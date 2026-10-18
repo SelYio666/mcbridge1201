@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 00:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 00:40（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 00:40）：**ResourcefulLib 客户端网络桥生效**。重写嵌套 RL 2.0.6 的 `FabricClientPacketHelper` 到 1.21.1 Payload API；客户端越过 ironchests **main** 入口点，进入 client 入口点，新阻断为 `ModelLoadingRegistry` 缺失与 `BalmClient.initialize(String,Runnable)` 缺失。证据 `runs/p51-client-bridge/`。
 更新（2026-10-19 00:35）：**首次真实客户端运行（PCL）**。已装 1.21.1 Fabric 0.19.5 客户端；五个模组全部加载，ironchests 入口点崩溃：`ClientPlayNetworking$PlayChannelHandler` 缺失（旧 ResourcefulLib 2.0.6 客户端网络 API）。换 ResourcefulLib 3.0.12 会在 `PacketHandler` 处失败。这是新的真实客户端阻断，不是服务端问题。证据 `runs/p50-client/`。
 更新（2026-10-19 00:05）：**`@At.ordinal` 提取**。`Injection.atOrdinal` + `mixinAtOrdinals`；lithium 86 at-targets 中 10 个带 ordinal；仅提取，不做匹配指令计数/越界校验；测试 **22/22**。证据 `runs/p49-at-ordinal/`。
 更新（2026-10-18 23:59）：**nested jar mixin 展开**。scanner 读取 `META-INF/jars/*.jar` 内的 `.mixins.json`，带 `!/` 前缀；ironchests P26 从 0 mixin/0 injection 变为 **1/1**（unresolved 0），lithium 保持 202/214/86/3；测试 **21/21**。证据 `runs/p48-nested-mixins/`。
@@ -336,6 +337,12 @@
 168. **崩溃**：ironchests 入口点 `NoClassDefFoundError: ClientPlayNetworking$PlayChannelHandler`（旧 ResourcefulLib 2.0.6 客户端网络 API）；换 ResourcefulLib 3.0.12 又在 `PacketHandler` 失败。
 169. **结论**：这是新的真实客户端阻断，服务端测试覆盖不到。证据 `runs/p50-client/`。
 
+## 2026-10-19 00:40 更新：RL 客户端网络桥
+
+170. **桥**：重写嵌套 RL 2.0.6 `FabricClientPacketHelper`，旧 handler 编解码保留，外层用 1.21.1 `CustomPayload`/`PlayPayloadHandler`。
+171. **结果**：客户端越过 ironchests main 入口点，进入 client 入口点；新阻断 `ModelLoadingRegistry` 缺失、`BalmClient.initialize(String,Runnable)` 缺失。
+172. **边界**：桥是 work-only 实验，尚未规则化；没有客户端通过声明。证据 `runs/p51-client-bridge/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -404,6 +411,7 @@
 | nested mixin 展开 | `runs/p48-nested-mixins/README.md`、`verdict.json`、`ironchests.json` |
 | @At ordinal | `runs/p49-at-ordinal/README.md`、`verdict.json`、`lithium-converted.json` |
 | 首次客户端运行 | `runs/p50-client/README.md`、`client.log`、`crash-report.txt` |
+| RL 客户端网络桥 | `runs/p51-client-bridge/README.md`、`FabricClientPacketHelper.java`、`crash-report.txt` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

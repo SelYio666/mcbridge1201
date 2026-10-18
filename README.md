@@ -36,7 +36,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | Codec dispatch 安全适配 | javac `CodecDispatch` 用 `MapCodec.of` 包装旧 Codec；契约 5/5；record-codec probe 与三样本同服 probe 均通过 | [docs/baseline.md](docs/baseline.md) §7.28–7.29、§7.39、§7.45、`runs/p26-codec-safe/`、`runs/p37-codec-probe/`、`runs/p43-all-three-codec/` |
 | **lithium + ironchests 联合契约** | 同一实例两进程放置/插入/NBT/重启读回 5 钻石全部通过；P26 安全 CodecDispatch 版本也通过；三样本（+trashslot/Balm）同服及 225-chunk 压力也通过 | [docs/baseline.md](docs/baseline.md) §7.20、§7.29、§7.43–7.44、`runs/p14-lithium-ironchests/`、`runs/p27-combined-safe-codec/`、`runs/p41-all-three/`、`runs/p42-all-three-chunk/` |
 | 第三样本 trashslot | 原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥，**专用服务端 BOOTED**（`Done (4.655s)`）；三个包 codec（含 5 钻石）往返通过；clientbound receiver 未在客户端执行 | `runs/p15-trashslot/`、`runs/p16-balm/`、`runs/p17-balm-net/`、`runs/p29-client-receiver/`、`runs/p32-trashslot-codec/`、`runs/p33-all-packets/`、`rules/fabric-1.21.1/trashslot.json` |
-| 客户端首次运行（PCL） | 1.21.1 Fabric 客户端已装，五模组加载；ironchests 入口点因旧 ResourcefulLib 客户端网络 API 崩溃（`ClientPlayNetworking$PlayChannelHandler` 缺失） | `runs/p50-client/`、[remaining-work](docs/remaining-work.md) |
+| 客户端首次运行（PCL） | 1.21.1 Fabric 客户端已装，五模组加载；RL 客户端网络桥已越过 ironchests main 入口点；当前阻断为 `ModelLoadingRegistry` 与 `BalmClient.initialize` | `runs/p50-client/`、`runs/p51-client-bridge/`、[remaining-work](docs/remaining-work.md) |
 
 ## 交接
 

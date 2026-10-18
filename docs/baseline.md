@@ -1025,6 +1025,27 @@ ResourcefulLib 2.0.6 使用旧 `PlayChannelHandler` / `Identifier` 客户端网�
 `runs/p50-client/`。下一步是实现 ResourcefulLib 客户端网络桥，或把其 client helper 改到
 1.21.1 API 且保留 ironchests 使用的 `PacketHandler`。
 
+### 7.53 ResourcefulLib 客户端网络桥
+
+P50 的 `ClientPlayNetworking$PlayChannelHandler` 阻断通过替换嵌套 ResourcefulLib 2.0.6 的
+`FabricClientPacketHelper` 解决：
+
+- 旧 `clientOnlyRegister(Identifier, PacketHandler)` 创建 1.21.1 `CustomPayload` id，注册
+  S2C/C2S codec，接收后用原始 `PacketHandler.decode/handle` 处理；
+- 旧 `sendToServerClientOnly(Identifier, Packet)` 用原始 handler 编码后
+  `ClientPlayNetworking.send(CustomPayload)`；
+- 保留 RL 2.0.6 的 `PacketHandler`/`Packet`/`PacketContext`。
+
+客户端因此越过 ironchests **main** 入口点，进入 client 入口点；新阻断为：
+
+```text
+NoClassDefFoundError: net/fabricmc/fabric/api/client/model/ModelLoadingRegistry
+NoSuchMethodError: BalmClient.initialize(String, Runnable)
+```
+
+这两项仍未修；桥目前是 work-only 实验，尚未规则化，不能声明客户端通过。证据
+`runs/p51-client-bridge/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
