@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "0.1-draft",
+  "profileId": "lithium.0.11.4.fabric-1.20.1__fabric-1.21.1",
+  "status": "booted_within_scope",
+  "statusNote": "Dedicated server reaches Done (4.772s), loads/saves the world and passes a 225-chunk force-load/save/restart stress test; the lithium+ironchests combined container contract also passes. No lithium gameplay/client/network contract was executed. Two explicit mixinStrips remain and the old chunk cache/off-thread fast path was not reimplemented.",
+  "source": {
+    "minecraft": "1.20.1",
+    "loader": "fabric",
+    "modId": "lithium",
+    "modVersion": "0.11.4",
+    "jarSha256": "76133efe92aea907cf75562d9e26517deb170e2580e1ecd4979da2c8902de782",
+    "originUrl": "https://cdn.modrinth.com/data/gvQqBUqZ/versions/iEcXOkz4/lithium-fabric-mc1.20.1-0.11.4.jar",
+    "license": "LGPL-3.0-only"
+  },
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "loaderBuild": "0.19.5",
+    "fabricApi": "0.102.0+1.21.1",
+    "clientJarSha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "sides": [
+      "dedicated_server"
+    ]
+  },
+  "engine": {
+    "name": "CenturyBridge",
+    "repo": "dextawa/CenturyBridge",
+    "commit": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
+    "license": "MIT",
+    "note": "engine compiled with a local no-op MixinCheck stub; mixin-check gate not verified"
+  },
+  "rulePackage": {
+    "path": "rules/fabric-1.21.1/lithium.json",
+    "sha256": "bfdbd17304e6081915fad8c5c2ef576deb1f422ef41f034553809c89fac14dd2",
+    "accessWidener": null
+  },
+  "appliedRules": [
+    {
+      "id": "walknodeevaluator.checkneighbourblocks.view-to-context",
+      "capability": "world.chunk.neighbour-blocks"
+    },
+    {
+      "id": "lithium.explosionmixin.ctor-callback",
+      "capability": "mixin.callback.constructor"
+    },
+    {
+      "id": "lithium.poi.serializing-storage-ctor-callback",
+      "capability": "mixin.callback.constructor"
+    },
+    {
+      "id": "lithium.serverchunkmanager.chunkresult-port",
+      "capability": "chunk.access.result-api"
+    }
+  ],
+  "analysis": {
+    "missingClass": 1,
+    "missingMember": 7,
+    "descMismatch": 6,
+    "missingApiClass": 0,
+    "missingApiMember": 0,
+    "confirmedInSource": 13,
+    "mixins": 224,
+    "mixinTargetsUnresolved": 0,
+    "planSha256": "9ebfa5e98d1882a64881a8c34981012f8e54398b50d52d344250be9138ce5316"
+  },
+  "requiredContracts": [
+    {
+      "id": "server.boot",
+      "result": "passed",
+      "scope": "dedicated server"
+    },
+    {
+      "id": "server.chunk.load",
+      "result": "passed",
+      "scope": "225 force-loaded chunks"
+    },
+    {
+      "id": "server.chunk.save_restart",
+      "result": "passed",
+      "scope": "two process runs"
+    },
+    {
+      "id": "container.combined",
+      "result": "passed",
+      "scope": "lithium+ironchests"
+    },
+    {
+      "id": "lithium.gameplay",
+      "result": "pending",
+      "scope": "needs player/client"
+    },
+    {
+      "id": "client.render",
+      "result": "pending",
+      "scope": "needs client"
+    },
+    {
+      "id": "multiplayer.sync",
+      "result": "pending",
+      "scope": "needs 2 clients"
+    }
+  ],
+  "evidence": {
+    "boot": {
+      "path": "runs/p13-chunk-port/verdict.json",
+      "sha256": "ede1848be5746b2c1d4028517afabed79c2287d83ab11b38f43348f615cd48fa"
+    },
+    "chunkStress": {
+      "path": "runs/p24-chunk-stress-tool/verdict.json",
+      "sha256": "57f3e4e55b6ee67ab6e517d29758d9677f1de0c7a3a1d5dc97095b95833f3a7a"
+    },
+    "combined": {
+      "path": "runs/p14-lithium-ironchests/verdict.json",
+      "sha256": "db94700abaa63997b5c1d604518eaaee676435c168a7fc854cd42cf0a345f05c"
+    },
+    "mixins": [
+      {
+        "id": "entity.collisions.movement.EntityMixin",
+        "reason": "explicit mixinStrip; collision optimization dropped"
+      },
+      {
+        "id": "block.flatten_states.FluidStateMixin",
+        "reason": "explicit mixinStrip; fluid-state optimization dropped"
+      }
+    ]
+  }
+}

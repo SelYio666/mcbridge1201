@@ -21,7 +21,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 常量池种类修正 | 123 处 Methodref→InterfaceMethodref + 3 个 method handle（含 JiJ） | `java/.../rules/JarPatcher.java` |
 | 规则数 | `container.json` 7 条 + `lithium.json` 调用点/2 条 Mixin 目标/1 条实现类替换 + `trashslot.json` 4 条 NBT/3 条 Balm 调用点 | `rules/fabric-1.21.1/` |
 | 容器契约（服务端命令） | **通过**：放置 → 插入 5 钻石 → NBT `Items` → 重启读回 5 | `runs/p5-contract-*/` |
-| 兼容档案 | ironchests @ Fabric 1.21.1，`status: passed_within_scope`（仅专用服务端；缺客户端） | [profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json](profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json) |
+| 兼容档案 | ironchests `passed_within_scope`；lithium / trashslot `booted_within_scope`（范围见档案） | [profiles/README.md](profiles/README.md) |
 | 支持矩阵 | 10 份样本的静态结果 + 运行时阶段（未运行 ≠ 通过） | [docs/support-matrix.md](docs/support-matrix.md) |
 | 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
 | **调用点签名适配** | `callSiteAdaptations` + javac 桥；lithium `class_14.method_59` 命中 2 处，`NoSuchMethodError` 消失 | [docs/baseline.md](docs/baseline.md) §7.17、`runs/p10-lithium-signature/` |

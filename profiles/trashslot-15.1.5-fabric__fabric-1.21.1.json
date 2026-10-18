@@ -1,0 +1,135 @@
+{
+  "schemaVersion": "0.1-draft",
+  "profileId": "trashslot.15.1.5.fabric-1.20.1__fabric-1.21.1",
+  "status": "booted_within_scope",
+  "statusNote": "Dedicated server reaches Done (4.655s) with native Balm 21.0.66, the Balm initializer call-site bridge, the Balm networking payload bridge and the four ItemStack/NBT tombstone bridges. A clientbound receiver is present but has not been executed. No client GUI, packet round-trip or player trash-slot behavior was verified.",
+  "source": {
+    "minecraft": "1.20.1",
+    "loader": "fabric",
+    "modId": "trashslot",
+    "modVersion": "15.1.5",
+    "jarSha256": "07858324752987ed6a7a83b9dc71385fbe43ca1e16bcae91bdf57850e92435f2",
+    "originUrl": "https://cdn.modrinth.com/data/vRYk0bv7/versions/rvZNAUdl/trashslot-fabric-1.20.1-15.1.5.jar",
+    "license": "LicenseRef-All-Rights-Reserved"
+  },
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "loaderBuild": "0.19.5",
+    "fabricApi": "0.102.0+1.21.1",
+    "clientJarSha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "sides": [
+      "dedicated_server"
+    ]
+  },
+  "engine": {
+    "name": "CenturyBridge",
+    "repo": "dextawa/CenturyBridge",
+    "commit": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
+    "license": "MIT",
+    "note": "engine compiled with a local no-op MixinCheck stub; mixin-check gate not verified"
+  },
+  "dependencies": [
+    {
+      "modId": "balm-fabric",
+      "version": "21.0.66",
+      "mode": "native-1.21.1",
+      "jarSha256": "fda64674da8959d8d3f0c4b5bc1e9543e867b16e9f078bffa704f95cd584a855"
+    }
+  ],
+  "rulePackage": {
+    "path": "rules/fabric-1.21.1/trashslot.json",
+    "sha256": "047b8939bcb19adc338232bcc3ff8d252caa1f12d5de508f8c31fb699aa4abdf",
+    "accessWidener": "rules/fabric-1.21.1/mcbridge.accesswidener",
+    "accessWidenerSha256": "cfe9a78f3d96b58e125c0cd959cde5ca3ed38b1b7e84a2bb5bf8d214f44df292"
+  },
+  "appliedRules": [
+    {
+      "id": "trashslot.balm.initialize-context",
+      "capability": "balm.initialize.context"
+    },
+    {
+      "id": "trashslot.balm.network-serverbound",
+      "capability": "balm.network.payload"
+    },
+    {
+      "id": "trashslot.balm.network-clientbound",
+      "capability": "balm.network.payload"
+    },
+    {
+      "id": "trashslot.itemstack.write-nbt",
+      "capability": "itemstack.nbt.components"
+    },
+    {
+      "id": "trashslot.itemstack.from-nbt",
+      "capability": "itemstack.nbt.components"
+    },
+    {
+      "id": "trashslot.packet.write-itemstack",
+      "capability": "itemstack.packet.components"
+    },
+    {
+      "id": "trashslot.packet.read-itemstack",
+      "capability": "itemstack.packet.components"
+    }
+  ],
+  "analysis": {
+    "missingClass": 0,
+    "missingMember": 2,
+    "descMismatch": 0,
+    "missingApiClass": 0,
+    "missingApiMember": 0,
+    "confirmedInSource": 2,
+    "mixins": 0,
+    "mixinTargetsUnresolved": 0,
+    "planSha256": "9ebfa5e98d1882a64881a8c34981012f8e54398b50d52d344250be9138ce5316"
+  },
+  "requiredContracts": [
+    {
+      "id": "server.boot",
+      "result": "passed",
+      "scope": "dedicated server"
+    },
+    {
+      "id": "balm.initialize",
+      "result": "passed",
+      "scope": "call-site bridge"
+    },
+    {
+      "id": "balm.network.register",
+      "result": "passed",
+      "scope": "payload registration"
+    },
+    {
+      "id": "trashslot.nbt.bridge",
+      "result": "prepared",
+      "scope": "not triggered by player action"
+    },
+    {
+      "id": "client.gui.open",
+      "result": "pending",
+      "scope": "needs client"
+    },
+    {
+      "id": "client.packet.roundtrip",
+      "result": "pending",
+      "scope": "needs client"
+    },
+    {
+      "id": "player.trash.slot",
+      "result": "pending",
+      "scope": "needs player"
+    }
+  ],
+  "evidence": {
+    "boot": {
+      "path": "runs/p17-balm-net/verdict.json",
+      "sha256": "cd51c6eeb9bc8a1ae28081cf4a7f69df7fbaff9173ef14bdd104b8a8eef6e30f"
+    },
+    "clientReceiver": {
+      "path": "runs/p29-client-receiver/verdict.json",
+      "sha256": "d99f765819fb970df5dd6c34f67e7638ee64c27021a3aa3243c192e49b29497f"
+    }
+  }
+}

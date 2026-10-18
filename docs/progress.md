@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 22:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 22:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 22:55）：**lithium / trashslot 兼容档案**。新增 `profiles/lithium...json`（`booted_within_scope`，boot + 225-chunk + combined）与 `profiles/trashslot...json`（`booted_within_scope`，原生 Balm 21；客户端/网络未执行），并加 `profiles/README.md` 索引；所有 hash 由脚本从实际文件计算。证据 `profiles/`。
 更新（2026-10-18 22:50）：**trashslot clientbound receiver 已接入**。`BalmNetworkingBridge$Client` 在客户端用 `ClientPlayNetworking.registerGlobalReceiver` 调用旧 `BiConsumer<Player,T>`；服务端通过环境反射跳过，专用服务端仍 `Done (4.894s)`。客户端分支未执行，不能宣称客户端通过；证据 `runs/p29-client-receiver/`。
 更新（2026-10-18 22:45）：**P26 安全 Codec 构建的 BytecodeVerify**。`ironchests-safe-aw.jar` 顶层 73 classes / 0 failures，nested ResourcefulLib 142 classes / 0 failures，exit 0；运行侧由 P26/P27 契约覆盖。证据 `runs/p28-codec-verify/`。
 更新（2026-10-18 22:40）：**P26 安全 CodecDispatch 的联合契约回归**。在 lithium + ironchests 同实例中换用 P26 的 `ironchests-safe-aw.jar`，两进程容器契约 5/5 通过、两次 `Done`、exit 0；说明安全 Codec 适配没有破坏 P14 的共存路径。证据 `runs/p27-combined-safe-codec/`。
@@ -182,6 +183,13 @@
 98. **服务端**：更新后的 trashslot 补丁启动 `Done (4.894s)`，`doneSeen=true`，exit 0；没有 `ClientPlayNetworking` 类加载错误。
 99. **边界**：没有客户端 fixture，client 分支、receiver 注册和 `MessageTrashSlotContent` 实际投递/解码均未执行；不能宣称客户端通过。证据 `runs/p29-client-receiver/`。
 
+## 2026-10-18 22:55 更新：兼容档案
+
+100. **lithium profile**：`profiles/lithium-0.11.4-fabric__fabric-1.21.1.json`，`booted_within_scope`；contracts 含 boot / chunk load / chunk save+restart / combined，pending gameplay/client/multiplayer；记录两条 mixinStrip 与优化减少。
+101. **trashslot profile**：`profiles/trashslot-15.1.5-fabric__fabric-1.21.1.json`，`booted_within_scope`；记录原生 Balm 21 依赖、7 条规则、boot/initialize/network；pending client GUI/packet round-trip/player。
+102. **索引**：`profiles/README.md` 列三个 profile 与状态词表；所有 source/rule/evidence hash 由脚本按实际文件计算。
+103. **证据**：`profiles/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -229,6 +237,7 @@
 | 安全 Codec 联合回归 | `runs/p27-combined-safe-codec/README.md`、`verdict-summary.json`、`verdict.json` |
 | 安全 Codec BytecodeVerify | `runs/p28-codec-verify/README.md`、`verdict.json`、`top-level.log`、`nested.log` |
 | clientbound receiver | `runs/p29-client-receiver/README.md`、`verdict.json`、`server.log` |
+| 兼容档案 | `profiles/README.md`、`profiles/lithium-...json`、`profiles/trashslot-...json` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

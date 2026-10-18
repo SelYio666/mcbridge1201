@@ -812,6 +812,17 @@ failed**，nested ResourcefulLib **142 classes，0 failures**，exit 0。覆盖 
 投递/解码**未执行**；服务端 boot 只证明服务端分支惰性且类集合可加载。证据
 `runs/p29-client-receiver/`。
 
+### 7.32 多份兼容档案
+
+`profiles/` 现在有三份档案：
+
+- ironchests：`passed_within_scope`（容器契约）；
+- lithium：`booted_within_scope`（boot + 225-chunk stress + combined；pending gameplay/client）；
+- trashslot：`booted_within_scope`（原生 Balm 21 + 7 条规则；pending client GUI/packet round-trip/player）。
+
+每份档案 pin 源 jar hash、目标 client/mappings hash、规则包 hash 和证据文件；jar 本身不进仓库。
+`profiles/README.md` 给出状态词表。证据 `profiles/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
