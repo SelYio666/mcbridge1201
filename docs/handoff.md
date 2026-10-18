@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 23:50）：**剩余工作边界**。新增 `docs/remaining-work.md`：服务端/静态工作已覆盖；客户端 GUI/网络/多人因无 client fixture 未执行；chunk 优化、nested mixin 静态分析、Forge 分析列为非阻塞后续。没有新增“客户端通过”声明。
 更新（2026-10-18 23:45）：**三样本 bundle profile**。`profiles/bundle-all-three__fabric-1.21.1.json`，`passed_within_scope`：coexistence + 容器 5/5 + 225-chunk stress + CodecDispatch probe；client/GUI pending。证据 `profiles/`。
 更新（2026-10-18 23:42）：**三样本 + CodecDispatch probe 通过**。all-three 实例加载 P37 probe，`Done (5.425s)`、`CODEC_DISPATCH_PROBE_OK`；安全 Codec 包装在三样本同服时仍正常。证据 `runs/p43-all-three-codec/`。
 更新（2026-10-18 23:55）：**三样本同服 chunk 压力通过**。all-three 实例 225 chunks、远角方块 save/restart 断言全 true，两进程 exit 0；证据 `runs/p42-all-three-chunk/`。

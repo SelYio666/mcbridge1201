@@ -72,6 +72,8 @@ java\build\install\mcbridge1201\bin\mcbridge1201.bat analyze `
 
 CenturyBridge 转换见 [docs/engine-selection.md](docs/engine-selection.md) 的“真实尝试”一节；它需要本地编译上游引擎并生成 7 节分段。
 
+已验证范围与阻塞项（客户端 GUI/网络/多人）见 [docs/remaining-work.md](docs/remaining-work.md) 和 [docs/progress.md](docs/progress.md)。
+
 ## 目录
 
 ```text

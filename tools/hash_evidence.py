@@ -291,6 +291,7 @@ FILES = [
     "manifests/upstream.lock.json",
     "profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json",
     "docs/support-matrix.md",
+    "docs/remaining-work.md",
 ]
 
 

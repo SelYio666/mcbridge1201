@@ -967,6 +967,13 @@ P13 + ironchests P26 + trashslot P29/Balm 21 同服；contracts 为 boot `Done (
 5/5、225-chunk stress、CodecDispatch probe；client/GUI/multiplayer 仍 pending。四项 evidence
 均 pin hash。索引在 `profiles/README.md`。
 
+### 7.47 剩余工作边界
+
+`docs/remaining-work.md` 明确记录：服务端/静态范围已验证；客户端 GUI、`ClientPlayNetworking`
+投递、多人同步因本机没有 client fixture 未执行；chunk 优化、nested mixin 静态分析、Forge
+成员分析列为非阻塞后续。该文档同时给出提供 client fixture 后的验收方式，不包含任何
+“客户端通过”声明。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
