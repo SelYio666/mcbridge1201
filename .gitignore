@@ -1,0 +1,14 @@
+# 本地工作集：游戏 jar、样本 jar、上游源码快照、实例、转换产物（不入库）
+work/
+# 构建缓存
+java/build/
+java/.gradle/
+.gradle/
+# Python
+__pycache__/
+*.pyc
+# IDE
+.idea/
+.vscode/
+# 临时
+*.part

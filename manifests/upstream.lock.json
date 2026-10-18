@@ -1,0 +1,188 @@
+{
+  "generatedAt": "2026-10-18T17:47:39+08:00",
+  "method": "atom feeds + codeload zip (GitHub REST API rate-limited on this host)",
+  "repos": [
+    {
+      "repo": "Bownlux/Retromod",
+      "url": "https://github.com/Bownlux/Retromod",
+      "branchFeed": {
+        "feed": "https://github.com/Bownlux/Retromod/commits/main.atom",
+        "branch": "main",
+        "commits": [
+          {
+            "sha": "e693278379a6c80cd1a6623136a166f4d8c5cafe",
+            "updated": "2026-10-13T03:08:53Z",
+            "title": "removed test files for mods"
+          },
+          {
+            "sha": "0e744dbd7f1b275df42cfa31dc164ac54662d371",
+            "updated": "2026-10-13T02:31:08Z",
+            "title": "1.4.0-snapshot.1 fixed CI"
+          },
+          {
+            "sha": "9f6a6683d74941ceaa210af1db6ca917744e3093",
+            "updated": "2026-10-13T02:12:11Z",
+            "title": "1.4.0-snapshot.1"
+          },
+          {
+            "sha": "95afbe2cb1f1c592cbff2244bc556dfd4200f110",
+            "updated": "2026-10-10T04:03:11Z",
+            "title": "1.3.4 probably last 1.3.x release for now"
+          },
+          {
+            "sha": "4ab5d88da9d5cd95447b210bba19619b59259cfd",
+            "updated": "2026-10-08T01:52:12Z",
+            "title": "1.3.3"
+          },
+          {
+            "sha": "a48938b25c964bd6ee70ff2054f6014b863e856b",
+            "updated": "2026-10-05T20:31:41Z",
+            "title": "Merge pull request #315 from Bownlux/compat-report/issue-314"
+          },
+          {
+            "sha": "5606cce73bbe452fae41e175439c8a755ff76dd2",
+            "updated": "2026-10-04T20:05:08Z",
+            "title": "compatdb: Polished Planks (diamond) from #314"
+          },
+          {
+            "sha": "a7f0c28c661f7d554e039640c792601544dc1a8c",
+            "updated": "2026-09-30T21:02:06Z",
+            "title": "1.3.2 sorry for wait"
+          },
+          {
+            "sha": "d4b2df5865207ac0c7cd5c233b5bfc4998c3017d",
+            "updated": "2026-09-18T20:24:18Z",
+            "title": "1.3.1"
+          },
+          {
+            "sha": "fc72560f7fb4adbe9590cd807b77970a7f6b332c",
+            "updated": "2026-09-15T22:12:00Z",
+            "title": "1.3.0 full"
+          }
+        ]
+      },
+      "lockedSha": "e693278379a6c80cd1a6623136a166f4d8c5cafe",
+      "releases": [
+        {
+          "title": "Latest main build · Fabric and Quilt · 1.4.0-snapshot.1 for MC 26.2",
+          "updated": "2026-10-13T03:12:39Z",
+          "link": ""
+        }
+      ],
+      "snapshot": {
+        "url": "https://codeload.github.com/Bownlux/Retromod/zip/e693278379a6c80cd1a6623136a166f4d8c5cafe",
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\upstream\\Bownlux__Retromod@e693278379a6c80cd1a6623136a166f4d8c5cafe.zip",
+        "size": 7421975,
+        "sha256": "b8fbe82c1d2d34b3a466301725f82f11f117e2611664abdbd787e6f50c9274ce",
+        "fetchedAt": "2026-10-18T17:49:08+08:00",
+        "cached": false,
+        "entryCount": 1841,
+        "topLevel": [
+          "Retromod-e693278379a6c80cd1a6623136a166f4d8c5cafe"
+        ],
+        "licenseFiles": [
+          "Retromod-e693278379a6c80cd1a6623136a166f4d8c5cafe/LICENSE"
+        ],
+        "buildFiles": [
+          "Retromod-e693278379a6c80cd1a6623136a166f4d8c5cafe/pom.xml"
+        ],
+        "zip": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\upstream\\Bownlux__Retromod@e693278379a6c80cd1a6623136a166f4d8c5cafe.zip"
+      },
+      "licenses": [
+        {
+          "entry": "Retromod-e693278379a6c80cd1a6623136a166f4d8c5cafe/LICENSE",
+          "savedAs": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\third-party\\licenses\\Bownlux__Retromod__e693278379__LICENSE",
+          "sha256": "1bd4bc93e323b7cca4f4f40af43c38b91c5cf54165e0db5fdcc58e0d3b1ec47d",
+          "bytes": 1064
+        }
+      ]
+    },
+    {
+      "repo": "dextawa/CenturyBridge",
+      "url": "https://github.com/dextawa/CenturyBridge",
+      "branchFeed": {
+        "feed": "https://github.com/dextawa/CenturyBridge/commits/main.atom",
+        "branch": "main",
+        "commits": [
+          {
+            "sha": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
+            "updated": "2026-08-25T15:49:59Z",
+            "title": "26.2: ClientTickEvents world->level + NBT getter Optional-fold, clien…"
+          },
+          {
+            "sha": "5e166f4cb61f9676ef2794097c8735ef5a7c0bce",
+            "updated": "2026-08-25T15:49:59Z",
+            "title": "fieldRenames/fieldRedirects also fire on non-vanilla owners"
+          },
+          {
+            "sha": "91279cfb9353e260187458d2b0dbe12a7b0b0f2b",
+            "updated": "2026-08-25T15:04:35Z",
+            "title": "pack-resources ctor factories: PathPackResources / ZipResourcePack, f…"
+          },
+          {
+            "sha": "927fa4a1a91d0b66f0afa859b57462f8f7215bed",
+            "updated": "2026-08-25T14:52:10Z",
+            "title": "legacy ResourcesSupplier wrap: adapt the 1.20.1 SAM at cbReadMetaAndC…"
+          },
+          {
+            "sha": "0d5f9ce78e6d31b7e3327fb0be4b05e428ed5d48",
+            "updated": "2026-08-25T14:35:32Z",
+            "title": "model compat: follow fapi's ExtraModelKey rework at 1.21.8/1.21.11"
+          },
+          {
+            "sha": "4a943dba555e14da066da61c46e78cb57b689f82",
+            "updated": "2026-08-25T14:25:38Z",
+            "title": "class_642 super-ctor adapt + Pack.readMetaAndCreate bridge, all trees"
+          },
+          {
+            "sha": "b989f07773552085fb9ee54bdc75f126fb078256",
+            "updated": "2026-08-25T13:54:26Z",
+            "title": "track core/tools: the kill-list, forging, translation and generator t…"
+          },
+          {
+            "sha": "1f78e36a2c21cf9adde24eeb096e25ff51acfbcb",
+            "updated": "2026-08-25T10:36:13Z",
+            "title": "CLAUDE.md: the client fixture is part of verification"
+          },
+          {
+            "sha": "2fc63d2b615062f78dd5ea78212fe8429ddf6681",
+            "updated": "2026-08-25T10:30:28Z",
+            "title": "mixin-check: covers compared through the name table for real-name tar…"
+          },
+          {
+            "sha": "390a8becb7659e2b1a9f5f9ebc966e58230918d3",
+            "updated": "2026-08-25T10:29:25Z",
+            "title": "mouseScrolled: the 1.20.2 horizontal-amount split, both directions, e…"
+          }
+        ]
+      },
+      "lockedSha": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
+      "releases": [],
+      "snapshot": {
+        "url": "https://codeload.github.com/dextawa/CenturyBridge/zip/cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\upstream\\dextawa__CenturyBridge@cf4ebeba2eaaa49d3746162cc2c10b670d681aec.zip",
+        "size": 2354810,
+        "sha256": "d902090f71b1f56088b498a5d59da8ba0a3aee7352453c9ad4612b931d7f1b66",
+        "fetchedAt": "2026-10-18T17:49:36+08:00",
+        "cached": false,
+        "entryCount": 1965,
+        "topLevel": [
+          "CenturyBridge-cf4ebeba2eaaa49d3746162cc2c10b670d681aec"
+        ],
+        "licenseFiles": [
+          "CenturyBridge-cf4ebeba2eaaa49d3746162cc2c10b670d681aec/LICENSE"
+        ],
+        "buildFiles": [],
+        "zip": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\upstream\\dextawa__CenturyBridge@cf4ebeba2eaaa49d3746162cc2c10b670d681aec.zip"
+      },
+      "licenses": [
+        {
+          "entry": "CenturyBridge-cf4ebeba2eaaa49d3746162cc2c10b670d681aec/LICENSE",
+          "savedAs": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\third-party\\licenses\\dextawa__CenturyBridge__cf4ebeba2e__LICENSE",
+          "sha256": "c505a7cd0e517790e0702103059dce6f2a05c8d34537a3908c12bebee64e75ae",
+          "bytes": 1061
+        }
+      ]
+    }
+  ]
+}

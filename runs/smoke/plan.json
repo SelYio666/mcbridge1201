@@ -1,0 +1,946 @@
+{
+  "schemaVersion": "0.1-draft",
+  "generatedAt": "2026-10-18T17:59:04.7221431+08:00",
+  "tool": "mcbridge1201 0.1.0",
+  "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "clientJar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\client-1.21.1.jar",
+    "clientJarSha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+    "mappings": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\intermediary-1.21.1-v2.jar",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "indexClasses": 10919,
+    "indexMembers": 87766,
+    "indexBuildMs": 657,
+    "apiJars": [
+      {
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\fabric-api-0.102.0+1.21.1.jar",
+        "sha256": "fd021e3ea8d043805207f39d43ac4b358629b30f0d9280ffc5a886a433291bd1"
+      },
+      {
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\fabric-loader-0.19.5.jar",
+        "sha256": "93044e4dd46de5d8136701292f05e868da096d2c9fddb4793e4fdbcc63efc695"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "file": "ironchests-5.0.2-fabric.jar",
+      "sha256": "6a07065a3a68280e26a0fc8a3fc0d8dde10b0999432492ef6726cd583be96de6",
+      "size": 485230,
+      "loader": "fabric",
+      "modId": "ironchests",
+      "version": "5.0.2",
+      "displayName": "Iron Chests: Restocked",
+      "environment": "*",
+      "depends": {
+        "fabricloader": "*",
+        "fabric": "*",
+        "minecraft": "\u003e\u003d1.20",
+        "java": "\u003e\u003d17"
+      },
+      "classes": 66,
+      "classFileMajorMax": 61,
+      "nestedJars": 1,
+      "signed": false,
+      "accessWideners": 0,
+      "verdict": "blocked_static",
+      "stage": "ANALYZED",
+      "counts": {
+        "refsTotal": 1139,
+        "missingClass": 1,
+        "missingMember": 41,
+        "descMismatch": 19,
+        "missingApiClass": 7,
+        "missingApiMember": 6,
+        "wrongLoaderNamespace": 0,
+        "mixins": 0,
+        "mixinTargetsUnresolved": 0,
+        "externalPackages": 18
+      },
+      "missingClass": [
+        {
+          "owner": "net/minecraft/class_2444",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/datagen/FinishedCodecRecipe [nested]"
+          ]
+        }
+      ],
+      "missingMember": [
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7948",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 14,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem",
+            "tech/thatgravyboat/ironchests/common/items/UnlockableItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7969",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 8,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem",
+            "tech/thatgravyboat/ironchests/common/utils/ModUtils",
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/NbtPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7985",
+          "desc": "()Z",
+          "kind": "method",
+          "refs": 6,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem",
+            "tech/thatgravyboat/ironchests/common/items/UnlockableItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2096",
+          "name": "method_9038",
+          "desc": "()Ljava/lang/Number;",
+          "kind": "method",
+          "refs": 4,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/bounds/BoundCodec [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7980",
+          "desc": "(Lnet/minecraft/class_2487;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem",
+            "com/teamresourceful/resourcefullib/common/codecs/recipes/ItemStackCodec [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1860",
+          "name": "method_8114",
+          "desc": "()Lnet/minecraft/class_2960;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/recipe/CodecRecipeSerializer [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_4588",
+          "name": "method_23763",
+          "desc": "(Lorg/joml/Matrix3f;FFF)Lnet/minecraft/class_4588;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/client/highlights/base/HighlightLine [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_4588",
+          "name": "method_1344",
+          "desc": "()V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/client/highlights/base/HighlightLine [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2090",
+          "name": "method_9019",
+          "desc": "()Lcom/google/gson/JsonElement;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]",
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2090",
+          "name": "method_9021",
+          "desc": "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2090;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]",
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2090",
+          "name": "field_9685",
+          "desc": "Lnet/minecraft/class_2090;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]",
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2096",
+          "name": "method_9042",
+          "desc": "()Ljava/lang/Number;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/bounds/BoundCodec [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_7923",
+          "name": "field_41176",
+          "desc": "Lnet/minecraft/class_2378;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/EnchantmentPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1657",
+          "name": "method_20236",
+          "desc": "(Lnet/minecraft/class_1268;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7938",
+          "desc": "()Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlock"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2371",
+          "name": "stream",
+          "desc": "()Ljava/util/stream/Stream;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlock"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2073",
+          "name": "method_8971",
+          "desc": "()Lcom/google/gson/JsonElement;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/api/chesttype/ChestType"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2073",
+          "name": "method_8969",
+          "desc": "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2073;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/api/chesttype/ChestType"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2073",
+          "name": "field_9640",
+          "desc": "Lnet/minecraft/class_2073;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/api/chesttype/ChestType"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_5365",
+          "name": "equals",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/ChestRenderer"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_332",
+          "name": "method_48587",
+          "desc": "(Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/ui/GeneratedScreenRenderer"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1086",
+          "name": "equals",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/client/highlights/state/HighlightStates [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_3264",
+          "name": "equals",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/GenericMemoryPack [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_3262$class_7664",
+          "name": "accept",
+          "desc": "(Ljava/lang/Object;Ljava/lang/Object;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/GenericMemoryPack [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7953",
+          "desc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/NbtPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_161$class_162",
+          "name": "method_698",
+          "desc": "()Lcom/google/gson/JsonObject;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/datagen/FinishedCodecRecipe [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1856",
+          "name": "method_52177",
+          "desc": "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_1856;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/recipes/IngredientCodec [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1856",
+          "name": "method_8089",
+          "desc": "()Lcom/google/gson/JsonElement;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/recipes/IngredientCodec [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1856",
+          "name": "method_8086",
+          "desc": "(Lnet/minecraft/class_2540;)Lnet/minecraft/class_1856;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/recipes/IngredientCodec [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_1856",
+          "name": "method_8088",
+          "desc": "(Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/recipes/IngredientCodec [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2499",
+          "name": "addAll",
+          "desc": "(Ljava/util/Collection;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/nbt/TagUtils [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2499",
+          "name": "stream",
+          "desc": "()Ljava/util/stream/Stream;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/nbt/TagUtils [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2102",
+          "name": "method_9068",
+          "desc": "()Lcom/google/gson/JsonElement;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2102",
+          "name": "method_9064",
+          "desc": "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2102;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2102",
+          "name": "field_9709",
+          "desc": "Lnet/minecraft/class_2102;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2040",
+          "name": "method_8894",
+          "desc": "()Lcom/google/gson/JsonElement;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2040",
+          "name": "method_8893",
+          "desc": "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2040;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2040",
+          "name": "field_9581",
+          "desc": "Lnet/minecraft/class_2040;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2048",
+          "name": "method_8912",
+          "desc": "()Lcom/google/gson/JsonElement;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2048",
+          "name": "method_8913",
+          "desc": "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2048;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2048",
+          "name": "field_9599",
+          "desc": "Lnet/minecraft/class_2048;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        }
+      ],
+      "descMismatch": [
+        {
+          "owner": "net/minecraft/class_2586",
+          "name": "method_38242",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem",
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+        },
+        {
+          "owner": "net/minecraft/class_1293",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_1291;II)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1293 with desc (Lnet/minecraft/class_6880;IIZZZ)V"
+        },
+        {
+          "owner": "net/minecraft/class_1792",
+          "name": "method_7851",
+          "desc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Ljava/util/List;Lnet/minecraft/class_1836;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1792 with desc (Lnet/minecraft/class_1799;Lnet/minecraft/class_1792$class_9635;Ljava/util/List;Lnet/minecraft/class_1836;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2512",
+          "name": "method_10691",
+          "desc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2338;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/KeyItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2512 with desc (Lnet/minecraft/class_2487;Ljava/lang/String;)Ljava/util/Optional;"
+        },
+        {
+          "owner": "net/minecraft/class_2561$class_2562",
+          "name": "method_10877",
+          "desc": "(Ljava/lang/String;)Lnet/minecraft/class_5250;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/KeyItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2561$class_2562 with desc (Ljava/lang/String;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_5250;"
+        },
+        {
+          "owner": "net/minecraft/class_2512",
+          "name": "method_10692",
+          "desc": "(Lnet/minecraft/class_2338;)Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/UnlockableItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2512 with desc (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2520;"
+        },
+        {
+          "owner": "net/minecraft/class_2561$class_2562",
+          "name": "method_10867",
+          "desc": "(Lnet/minecraft/class_2561;)Ljava/lang/String;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/UnlockableItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2561$class_2562 with desc (Lnet/minecraft/class_2561;Lnet/minecraft/class_7225$class_7874;)Ljava/lang/String;"
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7956",
+          "desc": "(ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1799 with desc (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2586",
+          "name": "method_38243",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+        },
+        {
+          "owner": "net/minecraft/class_2586",
+          "name": "method_11014",
+          "desc": "(Lnet/minecraft/class_2487;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        {
+          "owner": "net/minecraft/class_1294",
+          "name": "field_5909",
+          "desc": "Lnet/minecraft/class_1291;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1294 with desc Lnet/minecraft/class_6880;"
+        },
+        {
+          "owner": "net/minecraft/class_1294",
+          "name": "field_5901",
+          "desc": "Lnet/minecraft/class_1291;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1294 with desc Lnet/minecraft/class_6880;"
+        },
+        {
+          "owner": "net/minecraft/class_2540",
+          "name": "method_10794",
+          "desc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/network/SyncMessage$Handler"
+          ],
+          "note": "target has same name in net/minecraft/class_2540 with desc (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2540;"
+        },
+        {
+          "owner": "net/minecraft/class_2621",
+          "name": "method_11014",
+          "desc": "(Lnet/minecraft/class_2487;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        {
+          "owner": "net/minecraft/class_1262",
+          "name": "method_5429",
+          "desc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_1262 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2621",
+          "name": "method_11007",
+          "desc": "(Lnet/minecraft/class_2487;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        {
+          "owner": "net/minecraft/class_1262",
+          "name": "method_5426",
+          "desc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_1262 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7950",
+          "desc": "(Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/client/utils/ScreenUtils [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_1799 with desc (Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;"
+        },
+        {
+          "owner": "net/minecraft/class_26",
+          "name": "method_17924",
+          "desc": "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/SaveHandler [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_26 with desc (Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;"
+        }
+      ],
+      "missingApiClass": [
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/ExtraModelProvider",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/BakedModelManagerHelper",
+          "name": "getModel",
+          "desc": "(Lnet/minecraft/class_1092;Lnet/minecraft/class_2960;)Lnet/minecraft/class_1087;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsClientImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+          "name": "INSTANCE",
+          "desc": "Lnet/fabricmc/fabric/api/client/model/ModelLoadingRegistry;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+          "name": "registerModelProvider",
+          "desc": "(Lnet/fabricmc/fabric/api/client/model/ExtraModelProvider;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient"
+          ]
+        }
+      ],
+      "missingApiMember": [
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "name": "equals",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+          "name": "registerGlobalReceiver",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+          "name": "send",
+          "desc": "(Lnet/minecraft/class_3222;Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType$ExtendedFactory;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/menu/fabric/MenuContentHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+          "name": "registerGlobalReceiver",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+          "name": "send",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        }
+      ],
+      "wrongLoaderNamespace": [],
+      "externalPackages": [
+        {
+          "owner": "B",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "C",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "D",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "F",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "I",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "J",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "S",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "Z",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[B",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[F",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[Lcom",
+          "kind": "package",
+          "refs": 6
+        },
+        {
+          "owner": "[Ljava",
+          "kind": "package",
+          "refs": 10
+        },
+        {
+          "owner": "[Lnet",
+          "kind": "package",
+          "refs": 4
+        },
+        {
+          "owner": "[Ltech",
+          "kind": "package",
+          "refs": 4
+        },
+        {
+          "owner": "com",
+          "kind": "package",
+          "refs": 226
+        },
+        {
+          "owner": "dev",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "io",
+          "kind": "package",
+          "refs": 8
+        },
+        {
+          "owner": "org",
+          "kind": "package",
+          "refs": 45
+        }
+      ],
+      "mixins": {
+        "configs": 0,
+        "classes": 0,
+        "unresolvedTargets": []
+      },
+      "notes": [
+        "static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)"
+      ]
+    }
+  ],
+  "summary": {
+    "artifacts": 1,
+    "blockedStatic": 1,
+    "needsDependency": 0,
+    "cleanStatic": 0
+  }
+}

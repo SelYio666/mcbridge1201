@@ -1,0 +1,106 @@
+{
+  "generatedAt": "2026-10-18T18:02:15+08:00",
+  "minecraft": [
+    {
+      "minecraft": "1.21.1",
+      "type": "release",
+      "releaseTime": "2024-08-08T12:24:45+00:00",
+      "javaVersion": {
+        "component": "java-runtime-delta",
+        "majorVersion": 21
+      },
+      "clientJar": {
+        "url": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar",
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\client-1.21.1.jar",
+        "size": 26836906,
+        "sha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+        "fetchedAt": "2026-10-18T18:02:14+08:00",
+        "cached": true,
+        "sha1": "30c73b1c5da787909b2f73340419fdf13b9def88",
+        "sha1Ok": true
+      },
+      "clientMappings": {
+        "url": "https://piston-data.mojang.com/v1/objects/2244b6f072256667bcd9a73df124d6c58de77992/client.txt",
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\client-1.21.1-mappings.txt",
+        "size": 9598610,
+        "sha256": "140c47931cccc8fc9e4c22d7603e2d714d1a953a146f51ea7397d95c955536ec",
+        "fetchedAt": "2026-10-18T18:02:14+08:00",
+        "cached": true,
+        "sha1Ok": true
+      }
+    },
+    {
+      "minecraft": "1.20.1",
+      "type": "release",
+      "releaseTime": "2023-06-12T13:25:51+00:00",
+      "javaVersion": {
+        "component": "java-runtime-gamma",
+        "majorVersion": 17
+      },
+      "clientJar": {
+        "url": "https://piston-data.mojang.com/v1/objects/0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838/client.jar",
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\client-1.20.1.jar",
+        "size": 23028853,
+        "sha256": "56b71336d2b4fdffd197f56595b0da93e32a946f78f382a299b8f4b92758bb0f",
+        "fetchedAt": "2026-10-18T18:02:15+08:00",
+        "cached": true,
+        "sha1": "0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838",
+        "sha1Ok": true
+      },
+      "clientMappings": {
+        "url": "https://piston-data.mojang.com/v1/objects/6c48521eed01fe2e8ecdadbd5ae348415f3c47da/client.txt",
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\client-1.20.1-mappings.txt",
+        "size": 8001795,
+        "sha256": "67bfc33ef0c7103f002d6ac134f8eddd3d67e2ce45d266e83816d1a2e2c9b01d",
+        "fetchedAt": "2026-10-18T18:02:15+08:00",
+        "cached": true,
+        "sha1Ok": true
+      }
+    }
+  ],
+  "fabric": {
+    "intermediary-1.20.1": {
+      "url": "https://maven.fabricmc.net/net/fabricmc/intermediary/1.20.1/intermediary-1.20.1-v2.jar",
+      "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\intermediary-1.20.1-v2.jar",
+      "size": 508743,
+      "sha256": "26b60a7dac40e19609cdf095f7124a79ea426d8a84344bc8883c7210f0294799",
+      "fetchedAt": "2026-10-18T18:02:15+08:00",
+      "cached": true
+    },
+    "intermediary-1.21.1": {
+      "url": "https://maven.fabricmc.net/net/fabricmc/intermediary/1.21.1/intermediary-1.21.1-v2.jar",
+      "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\intermediary-1.21.1-v2.jar",
+      "size": 582921,
+      "sha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+      "fetchedAt": "2026-10-18T18:02:15+08:00",
+      "cached": true
+    },
+    "loader": {
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.19.5/fabric-loader-0.19.5.jar",
+      "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\fabric-loader-0.19.5.jar",
+      "size": 1984980,
+      "sha256": "93044e4dd46de5d8136701292f05e868da096d2c9fddb4793e4fdbcc63efc695",
+      "fetchedAt": "2026-10-18T18:02:18+08:00",
+      "cached": true,
+      "version": "0.19.5"
+    },
+    "api": {
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.102.0+1.21.1/fabric-api-0.102.0+1.21.1.jar",
+      "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\fabric-api-0.102.0+1.21.1.jar",
+      "size": 2286038,
+      "sha256": "fd021e3ea8d043805207f39d43ac4b358629b30f0d9280ffc5a886a433291bd1",
+      "fetchedAt": "2026-10-18T18:02:18+08:00",
+      "cached": true,
+      "version": "0.102.0+1.21.1"
+    },
+    "api-1.20.1": {
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.92.12+1.20.1/fabric-api-0.92.12+1.20.1.jar",
+      "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\fabric-api-0.92.12+1.20.1.jar",
+      "size": 2137232,
+      "sha256": "4197ff4fbdac13cffccd267c1bc59e9fbabb2b5683a9d5f8023f4b5ea16a1c1e",
+      "fetchedAt": "2026-10-18T18:02:23+08:00",
+      "cached": false,
+      "version": "0.92.12+1.20.1"
+    }
+  }
+}

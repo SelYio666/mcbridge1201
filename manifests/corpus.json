@@ -1,0 +1,373 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-18T17:55:49+08:00",
+  "sourceGame": "1.20.1",
+  "selectionNote": "engineering sample (5 Fabric + 5 Forge), not a statistical sample; see docs/baseline.md",
+  "artifacts": [
+    {
+      "id": "ironchests@5.0.2",
+      "slug": "ironchests",
+      "title": "Iron Chests: Restocked",
+      "versionNumber": "5.0.2",
+      "versionId": "gioHN8Aw",
+      "filename": "ironchests-5.0.2-fabric.jar",
+      "loader": "fabric",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20",
+        "1.20.1"
+      ],
+      "loaders": [
+        "fabric"
+      ],
+      "role": "container",
+      "why": "CenturyBridge author-reported 1.20.1->1.21.1 sample; block entities + menu + persistence",
+      "license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": null,
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/n2de3t2z/versions/gioHN8Aw/ironchests-5.0.2-fabric.jar",
+      "size": 485230,
+      "sha256": "6a07065a3a68280e26a0fc8a3fc0d8dde10b0999432492ef6726cd583be96de6",
+      "modrinthSha512Verified": true,
+      "dependencies": [
+        {
+          "projectId": "G1hIVOrD",
+          "versionId": "lmvJ0Hcp",
+          "dependencyType": "embedded"
+        }
+      ],
+      "publishedAt": "2023-07-11T22:04:13.394113Z",
+      "downloads": 3842275,
+      "clientSide": "required",
+      "serverSide": "required"
+    },
+    {
+      "id": "lithium@mc1.20.1-0.11.4-fabric",
+      "slug": "lithium",
+      "title": "Lithium",
+      "versionNumber": "mc1.20.1-0.11.4-fabric",
+      "versionId": "iEcXOkz4",
+      "filename": "lithium-fabric-mc1.20.1-0.11.4.jar",
+      "loader": "fabric",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20.1"
+      ],
+      "loaders": [
+        "fabric",
+        "quilt"
+      ],
+      "role": "high-risk-mixin",
+      "why": "large, deep Mixin/optimizer surface; expected to be a stable block case",
+      "license": {
+        "id": "LGPL-3.0-only",
+        "name": "GNU Lesser General Public License v3.0 only",
+        "url": null,
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/gvQqBUqZ/versions/iEcXOkz4/lithium-fabric-mc1.20.1-0.11.4.jar",
+      "size": 691483,
+      "sha256": "76133efe92aea907cf75562d9e26517deb170e2580e1ecd4979da2c8902de782",
+      "modrinthSha512Verified": true,
+      "dependencies": [],
+      "publishedAt": "2025-11-27T15:24:22.341495Z",
+      "downloads": 139262876,
+      "clientSide": "optional",
+      "serverSide": "optional"
+    },
+    {
+      "id": "appleskin@2.5.2+mc1.20.1",
+      "slug": "appleskin",
+      "title": "AppleSkin",
+      "versionNumber": "2.5.2+mc1.20.1",
+      "versionId": "N5XeV21r",
+      "filename": "appleskin-fabric-mc1.20.1-2.5.2.jar",
+      "loader": "fabric",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20.1"
+      ],
+      "loaders": [
+        "fabric"
+      ],
+      "role": "client-ui",
+      "why": "client-only HUD + event hooks; tests side separation",
+      "license": {
+        "id": "Unlicense",
+        "name": "The Unlicense",
+        "url": null,
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/EsAfCjCV/versions/N5XeV21r/appleskin-fabric-mc1.20.1-2.5.2.jar",
+      "size": 1097240,
+      "sha256": "821241285f534fd04aa15a91f3d1a6059135bce2d4b6e409fa1ae8825b4c9702",
+      "modrinthSha512Verified": true,
+      "dependencies": [
+        {
+          "projectId": "P7dR8mSH",
+          "versionId": null,
+          "dependencyType": "required"
+        }
+      ],
+      "publishedAt": "2026-01-24T11:29:59.321275Z",
+      "downloads": 97057102,
+      "clientSide": "optional",
+      "serverSide": "optional"
+    },
+    {
+      "id": "modmenu@7.2.2",
+      "slug": "modmenu",
+      "title": "Mod Menu",
+      "versionNumber": "7.2.2",
+      "versionId": "lEkperf6",
+      "filename": "modmenu-7.2.2.jar",
+      "loader": "fabric",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20.1"
+      ],
+      "loaders": [
+        "fabric",
+        "quilt"
+      ],
+      "role": "metadata-config",
+      "why": "config screen + Fabric API dependency graph",
+      "license": {
+        "id": "MIT",
+        "name": "MIT License",
+        "url": null,
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/mOgUt4GM/versions/lEkperf6/modmenu-7.2.2.jar",
+      "size": 721366,
+      "sha256": "a041b0f0305ffa5eb90120aa23768e1cfbb27583904b1751e3783c0f69382f1a",
+      "modrinthSha512Verified": true,
+      "dependencies": [],
+      "publishedAt": "2023-09-08T04:44:04.261764Z",
+      "downloads": 157880147,
+      "clientSide": "required",
+      "serverSide": "unsupported"
+    },
+    {
+      "id": "trashslot@15.1.5+fabric-1.20.1",
+      "slug": "trashslot",
+      "title": "TrashSlot",
+      "versionNumber": "15.1.5+fabric-1.20.1",
+      "versionId": "rvZNAUdl",
+      "filename": "trashslot-fabric-1.20.1-15.1.5.jar",
+      "loader": "fabric",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20.1"
+      ],
+      "loaders": [
+        "fabric"
+      ],
+      "role": "container",
+      "why": "container-like UI, client+server, cloth-config dependency",
+      "license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": "https://mods.twelveiterations.com/permissions",
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/vRYk0bv7/versions/rvZNAUdl/trashslot-fabric-1.20.1-15.1.5.jar",
+      "size": 118660,
+      "sha256": "07858324752987ed6a7a83b9dc71385fbe43ca1e16bcae91bdf57850e92435f2",
+      "modrinthSha512Verified": true,
+      "dependencies": [
+        {
+          "projectId": "MBAkmtvl",
+          "versionId": null,
+          "dependencyType": "required"
+        }
+      ],
+      "publishedAt": "2026-05-01T06:44:29.117033Z",
+      "downloads": 6514703,
+      "clientSide": "required",
+      "serverSide": "required"
+    },
+    {
+      "id": "jei@15.71.0.224",
+      "slug": "jei",
+      "title": "Just Enough Items (JEI)",
+      "versionNumber": "15.71.0.224",
+      "versionId": "gwEKpCDU",
+      "filename": "jei-1.20.1-forge-15.71.0.224.jar",
+      "loader": "forge",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20.1"
+      ],
+      "loaders": [
+        "forge"
+      ],
+      "role": "container-gui",
+      "why": "very large Forge API surface, registry/plugin lifecycle, item subtypes",
+      "license": {
+        "id": "MIT",
+        "name": "MIT License",
+        "url": null,
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/u6dRKJwZ/versions/gwEKpCDU/jei-1.20.1-forge-15.71.0.224.jar",
+      "size": 2393438,
+      "sha256": "30626ef01662d0d79ccaa04fb3ce8bd1a084e8031dc90e276b626ca82698ad46",
+      "modrinthSha512Verified": true,
+      "dependencies": [
+        {
+          "projectId": "7tEfOcA7",
+          "versionId": null,
+          "dependencyType": "required"
+        },
+        {
+          "projectId": "BOHUKqOz",
+          "versionId": null,
+          "dependencyType": "optional"
+        }
+      ],
+      "publishedAt": "2026-10-16T08:22:58.771060Z",
+      "downloads": 84309333,
+      "clientSide": "optional",
+      "serverSide": "optional"
+    },
+    {
+      "id": "journeymap@1.20.1-6.0.7+forge",
+      "slug": "journeymap",
+      "title": "JourneyMap",
+      "versionNumber": "1.20.1-6.0.7+forge",
+      "versionId": "HWDC99DO",
+      "filename": "journeymap-forge-1.20.1-6.0.7.jar",
+      "loader": "forge",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20.1"
+      ],
+      "loaders": [
+        "forge"
+      ],
+      "role": "client-render",
+      "why": "client rendering + world data; expected render breakage",
+      "license": {
+        "id": "LicenseRef-All-Rights-Reserved",
+        "name": "",
+        "url": null,
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/lfHFW1mp/versions/HWDC99DO/journeymap-forge-1.20.1-6.0.7.jar",
+      "size": 4353808,
+      "sha256": "65cf198bd2ec41b2c1ac24a28544dddc74d5ef63222ebf3d393b76fa7bdc7a23",
+      "modrinthSha512Verified": true,
+      "dependencies": [],
+      "publishedAt": "2026-10-03T17:50:22.573855Z",
+      "downloads": 15395654,
+      "clientSide": "optional",
+      "serverSide": "optional"
+    },
+    {
+      "id": "curios@5.14.1+1.20.1",
+      "slug": "curios",
+      "title": "Curios API",
+      "versionNumber": "5.14.1+1.20.1",
+      "versionId": "IPQlZkz1",
+      "filename": "curios-forge-5.14.1+1.20.1.jar",
+      "loader": "forge",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20",
+        "1.20.1"
+      ],
+      "loaders": [
+        "forge",
+        "neoforge"
+      ],
+      "role": "capability-api",
+      "why": "capability storage + network + menu integrations",
+      "license": {
+        "id": "LGPL-3.0-or-later",
+        "name": "GNU Lesser General Public License v3.0 or later",
+        "url": null,
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/vvuO3ImH/versions/IPQlZkz1/curios-forge-5.14.1%2B1.20.1.jar",
+      "size": 398066,
+      "sha256": "1e817919a35b37cf30524aaec73f0ca5130452f23f168f844854df282eb8e51f",
+      "modrinthSha512Verified": true,
+      "dependencies": [],
+      "publishedAt": "2025-04-13T13:09:28.168539Z",
+      "downloads": 33136914,
+      "clientSide": "required",
+      "serverSide": "required"
+    },
+    {
+      "id": "patchouli@1.20.1-85-forge",
+      "slug": "patchouli",
+      "title": "Patchouli",
+      "versionNumber": "1.20.1-85-forge",
+      "versionId": "94dtOLgZ",
+      "filename": "Patchouli-1.20.1-85-FORGE.jar",
+      "loader": "forge",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20.1"
+      ],
+      "loaders": [
+        "forge"
+      ],
+      "role": "data-library",
+      "why": "data-driven book resources + client rendering + registry",
+      "license": {
+        "id": "CC-BY-NC-SA-3.0",
+        "name": "Creative Commons Attribution Non Commercial Share Alike 3.0 Unported",
+        "url": null,
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/nU0bVIaL/versions/94dtOLgZ/Patchouli-1.20.1-85-FORGE.jar",
+      "size": 642732,
+      "sha256": "05f7b5d52f6b8f0fd7f8b4822fa07a192d1394d83a264309c9d221d6d4fd21c5",
+      "modrinthSha512Verified": true,
+      "dependencies": [],
+      "publishedAt": "2026-03-08T21:08:41.512166Z",
+      "downloads": 36622043,
+      "clientSide": "required",
+      "serverSide": "required"
+    },
+    {
+      "id": "create@mc1.20.1-6.0.8",
+      "slug": "create",
+      "title": "Create",
+      "versionNumber": "mc1.20.1-6.0.8",
+      "versionId": "8amzvn9x",
+      "filename": "create-1.20.1-6.0.8.jar",
+      "loader": "forge",
+      "sourceGame": "1.20.1",
+      "gameVersions": [
+        "1.20.1"
+      ],
+      "loaders": [
+        "forge",
+        "neoforge"
+      ],
+      "role": "high-risk-mixin",
+      "why": "registrate, large mixin set, contraption state; stress sample",
+      "license": {
+        "id": "LicenseRef-Create-Mod-License",
+        "name": "",
+        "url": "https://github.com/Creators-of-Create/Create/blob/HEAD/LICENSE.md",
+        "redistributableHint": "check project licence before distributing converted jars"
+      },
+      "url": "https://cdn.modrinth.com/data/LNytGWDc/versions/8amzvn9x/create-1.20.1-6.0.8.jar",
+      "size": 19170905,
+      "sha256": "6fbb910c367dbce8e4fc7e5bf64b6edd4de980906ed00af8e47e4af843c0d9b0",
+      "modrinthSha512Verified": true,
+      "dependencies": [],
+      "publishedAt": "2025-11-02T16:10:25.364809Z",
+      "downloads": 27861899,
+      "clientSide": "optional",
+      "serverSide": "required"
+    }
+  ]
+}

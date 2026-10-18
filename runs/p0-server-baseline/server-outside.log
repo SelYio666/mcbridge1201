@@ -1,0 +1,21 @@
+# argv: C:\Users\27682\Documents\新建文件夹\.toolchain\jdk\bin\java.exe -Xmx1536M -Xms512M -Dfile.encoding=UTF-8 -Djava.io.tmpdir=C:\mcrun\fabric-1.21.1-server\tmp -jar fabric-server-launch.jar nogui
+�������ط���ˡ���
+Exception in thread "main" java.lang.RuntimeException: Failed to setup fabric server
+	at net.fabricmc.installer.ServerLauncher.main(ServerLauncher.java:56)
+Caused by: java.io.IOException: Request to https://piston-data.mojang.com/v1/objects/59353fb40c36d304f2035d51e7d6e6baa98dc05c/server.jar failed: C:\mcrun\fabric-1.21.1-server\.fabric
+	at net.fabricmc.installer.util.HttpClient.tryWithProxies(HttpClient.java:148)
+	at net.fabricmc.installer.util.HttpClient.downloadFile(HttpClient.java:59)
+	at net.fabricmc.installer.server.MinecraftServerDownloader.downloadMinecraftServer(MinecraftServerDownloader.java:45)
+	at net.fabricmc.installer.ServerLauncher.initialise(ServerLauncher.java:102)
+	at net.fabricmc.installer.ServerLauncher.main(ServerLauncher.java:54)
+Caused by: java.nio.file.AccessDeniedException: C:\mcrun\fabric-1.21.1-server\.fabric
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:89)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.createDirectory(WindowsFileSystemProvider.java:527)
+	at java.base/java.nio.file.Files.createDirectory(Files.java:700)
+	at java.base/java.nio.file.Files.createAndCheckIsDirectory(Files.java:808)
+	at java.base/java.nio.file.Files.createDirectories(Files.java:794)
+	at net.fabricmc.installer.util.HttpClient.lambda$downloadFile$2(HttpClient.java:60)
+	at net.fabricmc.installer.util.HttpClient.tryWithProxies(HttpClient.java:145)
+	... 4 more

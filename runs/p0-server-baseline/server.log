@@ -1,0 +1,16 @@
+# argv: C:\Users\27682\Documents\新建文件夹\.toolchain\jdk\bin\java.exe -Xmx1536M -Xms512M -Dfile.encoding=UTF-8 -Djava.io.tmpdir=C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\instances\fabric-1.21.1-server\tmp -jar fabric-server-launch.jar nogui
+Starting net.fabricmc.loader.impl.game.minecraft.BundlerClassPathCapture
+[18:12:33] [main/INFO]: Loading Minecraft 1.21.1 with Fabric Loader 0.19.5
+[18:12:33] [main/ERROR]: Uncaught exception in thread "main"
+java.lang.RuntimeException: An exception occurred when launching the server!
+	at net.fabricmc.loader.impl.launch.server.FabricServerLauncher.main(FabricServerLauncher.java:71) ~[fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.installer.ServerLauncher.main(ServerLauncher.java:69) ~[fabric-server-launch.jar:1.1.2]
+Caused by: java.lang.RuntimeException: Could not find game constructor in net.minecraft.server.Main!
+	at net.fabricmc.loader.impl.game.minecraft.patch.EntrypointPatch.process(EntrypointPatch.java:183) ~[fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.loader.impl.game.patch.GameTransformer.locateEntrypoints(GameTransformer.java:82) ~[fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.initialize(MinecraftGameProvider.java:396) ~[fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.init(Knot.java:141) ~[fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:66) ~[fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotServer.main(KnotServer.java:23) ~[fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.loader.impl.launch.server.FabricServerLauncher.main(FabricServerLauncher.java:69) ~[fabric-loader-0.19.5.jar:?]
+	... 1 more
