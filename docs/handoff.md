@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 22:50）：**trashslot clientbound receiver 已接入**。`BalmNetworkingBridge$Client` 在客户端用 `ClientPlayNetworking.registerGlobalReceiver` 调用旧 `BiConsumer<Player,T>`；服务端反射跳过，仍 `Done (4.894s)`。客户端分支未执行，不能宣称客户端通过；证据 `runs/p29-client-receiver/`。
 更新（2026-10-18 22:45）：**P26 安全 Codec 构建的 BytecodeVerify**。顶层 73 classes / 0 failures，nested ResourcefulLib 142 classes / 0 failures，exit 0；运行侧由 P26/P27 契约覆盖。证据 `runs/p28-codec-verify/`。
 更新（2026-10-18 22:40）：**安全 CodecDispatch 联合回归**。lithium + P26 `ironchests-safe-aw.jar` 同实例，两进程容器契约 5/5、两次 `Done`、exit 0；P26 未破坏 P14 共存路径。证据 `runs/p27-combined-safe-codec/`。
 更新（2026-10-18 22:35）：**Codec.dispatch 安全 MapCodec 适配**。活跃路径改用 javac `CodecDispatch`，用 `MapCodec.of(MapEncoder, MapDecoder)` 真正包装旧 `Codec`，不再依赖 `assumeMapUnsafe`；ironchests 容器契约 5/5，测试 17/17。证据 `runs/p26-codec-safe/`。

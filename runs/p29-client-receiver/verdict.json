@@ -1,0 +1,12 @@
+{
+  "feature": "trashslot clientbound payload receiver",
+  "serverBoot": {"doneSeen": true, "exitCode": 0, "doneLine": "Done (4.894s)! For help, type \"help\""},
+  "embeddedBridges": [
+    "top/mcbridge1201/bridge/BalmNetworkingBridge",
+    "top/mcbridge1201/bridge/BalmNetworkingBridge$Payload",
+    "top/mcbridge1201/bridge/BalmNetworkingBridge$Client"
+  ],
+  "clientVerified": false,
+  "clientNotVerifiedReason": "no client fixture/display in this environment",
+  "scope": "dedicated server boot only; client branch unexecuted"
+}

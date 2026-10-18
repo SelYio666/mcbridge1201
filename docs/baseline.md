@@ -798,6 +798,20 @@ failed**，nested ResourcefulLib **142 classes，0 failures**，exit 0。覆盖 
 `CodecDispatch`/`$1`/`$2` 与 nested 类；仍只是栈深度校验，运行语义由 §7.28/§7.29 的契约覆盖。
 证据 `runs/p28-codec-verify/`。
 
+### 7.31 trashslot 的 clientbound receiver
+
+`BalmNetworkingBridge` 增加嵌套 `$Client`：客户端用
+`ClientPlayNetworking.registerGlobalReceiver` 注册 playS2C payload，解码后调用旧的
+`BiConsumer<Player,T>`。`registerClientbound` 通过 `FabricLoader` 环境反射，只在 `CLIENT`
+时加载并调用该嵌套类；服务端不会加载 `ClientPlayNetworking`。
+
+服务端验证：更新后的 trashslot 补丁启动 `Done (4.894s)`，`doneSeen=true`，exit 0，没有
+`ClientPlayNetworking` 类加载错误；jar 内包含 `BalmNetworkingBridge`/`$Payload`/`$Client`。
+
+边界：没有客户端 fixture，client 分支、receiver 注册和 `MessageTrashSlotContent` 的实际
+投递/解码**未执行**；服务端 boot 只证明服务端分支惰性且类集合可加载。证据
+`runs/p29-client-receiver/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

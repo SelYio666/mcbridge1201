@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 22:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 22:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 22:50）：**trashslot clientbound receiver 已接入**。`BalmNetworkingBridge$Client` 在客户端用 `ClientPlayNetworking.registerGlobalReceiver` 调用旧 `BiConsumer<Player,T>`；服务端通过环境反射跳过，专用服务端仍 `Done (4.894s)`。客户端分支未执行，不能宣称客户端通过；证据 `runs/p29-client-receiver/`。
 更新（2026-10-18 22:45）：**P26 安全 Codec 构建的 BytecodeVerify**。`ironchests-safe-aw.jar` 顶层 73 classes / 0 failures，nested ResourcefulLib 142 classes / 0 failures，exit 0；运行侧由 P26/P27 契约覆盖。证据 `runs/p28-codec-verify/`。
 更新（2026-10-18 22:40）：**P26 安全 CodecDispatch 的联合契约回归**。在 lithium + ironchests 同实例中换用 P26 的 `ironchests-safe-aw.jar`，两进程容器契约 5/5 通过、两次 `Done`、exit 0；说明安全 Codec 适配没有破坏 P14 的共存路径。证据 `runs/p27-combined-safe-codec/`。
 更新（2026-10-18 22:35）：**Codec.dispatch 安全 MapCodec 适配**。活跃路径改用 javac `CodecDispatch`，用 `MapCodec.of(MapEncoder, MapDecoder)` 真正包装旧 `Codec`，不再依赖 `assumeMapUnsafe`；重新补丁 ironchests 后容器契约 5/5 通过，测试 17/17。证据 `runs/p26-codec-safe/`。
@@ -175,6 +176,12 @@
 95. **nested**：ResourcefulLib，`142 classes`，0 failures，exit 0。
 96. **说明**：覆盖 javac `CodecDispatch`/`$1`/`$2` 与 nested 类；仍只是栈深度校验，运行语义由 P26/P27 契约覆盖。证据 `runs/p28-codec-verify/`。
 
+## 2026-10-18 22:50 更新：clientbound receiver
+
+97. **实现**：`BalmNetworkingBridge$Client` 使用 `ClientPlayNetworking.registerGlobalReceiver`，把 payload 解出后调用旧 `BiConsumer<Class_1657,T>`；`registerClientbound` 通过 `FabricLoader` 环境反射，只在 `CLIENT` 时加载/调用该嵌套类。
+98. **服务端**：更新后的 trashslot 补丁启动 `Done (4.894s)`，`doneSeen=true`，exit 0；没有 `ClientPlayNetworking` 类加载错误。
+99. **边界**：没有客户端 fixture，client 分支、receiver 注册和 `MessageTrashSlotContent` 实际投递/解码均未执行；不能宣称客户端通过。证据 `runs/p29-client-receiver/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -221,6 +228,7 @@
 | Codec dispatch 安全适配 | `runs/p26-codec-safe/README.md`、`verdict.json`、`contract/verdict.json` |
 | 安全 Codec 联合回归 | `runs/p27-combined-safe-codec/README.md`、`verdict-summary.json`、`verdict.json` |
 | 安全 Codec BytecodeVerify | `runs/p28-codec-verify/README.md`、`verdict.json`、`top-level.log`、`nested.log` |
+| clientbound receiver | `runs/p29-client-receiver/README.md`、`verdict.json`、`server.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

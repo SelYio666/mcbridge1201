@@ -4,6 +4,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import net.blay09.mods.balm.api.network.BalmNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.class_2540;
@@ -45,9 +46,37 @@ public final class BalmNetworkingBridge {
         Payload<T> descriptor = new Payload<>(id);
         class_8710.class_9154<Payload<T>> packetType = descriptor.method_56479();
         PayloadTypeRegistry.playS2C().register(packetType, codec(writer, reader, descriptor));
-        // ClientPlayNetworking cannot be referenced from a dedicated-server class; the client
-        // receiver is intentionally not installed here. The server-side payload type is enough
-        // for boot/registration and for sending the payload shape.
+        if (isClient()) {
+            try {
+                Class<?> client = Class.forName("top.mcbridge1201.bridge.BalmNetworkingBridge$Client");
+                client.getMethod("register", class_8710.class_9154.class, BiConsumer.class)
+                        .invoke(null, packetType, handler);
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException("client payload receiver registration failed", e);
+            }
+        }
+    }
+
+    private static boolean isClient() {
+        try {
+            Class<?> loaderClass = Class.forName("net.fabricmc.loader.api.FabricLoader");
+            Object loader = loaderClass.getMethod("getInstance").invoke(null);
+            Object type = loader.getClass().getMethod("getEnvironmentType").invoke(loader);
+            return "CLIENT".equals(String.valueOf(type));
+        } catch (ReflectiveOperationException e) {
+            return false;
+        }
+    }
+
+    /** Loaded only on the client; kept nested so it is embedded with the bridge. */
+    public static final class Client {
+        private Client() {}
+
+        public static <T> void register(class_8710.class_9154<Payload<T>> type,
+                                        BiConsumer<net.minecraft.class_1657, T> handler) {
+            ClientPlayNetworking.registerGlobalReceiver(type,
+                    (payload, context) -> handler.accept(context.player(), payload.value()));
+        }
     }
 
     private static <T> class_9139<class_9129, Payload<T>> codec(
