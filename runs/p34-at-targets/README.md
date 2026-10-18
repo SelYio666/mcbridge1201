@@ -1,5 +1,8 @@
 # P34: `@At` target extraction (conservative)
 
+> P35 adds refmap mapping for the at-target; the converted lithium result becomes 86 at-targets
+> (0 unresolved new) instead of 0. This P34 file is retained as the conservative step.
+
 Date: 2026-10-18 (Asia/Shanghai). Extends P21/P22 injection analysis to the annotation's
 injection-point target.
 

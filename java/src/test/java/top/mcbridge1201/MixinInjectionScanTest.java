@@ -21,6 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class MixinInjectionScanTest {
 
     private static byte[] syntheticMixin(String method) {
+        return syntheticMixin(method, "Lnet/minecraft/class_14;method_59()V");
+    }
+
+    private static byte[] syntheticMixin(String method, String atTarget) {
         ClassWriter cw = new ClassWriter(0);
         cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER, "test/TestMixin",
                 null, "java/lang/Object", null);
@@ -36,7 +40,7 @@ class MixinInjectionScanTest {
         AnnotationVisitor at = inject.visitAnnotation(
                 "at", "Lorg/spongepowered/asm/mixin/injection/At;");
         at.visit("value", "INVOKE");
-        at.visit("target", "Lnet/minecraft/class_14;method_59()V");
+        at.visit("target", atTarget);
         at.visitEnd();
         inject.visitEnd();
         mv.visitInsn(Opcodes.RETURN);
@@ -94,9 +98,10 @@ class MixinInjectionScanTest {
         entries.put("test.mixins.json", ("{\"package\":\"test\",\"refmap\":\"test.refmap.json\","
                 + "\"mixins\":[\"TestMixin\"]}").getBytes(StandardCharsets.UTF_8));
         entries.put("test.refmap.json", ("{\"mappings\":{\"test/TestMixin\":{"
-                + "\"named()V\":\"Lnet/minecraft/class_14;method_59()V\"}}}")
+                + "\"named()V\":\"Lnet/minecraft/class_14;method_59()V\","
+                + "\"namedAt()V\":\"Lnet/minecraft/class_14;method_60()V\"}}}")
                 .getBytes(StandardCharsets.UTF_8));
-        entries.put("test/TestMixin.class", syntheticMixin("named()V"));
+        entries.put("test/TestMixin.class", syntheticMixin("named()V", "namedAt()V"));
         writeJar(jar, entries);
 
         ArtifactScanner.Artifact a = ArtifactScanner.scan(jar);
@@ -104,5 +109,8 @@ class MixinInjectionScanTest {
         assertEquals("net/minecraft/class_14", inj.targetOwner);
         assertEquals("method_59", inj.targetName);
         assertEquals("()V", inj.targetDesc);
+        assertEquals("net/minecraft/class_14", inj.atTargetOwner);
+        assertEquals("method_60", inj.atTargetName);
+        assertEquals("()V", inj.atTargetDesc);
     }
 }

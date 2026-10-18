@@ -1,0 +1,12 @@
+{
+  "feature": "refmap-aware @At target resolution",
+  "tests": {"total": 18, "failures": 0},
+  "lithium_converted": {
+    "mixins": 202,
+    "mixinInjections": 214,
+    "mixinAtTargets": 86,
+    "mixinInjectionsUnresolved": 3,
+    "note": "86 at-targets resolved through refmap; the 3 unresolved are still the known constructors, no new false positives"
+  },
+  "limitations": "Only intermediary after refmap; ordinal/slice/local capture still unparsed."
+}

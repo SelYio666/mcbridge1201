@@ -870,6 +870,23 @@ ordinal/slice/local capture 仍未解析。
 跳过）、`mixinInjectionsUnresolved=3`（仍是已知构造器）。无新增 false positive。测试 **18/18**；
 证据 `runs/p34-at-targets/`。
 
+### 7.37 refmap 感知的 `@At` 目标
+
+P34 的 `@At` 解析只认已是 intermediary 的 target。P35 把 `Injection.atRawTarget` 也送入
+mixin refmap；映射成功后解析 `Lowner;method(desc)` 或 `field:type`，再交给 analyzer 校验。
+scanner 测试同时映射 handler 的 `named()V` 与 at-target 的 `namedAt()V`。
+
+实跑转换后 lithium：
+
+```text
+mixinInjections: 214
+mixinAtTargets: 86
+mixinInjectionsUnresolved: 3
+```
+
+86 个 at-target 从“跳过”变为实际解析；3 个 unresolved 仍是已知的 POI/FluidState/Explosion
+构造器，没有新增 false positive。测试 **18/18**；证据 `runs/p34-at-targets/`、`runs/p35-at-refmap/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

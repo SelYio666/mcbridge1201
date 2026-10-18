@@ -54,6 +54,7 @@ public final class ArtifactScanner {
         public String targetName;
         public String targetDesc;
         public String atValue;
+        public String atRawTarget;
         public String atTargetOwner;
         public String atTargetName;
         public String atTargetDesc;
@@ -337,6 +338,38 @@ public final class ArtifactScanner {
             inj.targetName = head;
             inj.targetDesc = desc;
         }
+        if (inj.atRawTarget != null) {
+            String atMapped = mi.refmap.get(inj.atRawTarget);
+            if (atMapped == null) {
+                for (String t : mi.targets) {
+                    atMapped = mi.refmap.get("L" + t + ";" + inj.atRawTarget);
+                    if (atMapped != null) break;
+                }
+            }
+            if (atMapped != null) applyAtMapped(inj, atMapped);
+        }
+    }
+
+    private static void applyAtMapped(Injection inj, String mapped) {
+        String s = mapped.trim();
+        int semi = s.indexOf(';');
+        String rest = s;
+        if (semi > 0) {
+            String owner = s.substring(0, semi);
+            if (owner.startsWith("L")) owner = owner.substring(1);
+            inj.atTargetOwner = owner;
+            rest = s.substring(semi + 1);
+        }
+        int colon = rest.indexOf(':');
+        int paren = rest.indexOf('(');
+        if (colon > 0 && (paren < 0 || colon < paren)) {
+            inj.atTargetField = true;
+            inj.atTargetName = rest.substring(0, colon);
+            inj.atTargetDesc = rest.substring(colon + 1);
+        } else {
+            inj.atTargetName = paren < 0 ? rest : rest.substring(0, paren);
+            inj.atTargetDesc = paren < 0 ? null : rest.substring(paren);
+        }
     }
 
     private static final Set<String> INJECTION_ANNOTATIONS = Set.of(
@@ -473,6 +506,7 @@ public final class ArtifactScanner {
 
     private static void copyAt(Injection to, Injection from) {
         to.atValue = from.atValue;
+        to.atRawTarget = from.atRawTarget;
         to.atTargetOwner = from.atTargetOwner;
         to.atTargetName = from.atTargetName;
         to.atTargetDesc = from.atTargetDesc;
@@ -500,6 +534,7 @@ public final class ArtifactScanner {
         if (target == null) return;
         String s = target.trim();
         if (s.isEmpty()) return;
+        inj.atRawTarget = s;
         int semi = s.indexOf(';');
         String rest = s;
         if (semi > 0) {

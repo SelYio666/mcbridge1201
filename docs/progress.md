@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 23:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:20（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 23:20）：**refmap `@At` 目标解析**。`atRawTarget` 也走 refmap，lithium 的 `mixinAtTargets` 从 0 提升到 **86**，`mixinInjectionsUnresolved` 仍为 3（已知构造器），没有新增 false positive；测试 18/18。证据 `runs/p35-at-refmap/`。
 更新（2026-10-18 23:15）：**`@At` 目标提取（保守）**。scanner 解析 `@Inject` 等的 `@At(value,target)`，analyzer 对 intermediary 的 INVOKE/FIELD 目标做存在性检查；转换后 lithium `mixinInjections=214`、`mixinAtTargets=0`（Yarn/refmap 目标跳过）、3 个已知构造器 unresolved；测试 18/18。证据 `runs/p34-at-targets/`。
 更新（2026-10-18 23:10）：**trashslot 三个包 codec 全部往返通过**。`MessageTrashSlotClick`/`MessageTrashSlotContent` 的空栈与 5 钻石、`MessageDeleteFromSlot(3,true)` 均通过，日志 `TRASHSLOT_ALL_CODEC_OK`；服务端 `Done (4.993s)`、exit 0。仍不含客户端投递/GUI。证据 `runs/p33-all-packets/`。
 更新（2026-10-18 23:05）：**trashslot packet codec 往返通过**。服务器内 probe 对空栈与 5 钻石分别执行 `MessageTrashSlotClick.encode/decode`，断言 empty/count/item 全部通过，日志 `TRASHSLOT_CODEC_OK`；服务端 `Done (5.025s)`、exit 0。验证了 4 个 ItemStack/NBT 桥和 registry-aware codec，仍不含客户端网络投递。证据 `runs/p32-trashslot-codec/`。
@@ -219,6 +220,12 @@
 115. **实跑**：lithium `mixinInjections=214`、`mixinAtTargets=0`（Yarn/refmap 目标跳过）、3 个已知构造器 unresolved；无新增 false positive。
 116. **测试**：synthetic `@At` 提取 + analyzer missing-at-target；18/18。证据 `runs/p34-at-targets/`。
 
+## 2026-10-18 23:20 更新：refmap @At
+
+117. **映射**：`Injection.atRawTarget` 也走 mixin refmap；`applyAtMapped` 解析 `Lowner;method(desc)` / `field:type`。
+118. **实跑**：lithium `mixinInjections=214`、`mixinAtTargets=86`、unresolved 仍 3（已知构造器），无新增 false positive。
+119. **测试**：refmap 测试同时映射 handler 与 at-target；18/18。证据 `runs/p35-at-refmap/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -271,6 +278,7 @@
 | trashslot packet codec | `runs/p32-trashslot-codec/README.md`、`verdict.json`、`server.log` |
 | trashslot all packets | `runs/p33-all-packets/README.md`、`verdict.json`、`server.log` |
 | @At 目标分析 | `runs/p34-at-targets/README.md`、`verdict.json`、`lithium-converted.json` |
+| refmap @At | `runs/p35-at-refmap/README.md`、`verdict.json`、`lithium-converted.json` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
