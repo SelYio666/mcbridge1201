@@ -1046,6 +1046,24 @@ NoSuchMethodError: BalmClient.initialize(String, Runnable)
 这两项仍未修；桥目前是 work-only 实验，尚未规则化，不能声明客户端通过。证据
 `runs/p51-client-bridge/`。
 
+### 7.54 客户端主菜单与 Balm 同步阻断
+
+在 PCL 的 1.21.1 Fabric 0.19.5 客户端上，五个模组全部加载；补上 RL 客户端网络桥、Balm
+客户端初始化桥（`BalmClient.initialize(String, EmptyLoadContext, Runnable)`）和 ironchests
+`ModelLoadingPlugin` 后，客户端到达**主菜单**（`runs/p52-client-balm/main-menu.png`）。
+
+创建/进入世界时，trashslot 的登录同步触发 `BalmNetworking.sendTo`；服务端断开：
+
+```text
+EncoderException: Failed to encode packet 'clientbound/minecraft:custom_payload'
+  (trashslot:trash_slot_content)
+ClassCastException: class_9129 cannot be cast to MessageTrashSlotContent
+  at BalmNetworkingBridge.lambda$codec$2
+```
+
+payload 包装的 `value` 与 codec 参数顺序仍未对齐；世界/GUI/持久化/双客户端同步未执行。
+这不是客户端通过，也没有升级 profile 状态。证据 `runs/p52-client-balm/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

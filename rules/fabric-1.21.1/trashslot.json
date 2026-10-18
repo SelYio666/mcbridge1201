@@ -18,6 +18,22 @@
       "capability": "balm.initialize.context",
       "risk": "medium",
       "evidence": "Native Balm 21.0.66 (1.21.1) boot: NoSuchMethodError 'void net.blay09.mods.balm.api.Balm.initialize(java.lang.String, java.lang.Runnable)' at net.blay09.mods.trashslot.FabricTrashSlot.onInitialize (runs/p15-trashslot/server-trashslot3.log). Balm 21 replaced the two-arg initializer with initialize(String, BalmRuntimeLoadContext, Runnable) / initializeMod. TrashSlot is a normal mod initializer, so Balm's EmptyLoadContext.INSTANCE is the equivalent context; the bridge calls the new method."
+    },
+    {
+      "id": "trashslot.balm.client-initialize-context",
+      "sourceOwner": "net/blay09/mods/balm/api/client/BalmClient",
+      "sourceName": "initialize",
+      "sourceDesc": "(Ljava/lang/String;Ljava/lang/Runnable;)V",
+      "sourceOpcode": 184,
+      "targetOwner": "net/blay09/mods/balm/api/client/BalmClient",
+      "targetName": "initialize",
+      "targetDesc": "(Ljava/lang/String;Lnet/blay09/mods/balm/api/BalmRuntimeLoadContext;Ljava/lang/Runnable;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/BalmClientInitializeBridge",
+      "bridgeMethod": "initialize",
+      "bridgeDesc": "(Ljava/lang/String;Ljava/lang/Runnable;)V",
+      "capability": "balm.client.initialize.context",
+      "risk": "medium",
+      "evidence": "First client run (runs/p51-client-bridge/crash-report.txt): NoSuchMethodError 'void net.blay09.mods.balm.api.client.BalmClient.initialize(java.lang.String, java.lang.Runnable)' at net.blay09.mods.trashslot.client.FabricTrashSlotClient.onInitializeClient. Balm 21's client initializer also takes a BalmRuntimeLoadContext; the bridge uses EmptyLoadContext.INSTANCE."
     }
   ],
   "methodRedirects": [
@@ -46,6 +62,19 @@
       "capability": "balm.network.payload",
       "risk": "medium",
       "evidence": "Same Balm 21 networking shape change; trashslot registers MessageTrashSlotContent clientbound. The bridge registers the playS2C payload type and codec but intentionally does not install a client receiver on a dedicated server. This is sufficient for server boot/registration; client delivery is not verified."
+    },
+    {
+      "id": "trashslot.balm.send-to",
+      "sourceOwner": "net/blay09/mods/balm/api/network/BalmNetworking",
+      "sourceName": "sendTo",
+      "sourceDesc": "(Lnet/minecraft/class_1657;Ljava/lang/Object;)V",
+      "sourceOpcode": 185,
+      "bridgeClass": "top/mcbridge1201/bridge/BalmNetworkingBridge",
+      "bridgeMethod": "sendTo",
+      "bridgeDesc": "(Lnet/blay09/mods/balm/api/network/BalmNetworking;Lnet/minecraft/class_1657;Ljava/lang/Object;)V",
+      "capability": "balm.network.send",
+      "risk": "medium",
+      "evidence": "First client world join (runs/p52-client-balm/crash-report.txt): NoSuchMethodError BalmNetworking.sendTo(Player, Object) at trashslot TrashSlot.initialize lambda (PlayerLogin/OpenMenu sync). Balm 21's generic sendTo(Player, T extends CustomPayload) erases differently; the bridge looks up the payload registered for the packet class and calls ServerPlayNetworking.send."
     },
     {
       "id": "trashslot.itemstack.write-nbt",

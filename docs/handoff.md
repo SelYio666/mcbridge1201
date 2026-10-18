@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 00:50）：**客户端到达主菜单**。PCL Fabric 1.21.1 客户端加载五模组并进入主菜单；Balm 客户端初始化、ironchests 模型桥已补。进入世界时 `BalmNetworking.sendTo` payload 编码仍失败（`class_9129` vs `MessageTrashSlotContent`），未进入世界/GUI。证据 `runs/p52-client-balm/`。
 更新（2026-10-19 00:40）：**ResourcefulLib 客户端网络桥生效**。重写嵌套 RL 2.0.6 的 `FabricClientPacketHelper` 到 1.21.1 Payload API；客户端越过 ironchests **main** 入口点，新阻断为 `ModelLoadingRegistry` 缺失与 `BalmClient.initialize(String,Runnable)` 缺失。证据 `runs/p51-client-bridge/`。
 更新（2026-10-19 00:35）：**首次真实客户端运行（PCL）**。1.21.1 Fabric 客户端已装；五模组加载后 ironchests 入口点崩溃于 `ClientPlayNetworking$PlayChannelHandler` 缺失（旧 ResourcefulLib 2.0.6 客户端网络 API）。换 ResourcefulLib 3.0.12 又缺 `PacketHandler`。这是新的真实客户端阻断。证据 `runs/p50-client/`。
 更新（2026-10-19 00:05）：**`@At.ordinal` 提取**。`Injection.atOrdinal` + `mixinAtOrdinals`；lithium 86 at-targets 中 10 个带 ordinal；只提取，不做匹配指令计数/越界校验；测试 **22/22**。证据 `runs/p49-at-ordinal/`。
