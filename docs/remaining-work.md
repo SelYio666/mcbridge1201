@@ -38,6 +38,20 @@ To close these, provide a Fabric 1.21.1 client instance with:
 Acceptance would be: open the trash GUI, move a stack to/from the trash slot, restart, reopen;
 and a two-client sync check. Do not mark the profiles as client-compatible without that.
 
+### Input-method caveat (observed in PCL)
+
+On this machine, with a Chinese IME active, letter keys such as W/E are captured by the IME
+candidate window: W shows the IME box and does not move the player; switching to English makes
+movement work. This is a client input/focus issue, not a mod compatibility result.
+
+Therefore:
+
+- keyboard tests (WASD, E inventory, hotbar keys) must be run with the IME in **English** mode, and
+  the mode must be recorded in the evidence;
+- chat/sign/book text tests intentionally use the Chinese IME;
+- mouse/probe-driven tests (P55/P56) are not affected by the IME; P56's trash-drop gap still needs
+  its own GUI slot/hit-test investigation.
+
 ## Optional, not blocking the above
 
 - **Chunk optimization**: the P13 port delegates to vanilla `method_14134`; the old lithium
