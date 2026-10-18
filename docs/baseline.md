@@ -185,7 +185,7 @@ Caused by: java.io.IOException: the jar file .\.fabric\remappedJars\minecraft-1.
 mcbridge1201 remap-jar --in <obf.jar> --out <intermediary.jar> --mappings <intermediary-1.21.1.tiny>
 ```
 
-用 ASM `ClassRemapper` + `ZipOutputStream`（**不经过 zipfs**，因此绕开只读判定），保留方法体。三个缺陷都是运行时崩溃暴露后逐个修的：
+用 ASM `ClassRemapper` + `ZipOutputStream`（**不经过 zipfs**，因此绕开只读判定），保留方法体。四个缺陷都是运行时崩溃暴露后逐个修的：
 
 | 现象 | 原因 | 修复 |
 |---|---|---|
@@ -217,7 +217,7 @@ python tools/run_server.py --instance work/instances/fabric-1.21.1-server `
 {"doneSeen": true, "exitCode": 0, "durationSeconds": 20.6}
 ```
 
-日志：`runs/p1-server-baseline/server-baseline.log`（SHA-256 `3523ae82...`，随 `runs/SHA256SUMS.txt` 固定）。Fabric API 0.102.0+1.21.1 的 41 个模块全部加载。
+日志：`runs/p1-server-baseline/server-baseline.log`（首次，SHA-256 `3523ae82...`）与 `server-rerun.log`（重跑，`doneSeen: true`、退出码 0、15.8s）。Fabric API 0.102.0+1.21.1 的 41 个模块全部加载；两次启动均到达 `Done`。
 
 ### 7.5 转换后的 ironchests：LOADED，然后真实崩溃
 
@@ -250,7 +250,7 @@ Caused by: java.lang.NoSuchFieldError: Class net.minecraft.class_2073 does not h
 
 ## 8. 未验证项与下一步
 
-1. **`ItemPredicate.ANY` 的语义替换**：不是改个字段名，1.21.1 的 `ItemPredicate` 已重构。下一个真实缺口就是给 `ChestType.codec` 提供新谓词（`DataComponentPredicate`/`ItemPredicate.Builder`）的桥或规则。
+1. **`ItemPredicate.ANY` 的语义替换**：不是改个字段名。1.21.1 的 `ItemPredicate` 已变成 record `(Optional items, MinMaxBounds.Ints count, DataComponentPredicate components, Map subPredicates)`，没有 `ANY` 常量。可执行的桥：读取 `class_2073.field_9640` 时返回缓存的 `new ItemPredicate(Optional.empty(), MinMaxBounds.Ints.ANY, DataComponentPredicate.EMPTY, Map.of())`；这需要按目标构造器做一次重定向（CenturyBridge 报告里的 `L3 constructor` 一类），不是改名。
 2. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是"无桥"结果。
 3. **WORLD_LOADED / 玩法契约**：需要客户端或命令侧断言；服务端可先做 `/give` + 放置 + 容器存取 + 重启读回的命令行契约。
 4. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。

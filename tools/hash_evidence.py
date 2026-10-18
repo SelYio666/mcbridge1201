@@ -14,6 +14,7 @@ FILES = [
     "work/remap/server-intermediary.jar",
     "runs/p1-server-baseline/server.log",
     "runs/p1-server-baseline/server-baseline.log",
+    "runs/p1-server-baseline/server-rerun.log",
     "runs/p1-server-converted-ironchests/server.log",
     "runs/p0-server-baseline/server.log",
     "runs/p0-server-baseline/server-l016.log",
