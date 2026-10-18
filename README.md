@@ -22,6 +22,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 规则数 | 3 条（`ItemPredicate.ANY`、`fromJson`、`Codec.dispatch`）+ 常量池种类修正 | `rules/fabric-1.21.1/container.json` |
 | 容器契约（服务端命令） | **通过**：放置 → 插入 5 钻石 → NBT `Items` → 重启读回 5 | `runs/p5-contract-*/` |
 | 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
+| 第二样本 lithium | 转换并加载成功（131 配置项）；mixin 注入失败 → 显式降级 2 条；卡在 `class_14.method_59` 签名 | `runs/p6-lithium/`、`rules/fabric-1.21.1/lithium-degraded.json` |
 
 ## 复现
 

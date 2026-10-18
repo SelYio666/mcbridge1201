@@ -159,8 +159,22 @@ public final class Main {
         Map<String, List<String>> f = flags(args, 1);
         Path in = Path.of(require(f, "in"));
         Path out = Path.of(require(f, "out"));
-        Path rulesPath = Path.of(require(f, "rules"));
-        var rules = top.mcbridge1201.rules.RuleSet.load(rulesPath);
+        List<String> rulePaths = f.getOrDefault("rules", List.of());
+        if (rulePaths.isEmpty()) {
+            System.err.println("missing --rules");
+            System.exit(2);
+        }
+        var rules = new top.mcbridge1201.rules.RuleSet();
+        for (String rp : rulePaths) {
+            var part = top.mcbridge1201.rules.RuleSet.load(Path.of(rp));
+            if (rules.version == null) rules.version = part.version;
+            if (rules.target == null) rules.target = part.target;
+            rules.fieldRedirects.addAll(part.fieldRedirects);
+            rules.methodRedirects.addAll(part.methodRedirects);
+            rules.constructorRedirects.addAll(part.constructorRedirects);
+            rules.signatureAdaptations.addAll(part.signatureAdaptations);
+            rules.mixinStrips.addAll(part.mixinStrips);
+        }
         TargetIndex idx = null;
         String clientJar = one(f, "client-jar", null);
         String mappings = one(f, "mappings", null);

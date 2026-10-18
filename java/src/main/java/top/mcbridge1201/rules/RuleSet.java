@@ -32,6 +32,19 @@ public final class RuleSet {
     public final List<MethodRedirect> methodRedirects = new ArrayList<>();
     public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
     public final List<SignatureAdaptation> signatureAdaptations = new ArrayList<>();
+    public final List<MixinStrip> mixinStrips = new ArrayList<>();
+
+    /**
+     * Explicit, recorded degradation: removes mixin classes from a config whose injection
+     * targets no longer exist. Disabling a mixin is never silent success; the patch report
+     * and the compatibility profile must list it.
+     */
+    public static final class MixinStrip {
+        public String id;
+        public String config;
+        public List<String> classes = new ArrayList<>();
+        public String reason;
+    }
 
     /** A call that must gain the extra argument introduced by a signature adaptation. */
     public static final class CallRewrite {
@@ -117,7 +130,19 @@ public final class RuleSet {
                 rs.signatureAdaptations.add(new Gson().fromJson(el, SignatureAdaptation.class));
             }
         }
+        if (o.has("mixinStrips")) {
+            for (var el : o.getAsJsonArray("mixinStrips")) {
+                rs.mixinStrips.add(new Gson().fromJson(el, MixinStrip.class));
+            }
+        }
         return rs;
+    }
+
+    public MixinStrip mixinStripFor(String entryName) {
+        for (MixinStrip s : mixinStrips) {
+            if (entryName.equals(s.config) || entryName.endsWith("/" + s.config)) return s;
+        }
+        return null;
     }
 
     public List<SignatureAdaptation> adaptationsFor(String internalClass) {

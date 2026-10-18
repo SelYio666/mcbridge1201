@@ -407,9 +407,37 @@ protected void method_11007(net.minecraft.class_2487, net.minecraft.class_7225$c
 
 结论：**容器契约在“专用服务端 + 命令 API + 单进程重启”范围内通过**（`CONTRACT_PASSED`，范围受限）。没有验证 GUI、渲染、多人同步，也没有客户端玩家操作路径。
 
+### 7.15 第二份样本：lithium 的加载、mixin 注入点与下一道签名墙
+
+为验证管线不是 ironchests 专用，用同一套流程处理 **lithium**（1.20.1、224 个 mixin、优化器类模组）：
+
+```text
+convert → verdicts: {ok_degraded_partial=1}, unaccounted refs: 11, tombstones: 5
+patch   → 通用规则 0 命中（说明规则没有硬编码到 ironchests 的符号）
+boot    → Loading 42 mods 含 lithium 0.11.4；读取了 131 个配置项；随后崩溃
+```
+
+依次观察到的失败：
+
+| 阶段 | 失败 | 处理 |
+|---|---|---|
+| Mixin | `lithium.mixins.json:entity.collisions.movement.EntityMixin` 的 Redirector `adjustMovementForCollisionsGetEntitiesLater` scanned 0 targets | 新增 `mixinStrips` 降级机制，从配置中移除该类 |
+| Mixin | `block.flatten_states.FluidStateMixin` 的 `@Inject initFluidCache` 无目标 | 同一降级档案追加 |
+| 方法签名 | `NoSuchMethodError: net.minecraft.class_14.method_59(...)`（BlockState 相关） | 尚未处理；与本项目静态分析器对 lithium 报的 `class_14 method_59` 描述符变化一致 |
+
+结论：
+
+- 转换件能被 Loader 接受，mixin 配置能解析，**说明管线可复用到第二份模组**；
+- 但“mixin 目标消失”与“方法签名变化”两类损伤会继续阻断启动；
+- `mixinStrips` 是**显式降级**：每条 strip 记录 id、配置、类名、原因，并出现在 patch 输出中；这不是“兼容成功”，文档按 degraded 记；
+- 降级档案：`rules/fabric-1.21.1/lithium-degraded.json`（单独文件，不混进通用规则）。
+
+实例随后恢复为 ironchests，并重跑容器契约确认仍通过（`runs/p6-contract-recheck/verdict.json`）。
+
 ## 8. 未验证项与下一步
 
 1. **图形/GUI 与多人**：服务端契约已通过；`WORLD_LOADED` 的玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
+2. **方法签名变化的通用适配**：lithium 卡在 `class_14.method_59` 的 `NoSuchMethodError`；需要把 `signatureAdaptations` 从“覆写迁移”扩展到“调用点参数/描述符迁移”。
 2. **`fromJson` 的 ANY 回退是语义降级**：解析失败会变成“匹配所有物品”，必须改成显式诊断或真正的 MapCodec 适配后再对外。
 2. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；已用“fromJson 解析失败回退 ANY”绕过一次，但那是**语义降级**，必须在最终规则里改成显式诊断或真正的 MapCodec 构造。
 2. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是"无桥"结果。

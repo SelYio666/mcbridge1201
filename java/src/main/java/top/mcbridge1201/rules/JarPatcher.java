@@ -85,6 +85,11 @@ public final class JarPatcher {
                 st.nested++;
                 continue;
             }
+            RuleSet.MixinStrip strip = rules.mixinStripFor(name);
+            if (strip != null) {
+                out.put(name, stripMixinConfig(e.getValue(), strip, st));
+                continue;
+            }
             if (!name.endsWith(".class")) {
                 out.put(name, e.getValue());
                 continue;
@@ -378,6 +383,28 @@ public final class JarPatcher {
             return new org.objectweb.asm.Handle(h.getTag(), h.getOwner(), h.getName(), h.getDesc(), true);
         }
         return null;
+    }
+
+    /** Removes explicitly degraded mixin entries from a config (recorded, never silent). */
+    private static byte[] stripMixinConfig(byte[] json, RuleSet.MixinStrip strip, Stats st) {
+        com.google.gson.JsonObject o;
+        try {
+            o = com.google.gson.JsonParser.parseString(new String(json, java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (RuntimeException ex) {
+            return json;
+        }
+        for (String side : new String[]{"mixins", "client", "server"}) {
+            if (!o.has(side) || !o.get(side).isJsonArray()) continue;
+            var arr = o.getAsJsonArray(side);
+            for (int i = arr.size() - 1; i >= 0; i--) {
+                String cls = arr.get(i).getAsString();
+                if (strip.classes.contains(cls)) {
+                    arr.remove(i);
+                    st.applied.merge(strip.id, 1, Integer::sum);
+                }
+            }
+        }
+        return new com.google.gson.Gson().toJson(o).getBytes(java.nio.charset.StandardCharsets.UTF_8);
     }
 
     private static boolean looksLikeZip(byte[] b) {

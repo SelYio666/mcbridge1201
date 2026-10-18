@@ -54,4 +54,12 @@ mcbridge1201 patch --in <converted.jar> --out <patched.jar> \
 
 `signatureAdaptations` 会迁移方法描述符、平移局部变量槽、给指定调用补参数，并用 `COMPUTE_FRAMES` 重算帧；这是“签名变化”类损伤的通用处理形态，而不是单点改名。
 
+## 显式降级：mixinStrips
+
+`mixinStrips` 从 mixin 配置里移除注入目标已消失的类（例如 lithium 的 `entity.collisions.movement.EntityMixin`）。每条 strip 必须带 `id`、`config`、`classes`、`reason`，并且：
+
+- 只允许用于**可选优化/装饰性功能**；核心逻辑（存档、掉落、同步）不得靠 strip 过关；
+- 产物、报告和兼容档案必须标注 `degraded`；
+- 降级档案放在单独文件（如 `lithium-degraded.json`），不混进通用规则。
+
 规则匹配还支持 `MethodHandle`（lambda 实现）——CenturyBridge 的 tombstone 经常以句柄形式出现，不是直接 `invokestatic`。

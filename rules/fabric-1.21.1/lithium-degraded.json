@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "profile": "lithium-degraded",
+  "note": "Explicit degradation profile: perf mixins whose injection targets changed are disabled. This is NOT full compatibility; it is recorded, opt-in degradation.",
+  "mixinStrips": [
+    {
+      "id": "lithium.strip.entity.collisions.movement",
+      "config": "lithium.mixins.json",
+      "classes": [
+        "entity.collisions.movement.EntityMixin",
+        "block.flatten_states.FluidStateMixin"
+      ],
+      "reason": "Redirector adjustMovementForCollisionsGetEntitiesLater scanned 0 targets in 1.21.1 (Entity movement code changed). Runtime: InjectionError at 1.21.1 server boot."
+    }
+  ]
+}
