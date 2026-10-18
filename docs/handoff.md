@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 23:50）：**三样本同服通过**。lithium + ironchests(P26) + trashslot(P29)/Balm 21 同实例 `Done (4.632s)`；容器契约两次重启 5/5。证据 `runs/p41-all-three/`。
 更新（2026-10-18 23:45）：**证据总校验扩展**。`tools/verify_evidence.py` 增加 P35/P36 at-target 计数和 lithium profile 检查；全部 checks true，exit 0。证据 `runs/p40-verify-extended/`。
 更新（2026-10-18 23:40）：**证据总校验工具**。`tools/verify_evidence.py` 检查 18 个测试、P14/P24/P26/P27/P33/P37/P38 证据及“无 tracked jar”；`passed=true`，exit 0。证据 `runs/p39-verify-evidence/`。
 更新（2026-10-18 23:35）：**P29 client bridge 的 BytecodeVerify**。`trashslot-client-aw.jar` 顶层 47 classes / 0 failures，覆盖 `BalmNetworkingBridge`/`$Payload`/`$Client`；客户端分支仍未执行。证据 `runs/p38-client-bv/`。

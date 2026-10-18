@@ -1,0 +1,15 @@
+{
+  "contract": "container.basic",
+  "instance": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\instances\\fabric-1.21.1-server-all-three",
+  "steps": {
+    "place": true,
+    "insert": true,
+    "nbt_after_insert": true,
+    "nbt_after_restart": true,
+    "count_after_restart": true
+  },
+  "blockDataAfterInsert": "{z: 0, x: 0, id: \"ironchests:iron_chest\", y: 100, Items: [{count: 5, Slot: 0b, id: \"minecraft:diamond\"}]}",
+  "blockDataAfterRestart": "{z: 0, x: 0, id: \"ironchests:iron_chest\", y: 100, Items: [{count: 5, Slot: 0b, id: \"minecraft:diamond\"}]}",
+  "passed": true,
+  "scope": "dedicated server + command API; GUI/render/multiplayer NOT verified"
+}

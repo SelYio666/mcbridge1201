@@ -1,0 +1,18 @@
+{
+  "contract": "all-three coexistence + container",
+  "instance": "work/instances/fabric-1.21.1-server-all-three",
+  "mods": [
+    "lithium-0.11.4+1.21.1-patched.jar",
+    "ironchests-safe-aw.jar (P26 CodecDispatch)",
+    "trashslot-client-aw.jar (P29 client bridge)",
+    "balm-fabric-1.21.1-21.0.66.jar"
+  ],
+  "serverBoot": {"doneSeen": true, "doneLine": "Done (4.632s)! For help, type \"help\"", "exitCode": 0},
+  "container": {
+    "passed": true,
+    "steps": {"place": true, "insert": true, "nbt_after_insert": true, "nbt_after_restart": true, "count_after_restart": true},
+    "runs": 2,
+    "exitCodes": [0, 0]
+  },
+  "scope": "dedicated server + command API; no client/GUI/player/multiplayer"
+}

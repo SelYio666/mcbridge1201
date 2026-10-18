@@ -70,6 +70,9 @@ def main() -> int:
           lambda d: _counts(d) == (209, 84, 0))
     check("profiles_present", "profiles/lithium-0.11.4-fabric__fabric-1.21.1.json",
           lambda d: d.get("status") == "booted_within_scope")
+    check("all_three", "runs/p41-all-three/verdict.json",
+          lambda d: d.get("container", {}).get("passed") is True
+          and d.get("serverBoot", {}).get("doneSeen") is True)
 
     tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True)
     jars = [line for line in tracked.stdout.splitlines() if line.endswith(".jar")]

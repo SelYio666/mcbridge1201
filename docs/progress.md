@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 23:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 23:50）：**三样本同服通过**。lithium + ironchests(P26) + trashslot(P29)/Balm 21 同实例，`Done (4.632s)`；容器契约两次重启 5/5 通过。说明三份转换件可以共存，ironchests 持久化仍正常。证据 `runs/p41-all-three/`。
 更新（2026-10-18 23:45）：**证据总校验扩展**。`tools/verify_evidence.py` 增加 P35/P36 at-target 计数和 lithium profile 检查；全部 checks true，exit 0。证据 `runs/p40-verify-extended/`。
 更新（2026-10-18 23:40）：**证据总校验工具**。新增 `tools/verify_evidence.py`，一次性检查 18 个测试、P14/P24/P26/P27/P33/P37/P38 证据和“无 tracked jar”；本次 `passed=true`，exit 0。证据 `runs/p39-verify-evidence/`。
 更新（2026-10-18 23:35）：**P29 client bridge 的 BytecodeVerify**。`trashslot-client-aw.jar` 顶层 47 classes / 0 failures，覆盖 `BalmNetworkingBridge`/`$Payload`/`$Client`；客户端分支仍未执行。证据 `runs/p38-client-bv/`。
@@ -262,6 +263,13 @@
 134. **结果**：`passed=true`，exit 0；原有 9 项 + 新增 3 项全部 true。
 135. **边界**：仍只校验既有证据，不启动服务端/客户端。证据 `runs/p40-verify-extended/`。
 
+## 2026-10-18 23:50 更新：三样本同服
+
+136. **实例**：`fabric-1.21.1-server-all-three`，lithium(P13) + ironchests(P26) + trashslot(P29) + Balm 21 + Fabric API。
+137. **结果**：`Done (4.632s)`；容器契约两次重启 5/5，`passed=true`，两次 exit 0。
+138. **意义**：三份转换件可以共存，ironchests 持久化未被 lithium/trashslot 干扰。
+139. **边界**：专用服务端 + 命令 API；无客户端、trash GUI、lithium 玩法/多人。证据 `runs/p41-all-three/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -320,6 +328,7 @@
 | client bridge BytecodeVerify | `runs/p38-client-bv/README.md`、`verdict.json`、`top-level.log` |
 | 证据总校验 | `tools/verify_evidence.py`、`runs/p39-verify-evidence/README.md`、`verify.log` |
 | 证据总校验扩展 | `runs/p40-verify-extended/README.md`、`verify.log` |
+| 三样本同服 | `runs/p41-all-three/README.md`、`verdict.json`、`server.log`、`contract/verdict.json` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

@@ -931,6 +931,21 @@ failures/errors。它只检查既有证据一致性，不重新启动服务端/�
 本次全部 true，exit 0。它只校验既有证据，不启动服务端/客户端。证据
 `runs/p40-verify-extended/`。
 
+### 7.43 三样本同服
+
+同一个 Fabric 1.21.1 专用服务端加载：
+
+- lithium P13 chunk-port；
+- ironchests P26 safe-Codec AW；
+- trashslot P29 client-bridge 构建 + 原生 Balm 21.0.66；
+- Fabric API。
+
+启动 `Done (4.632s)`；随后两次进程的容器契约 5/5 通过（两次 `Done`、exit 0），5 钻石在
+重启后读回。说明三份转换件可以共存，ironchests 持久化未被 lithium/trashslot 干扰。
+
+范围仍是专用服务端 + 命令 API；无客户端、trash GUI、lithium 玩法或多人。证据
+`runs/p41-all-three/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
