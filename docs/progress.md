@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 21:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 21:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 21:50）：**trashslot 到达专用服务端 `Done`**。用原生 Balm 21.0.66 + call-site 桥（`Balm.initialize` 加 context；旧 Balm 网络注册 → Fabric `PacketType`/`StreamCodec` 载荷桥）+ 4 个 ItemStack/NBT 桥，`Done (4.655s)`，世界加载/保存。仍是 BOOTED，客户端 GUI/网络包往返未验证；证据 `runs/p17-balm-net/`。
 更新（2026-10-18 21:45）：**Balm 初始化调用点桥已推进 trashslot，但卡在 Balm 网络 API**。`Balm.initialize(String,Runnable)` → `initialize(String, EmptyLoadContext, Runnable)` 的 call-site 桥生效，旧的初始化 `NoSuchMethodError` 消失；下一失败是 `BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer)`，Balm 21 已改为 `PacketType`/`StreamCodec` 载荷注册。仍未 boot，规则保持 prepared/unverified；证据 `runs/p16-balm/`。
 更新（2026-10-18 21:40）：**第三个样本 trashslot 尝试受阻于 Balm/Fabric networking**。trashslot 自身的 4 个 ItemStack/NBT tombstone 已写桥并 patch，但依赖 Balm：转换 Balm 7.3.44 后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，改用原生 Balm 21.0.66 又卡在 `Balm.initialize(String,Runnable)` 被移除。未 boot，未宣称通过；证据 `runs/p15-trashslot/`。
 更新（2026-10-18 21:35）：**lithium + ironchests 联合容器契约通过**。同一 Fabric 1.21.1 专用服务端实例加载两份转换件，`run_contract.py` 两进程放置/插入/NBT/重启读回 5 钻石全部通过；说明 P13 chunk access 移植没有破坏容器持久化，且两样本可共存。证据 `runs/p14-lithium-ironchests/`，说明 `docs/baseline.md` §7.20。仍不含 lithium 自身玩法/客户端。
@@ -78,6 +79,13 @@
 46. **下一失败**：`BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer)`；Balm 21 改为 `PacketType`/`StreamCodec` 载荷注册，不是可简单补 context 的描述符。
 47. **状态**：trashslot 仍未 boot；NBT 桥 + Balm 初始化桥 prepared，整体 unverified。证据 `runs/p16-balm/README.md`、`server-balm2.log`。
 
+## 2026-10-18 21:50 更新：trashslot BOOTED
+
+48. **Balm 网络桥**：旧 `BalmNetworking.registerServerboundPacket(Identifier,Class,BiConsumer,Function,BiConsumer)` / `registerClientboundPacket` 重定向到 `BalmNetworkingBridge`；桥把包类包成 `CustomPayload`，用旧 encode/decode 构造 `StreamCodec<RegistryFriendlyByteBuf,T>`，注册 playC2S/playS2C 与 `ServerPlayNetworking` 全局接收器（serverbound 2 次、clientbound 1 次）。
+49. **结果**：原生 Balm 21.0.66 + trashslot 补丁 `Done (4.655s)`，世界加载/保存；`doneSeen=true`，runner/JVM exit 0。
+50. **范围**：BOOTED，不是客户端/玩法通过；没有客户端连接，clientbound receiver 未安装，包 encode/decode 与 ItemStack NBT 桥未被玩家动作触发。
+51. **证据**：`runs/p17-balm-net/README.md`、`verdict.json`、`server-net2.log`、`patch2.log`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -112,6 +120,7 @@
 | lithium+ironchests 联合契约 | `runs/p14-lithium-ironchests/README.md`、`verdict.json`、`step1-place-insert.log`、`step2-restart-read.log` |
 | trashslot 尝试（受阻） | `runs/p15-trashslot/README.md`、`convert.log`、`convert-balm.log`、`patch.log`、`server-trashslot3.log` |
 | Balm 初始化桥（仍受阻） | `runs/p16-balm/README.md`、`patch.log`、`server-balm2.log` |
+| trashslot BOOTED | `runs/p17-balm-net/README.md`、`verdict.json`、`server-net2.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
@@ -124,7 +133,7 @@
 5. **`Codec.dispatch` 的可靠适配**：ironchests 契约虽已通过，但 `assumeMapUnsafe` 在部分路径仍可能 `Optional.of(null)`；应改成真正的 `MapCodec` 构造/显式诊断。
 6. **CenturyBridge 桥 jar 未构建**：`core/shims/1.21.1` 未编译，`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。
 7. **玩家侧 / 多人**：GUI、右键交互、渲染、两个客户端同步仍 pending；服务端只做了命令契约。
-8. **第三个样本 trashslot 的 Balm 依赖**：trashslot 自身 4 个 tombstone 已写桥，但 Balm 7.3.44 转换后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，原生 Balm 21.0.66 又缺 `Balm.initialize(String,Runnable)`。需要 Balm networking/API 桥或改用兼容 Balm 版本；在 boot 前不能把 trashslot 规则算通过。
+8. **第三个样本 trashslot 仅到 BOOTED**：原生 Balm 21 + 初始化/网络桥 + 4 个 NBT 桥已让专用服务端 `Done`；但无客户端连接，clientbound receiver 未安装，包 encode/decode 和 ItemStack NBT 桥未被玩家动作触发，客户端 GUI/玩法仍未验证。
 9. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
 10. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
 11. **BytecodeVerify** 未编译运行，转换件未做数据流校验。

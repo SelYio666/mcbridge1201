@@ -660,6 +660,13 @@ P16 继续尝试原生 Balm 21.0.66：新增 `BalmInitializeBridge`，把旧的
 BiConsumer)`——Balm 21 已改成 `PacketType`/`StreamCodec` 载荷注册，需要真正的网络包适配，不是
 补一个 context 就能解决。trashslot 仍未 boot；证据 `runs/p16-balm/`。
 
+P17 完成网络桥：`BalmNetworkingBridge` 把旧注册调用重定向到 Fabric 1.21.1 的
+`PayloadTypeRegistry` + `CustomPayload` 包装 + `StreamCodec`（serverbound 2 个、clientbound 1 个），
+并给 serverbound 安装 `ServerPlayNetworking` 全局接收器。原生 Balm 21.0.66 + 补丁后 trashslot
+到达 **专用服务端 `Done (4.655s)`**，世界加载/保存；`doneSeen=true`，runner/JVM exit 0。
+这是 **BOOTED**，不是客户端/玩法通过：没有客户端连接，clientbound receiver 未安装，包
+encode/decode 与 ItemStack NBT 桥未被玩家动作触发。证据 `runs/p17-balm-net/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
@@ -671,7 +678,7 @@ BiConsumer)`——Balm 21 已改成 `PacketType`/`StreamCodec` 载荷注册，�
 5. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
 6. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
 7. **WORLD_LOADED / 玩法契约**：lithium+ironchests 同实例的容器契约已通过（§7.20）；lithium 自身的玩法、`/give`/玩家交互/掉落/同步仍未覆盖，客户端仍 pending。
-8. **trashslot 的 Balm 依赖**：4 个 tombstone 已写桥并 patch，但 Balm 7.3.44 转换后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，原生 Balm 21.0.66 又缺 `Balm.initialize(String,Runnable)`；boot 前不能把 trashslot 规则算通过（§7.21）。
+8. **trashslot 仅到 BOOTED**：原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥已让专用服务端 `Done (4.655s)`（§7.21）；但无客户端连接，clientbound receiver 未安装，包 encode/decode 与 ItemStack NBT 桥未被玩家动作触发，客户端 GUI/玩法未验证。
 9. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
 10. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
 11. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。

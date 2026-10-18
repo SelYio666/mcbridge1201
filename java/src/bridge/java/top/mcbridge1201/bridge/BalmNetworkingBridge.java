@@ -1,0 +1,92 @@
+package top.mcbridge1201.bridge;
+
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+import net.blay09.mods.balm.api.network.BalmNetworking;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.class_2540;
+import net.minecraft.class_2960;
+import net.minecraft.class_3222;
+import net.minecraft.class_8710;
+import net.minecraft.class_9129;
+import net.minecraft.class_9139;
+
+/**
+ * Adapts the 1.20.1-era Balm networking registration to 1.21.1 Fabric payloads.
+ *
+ * <p>Old Balm: {@code registerServerboundPacket(Identifier, Class<T>, BiConsumer<FriendlyByteBuf,T>,
+ * Function<FriendlyByteBuf,T>, BiConsumer<ServerPlayer,T>)}. 1.21.1 Balm 21 uses
+ * {@code PacketType<T>} + {@code StreamCodec<RegistryFriendlyByteBuf,T>}. This bridge keeps the
+ * old call shape by wrapping T in a CustomPayload and registering a StreamCodec that delegates to
+ * the mod's existing encode/decode functions. Clientbound payload types are registered too, but
+ * no client receiver is installed on a dedicated server (the client path is not exercised here).
+ */
+public final class BalmNetworkingBridge {
+    private BalmNetworkingBridge() {}
+
+    public static <T> void registerServerbound(BalmNetworking self, class_2960 id, Class<T> type,
+                                               BiConsumer<class_2540, T> writer,
+                                               Function<class_2540, T> reader,
+                                               BiConsumer<class_3222, T> handler) {
+        Payload<T> descriptor = new Payload<>(id);
+        class_8710.class_9154<Payload<T>> packetType = descriptor.method_56479();
+        class_9139<class_9129, Payload<T>> codec = codec(writer, reader, descriptor);
+        PayloadTypeRegistry.playC2S().register(packetType, codec);
+        ServerPlayNetworking.registerGlobalReceiver(packetType,
+                (payload, context) -> handler.accept(context.player(), payload.value()));
+    }
+
+    public static <T> void registerClientbound(BalmNetworking self, class_2960 id, Class<T> type,
+                                               BiConsumer<class_2540, T> writer,
+                                               Function<class_2540, T> reader,
+                                               BiConsumer<net.minecraft.class_1657, T> handler) {
+        Payload<T> descriptor = new Payload<>(id);
+        class_8710.class_9154<Payload<T>> packetType = descriptor.method_56479();
+        PayloadTypeRegistry.playS2C().register(packetType, codec(writer, reader, descriptor));
+        // ClientPlayNetworking cannot be referenced from a dedicated-server class; the client
+        // receiver is intentionally not installed here. The server-side payload type is enough
+        // for boot/registration and for sending the payload shape.
+    }
+
+    private static <T> class_9139<class_9129, Payload<T>> codec(
+            BiConsumer<class_2540, T> writer, Function<class_2540, T> reader, Payload<T> descriptor) {
+        return class_9139.method_56438(
+                (payload, buf) -> writer.accept(buf, payload.value()),
+                buf -> {
+                    T value = reader.apply(buf);
+                    return descriptor.with(value);
+                });
+    }
+
+    /** CustomPayload wrapper; the id is fixed by the PacketType created in the constructor. */
+    public static final class Payload<T> implements class_8710 {
+        private final class_8710.class_9154<Payload<T>> type;
+        private final T value;
+
+        @SuppressWarnings("unchecked")
+        private Payload(class_2960 id) {
+            this.type = new class_8710.class_9154<>(id);
+            this.value = null;
+        }
+
+        private Payload(class_8710.class_9154<Payload<T>> type, T value) {
+            this.type = type;
+            this.value = value;
+        }
+
+        private Payload<T> with(T value) {
+            return new Payload<>(type, value);
+        }
+
+        public T value() {
+            return value;
+        }
+
+        @Override
+        public class_8710.class_9154<Payload<T>> method_56479() {
+            return type;
+        }
+    }
+}

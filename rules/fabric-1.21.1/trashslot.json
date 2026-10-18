@@ -1,7 +1,7 @@
 {
   "schemaVersion": "0.1-draft",
   "target": "fabric-1.21.1",
-  "note": "trashslot 15.1.5 (1.20.1 -> 1.21.1). CenturyBridge tombstoned four ItemStack/NBT helpers at the 1.20.4->1.20.5 component boundary; the bridges below restore them with the 1.21.1 registry-aware ItemStack codec. STATUS: prepared but NOT boot-verified. With native Balm 21.0.66 the Balm.initialize call-site bridge is verified to advance boot, but the next failure is BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer): Balm 21 networking is payload/PacketType/StreamCodec based, and the old API is gone. Do not treat these rules as passed until a real boot/contract exists (see runs/p15-trashslot/ and runs/p16-balm/).",
+  "note": "trashslot 15.1.5 (1.20.1 -> 1.21.1). CenturyBridge tombstoned four ItemStack/NBT helpers at the 1.20.4->1.20.5 component boundary; the bridges restore them with the 1.21.1 registry-aware ItemStack codec. STATUS: boot-verified on a dedicated server with native Balm 21.0.66 (Done 4.655s, runs/p17-balm-net/server-net2.log). The Balm initializer call-site bridge and the Balm networking payload bridge are both required. Client GUI, clientbound receiver, packet round-trip, and player trash-slot behavior are NOT verified.",
   "callSiteAdaptations": [
     {
       "id": "trashslot.balm.initialize-context",
@@ -21,6 +21,32 @@
     }
   ],
   "methodRedirects": [
+    {
+      "id": "trashslot.balm.network-serverbound",
+      "sourceOwner": "net/blay09/mods/balm/api/network/BalmNetworking",
+      "sourceName": "registerServerboundPacket",
+      "sourceDesc": "(Lnet/minecraft/class_2960;Ljava/lang/Class;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)V",
+      "sourceOpcode": 185,
+      "bridgeClass": "top/mcbridge1201/bridge/BalmNetworkingBridge",
+      "bridgeMethod": "registerServerbound",
+      "bridgeDesc": "(Lnet/blay09/mods/balm/api/network/BalmNetworking;Lnet/minecraft/class_2960;Ljava/lang/Class;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)V",
+      "capability": "balm.network.payload",
+      "risk": "medium",
+      "evidence": "Native Balm 21.0.66 boot: NoSuchMethodError BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer) at trashslot ModNetworking.initialize (runs/p16-balm/server-balm2.log). Balm 21 replaced this with PacketType<T> + StreamCodec<RegistryFriendlyByteBuf,T>; the bridge wraps T in a CustomPayload, builds the codec from the old encode/decode lambdas, registers playC2S and a ServerPlayNetworking global receiver."
+    },
+    {
+      "id": "trashslot.balm.network-clientbound",
+      "sourceOwner": "net/blay09/mods/balm/api/network/BalmNetworking",
+      "sourceName": "registerClientboundPacket",
+      "sourceDesc": "(Lnet/minecraft/class_2960;Ljava/lang/Class;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)V",
+      "sourceOpcode": 185,
+      "bridgeClass": "top/mcbridge1201/bridge/BalmNetworkingBridge",
+      "bridgeMethod": "registerClientbound",
+      "bridgeDesc": "(Lnet/blay09/mods/balm/api/network/BalmNetworking;Lnet/minecraft/class_2960;Ljava/lang/Class;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)V",
+      "capability": "balm.network.payload",
+      "risk": "medium",
+      "evidence": "Same Balm 21 networking shape change; trashslot registers MessageTrashSlotContent clientbound. The bridge registers the playS2C payload type and codec but intentionally does not install a client receiver on a dedicated server. This is sufficient for server boot/registration; client delivery is not verified."
+    },
     {
       "id": "trashslot.itemstack.write-nbt",
       "sourceOwner": "centurybridge/gen/Tombstones_trashslot_fabric_1_20_1_15_1_5",

@@ -1,0 +1,42 @@
+{
+  "sample": "trashslot-fabric-1.20.1-15.1.5",
+  "target": "fabric-1.21.1",
+  "status": "BOOTED_DEDICATED_SERVER",
+  "rules": [
+    "trashslot.balm.initialize-context",
+    "trashslot.balm.network-serverbound",
+    "trashslot.balm.network-clientbound",
+    "trashslot.itemstack.write-nbt",
+    "trashslot.itemstack.from-nbt",
+    "trashslot.packet.write-itemstack",
+    "trashslot.packet.read-itemstack"
+  ],
+  "dependencies": {
+    "balm": "balm-fabric-1.21.1-21.0.66.jar (native 1.21.1)"
+  },
+  "patch": {
+    "jar": "work/cb/out/trashslot/trashslot-patched-net2-aw.jar",
+    "sha256": "34a22eb1952d52d70f793b49955e9fb021916d7dd967a4fd8b3093836987d770",
+    "applied": {
+      "trashslot.balm.initialize-context": 1,
+      "trashslot.balm.network-serverbound": 2,
+      "trashslot.balm.network-clientbound": 1,
+      "trashslot.itemstack.write-nbt": 1,
+      "trashslot.itemstack.from-nbt": 1,
+      "trashslot.packet.write-itemstack": 2,
+      "trashslot.packet.read-itemstack": 2
+    },
+    "log": "runs/p17-balm-net/patch2.log"
+  },
+  "server": {
+    "instance": "work/instances/fabric-1.21.1-server-trashslot",
+    "log": "runs/p17-balm-net/server-net2.log",
+    "doneSeen": true,
+    "doneLine": "Done (4.655s)! For help, type \"help\"",
+    "runnerExitCode": 0,
+    "jvmExitCode": 0,
+    "worldSaved": true
+  },
+  "scope": "dedicated server boot + world load/save only; no client GUI, clientbound receiver, packet round-trip, or player trash-slot behavior",
+  "notAClaim": "BOOTED, not a gameplay/client compatibility pass"
+}

@@ -147,7 +147,7 @@ def main():
         "lithium-fabric-mc1.20.1-0.11.4.jar":
             "BOOTED（专用服务端 Done，世界加载/保存；chunk access 已移植，优化减少；与 ironchests 联合容器契约通过；无 lithium 玩法/客户端；2 条 mixinStrip；见 runs/p13-chunk-port/、runs/p14-lithium-ironchests/）",
         "trashslot-fabric-1.20.1-15.1.5.jar":
-            "BLOCKED（4 个 ItemStack/NBT tombstone 已桥并 patch，但 Balm/Fabric networking 阻断启动；规则 prepared/unverified；见 runs/p15-trashslot/）",
+            "BOOTED（专用服务端 Done 4.655s；原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥；无客户端/网络包往返；见 runs/p17-balm-net/）",
     }
     for a in plan["artifacts"]:
         c = a["counts"]
