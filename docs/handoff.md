@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 23:42）：**三样本 + CodecDispatch probe 通过**。all-three 实例加载 P37 probe，`Done (5.425s)`、`CODEC_DISPATCH_PROBE_OK`；安全 Codec 包装在三样本同服时仍正常。证据 `runs/p43-all-three-codec/`。
 更新（2026-10-18 23:55）：**三样本同服 chunk 压力通过**。all-three 实例 225 chunks、远角方块 save/restart 断言全 true，两进程 exit 0；证据 `runs/p42-all-three-chunk/`。
 更新（2026-10-18 23:50）：**三样本同服通过**。lithium + ironchests(P26) + trashslot(P29)/Balm 21 同实例 `Done (4.632s)`；容器契约两次重启 5/5。证据 `runs/p41-all-three/`。
 更新（2026-10-18 23:45）：**证据总校验扩展**。`tools/verify_evidence.py` 增加 P35/P36 at-target 计数和 lithium profile 检查；全部 checks true，exit 0。证据 `runs/p40-verify-extended/`。

@@ -1,0 +1,7 @@
+{
+  "contract": "all-three + CodecDispatch probe",
+  "instance": "work/instances/fabric-1.21.1-server-all-three",
+  "marker": "CODEC_DISPATCH_PROBE_OK",
+  "server": {"doneSeen": true, "doneLine": "Done (5.425s)! For help, type \"help\"", "exitCode": 0},
+  "scope": "dedicated server + command API; synthetic probe; no client"
+}

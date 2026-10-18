@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 23:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:42（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 23:42）：**三样本 + CodecDispatch probe 通过**。all-three 实例加载 P37 probe，`Done (5.425s)`、`CODEC_DISPATCH_PROBE_OK`；证明安全 Codec 包装在 lithium/trashslot/Balm 同时加载时仍正常。证据 `runs/p43-all-three-codec/`。
 更新（2026-10-18 23:55）：**三样本同服 chunk 压力测试通过**。all-three 实例 force-load 225 chunks、远角方块 save/restart 断言全 true，两进程 exit 0；说明 lithium chunk 移植在 ironchests/trashslot/Balm 同时加载时仍正常。证据 `runs/p42-all-three-chunk/`。
 更新（2026-10-18 23:50）：**三样本同服通过**。lithium + ironchests(P26) + trashslot(P29)/Balm 21 同实例，`Done (4.632s)`；容器契约两次重启 5/5 通过。证据 `runs/p41-all-three/`。
 更新（2026-10-18 23:45）：**证据总校验扩展**。`tools/verify_evidence.py` 增加 P35/P36 at-target 计数和 lithium profile 检查；全部 checks true，exit 0。证据 `runs/p40-verify-extended/`。
@@ -278,6 +279,13 @@
 142. **意义**：lithium chunk 移植在 ironchests/trashslot/Balm 同时加载时仍正常。
 143. **证据**：`runs/p42-all-three-chunk/README.md`、`verdict.json`、`step1.log`、`step2.log`。
 
+## 2026-10-18 23:42 更新：三样本 + Codec probe
+
+144. **场景**：P41 all-three 实例加载 `codecdispatchprobe.jar`，执行 P37 record-codec encode/decode。
+145. **结果**：`CODEC_DISPATCH_PROBE_OK`，`Done (5.425s)`、exit 0。
+146. **意义**：安全 `CodecDispatch` 在 lithium/trashslot/Balm 同时加载时仍正常。
+147. **证据**：`runs/p43-all-three-codec/README.md`、`verdict.json`、`server.log`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -338,6 +346,7 @@
 | 证据总校验扩展 | `runs/p40-verify-extended/README.md`、`verify.log` |
 | 三样本同服 | `runs/p41-all-three/README.md`、`verdict.json`、`server.log`、`contract/verdict.json` |
 | 三样本 chunk 压力 | `runs/p42-all-three-chunk/README.md`、`verdict.json`、`step1.log`、`step2.log` |
+| 三样本 Codec probe | `runs/p43-all-three-codec/README.md`、`verdict.json`、`server.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

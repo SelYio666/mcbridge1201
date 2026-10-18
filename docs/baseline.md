@@ -953,6 +953,13 @@ failures/errors。它只检查既有证据一致性，不重新启动服务端/�
 `passed=true`。说明 lithium 的 chunk access 移植在 ironchests + trashslot + Balm 同时加载时
 仍然正确。范围仍是专用服务端 + 命令 API；证据 `runs/p42-all-three-chunk/`。
 
+### 7.45 三样本 + CodecDispatch probe
+
+在 P41 的 all-three 实例中加载 P37 的 `codecdispatchprobe.jar`，`CodecDispatch` 的
+`Box(1)` encode/decode 仍得到 `CODEC_DISPATCH_PROBE_OK`；服务端 `Done (5.425s)`、exit 0。
+说明安全 MapCodec 包装在 lithium/trashslot/Balm 同时加载时仍正常。合成 probe，不是
+ironchests `ShapeTypes`；无客户端。证据 `runs/p43-all-three-codec/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
