@@ -1,0 +1,21 @@
+{
+  "contract": "lithium.chunk-access.stress",
+  "generatedAt": "2026-10-18T22:22:42+08:00",
+  "instance": "C:\\Users\\27682\\Documents\\\u65b0\u5efa\u6587\u4ef6\u5939\\mcbridge1201\\work\\instances\\fabric-1.21.1-server-lithium",
+  "radiusChunks": 7,
+  "chunksExpected": 225,
+  "chunksMarked": 225,
+  "steps": {
+    "step1Done": true,
+    "step1Exit0": true,
+    "step2Done": true,
+    "step2Exit0": true,
+    "forceloadMarked": true,
+    "markerA": true,
+    "markerB": true
+  },
+  "step1Log": "C:\\Users\\27682\\Documents\\\u65b0\u5efa\u6587\u4ef6\u5939\\mcbridge1201\\runs\\p24-chunk-stress-tool\\step1.log",
+  "step2Log": "C:\\Users\\27682\\Documents\\\u65b0\u5efa\u6587\u4ef6\u5939\\mcbridge1201\\runs\\p24-chunk-stress-tool\\step2.log",
+  "scope": "dedicated server + command API; no client/GUI/player/multiplayer",
+  "passed": true
+}

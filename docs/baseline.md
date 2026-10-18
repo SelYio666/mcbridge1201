@@ -753,6 +753,17 @@ P13 的 chunk 移植此前只做了单 chunk 命令探针。P23 在
 保存/重启路径上仍然正确。边界仍是专用服务端 + 命令 API，无客户端/玩家/多人；旧的多入口
 缓存/off-thread 快路径仍未恢复。证据 `runs/p23-chunk-stress/`。
 
+### 7.27 chunk 压力测试工具
+
+P23 的压力测试已工具化为 `tools/run_chunk_stress.py`：自动跑两个服务端进程，先
+`forceload remove all`，再 force-load 225 个 chunk（`--radius 7` 的 `-112..112` 方块范围），
+在远角设置钻石/绿宝石块并 `save-all flush`；重启后 `execute if block` 断言两个远角块，
+输出 `verdict.json`。工具只在两次 `Done`、两个 exit 0、两个 `STRESS_OK` 标记都满足时返回 0。
+
+本次运行：`chunksMarked=225`、`STRESS_OK_A/B`、`passed=true`，exit 0。第一版工具在
+`forceload add` 后立刻 `setblock`，因异步 chunk 加载出现 “Could not set the block”；现在
+step1 命令间隔 2.5s，并解析实际的 “Marked N chunks”。证据 `runs/p24-chunk-stress-tool/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
