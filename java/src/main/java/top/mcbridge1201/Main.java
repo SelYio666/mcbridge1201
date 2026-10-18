@@ -36,6 +36,7 @@ public final class Main {
             case "analyze" -> analyze(args);
             case "index-info" -> indexInfo(args);
             case "remap-jar" -> remapJar(args);
+            case "patch" -> patchJar(args);
             case "patch-readonly" -> patchReadOnly(args);
             case "refs" -> dumpRefs(args);
             default -> {
@@ -151,6 +152,29 @@ public final class Main {
                         r.name() == null ? "" : r.name(), r.desc() == null ? "" : r.desc());
             }
         }
+    }
+
+    /** Apply versioned transform rules (field redirects) and embed the bridge classes. */
+    private static void patchJar(String[] args) throws IOException {
+        Map<String, List<String>> f = flags(args, 1);
+        Path in = Path.of(require(f, "in"));
+        Path out = Path.of(require(f, "out"));
+        Path rulesPath = Path.of(require(f, "rules"));
+        var rules = top.mcbridge1201.rules.RuleSet.load(rulesPath);
+        TargetIndex idx = null;
+        String clientJar = one(f, "client-jar", null);
+        String mappings = one(f, "mappings", null);
+        if (clientJar != null && mappings != null) {
+            idx = IndexBuilder.minecraft(Path.of(clientJar), readMappings(Path.of(mappings)));
+            for (String lib : f.getOrDefault("lib", List.of())) {
+                IndexBuilder.apiJar(Path.of(lib), idx);
+            }
+        }
+        var res = top.mcbridge1201.rules.JarPatcher.patch(in, out, rules, idx);
+        System.out.printf("patched %s -> %s (classes changed=%d)%n", in.getFileName(), out.getFileName(), res.classes());
+        res.applied().forEach((k, v) -> System.out.printf("  rule %s applied %d time(s)%n", k, v));
+        System.out.printf("  bridges embedded: %s%n", res.bridges());
+        System.out.printf("  sha256 %s%n", ArtifactScanner.sha256(out));
     }
 
     private static void patchReadOnly(String[] args) throws IOException {

@@ -17,6 +17,9 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 自研重映射器（保留方法体） | 6148 类服务端 jar 可用，修复 4 类真实缺陷 | `java/.../remap/`、[docs/baseline.md](docs/baseline.md) §7.3 |
 | 1.21.1 专用服务端 | **BOOTED**：`Done (4.803s)`，正常停止 | `runs/p1-server-baseline/` |
 | 转换件运行时 | **LOADED**，入口点 `NoSuchFieldError: ItemPredicate.ANY` | `runs/p1-server-converted-ironchests/` |
+| 第一条转换规则 + 桥 | `ItemPredicate.ANY` → 空谓词；入口点通过 | `rules/fabric-1.21.1/container.json`、[rules/README.md](rules/README.md) |
+| 常量池种类修正 | 123 处 Methodref→InterfaceMethodref + 3 个 method handle（含 JiJ） | `java/.../rules/JarPatcher.java` |
+| 当前阻断 | `Codec.dispatch`：`MapCodecCodec cannot be cast to MapCodec`（数据加载阶段） | `runs/p2-server-ironchests-rule1/` |
 
 ## 复现
 

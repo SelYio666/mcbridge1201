@@ -248,9 +248,42 @@ Caused by: java.lang.NoSuchFieldError: Class net.minecraft.class_2073 does not h
 
 这条闭环（运行时崩溃 → 分析器漏报 → 修正 → 静态预测命中）是当前最可信的跨版本证据链。
 
+### 7.7 第一条转换规则与常量池种类修正
+
+规则文件 `rules/fabric-1.21.1/container.json`：
+
+- `itempredicate.any.static-field`：匹配 `GETSTATIC net/minecraft/class_2073.field_9640`，替换为 `INVOKESTATIC top/mcbridge1201/bridge/ItemPredicateAny.any()`。
+- 桥类由 ASM 生成并嵌入输出 jar：返回 `new ItemPredicate(Optional.empty(), MinMaxBounds.Ints.ANY, DataComponentPredicate.EMPTY, Map.of())`，与 1.20.1 的“匹配所有物品”语义等价。
+- 第一次生成时 `Map.of()` 用了 Methodref，运行时报 `IncompatibleClassChangeError: ... must be InterfaceMethodref`，已改为 interface 调用。
+
+同一次 `patch` 还做了**常量池种类修正**（`--client-jar`/`--mappings`/`--lib`）：
+
+| 位置 | 现象 | 处理 |
+|---|---|---|
+| `DataResult.success` 调用点（123 处，含 JiJ） | 1.20.5 起 `DataResult` 由 class 变 interface，旧 `Methodref` 不再合法 | 改成 `InterfaceMethodref` / `invokeinterface` |
+| `MethodHandle` 常量与 invokedynamic 参数（3 处） | 句柄里的 `REF_invokeStatic` 也带种类位，`ShapeTypes.decode` 通过 handle 引用 `DataResult.success` | 重建 `Handle`，`isInterface=true` |
+| 嵌套 jar | 崩溃来自 ironchests 内嵌的 ResourcefulLib `EnumCodec` | 递归处理 `META-INF/jars/*.jar` |
+
+产物：`work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-patched.jar`（SHA-256 `ad5e87ed...7e80`）。`IronChests.init` 现在通过 `ItemPredicate` 阶段。
+
+### 7.8 下一个真实缺口：`Codec.dispatch` 的 `MapCodec` 形状
+
+同一进程继续加载 chest 数据，在 `ShapeTypes.decode` 处失败：
+
+```text
+Caused by: java.lang.ClassCastException: class com.mojang.serialization.MapCodec$MapCodecCodec
+  cannot be cast to class com.mojang.serialization.MapCodec
+    at java.base/java.util.function.Function.lambda$andThen$1
+    at com.mojang.serialization.codecs.KeyDispatchCodec.lambda$decode$4
+    at ...KeyDispatchCodec.decode
+    at ...ShapeTypes.decode(ShapeTypes.java:32)
+```
+
+`ShapeTypes.decode` 调用 `Codec.dispatch(Function, Function)`；1.20.1→1.21.1 之间 `MapCodec` 被引入，dispatch 的第二个函数语义从 “返回 Codec” 变成 “返回 MapCodec”。这是**形状变化**，不是重命名，需要适配器（把 MapCodec 包成 Codec 或改 dispatch 的调用点），属于下一步要写的第二条规则/桥。
+
 ## 8. 未验证项与下一步
 
-1. **`ItemPredicate.ANY` 的语义替换**：不是改个字段名。1.21.1 的 `ItemPredicate` 已变成 record `(Optional items, MinMaxBounds.Ints count, DataComponentPredicate components, Map subPredicates)`，没有 `ANY` 常量。可执行的桥：读取 `class_2073.field_9640` 时返回缓存的 `new ItemPredicate(Optional.empty(), MinMaxBounds.Ints.ANY, DataComponentPredicate.EMPTY, Map.of())`；这需要按目标构造器做一次重定向（CenturyBridge 报告里的 `L3 constructor` 一类），不是改名。
+1. **`Codec.dispatch` / `MapCodec` 形状适配**：`ShapeTypes.decode` 在 1.21.1 抛 `MapCodecCodec cannot be cast to MapCodec`；需要把 dispatch 的第二参数（1.20.1 返回 Codec）适配成目标版本的 `MapCodec`。这是当前阻断 `WORLD_LOADED` 的第一道数据加载墙。`ItemPredicate.ANY` 已由 §7.7 的规则解决。
 2. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是"无桥"结果。
 3. **WORLD_LOADED / 玩法契约**：需要客户端或命令侧断言；服务端可先做 `/give` + 放置 + 容器存取 + 重启读回的命令行契约。
 4. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。

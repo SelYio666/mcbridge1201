@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "fieldRedirects": [
+    {
+      "id": "itempredicate.any.static-field",
+      "sourceOwner": "net/minecraft/class_2073",
+      "sourceName": "field_9640",
+      "sourceDesc": "Lnet/minecraft/class_2073;",
+      "bridgeClass": "top/mcbridge1201/bridge/ItemPredicateAny",
+      "bridgeMethod": "any",
+      "bridgeDesc": "()Lnet/minecraft/class_2073;",
+      "capability": "item.predicate.any",
+      "risk": "low",
+      "evidence": "1.21.1 ItemPredicate is a record (Optional items, MinMaxBounds.Ints, DataComponentPredicate, Map) and has no ANY constant; an empty ItemPredicate matches every stack exactly like the 1.20.1 constant. Runtime failure: NoSuchFieldError class_2073.field_9640 in ironchests ChestType.codec."
+    }
+  ]
+}
