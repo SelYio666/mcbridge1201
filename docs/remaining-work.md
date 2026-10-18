@@ -18,9 +18,9 @@ claim that these paths work.
 
 ## Blocked: client GUI / network / multiplayer
 
-A PCL-based Fabric 1.21.1 client now **joins a singleplayer world and renders terrain/HUD** after
-the Balm writer-order and lithium `VarInt` bridges. Inventory/trash GUI interaction was not
-executed (synthetic `E` key injection did not open it), so the following remain **not verified**:
+A PCL-based Fabric 1.21.1 client joins a singleplayer world, renders terrain/HUD, and shows the
+inventory with TrashSlot's trash button. Item transfer, persistence, ironchests GUI and sync are
+still **not verified**:
 
 - trashslot client GUI, `ClientPlayNetworking` receiver, actual packet delivery;
 - lithium gameplay/rendering;

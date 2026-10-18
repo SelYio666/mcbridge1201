@@ -1099,6 +1099,17 @@ Loaded 2 advancements
 世界并渲染**，但背包/trash GUI、容器持久化、clientbound 同步、双客户端仍未执行；自动化
 `E` 键未打开背包，不能当成 GUI 已测。证据 `runs/p54-client-lithium/`。
 
+### 7.57 背包 + TrashSlot GUI 渲染
+
+合成键盘 `E` 不可靠，改用客户端测试 probe 在 player 存在后调用
+`MinecraftClient.method_1507(new InventoryScreen(player))`。截图（`inventory-probe.png`）显示
+原版背包以及右下角的 **TrashSlot 按钮**，世界/HUD 正常；点击空 trash 按钮后界面保持
+（`trash-click.png`）。
+
+这验证了 **GUI 渲染/集成**，但没有物品移入/移出、重启持久化、ironchests 容器 GUI 或同步。
+probe 是 work-only 测试入口，不是 patcher 的一部分；没有因此声称完整 GUI 通过。证据
+`runs/p55-client-gui/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

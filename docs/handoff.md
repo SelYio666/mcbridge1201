@@ -1,7 +1,8 @@
 # 交接摘要（一页）
 
 
-更新（2026-10-19 01:00）：**客户端进入世界并渲染**。补 `LithiumVarIntBridge` 后世界生成通过；客户端登录单人世界、渲染地形/HUD（`runs/p54-client-lithium/world.png`）。trash GUI/容器持久化/同步仍未执行（合成键盘 E 未打开背包）。证据 `runs/p54-client-lithium/`。
+更新（2026-10-19 01:05）：**背包 + TrashSlot GUI 渲染**。客户端 probe 自动打开 `InventoryScreen`；截图显示原版背包和右下角 TrashSlot 按钮。空 trash 按钮点击无可见变化；物品移入/移出、持久化、容器 GUI、同步仍未验证。证据 `runs/p55-client-gui/`。
+更新（2026-10-19 01:00）：**客户端进入世界并渲染**。补 `LithiumVarIntBridge` 后世界生成通过；客户端登录单人世界、渲染地形/HUD（`runs/p54-client-lithium/world.png`）。证据 `runs/p54-client-lithium/`。
 更新（2026-10-19 00:55）：**世界加入越过 Balm payload**。修正旧 Balm writer 参数顺序 `(packet, buf)` 后，`trash_slot_content` 编码错误消失；客户端进入世界生成，新阻断为 lithium `class_2540.method_10815` tombstone（`VarInt.getByteSize`）。证据 `runs/p53-client-world/`。
 更新（2026-10-19 00:50）：**客户端到达主菜单**。PCL Fabric 1.21.1 客户端加载五模组并进入主菜单；Balm 客户端初始化、ironchests 模型桥已补。进入世界时 `BalmNetworking.sendTo` payload 编码仍失败（`class_9129` vs `MessageTrashSlotContent`），未进入世界/GUI。证据 `runs/p52-client-balm/`。
 更新（2026-10-19 00:40）：**ResourcefulLib 客户端网络桥生效**。重写嵌套 RL 2.0.6 的 `FabricClientPacketHelper` 到 1.21.1 Payload API；客户端越过 ironchests **main** 入口点，新阻断为 `ModelLoadingRegistry` 缺失与 `BalmClient.initialize(String,Runnable)` 缺失。证据 `runs/p51-client-bridge/`。
