@@ -1,8 +1,8 @@
 {
   "schemaVersion": "0.1-draft",
   "profileId": "ironchests.5.0.2.fabric-1.20.1__fabric-1.21.1",
-  "status": "degraded",
-  "statusNote": "Container contract passed on a dedicated server (place/insert/NBT/restart). Overall verdict stays degraded because the ItemPredicate.fromJson bridge falls back to a match-everything predicate when the 1.21.1 codec rejects legacy JSON, and because client GUI/render and multiplayer were not executed.",
+  "status": "passed_within_scope",
+  "statusNote": "Dedicated-server container contract passed (place/insert/NBT/restart) with the registry-aware ItemPredicate bridge; no fallback warning observed at boot. Client GUI/render and multiplayer were not executed, so this is scoped to the dedicated server.",
   "source": {
     "minecraft": "1.20.1",
     "loader": "fabric",
@@ -43,11 +43,6 @@
       "capability": "item.predicate.any"
     },
     {
-      "id": "itempredicate.fromjson.static",
-      "capability": "item.predicate.json",
-      "degradation": "falls back to match-everything when the codec rejects legacy JSON"
-    },
-    {
       "id": "codec.dispatch.mapcodec-shape",
       "capability": "codec.dispatch.mapcodec"
     },
@@ -66,6 +61,11 @@
     {
       "id": "constant-kind-fix",
       "capability": "dfu.interfaceization"
+    },
+    {
+      "id": "itempredicate.fromjson.static",
+      "capability": "item.predicate.json",
+      "implementation": "registry-aware RegistryOps bridge (compiled Java source)"
     }
   ],
   "analysis": {
@@ -135,7 +135,6 @@
   },
   "knownLimitations": [
     "GUI/render/multiplayer untested (no client instance).",
-    "fromJson falls back to match-everything when the 1.21.1 codec rejects legacy predicate JSON (observed for {\"items\":[\"minecraft:dirt\"]}; likely needs RegistryOps); this weakens item filtering and is recorded as degraded.",
     "Game jar was locally remapped with this project's ASM remapper because the stock Fabric remap cannot write in this sandbox."
   ]
 }
