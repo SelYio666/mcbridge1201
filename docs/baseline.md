@@ -281,9 +281,37 @@ Caused by: java.lang.ClassCastException: class com.mojang.serialization.MapCodec
 
 `ShapeTypes.decode` 调用 `Codec.dispatch(Function, Function)`；1.20.1→1.21.1 之间 `MapCodec` 被引入，dispatch 的第二个函数语义从 “返回 Codec” 变成 “返回 MapCodec”。这是**形状变化**，不是重命名，需要适配器（把 MapCodec 包成 Codec 或改 dispatch 的调用点），属于下一步要写的第二条规则/桥。
 
+### 7.9 第二、三条规则：dispatch 适配与 `fromJson` 重建
+
+新增两条规则（`rules/fabric-1.21.1/container.json`）：
+
+| 规则 | 处理 | 结果 |
+|---|---|---|
+| `codec.dispatch.mapcodec-shape` | 把 `INVOKEINTERFACE Codec.dispatch(Function,Function)` 重定向到生成的 `CodecDispatch.dispatch`，内部用 `MapCodec.assumeMapUnsafe` 包装旧 lambda 的返回值 | 应用 2 次，`ShapeTypes.decode` 不再抛 `ClassCastException` |
+| `itempredicate.fromjson.static` | CenturyBridge 把 `ItemPredicate.fromJson(JsonElement)` 替换成了 tombstone，且调用点是 **MethodHandle**（lambda 实现）而非直接指令；按 owner 前缀 + 精确描述符匹配句柄并重定向到 `ItemPredicateFromJson.fromJson`（用 1.21.1 的 `ItemPredicate.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(null)` 重建原实现） | 应用 1 次，tombstone 不再被调用 |
+
+补丁产物：`work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-patched.jar`（SHA-256 `7ec705dd...5592`）。规则引擎现在支持：字段重定向、方法重定向（含 `MethodHandle` 实现）、常量池种类修正、JiJ 递归。
+
+### 7.10 当前阻断：`assumeMapUnsafe` 不足
+
+下一层失败：
+
+```text
+Caused by: java.lang.NullPointerException
+    at java.util.Optional.of
+    at com.mojang.serialization.DataResult$Success.result(DataResult.java:140)
+    at com.mojang.serialization.MapCodec$7.apply(MapCodec.java:317)
+    at com.mojang.serialization.MapCodec$4.decode(MapCodec.java:257)
+    at RecordCodecBuilder$Instance$7.decode(RecordCodecBuilder.java:406)
+```
+
+`MapCodec.assumeMapUnsafe` 只对“本来就是 map codec”的 Codec 安全；这里被包装的 Codec 走普通解码路径，返回 `success(null)`，于是 `Optional.of(null)` 抛 NPE。正确做法不是继续用 unsafe 包装，而是构造真正的 `MapCodec`（`MapCodec.of(MapEncoder, MapDecoder)` 或 `Codec` 的 map 视图），或者改走 `MapCodec` 原生的 dispatch 语义——这是下一步要设计的适配器。
+
+这一点也说明：**“能过入口点”与“能加载数据”是两层不同的语义**，规则必须逐条有行为证据，不能只看异常消失。
+
 ## 8. 未验证项与下一步
 
-1. **`Codec.dispatch` / `MapCodec` 形状适配**：`ShapeTypes.decode` 在 1.21.1 抛 `MapCodecCodec cannot be cast to MapCodec`；需要把 dispatch 的第二参数（1.20.1 返回 Codec）适配成目标版本的 `MapCodec`。这是当前阻断 `WORLD_LOADED` 的第一道数据加载墙。`ItemPredicate.ANY` 已由 §7.7 的规则解决。
+1. **`Codec.dispatch` 的真正适配**：当前 `assumeMapUnsafe` 版本在 `MapCodec$7` 处 NPE（`Optional.of(null)`）。需要构造真正的 `MapCodec`（`MapCodec.of` / map 视图），或用 `KeyDispatchCodec` 的等价路径重建 dispatch；`ItemPredicate.ANY` 与 `fromJson` 已由 §7.7/§7.9 的规则解决。
 2. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是"无桥"结果。
 3. **WORLD_LOADED / 玩法契约**：需要客户端或命令侧断言；服务端可先做 `/give` + 放置 + 容器存取 + 重启读回的命令行契约。
 4. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。

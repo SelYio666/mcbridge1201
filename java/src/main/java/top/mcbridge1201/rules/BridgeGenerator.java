@@ -4,18 +4,50 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Generates the small runtime bridge classes that rules redirect into.
  *
- * <p>Hand-written bytecode (ASM) instead of javac: the bridge only needs a constructor
- * call against target-version types, and generating it keeps the tool independent from a
- * game classpath at build time.
+ * <p>Hand-written bytecode (ASM) instead of javac: the bridges only call target-version
+ * types, and generating them keeps the tool independent from a game classpath at build time.
  */
 public final class BridgeGenerator {
     private BridgeGenerator() {}
 
     public static final String ITEM_PREDICATE_ANY = "top/mcbridge1201/bridge/ItemPredicateAny";
     public static final String ITEM_PREDICATE_ANY_DESC = "()Lnet/minecraft/class_2073;";
+
+    public static final String CODEC_DISPATCH = "top/mcbridge1201/bridge/CodecDispatch";
+    public static final String CODEC_DISPATCH_ADAPTER = "top/mcbridge1201/bridge/CodecDispatch$Adapter";
+    public static final String ITEM_PREDICATE_FROM_JSON = "top/mcbridge1201/bridge/ItemPredicateFromJson";
+
+    private static final String CODEC = "com/mojang/serialization/Codec";
+    private static final String MAP_CODEC = "com/mojang/serialization/MapCodec";
+    private static final String FUNCTION = "java/util/function/Function";
+
+    /** All classes that must be embedded when the given bridge names are used. */
+    public static Map<String, byte[]> generate(Set<String> used) {
+        Map<String, byte[]> out = new LinkedHashMap<>();
+        if (used.contains(ITEM_PREDICATE_ANY)) {
+            out.put(ITEM_PREDICATE_ANY, itemPredicateAny());
+        }
+        if (used.contains(CODEC_DISPATCH)) {
+            out.put(CODEC_DISPATCH, codecDispatch());
+            out.put(CODEC_DISPATCH_ADAPTER, codecDispatchAdapter());
+        }
+        if (used.contains(ITEM_PREDICATE_FROM_JSON)) {
+            out.put(ITEM_PREDICATE_FROM_JSON, itemPredicateFromJson());
+        }
+        for (String name : used) {
+            if (!out.containsKey(name)) {
+                throw new IllegalArgumentException("no generator for bridge " + name);
+            }
+        }
+        return out;
+    }
 
     /**
      * 1.20.1 {@code ItemPredicate.ANY} matched every stack. 1.21.1 made ItemPredicate a
@@ -54,6 +86,124 @@ public final class BridgeGenerator {
         any.visitInsn(Opcodes.ARETURN);
         any.visitMaxs(0, 0);
         any.visitEnd();
+
+        cw.visitEnd();
+        return cw.toByteArray();
+    }
+
+    /**
+     * 1.21.1 changed {@code Codec.dispatch}'s second function from {@code Codec} to
+     * {@code MapCodec}; old call sites return a Codec and crash with
+     * {@code MapCodecCodec cannot be cast to MapCodec}. The bridge adapts the value
+     * function with {@code MapCodec.assumeMapUnsafe}.
+     */
+    public static byte[] codecDispatch() {
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+                CODEC_DISPATCH, null, "java/lang/Object", null);
+
+        MethodVisitor init = cw.visitMethod(Opcodes.ACC_PRIVATE, "<init>", "()V", null, null);
+        init.visitCode();
+        init.visitVarInsn(Opcodes.ALOAD, 0);
+        init.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        init.visitInsn(Opcodes.RETURN);
+        init.visitMaxs(0, 0);
+        init.visitEnd();
+
+        MethodVisitor m = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "dispatch",
+                "(L" + CODEC + ";L" + FUNCTION + ";L" + FUNCTION + ";)L" + CODEC + ";", null, null);
+        m.visitCode();
+        m.visitVarInsn(Opcodes.ALOAD, 0);
+        m.visitVarInsn(Opcodes.ALOAD, 1);
+        m.visitTypeInsn(Opcodes.NEW, CODEC_DISPATCH_ADAPTER);
+        m.visitInsn(Opcodes.DUP);
+        m.visitVarInsn(Opcodes.ALOAD, 2);
+        m.visitMethodInsn(Opcodes.INVOKESPECIAL, CODEC_DISPATCH_ADAPTER, "<init>",
+                "(L" + FUNCTION + ";)V", false);
+        m.visitMethodInsn(Opcodes.INVOKEINTERFACE, CODEC, "dispatch",
+                "(L" + FUNCTION + ";L" + FUNCTION + ";)L" + CODEC + ";", true);
+        m.visitInsn(Opcodes.ARETURN);
+        m.visitMaxs(0, 0);
+        m.visitEnd();
+
+        cw.visitEnd();
+        return cw.toByteArray();
+    }
+
+    /**
+     * 1.20.1 {@code ItemPredicate.fromJson(JsonElement)} (static) was removed in 1.21.1.
+     * Faithful reconstruction: parse the JSON with the target's ItemPredicate.CODEC using
+     * JsonOps, exactly how the 1.20.1 implementation was written.
+     */
+    public static byte[] itemPredicateFromJson() {
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+                ITEM_PREDICATE_FROM_JSON, null, "java/lang/Object", null);
+
+        MethodVisitor init = cw.visitMethod(Opcodes.ACC_PRIVATE, "<init>", "()V", null, null);
+        init.visitCode();
+        init.visitVarInsn(Opcodes.ALOAD, 0);
+        init.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        init.visitInsn(Opcodes.RETURN);
+        init.visitMaxs(0, 0);
+        init.visitEnd();
+
+        MethodVisitor m = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "fromJson",
+                "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2073;", null, null);
+        m.visitCode();
+        m.visitFieldInsn(Opcodes.GETSTATIC, "net/minecraft/class_2073", "field_45754",
+                "Lcom/mojang/serialization/Codec;");
+        m.visitFieldInsn(Opcodes.GETSTATIC, "com/mojang/serialization/JsonOps", "INSTANCE",
+                "Lcom/mojang/serialization/JsonOps;");
+        m.visitVarInsn(Opcodes.ALOAD, 0);
+        m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "com/mojang/serialization/Codec", "parse",
+                "(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;", true);
+        m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "com/mojang/serialization/DataResult", "result",
+                "()Ljava/util/Optional;", true);
+        m.visitInsn(Opcodes.ACONST_NULL);
+        m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Optional", "orElse",
+                "(Ljava/lang/Object;)Ljava/lang/Object;", false);
+        m.visitTypeInsn(Opcodes.CHECKCAST, "net/minecraft/class_2073");
+        m.visitInsn(Opcodes.ARETURN);
+        m.visitMaxs(0, 0);
+        m.visitEnd();
+
+        cw.visitEnd();
+        return cw.toByteArray();
+    }
+
+    private static byte[] codecDispatchAdapter() {
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+                CODEC_DISPATCH_ADAPTER, null, "java/lang/Object", new String[]{FUNCTION});
+
+        cw.visitField(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, "inner", "L" + FUNCTION + ";", null, null).visitEnd();
+
+        MethodVisitor init = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "(L" + FUNCTION + ";)V", null, null);
+        init.visitCode();
+        init.visitVarInsn(Opcodes.ALOAD, 0);
+        init.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        init.visitVarInsn(Opcodes.ALOAD, 0);
+        init.visitVarInsn(Opcodes.ALOAD, 1);
+        init.visitFieldInsn(Opcodes.PUTFIELD, CODEC_DISPATCH_ADAPTER, "inner", "L" + FUNCTION + ";");
+        init.visitInsn(Opcodes.RETURN);
+        init.visitMaxs(0, 0);
+        init.visitEnd();
+
+        MethodVisitor apply = cw.visitMethod(Opcodes.ACC_PUBLIC, "apply",
+                "(Ljava/lang/Object;)Ljava/lang/Object;", null, null);
+        apply.visitCode();
+        apply.visitVarInsn(Opcodes.ALOAD, 0);
+        apply.visitFieldInsn(Opcodes.GETFIELD, CODEC_DISPATCH_ADAPTER, "inner", "L" + FUNCTION + ";");
+        apply.visitVarInsn(Opcodes.ALOAD, 1);
+        apply.visitMethodInsn(Opcodes.INVOKEINTERFACE, FUNCTION, "apply",
+                "(Ljava/lang/Object;)Ljava/lang/Object;", true);
+        apply.visitTypeInsn(Opcodes.CHECKCAST, CODEC);
+        apply.visitMethodInsn(Opcodes.INVOKESTATIC, MAP_CODEC, "assumeMapUnsafe",
+                "(L" + CODEC + ";)L" + MAP_CODEC + ";", false);
+        apply.visitInsn(Opcodes.ARETURN);
+        apply.visitMaxs(0, 0);
+        apply.visitEnd();
 
         cw.visitEnd();
         return cw.toByteArray();

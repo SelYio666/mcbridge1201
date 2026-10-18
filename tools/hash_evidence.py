@@ -11,6 +11,7 @@ FILES = [
     "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1.jar",
     "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-patched.jar",
     "runs/p2-server-ironchests-rule1/server.log",
+    "runs/p2-server-ironchests-rule2/server.log",
     "work/cb/out/ironchests/report.md",
     "work/cb/out/ironchests/full-audit.tsv",
     "work/remap/server-intermediary.jar",

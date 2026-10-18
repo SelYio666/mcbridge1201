@@ -14,7 +14,8 @@
 8. **转换件首次运行时验证**：ironchests 被 Loader 接受（`Loading 42 mods` 含 ironchests 5.0.2），入口点抛 `NoSuchFieldError: ItemPredicate.ANY`（`class_2073.field_9640`）→ **LOADED，未通过**。
 9. 这次崩溃暴露分析器漏报（字段解析把 JDK 接口祖先当未知），修正后 ironchests 确认损伤 47→52，新增的正是该字段 → 静态预测与真实崩溃一致。
 10. **第一条转换规则 + 桥**：`rules/fabric-1.21.1/container.json` 把 `ItemPredicate.ANY` 重定向到生成的 `ItemPredicateAny.any()`；`patch` 命令同时做常量池种类修正（class→interface，123 处 + 3 个 method handle），并递归处理 JiJ。ironchests 因此**通过入口点**。
-11. **下一个缺口**：`ShapeTypes.decode` 调用 `Codec.dispatch` 后抛 `ClassCastException: MapCodecCodec cannot be cast to MapCodec`——1.20.1→1.21.1 的 `MapCodec` 形状变化。
+11. **第二、三条规则**：`codec.dispatch.mapcodec-shape`（重定向到生成桥，`MapCodec.assumeMapUnsafe`）与 `itempredicate.fromjson.static`（重建 1.20.1 的 `fromJson`，且调用点是 MethodHandle）。规则引擎现在支持字段/方法/句柄重定向、常量池种类修正、JiJ 递归。
+12. **当前缺口**：`assumeMapUnsafe` 只对真 MapCodec 安全，`MapCodec$7` 处 `Optional.of(null)` NPE；需要构造真正的 MapCodec 适配器。
 12. 产出 `docs/baseline.md`、`docs/engine-selection.md`、`docs/limitations.md`、`rules/README.md`、生成矩阵、`runs/SHA256SUMS.txt`。
 
 ## 证据在哪里
@@ -34,6 +35,8 @@
 | BOOTED 日志 | `runs/p1-server-baseline/server-baseline.log`（`Done (4.803s)`） |
 | 转换件运行时失败日志 | `runs/p1-server-converted-ironchests/server.log` |
 | 第一条规则 + 补丁后日志 | `rules/fabric-1.21.1/container.json`、`runs/p2-server-ironchests-rule1/server.log` |
+| 第二/三条规则后日志 | `runs/p2-server-ironchests-rule2/server.log` |
+| 规则说明 | `rules/README.md` |
 | 打补丁后的转换件 | `work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-patched.jar` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
@@ -56,8 +59,8 @@
 python tools/run_server.py --instance work/instances/fabric-1.21.1-server `
   --log runs/p1-server-converted-ironchests/server.log --timeout 240
 
-# B. 针对 Codec.dispatch / MapCodec 写第二条规则；入口点已通过，下一步是数据加载
-#    （ShapeTypes.decode），之后才是 /give + 放置 + 容器契约
+# B. 重新设计 Codec.dispatch 适配（不要再用 assumeMapUnsafe）：构造 MapCodec.of(...)
+#    或等价路径；通过后再做 /give + 放置 + 容器契约
 
 # C. Forge 第二套索引（并行可做）
 #    下载 de.oceanlabs.mcp:mcp_config:1.20.1:joined.tsrg 与 NeoForge 1.21.1 universal jar，

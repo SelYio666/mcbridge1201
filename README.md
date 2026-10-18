@@ -19,7 +19,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 转换件运行时 | **LOADED**，入口点 `NoSuchFieldError: ItemPredicate.ANY` | `runs/p1-server-converted-ironchests/` |
 | 第一条转换规则 + 桥 | `ItemPredicate.ANY` → 空谓词；入口点通过 | `rules/fabric-1.21.1/container.json`、[rules/README.md](rules/README.md) |
 | 常量池种类修正 | 123 处 Methodref→InterfaceMethodref + 3 个 method handle（含 JiJ） | `java/.../rules/JarPatcher.java` |
-| 当前阻断 | `Codec.dispatch`：`MapCodecCodec cannot be cast to MapCodec`（数据加载阶段） | `runs/p2-server-ironchests-rule1/` |
+| 规则数 | 3 条（`ItemPredicate.ANY`、`fromJson`、`Codec.dispatch`）+ 常量池种类修正 | `rules/fabric-1.21.1/container.json` |
+| 当前阻断 | `assumeMapUnsafe` 在 `MapCodec$7` 处 `Optional.of(null)` NPE（数据加载阶段） | `runs/p2-server-ironchests-rule2/` |
 
 ## 复现
 

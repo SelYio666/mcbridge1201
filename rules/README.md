@@ -46,4 +46,8 @@ mcbridge1201 patch --in <converted.jar> --out <patched.jar> \
 | id | 目标 | 语义依据 | 状态 |
 |---|---|---|---|
 | `itempredicate.any.static-field` | `ItemPredicate.ANY` → 空谓词 | 1.20.1 的 ANY 匹配所有物品；1.21.1 的空 `ItemPredicate` 同样匹配所有 | 已应用，ironchests 入口点因此通过 |
+| `codec.dispatch.mapcodec-shape` | `Codec.dispatch` 第二参数返回 MapCodec | 1.20.5 引入 MapCodec；桥用 `MapCodec.assumeMapUnsafe` 包装 | 已应用 2 处；`assumeMapUnsafe` 在 `MapCodec$7` 处 NPE，需要更强的适配器 |
+| `itempredicate.fromjson.static` | `ItemPredicate.fromJson` 的 tombstone 调用（MethodHandle） | 1.21.1 用 `ItemPredicate.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(null)` 重建 | 已应用 1 处 |
 | `constant-kind-fix(-handle)` | class→interface 的常量池种类 | 1.20.5 的 DFU 接口化 | 已应用 123 + 3 处 |
+
+规则匹配还支持 `MethodHandle`（lambda 实现）——CenturyBridge 的 tombstone 经常以句柄形式出现，不是直接 `invokestatic`。

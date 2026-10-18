@@ -60,12 +60,8 @@ public final class JarPatcher {
         }
         Stats st = new Stats();
         Map<String, byte[]> patched = patchEntries(entries, rules, targetIndex, st, true);
-        for (String bridge : st.bridges) {
-            if (BridgeGenerator.ITEM_PREDICATE_ANY.equals(bridge)) {
-                patched.put(bridge + ".class", BridgeGenerator.itemPredicateAny());
-            } else {
-                throw new IOException("no generator for bridge " + bridge);
-            }
+        for (var e : BridgeGenerator.generate(st.bridges).entrySet()) {
+            patched.put(e.getKey() + ".class", e.getValue());
         }
         Files.createDirectories(out.toAbsolutePath().getParent());
         writeZip(patched, out);
@@ -117,6 +113,19 @@ public final class JarPatcher {
                         st.bridges.add(r.bridgeClass);
                         changed = true;
                     }
+                } else if (insn instanceof MethodInsnNode m0) {
+                    if (System.getenv("MCB_DEBUG_RULES") != null
+                            && m0.desc.contains("JsonElement;)Lnet/minecraft/class_2073;")) {
+                        System.out.printf("DEBUG invoke %d %s.%s%s%n", m0.getOpcode(), m0.owner, m0.name, m0.desc);
+                    }
+                    RuleSet.MethodRedirect r = rules.matchInvoke(m0.owner, m0.name, m0.desc, m0.getOpcode());
+                    if (r != null) {
+                        insns.set(insn, new MethodInsnNode(Opcodes.INVOKESTATIC,
+                                r.bridgeClass, r.bridgeMethod, r.bridgeDesc, false));
+                        st.applied.merge(r.id, 1, Integer::sum);
+                        st.bridges.add(r.bridgeClass);
+                        changed = true;
+                    }
                 }
                 insn = next;
             }
@@ -128,6 +137,9 @@ public final class JarPatcher {
                     }
                     if (fixHandles(insn, idx)) {
                         st.applied.merge("constant-kind-fix-handle", 1, Integer::sum);
+                        changed = true;
+                    }
+                    if (applyHandleRules(insn, rules, st)) {
                         changed = true;
                     }
                 }
@@ -166,6 +178,48 @@ public final class JarPatcher {
      * an InterfaceMethodref (observed in a MethodHandle bootstrap argument:
      * {@code ShapeTypes.decode} referenced {@code DataResult.success} through a handle).
      */
+    /**
+     * A method reference can also be a lambda implementation handle rather than a direct
+     * instruction (observed: CenturyBridge's tombstone {@code t6(JsonElement)} was passed as a
+     * MethodHandle to ResourcefulLib's passthrough). Handle matches are redirected like calls.
+     */
+    private static boolean applyHandleRules(AbstractInsnNode insn, RuleSet rules, Stats st) {
+        if (insn instanceof org.objectweb.asm.tree.InvokeDynamicInsnNode indy) {
+            boolean any = false;
+            for (int i = 0; i < indy.bsmArgs.length; i++) {
+                if (indy.bsmArgs[i] instanceof org.objectweb.asm.Handle h) {
+                    var fixed = redirectHandle(h, rules, st);
+                    if (fixed != null) {
+                        indy.bsmArgs[i] = fixed;
+                        any = true;
+                    }
+                }
+            }
+            return any;
+        }
+        if (insn instanceof org.objectweb.asm.tree.LdcInsnNode ldc
+                && ldc.cst instanceof org.objectweb.asm.Handle h) {
+            var fixed = redirectHandle(h, rules, st);
+            if (fixed != null) {
+                ldc.cst = fixed;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static org.objectweb.asm.Handle redirectHandle(org.objectweb.asm.Handle h, RuleSet rules, Stats st) {
+        int opcode = h.getTag() == Opcodes.H_INVOKESTATIC ? Opcodes.INVOKESTATIC
+                : h.getTag() == Opcodes.H_INVOKEVIRTUAL ? Opcodes.INVOKEVIRTUAL : 0;
+        if (opcode == 0) return null;
+        RuleSet.MethodRedirect r = rules.matchInvoke(h.getOwner(), h.getName(), h.getDesc(), opcode);
+        if (r == null) return null;
+        st.applied.merge(r.id, 1, Integer::sum);
+        st.bridges.add(r.bridgeClass);
+        return new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, r.bridgeClass, r.bridgeMethod,
+                r.bridgeDesc, false);
+    }
+
     private static boolean fixHandles(AbstractInsnNode insn, top.mcbridge1201.index.TargetIndex idx) {
         if (insn instanceof org.objectweb.asm.tree.LdcInsnNode ldc) {
             Object v = ldc.cst;

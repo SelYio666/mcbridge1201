@@ -29,6 +29,22 @@ public final class RuleSet {
     }
 
     public final List<FieldRedirect> fieldRedirects = new ArrayList<>();
+    public final List<MethodRedirect> methodRedirects = new ArrayList<>();
+
+    /** Rewrites an interface/static call to a bridge method that adapts the callee's shape. */
+    public static final class MethodRedirect {
+        public String id;
+        public String sourceOwner;
+        public String sourceName;
+        public String sourceDesc;
+        public int sourceOpcode; // 184 = INVOKESTATIC, 185 = INVOKEINTERFACE, 182 = INVOKEVIRTUAL
+        public String bridgeClass;
+        public String bridgeMethod;
+        public String bridgeDesc;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
     public String version;
     public String target;
 
@@ -42,7 +58,31 @@ public final class RuleSet {
                 rs.fieldRedirects.add(new Gson().fromJson(el, FieldRedirect.class));
             }
         }
+        if (o.has("methodRedirects")) {
+            for (var el : o.getAsJsonArray("methodRedirects")) {
+                rs.methodRedirects.add(new Gson().fromJson(el, MethodRedirect.class));
+            }
+        }
         return rs;
+    }
+
+    public MethodRedirect matchInvoke(String owner, String name, String desc, int opcode) {
+        for (MethodRedirect r : methodRedirects) {
+            if (!ownerMatches(r.sourceOwner, owner)) continue;
+            if (r.sourceName != null && !r.sourceName.isEmpty() && !r.sourceName.equals(name)) continue;
+            if (r.sourceDesc != null && !r.sourceDesc.equals(desc)) continue;
+            if (r.sourceOpcode != 0 && r.sourceOpcode != opcode) continue;
+            return r;
+        }
+        return null;
+    }
+
+    /** A trailing '*' allows matching generated helper classes (e.g. tombstone stubs). */
+    private static boolean ownerMatches(String pattern, String owner) {
+        if (pattern.endsWith("*")) {
+            return owner.startsWith(pattern.substring(0, pattern.length() - 1));
+        }
+        return pattern.equals(owner);
     }
 
     public FieldRedirect matchGetStatic(String owner, String name, String desc) {

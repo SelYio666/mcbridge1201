@@ -14,5 +14,33 @@
       "risk": "low",
       "evidence": "1.21.1 ItemPredicate is a record (Optional items, MinMaxBounds.Ints, DataComponentPredicate, Map) and has no ANY constant; an empty ItemPredicate matches every stack exactly like the 1.20.1 constant. Runtime failure: NoSuchFieldError class_2073.field_9640 in ironchests ChestType.codec."
     }
+  ],
+  "methodRedirects": [
+    {
+      "id": "codec.dispatch.mapcodec-shape",
+      "sourceOwner": "com/mojang/serialization/Codec",
+      "sourceName": "dispatch",
+      "sourceDesc": "(Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;",
+      "sourceOpcode": 185,
+      "bridgeClass": "top/mcbridge1201/bridge/CodecDispatch",
+      "bridgeMethod": "dispatch",
+      "bridgeDesc": "(Lcom/mojang/serialization/Codec;Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;",
+      "capability": "codec.dispatch.mapcodec",
+      "risk": "medium",
+      "evidence": "1.21.1 dispatch's value function returns MapCodec (introduced in 1.20.5); 1.20.1 lambdas return Codec and crash with ClassCastException MapCodecCodec -> MapCodec (ShapeTypes.decode). The bridge wraps the result with MapCodec.assumeMapUnsafe."
+    },
+    {
+      "id": "itempredicate.fromjson.static",
+      "sourceOwner": "centurybridge/gen/Tombstones_*",
+      "sourceName": "",
+      "sourceDesc": "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2073;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/ItemPredicateFromJson",
+      "bridgeMethod": "fromJson",
+      "bridgeDesc": "(Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2073;",
+      "capability": "item.predicate.json",
+      "risk": "medium",
+      "evidence": "1.20.1 ItemPredicate.fromJson(JsonElement) was STATIC and used ItemPredicate.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(null). CenturyBridge tombstoned the call (t6, died @1.20.2->1.20.3). The bridge reproduces the original implementation against the 1.21.1 codec. Match is by descriptor on CenturyBridge's generated tombstone class (names are per-artifact)."
+    }
   ]
 }
