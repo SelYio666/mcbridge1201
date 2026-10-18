@@ -1,0 +1,26 @@
+{
+  "feature": "full safe Codec.dispatch MapCodec wrapper",
+  "implementation": "javac bridge top/mcbridge1201/bridge/CodecDispatch",
+  "tests": {"total": 17, "failures": 0},
+  "patch": {
+    "jar": "work/tmp/p26-final/ironchests-safe-aw.jar",
+    "sha256Raw": "b4730d00b6df95a875bd89ea6c796e764b49ea85cfd9a5372c90366783a17a6e",
+    "classesChanged": 36,
+    "bridges": ["top/mcbridge1201/bridge/CodecDispatch"],
+    "note": "active path uses the javac MapCodec wrapper; no CodecDispatch$Guard in the jar"
+  },
+  "contract": {
+    "instance": "work/instances/fabric-1.21.1-server",
+    "passed": true,
+    "steps": {
+      "place": true,
+      "insert": true,
+      "nbt_after_insert": true,
+      "nbt_after_restart": true,
+      "count_after_restart": true
+    },
+    "runs": 2,
+    "exitCodes": [0, 0]
+  },
+  "limitations": "MapCodec wrapper has empty keys/compressor by design for dispatch values; contract scope remains dedicated server + command API."
+}

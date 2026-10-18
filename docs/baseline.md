@@ -764,20 +764,24 @@ P23 的压力测试已工具化为 `tools/run_chunk_stress.py`：自动跑两个
 `forceload add` 后立刻 `setblock`，因异步 chunk 加载出现 “Could not set the block”；现在
 step1 命令间隔 2.5s，并解析实际的 “Marked N chunks”。证据 `runs/p24-chunk-stress-tool/`。
 
-### 7.28 `Codec.dispatch` 的空结果保护
+### 7.28 `Codec.dispatch` 的安全 MapCodec 适配
 
-`CodecDispatch$Adapter` 对非 `MapCodecCodec` 的旧返回值仍用
-`MapCodec.assumeMapUnsafe(codec)`，但返回值现在包一层
-`MapCodec.mapResult(new CodecDispatch$Guard())`：若 `assumeMapUnsafe` 返回成功的 `null`，
-`Guard.apply` 把它变成 `DataResult.error("null result from Codec.dispatch adapter")`，避免
-`Optional.of(null)` 继续泄漏到 DFU 调用方；`Guard.coApply` 原样返回 `RecordBuilder`，不影响编码。
+P25 曾给 `assumeMapUnsafe` 包一层 `CodecDispatch$Guard`，把 null-success 变成 decode error。
+P26 把活跃路径换成 **javac 编译的 `CodecDispatch`**：旧 dispatch 第二函数返回的 `Codec` 通过
+`MapCodec.of(MapEncoder, MapDecoder)` 安全包成真正的 MapCodec：
 
-`BridgeGenerator.generate` 会随 `CodecDispatch` 一起生成 `CodecDispatch$Guard`。重新补丁
-ironchests 后，`CodecDispatch` / `$Adapter` / `$Guard` 都在 jar 内；容器契约 5/5 通过，两次
-`Done`、exit 0。测试 **17/17**。
+- decode：`DynamicOps.createMap(input.entries())` 后调用 `codec.decode(...).map(Pair::getFirst)`；
+- encode：`codec.encodeStart(...)` 得到 map，再把 entries 写入 `RecordBuilder`；
+- `MapCodecCodec` 直接 unwrap，避免二次包装；
+- keys/KeyCompressor 为空（dispatch 的 key 由 `Codec.dispatch` 自身处理）。
 
-这是保护层，不是对 `assumeMapUnsafe` 的完全替代：合法的非 map codec 形状限制仍可能存在。
-证据 `runs/p25-codec-guard/`。
+`JarPatcher` 在提供 `--bridge-dir` 时优先使用这个 javac `CodecDispatch`，其他生成桥仍走 ASM；
+没有 bridge dir 时才回退到旧的 generated 版本（P25 guard 仅作为 fallback 保留）。重新补丁
+ironchests 后 `javac bridges: [CodecDispatch]`，jar 内是 `CodecDispatch`/`$1`/`$2`，不含 `$Guard`；
+容器契约 5/5 通过，两次 `Done`、exit 0。测试 **17/17**。
+
+这是真正的安全 map 包装，但 keys/compressor 为空是为 dispatch 值有意设计的；契约范围仍是
+专用服务端 + 命令 API。证据 `runs/p25-codec-guard/`、`runs/p26-codec-safe/`。
 
 ## 8. 未验证项与下一步
 
@@ -787,7 +791,7 @@ ironchests 后，`CodecDispatch` / `$Adapter` / `$Guard` 都在 jar 内；容器
 2. **调用点签名适配的覆盖面**：`callSiteAdaptations` 已用 lithium `class_14.method_59` 验证（§7.17）；P18 已把桥按 jar 嵌入嵌套 jar 并用 ironchests JiJ 回归（§7.22），仍可继续覆盖更多样本/多层嵌套/方法句柄场景。
 3. **Mixin 目标描述符适配的覆盖面**：`mixinCallbackAdaptations` 已处理 Explosion 与 POI storage 两处（§7.18），但仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 两种模式在真实注入点上的边界。
 4. **Mixin 实现类替换的覆盖面**：`mixinClassReplacements` 已把 `ServerChunkManagerMixin` 移植到 1.21.1 并让 lithium 到达 `Done`（§7.19）；仍需验证该模式在更多 API 形状变化上的可维护性，并决定是否重写被放弃的 chunk 多入口缓存/off-thread 快路径。
-5. **`Codec.dispatch` 的可靠适配**：已加 `CodecDispatch$Guard`，把 `assumeMapUnsafe` 的 null-success 变成显式 decode error（§7.28）；仍未完全替代 `assumeMapUnsafe`，真正的 `MapCodec` 构造/形状校验仍是后续项。
+5. **`Codec.dispatch` 的可靠适配**：P26 已用 javac `CodecDispatch` 实现真正的 `MapEncoder`/`MapDecoder` 包装，不再依赖 `assumeMapUnsafe`（§7.28）；generated guard 仅作为无 bridge-dir 的回退。仍需验证更多 dispatch codec 形状。
 6. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
 7. **WORLD_LOADED / 玩法契约**：lithium+ironchests 同实例的容器契约已通过（§7.20）；lithium 自身的玩法、`/give`/玩家交互/掉落/同步仍未覆盖，客户端仍 pending。
 8. **trashslot 仅到 BOOTED**：原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥已让专用服务端 `Done (4.655s)`（§7.21）；但无客户端连接，clientbound receiver 未安装，包 encode/decode 与 ItemStack NBT 桥未被玩家动作触发，客户端 GUI/玩法未验证。

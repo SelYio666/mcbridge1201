@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 22:30（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 22:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 22:35）：**Codec.dispatch 安全 MapCodec 适配**。活跃路径改用 javac `CodecDispatch`，用 `MapCodec.of(MapEncoder, MapDecoder)` 真正包装旧 `Codec`，不再依赖 `assumeMapUnsafe`；重新补丁 ironchests 后容器契约 5/5 通过，测试 17/17。证据 `runs/p26-codec-safe/`。
 更新（2026-10-18 22:30）：**Codec.dispatch 空结果保护**。`CodecDispatch$Guard` 把 `assumeMapUnsafe` 的 null-success 变成 `DataResult.error`，避免 `Optional.of(null)` 外泄；重新补丁 ironchests 后容器契约 5/5 通过，测试 17/17。证据 `runs/p25-codec-guard/`。
 更新（2026-10-18 22:25）：**chunk 压力测试工具化**。新增 `tools/run_chunk_stress.py`：两进程 force-load 225 chunks、远角方块、save/restart、`execute if block` 断言，输出 `verdict.json`；本次运行 `chunksMarked=225`、`STRESS_OK_A/B`、`passed=true`，exit 0。证据 `runs/p24-chunk-stress-tool/`。
 更新（2026-10-18 22:20）：**lithium chunk-access 压力测试通过**。224 个 forceload chunk（`[-7,-7]` 到 `[7,7]`），在远角设置钻石/绿宝石块，save/restart 后 `execute if block` 分别输出 `STRESS_OK_A/B`；两次 `Done`、exit 0。说明 P13 chunk 移植不只在单 chunk 探针上正确。证据 `runs/p23-chunk-stress/`。
@@ -152,6 +153,13 @@
 84. **验证**：AW 注入后容器契约 5/5，两次 `Done`、exit 0；`gradle test` **17/17**。
 85. **边界**：这是保护层，不是 `assumeMapUnsafe` 的完全替代；真正的 `MapCodec` 构造/形状校验仍待做。证据 `runs/p25-codec-guard/`。
 
+## 2026-10-18 22:35 更新：Codec.dispatch 安全 MapCodec 适配
+
+86. **javac 桥**：新增 `CodecDispatch.java`，用 `MapCodec.of(MapEncoder, MapDecoder)` 包装旧 dispatch 返回的 `Codec`；decode 走 `DynamicOps.createMap` + `codec.decode(...).map(Pair::getFirst)`，encode 走 `codec.encodeStart` + 复制 map entries；`MapCodecCodec` 直接 unwrap。
+87. **选择逻辑**：`JarPatcher` 在 `--bridge-dir` 提供 `CodecDispatch.class` 时优先用它；其他生成桥仍走 ASM；无 bridge dir 时才回退到 P25 generated guard。
+88. **验证**：重新补丁 ironchests，36 classes，`javac bridges: [CodecDispatch]`，jar 内无 `$Guard`；容器契约 5/5，两次 `Done`、exit 0；`gradle test` **17/17**。
+89. **边界**：MapCodec wrapper 的 keys/compressor 为空是 dispatch 值的有意设计；契约仍为专用服务端 + 命令 API。证据 `runs/p26-codec-safe/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -195,6 +203,7 @@
 | lithium chunk 压力测试 | `runs/p23-chunk-stress/README.md`、`verdict.json`、`step1b.log`、`step2.log` |
 | chunk 压力测试工具 | `tools/run_chunk_stress.py`、`runs/p24-chunk-stress-tool/README.md`、`verdict.json` |
 | Codec dispatch guard | `runs/p25-codec-guard/README.md`、`verdict.json`、`contract/verdict.json` |
+| Codec dispatch 安全适配 | `runs/p26-codec-safe/README.md`、`verdict.json`、`contract/verdict.json` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

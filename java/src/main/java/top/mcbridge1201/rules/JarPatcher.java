@@ -151,14 +151,21 @@ public final class JarPatcher {
                                          Map<String, byte[]> bridgeClasses) {
         Set<String> generatedNames = new TreeSet<>();
         for (String name : used) {
-            if (BridgeGenerator.isGenerated(name)) generatedNames.add(name);
+            boolean supplied = bridgeClasses != null && bridgeClasses.containsKey(name);
+            boolean external = supplied && (!BridgeGenerator.isGenerated(name)
+                    || BridgeGenerator.CODEC_DISPATCH.equals(name));
+            if (BridgeGenerator.isGenerated(name) && !external) generatedNames.add(name);
         }
         for (var e : BridgeGenerator.generate(generatedNames).entrySet()) {
             out.put(e.getKey() + ".class", e.getValue());
         }
         for (String bridge : used) {
-            if (BridgeGenerator.isGenerated(bridge)) continue;
-            if (bridgeClasses == null || !bridgeClasses.containsKey(bridge)) {
+            boolean generated = BridgeGenerator.isGenerated(bridge);
+            boolean supplied = bridgeClasses != null && bridgeClasses.containsKey(bridge);
+            boolean external = supplied && (!generated
+                    || BridgeGenerator.CODEC_DISPATCH.equals(bridge));
+            if (generated && !external) continue;
+            if (!supplied) {
                 throw new IllegalArgumentException("bridge class " + bridge
                         + " is not generated and was not supplied (use --bridge-dir)");
             }

@@ -32,7 +32,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | **Mixin 实现类替换** | `mixinClassReplacements`；chunk access 移植到 1.21.1 `ChunkResult` API，lithium 到达 `Done` | [docs/baseline.md](docs/baseline.md) §7.19、`runs/p13-chunk-port/` |
 | 第二样本 lithium | 转换并加载成功；显式降级 2 条 mixin；调用点/2 处 Mixin 目标/chunk access 已适配，**专用服务端 BOOTED**（`Done (4.772s)`），224-chunk 压力测试通过；无 lithium 玩法/客户端契约 | `runs/p6-lithium/`、`runs/p10-lithium-signature/`、`runs/p11-lithium-explosion/`、`runs/p13-chunk-port/`、`runs/p23-chunk-stress/`、`rules/fabric-1.21.1/lithium.json` |
 | chunk 压力测试工具 | `tools/run_chunk_stress.py`：225 chunks + save/restart + 远角断言，`passed=true` | [docs/baseline.md](docs/baseline.md) §7.27、`runs/p24-chunk-stress-tool/` |
-| Codec dispatch 保护 | `CodecDispatch$Guard` 拒绝 `assumeMapUnsafe` 的 null-success；契约 5/5 | [docs/baseline.md](docs/baseline.md) §7.28、`runs/p25-codec-guard/` |
+| Codec dispatch 安全适配 | javac `CodecDispatch` 用 `MapCodec.of` 包装旧 Codec；契约 5/5 | [docs/baseline.md](docs/baseline.md) §7.28、`runs/p26-codec-safe/` |
 | **lithium + ironchests 联合契约** | 同一实例两进程放置/插入/NBT/重启读回 5 钻石全部通过 | [docs/baseline.md](docs/baseline.md) §7.20、`runs/p14-lithium-ironchests/` |
 | 第三样本 trashslot | 原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥，**专用服务端 BOOTED**（`Done (4.655s)`）；无客户端/网络包往返 | `runs/p15-trashslot/`、`runs/p16-balm/`、`runs/p17-balm-net/`、`rules/fabric-1.21.1/trashslot.json` |
 
