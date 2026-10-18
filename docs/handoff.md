@@ -34,7 +34,13 @@ python tools/run_contract.py --instance work/instances/fabric-1.21.1-server --ou
 1. **`ItemPredicate` 的 registry-aware 构造**（唯一的已知语义降级）
    - 现象：`fromJson` 收到 `{"items":["minecraft:dirt"]}`，1.21.1 `ItemPredicate.CODEC` + `JsonOps` 解析失败，退回“匹配所有”。
    - 需要：从 registry 构造 `HolderSet`，而不是用 `JsonOps` 解析。
-   - 已查到的 API 线索：`class_2378.method_10223(Identifier)`（registry get）、`class_6880`（HolderSet，需查 `direct` 工厂）、`class_7923`（BuiltInRegistries，需查 ITEM 字段）、`class_2073` 构造器 `(Optional, class_2096$class_2100, class_9329, Map)`。
+   - 已确认的 1.21.1 API（intermediary）：
+     - `class_7923.field_41178` = `class_7922<class_1792>`（BuiltInRegistries.ITEM）
+     - `class_2378.method_10223(Identifier)` = 按 id 取物品
+     - `class_6880.method_40223(T)` = 单元素 direct HolderSet
+     - `class_2378.method_40269(T)` = wrapAsHolder
+     - `class_2073` 构造器 `(Optional, class_2096$class_2100, class_9329, Map)`；`class_2096$class_2100.field_9708` = ANY，`class_9329.field_49597` = EMPTY
+     - 仍缺：多元素 `HolderSet.direct(List/varargs)` 的 intermediary 名（`javap` 对 `class_7922` 未返回结果，需要再查）
    - 建议：把该桥写成 **Java 源码**（`java/src/bridge/java/...`），用 javac 对 `work/cb/data/jars/client-1.21.1-intermediary.jar` 编译后嵌入，而不是继续手写 ASM（JSON 解析 + 循环不适合手写字节码）。
 2. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
 3. **调用点级签名适配**：lithium 的 `class_14.method_59`（BlockView/pos → BlockPlaceContext/坐标）需要手写桥，属语义变化。
