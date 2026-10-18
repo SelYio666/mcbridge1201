@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 20:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 21:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 21:05）：**Mixin 目标描述符适配已实现**：lithium 的 `ExplosionMixin` 与 POI `SerializingRegionBasedStorageMixin` 两处 `@Inject` 目标签名迁移成功，服务端推进到 chunk access 的 `ChunkHolderExtended` cast（下一阻断是 1.21.1 chunk API 形状 + CenturyBridge tombstone，不是描述符）。说明见 `docs/baseline.md` §7.18、`rules/fabric-1.21.1/lithium.json`、`runs/p11-lithium-explosion/`。
 更新（2026-10-18 20:50）：**调用点签名适配已实现并用 lithium 的 `class_14.method_59` 验收**。补丁后 `NoSuchMethodError` 消失，启动推进到下一失败（`world.explosions.ExplosionMixin` 的注入目标变化）。规则、桥、命令、退出码与日志见 `docs/baseline.md` §7.17、`rules/fabric-1.21.1/lithium.json`、`runs/p10-lithium-signature/`。
 
 ## 本轮做了什么
@@ -36,6 +37,15 @@
 24. **验收结果**：lithium 补丁 `walknodeevaluator.checkneighbourblocks.view-to-context` 命中 **2** 次（`PathNodeCache.getNodeTypeFromNeighbors`、`AbstractBlockStateMixin.init`）；服务端启动不再抛 `NoSuchMethodError`，推进到 `ExplosionMixin` 的 `@Inject` 目标不匹配；`doneSeen=false`，runner exit 11，属“下一失败”而不是通过。回归检查：用 `container.json` 重补 ironchests，输出与既有 `-patched.jar` 逐字节相同（SHA-256 `7d89d452...bc9a1`）。
 25. **测试与证据**：新增 `CallSiteAdaptationTest`（精确匹配）与 `JarPatcherCallSiteTest`（合成 jar 端到端 + 缺桥拒绝）；`gradle test` 8/8 通过。日志、哈希、复现命令在 `runs/p10-lithium-signature/README.md`。
 
+## 2026-10-18 21:05 更新：Mixin 目标描述符适配
+
+26. **规则引擎新增 `mixinCallbackAdaptations`**：支持 `append`（在 CallbackInfo 前插新参数、平移局部变量、重写 `@Inject.method`）与 `replace`（替换回调捕获参数、清过期调试元数据、按新描述符算 `maxLocals`）；可选 `refmap` 重写，防止 Mixin 继续用旧 refmap 锁定旧签名。
+27. **ExplosionMixin**：1.21.1 `Explosion` 构造器追加 `ParticleOptions, ParticleOptions, Holder<SoundEvent>`；回调体只读 shadow 字段，因此插入 3 个未使用参数槽即可，语义不变。
+28. **POI `SerializingRegionBasedStorageMixin`**：`SectionStorage` 构造器从 `Path/DataFixer/...` 变为 `SimpleRegionStorage/RegistryAccess/ChunkIOErrorReporter/...`；回调体只用 `this`，替换捕获参数，并把 refmap 的 `"<init>"` 映射改到新描述符。
+29. **结果**：补丁命中 Explosion 1 次、POI 1 次、refmap 1 次；服务端不再有这两处注入失败，走到 `Preparing level "world"`，随后在 `class_3215.getChunkBlocking` 抛 `ClassCastException: class_3193 cannot be cast to ChunkHolderExtended`。`doneSeen=false`，runner exit 11，JVM exit 0；仍不是兼容通过。
+30. **下一阻断分析**：CenturyBridge 移除了 `ChunkHolderMixin`（`field_16425` / `class_3193$class_3724` 消失），保留的 `ServerChunkManagerMixin` 仍 cast 到 `ChunkHolderExtended`。直接 re-add 失败（`@Shadow field_16425` 不存在）；本地化 field 的实验越过 cast 但撞上 `class_3898.method_17236` tombstone。两者都记录在 `runs/p11-lithium-explosion/`，**均未采用**，也没有用 mixin strip 掩盖。
+31. **测试**：新增 `MixinCallbackAdaptationTest`（append/replace/refmap 合成 jar），`gradle test --rerun-tasks` 11/11 通过。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -61,13 +71,17 @@
 | 1.20.1 / 1.21.1 `method_59` 方法体 | `runs/p10-lithium-signature/class_14-1.20.1-body.txt`、`class_14-1.21.1-body.txt` |
 | 调用点补丁 / 启动 / 哈希 | `runs/p10-lithium-signature/README.md`、`patch-lithium.log`、`server-callsite.log`、`verdict.json` |
 | 单元测试 | `runs/p10-lithium-signature/gradle-test.log`（8 tests, 0 failures） |
+| Mixin 适配规则 | `rules/fabric-1.21.1/lithium.json`（`mixinCallbackAdaptations`） |
+| Mixin 适配补丁 / 启动 / 实验 | `runs/p11-lithium-explosion/README.md`、`patch-lithium3.log`、`server-explosion3.log`、`server-readd.log`、`server-chunkholder-local2.log` |
+| Mixin 适配测试 | `runs/p11-lithium-explosion/gradle-test.log`（11 tests, 0 failures） |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
 ## 未解决（按优先级）
 
-1. **lithium 的 `ExplosionMixin` 注入目标变化**：1.21.1 的 `Explosion` 构造器改为接收 `Holder`/注册表项，旧 `@Inject` 描述符不存在。这是当前 lithium 启动的下一道墙；需要改注入点或用规则显式降级，不得删除核心逻辑 mixin。
+1. **lithium 的 chunk access 阻断**：`class_3215.getChunkBlocking` cast `class_3193` 到 `ChunkHolderExtended` 失败；CenturyBridge 移除了 `ChunkHolderMixin`，直接 re-add 会因 `@Shadow field_16425` 不存在而失败，本地化 field 的实验又撞上 `class_3898.method_17236` tombstone。需要真正移植 1.21.1 ChunkMap/chunk future API 或为非降级桥；不得用 mixin strip 掩盖。
 2. **调用点适配的覆盖面**：目前只验证了顶层 jar 的直接调用/句柄；嵌套 jar（JiJ）内的调用点尚未覆盖，需要把桥嵌入到对应嵌套 jar 或改用可见性更好的桥部署方式。
+3. **Mixin 目标描述符适配的覆盖面**：已处理 Explosion 与 POI storage 两处；仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 模式在真实注入点上的边界。
 3. **`Codec.dispatch` 的可靠适配**：ironchests 契约虽已通过，但 `assumeMapUnsafe` 在部分路径仍可能 `Optional.of(null)`；应改成真正的 `MapCodec` 构造/显式诊断。
 4. **CenturyBridge 桥 jar 未构建**：`core/shims/1.21.1` 未编译，`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。
 5. **玩家侧 / 多人**：GUI、右键交互、渲染、两个客户端同步仍 pending；服务端只做了命令契约。

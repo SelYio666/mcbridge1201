@@ -3,12 +3,17 @@ package top.mcbridge1201.rules;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.ParameterNode;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -130,6 +135,11 @@ public final class JarPatcher {
                 out.put(name, stripMixinConfig(e.getValue(), strip, st));
                 continue;
             }
+            List<RuleSet.MixinCallbackAdaptation> refmaps = rules.refmapAdaptationsFor(name);
+            if (!refmaps.isEmpty()) {
+                out.put(name, patchRefmap(e.getValue(), refmaps, st));
+                continue;
+            }
             if (!name.endsWith(".class")) {
                 out.put(name, e.getValue());
                 continue;
@@ -146,6 +156,10 @@ public final class JarPatcher {
         new ClassReader(bytes).accept(cn, 0);
         boolean changed = false;
         boolean framesAffected = false;
+        if (applyMixinCallbackAdaptations(cn, rules, st)) {
+            changed = true;
+            framesAffected = true;
+        }
         if (applySignatureAdaptations(cn, rules, st)) {
             changed = true;
             framesAffected = true;
@@ -229,6 +243,107 @@ public final class JarPatcher {
     }
 
     /**
+     * Adapts a mixin callback whose target method gained parameters: the callback gains the
+     * new parameter slots before {@code CallbackInfo}, and the {@code @Inject(method=...)}
+     * string is rewritten to the target version's descriptor.
+     */
+    private static boolean applyMixinCallbackAdaptations(ClassNode cn, RuleSet rules, Stats st) {
+        boolean any = false;
+        for (RuleSet.MixinCallbackAdaptation a : rules.mixinAdaptationsFor(cn.name)) {
+            for (MethodNode mn : cn.methods) {
+                if (!mn.name.equals(a.callbackMethod) || !mn.desc.equals(a.oldCallbackDesc)) continue;
+                if (a.replace) {
+                    // The callback body only uses `this`; replace the captured target args with
+                    // the target version's args and drop the now-stale debug metadata.
+                    int oldArgSlots = Type.getArgumentsAndReturnSizes(a.oldCallbackDesc) >> 2;
+                    for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+                        if (insn instanceof org.objectweb.asm.tree.VarInsnNode v
+                                && v.var >= 1 && v.var < oldArgSlots) {
+                            throw new IllegalArgumentException(a.id + ": replace mode cannot be used; "
+                                    + "callback reads captured argument slot " + v.var);
+                        }
+                        if (insn instanceof org.objectweb.asm.tree.IincInsnNode i
+                                && i.var >= 1 && i.var < oldArgSlots) {
+                            throw new IllegalArgumentException(a.id + ": replace mode cannot be used; "
+                                    + "callback increments captured argument slot " + i.var);
+                        }
+                    }
+                    mn.desc = a.newCallbackDesc;
+                    mn.maxLocals = Math.max(mn.maxLocals, Type.getArgumentsAndReturnSizes(a.newCallbackDesc) >> 2);
+                    mn.parameters = null;
+                    mn.localVariables = null;
+                } else {
+                    int delta = 0;
+                    for (String d : a.addedParamDescs) delta += Type.getType(d).getSize();
+                    if (delta == 0) continue;
+                    shiftLocals(mn, a.insertSlot, delta);
+                    mn.desc = a.newCallbackDesc;
+                    mn.maxLocals += delta;
+                    addMixinParameters(mn, a);
+                }
+                rewriteInjectTarget(mn, a.oldTargetDescriptor, a.newTargetDescriptor);
+                st.applied.merge(a.id, 1, Integer::sum);
+                any = true;
+            }
+        }
+        return any;
+    }
+
+    private static void addMixinParameters(MethodNode mn, RuleSet.MixinCallbackAdaptation a) {
+        if (mn.parameters != null && !mn.parameters.isEmpty()) {
+            int at = Math.max(0, mn.parameters.size() - 1); // keep CallbackInfo last
+            for (int i = 0; i < a.addedParamDescs.size(); i++) {
+                String name = i < a.addedParamNames.size() ? a.addedParamNames.get(i) : "p" + i;
+                mn.parameters.add(at + i, new ParameterNode(name, 0));
+            }
+        }
+        if (mn.localVariables != null && !mn.localVariables.isEmpty()) {
+            LabelNode start = null;
+            LabelNode end = null;
+            for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+                if (insn instanceof LabelNode l) {
+                    if (start == null) start = l;
+                    end = l;
+                }
+            }
+            if (start != null) {
+                int slot = a.insertSlot;
+                for (int i = 0; i < a.addedParamDescs.size(); i++) {
+                    String name = i < a.addedParamNames.size() ? a.addedParamNames.get(i) : "p" + i;
+                    String desc = a.addedParamDescs.get(i);
+                    mn.localVariables.add(new LocalVariableNode(name, desc, null, start, end, slot));
+                    slot += Type.getType(desc).getSize();
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void rewriteInjectTarget(MethodNode mn, String oldTarget, String newTarget) {
+        if (oldTarget == null || newTarget == null) return;
+        for (List<AnnotationNode> annotations : Arrays.asList(mn.visibleAnnotations, mn.invisibleAnnotations)) {
+            if (annotations == null) continue;
+            for (AnnotationNode an : annotations) {
+                if (!"Lorg/spongepowered/asm/mixin/injection/Inject;".equals(an.desc) || an.values == null) {
+                    continue;
+                }
+                for (int i = 0; i + 1 < an.values.size(); i += 2) {
+                    if (!"method".equals(an.values.get(i))) continue;
+                    Object value = an.values.get(i + 1);
+                    if (value instanceof List<?> raw) {
+                        List<Object> list = (List<Object>) raw;
+                        for (int j = 0; j < list.size(); j++) {
+                            if (oldTarget.equals(list.get(j))) list.set(j, newTarget);
+                        }
+                    } else if (value instanceof String s && oldTarget.equals(s)) {
+                        an.values.set(i + 1, newTarget);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Appends a parameter to an override so it keeps overriding the target method, shifting
      * existing locals and forwarding the new argument to the listed calls.
      */
@@ -237,7 +352,7 @@ public final class JarPatcher {
         for (RuleSet.SignatureAdaptation a : rules.adaptationsFor(cn.name)) {
             for (MethodNode mn : cn.methods) {
                 if (!mn.name.equals(a.methodName) || !mn.desc.equals(a.oldDesc)) continue;
-                shiftLocals(mn, a.paramSlot);
+                shiftLocals(mn, a.paramSlot, 1);
                 mn.desc = a.newDesc;
                 mn.maxLocals = Math.max(mn.maxLocals + 1, a.paramSlot + 1);
                 for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
@@ -260,17 +375,17 @@ public final class JarPatcher {
         return any;
     }
 
-    private static void shiftLocals(MethodNode mn, int fromSlot) {
+    private static void shiftLocals(MethodNode mn, int fromSlot, int delta) {
         for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
             if (insn instanceof org.objectweb.asm.tree.VarInsnNode v && v.var >= fromSlot) {
-                v.var += 1;
+                v.var += delta;
             } else if (insn instanceof org.objectweb.asm.tree.IincInsnNode i && i.var >= fromSlot) {
-                i.var += 1;
+                i.var += delta;
             }
         }
         if (mn.localVariables != null) {
             for (var lv : mn.localVariables) {
-                if (lv.index >= fromSlot) lv.index += 1;
+                if (lv.index >= fromSlot) lv.index += delta;
             }
         }
     }
@@ -467,6 +582,29 @@ public final class JarPatcher {
             }
         }
         return new com.google.gson.Gson().toJson(o).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /** Rewrites a Mixin refmap entry that pins an old target descriptor. */
+    private static byte[] patchRefmap(byte[] json, List<RuleSet.MixinCallbackAdaptation> adaptations, Stats st) {
+        com.google.gson.JsonObject root;
+        try {
+            root = com.google.gson.JsonParser.parseString(
+                    new String(json, java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (RuntimeException ex) {
+            throw new IllegalArgumentException("invalid mixin refmap JSON", ex);
+        }
+        com.google.gson.JsonObject mappings = root.getAsJsonObject("mappings");
+        if (mappings == null) throw new IllegalArgumentException("mixin refmap has no 'mappings' object");
+        for (RuleSet.MixinCallbackAdaptation a : adaptations) {
+            if (a.refmapKey == null || a.refmapValue == null) continue;
+            com.google.gson.JsonObject mixin = mappings.getAsJsonObject(a.mixinClass);
+            if (mixin == null) {
+                throw new IllegalArgumentException("refmap has no entry for mixin " + a.mixinClass);
+            }
+            mixin.addProperty(a.refmapKey, a.refmapValue);
+            st.applied.merge(a.id + "/refmap", 1, Integer::sum);
+        }
+        return new com.google.gson.Gson().toJson(root).getBytes(java.nio.charset.StandardCharsets.UTF_8);
     }
 
     private static boolean looksLikeZip(byte[] b) {

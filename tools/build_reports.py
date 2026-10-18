@@ -145,7 +145,7 @@ def main():
     runtime = {
         "ironchests-5.0.2-fabric.jar": "CONTRACT_PASSED（服务端命令范围）",
         "lithium-fabric-mc1.20.1-0.11.4.jar":
-            "LOADED；显式 mixin 降级 2 条；调用点签名已适配，推进到 ExplosionMixin 注入目标（未通过；见 runs/p10-lithium-signature/）",
+            "LOADED；显式 mixin 降级 2 条；调用点与 2 处 Mixin 目标已适配，卡在 chunk access 的 ChunkHolderExtended cast（未通过；见 runs/p11-lithium-explosion/）",
     }
     for a in plan["artifacts"]:
         c = a["counts"]

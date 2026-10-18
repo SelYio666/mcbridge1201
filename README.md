@@ -25,7 +25,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 支持矩阵 | 10 份样本的静态结果 + 运行时阶段（未运行 ≠ 通过） | [docs/support-matrix.md](docs/support-matrix.md) |
 | 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
 | **调用点签名适配** | `callSiteAdaptations` + javac 桥；lithium `class_14.method_59` 命中 2 处，`NoSuchMethodError` 消失 | [docs/baseline.md](docs/baseline.md) §7.17、`runs/p10-lithium-signature/` |
-| 第二样本 lithium | 转换并加载成功（131 配置项）；显式降级 2 条 mixin；调用点签名已适配，推进到下一失败 `ExplosionMixin` 注入目标 | `runs/p6-lithium/`、`runs/p10-lithium-signature/`、`rules/fabric-1.21.1/lithium.json` |
+| **Mixin 目标描述符适配** | `mixinCallbackAdaptations`（append/replace + refmap）；lithium `ExplosionMixin` 与 POI storage 两处通过 | [docs/baseline.md](docs/baseline.md) §7.18、`runs/p11-lithium-explosion/` |
+| 第二样本 lithium | 转换并加载成功（131 配置项）；显式降级 2 条 mixin；调用点与 2 处 Mixin 目标已适配，卡在 chunk access 的 `ChunkHolderExtended` cast | `runs/p6-lithium/`、`runs/p10-lithium-signature/`、`runs/p11-lithium-explosion/`、`rules/fabric-1.21.1/lithium.json` |
 
 ## 交接
 

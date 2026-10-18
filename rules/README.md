@@ -79,6 +79,42 @@ mcbridge1201 patch --in <converted.jar> --out <patched.jar> \
   不会产出悬空调用。
 - 当前边界：外部桥只嵌入顶层 jar；嵌套 jar（JiJ）内的调用点尚未覆盖。
 
+## Mixin 目标描述符适配 schema
+
+当 `@Inject` 的目标方法描述符变化（构造器增删参数），用 `mixinCallbackAdaptations` 迁移
+Mixin 回调，而不是删 mixin：
+
+```json
+{
+  "mixinCallbackAdaptations": [
+    {
+      "id": "lithium.poi.serializing-storage-ctor-callback",
+      "mixinClass": "me/jellysquid/mods/lithium/mixin/ai/poi/SerializingRegionBasedStorageMixin",
+      "callbackMethod": "init",
+      "oldCallbackDesc": "(Ljava/nio/file/Path;...;CallbackInfo;)V",
+      "newCallbackDesc": "(Lnet/minecraft/class_9172;...;CallbackInfo;)V",
+      "replace": true,
+      "refmap": "mixins.lithium.refmap.json",
+      "refmapKey": "<init>",
+      "refmapValue": "Lnet/minecraft/class_4180;<init>(...new...)V",
+      "capability": "mixin.inject.target_descriptor",
+      "risk": "medium",
+      "evidence": "触发它的真实 InvalidInjectionException + 旧/新目标签名"
+    }
+  ]
+}
+```
+
+- `append` 模式（默认）：`insertSlot` + `addedParamDescs/Names`，在 `CallbackInfo` 前插入新参数，
+  平移 `VarInsn/IincInsn/LocalVariableTable`，补 `MethodParameters`，并可把 `@Inject.method` 从
+  `oldTargetDescriptor` 改写成 `newTargetDescriptor`。
+- `replace` 模式：`replace: true`，用 `newCallbackDesc` 替换捕获参数；回调体必须不读取旧参数
+  （规则 evidence 里要写明这一点），`maxLocals` 按新描述符重算，旧调试元数据清掉。
+- `refmap`：如果原 mixin 用 `<init>` 等短名并依赖 refmap，必须同时把 refmap 的
+  `mappings.<mixinClass>.<key>` 改到新描述符，否则 Mixin 会继续用旧签名匹配而失败。
+- 这不是 `mixinStrips`：不改 mixin 列表、不删注入；如果目标 API 形状变化超出描述符迁移，
+  必须停下来做真正的移植或显式降级，不能把 strip 当通过。
+
 ## 现有规则
 
 | id | 目标 | 语义依据 | 状态 |
@@ -89,6 +125,8 @@ mcbridge1201 patch --in <converted.jar> --out <patched.jar> \
 | `identifier.ctor.to-factory` | `new Identifier(ns,path)` → 公开工厂 | 1.21.1 私有化构造器 | 已应用 13 处；剩余用 access widener |
 | `blockentity.nbt.{read,write}.lookup` | 1 参 NBT 覆写 → 2 参（带 `WrapperLookup`），并给 `ContainerHelper` 调用补参 | 1.20.5 起 BlockEntity NBT 带注册表视图 | **已应用，容器持久化通过** |
 | `walknodeevaluator.checkneighbourblocks.view-to-context` | `WalkNodeEvaluator.checkNeighbourBlocks(BlockGetter, MutableBlockPos, PathType)` → 1.21.1 的 `(PathfindingContext, int, int, int, PathType)` | 1.20.1 旧方法体逐条移植；旧调用点可传任意 `BlockGetter`（含 `SingleBlockBlockView`），无法安全构造 `PathfindingContext` | **已应用 2 处；lithium 启动不再抛 `NoSuchMethodError`（推进到下一失败）** |
+| `lithium.explosionmixin.ctor-callback` | `Explosion` 构造器从 10 参变为 13 参（追加 2×ParticleOptions + Holder<SoundEvent>） | 回调体只读 shadow 字段；append 3 个未使用参数槽，语义不变 | **已应用 1 处；该注入通过（样本仍卡在 chunk access）** |
+| `lithium.poi.serializing-storage-ctor-callback` | `SectionStorage` 构造器改为 `(SimpleRegionStorage, Function, Function, RegistryAccess, ChunkIOErrorReporter, LevelHeightAccessor)` | 回调体只用 `this`；replace 捕获参数并重写 refmap `<init>` 映射 | **已应用 1 处 + refmap 1 处；该注入通过（样本仍卡在 chunk access）** |
 | `constant-kind-fix(-handle)` | class→interface 的常量池种类 | 1.20.5 的 DFU 接口化 | 已应用 123 + 3 处 |
 
 `signatureAdaptations` 会迁移方法描述符、平移局部变量槽、给指定调用补参数，并用 `COMPUTE_FRAMES` 重算帧；这是“签名变化”类损伤的通用处理形态，而不是单点改名。

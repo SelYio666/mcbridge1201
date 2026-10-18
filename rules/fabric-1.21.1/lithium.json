@@ -19,5 +19,44 @@
       "risk": "medium",
       "evidence": "Real crash: NoSuchMethodError 'BlockState net.minecraft.class_14.method_59(BlockView, BlockPos.Mutable, BlockState)' at lithium AbstractBlockStateMixin.handler$zij001$lithium$init (runs/p6-lithium/server.log lines 51-64); the same call is in lithium PathNodeCache.getNodeTypeFromNeighbors. Mojang name: WalkNodeEvaluator.checkNeighbourBlocks. 1.20.1 signature (BlockGetter, BlockPos.MutableBlockPos, BlockPathTypes); 1.21.1 signature (PathfindingContext, int, int, int, PathType), so the arguments were replaced. 1.20.1 body (body-preserving remap, runs/p10-lithium-signature/class_14-1.20.1-body.txt): scan 3x3x3 neighbours except the origin column; cactus/sweet berry -> DANGER_OTHER, isBurningBlock -> DANGER_FIRE, water -> WATER_BORDER, wither rose/pointed dripstone -> DAMAGE_CAUTIOUS; otherwise return the passed type. The bridge reproduces that order with 1.21.1 APIs. It cannot call the new method directly because PathfindingContext is only constructible from (CollisionGetter, Mob) and one old call site passes a synthetic SingleBlockBlockView (not a CollisionGetter, no entity)."
     }
+  ],
+  "mixinCallbackAdaptations": [
+    {
+      "id": "lithium.explosionmixin.ctor-callback",
+      "mixinClass": "me/jellysquid/mods/lithium/mixin/world/explosions/ExplosionMixin",
+      "callbackMethod": "init",
+      "oldCallbackDesc": "(Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V",
+      "newCallbackDesc": "(Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;Lnet/minecraft/class_2394;Lnet/minecraft/class_2394;Lnet/minecraft/class_6880;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V",
+      "insertSlot": 14,
+      "addedParamDescs": [
+        "Lnet/minecraft/class_2394;",
+        "Lnet/minecraft/class_2394;",
+        "Lnet/minecraft/class_6880;"
+      ],
+      "addedParamNames": [
+        "particleOptions",
+        "particleOptions2",
+        "soundEvent"
+      ],
+      "oldTargetDescriptor": "<init>(Lnet/minecraft/world/World;Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/damage/DamageSource;Lnet/minecraft/world/explosion/ExplosionBehavior;DDDFZLnet/minecraft/world/explosion/Explosion$DestructionType;)V",
+      "newTargetDescriptor": "<init>(Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;Lnet/minecraft/class_2394;Lnet/minecraft/class_2394;Lnet/minecraft/class_6880;)V",
+      "capability": "mixin.inject.target_descriptor",
+      "risk": "medium",
+      "evidence": "Real crash: Mixin apply for lithium.mixins.json:world.explosions.ExplosionMixin could not find @Inject target '<init>(Level, Entity, DamageSource, ExplosionBehavior, DDD F Z Explosion$DestructionType)' in net.minecraft.class_1927 (runs/p10-lithium-signature/server-callsite.log lines 53-54). 1.21.1 added three constructor parameters: ParticleOptions, ParticleOptions, Holder<SoundEvent>, so the old 10-arg descriptor is gone. The mixin callback body only uses shadow fields (field_9187, field_9186, field_9190, field_9195, field_9189), not the constructor arguments, so the three new slots are unused by the body. The adaptation appends the three parameter slots before CallbackInfo, shifts existing locals (CallbackInfo and explodeAir/endPortal locals) by 3, and rewrites the @Inject target to the intermediary 13-arg descriptor. This is a real target-descriptor migration, not a mixin strip."
+    },
+    {
+      "id": "lithium.poi.serializing-storage-ctor-callback",
+      "mixinClass": "me/jellysquid/mods/lithium/mixin/ai/poi/SerializingRegionBasedStorageMixin",
+      "callbackMethod": "init",
+      "oldCallbackDesc": "(Ljava/nio/file/Path;Ljava/util/function/Function;Ljava/util/function/Function;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;ZLnet/minecraft/class_5455;Lnet/minecraft/class_5539;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V",
+      "newCallbackDesc": "(Lnet/minecraft/class_9172;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/class_5455;Lnet/minecraft/class_9820;Lnet/minecraft/class_5539;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V",
+      "replace": true,
+      "refmap": "mixins.lithium.refmap.json",
+      "refmapKey": "<init>",
+      "refmapValue": "Lnet/minecraft/class_4180;<init>(Lnet/minecraft/class_9172;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/class_5455;Lnet/minecraft/class_9820;Lnet/minecraft/class_5539;)V",
+      "capability": "mixin.inject.target_descriptor",
+      "risk": "medium",
+      "evidence": "Real crash after the ExplosionMixin fix: SectionStorage (class_4180) @Inject target '<init>(Path, Function, Function, DataFixer, class_4284, boolean, RegistryAccess, LevelHeightAccessor)' not found (runs/p11-lithium-explosion/server-explosion.log lines 66-67). 1.21.1 replaced the constructor with '(SimpleRegionStorage, Function, Function, RegistryAccess, ChunkIOErrorReporter, LevelHeightAccessor)': the path became SimpleRegionStorage, DataFixer/dataFixTypes/boolean were removed, and ChunkIOErrorReporter was added. The callback body only uses 'this' (it initializes the columns/listening maps and never reads a constructor argument), so replacing the captured args is semantics-preserving. The rule rewrites the callback descriptor and drops stale parameter/local-variable metadata; the @Inject annotation remains method=\"<init>\" and Mixin infers the new target from the callback args."
+    }
   ]
 }

@@ -1,0 +1,49 @@
+{
+  "sample": "lithium-fabric-mc1.20.1-0.11.4",
+  "target": "fabric-1.21.1",
+  "rules": [
+    "lithium.explosionmixin.ctor-callback",
+    "lithium.poi.serializing-storage-ctor-callback"
+  ],
+  "ruleFile": "rules/fabric-1.21.1/lithium.json",
+  "patch": {
+    "jar": "work/cb/out/lithium/lithium-patched-explosion3.jar",
+    "sha256": "44a49bcdf5e2ae2f370c818fcdb1996821a67370fe899ddcc6a117b884b1e05e",
+    "applied": {
+      "lithium.explosionmixin.ctor-callback": 1,
+      "lithium.poi.serializing-storage-ctor-callback": 1,
+      "lithium.poi.serializing-storage-ctor-callback/refmap": 1
+    },
+    "log": "runs/p11-lithium-explosion/patch-lithium3.log"
+  },
+  "server": {
+    "instance": "work/instances/fabric-1.21.1-server-lithium",
+    "log": "runs/p11-lithium-explosion/server-explosion3.log",
+    "runnerExitCode": 11,
+    "jvmExitCode": 0,
+    "doneSeen": false,
+    "noSuchMethodErrorSeen": false,
+    "explosionMixinErrorSeen": false,
+    "poiMixinErrorSeen": false,
+    "nextFailure": "ClassCastException: net.minecraft.class_3193 cannot be cast to me.jellysquid.mods.lithium.common.world.chunk.ChunkHolderExtended at class_3215.getChunkBlocking",
+    "outcome": "advanced_to_next_failure"
+  },
+  "tests": {
+    "command": "gradle --no-daemon test --rerun-tasks (in java/)",
+    "exitCode": 0,
+    "tests": 11,
+    "failures": 0,
+    "log": "runs/p11-lithium-explosion/gradle-test.log"
+  },
+  "experimentsNotAdopted": {
+    "readdChunkHolderMixin": {
+      "log": "runs/p11-lithium-explosion/server-readd.log",
+      "failure": "@Shadow field field_16425 was not located in net.minecraft.class_3193"
+    },
+    "localizeChunkHolderField": {
+      "log": "runs/p11-lithium-explosion/server-chunkholder-local2.log",
+      "failure": "CenturyBridge tombstone: net.minecraft.class_3898.method_17236 no longer exists in 1.21.1"
+    }
+  },
+  "scope": "dedicated server startup only; GUI/render/multiplayer not verified; not a compatibility pass"
+}

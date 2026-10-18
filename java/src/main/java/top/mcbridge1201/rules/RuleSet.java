@@ -33,6 +33,7 @@ public final class RuleSet {
     public final List<CallSiteAdaptation> callSiteAdaptations = new ArrayList<>();
     public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
     public final List<SignatureAdaptation> signatureAdaptations = new ArrayList<>();
+    public final List<MixinCallbackAdaptation> mixinCallbackAdaptations = new ArrayList<>();
     public final List<MixinStrip> mixinStrips = new ArrayList<>();
 
     /**
@@ -53,6 +54,34 @@ public final class RuleSet {
         public String name;
         public String oldDesc;
         public String newDesc;
+    }
+
+    /**
+     * Adapts a mixin callback to a target method whose descriptor gained parameters. The
+     * callback keeps its body but gains the new parameter slots before {@code CallbackInfo};
+     * the {@code @Inject(method=...)} string is rewritten at the same time. This is separate
+     * from {@link SignatureAdaptation}: that one migrates an override in the mod, while this one
+     * migrates a mixin's injection target and its callback signature.
+     */
+    public static final class MixinCallbackAdaptation {
+        public String id;
+        public String mixinClass;
+        public String callbackMethod;
+        public String oldCallbackDesc;
+        public String newCallbackDesc;
+        public int insertSlot;
+        /** When true the callback's old target args are replaced by new args (body must not use them). */
+        public boolean replace;
+        public List<String> addedParamDescs = new ArrayList<>();
+        public List<String> addedParamNames = new ArrayList<>();
+        public String oldTargetDescriptor;
+        public String newTargetDescriptor;
+        public String refmap;
+        public String refmapKey;
+        public String refmapValue;
+        public String capability;
+        public String risk;
+        public String evidence;
     }
 
     /**
@@ -160,6 +189,11 @@ public final class RuleSet {
                 rs.signatureAdaptations.add(new Gson().fromJson(el, SignatureAdaptation.class));
             }
         }
+        if (o.has("mixinCallbackAdaptations")) {
+            for (var el : o.getAsJsonArray("mixinCallbackAdaptations")) {
+                rs.mixinCallbackAdaptations.add(new Gson().fromJson(el, MixinCallbackAdaptation.class));
+            }
+        }
         if (o.has("mixinStrips")) {
             for (var el : o.getAsJsonArray("mixinStrips")) {
                 rs.mixinStrips.add(new Gson().fromJson(el, MixinStrip.class));
@@ -179,6 +213,24 @@ public final class RuleSet {
         List<SignatureAdaptation> out = new ArrayList<>();
         for (SignatureAdaptation a : signatureAdaptations) {
             if (ownerMatches(a.targetClass, internalClass)) out.add(a);
+        }
+        return out;
+    }
+
+    /** Mixin callback adaptations target one exact mixin class; no wildcards. */
+    public List<MixinCallbackAdaptation> mixinAdaptationsFor(String internalClass) {
+        List<MixinCallbackAdaptation> out = new ArrayList<>();
+        for (MixinCallbackAdaptation a : mixinCallbackAdaptations) {
+            if (a.mixinClass.equals(internalClass)) out.add(a);
+        }
+        return out;
+    }
+
+    /** Refmap entries that must be rewritten together with a mixin callback adaptation. */
+    public List<MixinCallbackAdaptation> refmapAdaptationsFor(String entryName) {
+        List<MixinCallbackAdaptation> out = new ArrayList<>();
+        for (MixinCallbackAdaptation a : mixinCallbackAdaptations) {
+            if (a.refmap != null && a.refmap.equals(entryName)) out.add(a);
         }
         return out;
     }

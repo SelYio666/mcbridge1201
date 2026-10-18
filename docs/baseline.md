@@ -518,17 +518,62 @@ invokestatic top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks.check
 
 边界：本轮只验证专用服务端启动；GUI/渲染/多人仍 pending。外部桥目前只嵌入顶层 jar，嵌套 jar 内的调用点尚未覆盖（已写入 `rules/README.md`）。
 
+### 7.18 Mixin 目标描述符适配：lithium 的 `ExplosionMixin` 与 POI storage
+
+P10 解决 `class_14.method_59` 后，lithium 的下两个阻断不再是普通调用点，而是 **Mixin `@Inject` 的目标方法描述符**在 1.21.1 变化。§7.15 的两条 `mixinStrips` 只处理“注入目标消失”的显式降级；这两处如果直接 strip 会丢掉爆炸/POI 优化，因此新增了 `mixinCallbackAdaptations`（不是 strip）。
+
+**两处实际变化**
+
+| Mixin | 1.20.1 目标 | 1.21.1 目标 | 适配 |
+|---|---|---|---|
+| `world.explosions.ExplosionMixin#init` | `class_1927.<init>(Level, Entity, DamageSource, ExplosionBehavior, DDD F Z Explosion$DestructionType)` | 同参数后追加 `ParticleOptions, ParticleOptions, Holder<SoundEvent>`（13 参） | 在 `CallbackInfo` 前插入 3 个参数槽，局部变量整体后移 3，重写 `@Inject(method=...)` 为 intermediary 13 参描述符 |
+| `ai.poi.SerializingRegionBasedStorageMixin#init` | `class_4180.<init>(Path, Function, Function, DataFixer, class_4284, boolean, class_5455, class_5539)` | `class_4180.<init>(SimpleRegionStorage, Function, Function, RegistryAccess, ChunkIOErrorReporter, LevelHeightAccessor)` | 回调体只使用 `this`，直接替换捕获参数；同时把 refmap 的 `"<init>"` 映射改到新描述符 |
+
+两个回调体都不读取旧构造器参数（Explosion 只用 shadow 字段，POI 只初始化自己的 map），所以“参数槽迁移/替换”是语义等价的；这不是空实现，也不是删 mixin。
+
+**引擎支持**（`RuleSet`/`JarPatcher`）
+
+- `mixinCallbackAdaptations`：`mixinClass`、`callbackMethod`、`oldCallbackDesc`/`newCallbackDesc`、`insertSlot`、`addedParamDescs/Names`、`replace`、`oldTargetDescriptor`/`newTargetDescriptor`、`refmap/refmapKey/refmapValue`、`capability`、`risk`、`evidence`。
+- `append` 模式：在 `insertSlot` 插入新参数，平移 `VarInsn/IincInsn/LocalVariableTable`，补 `MethodParameters`，重写 `@Inject.method`。
+- `replace` 模式：替换回调捕获参数（调用体必须不读旧参数），清掉过期调试元数据，`maxLocals` 按新描述符计算。
+- refmap 重写：`patchRefmap` 把 `mappings.<mixinClass>.<key>` 改成目标版本描述符，避免 Mixin 继续用旧 refmap 锁定旧签名。
+- 规则文件仍是 `rules/fabric-1.21.1/lithium.json`，每条规则带能力、风险与真实崩溃证据。
+
+**实际结果**
+
+| 步骤 | 命令（节选） | 退出码 | 结果 |
+|---|---|---|---|
+| 打补丁 | `mcbridge1201 patch --in <converted lithium> --out lithium-patched-explosion3.jar --rules rules/fabric-1.21.1/lithium-degraded.json --rules rules/fabric-1.21.1/lithium.json --bridge-dir work/bridges` | 0 | Explosion 1 次 + POI 1 次 + refmap 1 次；`sha256 44a49bcd...e05e` |
+| 启动 | `python tools/run_server.py --instance work/instances/fabric-1.21.1-server-lithium --log runs/p11-lithium-explosion/server-explosion3.log --timeout 240` | 11（runner）；JVM 0；`doneSeen=false` | 两处 Mixin 均通过，推进到下一失败 |
+| 单元测试 | `gradle --no-daemon test --rerun-tasks` | 0 | 11 个测试，0 失败 |
+
+`server-explosion3.log` 已无 `NoSuchMethodError`、无 `ExplosionMixin`/`SerializingRegionBasedStorageMixin` 注入失败；服务端走到 `Preparing level "world"`，加载 1290 个配方、1399 个进度，随后在
+`class_3215.getChunkBlocking` 抛
+`ClassCastException: class_3193 cannot be cast to ChunkHolderExtended`。
+
+**下一层为什么不是“再改一个描述符”**
+
+CenturyBridge 转换时从 `lithium.mixins.json` 移除了 `world.chunk_access.ChunkHolderMixin`（其 shadow 字段 `field_16425` 与 `class_3193$class_3724` 在 1.21.1 已消失），但保留了使用 `ChunkHolderExtended` 的 `world.chunk_access.ServerChunkManagerMixin`，于是 cast 失败。两条实验都记录在案、**均未采用**：
+
+- 直接 re-add `ChunkHolderMixin`：`server-readd.log` 报 `@Shadow field field_16425 was not located in net.minecraft.class_3193`。
+- 把 shadow 字段本地化（mixin 自己的字段 + 懒初始化）：`server-chunkholder-local2.log` 越过了 cast，但随即撞上 CenturyBridge tombstone `class_3898.method_17236`。这改变了 chunk future 记账语义，未做完整 1.21.1 ChunkMap 适配，因此不采用；也没有用 mixin strip 掩盖。
+
+因此 lithium 仍是 **degraded**，不是兼容通过；下一步是真正移植 chunk access 层或为 `method_17236` 写非降级桥。
+
+边界：只验证专用服务端启动；GUI/渲染/多人 pending。没有提交游戏 jar、模组 jar 或转换件。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
 
 1. **图形/GUI 与多人**：服务端容器契约已通过；玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
 2. **调用点签名适配的覆盖面**：本轮已实现 `callSiteAdaptations` 并用 lithium `class_14.method_59` 验证（§7.17）。下一步把同一机制推广到其他样本，并处理 **嵌套 jar 内**的调用点（当前外部桥只嵌入顶层 jar）。
-3. **lithium 的下一个阻断：`ExplosionMixin` 注入目标变化**：1.21.1 的 `Explosion` 构造器已改为接收 `Holder`/注册表项，旧 `@Inject` 目标描述符不存在。需要按目标版本改写 mixin 注入点，或按规则显式记录降级；不得删除核心逻辑 mixin 冒充通过。
-4. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
-5. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
-6. **WORLD_LOADED / 玩法契约**：服务端已做放置/插入/NBT/重启读回；`/give`、玩家交互、掉落与同步仍未覆盖。
-7. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
-8. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
-9. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
-10. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；`ExplosionMixin` 正是这类问题。
+3. **Mixin 目标描述符适配的覆盖面**：`mixinCallbackAdaptations` 已处理 Explosion 与 POI storage 两处（§7.18），但仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 两种模式在真实注入点上的边界。
+4. **lithium 的下一个阻断：chunk access 层**：CenturyBridge 移除了 `ChunkHolderMixin`，但保留的 `ServerChunkManagerMixin` 仍 cast 到 `ChunkHolderExtended`；直接 re-add 会因 `@Shadow field_16425` 不存在而失败，本地化 field 的实验又会撞上 `class_3898.method_17236` tombstone（§7.18）。需要真正移植 1.21.1 的 ChunkMap/chunk future API，或为 tombstone 写非降级桥；不得用 mixin strip 掩盖。
+5. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
+6. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
+7. **WORLD_LOADED / 玩法契约**：服务端已做放置/插入/NBT/重启读回；`/give`、玩家交互、掉落与同步仍未覆盖。
+8. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
+9. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
+10. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
+11. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 的失败正是这类问题。
