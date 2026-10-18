@@ -42,6 +42,9 @@ python tools/run_contract.py --instance work/instances/fabric-1.21.1-server --ou
      - `class_2073` 构造器 `(Optional, class_2096$class_2100, class_9329, Map)`；`class_2096$class_2100.field_9708` = ANY，`class_9329.field_49597` = EMPTY
      - 仍缺：多元素 `HolderSet.direct(List/varargs)` 的 intermediary 名（`javap` 对 `class_7922` 未返回结果，需要再查）
    - 建议：把该桥写成 **Java 源码**（`java/src/bridge/java/...`），用 javac 对 `work/cb/data/jars/client-1.21.1-intermediary.jar` 编译后嵌入，而不是继续手写 ASM（JSON 解析 + 循环不适合手写字节码）。
+   - 已开工：`ItemPredicateFromJsonB.java` + `tools/build_bridges.py`。**首次编译失败，两个待修点**：
+     1. `class_2096$class_2100` 用顶层类名 javac 解析不到 → 改按嵌套类 `class_2096.class_2100` 引用，或反射取 `field_9708`；
+     2. 桥里引用了生成类 `ItemPredicateAny` → Java 源码路径下需要提供源码版（或改为内联构造）。
 2. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
 3. **调用点级签名适配**：lithium 的 `class_14.method_59`（BlockView/pos → BlockPlaceContext/坐标）需要手写桥，属语义变化。
 4. **Forge 成员级分析**：目前只有命名空间级；需要 tsrg(SRG) + Mojang 映射的联合索引。
