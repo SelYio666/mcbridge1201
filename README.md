@@ -34,7 +34,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | chunk 压力测试工具 | `tools/run_chunk_stress.py`：225 chunks + save/restart + 远角断言，`passed=true` | [docs/baseline.md](docs/baseline.md) §7.27、`runs/p24-chunk-stress-tool/` |
 | Codec dispatch 安全适配 | javac `CodecDispatch` 用 `MapCodec.of` 包装旧 Codec；契约 5/5 | [docs/baseline.md](docs/baseline.md) §7.28、`runs/p26-codec-safe/` |
 | **lithium + ironchests 联合契约** | 同一实例两进程放置/插入/NBT/重启读回 5 钻石全部通过；P26 安全 CodecDispatch 版本也通过 | [docs/baseline.md](docs/baseline.md) §7.20、§7.29、`runs/p14-lithium-ironchests/`、`runs/p27-combined-safe-codec/` |
-| 第三样本 trashslot | 原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥，**专用服务端 BOOTED**（`Done (4.655s)`）；clientbound receiver 已接入但未在客户端执行 | `runs/p15-trashslot/`、`runs/p16-balm/`、`runs/p17-balm-net/`、`runs/p29-client-receiver/`、`rules/fabric-1.21.1/trashslot.json` |
+| 第三样本 trashslot | 原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥，**专用服务端 BOOTED**（`Done (4.655s)`）；packet codec 空栈/5 钻石往返通过；clientbound receiver 未在客户端执行 | `runs/p15-trashslot/`、`runs/p16-balm/`、`runs/p17-balm-net/`、`runs/p29-client-receiver/`、`runs/p32-trashslot-codec/`、`rules/fabric-1.21.1/trashslot.json` |
 
 ## 交接
 

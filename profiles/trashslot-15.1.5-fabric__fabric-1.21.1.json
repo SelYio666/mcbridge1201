@@ -2,7 +2,7 @@
   "schemaVersion": "0.1-draft",
   "profileId": "trashslot.15.1.5.fabric-1.20.1__fabric-1.21.1",
   "status": "booted_within_scope",
-  "statusNote": "Dedicated server reaches Done (4.655s) with native Balm 21.0.66, the Balm initializer call-site bridge, the Balm networking payload bridge and the four ItemStack/NBT tombstone bridges. A clientbound receiver is present but has not been executed. No client GUI, packet round-trip or player trash-slot behavior was verified.",
+  "statusNote": "Dedicated server reaches Done (4.655s) with native Balm 21.0.66, the Balm initializer call-site bridge, the Balm networking payload bridge and the four ItemStack/NBT tombstone bridges. MessageTrashSlotClick.encode/decode round-trips empty and 5-diamond stacks on the server (TRASHSLOT_CODEC_OK). A clientbound receiver is present but has not been executed; client GUI and player behavior remain unverified.",
   "source": {
     "minecraft": "1.20.1",
     "loader": "fabric",
@@ -107,6 +107,11 @@
       "scope": "not triggered by player action"
     },
     {
+      "id": "trashslot.packet.codec",
+      "result": "passed",
+      "scope": "server-side probe, empty + 5 diamonds"
+    },
+    {
       "id": "client.gui.open",
       "result": "pending",
       "scope": "needs client"
@@ -130,6 +135,10 @@
     "clientReceiver": {
       "path": "runs/p29-client-receiver/verdict.json",
       "sha256": "d99f765819fb970df5dd6c34f67e7638ee64c27021a3aa3243c192e49b29497f"
+    },
+    "packetCodec": {
+      "path": "runs/p32-trashslot-codec/verdict.json",
+      "sha256": "10022ddced5a8a7bb4538dba1c4c0979858fafe5de52d63e963d9a8a2958e507"
     }
   }
 }

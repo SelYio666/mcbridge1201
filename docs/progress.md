@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 23:00（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 23:05）：**trashslot packet codec 往返通过**。服务器内 probe 对空栈与 5 钻石分别执行 `MessageTrashSlotClick.encode/decode`，断言 empty/count/item 全部通过，日志 `TRASHSLOT_CODEC_OK`；服务端 `Done (5.025s)`、exit 0。验证了 4 个 ItemStack/NBT 桥和 registry-aware codec，仍不含客户端网络投递。证据 `runs/p32-trashslot-codec/`。
 更新（2026-10-18 23:00）：**CodecDispatch 选择逻辑回归测试**。新增 `JarPatcherCodecDispatchTest`，验证 `--bridge-dir` 提供的 javac `CodecDispatch` 优先于 generated fallback，且不嵌入 `CodecDispatch$Adapter`；测试 18/18。证据 `runs/p31-codec-selection/`。
 更新（2026-10-18 22:55）：**lithium / trashslot 兼容档案**。新增 `profiles/lithium...json`（`booted_within_scope`，boot + 225-chunk + combined）与 `profiles/trashslot...json`（`booted_within_scope`，原生 Balm 21；客户端/网络未执行），并加 `profiles/README.md` 索引；所有 hash 由脚本从实际文件计算。证据 `profiles/`。
 更新（2026-10-18 22:50）：**trashslot clientbound receiver 已接入**。`BalmNetworkingBridge$Client` 在客户端用 `ClientPlayNetworking.registerGlobalReceiver` 调用旧 `BiConsumer<Player,T>`；服务端通过环境反射跳过，专用服务端仍 `Done (4.894s)`。客户端分支未执行，不能宣称客户端通过；证据 `runs/p29-client-receiver/`。
@@ -197,6 +198,12 @@
 105. **意义**：锁住 P26 的 `--bridge-dir` 优先逻辑，防止以后又回退到 generated fallback。
 106. **结果**：`gradle test --rerun-tasks` **18/18**，exit 0。证据 `runs/p31-codec-selection/`。
 
+## 2026-10-18 23:05 更新：trashslot packet codec 往返
+
+107. **Probe**：一个 Fabric 测试 mod 在 `SERVER_STARTED` 时调用 `MessageTrashSlotClick.encode/decode`，分别测试空栈与 `new ItemStack(Items.DIAMOND,5)`，断言 empty/count/item。
+108. **结果**：日志 `TRASHSLOT_CODEC_OK`，服务端 `Done (5.025s)`、exit 0；覆盖 `TrashSlotNbtBridge.writeItem/readItem`、`FriendlyByteBuf` NBT 和 registry-aware `ItemStack.CODEC`。
+109. **边界**：仍没有客户端 `ClientPlayNetworking` 投递、trash GUI 或玩家动作。证据 `runs/p32-trashslot-codec/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -246,6 +253,7 @@
 | clientbound receiver | `runs/p29-client-receiver/README.md`、`verdict.json`、`server.log` |
 | 兼容档案 | `profiles/README.md`、`profiles/lithium-...json`、`profiles/trashslot-...json` |
 | CodecDispatch 选择回归 | `runs/p31-codec-selection/README.md`、`verdict.json`、`gradle-test.log` |
+| trashslot packet codec | `runs/p32-trashslot-codec/README.md`、`verdict.json`、`server.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

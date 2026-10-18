@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 23:05）：**trashslot packet codec 往返通过**。服务器内 probe 对空栈与 5 钻石执行 `MessageTrashSlotClick.encode/decode`，断言 empty/count/item 全部通过（`TRASHSLOT_CODEC_OK`）；服务端 `Done (5.025s)`、exit 0。仍不含客户端网络投递。证据 `runs/p32-trashslot-codec/`。
 更新（2026-10-18 23:00）：**CodecDispatch 选择回归测试**。验证 `--bridge-dir` 提供的 javac `CodecDispatch` 优先于 generated fallback，且不嵌入 `CodecDispatch$Adapter`；测试 18/18。证据 `runs/p31-codec-selection/`。
 更新（2026-10-18 22:55）：**lithium / trashslot 兼容档案**。新增两份 `booted_within_scope` profile 与 `profiles/README.md` 索引；lithium 记录 boot/225-chunk/combined，trashslot 记录原生 Balm 21 与 boot/网络；客户端/玩法仍 pending。证据 `profiles/`。
 更新（2026-10-18 22:50）：**trashslot clientbound receiver 已接入**。`BalmNetworkingBridge$Client` 在客户端用 `ClientPlayNetworking.registerGlobalReceiver` 调用旧 `BiConsumer<Player,T>`；服务端反射跳过，仍 `Done (4.894s)`。客户端分支未执行，不能宣称客户端通过；证据 `runs/p29-client-receiver/`。

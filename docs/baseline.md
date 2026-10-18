@@ -831,6 +831,19 @@ failed**，nested ResourcefulLib **142 classes，0 failures**，exit 0。覆盖 
 `CodecDispatch$Adapter`。这锁住了 P26 的 `--bridge-dir` 优先逻辑（只有 `CodecDispatch`
 被外部覆盖，其他生成桥保持 ASM）。测试 **18/18**；证据 `runs/p31-codec-selection/`。
 
+### 7.34 trashslot packet codec 往返
+
+用一个 Fabric 测试 mod 在 `ServerLifecycleEvents.SERVER_STARTED` 时执行
+`MessageTrashSlotClick.encode/decode`，覆盖两个 case：
+
+- `ItemStack.EMPTY` -> decode 后仍 empty；
+- `new ItemStack(Items.DIAMOND, 5)` -> decode 后非空、count=5、item 仍为 diamond。
+
+日志 `TRASHSLOT_CODEC_OK`；服务端 `Done (5.025s)`、exit 0。这验证了
+`TrashSlotNbtBridge.writeItem/readItem`、`FriendlyByteBuf` NBT 写读和 registry-aware
+`ItemStack.CODEC`，而不是只验证启动。仍不含客户端 `ClientPlayNetworking` 投递、trash GUI
+或玩家动作。证据 `runs/p32-trashslot-codec/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
