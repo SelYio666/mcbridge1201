@@ -1,5 +1,7 @@
 # 交接摘要（一页）
 
+
+更新（2026-10-18 20:20）：`ItemPredicate.fromJson` 的降级已消除——改用反射读取 BuiltInRegistries 并通过 RegistryOps 解析 codec，启动日志不再出现 falling back，兼容档案已升为 `passed_within_scope`（服务端范围）。下面“未解决”第 1 条视为已完成。
 日期：2026-10-18。给下一个接手者：先读这页，再按需展开 `docs/baseline.md`。
 
 ## 现在能做什么
