@@ -1,0 +1,6 @@
+{
+  "feature": "multi-method injection arrays keep every target",
+  "tests": {"total": 19, "failures": 0},
+  "case": {"methods": ["method_59()V", "method_60()V"], "atTarget": "method_61", "injections": 2},
+  "evidence": "gradle-test.log"
+}

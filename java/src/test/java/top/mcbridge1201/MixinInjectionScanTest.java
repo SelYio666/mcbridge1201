@@ -25,6 +25,10 @@ class MixinInjectionScanTest {
     }
 
     private static byte[] syntheticMixin(String method, String atTarget) {
+        return syntheticMixin(new String[]{method}, atTarget);
+    }
+
+    private static byte[] syntheticMixin(String[] methods, String atTarget) {
         ClassWriter cw = new ClassWriter(0);
         cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER, "test/TestMixin",
                 null, "java/lang/Object", null);
@@ -36,7 +40,13 @@ class MixinInjectionScanTest {
         mv.visitCode();
         AnnotationVisitor inject = mv.visitAnnotation(
                 "Lorg/spongepowered/asm/mixin/injection/Inject;", true);
-        inject.visit("method", method);
+        if (methods.length == 1) {
+            inject.visit("method", methods[0]);
+        } else {
+            AnnotationVisitor array = inject.visitArray("method");
+            for (String method : methods) array.visit(null, method);
+            array.visitEnd();
+        }
         AnnotationVisitor at = inject.visitAnnotation(
                 "at", "Lorg/spongepowered/asm/mixin/injection/At;");
         at.visit("value", "INVOKE");
@@ -112,5 +122,25 @@ class MixinInjectionScanTest {
         assertEquals("net/minecraft/class_14", inj.atTargetOwner);
         assertEquals("method_60", inj.atTargetName);
         assertEquals("()V", inj.atTargetDesc);
+    }
+
+    @Test
+    void keepsEveryMethodOfAnInjectionArray() throws Exception {
+        Path dir = Path.of("build", "test-tmp", "mixin-multi-method");
+        Files.createDirectories(dir);
+        Path jar = dir.resolve("mixin.jar");
+        Map<String, byte[]> entries = new LinkedHashMap<>();
+        entries.put("test.mixins.json", ("{\"package\":\"test\","
+                + "\"mixins\":[\"TestMixin\"]}").getBytes(StandardCharsets.UTF_8));
+        entries.put("test/TestMixin.class", syntheticMixin(
+                new String[]{"method_59()V", "method_60()V"}, "Lnet/minecraft/class_14;method_61()V"));
+        writeJar(jar, entries);
+
+        ArtifactScanner.Artifact a = ArtifactScanner.scan(jar);
+        assertEquals(2, a.mixins.get(0).injections.size());
+        assertEquals("method_59", a.mixins.get(0).injections.get(0).targetName);
+        assertEquals("method_60", a.mixins.get(0).injections.get(1).targetName);
+        assertEquals("method_61", a.mixins.get(0).injections.get(0).atTargetName);
+        assertEquals("method_61", a.mixins.get(0).injections.get(1).atTargetName);
     }
 }

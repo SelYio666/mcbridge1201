@@ -974,6 +974,12 @@ P13 + ironchests P26 + trashslot P29/Balm 21 同服；contracts 为 boot `Done (
 成员分析列为非阻塞后续。该文档同时给出提供 client fixture 后的验收方式，不包含任何
 “客户端通过”声明。
 
+### 7.48 多 method injection 数组回归
+
+新增 synthetic `@Inject(method={"method_59()V","method_60()V"})` + 共享 `@At(method_61)` 测试，
+断言产生两条 `Injection` 且都带 at-target。这钉住 P34 的修复（此前数组被折叠成一条，
+lithium 214→207）。测试总数 **19/19**。证据 `runs/p46-multi-method/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
