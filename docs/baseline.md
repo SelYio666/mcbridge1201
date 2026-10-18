@@ -5,8 +5,9 @@
 ## 0. 一句话结论
 
 - **可执行的**：环境锁定、上游提交/许可锁定、10 份 1.20.1 样本（sha512 校验通过）、自研静态损伤分析器（10/10 跑通）、CenturyBridge 引擎编译、7 节版本分段、ironchests 真实转换（`ok_partial`）。
-- **被环境阻塞的**：Fabric 1.21.1 专用服务端在本机启动失败。原因是 Java 进程在本会话工作区里 `Files.isWritable` 恒为 false（受限令牌 ACL），Fabric Loader 据此把 remap 目标判定为只读并拒绝写出。已保留完整日志与两个绕过尝试的结果。
-- **未完成的**：任何 `BOOTED` 及以上证据；图形客户端；Forge→NeoForge 成员级分析（只做到命名空间/类级）。
+- **已 BOOTED**：Fabric 1.21.1 专用服务端在**本地重映射过的游戏 jar** 上到达 `Done (4.803s)`，正常保存并停止。原版 Loader 的 remap 路径被沙箱的 `Files.isWritable` 阻塞，因此用自研 ASM 重映射器产出等价 jar（保留方法体 + 继承/接口/lambda 重命名传播）；Loader 本身未改动。
+- **已 LOADED，未通过**：CenturyBridge 转换后的 ironchests 被 Loader 接受并进入入口点，随后在 `ItemPredicate.ANY`（`class_2073.field_9640`，1.21.1 已移除）处 `NoSuchFieldError`。这是当前第一个真实运行时缺口，与静态分析、CenturyBridge 账本三方一致。
+- **未完成的**：`WORLD_LOADED` 以上的玩法契约、客户端/渲染、多人同步、Forge 成员级分析。
 
 ## 1. 环境
 
@@ -21,7 +22,7 @@
 | Python | 3.12（`C:\Users\27682\AppData\Local\Programs\Python\Python312`），HTTPS 正常 | 全部 `tools/*.py` | 否 |
 | 网络可达 | `piston-meta.mojang.com`、`maven.fabricmc.net`、`meta.fabricmc.net`、`api.modrinth.com`、`repo1.maven.org`、`codeload.github.com`、`github.com` HTML/atom 可达；`api.github.com` 返回 **403 限流**；`plugins.gradle.org` 握手超时 | 各抓取脚本日志 | 部分 |
 | 启动器/图形 | PCL2 已安装；`.minecraft` 仅有 `runtime/jre-legacy`，无版本目录；未做任何图形客户端启动 | 目录检查 | **是**：本轮无客户端/渲染证据 |
-| 专用服务端 | 已下载 Fabric server launcher（loader 0.19.5 / 0.16.14），未能启动，见 §7 | `runs/p0-server-baseline/` | **是** |
+| 专用服务端 | Fabric server launcher 0.19.5；**已 BOOTED**（见 §7），游戏 jar 由本项目重映射 | `runs/p1-server-baseline/` | 否（remap 需本地绕过，见 §7.2） |
 
 ### 1.1 三个环境异常（都会影响复现，必须写进脚本）
 
@@ -89,7 +90,7 @@
 
 | 样本 | 判定 | MISSING_CLASS | MISSING_MEMBER | DESC_MISMATCH | FABRIC_API 缺失 | 源索引确认 | 备注 |
 |---|---|---|---|---|---|---|---|
-| ironchests | blocked_static | 1 | 15 | 19 | 7+5 | **47/47** | NBT/组件墙、BlockEntity NBT、Item.appendTooltip、Explosion 构造器、Fabric API model/networking 删除 |
+| ironchests | blocked_static | 1 | 20 | 19 | 7+5 | **52/52** | NBT/组件墙、BlockEntity NBT、Item.appendTooltip、Explosion 构造器、Fabric API model/networking 删除 |
 | lithium | blocked_static | 1 | 5 | 6 | 0 | 11/12 | 224 个 mixin；`class_3193$class_3724` 类消失 |
 | appleskin | blocked_static | 0 | 11 | 14 | 1+1 | 27/27 | HUD/事件签名变化 |
 | modmenu | blocked_static | 4 | 7 | 14 | 0 | 24/25 | 4 个类整体消失 |
@@ -155,51 +156,104 @@ convert data/segments 1.20.1 1.21.1 out/ironchests in/ironchests-5.0.2-fabric.ja
 
 **这仍然是 `TRANSFORMED`，不是 `VERIFIED`/`BOOTED`**：没有运行、没有跑 `BytecodeVerify`（上游工具类，本轮未编译）、桥 jar 未构建。
 
-## 7. 目标 1.21.1 专用服务端：真实尝试与阻塞
+## 7. 目标 1.21.1 专用服务端：从阻塞到 BOOTED
 
-### 7.1 做了什么
+### 7.1 第一层阻塞（已定位）
 
-1. `tools/setup_server.py` 用 Fabric meta 生成隔离实例（launcher + `eula=true` + `server.properties` + Fabric API 0.102.0）。
-2. `tools/run_server.py` 启动 JVM、抓日志、在出现 `Done (` 后发送 `stop`，并输出 JSON 结果。
-3. loader 0.19.5、0.16.14 各尝试多次；也在 `C:\mcrun`（ASCII 路径、干净 ACL）复现。
-
-### 7.2 结果
-
-全部停在 `BOOTED` 之前，日志：`runs/p0-server-baseline/server.log`、`server-l016.log`、`server-outside.log`。
+`tools/setup_server.py` 生成隔离实例，`tools/run_server.py` 启动 JVM 并在 `Done (` 后自动 `stop`。stock Loader 的 remap 直接失败：
 
 ```text
 Caused by: java.io.IOException: the jar file .\.fabric\remappedJars\minecraft-1.21.1-0.19.5\server-intermediary.jar.tmp can't be written
   at ...tinyremapper.OutputConsumerPath.<init>(OutputConsumerPath.java:102)
 ```
 
-根因（已定位到具体判据）：`OutputConsumerPath` 用 `FileSystemReference.isReadOnly()`，而 zipfs 的只读判定依赖 `Files.isWritable`；在本会话里工作区内 `Files.isWritable` **恒为 false**（探针：`parent writable=false`、`created exists=true writable=false`，但 `Files.writeString` 实际成功）。这是受限令牌 ACL 的结果，不是磁盘权限问题。
+根因：`OutputConsumerPath` 用 `FileSystemReference.isReadOnly()` 判定，而 zipfs 的只读标志取自 `Files.isWritable`；本会话工作区内 `Files.isWritable` **恒为 false**（探针：`parent writable=false`、`created exists=true writable=false`，但 `Files.writeString` 实际成功）。这是受限令牌/沙箱 ACL 的结果，不是磁盘权限。
 
-尝试过的绕过与结果：
+尝试过但无效的绕过：手动建目录、删残留 `.tmp`、换 ASCII 路径 `C:\mcrun`（Java 连 `.fabric` 都建不了）、给沙箱 SID 加 FullControl ACE、`-Djava.io.tmpdir`（只修好 ImageIO 类错误）。
 
-| 尝试 | 结果 |
-|---|---|
-| 手动创建 `.fabric/remappedJars/...` 目录 | 无效（问题在文件可写性判定） |
-| 删除残留 `.tmp` 后重跑 | 首次仍失败；`icacls` 显示 ACL 正常 |
-| 换 ASCII 路径 `C:\mcrun` | 失败更早：Java 创建 `.fabric` 本身 `AccessDeniedException`；同一路径 `pwsh`/`python` 可写 |
-| `-Djava.io.tmpdir` 指向工作区内 | 修好了 ImageIO/temp 类错误（0.16.14 因此能走得更远），但不解决 zipfs 只读判定 |
-| 用 CenturyBridge `remap-jar` **预生成** `server-intermediary.jar`（6 148 类） | 跳过 remap，但 Loader 在 `EntrypointPatch` 处失败：`Could not find game constructor in net.minecraft.server.Main!`（本地 remap 不等价于 Loader 自己的 remap+patch 流程） |
+### 7.2 误导：CenturyBridge 的 `remap-jar` 是 stub 生成器
 
-### 7.3 复现步骤（在可写环境下应当可复现）
+用上游 `remap-jar` 预生成 `server-intermediary.jar` 能跳过 Loader remap，但 Loader 报
+`Could not find game constructor in net.minecraft.server.Main!`。用 `javap -c` 检查发现：
+**该 jar 的类没有 Code 属性**——CenturyBridge 的 `remap-jar` 只产出编译用 stub，方法体被剥离。这不是 Loader 的问题，是工具用途不同。
+
+### 7.3 解决：自研 body-preserving remapper
+
+新增命令（`java/src/main/java/top/mcbridge1201/remap/`）：
+
+```text
+mcbridge1201 remap-jar --in <obf.jar> --out <intermediary.jar> --mappings <intermediary-1.21.1.tiny>
+```
+
+用 ASM `ClassRemapper` + `ZipOutputStream`（**不经过 zipfs**，因此绕开只读判定），保留方法体。三个缺陷都是运行时崩溃暴露后逐个修的：
+
+| 现象 | 原因 | 修复 |
+|---|---|---|
+| `AbstractMethodError` `class_3797` 未实现 `class_6489.method_48019` | 接口实现方法不在 intermediary 映射里（server-only override） | 沿 super/interface 传播方法名 |
+| `ClassFormatError: Duplicate method` `class_5912.method_14486` | 传播把 static/private 辅助方法改成了接口方法名（intermediary 名只由 name+desc 决定） | static/private 不参与传播 |
+| `NoSuchFieldError class_244` 无 `b` | 字段引用以子类为 owner，实际声明在父类 | 字段仅在 owner 未声明时沿父类传播 |
+| `AbstractMethodError` `class_3754$$Lambda` 未实现 `method_16359` | LambdaMetafactory 取 **invokedynamic 名字**作为 SAM 名，不取接口方法名 | 重写 `mapInvokeDynamicMethodName`，按接口 SAM 映射改名 |
+
+产物：`work/remap/server-intermediary.jar`，6 148 类、18 425 518 B、SHA-256 `27d29458a7e64512b592555c75fe52156260b784d2da46d90e34aba3bc17978d`。Loader 接受它并跳过自己的 remap。两次独立重映射得到**逐字节相同**的 jar（同一 SHA-256），可复现。
+
+> 这是**本地工具链绕过**，不是产品能力：Loader 本体未改；游戏 jar 的映射语义相同，但实现是本项目的。重映射器本身有独立价值（目标 jar 索引/桥编译都需要它），已加单元测试与确定性输出（entry 时间戳置 0）。
+
+### 7.4 BOOTED 证据
 
 ```powershell
 python tools/setup_server.py --instance work/instances/fabric-1.21.1-server
-$env:JAVA_HOME='...\.toolchain\jdk'
+# 本机必需：用自研重映射器预生成 Loader 期望的 server-intermediary.jar
+python tools/remap_server.py --instance work/instances/fabric-1.21.1-server `
+  --loader 0.19.5 --mappings work/cb/data/mappings/intermediary-1.21.1.tiny
 python tools/run_server.py --instance work/instances/fabric-1.21.1-server `
-  --log runs/p0-server-baseline/server.log --timeout 300
+  --log runs/p1-server-baseline/server.log --timeout 300
 ```
 
-在正常 Windows 用户会话（非受限令牌）里，这条命令应当到达 `Done (` 并自动 `stop`。本会话的失败与代码无关，日志已保留。
+```text
+[18:33:34] [Server thread/INFO]: Done (4.803s)! For help, type "help"
+[18:33:36] [Server thread/INFO]: Stopping the server
+[18:33:37] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+...
+{"doneSeen": true, "exitCode": 0, "durationSeconds": 20.6}
+```
+
+日志：`runs/p1-server-baseline/server-baseline.log`（SHA-256 `3523ae82...`，随 `runs/SHA256SUMS.txt` 固定）。Fabric API 0.102.0+1.21.1 的 41 个模块全部加载。
+
+### 7.5 转换后的 ironchests：LOADED，然后真实崩溃
+
+把 `work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1.jar` 放进 `mods/` 后重跑（`runs/p1-server-converted-ironchests/server.log`）：
+
+```text
+[main/INFO]: Loading 42 mods:
+    - ironchests 5.0.2
+...
+java.lang.RuntimeException: Could not execute entrypoint stage 'main' ... provided by 'ironchests'
+Caused by: java.lang.NoSuchFieldError: Class net.minecraft.class_2073 does not have member field 'net.minecraft.class_2073 field_9640'
+    at tech.thatgravyboat.ironchests.api.chesttype.ChestType.lambda$codec$1(ChestType.java:70)
+    at ...ChestType.codec(ChestType.java:57)
+    at ...ChestTypeLoader.parseChest(ChestTypeLoader.java:48)
+    at ...IronChests.init(IronChests.java:16)
+```
+
+命名解析（`tools/name_lookup.py`，把 intermediary 与 Mojang 官方映射按 obf 名 join）：
+
+- `class_2073` = `net.minecraft.advancements.critereon.ItemPredicate`
+- `field_9640` = `ItemPredicate.ANY`（1.21.1 已移除）
+
+意义：**Loader 接受了转换件**（mod 列表里出现 ironchests 5.0.2，`fabric.mod.json` 的 minecraft 依赖已被 CenturyBridge 改为 1.21.1），失败发生在入口点执行时，属于真实的语义缺口，而不是加载/元数据问题。
+
+### 7.6 这次崩溃反过来修正了分析器
+
+首次静态分析**没有**报 `class_2073.field_9640`：`resolveField` 把 `java/util/function/Predicate` 这类未索引 JDK 祖先当成“可能提供成员”，于是返回 `UNKNOWN` 而不是 `MISSING_MEMBER`。已修正为：字段解析只对非 JDK 的未索引祖先保守。重跑后 ironchests 的确认损伤从 **47 条变成 52 条**（`confirmed 52/52`），新增的正是 `ItemPredicate.ANY`。
+
+这条闭环（运行时崩溃 → 分析器漏报 → 修正 → 静态预测命中）是当前最可信的跨版本证据链。
 
 ## 8. 未验证项与下一步
 
-1. **BOOTED 及以上**：需要可写 `Files.isWritable` 的环境，或改用不依赖 zipfs 可写判定的启动路径。
-2. **图形客户端**：无客户端实例、无已确认显示环境；`WORLD_LOADED`/渲染截图全部 pending。
-3. **Forge 成员级分析**：需要 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射）。本轮只给出命名空间级结论。
-4. **CenturyBridge 桥 jar**：需上游补 `MixinCheck`，或接受 `build.sh` 门禁不可验证。
-5. **BytecodeVerify**：未编译；转换产物尚未做数据流校验。
-6. 分析器缺 `Mixin` 注入点级别的匹配质量评估（ordinal/slice/局部变量）。
+1. **`ItemPredicate.ANY` 的语义替换**：不是改个字段名，1.21.1 的 `ItemPredicate` 已重构。下一个真实缺口就是给 `ChestType.codec` 提供新谓词（`DataComponentPredicate`/`ItemPredicate.Builder`）的桥或规则。
+2. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是"无桥"结果。
+3. **WORLD_LOADED / 玩法契约**：需要客户端或命令侧断言；服务端可先做 `/give` + 放置 + 容器存取 + 重启读回的命令行契约。
+4. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
+5. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
+6. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
+7. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量。

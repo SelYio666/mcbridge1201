@@ -35,6 +35,9 @@ public final class Main {
             case "doctor" -> doctor(args);
             case "analyze" -> analyze(args);
             case "index-info" -> indexInfo(args);
+            case "remap-jar" -> remapJar(args);
+            case "patch-readonly" -> patchReadOnly(args);
+            case "refs" -> dumpRefs(args);
             default -> {
                 usage();
                 System.exit(2);
@@ -50,6 +53,7 @@ public final class Main {
                            --api <jar> [--api <jar> ...] --target <version> [--target-loader fabric]
                            --out <plan.json> [--markdown <file>]
                   index-info --client-jar <jar> --mappings <tiny> --api <jar> [...]
+                  remap-jar --in <obf.jar> --out <intermediary.jar> --mappings <tiny|mappings.jar>
                 """);
     }
 
@@ -94,6 +98,11 @@ public final class Main {
     private static TargetIndex unusedPlaceholder() { return null; }
 
     private static TinyMappings readMappings(Path mappingsJar) throws IOException {
+        if (mappingsJar.toString().endsWith(".tiny")) {
+            try (InputStream in = Files.newInputStream(mappingsJar)) {
+                return TinyMappings.read(in);
+            }
+        }
         try (ZipFile zf = new ZipFile(mappingsJar.toFile())) {
             var e = zf.getEntry("mappings/mappings.tiny");
             if (e == null) throw new IOException("no mappings/mappings.tiny in " + mappingsJar);
@@ -103,6 +112,18 @@ public final class Main {
         }
     }
 
+    /** Real, body-preserving remap (official -> intermediary), used for target-game stubs. */
+    private static void remapJar(String[] args) throws IOException {
+        Map<String, List<String>> f = flags(args, 1);
+        Path in = Path.of(require(f, "in"));
+        Path out = Path.of(require(f, "out"));
+        Path mappings = Path.of(require(f, "mappings"));
+        long t0 = System.nanoTime();
+        new top.mcbridge1201.remap.JarRemapper(readMappings(mappings)).remap(in, out);
+        System.out.printf("wrote %s in %d ms (sha256 %s)%n",
+                out, (System.nanoTime() - t0) / 1_000_000, ArtifactScanner.sha256(out));
+    }
+
     private static void indexInfo(String[] args) throws IOException {
         Map<String, List<String>> f = flags(args, 1);
         Path clientJar = Path.of(require(f, "client-jar"));
@@ -110,6 +131,36 @@ public final class Main {
         TargetIndex idx = IndexBuilder.minecraft(clientJar, tm);
         for (String api : f.getOrDefault("api", List.of())) IndexBuilder.apiJar(Path.of(api), idx);
         System.out.printf("classes=%d methods=%d mappings=%d%n", idx.classCount(), idx.methodCount(), tm.classMap.size());
+    }
+
+    /** Instrument a tool copy: make one boolean method return false (local workaround only). */
+    /** Debug helper: print the references collected from one class inside a jar. */
+    private static void dumpRefs(String[] args) throws IOException {
+        Map<String, List<String>> f = flags(args, 1);
+        Path jar = Path.of(require(f, "jar"));
+        String cls = require(f, "class").replace('.', '/');
+        try (ZipFile zf = new ZipFile(jar.toFile())) {
+            var e = zf.getEntry(cls + ".class");
+            if (e == null) {
+                System.err.println("class not found: " + cls);
+                System.exit(2);
+            }
+            byte[] bytes = zf.getInputStream(e).readAllBytes();
+            for (var r : top.mcbridge1201.scan.RefCollector.collect(bytes, cls)) {
+                System.out.printf("%-6s %s %s %s%n", r.kind(), r.owner(),
+                        r.name() == null ? "" : r.name(), r.desc() == null ? "" : r.desc());
+            }
+        }
+    }
+
+    private static void patchReadOnly(String[] args) throws IOException {
+        Map<String, List<String>> f = flags(args, 1);
+        Path in = Path.of(require(f, "in"));
+        Path out = Path.of(require(f, "out"));
+        String cls = one(f, "class", "net/fabricmc/tinyremapper/FileSystemReference");
+        String method = one(f, "method", "isReadOnly");
+        top.mcbridge1201.remap.ReadOnlyGuardPatcher.patch(in, out, cls, method);
+        System.out.printf("patched %s#%s in %s -> %s%n", cls, method, in.getFileName(), out.getFileName());
     }
 
     private static String require(Map<String, List<String>> f, String k) {

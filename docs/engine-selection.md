@@ -28,15 +28,22 @@
 作者的 1.21.1 案例（ironchests 注册/放置/GUI/存取/退出重进）本轮**没有复现**：本机服务端启动被环境阻塞（`docs/baseline.md` §7），客户端完全没有运行。我们只独立得到：
 
 - `TRANSFORMED`：转换件存在、hash 固定；
+- `LOADED`：1.21.1 专用服务端加载了转换件（mod 列表出现 `ironchests 5.0.2`，minecraft 依赖已被上游改为 1.21.1），随后在入口点 `NoSuchFieldError: ItemPredicate.ANY`（`class_2073.field_9640`）失败；
 - 28 个 tombstone、55 条未记账引用、1 个 class issue、1 个 constructor issue；
-- 其中 NBT 家族（`class_1799.method_7948/7969/7980/7985`）与 `class_2586.method_38242` 与本项目静态分析器的结论**互相吻合**（两条独立路径指向同一批跨版本变化），这是目前最强的交叉证据。
+- 其中 NBT 家族（`class_1799.method_7948/7969/7980/7985`）、`ItemPredicate` 字段与本项目静态分析器的结论**互相吻合**（两条独立路径 + 一次真实崩溃指向同一批跨版本变化）。
+
+基线（无转换模组）已 `BOOTED`：`Done (4.803s)`，日志 `runs/p1-server-baseline/`，细节见 `docs/baseline.md` §7。
 
 ## 4. 三个最重要的行为缺口（按优先级）
 
-1. **物品/方块实体 NBT → 数据组件（1.20.5 墙）**
+1. **物品/方块实体 NBT → 数据组件（1.20.5 墙），以及 `ItemPredicate` 重构**
    - 证据：CenturyBridge 把 `class_1799` 的 4 个 NBT 方法、`class_1856/2040/2048/2090/2102/2073` 的 JSON 读写全部 tombstone；本项目静态分析器对 ironchests 报 `method_7948` 14 次、`method_7969` 8 次、`method_7985` 6 次。
-   - 影响：容器/箱子类模组的存档与同步直接依赖它；不补就是“能加载、开箱即炸”。
-   - 下一步：用 `ItemStack` 的 `getNbt/setNbt/getOrCreateNbt` → `DataComponentMap` 的真实桥，写容器 fixture + ironchests 的单机契约。
+   - **运行时实锤**：转换件在 1.21.1 服务端入口点抛 `NoSuchFieldError: class_2073.field_9640`（= `ItemPredicate.ANY`），位置 `IronChests.init → ChestTypeLoader.parseChest → ChestType.codec`。这说明“能加载”与“能初始化”之间还隔着真正的语义墙。
+   - 影响：容器/箱子类模组的存档、同步与配方谓词都依赖这些 API。
+   - 下一步（按顺序）：
+     1. 为 `ItemPredicate.ANY` 写精确规则/桥（返回 1.21.1 的空谓词等价物），让 ironchests 能通过入口点；
+     2. 再做 `ItemStack` 的 `getNbt/setNbt/getOrCreateNbt` → `DataComponentMap` 的真实桥；
+     3. 用命令侧契约（`/give`、放置、`/setblock`、容器交互、重启读回）验证，而不是只看 "Done"。
 
 2. **Fabric API 自身 API 删除/改名**
    - 证据：`ModelLoadingRegistry` / `ExtraModelProvider` / `BakedModelManagerHelper` 在 1.21.1 Fabric API 不存在；`ServerPlayNetworking.PlayChannelHandler` / `ClientPlayNetworking.PlayChannelHandler` 改名（ironchests 经 ResourcefulLib 的 JiJ 代码命中）。
@@ -57,13 +64,17 @@
 
 ## 6. 下一条可执行命令
 
-在可写环境（`Files.isWritable` 正常）里：
+`BOOTED` 已拿到（本地重映射 jar，见 `docs/baseline.md` §7）。当前要解决的是转换件在入口点的第一个真实缺口：
 
 ```powershell
-python tools/setup_server.py --instance work/instances/fabric-1.21.1-server
+# 1) 现状复跑：服务端 + 转换件，应复现 ItemPredicate.ANY 的 NoSuchFieldError
 python tools/run_server.py --instance work/instances/fabric-1.21.1-server `
-  --log runs/p1-server-baseline/server.log --timeout 300
-# 期望：日志出现 "Done ("，脚本自动 stop，退出码 0
+  --log runs/p1-server-converted-ironchests/server.log --timeout 240
+
+# 2) 针对 class_2073.field_9640 写第一条规则/桥，重跑 CenturyBridge convert，再启动
+#    （规则必须锁定 artifact hash：ironchests-5.0.2-fabric.jar = 6a07065a...96de6）
+
+# 3) 入口点通过后，再验证 WORLD_LOADED：/give 物品、放置、打开容器、存取、重启读回
 ```
 
-拿到 `BOOTED` 后，再把 `work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1.jar` 放进 `mods/`，用同一脚本记录失败栈；这是“转换件能否被 Loader 接受”的第一条真实证据。然后才进入 NBT→组件的桥实现。
+在没有客户端的情况下，先做**专用服务端 + 命令**能覆盖的契约；渲染与 GUI 仍为 pending。

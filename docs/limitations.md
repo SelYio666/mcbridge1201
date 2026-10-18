@@ -4,8 +4,9 @@
 
 ## 1. 证据阶段
 
-- 目前最高阶段：**`TRANSFORMED`**（CenturyBridge 产出 ironchests 转换件）与 **`ANALYZED`**（10 份样本）。
-- `BOOTED`、`WORLD_LOADED`、`CONTRACT_PASSED`、`SET_PASSED`：**全部 pending**。本轮没有成功启动任何 Minecraft 进程。
+- 目前最高阶段：**`BOOTED`**（1.21.1 专用服务端基线，`Done (4.803s)`）与 **`LOADED`**（转换后的 ironchests 被 Loader 接受后于入口点崩溃）。
+- `WORLD_LOADED`、`CONTRACT_PASSED`、`SET_PASSED`：**全部 pending**。没有 `/give`、放置、容器存取、重启读回或多人同步证据。
+- `BOOTED` 使用的游戏 jar 由本项目 ASM 重映射器生成（Loader 本体未改），因为原版 remap 被沙箱 `Files.isWritable` 阻塞。这不是 stock 路径，复现时必须写明。
 - 静态 `CLEAN_STATIC` 只表示“在索引覆盖的命名空间里没有发现缺类/缺成员”，不表示能加载，更不表示玩法正确。
 
 ## 2. 静态分析器
@@ -22,8 +23,16 @@
 - 固定提交 `cf4ebeba...` 的 `core/src` **缺少** `MixinCheck.java`；本地补的是 no-op 空实现。任何与 `mixin-check` 相关的门禁结论都不成立。
 - `convert` 的 `ok_partial` 是上游自己的判定；本项目未独立验证它的语义。
 - 28 个 tombstone 意味着“调用到就抛错”，不是“已桥接”。ironchests 的容器玩法在没有桥 jar 时必然失败。
+- **实测确认**：转换件在 1.21.1 服务端被 Loader 接受后，入口点即抛 `NoSuchFieldError: ItemPredicate.ANY`（`class_2073.field_9640`）。这说明 `ok_partial` 不代表能初始化。
 - 桥 jar（`core/shims/1.21.1`）未构建；`build.sh` 的四道门禁一步都没跑。
 - 转换件的 jar 签名已被上游清理；不得声称它仍由原作者签名。
+
+## 3.1 自研重映射器
+
+- 只为解决本机 zipfs 只读阻塞而写；它不是 TinyRemapper 的等价替代：没有 `--propagatePrivate`、冲突检测、record/模块化细节的完整处理。
+- 目前只在 **1.21.1 服务端 jar** 上验证（6148 类，能启动到 Done）；客户端 jar、带资源 jar、多版本 jar 未验证。
+- 名称传播规则是工程近似：static/private 不传播、字段仅在 owner 未声明时向上找；遇到多接口同签名冲突时取第一个命中，没有冲突失败机制。
+- 输出 entry 时间戳固定为 0，便于复现；未做 jar 签名清理以外的规范化。
 
 ## 4. 环境
 
@@ -43,7 +52,7 @@
 
 合格的表述：
 
-> 在 2026-10-18 的 Windows 11 + Zulu 21 环境中，对 `ironchests-5.0.2-fabric.jar`（SHA-256 `6a0706...de6`）执行静态分析，得到 1 个消失类、15 个消失成员、19 个描述符变化、12 个 Fabric API 缺失，且 47 条损伤全部能在 1.20.1 索引中复现；CenturyBridge `convert` 产出 `ok_partial` 转换件，其中 28 个调用点被替换为惰性抛错的 tombstone。**未启动游戏，未验证玩法。**
+> 在 2026-10-18 的 Windows 11 + Zulu 21 环境中，对 `ironchests-5.0.2-fabric.jar`（SHA-256 `6a0706...de6`）执行静态分析，得到 1 个消失类、20 个消失成员、19 个描述符变化、12 个 Fabric API 缺失，且 52 条损伤全部能在 1.20.1 索引中复现；CenturyBridge `convert` 产出 `ok_partial` 转换件，其中 28 个调用点被替换为惰性抛错的 tombstone。该转换件能被 Fabric 1.21.1 专用服务端加载，但入口点因 `ItemPredicate.ANY` 被移除而失败；**未进入世界，未验证玩法。**
 
 不合格的表述：
 

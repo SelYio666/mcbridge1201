@@ -2,19 +2,21 @@
 
 Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来源固定为 **1.20.1**，首个精确目标是 **Fabric 1.21.1**，同时抽样分析 Forge 1.20.1。
 
-本仓库当前只交付 P0 的事实与证据：环境锁定、上游引擎锁定、10 份真实样本、**自研静态损伤分析器**、CenturyBridge 真实转换产物，以及可复现脚本。它不宣称任何模组“已兼容”。
+本仓库当前交付 P0 的事实与证据，以及 P1 的第一段运行时结果：环境锁定、上游引擎锁定、10 份真实样本、**自研静态损伤分析器**、**body-preserving 重映射器**、CenturyBridge 真实转换产物，和第一次真实启动。它不宣称任何模组“已兼容”。
 
-## 现状（2026-10-18 第一轮）
+## 现状（2026-10-18）
 
 | 项目 | 状态 | 证据 |
 |---|---|---|
 | 环境锁定（JDK 21 / Gradle 9.8.1 / 无 JDK 17） | 已记录 | [docs/baseline.md](docs/baseline.md) |
 | Retromod / CenturyBridge 精确提交、许可、工件 | 已锁定 | `manifests/upstream.lock.json` |
 | 10 份 1.20.1 样本（5 Fabric + 5 Forge） | 已下载并校验 sha512 | `manifests/corpus.json` |
-| 静态损伤分析（Fabric 1.21.1） | 10/10 已跑通 | `runs/p0-fabric-target/plan.json`、[docs/generated/static-matrix-fabric-1.21.1.md](docs/generated/static-matrix-fabric-1.21.1.md) |
+| 静态损伤分析（Fabric 1.21.1） | 10/10 已跑通，ironchests 52/52 源索引确认 | `runs/p0-fabric-target/plan.json`、[static-matrix](docs/generated/static-matrix-fabric-1.21.1.md) |
 | CenturyBridge 引擎构建 | 可编译（需本地 1 个缺失类的 stub） | [docs/engine-selection.md](docs/engine-selection.md) |
-| CenturyBridge 真实转换 ironchests | 已完成，`ok_partial` | `work/cb/out/ironchests/report.md` |
-| 目标 1.21.1 专用服务端启动 | 见 docs/baseline.md | `runs/p0-server-baseline/` |
+| CenturyBridge 真实转换 ironchests | 已完成，`ok_partial`（28 tombstone） | `work/cb/out/ironchests/report.md` |
+| 自研重映射器（保留方法体） | 6148 类服务端 jar 可用，修复 4 类真实缺陷 | `java/.../remap/`、[docs/baseline.md](docs/baseline.md) §7.3 |
+| 1.21.1 专用服务端 | **BOOTED**：`Done (4.803s)`，正常停止 | `runs/p1-server-baseline/` |
+| 转换件运行时 | **LOADED**，入口点 `NoSuchFieldError: ItemPredicate.ANY` | `runs/p1-server-converted-ironchests/` |
 
 ## 复现
 

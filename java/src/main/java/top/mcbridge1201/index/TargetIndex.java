@@ -89,7 +89,11 @@ public final class TargetIndex {
             if (!seen.add(cur)) continue;
             ClassInfo ci = classes.get(cur);
             if (ci == null) {
-                if (!cur.equals(owner) && !isObject(cur)) unindexedAncestor = true;
+                // JDK ancestors are complete from the analyzer's point of view: a field
+                // cannot be inherited from java.util.function.Predicate, so do not let an
+                // unindexed JDK interface mask a genuinely removed field
+                // (ItemPredicate.field_9640 was missed this way until a real crash exposed it).
+                if (!cur.equals(owner) && !isJdk(cur)) unindexedAncestor = true;
                 continue;
             }
             Set<String> descs = ci.fields.get(name);
@@ -114,6 +118,11 @@ public final class TargetIndex {
      */
     private static boolean isObject(String owner) {
         return "java/lang/Object".equals(owner);
+    }
+
+    private static boolean isJdk(String owner) {
+        return owner.startsWith("java/") || owner.startsWith("javax/") || owner.startsWith("jdk/")
+                || owner.startsWith("sun/") || owner.startsWith("com/sun/");
     }
 
     public int classCount() {

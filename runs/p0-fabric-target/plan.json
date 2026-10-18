@@ -1,6 +1,6 @@
 {
   "schemaVersion": "0.1-draft",
-  "generatedAt": "2026-10-18T18:14:58.0009304+08:00",
+  "generatedAt": "2026-10-18T18:35:24.62965+08:00",
   "tool": "mcbridge1201 0.1.0",
   "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
   "target": {
@@ -12,7 +12,7 @@
     "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
     "indexClasses": 10919,
     "indexMembers": 87766,
-    "indexBuildMs": 1009,
+    "indexBuildMs": 1004,
     "apiJars": [
       {
         "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\fabric-api-0.102.0+1.21.1.jar",
@@ -17544,9 +17544,9 @@
       "verdict": "blocked_static",
       "stage": "ANALYZED",
       "counts": {
-        "unresolvedDueToHierarchy": 26,
+        "unresolvedDueToHierarchy": 20,
         "missingClass": 1,
-        "missingMember": 15,
+        "missingMember": 20,
         "descMismatch": 19,
         "missingApiClass": 7,
         "missingApiMember": 5,
@@ -17554,7 +17554,7 @@
         "unmappedNamespaceRefs": 12,
         "mixins": 0,
         "mixinTargetsUnresolved": 0,
-        "missingConfirmedInSource": 47,
+        "missingConfirmedInSource": 52,
         "externalPackages": 8
       },
       "missingClass": [
@@ -17665,6 +17665,18 @@
           "presentInSource": true
         },
         {
+          "owner": "net/minecraft/class_2090",
+          "name": "field_9685",
+          "desc": "Lnet/minecraft/class_2090;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]",
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
           "owner": "net/minecraft/class_2096",
           "name": "method_9042",
           "desc": "()Ljava/lang/Number;",
@@ -17709,6 +17721,17 @@
           "presentInSource": true
         },
         {
+          "owner": "net/minecraft/class_2073",
+          "name": "field_9640",
+          "desc": "Lnet/minecraft/class_2073;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/api/chesttype/ChestType"
+          ],
+          "presentInSource": true
+        },
+        {
           "owner": "net/minecraft/class_332",
           "name": "method_48587",
           "desc": "(Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
@@ -17738,6 +17761,39 @@
           "refs": 1,
           "sources": [
             "com/teamresourceful/resourcefullib/common/datagen/FinishedCodecRecipe [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2102",
+          "name": "field_9709",
+          "desc": "Lnet/minecraft/class_2102;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2040",
+          "name": "field_9581",
+          "desc": "Lnet/minecraft/class_2040;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2048",
+          "name": "field_9599",
+          "desc": "Lnet/minecraft/class_2048;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
           ],
           "presentInSource": true
         }
@@ -32905,9 +32961,9 @@
       "verdict": "blocked_static",
       "stage": "ANALYZED",
       "counts": {
-        "unresolvedDueToHierarchy": 14,
+        "unresolvedDueToHierarchy": 10,
         "missingClass": 1,
-        "missingMember": 5,
+        "missingMember": 7,
         "descMismatch": 6,
         "missingApiClass": 0,
         "missingApiMember": 0,
@@ -32915,7 +32971,7 @@
         "unmappedNamespaceRefs": 79,
         "mixins": 224,
         "mixinTargetsUnresolved": 0,
-        "missingConfirmedInSource": 11,
+        "missingConfirmedInSource": 13,
         "externalPackages": 10
       },
       "missingClass": [
@@ -32940,6 +32996,30 @@
           "refs": 2,
           "sources": [
             "me/jellysquid/mods/lithium/common/hopper/HopperHelper"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_4048",
+          "name": "field_18067",
+          "desc": "F",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_4048",
+          "name": "field_18068",
+          "desc": "F",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
           ],
           "presentInSource": true
         },
