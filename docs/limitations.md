@@ -4,8 +4,9 @@
 
 ## 1. 证据阶段
 
-- 目前最高阶段：**`BOOTED`**（1.21.1 专用服务端基线，`Done (4.803s)`）与 **`LOADED`**（转换后的 ironchests 被 Loader 接受后于入口点崩溃）。
-- `WORLD_LOADED`、`CONTRACT_PASSED`、`SET_PASSED`：**全部 pending**。没有 `/give`、放置、容器存取、重启读回或多人同步证据。
+- 目前最高阶段：**`CONTRACT_PASSED`（范围受限）**——专用服务端 + 命令 API 下，转换后的 ironchests 完成“放置 → 插入 → NBT 写入 → 进程重启 → 读回”。
+- 客户端 `WORLD_LOADED`（玩家进入世界、GUI、渲染）**未验证**。
+- `SET_PASSED` 与多人同步：pending。
 - `BOOTED` 使用的游戏 jar 由本项目 ASM 重映射器生成（Loader 本体未改），因为原版 remap 被沙箱 `Files.isWritable` 阻塞。这不是 stock 路径，复现时必须写明。
 - 静态 `CLEAN_STATIC` 只表示“在索引覆盖的命名空间里没有发现缺类/缺成员”，不表示能加载，更不表示玩法正确。
 

@@ -31,6 +31,33 @@ public final class RuleSet {
     public final List<FieldRedirect> fieldRedirects = new ArrayList<>();
     public final List<MethodRedirect> methodRedirects = new ArrayList<>();
     public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
+    public final List<SignatureAdaptation> signatureAdaptations = new ArrayList<>();
+
+    /** A call that must gain the extra argument introduced by a signature adaptation. */
+    public static final class CallRewrite {
+        public String owner;
+        public String name;
+        public String oldDesc;
+        public String newDesc;
+    }
+
+    /**
+     * Migrates an override to the target version's signature by appending a parameter
+     * (e.g. BlockEntity NBT methods gained a RegistryWrapper.WrapperLookup in 1.20.5).
+     * Without this the method no longer overrides and vanilla silently skips it.
+     */
+    public static final class SignatureAdaptation {
+        public String id;
+        public String targetClass;
+        public String methodName;
+        public String oldDesc;
+        public String newDesc;
+        public int paramSlot;
+        public List<CallRewrite> callRewrites = new ArrayList<>();
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
 
     /**
      * Replaces {@code new X(a,b) + invokespecial X.<init>(a,b)} with a static factory call.
@@ -85,7 +112,20 @@ public final class RuleSet {
                 rs.constructorRedirects.add(new Gson().fromJson(el, ConstructorRedirect.class));
             }
         }
+        if (o.has("signatureAdaptations")) {
+            for (var el : o.getAsJsonArray("signatureAdaptations")) {
+                rs.signatureAdaptations.add(new Gson().fromJson(el, SignatureAdaptation.class));
+            }
+        }
         return rs;
+    }
+
+    public List<SignatureAdaptation> adaptationsFor(String internalClass) {
+        List<SignatureAdaptation> out = new ArrayList<>();
+        for (SignatureAdaptation a : signatureAdaptations) {
+            if (ownerMatches(a.targetClass, internalClass)) out.add(a);
+        }
+        return out;
     }
 
     public ConstructorRedirect matchConstructor(String owner, String desc) {

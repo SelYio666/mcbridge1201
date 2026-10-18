@@ -55,5 +55,45 @@
       "risk": "low",
       "evidence": "1.21.1 made Identifier(String,String) private; Identifier.of(String,String) = method_60655 is the public factory. Runtime failure: IllegalAccessError in ResourcefulLib NetworkChannel.<init> (called from ironchests NetPacketHandler)."
     }
+  ],
+  "signatureAdaptations": [
+    {
+      "id": "blockentity.nbt.write.lookup",
+      "targetClass": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity",
+      "methodName": "method_11007",
+      "oldDesc": "(Lnet/minecraft/class_2487;)V",
+      "newDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V",
+      "paramSlot": 2,
+      "callRewrites": [
+        { "owner": "net/minecraft/class_2621", "name": "method_11007",
+          "oldDesc": "(Lnet/minecraft/class_2487;)V",
+          "newDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V" },
+        { "owner": "net/minecraft/class_1262", "name": "method_5426",
+          "oldDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)Lnet/minecraft/class_2487;",
+          "newDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;" }
+      ],
+      "capability": "blockentity.nbt.registries",
+      "risk": "medium",
+      "evidence": "1.20.5 added RegistryWrapper.WrapperLookup to BlockEntity read/write NBT and ContainerHelper.saveAllItems. The converted method kept the 1-arg descriptor, stopped overriding, and vanilla silently skipped it: the chest kept items in memory but wrote no Items tag (observed with data get block)."
+    },
+    {
+      "id": "blockentity.nbt.read.lookup",
+      "targetClass": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity",
+      "methodName": "method_11014",
+      "oldDesc": "(Lnet/minecraft/class_2487;)V",
+      "newDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V",
+      "paramSlot": 2,
+      "callRewrites": [
+        { "owner": "net/minecraft/class_2621", "name": "method_11014",
+          "oldDesc": "(Lnet/minecraft/class_2487;)V",
+          "newDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V" },
+        { "owner": "net/minecraft/class_1262", "name": "method_5429",
+          "oldDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)V",
+          "newDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)V" }
+      ],
+      "capability": "blockentity.nbt.registries",
+      "risk": "medium",
+      "evidence": "Same signature change on the read path; without it the chest cannot restore Items after a restart even if the write side is fixed."
+    }
   ]
 }

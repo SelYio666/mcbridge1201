@@ -101,6 +101,10 @@ public final class JarPatcher {
         new ClassReader(bytes).accept(cn, 0);
         boolean changed = false;
         boolean framesAffected = false;
+        if (applySignatureAdaptations(cn, rules, st)) {
+            changed = true;
+            framesAffected = true;
+        }
         for (MethodNode mn : cn.methods) {
             InsnList insns = mn.instructions;
             for (AbstractInsnNode insn = insns.getFirst(); insn != null; ) {
@@ -162,6 +166,53 @@ public final class JarPatcher {
         cn.accept(cw);
         st.classes++;
         return cw.toByteArray();
+    }
+
+    /**
+     * Appends a parameter to an override so it keeps overriding the target method, shifting
+     * existing locals and forwarding the new argument to the listed calls.
+     */
+    private static boolean applySignatureAdaptations(ClassNode cn, RuleSet rules, Stats st) {
+        boolean any = false;
+        for (RuleSet.SignatureAdaptation a : rules.adaptationsFor(cn.name)) {
+            for (MethodNode mn : cn.methods) {
+                if (!mn.name.equals(a.methodName) || !mn.desc.equals(a.oldDesc)) continue;
+                shiftLocals(mn, a.paramSlot);
+                mn.desc = a.newDesc;
+                mn.maxLocals = Math.max(mn.maxLocals + 1, a.paramSlot + 1);
+                for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+                    if (!(insn instanceof MethodInsnNode m)) continue;
+                    for (RuleSet.CallRewrite cw : a.callRewrites) {
+                        boolean ownerOk = cw.owner == null || cw.owner.equals(m.owner);
+                        if (ownerOk && cw.name.equals(m.name) && cw.oldDesc.equals(m.desc)) {
+                            m.desc = cw.newDesc;
+                            mn.instructions.insertBefore(m,
+                                    new org.objectweb.asm.tree.VarInsnNode(Opcodes.ALOAD, a.paramSlot));
+                            st.applied.merge(a.id + "/call", 1, Integer::sum);
+                            break;
+                        }
+                    }
+                }
+                st.applied.merge(a.id, 1, Integer::sum);
+                any = true;
+            }
+        }
+        return any;
+    }
+
+    private static void shiftLocals(MethodNode mn, int fromSlot) {
+        for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+            if (insn instanceof org.objectweb.asm.tree.VarInsnNode v && v.var >= fromSlot) {
+                v.var += 1;
+            } else if (insn instanceof org.objectweb.asm.tree.IincInsnNode i && i.var >= fromSlot) {
+                i.var += 1;
+            }
+        }
+        if (mn.localVariables != null) {
+            for (var lv : mn.localVariables) {
+                if (lv.index >= fromSlot) lv.index += 1;
+            }
+        }
     }
 
     /**

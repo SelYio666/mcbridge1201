@@ -48,6 +48,10 @@ mcbridge1201 patch --in <converted.jar> --out <patched.jar> \
 | `itempredicate.any.static-field` | `ItemPredicate.ANY` → 空谓词 | 1.20.1 的 ANY 匹配所有物品；1.21.1 的空 `ItemPredicate` 同样匹配所有 | 已应用，ironchests 入口点因此通过 |
 | `codec.dispatch.mapcodec-shape` | `Codec.dispatch` 第二参数返回 MapCodec | 1.20.5 引入 MapCodec；桥用 `MapCodec.assumeMapUnsafe` 包装 | 已应用 2 处；`assumeMapUnsafe` 在 `MapCodec$7` 处 NPE，需要更强的适配器 |
 | `itempredicate.fromjson.static` | `ItemPredicate.fromJson` 的 tombstone 调用（MethodHandle） | 1.21.1 用 `ItemPredicate.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(null)` 重建 | 已应用 1 处 |
+| `identifier.ctor.to-factory` | `new Identifier(ns,path)` → 公开工厂 | 1.21.1 私有化构造器 | 已应用 13 处；剩余用 access widener |
+| `blockentity.nbt.{read,write}.lookup` | 1 参 NBT 覆写 → 2 参（带 `WrapperLookup`），并给 `ContainerHelper` 调用补参 | 1.20.5 起 BlockEntity NBT 带注册表视图 | **已应用，容器持久化通过** |
 | `constant-kind-fix(-handle)` | class→interface 的常量池种类 | 1.20.5 的 DFU 接口化 | 已应用 123 + 3 处 |
+
+`signatureAdaptations` 会迁移方法描述符、平移局部变量槽、给指定调用补参数，并用 `COMPUTE_FRAMES` 重算帧；这是“签名变化”类损伤的通用处理形态，而不是单点改名。
 
 规则匹配还支持 `MethodHandle`（lambda 实现）——CenturyBridge 的 tombstone 经常以句柄形式出现，不是直接 `invokestatic`。

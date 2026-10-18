@@ -380,9 +380,37 @@ protected void method_11007(net.minecraft.class_2487, net.minecraft.class_7225$c
 
 这属于方案里的“签名变化”，需要专门的适配（把 1-arg 覆写改成 2-arg 并忽略/转发 lookup，同时处理调用点），不能用改名或空实现糊过去。
 
+### 7.14 签名适配规则修复持久化，容器契约通过
+
+针对 §7.13 的根因新增 `signatureAdaptations` 规则（不只改名，而是把 1 参覆写迁移成 2 参）：
+
+- `method_11007(NbtCompound)V` → `method_11007(NbtCompound, WrapperLookup)V`
+- `method_11014(NbtCompound)V` → `method_11014(NbtCompound, WrapperLookup)V`
+- 局部变量槽从 2 开始整体后移，新增参数放在槽 2；
+- 方法体内的既有调用同步补参：
+  - `super.method_11007/11014`（`class_2621`）
+  - `ContainerHelper.saveAllItems`（`class_1262.method_5426`，2 参 → 3 参）
+  - `ContainerHelper.loadAllItems`（`class_1262.method_5429`，2 参 → 3 参）
+- 由于改了方法描述符，帧用 `COMPUTE_FRAMES` 重算（`SafeClassWriter`，不加载游戏类）。
+
+应用统计：`blockentity.nbt.write.lookup` 1 次 + 2 处调用补参；读方法同样被改写为 2 参。
+
+契约重跑（同一实例，命令驱动）：
+
+| 步骤 | 证据 | 结果 |
+|---|---|---|
+| 放置 `ironchests:iron_chest` @ (0,100,0) | `runs/p5-contract-nbt-fix/server.log` | 通过 |
+| 插入 5 个钻石 | `Replaced a slot at 0, 100, 0 with [Diamond]` | 通过 |
+| 读取方块数据 | `{... Items: [{count: 5, Slot: 0b, id: "minecraft:diamond"}], ... id: "ironchests:iron_chest"}` | **通过（物品已进 NBT）** |
+| 保存并重启进程 | `runs/p5-contract-nbt-restart/server.log` | 通过 |
+| 重启后读回 | `data get block 0 100 0` → 同上；`Items[0].count` → `5` | **通过** |
+
+结论：**容器契约在“专用服务端 + 命令 API + 单进程重启”范围内通过**（`CONTRACT_PASSED`，范围受限）。没有验证 GUI、渲染、多人同步，也没有客户端玩家操作路径。
+
 ## 8. 未验证项与下一步
 
-1. **BlockEntity NBT 签名适配**：`method_11007/11014` 需要补 `WrapperLookup` 参数才能重新 override，否则容器内容不落盘（当前已实测：物品插入成功、NBT 为空）。这是容器契约的第一优先级。
+1. **图形/GUI 与多人**：服务端契约已通过；`WORLD_LOADED` 的玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
+2. **`fromJson` 的 ANY 回退是语义降级**：解析失败会变成“匹配所有物品”，必须改成显式诊断或真正的 MapCodec 适配后再对外。
 2. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；已用“fromJson 解析失败回退 ANY”绕过一次，但那是**语义降级**，必须在最终规则里改成显式诊断或真正的 MapCodec 构造。
 2. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是"无桥"结果。
 3. **WORLD_LOADED / 玩法契约**：需要客户端或命令侧断言；服务端可先做 `/give` + 放置 + 容器存取 + 重启读回的命令行契约。

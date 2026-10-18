@@ -20,8 +20,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 第一条转换规则 + 桥 | `ItemPredicate.ANY` → 空谓词；入口点通过 | `rules/fabric-1.21.1/container.json`、[rules/README.md](rules/README.md) |
 | 常量池种类修正 | 123 处 Methodref→InterfaceMethodref + 3 个 method handle（含 JiJ） | `java/.../rules/JarPatcher.java` |
 | 规则数 | 3 条（`ItemPredicate.ANY`、`fromJson`、`Codec.dispatch`）+ 常量池种类修正 | `rules/fabric-1.21.1/container.json` |
-| 容器契约（服务端命令） | 放置通过、插入通过、**NBT 持久化失败**（无 `Items`） | `runs/p4-contract-*/` |
-| 持久化根因 | `BlockEntity.method_11007/11014` 仍是 1 参签名，未 override 2 参方法 | `docs/baseline.md` §7.13 |
+| 容器契约（服务端命令） | **通过**：放置 → 插入 5 钻石 → NBT `Items` → 重启读回 5 | `runs/p5-contract-*/` |
+| 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
 
 ## 复现
 
