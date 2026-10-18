@@ -30,6 +30,7 @@ public final class RuleSet {
 
     public final List<FieldRedirect> fieldRedirects = new ArrayList<>();
     public final List<MethodRedirect> methodRedirects = new ArrayList<>();
+    public final List<CallSiteAdaptation> callSiteAdaptations = new ArrayList<>();
     public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
     public final List<SignatureAdaptation> signatureAdaptations = new ArrayList<>();
     public final List<MixinStrip> mixinStrips = new ArrayList<>();
@@ -102,6 +103,30 @@ public final class RuleSet {
         public String risk;
         public String evidence;
     }
+
+    /**
+     * A call-site signature adaptation: the callee's descriptor changed between versions
+     * (arguments were replaced, not just renamed). The old call is redirected to a
+     * javac-compiled bridge with the old descriptor; the bridge receives the old arguments and
+     * implements the target-version equivalent. Matched exactly by owner + name + descriptor
+     * (+ opcode).
+     */
+    public static final class CallSiteAdaptation {
+        public String id;
+        public String sourceOwner;
+        public String sourceName;
+        public String sourceDesc;
+        public int sourceOpcode; // 184 = INVOKESTATIC by default
+        public String targetOwner;
+        public String targetName;
+        public String targetDesc;
+        public String bridgeClass;
+        public String bridgeMethod;
+        public String bridgeDesc;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
     public String version;
     public String target;
 
@@ -118,6 +143,11 @@ public final class RuleSet {
         if (o.has("methodRedirects")) {
             for (var el : o.getAsJsonArray("methodRedirects")) {
                 rs.methodRedirects.add(new Gson().fromJson(el, MethodRedirect.class));
+            }
+        }
+        if (o.has("callSiteAdaptations")) {
+            for (var el : o.getAsJsonArray("callSiteAdaptations")) {
+                rs.callSiteAdaptations.add(new Gson().fromJson(el, CallSiteAdaptation.class));
             }
         }
         if (o.has("constructorRedirects")) {
@@ -167,6 +197,21 @@ public final class RuleSet {
             if (!ownerMatches(r.sourceOwner, owner)) continue;
             if (r.sourceName != null && !r.sourceName.isEmpty() && !r.sourceName.equals(name)) continue;
             if (r.sourceDesc != null && !r.sourceDesc.equals(desc)) continue;
+            if (r.sourceOpcode != 0 && r.sourceOpcode != opcode) continue;
+            return r;
+        }
+        return null;
+    }
+
+    /**
+     * Exact match only: call-site adaptations change the meaning of the call, so there is no
+     * wildcard owner and no descriptor-prefix matching here.
+     */
+    public CallSiteAdaptation matchCallSite(String owner, String name, String desc, int opcode) {
+        for (CallSiteAdaptation r : callSiteAdaptations) {
+            if (!r.sourceOwner.equals(owner)) continue;
+            if (!r.sourceName.equals(name)) continue;
+            if (!r.sourceDesc.equals(desc)) continue;
             if (r.sourceOpcode != 0 && r.sourceOpcode != opcode) continue;
             return r;
         }

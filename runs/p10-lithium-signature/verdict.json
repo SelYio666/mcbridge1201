@@ -1,0 +1,38 @@
+{
+  "sample": "lithium-fabric-mc1.20.1-0.11.4",
+  "target": "fabric-1.21.1",
+  "rule": "walknodeevaluator.checkneighbourblocks.view-to-context",
+  "ruleFile": "rules/fabric-1.21.1/lithium.json",
+  "bridge": "top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks",
+  "before": {
+    "crash": "java.lang.NoSuchMethodError: 'net.minecraft.class_7 net.minecraft.class_14.method_59(net.minecraft.class_1922, net.minecraft.class_2338$class_2339, net.minecraft.class_7)'",
+    "log": "runs/p6-lithium/server.log"
+  },
+  "patch": {
+    "jar": "work/cb/out/lithium/lithium-patched-final.jar",
+    "sha256": "4d9e5374e01d5ce51e0ded94293c307bfda7c0d33a43ccaf28b85be0320a9822",
+    "ruleApplications": 2,
+    "bridgesEmbedded": [
+      "top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks"
+    ],
+    "log": "runs/p10-lithium-signature/patch-lithium.log"
+  },
+  "server": {
+    "instance": "work/instances/fabric-1.21.1-server-lithium",
+    "log": "runs/p10-lithium-signature/server-callsite.log",
+    "runnerExitCode": 11,
+    "jvmExitCode": 1,
+    "doneSeen": false,
+    "noSuchMethodErrorSeen": false,
+    "nextFailure": "Mixin apply failed: lithium.mixins.json:world.explosions.ExplosionMixin cannot find the 1.20.1 Explosion constructor target in net.minecraft.class_1927",
+    "outcome": "advanced_to_next_failure"
+  },
+  "tests": {
+    "command": "gradle --no-daemon test (in java/)",
+    "exitCode": 0,
+    "tests": 8,
+    "failures": 0,
+    "log": "runs/p10-lithium-signature/gradle-test.log"
+  },
+  "scope": "dedicated server startup only; GUI/render/multiplayer not verified"
+}

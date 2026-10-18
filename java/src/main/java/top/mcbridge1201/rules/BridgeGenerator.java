@@ -29,6 +29,14 @@ public final class BridgeGenerator {
     private static final String MAP_CODEC = "com/mojang/serialization/MapCodec";
     private static final String FUNCTION = "java/util/function/Function";
 
+    /** Bridge classes this generator can emit. Everything else must be supplied as javac output. */
+    public static boolean isGenerated(String name) {
+        return ITEM_PREDICATE_ANY.equals(name)
+                || CODEC_DISPATCH.equals(name)
+                || ITEM_PREDICATE_FROM_JSON.equals(name)
+                || IDENTIFIER_FACTORY.equals(name);
+    }
+
     /** All classes that must be embedded when the given bridge names are used. */
     public static Map<String, byte[]> generate(Set<String> used) {
         Map<String, byte[]> out = new LinkedHashMap<>();

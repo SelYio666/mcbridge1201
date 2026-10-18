@@ -28,17 +28,19 @@ import java.util.zip.ZipOutputStream;
  * referenced bridge classes. Deterministic output (fixed entry timestamps), no zipfs.
  */
 public final class JarPatcher {
-    public record Result(Map<String, Integer> applied, int classes, Set<String> bridges, int nestedJars) {}
+    public record Result(Map<String, Integer> applied, int classes, Set<String> bridges,
+                         int nestedJars, Set<String> externalBridges) {}
 
     private static final class Stats {
         final Map<String, Integer> applied = new TreeMap<>();
         final Set<String> bridges = new TreeSet<>();
+        final Set<String> external = new TreeSet<>();
         int classes;
         int nested;
     }
 
     public static Result patch(Path in, Path out, RuleSet rules) throws IOException {
-        return patch(in, out, rules, null);
+        return patch(in, out, rules, null, Map.of());
     }
 
     /**
@@ -49,6 +51,19 @@ public final class JarPatcher {
      */
     public static Result patch(Path in, Path out, RuleSet rules,
                                top.mcbridge1201.index.TargetIndex targetIndex) throws IOException {
+        return patch(in, out, rules, targetIndex, Map.of());
+    }
+
+    /**
+     * @param bridgeClasses javac-compiled bridge classes keyed by internal name (e.g.
+     *                      {@code top/mcbridge1201/bridge/Foo}). Used by call-site adaptations,
+     *                      whose bridges are Java source compiled against the target stub rather
+     *                      than generated as ASM. Nested classes named {@code Foo$Bar} are
+     *                      embedded with their outer class.
+     */
+    public static Result patch(Path in, Path out, RuleSet rules,
+                               top.mcbridge1201.index.TargetIndex targetIndex,
+                               Map<String, byte[]> bridgeClasses) throws IOException {
         Map<String, byte[]> entries = new LinkedHashMap<>();
         try (ZipFile zf = new ZipFile(in.toFile())) {
             var en = zf.entries();
@@ -60,12 +75,37 @@ public final class JarPatcher {
         }
         Stats st = new Stats();
         Map<String, byte[]> patched = patchEntries(entries, rules, targetIndex, st, true);
-        for (var e : BridgeGenerator.generate(st.bridges).entrySet()) {
+        // Bridges generated as ASM by the tool itself (existing rules).
+        Set<String> generatedNames = new TreeSet<>();
+        for (String name : st.bridges) {
+            if (BridgeGenerator.isGenerated(name)) generatedNames.add(name);
+        }
+        for (var e : BridgeGenerator.generate(generatedNames).entrySet()) {
             patched.put(e.getKey() + ".class", e.getValue());
+        }
+        // Bridges compiled by javac (call-site adaptations). An unknown bridge is a hard error:
+        // silently emitting a call to a missing class would defer the failure to server boot.
+        for (String used : st.bridges) {
+            if (BridgeGenerator.isGenerated(used)) continue;
+            if (bridgeClasses == null || !bridgeClasses.containsKey(used)) {
+                throw new IllegalArgumentException("bridge class " + used
+                        + " is not generated and was not supplied (use --bridge-dir)");
+            }
+            boolean embedded = false;
+            for (var e : bridgeClasses.entrySet()) {
+                if (e.getKey().equals(used) || e.getKey().startsWith(used + "$")) {
+                    patched.put(e.getKey() + ".class", e.getValue());
+                    embedded = true;
+                }
+            }
+            if (!embedded) {
+                throw new IllegalArgumentException("compiled bridge class missing: " + used);
+            }
+            st.external.add(used);
         }
         Files.createDirectories(out.toAbsolutePath().getParent());
         writeZip(patched, out);
-        return new Result(st.applied, st.classes, st.bridges, st.nested);
+        return new Result(st.applied, st.classes, st.bridges, st.nested, st.external);
     }
 
     private static Map<String, byte[]> patchEntries(Map<String, byte[]> entries, RuleSet rules,
@@ -138,19 +178,32 @@ public final class JarPatcher {
                             && m0.desc.contains("JsonElement;)Lnet/minecraft/class_2073;")) {
                         System.out.printf("DEBUG invoke %d %s.%s%s%n", m0.getOpcode(), m0.owner, m0.name, m0.desc);
                     }
-                    RuleSet.MethodRedirect r = rules.matchInvoke(m0.owner, m0.name, m0.desc, m0.getOpcode());
-                    if (r != null) {
+                    RuleSet.CallSiteAdaptation cs =
+                            rules.matchCallSite(m0.owner, m0.name, m0.desc, m0.getOpcode());
+                    if (cs != null) {
+                        // The callee's arguments were replaced, not just renamed. Keep the old
+                        // stack shape and hand it to a javac-compiled bridge.
                         insns.set(insn, new MethodInsnNode(Opcodes.INVOKESTATIC,
-                                r.bridgeClass, r.bridgeMethod, r.bridgeDesc, false));
-                        st.applied.merge(r.id, 1, Integer::sum);
-                        st.bridges.add(r.bridgeClass);
+                                cs.bridgeClass, cs.bridgeMethod, cs.bridgeDesc, false));
+                        st.applied.merge(cs.id, 1, Integer::sum);
+                        st.bridges.add(cs.bridgeClass);
                         changed = true;
+                    } else {
+                        RuleSet.MethodRedirect r =
+                                rules.matchInvoke(m0.owner, m0.name, m0.desc, m0.getOpcode());
+                        if (r != null) {
+                            insns.set(insn, new MethodInsnNode(Opcodes.INVOKESTATIC,
+                                    r.bridgeClass, r.bridgeMethod, r.bridgeDesc, false));
+                            st.applied.merge(r.id, 1, Integer::sum);
+                            st.bridges.add(r.bridgeClass);
+                            changed = true;
+                        }
                     }
                 }
                 insn = next;
             }
-            if (idx != null) {
-                for (AbstractInsnNode insn = insns.getFirst(); insn != null; insn = insn.getNext()) {
+            for (AbstractInsnNode insn = insns.getFirst(); insn != null; insn = insn.getNext()) {
+                if (idx != null) {
                     if (insn instanceof MethodInsnNode m && fixKind(m, idx)) {
                         st.applied.merge("constant-kind-fix", 1, Integer::sum);
                         changed = true;
@@ -159,9 +212,11 @@ public final class JarPatcher {
                         st.applied.merge("constant-kind-fix-handle", 1, Integer::sum);
                         changed = true;
                     }
-                    if (applyHandleRules(insn, rules, st)) {
-                        changed = true;
-                    }
+                }
+                // Handles can carry a call-site adaptation even when no target index was
+                // supplied; the rule itself is exact, so it is safe to apply unconditionally.
+                if (applyHandleRules(insn, rules, st)) {
+                    changed = true;
                 }
             }
         }
@@ -341,6 +396,13 @@ public final class JarPatcher {
         int opcode = h.getTag() == Opcodes.H_INVOKESTATIC ? Opcodes.INVOKESTATIC
                 : h.getTag() == Opcodes.H_INVOKEVIRTUAL ? Opcodes.INVOKEVIRTUAL : 0;
         if (opcode == 0) return null;
+        RuleSet.CallSiteAdaptation cs = rules.matchCallSite(h.getOwner(), h.getName(), h.getDesc(), opcode);
+        if (cs != null) {
+            st.applied.merge(cs.id, 1, Integer::sum);
+            st.bridges.add(cs.bridgeClass);
+            return new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, cs.bridgeClass, cs.bridgeMethod,
+                    cs.bridgeDesc, false);
+        }
         RuleSet.MethodRedirect r = rules.matchInvoke(h.getOwner(), h.getName(), h.getDesc(), opcode);
         if (r == null) return null;
         st.applied.merge(r.id, 1, Integer::sum);

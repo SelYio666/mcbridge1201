@@ -19,12 +19,13 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 转换件运行时 | **BOOTED + 世界加载**：`Done (1.134s)`，42 个模组 | `runs/p3-server-accesswidener/` |
 | 第一条转换规则 + 桥 | `ItemPredicate.ANY` → 空谓词；入口点通过 | `rules/fabric-1.21.1/container.json`、[rules/README.md](rules/README.md) |
 | 常量池种类修正 | 123 处 Methodref→InterfaceMethodref + 3 个 method handle（含 JiJ） | `java/.../rules/JarPatcher.java` |
-| 规则数 | 3 条（`ItemPredicate.ANY`、`fromJson`、`Codec.dispatch`）+ 常量池种类修正 | `rules/fabric-1.21.1/container.json` |
+| 规则数 | `container.json` 7 条（含 NBT 签名适配、dispatch/fromJson/Identifier）+ `lithium.json` 调用点规则 | `rules/fabric-1.21.1/` |
 | 容器契约（服务端命令） | **通过**：放置 → 插入 5 钻石 → NBT `Items` → 重启读回 5 | `runs/p5-contract-*/` |
-| 兼容档案 | ironchests @ Fabric 1.21.1，`status: degraded`（契约通过；fromJson 降级；缺客户端） | [profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json](profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json) |
+| 兼容档案 | ironchests @ Fabric 1.21.1，`status: passed_within_scope`（仅专用服务端；缺客户端） | [profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json](profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json) |
 | 支持矩阵 | 10 份样本的静态结果 + 运行时阶段（未运行 ≠ 通过） | [docs/support-matrix.md](docs/support-matrix.md) |
 | 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
-| 第二样本 lithium | 转换并加载成功（131 配置项）；mixin 注入失败 → 显式降级 2 条；卡在 `class_14.method_59` 签名 | `runs/p6-lithium/`、`rules/fabric-1.21.1/lithium-degraded.json` |
+| **调用点签名适配** | `callSiteAdaptations` + javac 桥；lithium `class_14.method_59` 命中 2 处，`NoSuchMethodError` 消失 | [docs/baseline.md](docs/baseline.md) §7.17、`runs/p10-lithium-signature/` |
+| 第二样本 lithium | 转换并加载成功（131 配置项）；显式降级 2 条 mixin；调用点签名已适配，推进到下一失败 `ExplosionMixin` 注入目标 | `runs/p6-lithium/`、`runs/p10-lithium-signature/`、`rules/fabric-1.21.1/lithium.json` |
 
 ## 交接
 

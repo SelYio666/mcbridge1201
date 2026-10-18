@@ -1,0 +1,9 @@
+﻿# NoSuchMethodError check (generated)
+
+baseline (runs/p6-lithium/server.log:51):
+net.fabricmc.loader.impl.FormattedException: java.lang.NoSuchMethodError: 'net.minecraft.class_7 net.minecraft.class_14.method_59(net.minecraft.class_1922, net.minecraft.class_2338$class_2339, net.minecraft.class_7)'
+
+after (runs/p10-lithium-signature/server-callsite.log): NoSuchMethodError matches = 0
+
+next failure (first InvalidInjectionException):
+[20:46:04] [main/ERROR]: Mixin apply for mod lithium failed lithium.mixins.json:world.explosions.ExplosionMixin from mod lithium -> net.minecraft.class_1927: org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException Critical injection failure: @Inject annotation on init could not find any targets matching 'Lnet/minecraft/class_1927;<init>(Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;)V' in net/minecraft/class_1927. Using refmap mixins.lithium.refmap.json [INJECT_PREPARE_LEGACY Applicator Phase -> lithium.mixins.json:world.explosions.ExplosionMixin from mod lithium -> Prepare Legacy Injections -> handler$zop000$lithium$init(Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfo;)V -> Parse ->  -> Validate Targets]

@@ -21,13 +21,18 @@ def main():
     with zipfile.ZipFile(args.jar) as zin:
         entries = {n: zin.read(n) for n in zin.namelist() if not n.endswith("/")}
     replaced = []
+    added = []
     for internal in args.replace:
         src = os.path.join(args.classes, *internal.split("/")) + ".class"
         if not os.path.exists(src):
             print("missing compiled class:", src, flush=True)
             return 2
-        entries[internal + ".class"] = open(src, "rb").read()
-        replaced.append(internal)
+        if (internal + ".class") in entries:
+            replaced.append(internal)
+        else:
+            added.append(internal)
+        with open(src, "rb") as f:
+            entries[internal + ".class"] = f.read()
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     with zipfile.ZipFile(args.out, "w", zipfile.ZIP_DEFLATED) as zout:
         for name, data in entries.items():
@@ -35,6 +40,7 @@ def main():
             info.compress_type = zipfile.ZIP_DEFLATED
             zout.writestr(info, data)
     print("replaced", len(replaced), "bridge classes ->", args.out)
+    print("added", len(added), "bridge classes ->", args.out)
     return 0
 
 

@@ -41,15 +41,54 @@ mcbridge1201 patch --in <converted.jar> --out <patched.jar> \
 
 桥类由 `BridgeGenerator` 用 ASM 生成并嵌入输出 jar，因此规则不依赖额外安装的桥 mod。
 
+## 调用点签名适配 schema
+
+当目标方法的**参数/描述符**发生变化（不是改名）时，用 `callSiteAdaptations` 把旧调用重定向到
+一个 javac 编译的桥方法。匹配是精确的 `(owner, name, oldDesc[, opcode])`，不做通配：
+
+```json
+{
+  "callSiteAdaptations": [
+    {
+      "id": "walknodeevaluator.checkneighbourblocks.view-to-context",
+      "sourceOwner": "net/minecraft/class_14",
+      "sourceName": "method_59",
+      "sourceDesc": "(Lnet/minecraft/class_1922;Lnet/minecraft/class_2338$class_2339;Lnet/minecraft/class_7;)Lnet/minecraft/class_7;",
+      "sourceOpcode": 184,
+      "targetOwner": "net/minecraft/class_14",
+      "targetName": "method_59",
+      "targetDesc": "(Lnet/minecraft/class_9316;IIILnet/minecraft/class_7;)Lnet/minecraft/class_7;",
+      "bridgeClass": "top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks",
+      "bridgeMethod": "checkNeighbourBlocks",
+      "bridgeDesc": "(Lnet/minecraft/class_1922;Lnet/minecraft/class_2338$class_2339;Lnet/minecraft/class_7;)Lnet/minecraft/class_7;",
+      "capability": "pathfinding.neighbour_block_scan",
+      "risk": "medium",
+      "evidence": "触发它的真实 NoSuchMethodError + 旧/新签名 + 语义依据"
+    }
+  ]
+}
+```
+
+- `bridgeDesc` 必须与旧栈形状一致；`JarPatcher` 把命中调用改成 `INVOKESTATIC`，直接调用和
+  `MethodHandle` 都会处理。
+- 桥写成 Java 源码放在 `java/src/bridge/java/...`，用
+  `python tools/build_bridges.py --stub <client-1.21.1-intermediary.jar> --lib <gson> --lib <dfu> --out work/bridges`
+  编译；`patch --bridge-dir work/bridges` 会把用到的编译产物嵌入输出 jar。
+  `tools/inject_bridges.py` 可独立替换/补齐桥类（输出确定性时间戳）。
+- 规则引用的桥如果既不是 `BridgeGenerator` 内建、也没有通过 `--bridge-dir` 提供，`patch` 会**硬失败**，
+  不会产出悬空调用。
+- 当前边界：外部桥只嵌入顶层 jar；嵌套 jar（JiJ）内的调用点尚未覆盖。
+
 ## 现有规则
 
 | id | 目标 | 语义依据 | 状态 |
 |---|---|---|---|
 | `itempredicate.any.static-field` | `ItemPredicate.ANY` → 空谓词 | 1.20.1 的 ANY 匹配所有物品；1.21.1 的空 `ItemPredicate` 同样匹配所有 | 已应用，ironchests 入口点因此通过 |
-| `codec.dispatch.mapcodec-shape` | `Codec.dispatch` 第二参数返回 MapCodec | 1.20.5 引入 MapCodec；桥用 `MapCodec.assumeMapUnsafe` 包装 | 已应用 2 处；`assumeMapUnsafe` 在 `MapCodec$7` 处 NPE，需要更强的适配器 |
-| `itempredicate.fromjson.static` | `ItemPredicate.fromJson` 的 tombstone 调用（MethodHandle） | 1.21.1 用 `ItemPredicate.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(null)` 重建 | 已应用 1 处 |
+| `codec.dispatch.mapcodec-shape` | `Codec.dispatch` 第二参数返回 MapCodec | 1.20.5 引入 MapCodec；桥用 `MapCodec.assumeMapUnsafe` 包装 | 已应用 2 处；ironchests 数据加载/容器契约通过，但 `assumeMapUnsafe` 在部分路径仍可能 NPE（未完全消除，见 baseline §8） |
+| `itempredicate.fromjson.static` | `ItemPredicate.fromJson` 的 tombstone 调用（MethodHandle） | 1.21.1 用 registry-aware `ItemPredicate.CODEC` + `RegistryOps` 重建（Java 源码桥） | 已应用 1 处；p9 起启动日志不再出现 fallback 告警 |
 | `identifier.ctor.to-factory` | `new Identifier(ns,path)` → 公开工厂 | 1.21.1 私有化构造器 | 已应用 13 处；剩余用 access widener |
 | `blockentity.nbt.{read,write}.lookup` | 1 参 NBT 覆写 → 2 参（带 `WrapperLookup`），并给 `ContainerHelper` 调用补参 | 1.20.5 起 BlockEntity NBT 带注册表视图 | **已应用，容器持久化通过** |
+| `walknodeevaluator.checkneighbourblocks.view-to-context` | `WalkNodeEvaluator.checkNeighbourBlocks(BlockGetter, MutableBlockPos, PathType)` → 1.21.1 的 `(PathfindingContext, int, int, int, PathType)` | 1.20.1 旧方法体逐条移植；旧调用点可传任意 `BlockGetter`（含 `SingleBlockBlockView`），无法安全构造 `PathfindingContext` | **已应用 2 处；lithium 启动不再抛 `NoSuchMethodError`（推进到下一失败）** |
 | `constant-kind-fix(-handle)` | class→interface 的常量池种类 | 1.20.5 的 DFU 接口化 | 已应用 123 + 3 处 |
 
 `signatureAdaptations` 会迁移方法描述符、平移局部变量槽、给指定调用补参数，并用 `COMPUTE_FRAMES` 重算帧；这是“签名变化”类损伤的通用处理形态，而不是单点改名。

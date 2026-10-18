@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "Call-site signature adaptations for lithium 0.11.4 (1.20.1 -> 1.21.1). Only exact owner/name/descriptor matches; each bridge is javac-compiled against work/cb/data/jars/client-1.21.1-intermediary.jar.",
+  "callSiteAdaptations": [
+    {
+      "id": "walknodeevaluator.checkneighbourblocks.view-to-context",
+      "sourceOwner": "net/minecraft/class_14",
+      "sourceName": "method_59",
+      "sourceDesc": "(Lnet/minecraft/class_1922;Lnet/minecraft/class_2338$class_2339;Lnet/minecraft/class_7;)Lnet/minecraft/class_7;",
+      "sourceOpcode": 184,
+      "targetOwner": "net/minecraft/class_14",
+      "targetName": "method_59",
+      "targetDesc": "(Lnet/minecraft/class_9316;IIILnet/minecraft/class_7;)Lnet/minecraft/class_7;",
+      "bridgeClass": "top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks",
+      "bridgeMethod": "checkNeighbourBlocks",
+      "bridgeDesc": "(Lnet/minecraft/class_1922;Lnet/minecraft/class_2338$class_2339;Lnet/minecraft/class_7;)Lnet/minecraft/class_7;",
+      "capability": "pathfinding.neighbour_block_scan",
+      "risk": "medium",
+      "evidence": "Real crash: NoSuchMethodError 'BlockState net.minecraft.class_14.method_59(BlockView, BlockPos.Mutable, BlockState)' at lithium AbstractBlockStateMixin.handler$zij001$lithium$init (runs/p6-lithium/server.log lines 51-64); the same call is in lithium PathNodeCache.getNodeTypeFromNeighbors. Mojang name: WalkNodeEvaluator.checkNeighbourBlocks. 1.20.1 signature (BlockGetter, BlockPos.MutableBlockPos, BlockPathTypes); 1.21.1 signature (PathfindingContext, int, int, int, PathType), so the arguments were replaced. 1.20.1 body (body-preserving remap, runs/p10-lithium-signature/class_14-1.20.1-body.txt): scan 3x3x3 neighbours except the origin column; cactus/sweet berry -> DANGER_OTHER, isBurningBlock -> DANGER_FIRE, water -> WATER_BORDER, wither rose/pointed dripstone -> DAMAGE_CAUTIOUS; otherwise return the passed type. The bridge reproduces that order with 1.21.1 APIs. It cannot call the new method directly because PathfindingContext is only constructible from (CollisionGetter, Mob) and one old call site passes a synthetic SingleBlockBlockView (not a CollisionGetter, no entity)."
+    }
+  ]
+}

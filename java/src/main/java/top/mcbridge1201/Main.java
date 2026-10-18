@@ -55,6 +55,9 @@ public final class Main {
                            --out <plan.json> [--markdown <file>]
                   index-info --client-jar <jar> --mappings <tiny> --api <jar> [...]
                   remap-jar --in <obf.jar> --out <intermediary.jar> --mappings <tiny|mappings.jar>
+                  patch    --in <jar> --out <jar> --rules <json> [--rules <json> ...]
+                           [--client-jar <1.21.1 client.jar> --mappings <intermediary tiny>]
+                           [--bridge-dir <javac output dir> ...]
                 """);
     }
 
@@ -171,6 +174,7 @@ public final class Main {
             if (rules.target == null) rules.target = part.target;
             rules.fieldRedirects.addAll(part.fieldRedirects);
             rules.methodRedirects.addAll(part.methodRedirects);
+            rules.callSiteAdaptations.addAll(part.callSiteAdaptations);
             rules.constructorRedirects.addAll(part.constructorRedirects);
             rules.signatureAdaptations.addAll(part.signatureAdaptations);
             rules.mixinStrips.addAll(part.mixinStrips);
@@ -184,11 +188,33 @@ public final class Main {
                 IndexBuilder.apiJar(Path.of(lib), idx);
             }
         }
-        var res = top.mcbridge1201.rules.JarPatcher.patch(in, out, rules, idx);
+        Map<String, byte[]> bridgeClasses = loadBridgeClasses(f.getOrDefault("bridge-dir", List.of()));
+        var res = top.mcbridge1201.rules.JarPatcher.patch(in, out, rules, idx, bridgeClasses);
         System.out.printf("patched %s -> %s (classes changed=%d)%n", in.getFileName(), out.getFileName(), res.classes());
         res.applied().forEach((k, v) -> System.out.printf("  rule %s applied %d time(s)%n", k, v));
         System.out.printf("  bridges embedded: %s%n", res.bridges());
+        System.out.printf("  javac bridges: %s%n", res.externalBridges());
         System.out.printf("  sha256 %s%n", ArtifactScanner.sha256(out));
+    }
+
+    /** Load javac output ({@code <dir>/top/.../Foo.class}) keyed by internal class name. */
+    private static Map<String, byte[]> loadBridgeClasses(List<String> dirs) throws IOException {
+        Map<String, byte[]> out = new LinkedHashMap<>();
+        for (String dir : dirs) {
+            Path root = Path.of(dir);
+            if (!Files.isDirectory(root)) {
+                throw new IOException("--bridge-dir is not a directory: " + root);
+            }
+            try (Stream<Path> s = Files.walk(root)) {
+                for (Path p : s.filter(Files::isRegularFile)
+                        .filter(p -> p.toString().endsWith(".class")).sorted().toList()) {
+                    String rel = root.relativize(p).toString().replace('\\', '/');
+                    String internal = rel.substring(0, rel.length() - ".class".length());
+                    out.put(internal, Files.readAllBytes(p));
+                }
+            }
+        }
+        return out;
     }
 
     private static void patchReadOnly(String[] args) throws IOException {

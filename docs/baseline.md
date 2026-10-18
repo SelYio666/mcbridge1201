@@ -423,12 +423,12 @@ boot    → Loading 42 mods 含 lithium 0.11.4；读取了 131 个配置项；�
 |---|---|---|
 | Mixin | `lithium.mixins.json:entity.collisions.movement.EntityMixin` 的 Redirector `adjustMovementForCollisionsGetEntitiesLater` scanned 0 targets | 新增 `mixinStrips` 降级机制，从配置中移除该类 |
 | Mixin | `block.flatten_states.FluidStateMixin` 的 `@Inject initFluidCache` 无目标 | 同一降级档案追加 |
-| 方法签名 | `NoSuchMethodError: net.minecraft.class_14.method_59(...)`（BlockState 相关） | 尚未处理；与本项目静态分析器对 lithium 报的 `class_14 method_59` 描述符变化一致 |
+| 方法签名 | `NoSuchMethodError: net.minecraft.class_14.method_59(...)`（BlockState 相关） | **已由 §7.17 的调用点签名适配处理**；启动推进到 `ExplosionMixin` 目标变化 |
 
 结论：
 
 - 转换件能被 Loader 接受，mixin 配置能解析，**说明管线可复用到第二份模组**；
-- 但“mixin 目标消失”与“方法签名变化”两类损伤会继续阻断启动；
+- 但“mixin 目标消失”与“方法签名变化”两类损伤会继续阻断启动（其中方法签名变化已在 §7.17 用调用点桥解决）；
 - `mixinStrips` 是**显式降级**：每条 strip 记录 id、配置、类名、原因，并出现在 patch 输出中；这不是“兼容成功”，文档按 degraded 记；
 - 降级档案：`rules/fabric-1.21.1/lithium-degraded.json`（单独文件，不混进通用规则）。
 
@@ -454,16 +454,81 @@ boot    → Loading 42 mods 含 lithium 0.11.4；读取了 131 个配置项；�
 
 后续正确做法（已列为下一缺口）：不要用 `JsonOps` 解析 `ItemPredicate`，而是从 registry 上下文构建（`RegistryOps` 或直接用 `BuiltInRegistries.ITEM` 构造 `HolderSet` + 空 `DataComponentPredicate`），再用构造器生成谓词；这需要一个真正的运行时桥，而不是静态 JSON 解析。
 
+### 7.17 调用点签名适配：lithium 的 `class_14.method_59`（新增规则类型）
+
+§7.15 的 `NoSuchMethodError` 是**调用点签名变化**，不是改名。命名解析（`tools/name_lookup.py` + Mojang 映射 join）：
+
+- `class_14` = `net.minecraft.world.level.pathfinder.WalkNodeEvaluator`；`method_59` = `checkNeighbourBlocks`。
+- 1.20.1：`(BlockGetter, BlockPos.MutableBlockPos, BlockPathTypes) -> BlockPathTypes`。
+- 1.21.1：`(PathfindingContext, int, int, int, PathType) -> PathType`。
+- 交接里写的 “BlockPlaceContext” 是按旧参数猜的；映射结果是 `class_9316` = `PathfindingContext`（`class_9316` 不是 `BlockPlaceContext`）。这一条按实际映射修正。
+
+为了拿到真实方法体（`work/cb/data/jars/client-*-intermediary.jar` 是 CenturyBridge 的 stub，方法没有 Code），用自研 body-preserving remapper 把 1.20.1/1.21.1 client jar 重映射成 intermediary 后再 `javap -c`：
+
+```text
+runs/p10-lithium-signature/class_14-1.20.1-body.txt   # 旧 checkNeighbourBlocks 的完整字节码
+runs/p10-lithium-signature/class_14-1.21.1-body.txt   # 新签名 + PathfindingContext 路径
+```
+
+1.20.1 方法体的语义：按 3×3×3 邻居（跳过原点所在列）扫描；仙人掌/甜浆果 → `DANGER_OTHER`，`isBurningBlock` → `DANGER_FIRE`，水 → `WATER_BORDER`，凋灵玫瑰/滴水石锥 → `DAMAGE_CAUTIOUS`；没有命中则返回传入的 `type`。它还会改写传入的 `BlockPos.Mutable`。
+
+**实现（本轮新增，工具代码不是样本硬编码）**
+
+- `RuleSet` 新增 `callSiteAdaptations`：字段为 `id/sourceOwner/sourceName/sourceDesc/sourceOpcode/targetOwner/targetName/targetDesc/bridgeClass/bridgeMethod/bridgeDesc/capability/risk/evidence`。匹配只接受 **精确** owner + name + descriptor（可选 opcode），不按名字猜、不做前缀通配。
+- `JarPatcher` 对直接 `MethodInsnNode` 和 `MethodHandle` 都应用；命中后把调用改成 `INVOKESTATIC <bridgeClass>.<bridgeMethod> <bridgeDesc>`，旧栈形状保持不变。
+- 桥写成 **Java 源码**：`java/src/bridge/java/top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks.java`；`tools/build_bridges.py` 对 `client-1.21.1-intermediary.jar` 编译，`mcbridge1201 patch --bridge-dir <dir>` 嵌入；`tools/inject_bridges.py` 可独立替换/补齐（本轮两条路径都跑过）。
+- 规则文件：`rules/fabric-1.21.1/lithium.json`。规则里的 `evidence` 绑定了真实崩溃日志和旧/新签名，不是事后补的理由。
+
+为什么桥不直接调用 1.21.1 的新 `method_59`：`PathfindingContext` 只有 `(CollisionGetter, Mob)` 构造器，而旧调用点可能传任意 `BlockGetter`——lithium 的 `SingleBlockBlockView` 既不是 `CollisionGetter`，也没有 entity。伪造 context 会改变语义并引入 entity 依赖，所以桥按旧方法体逐条移植到 1.21.1 仍存在的 API（`BlockGetter`/`BlockState`/`FluidState`/`Blocks`/`WalkNodeEvaluator.method_57082`），并保留旧 `MutableBlockPos` 的副作用。这是**语义等价移植**，不是空实现或默认值。
+
+**实际命令、退出码与结果**
+
+| 步骤 | 命令（节选） | 退出码 | 结果 |
+|---|---|---|---|
+| 编译桥 | `python tools/build_bridges.py --stub work/cb/data/jars/client-1.21.1-intermediary.jar --lib work/lib/gson-2.11.0.jar --lib <datafixerupper.jar> --out work/bridges` | 0 | 3 个 bridge 源编译成功；日志 `runs/p10-lithium-signature/build-bridges.log` |
+| 打补丁 | `mcbridge1201 patch --in <lithium converted> --out lithium-patched-callsite.jar --rules rules/fabric-1.21.1/lithium-degraded.json --rules rules/fabric-1.21.1/lithium.json --bridge-dir work/bridges` | 0 | 规则命中 **2** 次；桥嵌入；日志 `runs/p10-lithium-signature/patch-lithium.log` |
+| 独立注入 | `python tools/inject_bridges.py --jar ... --out lithium-patched-final.jar --classes work/bridges --replace top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks` | 0 | replaced 1；日志 `runs/p10-lithium-signature/inject-bridges.log` |
+| 启动 | `python tools/run_server.py --instance work/instances/fabric-1.21.1-server-lithium --log runs/p10-lithium-signature/server-callsite.log --timeout 240` | 11（runner；JVM 1） | `doneSeen=false`；**`NoSuchMethodError` 消失**，推进到下一失败 |
+| 单元测试 | `gradle --no-daemon test`（在 `java/`） | 0 | 8 个测试，0 失败；日志 `runs/p10-lithium-signature/gradle-test.log` |
+
+补丁后的两处调用点是 `PathNodeCache.getNodeTypeFromNeighbors` 与 `mixin/ai/pathing/AbstractBlockStateMixin.init`；`javap -c` 确认它们变成：
+
+```text
+invokestatic top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks.checkNeighbourBlocks:
+  (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338$class_2339;Lnet/minecraft/class_7;)
+  Lnet/minecraft/class_7;
+```
+
+回归检查：用 `container.json` 重新补丁 ironchests（同样的 `--client-jar`/`--mappings`/DFU 输入），输出与已有 `-patched.jar` **逐字节相同**（SHA-256 `7d89d452...bc9a1`），说明新增的调用点机制没有改变既有规则的行为。日志：`runs/p10-lithium-signature/ironchests-patch-recheck.log`。
+
+启动日志（`runs/p10-lithium-signature/server-callsite.log`）：
+
+- 不再出现 `NoSuchMethodError ... class_14.method_59`；
+- 原来的入口点 `class_4970$class_4971.handler$...$lithium$init` 已经执行过去；
+- 下一个真实阻断是 `lithium.mixins.json:world.explosions.ExplosionMixin` 的 `@Inject` 找不到 1.21.1 的 `Explosion` 构造器（`class_1927.<init>(Level, Entity, DamageSource, Explosion.BlockInteraction, DDD, float, boolean, Explosion.BlockInteraction)` 已不存在）。这是 **mixin 目标变化**，不是本规则能修的调用点描述符；留作下一项，不得用删除核心 mixin 冒充通过。
+
+产物 SHA-256（证据文件 `runs/p10-lithium-signature/verdict.json`）：
+
+| 产物 | SHA-256 |
+|---|---|
+| converted lithium | `2a94fff311bf5b30d0890865f4016f4a4252d9169129fbe333a5962d3cd3b52b` |
+| `lithium-patched-callsite.jar` | `0f383be3f18fbe5dc47ba5afa9d275d5f658076e953118af96d32ee4b4d2824f` |
+| `lithium-patched-final.jar` | `4d9e5374e01d5ce51e0ded94293c307bfda7c0d33a43ccaf28b85be0320a9822` |
+| compiled bridge class | `679ed5ac5d33cd8e88caf517439e25d84df214323196593fcbadf345789e6ead` |
+
+边界：本轮只验证专用服务端启动；GUI/渲染/多人仍 pending。外部桥目前只嵌入顶层 jar，嵌套 jar 内的调用点尚未覆盖（已写入 `rules/README.md`）。
+
 ## 8. 未验证项与下一步
 
-1. **`ItemPredicate` 的 registry-aware 构造**：当前 `fromJson` 用 `JsonOps` 解析 `{"items":[...]}` 失败并退回全匹配（已实测触发）。要按 registry 构造 `HolderSet`，才能去掉这个降级。
-2. **图形/GUI 与多人**：服务端契约已通过；玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
-2. **方法签名变化的通用适配**：lithium 卡在 `class_14.method_59` 的 `NoSuchMethodError`；需要把 `signatureAdaptations` 从“覆写迁移”扩展到“调用点参数/描述符迁移”。
-2. **`fromJson` 的 ANY 回退是语义降级**：解析失败会变成“匹配所有物品”，必须改成显式诊断或真正的 MapCodec 适配后再对外。
-2. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；已用“fromJson 解析失败回退 ANY”绕过一次，但那是**语义降级**，必须在最终规则里改成显式诊断或真正的 MapCodec 构造。
-2. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是"无桥"结果。
-3. **WORLD_LOADED / 玩法契约**：需要客户端或命令侧断言；服务端可先做 `/give` + 放置 + 容器存取 + 重启读回的命令行契约。
-4. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
-5. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
-6. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
-7. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量。
+> 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
+
+1. **图形/GUI 与多人**：服务端容器契约已通过；玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
+2. **调用点签名适配的覆盖面**：本轮已实现 `callSiteAdaptations` 并用 lithium `class_14.method_59` 验证（§7.17）。下一步把同一机制推广到其他样本，并处理 **嵌套 jar 内**的调用点（当前外部桥只嵌入顶层 jar）。
+3. **lithium 的下一个阻断：`ExplosionMixin` 注入目标变化**：1.21.1 的 `Explosion` 构造器已改为接收 `Holder`/注册表项，旧 `@Inject` 目标描述符不存在。需要按目标版本改写 mixin 注入点，或按规则显式记录降级；不得删除核心逻辑 mixin 冒充通过。
+4. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
+5. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
+6. **WORLD_LOADED / 玩法契约**：服务端已做放置/插入/NBT/重启读回；`/give`、玩家交互、掉落与同步仍未覆盖。
+7. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
+8. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
+9. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
+10. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；`ExplosionMixin` 正是这类问题。

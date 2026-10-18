@@ -49,11 +49,11 @@ def main():
     profile = {
         "schemaVersion": "0.1-draft",
         "profileId": "ironchests.5.0.2.fabric-1.20.1__fabric-1.21.1",
-        "status": "degraded",
-        "statusNote": ("Container contract passed on a dedicated server (place/insert/NBT/restart). "
-                       "Overall verdict stays degraded because the ItemPredicate.fromJson bridge falls back "
-                       "to a match-everything predicate when the 1.21.1 codec rejects legacy JSON, and because "
-                       "client GUI/render and multiplayer were not executed."),
+        "status": "passed_within_scope",
+        "statusNote": ("Dedicated-server container contract passed (place/insert/NBT/restart) with the "
+                       "registry-aware ItemPredicate bridge; no fallback warning observed at boot. "
+                       "Client GUI/render and multiplayer were not executed, so this is scoped to the "
+                       "dedicated server."),
         "source": {
             "minecraft": "1.20.1",
             "loader": "fabric",
@@ -88,13 +88,13 @@ def main():
         },
         "appliedRules": [
             {"id": "itempredicate.any.static-field", "capability": "item.predicate.any"},
-            {"id": "itempredicate.fromjson.static", "capability": "item.predicate.json",
-             "degradation": "falls back to match-everything when the codec rejects legacy JSON"},
             {"id": "codec.dispatch.mapcodec-shape", "capability": "codec.dispatch.mapcodec"},
             {"id": "identifier.ctor.to-factory", "capability": "identifier.construct"},
             {"id": "blockentity.nbt.read.lookup", "capability": "blockentity.nbt.registries"},
             {"id": "blockentity.nbt.write.lookup", "capability": "blockentity.nbt.registries"},
             {"id": "constant-kind-fix", "capability": "dfu.interfaceization"},
+            {"id": "itempredicate.fromjson.static", "capability": "item.predicate.json",
+             "implementation": "registry-aware RegistryOps bridge (compiled Java source)"},
         ],
         "analysis": {
             "missingClass": annotated["counts"]["missingClass"],
@@ -126,7 +126,6 @@ def main():
         },
         "knownLimitations": [
             "GUI/render/multiplayer untested (no client instance).",
-            "fromJson falls back to match-everything when the 1.21.1 codec rejects legacy predicate JSON (observed for {\"items\":[\"minecraft:dirt\"]}; likely needs RegistryOps); this weakens item filtering and is recorded as degraded.",
             "Game jar was locally remapped with this project's ASM remapper because the stock Fabric remap cannot write in this sandbox.",
         ],
     }
@@ -145,7 +144,8 @@ def main():
              "|---|---|---|---|---|---|---|---|---|"]
     runtime = {
         "ironchests-5.0.2-fabric.jar": "CONTRACT_PASSED（服务端命令范围）",
-        "lithium-fabric-mc1.20.1-0.11.4.jar": "LOADED，mixin 注入/签名墙（degraded 试验）",
+        "lithium-fabric-mc1.20.1-0.11.4.jar":
+            "LOADED；显式 mixin 降级 2 条；调用点签名已适配，推进到 ExplosionMixin 注入目标（未通过；见 runs/p10-lithium-signature/）",
     }
     for a in plan["artifacts"]:
         c = a["counts"]

@@ -10,7 +10,7 @@
 | ironchests-5.0.2-fabric.jar | fabric | blocked_static | 1 | 20 | 19 | 7 | 52/52 | CONTRACT_PASSED（服务端命令范围） |
 | jei-1.20.1-forge-15.71.0.224.jar | forge | wrong_loader | 0 | 0 | 0 | 0 | 0/0 | 未运行 |
 | journeymap-forge-1.20.1-6.0.7.jar | forge | wrong_loader | 0 | 0 | 0 | 0 | 0/0 | 未运行 |
-| lithium-fabric-mc1.20.1-0.11.4.jar | fabric | blocked_static | 1 | 7 | 6 | 0 | 13/14 | LOADED，mixin 注入/签名墙（degraded 试验） |
+| lithium-fabric-mc1.20.1-0.11.4.jar | fabric | blocked_static | 1 | 7 | 6 | 0 | 13/14 | LOADED；显式 mixin 降级 2 条；调用点签名已适配，推进到 ExplosionMixin 注入目标（未通过；见 runs/p10-lithium-signature/） |
 | modmenu-7.2.2.jar | fabric | blocked_static | 4 | 7 | 14 | 0 | 24/25 | 未运行 |
 | Patchouli-1.20.1-85-FORGE.jar | forge | wrong_loader | 0 | 0 | 0 | 0 | 0/0 | 未运行 |
 | trashslot-fabric-1.20.1-15.1.5.jar | fabric | blocked_static | 0 | 2 | 0 | 0 | 2/2 | 未运行 |

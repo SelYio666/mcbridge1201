@@ -24,7 +24,8 @@
 - 固定提交 `cf4ebeba...` 的 `core/src` **缺少** `MixinCheck.java`；本地补的是 no-op 空实现。任何与 `mixin-check` 相关的门禁结论都不成立。
 - `convert` 的 `ok_partial` 是上游自己的判定；本项目未独立验证它的语义。
 - 28 个 tombstone 意味着“调用到就抛错”，不是“已桥接”。ironchests 的容器玩法在没有桥 jar 时必然失败。
-- **实测确认**：转换件在 1.21.1 服务端被 Loader 接受后，入口点即抛 `NoSuchFieldError: ItemPredicate.ANY`（`class_2073.field_9640`）。这说明 `ok_partial` 不代表能初始化。
+- **实测确认（首次、未打规则补丁时）**：转换件在 1.21.1 服务端被 Loader 接受后，入口点即抛 `NoSuchFieldError: ItemPredicate.ANY`（`class_2073.field_9640`）。这说明 `ok_partial` 不代表能初始化。
+- 规则补丁后，同一转换件已到达 `Done` 并通过容器契约（放置/插入/NBT/重启读回，见 `docs/baseline.md` §7.14）；`ItemPredicate.fromJson` 已改为 registry-aware 桥（p9），不再回退全匹配。**这不改变客户端/GUI/多人仍未验证的边界。**
 - 桥 jar（`core/shims/1.21.1`）未构建；`build.sh` 的四道门禁一步都没跑。
 - 转换件的 jar 签名已被上游清理；不得声称它仍由原作者签名。
 
@@ -53,7 +54,7 @@
 
 合格的表述：
 
-> 在 2026-10-18 的 Windows 11 + Zulu 21 环境中，对 `ironchests-5.0.2-fabric.jar`（SHA-256 `6a0706...de6`）执行静态分析，得到 1 个消失类、20 个消失成员、19 个描述符变化、12 个 Fabric API 缺失，且 52 条损伤全部能在 1.20.1 索引中复现；CenturyBridge `convert` 产出 `ok_partial` 转换件，其中 28 个调用点被替换为惰性抛错的 tombstone。该转换件能被 Fabric 1.21.1 专用服务端加载，但入口点因 `ItemPredicate.ANY` 被移除而失败；**未进入世界，未验证玩法。**
+> 在 2026-10-18 的 Windows 11 + Zulu 21 环境中，对 `ironchests-5.0.2-fabric.jar`（SHA-256 `6a0706...de6`）执行静态分析，得到 1 个消失类、20 个消失成员、19 个描述符变化、12 个 Fabric API 缺失，且 52 条损伤全部能在 1.20.1 索引中复现；CenturyBridge `convert` 产出 `ok_partial` 转换件，其中 28 个调用点被替换为惰性抛错的 tombstone。经本项目规则补丁（含 NBT 签名适配、access widener、registry-aware `fromJson`）后，该转换件在 Fabric 1.21.1 **专用服务端**到达 `Done`，并通过“放置 → 插入 → NBT → 进程重启 → 读回”的容器契约；客户端 GUI/渲染、玩家交互与多人同步**未验证**。lithium 的 `class_14.method_59` 调用点签名已用 javac 桥适配，启动推进到 `ExplosionMixin` 注入目标变化，仍未通过。
 
 不合格的表述：
 

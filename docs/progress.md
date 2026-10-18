@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 18:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 20:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-18 20:50）：**调用点签名适配已实现并用 lithium 的 `class_14.method_59` 验收**。补丁后 `NoSuchMethodError` 消失，启动推进到下一失败（`world.explosions.ExplosionMixin` 的注入目标变化）。规则、桥、命令、退出码与日志见 `docs/baseline.md` §7.17、`rules/fabric-1.21.1/lithium.json`、`runs/p10-lithium-signature/`。
 
 ## 本轮做了什么
 
@@ -23,8 +25,16 @@
 17. **第二份样本 lithium**：转换 `ok_degraded_partial`、加载成功（131 个配置项）；两次 mixin 注入失败通过显式 `mixinStrips` 降级绕过，随后卡在 `class_14.method_59` 的 `NoSuchMethodError`（签名变化）。
 18. **降级机制**：`mixinStrips` 记录 id/配置/类/原因，单独档案 `rules/fabric-1.21.1/lithium-degraded.json`；实例已恢复 ironchests 并重跑契约通过。
 19. **降级探针**：`fromJson` 的回退实际被触发（`{"items":["minecraft:dirt"]}` 被 1.21.1 codec 拒绝），确认这是真实的语义弱化；下一步改为 registry-aware 构造。
-20. **交付物成型**：`tools/build_reports.py` 从锁文件与证据生成兼容档案（`profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json`，`status: degraded`）与支持矩阵（`docs/support-matrix.md`），字段与证据哈希全部来自实际文件。
-12. 产出 `docs/baseline.md`、`docs/engine-selection.md`、`docs/limitations.md`、`rules/README.md`、生成矩阵、`runs/SHA256SUMS.txt`。
+20. **交付物成型**：`tools/build_reports.py` 从锁文件与证据生成兼容档案（`profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json`；p9 之后状态升为 `passed_within_scope`）与支持矩阵（`docs/support-matrix.md`），字段与证据哈希全部来自实际文件。
+20b. 产出 `docs/baseline.md`、`docs/engine-selection.md`、`docs/limitations.md`、`rules/README.md`、生成矩阵、`runs/SHA256SUMS.txt`。
+
+## 2026-10-18 20:50 更新：调用点签名适配
+
+21. **规则引擎新增 `callSiteAdaptations`**：按精确 `(owner, name, oldDesc[, opcode])` 匹配直接调用与 `MethodHandle`，重定向到 `INVOKESTATIC` 桥；桥可以是 javac 源码编译产物，不再只能由 `BridgeGenerator` 生成 ASM。未知桥会硬失败，避免产出悬空调用。
+22. **lithium 桥写成 Java 源码**：`WalkNodeEvaluatorCheckNeighbourBlocks`，按 1.20.1 `checkNeighbourBlocks` 的真实字节码逐条移植（3×3×3 邻居、DANGER_OTHER/DANGER_FIRE/WATER_BORDER/DAMAGE_CAUTIOUS、保留 `MutableBlockPos` 副作用）。语义依据来自 body-preserving remap 后的 `javap -c`，不是猜。
+23. **工具链打通**：`tools/build_bridges.py` 对 `client-1.21.1-intermediary.jar` 编译（需 gson + datafixerupper 两个 lib）；`patch --bridge-dir` 嵌入；`tools/inject_bridges.py` 可独立替换/补齐（也修了“只替换、不新增”的限制）。
+24. **验收结果**：lithium 补丁 `walknodeevaluator.checkneighbourblocks.view-to-context` 命中 **2** 次（`PathNodeCache.getNodeTypeFromNeighbors`、`AbstractBlockStateMixin.init`）；服务端启动不再抛 `NoSuchMethodError`，推进到 `ExplosionMixin` 的 `@Inject` 目标不匹配；`doneSeen=false`，runner exit 11，属“下一失败”而不是通过。回归检查：用 `container.json` 重补 ironchests，输出与既有 `-patched.jar` 逐字节相同（SHA-256 `7d89d452...bc9a1`）。
+25. **测试与证据**：新增 `CallSiteAdaptationTest`（精确匹配）与 `JarPatcherCallSiteTest`（合成 jar 端到端 + 缺桥拒绝）；`gradle test` 8/8 通过。日志、哈希、复现命令在 `runs/p10-lithium-signature/README.md`。
 
 ## 证据在哪里
 
@@ -46,32 +56,47 @@
 | 第二/三条规则后日志 | `runs/p2-server-ironchests-rule2/server.log` |
 | 规则说明 | `rules/README.md` |
 | 打补丁后的转换件 | `work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-patched.jar` |
+| 调用点规则（lithium） | `rules/fabric-1.21.1/lithium.json` |
+| 调用点桥源码 | `java/src/bridge/java/top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks.java` |
+| 1.20.1 / 1.21.1 `method_59` 方法体 | `runs/p10-lithium-signature/class_14-1.20.1-body.txt`、`class_14-1.21.1-body.txt` |
+| 调用点补丁 / 启动 / 哈希 | `runs/p10-lithium-signature/README.md`、`patch-lithium.log`、`server-callsite.log`、`verdict.json` |
+| 单元测试 | `runs/p10-lithium-signature/gradle-test.log`（8 tests, 0 failures） |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
 ## 未解决（按优先级）
 
-1. **`Codec.dispatch` / `MapCodec` 形状适配**：`ShapeTypes.decode` 抛 `MapCodecCodec cannot be cast to MapCodec`；需要第二条规则/桥（这是当前 WORLD_LOADED 的第一道墙）。
-2. **CenturyBridge 桥 jar 未构建**：`core/shims/1.21.1` 未编译，`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。
-3. **WORLD_LOADED 及以上未验证**：无 `/give`、放置、容器存取、重启读回、多人同步证据。
-4. **客户端/渲染**：无实例、无显示验证，全部 pending。
-5. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
-6. **Mixin 注入点级分析**未做（只看目标类存在）。
-7. **BytecodeVerify** 未编译运行，转换件未做数据流校验。
-8. **重映射器的覆盖面**：目前只验证了服务端 jar；客户端 jar、带资源的 jar、模块化 jar 未验证；输出未做签名清理以外的规范化（entry 时间固定）。
+1. **lithium 的 `ExplosionMixin` 注入目标变化**：1.21.1 的 `Explosion` 构造器改为接收 `Holder`/注册表项，旧 `@Inject` 描述符不存在。这是当前 lithium 启动的下一道墙；需要改注入点或用规则显式降级，不得删除核心逻辑 mixin。
+2. **调用点适配的覆盖面**：目前只验证了顶层 jar 的直接调用/句柄；嵌套 jar（JiJ）内的调用点尚未覆盖，需要把桥嵌入到对应嵌套 jar 或改用可见性更好的桥部署方式。
+3. **`Codec.dispatch` 的可靠适配**：ironchests 契约虽已通过，但 `assumeMapUnsafe` 在部分路径仍可能 `Optional.of(null)`；应改成真正的 `MapCodec` 构造/显式诊断。
+4. **CenturyBridge 桥 jar 未构建**：`core/shims/1.21.1` 未编译，`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。
+5. **玩家侧 / 多人**：GUI、右键交互、渲染、两个客户端同步仍 pending；服务端只做了命令契约。
+6. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
+7. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；`ExplosionMixin` 正是这类问题。
+8. **BytecodeVerify** 未编译运行，转换件未做数据流校验。
+9. **重映射器的覆盖面**：目前只验证了服务端 jar；客户端 jar、带资源的 jar、模块化 jar 未验证；输出未做签名清理以外的规范化（entry 时间固定）。
 
 ## 下一步精确命令
 
 ```powershell
-# A. 复现当前失败（服务端 + 转换件）
-python tools/run_server.py --instance work/instances/fabric-1.21.1-server `
-  --log runs/p1-server-converted-ironchests/server.log --timeout 240
+# A. 复现调用点适配（lithium）
+$env:JAVA_HOME='C:\Users\27682\Documents\新建文件夹\.toolchain\jdk'
+cd java; gradle --no-daemon installDist; cd ..
+python tools/build_bridges.py --stub work/cb/data/jars/client-1.21.1-intermediary.jar `
+  --lib work/lib/gson-2.11.0.jar `
+  --lib work/instances/fabric-1.21.1-server/libraries/com/mojang/datafixerupper/8.0.16/datafixerupper-8.0.16.jar `
+  --out work/bridges
+java\build\install\mcbridge1201\bin\mcbridge1201.bat patch `
+  --in work/cb/out/lithium/lithium-fabric-mc1.20.1-0.11.4+1.21.1.jar `
+  --out work/cb/out/lithium/lithium-patched-callsite.jar `
+  --rules rules/fabric-1.21.1/lithium-degraded.json `
+  --rules rules/fabric-1.21.1/lithium.json --bridge-dir work/bridges
+python tools/run_server.py --instance work/instances/fabric-1.21.1-server-lithium `
+  --log runs/p10-lithium-signature/server-callsite.log --timeout 240
 
-# B. 客户端侧：用 1.21.1 客户端实例测试 GUI/渲染（本机沙箱暂无法启动图形客户端）
-# C. 把 fromJson 的“解析失败回退 ANY”改成显式诊断或真正的 MapCodec 适配（当前是语义降级）
-# D. 固化容器契约脚本：tools/run_contract.py（放置/插入/重启/读回 + 断言与 JSON 证据）
-
-# C. Forge 第二套索引（并行可做）
+# B. 下一个阻断：lithium ExplosionMixin 的 @Inject 目标（1.21.1 Explosion 构造器）
+# C. 客户端侧：用 1.21.1 客户端实例测试 GUI/渲染（本机沙箱暂无法启动图形客户端）
+# D. Forge 第二套索引（并行可做）
 #    下载 de.oceanlabs.mcp:mcp_config:1.20.1:joined.tsrg 与 NeoForge 1.21.1 universal jar，
 #    新增 MojangIndex；analyze --target-loader neoforge
 ```
