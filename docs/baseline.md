@@ -783,6 +783,14 @@ ironchests 后 `javac bridges: [CodecDispatch]`，jar 内是 `CodecDispatch`/`$1
 这是真正的安全 map 包装，但 keys/compressor 为空是为 dispatch 值有意设计的；契约范围仍是
 专用服务端 + 命令 API。证据 `runs/p25-codec-guard/`、`runs/p26-codec-safe/`。
 
+### 7.29 安全 CodecDispatch 的联合回归
+
+P26 的 javac `CodecDispatch` 换入 P14 的 lithium + ironchests 同实例后，`run_contract.py`
+两进程仍全部通过：`Done (26.7s)` → 放置/插入/NBT → 重启 `Done (17.0s)` → 读回 5 钻石；
+`passed=true`，5 个步骤全 true，exit 0。说明安全 MapCodec 包装没有破坏两份样本的共存路径。
+
+契约范围仍是专用服务端 + 命令 API；无客户端 GUI/玩家/多人。证据 `runs/p27-combined-safe-codec/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

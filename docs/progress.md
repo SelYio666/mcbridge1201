@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 22:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 22:40（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 22:40）：**P26 安全 CodecDispatch 的联合契约回归**。在 lithium + ironchests 同实例中换用 P26 的 `ironchests-safe-aw.jar`，两进程容器契约 5/5 通过、两次 `Done`、exit 0；说明安全 Codec 适配没有破坏 P14 的共存路径。证据 `runs/p27-combined-safe-codec/`。
 更新（2026-10-18 22:35）：**Codec.dispatch 安全 MapCodec 适配**。活跃路径改用 javac `CodecDispatch`，用 `MapCodec.of(MapEncoder, MapDecoder)` 真正包装旧 `Codec`，不再依赖 `assumeMapUnsafe`；重新补丁 ironchests 后容器契约 5/5 通过，测试 17/17。证据 `runs/p26-codec-safe/`。
 更新（2026-10-18 22:30）：**Codec.dispatch 空结果保护**。`CodecDispatch$Guard` 把 `assumeMapUnsafe` 的 null-success 变成 `DataResult.error`，避免 `Optional.of(null)` 外泄；重新补丁 ironchests 后容器契约 5/5 通过，测试 17/17。证据 `runs/p25-codec-guard/`。
 更新（2026-10-18 22:25）：**chunk 压力测试工具化**。新增 `tools/run_chunk_stress.py`：两进程 force-load 225 chunks、远角方块、save/restart、`execute if block` 断言，输出 `verdict.json`；本次运行 `chunksMarked=225`、`STRESS_OK_A/B`、`passed=true`，exit 0。证据 `runs/p24-chunk-stress-tool/`。
@@ -160,6 +161,13 @@
 88. **验证**：重新补丁 ironchests，36 classes，`javac bridges: [CodecDispatch]`，jar 内无 `$Guard`；容器契约 5/5，两次 `Done`、exit 0；`gradle test` **17/17**。
 89. **边界**：MapCodec wrapper 的 keys/compressor 为空是 dispatch 值的有意设计；契约仍为专用服务端 + 命令 API。证据 `runs/p26-codec-safe/`。
 
+## 2026-10-18 22:40 更新：安全 CodecDispatch 联合回归
+
+90. **场景**：`fabric-1.21.1-server-lithium-ironchests`，lithium chunkport + P26 `ironchests-safe-aw.jar`（javac `CodecDispatch`，无 `$Guard`）。
+91. **结果**：两进程 `Done (26.7s/17.0s)`，容器契约 5/5，两次 exit 0。
+92. **意义**：P26 的安全 Codec 适配不破坏 P14 已建立的 lithium+ironchests 共存路径。
+93. **证据**：`runs/p27-combined-safe-codec/README.md`、`verdict-summary.json`、`verdict.json`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -204,6 +212,7 @@
 | chunk 压力测试工具 | `tools/run_chunk_stress.py`、`runs/p24-chunk-stress-tool/README.md`、`verdict.json` |
 | Codec dispatch guard | `runs/p25-codec-guard/README.md`、`verdict.json`、`contract/verdict.json` |
 | Codec dispatch 安全适配 | `runs/p26-codec-safe/README.md`、`verdict.json`、`contract/verdict.json` |
+| 安全 Codec 联合回归 | `runs/p27-combined-safe-codec/README.md`、`verdict-summary.json`、`verdict.json` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

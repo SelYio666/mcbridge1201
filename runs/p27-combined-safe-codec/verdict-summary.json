@@ -1,0 +1,19 @@
+{
+  "contract": "lithium+ironchests.container.basic",
+  "instance": "work/instances/fabric-1.21.1-server-lithium-ironchests",
+  "mods": [
+    "lithium-0.11.4+1.21.1-patched.jar",
+    "ironchests-safe-aw.jar (P26 CodecDispatch)"
+  ],
+  "passed": true,
+  "steps": {
+    "place": true,
+    "insert": true,
+    "nbt_after_insert": true,
+    "nbt_after_restart": true,
+    "count_after_restart": true
+  },
+  "runs": 2,
+  "exitCodes": [0, 0],
+  "scope": "dedicated server + command API; no client/GUI/player/multiplayer"
+}
