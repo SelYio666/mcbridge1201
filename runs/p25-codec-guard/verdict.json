@@ -1,0 +1,27 @@
+{
+  "feature": "Codec.dispatch unsafe-MapCodec null-result guard",
+  "tests": {"total": 17, "failures": 0},
+  "patch": {
+    "jar": "work/tmp/p25/ironchests-guard-aw.jar",
+    "classesChanged": 36,
+    "bridges": [
+      "top/mcbridge1201/bridge/CodecDispatch",
+      "top/mcbridge1201/bridge/CodecDispatch$Adapter",
+      "top/mcbridge1201/bridge/CodecDispatch$Guard"
+    ]
+  },
+  "contract": {
+    "instance": "work/instances/fabric-1.21.1-server",
+    "passed": true,
+    "steps": {
+      "place": true,
+      "insert": true,
+      "nbt_after_insert": true,
+      "nbt_after_restart": true,
+      "count_after_restart": true
+    },
+    "runs": 2,
+    "exitCodes": [0, 0]
+  },
+  "limitations": "Guard only rejects a successful null decode; it does not replace assumeMapUnsafe or add full MapCodec shape validation. Contract scope remains dedicated server + command API."
+}

@@ -764,6 +764,21 @@ P23 的压力测试已工具化为 `tools/run_chunk_stress.py`：自动跑两个
 `forceload add` 后立刻 `setblock`，因异步 chunk 加载出现 “Could not set the block”；现在
 step1 命令间隔 2.5s，并解析实际的 “Marked N chunks”。证据 `runs/p24-chunk-stress-tool/`。
 
+### 7.28 `Codec.dispatch` 的空结果保护
+
+`CodecDispatch$Adapter` 对非 `MapCodecCodec` 的旧返回值仍用
+`MapCodec.assumeMapUnsafe(codec)`，但返回值现在包一层
+`MapCodec.mapResult(new CodecDispatch$Guard())`：若 `assumeMapUnsafe` 返回成功的 `null`，
+`Guard.apply` 把它变成 `DataResult.error("null result from Codec.dispatch adapter")`，避免
+`Optional.of(null)` 继续泄漏到 DFU 调用方；`Guard.coApply` 原样返回 `RecordBuilder`，不影响编码。
+
+`BridgeGenerator.generate` 会随 `CodecDispatch` 一起生成 `CodecDispatch$Guard`。重新补丁
+ironchests 后，`CodecDispatch` / `$Adapter` / `$Guard` 都在 jar 内；容器契约 5/5 通过，两次
+`Done`、exit 0。测试 **17/17**。
+
+这是保护层，不是对 `assumeMapUnsafe` 的完全替代：合法的非 map codec 形状限制仍可能存在。
+证据 `runs/p25-codec-guard/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
@@ -772,7 +787,7 @@ step1 命令间隔 2.5s，并解析实际的 “Marked N chunks”。证据 `run
 2. **调用点签名适配的覆盖面**：`callSiteAdaptations` 已用 lithium `class_14.method_59` 验证（§7.17）；P18 已把桥按 jar 嵌入嵌套 jar 并用 ironchests JiJ 回归（§7.22），仍可继续覆盖更多样本/多层嵌套/方法句柄场景。
 3. **Mixin 目标描述符适配的覆盖面**：`mixinCallbackAdaptations` 已处理 Explosion 与 POI storage 两处（§7.18），但仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 两种模式在真实注入点上的边界。
 4. **Mixin 实现类替换的覆盖面**：`mixinClassReplacements` 已把 `ServerChunkManagerMixin` 移植到 1.21.1 并让 lithium 到达 `Done`（§7.19）；仍需验证该模式在更多 API 形状变化上的可维护性，并决定是否重写被放弃的 chunk 多入口缓存/off-thread 快路径。
-5. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
+5. **`Codec.dispatch` 的可靠适配**：已加 `CodecDispatch$Guard`，把 `assumeMapUnsafe` 的 null-success 变成显式 decode error（§7.28）；仍未完全替代 `assumeMapUnsafe`，真正的 `MapCodec` 构造/形状校验仍是后续项。
 6. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
 7. **WORLD_LOADED / 玩法契约**：lithium+ironchests 同实例的容器契约已通过（§7.20）；lithium 自身的玩法、`/give`/玩家交互/掉落/同步仍未覆盖，客户端仍 pending。
 8. **trashslot 仅到 BOOTED**：原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥已让专用服务端 `Done (4.655s)`（§7.21）；但无客户端连接，clientbound receiver 未安装，包 encode/decode 与 ItemStack NBT 桥未被玩家动作触发，客户端 GUI/玩法未验证。

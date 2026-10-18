@@ -22,6 +22,7 @@ public final class BridgeGenerator {
 
     public static final String CODEC_DISPATCH = "top/mcbridge1201/bridge/CodecDispatch";
     public static final String CODEC_DISPATCH_ADAPTER = "top/mcbridge1201/bridge/CodecDispatch$Adapter";
+    public static final String CODEC_DISPATCH_GUARD = "top/mcbridge1201/bridge/CodecDispatch$Guard";
     public static final String ITEM_PREDICATE_FROM_JSON = "top/mcbridge1201/bridge/ItemPredicateFromJson";
     public static final String IDENTIFIER_FACTORY = "top/mcbridge1201/bridge/IdentifierFactory";
 
@@ -46,6 +47,7 @@ public final class BridgeGenerator {
         if (used.contains(CODEC_DISPATCH)) {
             out.put(CODEC_DISPATCH, codecDispatch());
             out.put(CODEC_DISPATCH_ADAPTER, codecDispatchAdapter());
+            out.put(CODEC_DISPATCH_GUARD, codecDispatchGuard());
         }
         if (used.contains(ITEM_PREDICATE_FROM_JSON)) {
             out.put(ITEM_PREDICATE_FROM_JSON, itemPredicateFromJson());
@@ -280,9 +282,73 @@ public final class BridgeGenerator {
         apply.visitTypeInsn(Opcodes.CHECKCAST, CODEC);
         apply.visitMethodInsn(Opcodes.INVOKESTATIC, MAP_CODEC, "assumeMapUnsafe",
                 "(L" + CODEC + ";)L" + MAP_CODEC + ";", false);
+        // assumeMapUnsafe may report success(null); guard it into a decode error instead of
+        // letting Optional.of(null) escape into DFU callers.
+        apply.visitTypeInsn(Opcodes.NEW, CODEC_DISPATCH_GUARD);
+        apply.visitInsn(Opcodes.DUP);
+        apply.visitMethodInsn(Opcodes.INVOKESPECIAL, CODEC_DISPATCH_GUARD, "<init>", "()V", false);
+        apply.visitMethodInsn(Opcodes.INVOKEVIRTUAL, MAP_CODEC, "mapResult",
+                "(L" + MAP_CODEC + "$ResultFunction;)L" + MAP_CODEC + ";", false);
         apply.visitInsn(Opcodes.ARETURN);
         apply.visitMaxs(0, 0);
         apply.visitEnd();
+
+        cw.visitEnd();
+        return cw.toByteArray();
+    }
+
+    /** ResultFunction that rejects a null-successful decode from assumeMapUnsafe. */
+    private static byte[] codecDispatchGuard() {
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+                CODEC_DISPATCH_GUARD, null, "java/lang/Object",
+                new String[]{MAP_CODEC + "$ResultFunction"});
+
+        MethodVisitor init = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+        init.visitCode();
+        init.visitVarInsn(Opcodes.ALOAD, 0);
+        init.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        init.visitInsn(Opcodes.RETURN);
+        init.visitMaxs(0, 0);
+        init.visitEnd();
+
+        String dataResult = "com/mojang/serialization/DataResult";
+        String resultFunction = MAP_CODEC + "$ResultFunction";
+        MethodVisitor apply = cw.visitMethod(Opcodes.ACC_PUBLIC, "apply",
+                "(Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;"
+                        + "L" + dataResult + ";)L" + dataResult + ";", null, null);
+        apply.visitCode();
+        var keep = new org.objectweb.asm.Label();
+        apply.visitVarInsn(Opcodes.ALOAD, 3);
+        apply.visitMethodInsn(Opcodes.INVOKEVIRTUAL, dataResult, "result",
+                "()Ljava/util/Optional;", false);
+        apply.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Optional", "isPresent", "()Z", false);
+        apply.visitJumpInsn(Opcodes.IFEQ, keep);
+        apply.visitVarInsn(Opcodes.ALOAD, 3);
+        apply.visitMethodInsn(Opcodes.INVOKEVIRTUAL, dataResult, "result",
+                "()Ljava/util/Optional;", false);
+        apply.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Optional", "get",
+                "()Ljava/lang/Object;", false);
+        apply.visitJumpInsn(Opcodes.IFNONNULL, keep);
+        apply.visitLdcInsn("null result from Codec.dispatch adapter");
+        apply.visitMethodInsn(Opcodes.INVOKESTATIC, dataResult, "error",
+                "(Ljava/lang/String;)L" + dataResult + ";", false);
+        apply.visitInsn(Opcodes.ARETURN);
+        apply.visitLabel(keep);
+        apply.visitVarInsn(Opcodes.ALOAD, 3);
+        apply.visitInsn(Opcodes.ARETURN);
+        apply.visitMaxs(0, 0);
+        apply.visitEnd();
+
+        MethodVisitor co = cw.visitMethod(Opcodes.ACC_PUBLIC, "coApply",
+                "(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;"
+                        + "Lcom/mojang/serialization/RecordBuilder;)"
+                        + "Lcom/mojang/serialization/RecordBuilder;", null, null);
+        co.visitCode();
+        co.visitVarInsn(Opcodes.ALOAD, 3);
+        co.visitInsn(Opcodes.ARETURN);
+        co.visitMaxs(0, 0);
+        co.visitEnd();
 
         cw.visitEnd();
         return cw.toByteArray();

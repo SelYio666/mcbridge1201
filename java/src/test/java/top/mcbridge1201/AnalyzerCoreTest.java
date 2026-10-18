@@ -1,14 +1,18 @@
 package top.mcbridge1201;
 
 import org.junit.jupiter.api.Test;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.ClassNode;
 import top.mcbridge1201.analyze.Analyzer;
 import top.mcbridge1201.index.ClassInfo;
 import top.mcbridge1201.index.TargetIndex;
 import top.mcbridge1201.index.TinyMappings;
+import top.mcbridge1201.rules.BridgeGenerator;
 import top.mcbridge1201.scan.ArtifactScanner;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,6 +91,18 @@ class AnalyzerCoreTest {
         assertEquals(2, r.mixinInjectionCount);
         assertEquals(1, r.unresolvedMixinInjections.size());
         assertTrue(r.unresolvedMixinInjections.get(0).contains("method_60"));
+    }
+
+    @Test
+    void codecDispatchGenerationIncludesNullResultGuard() {
+        var generated = BridgeGenerator.generate(Set.of(BridgeGenerator.CODEC_DISPATCH));
+        byte[] guard = generated.get(BridgeGenerator.CODEC_DISPATCH_GUARD);
+        assertNotNull(guard, "guard must be emitted with CodecDispatch");
+        ClassNode cn = new ClassNode();
+        new ClassReader(guard).accept(cn, 0);
+        assertTrue(cn.interfaces.contains("com/mojang/serialization/MapCodec$ResultFunction"));
+        assertNotNull(cn.methods.stream().filter(m -> m.name.equals("apply")).findFirst().orElse(null));
+        assertNotNull(cn.methods.stream().filter(m -> m.name.equals("coApply")).findFirst().orElse(null));
     }
 
     @Test
