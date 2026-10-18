@@ -823,6 +823,14 @@ failed**，nested ResourcefulLib **142 classes，0 failures**，exit 0。覆盖 
 每份档案 pin 源 jar hash、目标 client/mappings hash、规则包 hash 和证据文件；jar 本身不进仓库。
 `profiles/README.md` 给出状态词表。证据 `profiles/`。
 
+### 7.33 CodecDispatch 选择回归
+
+`JarPatcherCodecDispatchTest` 构造调用 `CodecDispatch.dispatch` 的 synthetic caller，并在
+`bridgeClasses` 里提供一个 dummy `CodecDispatch`。补丁后断言：规则命中一次、
+`externalBridges` 含 `CodecDispatch`、输出 class 是 supplied 版本、且没有 generated
+`CodecDispatch$Adapter`。这锁住了 P26 的 `--bridge-dir` 优先逻辑（只有 `CodecDispatch`
+被外部覆盖，其他生成桥保持 ASM）。测试 **18/18**；证据 `runs/p31-codec-selection/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

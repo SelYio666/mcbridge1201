@@ -1,0 +1,11 @@
+{
+  "feature": "supplied CodecDispatch over generated fallback",
+  "tests": {"total": 18, "failures": 0},
+  "newTest": "JarPatcherCodecDispatchTest.suppliedCodecDispatchIsEmbeddedInsteadOfGenerated",
+  "assertions": [
+    "rule applied once",
+    "externalBridges contains CodecDispatch",
+    "output CodecDispatch.class is the supplied class",
+    "generated CodecDispatch$Adapter is absent"
+  ]
+}

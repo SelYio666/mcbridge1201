@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 22:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:00（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 23:00）：**CodecDispatch 选择逻辑回归测试**。新增 `JarPatcherCodecDispatchTest`，验证 `--bridge-dir` 提供的 javac `CodecDispatch` 优先于 generated fallback，且不嵌入 `CodecDispatch$Adapter`；测试 18/18。证据 `runs/p31-codec-selection/`。
 更新（2026-10-18 22:55）：**lithium / trashslot 兼容档案**。新增 `profiles/lithium...json`（`booted_within_scope`，boot + 225-chunk + combined）与 `profiles/trashslot...json`（`booted_within_scope`，原生 Balm 21；客户端/网络未执行），并加 `profiles/README.md` 索引；所有 hash 由脚本从实际文件计算。证据 `profiles/`。
 更新（2026-10-18 22:50）：**trashslot clientbound receiver 已接入**。`BalmNetworkingBridge$Client` 在客户端用 `ClientPlayNetworking.registerGlobalReceiver` 调用旧 `BiConsumer<Player,T>`；服务端通过环境反射跳过，专用服务端仍 `Done (4.894s)`。客户端分支未执行，不能宣称客户端通过；证据 `runs/p29-client-receiver/`。
 更新（2026-10-18 22:45）：**P26 安全 Codec 构建的 BytecodeVerify**。`ironchests-safe-aw.jar` 顶层 73 classes / 0 failures，nested ResourcefulLib 142 classes / 0 failures，exit 0；运行侧由 P26/P27 契约覆盖。证据 `runs/p28-codec-verify/`。
@@ -190,6 +191,12 @@
 102. **索引**：`profiles/README.md` 列三个 profile 与状态词表；所有 source/rule/evidence hash 由脚本按实际文件计算。
 103. **证据**：`profiles/`。
 
+## 2026-10-18 23:00 更新：CodecDispatch 选择回归
+
+104. **测试**：`JarPatcherCodecDispatchTest` 构造一个调用 `CodecDispatch.dispatch` 的 synthetic caller，`bridgeClasses` 提供 dummy `CodecDispatch`；断言规则命中、`externalBridges` 含 `CodecDispatch`、输出类是 supplied class、且没有 `CodecDispatch$Adapter`。
+105. **意义**：锁住 P26 的 `--bridge-dir` 优先逻辑，防止以后又回退到 generated fallback。
+106. **结果**：`gradle test --rerun-tasks` **18/18**，exit 0。证据 `runs/p31-codec-selection/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -238,6 +245,7 @@
 | 安全 Codec BytecodeVerify | `runs/p28-codec-verify/README.md`、`verdict.json`、`top-level.log`、`nested.log` |
 | clientbound receiver | `runs/p29-client-receiver/README.md`、`verdict.json`、`server.log` |
 | 兼容档案 | `profiles/README.md`、`profiles/lithium-...json`、`profiles/trashslot-...json` |
+| CodecDispatch 选择回归 | `runs/p31-codec-selection/README.md`、`verdict.json`、`gradle-test.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
