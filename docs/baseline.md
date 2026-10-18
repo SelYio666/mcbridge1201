@@ -113,7 +113,7 @@
 ### 5.3 这套结果的边界
 
 - 只到 `ANALYZED`。`blocked_static` 的意思是“静态上存在必须处理的变化”，不是“无法运行”；`wrong_loader` 同理。
-- 未分析 Mixin 注入点 ordinal/slice/local capture 的匹配质量（只解析了 `@Mixin` 目标类是否存在）。
+- Mixin 注入目标已提取并保守校验 intermediary 方法（§7.24）；ordinal/slice/local capture 和 Yarn/refmap/构造器仍未分析。
 - Forge 样本没有成员级结论：1.20.1 Forge 用 SRG 名，NeoForge 1.21.1 用 Mojang 名，必须有第二套索引才能判断。这是 P1 的第一个分析缺口。
 
 ## 6. 上游引擎真实尝试
@@ -700,6 +700,29 @@ classloader，顶层桥不保证可见。P18 改为每个 `patchEntries` 维护�
 边界：`BasicInterpreter` 只检查栈深度/`max_stack` 一致性，不是完整 JVM 类型校验；覆盖三个顶层
 jar 和一个 nested jar，其他嵌套 jar/客户端路径未覆盖。证据 `runs/p19-bytecode-verify/`。
 
+### 7.24 Mixin 注入目标提取（保守解析）
+
+`ArtifactScanner` 现在解析 mixin handler 上的 `@Inject`/`@Redirect`/`@ModifyConstant`/
+`@ModifyVariable`/`@ModifyArg`/`@ModifyArgs`/`@ModifyExpressionValue`/`@ModifyReturnValue`/
+`@WrapOperation`/`@WrapWithCondition` 的 `method` 值（单值或数组，支持 owner 前缀），
+`Analyzer.Result` 新增 `mixinInjections` / `mixinInjectionsUnresolved` 和
+`unresolvedMixinInjections`；后者非空会进入 `blocked_static`。
+
+解析是保守的：只对 **intermediary 方法名（`method_*`）+ 明确描述符** 查 1.21.1 索引；
+Yarn/Mojang 命名、refmap 间接映射和构造器（`<init>`）不解析，避免猜测造成假阳性。
+
+验证：
+
+- `gradle test --rerun-tasks` **15/15**，exit 0；
+- synthetic `@Mixin` + `@Inject(method="method_59()V")` 测试提取；
+- synthetic target index 测试“存在/缺失”两种 injection target；
+- 对转换后的 lithium 实跑：`mixins=202`、`mixinInjections=214`、
+  `mixinInjectionsUnresolved=0`。0 是预期值：lithium 的 Explosion/POI 目标用 Yarn 名/构造器，
+  本保守扫描跳过；提取路径已被 214 个目标覆盖。
+
+边界：这不是运行时 Mixin 验证，也不能替代 refmap/named-descriptor 映射和构造器索引。
+证据 `runs/p20-mixin-inject/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
@@ -715,4 +738,4 @@ jar 和一个 nested jar，其他嵌套 jar/客户端路径未覆盖。证据 `r
 9. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
 10. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
 11. **BytecodeVerify**：已对三个顶层补丁 jar + 一个 nested ResourcefulLib jar 运行（§7.23，0 failures）；其他嵌套 jar/客户端路径仍未覆盖，且它只是栈深度校验，不是完整类型校验。
-12. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
+12. **Mixin 注入点级分析**：已提取 `@Inject`/`@Redirect` 等 `method` 目标并保守校验 intermediary 方法（§7.24）；ordinal/slice/局部变量、Yarn/refmap 映射和构造器仍未解析。

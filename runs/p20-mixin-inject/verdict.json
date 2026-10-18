@@ -1,0 +1,19 @@
+{
+  "feature": "mixin injection-target extraction and conservative resolution",
+  "tests": {
+    "total": 15,
+    "failures": 0,
+    "new": [
+      "MixinInjectionScanTest.extractsMixinTargetAndInjectionDescriptor",
+      "AnalyzerCoreTest.reportsMixinInjectionTargetsMissingInTheTargetIndex"
+    ]
+  },
+  "lithium_converted": {
+    "jar": "work/cb/out/lithium/lithium-fabric-mc1.20.1-0.11.4+1.21.1.jar",
+    "mixins": 202,
+    "mixinInjections": 214,
+    "mixinInjectionsUnresolved": 0,
+    "note": "0 unresolved because named/Yarn descriptors/refmaps and constructors are skipped by design; the extraction path is exercised."
+  },
+  "limitations": "No refmap/named-descriptor mapping and no constructor indexing yet; unresolved counts are conservative, not exhaustive."
+}

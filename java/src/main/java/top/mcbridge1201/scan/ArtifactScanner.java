@@ -41,6 +41,14 @@ public final class ArtifactScanner {
         public String configName;
         public int declaredClasses;
         public final List<String> targets = new ArrayList<>();
+        public final List<Injection> injections = new ArrayList<>();
+    }
+
+    /** One @Inject/@Redirect/... target method declared by a mixin handler. */
+    public static final class Injection {
+        public String annotation;
+        public String targetName;
+        public String targetDesc;
     }
 
     public static final class Artifact {
@@ -253,7 +261,9 @@ public final class ArtifactScanner {
                         String cls = el.getAsString();
                         String internal = (pkg.isEmpty() ? cls : pkg + "." + cls).replace('.', '/');
                         a.ownClasses.add(internal);
-                        mi.targets.addAll(mixinTargets(zf, internal));
+                        MixinInfo parsed = mixinInfo(zf, internal);
+                        mi.targets.addAll(parsed.targets);
+                        mi.injections.addAll(parsed.injections);
                         a.mixins.add(mi);
                     }
                 }
@@ -263,10 +273,22 @@ public final class ArtifactScanner {
         }
     }
 
-    private static List<String> mixinTargets(ZipFile zf, String internal) throws IOException {
+    private static final Set<String> INJECTION_ANNOTATIONS = Set.of(
+            "Lorg/spongepowered/asm/mixin/injection/Inject;",
+            "Lorg/spongepowered/asm/mixin/injection/Redirect;",
+            "Lorg/spongepowered/asm/mixin/injection/ModifyConstant;",
+            "Lorg/spongepowered/asm/mixin/injection/ModifyVariable;",
+            "Lorg/spongepowered/asm/mixin/injection/ModifyArg;",
+            "Lorg/spongepowered/asm/mixin/injection/ModifyArgs;",
+            "Lorg/spongepowered/asm/mixin/injection/ModifyExpressionValue;",
+            "Lorg/spongepowered/asm/mixin/injection/ModifyReturnValue;",
+            "Lorg/spongepowered/asm/mixin/injection/WrapOperation;",
+            "Lorg/spongepowered/asm/mixin/injection/WrapWithCondition;");
+
+    private static MixinInfo mixinInfo(ZipFile zf, String internal) throws IOException {
+        MixinInfo info = new MixinInfo();
         ZipEntry e = zf.getEntry(internal + ".class");
-        if (e == null) return List.of();
-        List<String> out = new ArrayList<>();
+        if (e == null) return info;
         new ClassReader(zf.getInputStream(e)).accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
@@ -275,20 +297,76 @@ public final class ArtifactScanner {
                     @Override
                     public void visit(String name, Object value) {
                         if ("targets".equals(name) && value instanceof String s) {
-                            out.add(s.replace('.', '/'));
+                            info.targets.add(s.replace('.', '/'));
                         } else if ("value".equals(name) && value instanceof org.objectweb.asm.Type t) {
-                            out.add(t.getInternalName());
+                            info.targets.add(t.getInternalName());
                         }
                     }
 
                     @Override
                     public AnnotationVisitor visitArray(String name) {
-                        return this;
+                        if (!"targets".equals(name)) return null;
+                        return new AnnotationVisitor(Opcodes.ASM9) {
+                            @Override
+                            public void visit(String n, Object value) {
+                                if (value instanceof String s) info.targets.add(s.replace('.', '/'));
+                            }
+                        };
+                    }
+                };
+            }
+
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor,
+                                             String signature, String[] exceptions) {
+                return new MethodVisitor(Opcodes.ASM9) {
+                    @Override
+                    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+                        if (!INJECTION_ANNOTATIONS.contains(desc)) return null;
+                        String annotation = desc.substring(desc.lastIndexOf('/') + 1, desc.length() - 1);
+                        return new AnnotationVisitor(Opcodes.ASM9) {
+                            @Override
+                            public void visit(String n, Object value) {
+                                if ("method".equals(n) && value instanceof String s) {
+                                    addInjection(info, annotation, s);
+                                }
+                            }
+
+                            @Override
+                            public AnnotationVisitor visitArray(String n) {
+                                if (!"method".equals(n)) return null;
+                                return new AnnotationVisitor(Opcodes.ASM9) {
+                                    @Override
+                                    public void visit(String ignored, Object value) {
+                                        if (value instanceof String s) addInjection(info, annotation, s);
+                                    }
+                                };
+                            }
+                        };
                     }
                 };
             }
         }, ClassReader.SKIP_CODE);
-        return out;
+        return info;
+    }
+
+    private static void addInjection(MixinInfo info, String annotation, String spec) {
+        if (spec == null) return;
+        String s = spec.trim();
+        if (s.isEmpty()) return;
+        int paren = s.indexOf('(');
+        String namePart = paren < 0 ? s : s.substring(0, paren);
+        String desc = paren < 0 ? null : s.substring(paren);
+        int semi = namePart.lastIndexOf(';');
+        if (semi >= 0) namePart = namePart.substring(semi + 1);
+        int dot = namePart.lastIndexOf('.');
+        if (dot >= 0) namePart = namePart.substring(dot + 1);
+        if (namePart.isBlank()) return;
+        Injection inj = new Injection();
+        inj.annotation = annotation;
+        inj.targetName = namePart;
+        inj.targetDesc = desc;
+        info.injections.add(inj);
     }
 
     private static byte[] readAll(InputStream in) throws IOException {

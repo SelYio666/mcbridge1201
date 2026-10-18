@@ -1,9 +1,11 @@
 package top.mcbridge1201;
 
 import org.junit.jupiter.api.Test;
+import top.mcbridge1201.analyze.Analyzer;
 import top.mcbridge1201.index.ClassInfo;
 import top.mcbridge1201.index.TargetIndex;
 import top.mcbridge1201.index.TinyMappings;
+import top.mcbridge1201.scan.ArtifactScanner;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -53,6 +55,38 @@ class AnalyzerCoreTest {
         assertEquals(TargetIndex.Kind.MISSING_CLASS, idx.resolveMethod("net/minecraft/class_9", "method_1", "()V").kind());
         // java.lang.Object members are not in the index but are still valid
         assertEquals(TargetIndex.Kind.OK, idx.resolveMethod("net/minecraft/class_1", "hashCode", "()I").kind());
+    }
+
+    @Test
+    void reportsMixinInjectionTargetsMissingInTheTargetIndex() {
+        TargetIndex mc = new TargetIndex("test");
+        ClassInfo target = new ClassInfo("net/minecraft/class_14");
+        target.superName = "java/lang/Object";
+        target.addMethod("method_59", "()V");
+        mc.classes.put(target.name, target);
+
+        ArtifactScanner.Artifact a = new ArtifactScanner.Artifact();
+        a.file = "synthetic.jar";
+        a.loader = "fabric";
+        ArtifactScanner.MixinInfo mi = new ArtifactScanner.MixinInfo();
+        mi.configName = "test.mixins.json";
+        mi.targets.add("net/minecraft/class_14");
+        ArtifactScanner.Injection ok = new ArtifactScanner.Injection();
+        ok.annotation = "Inject";
+        ok.targetName = "method_59";
+        ok.targetDesc = "()V";
+        ArtifactScanner.Injection missing = new ArtifactScanner.Injection();
+        missing.annotation = "Inject";
+        missing.targetName = "method_60";
+        missing.targetDesc = "()V";
+        mi.injections.add(ok);
+        mi.injections.add(missing);
+        a.mixins.add(mi);
+
+        Analyzer.Result r = new Analyzer(mc, new TargetIndex("api"), "fabric").analyze(a);
+        assertEquals(2, r.mixinInjectionCount);
+        assertEquals(1, r.unresolvedMixinInjections.size());
+        assertTrue(r.unresolvedMixinInjections.get(0).contains("method_60"));
     }
 
     @Test

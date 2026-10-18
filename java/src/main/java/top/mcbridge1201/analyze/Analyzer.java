@@ -48,7 +48,9 @@ public final class Analyzer {
         public final List<Item> unmappedNamespace = new ArrayList<>();
         public final List<Item> external = new ArrayList<>();
         public final List<String> unresolvedMixinTargets = new ArrayList<>();
+        public final List<String> unresolvedMixinInjections = new ArrayList<>();
         public int mixinClassCount;
+        public int mixinInjectionCount;
         public final List<String> notes = new ArrayList<>();
         public boolean truncated;
     }
@@ -144,6 +146,24 @@ public final class Analyzer {
                     r.unresolvedMixinTargets.add(mi.configName + " -> " + t + " (forge namespace)");
                 }
             }
+            for (ArtifactScanner.Injection inj : mi.injections) {
+                r.mixinInjectionCount++;
+                if (inj.targetName == null || !inj.targetName.startsWith("method_")) continue;
+                if ("<init>".equals(inj.targetName) || "<clinit>".equals(inj.targetName)) continue;
+                for (String t : mi.targets) {
+                    if (!isIntermediaryName(t) || !mc.hasClass(t)) continue;
+                    String desc = inj.targetDesc == null ? "" : inj.targetDesc;
+                    TargetIndex.Resolution res = mc.resolveMethod(t, inj.targetName, desc);
+                    boolean missing = inj.targetDesc == null
+                            ? res.kind() == TargetIndex.Kind.MISSING_MEMBER
+                            : res.kind() == TargetIndex.Kind.MISSING_MEMBER
+                                    || res.kind() == TargetIndex.Kind.DESC_MISMATCH;
+                    if (missing) {
+                        r.unresolvedMixinInjections.add(mi.configName + " -> " + t + "."
+                                + inj.targetName + desc + " (" + inj.annotation + ")");
+                    }
+                }
+            }
         }
 
         r.missingClass.addAll(trim(missClass, r));
@@ -170,6 +190,8 @@ public final class Analyzer {
         r.counts.put("unmappedNamespaceRefs", unmapped.values().stream().mapToInt(i -> i.refCount).sum());
         r.counts.put("mixins", a.mixins.size());
         r.counts.put("mixinTargetsUnresolved", r.unresolvedMixinTargets.size());
+        r.counts.put("mixinInjections", r.mixinInjectionCount);
+        r.counts.put("mixinInjectionsUnresolved", r.unresolvedMixinInjections.size());
         int confirmed = 0;
         for (List<Item> l : List.of(r.missingClass, r.missingMember, r.descMismatch, r.missingApiClass, r.missingApiMember)) {
             for (Item i : l) if (Boolean.TRUE.equals(i.presentInSource)) confirmed++;
@@ -182,7 +204,8 @@ public final class Analyzer {
             r.verdict = Verdict.WRONG_LOADER.name().toLowerCase(Locale.ROOT);
         } else if (!"fabric".equals(a.loader) && !"neoforge".equals(targetLoader) && !wrong.isEmpty()) {
             r.verdict = Verdict.WRONG_LOADER.name().toLowerCase(Locale.ROOT);
-        } else if (hard > 0 || !r.unresolvedMixinTargets.isEmpty()) {
+        } else if (hard > 0 || !r.unresolvedMixinTargets.isEmpty()
+                || !r.unresolvedMixinInjections.isEmpty()) {
             r.verdict = Verdict.BLOCKED_STATIC.name().toLowerCase(Locale.ROOT);
         } else if (!unmapped.isEmpty() && missClass.isEmpty() && missMember.isEmpty()) {
             r.verdict = Verdict.NEEDS_NAMESPACE_INDEX.name().toLowerCase(Locale.ROOT);
