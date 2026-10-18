@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 21:55）：**BytecodeVerify 已跑**。对 ironchests/lithium/trashslot 三个补丁 jar 顶层类验证 650 classes / 0 failures；对 ironchests nested ResourcefulLib 验证 141 classes / 0 failures。仅栈深度校验；证据 `runs/p19-bytecode-verify/`。
 更新（2026-10-18 21:52）：**嵌套 jar 的桥改为按 jar 嵌入**。`JarPatcher` 为每层 jar 记录 `used` 集合并把生成的/javac 桥嵌入使用它的那个 jar；新增 synthetic nested jar 测试，ironchests 重补丁只在 nested ResourcefulLib jar 多出 `IdentifierFactory`，容器契约 5/5 仍通过。测试 13/13；证据 `runs/p18-nested-bridges/`。
 更新（2026-10-18 21:50）：**trashslot 到达专用服务端 `Done`**。原生 Balm 21.0.66 + `Balm.initialize` call-site 桥 + 旧 Balm 网络注册 → Fabric `PacketType`/`StreamCodec` 载荷桥 + 4 个 ItemStack/NBT 桥，`Done (4.655s)`，世界加载/保存。仍是 BOOTED，客户端 GUI/网络包往返未验证；证据 `runs/p17-balm-net/`。
 更新（2026-10-18 21:45）：**Balm 初始化调用点桥已推进 trashslot，但卡在 Balm 网络 API**。`Balm.initialize(String,Runnable)` → `initialize(String, EmptyLoadContext, Runnable)` 的 call-site 桥生效，旧的初始化 `NoSuchMethodError` 消失；下一失败是 `BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer)`，Balm 21 已改为 `PacketType`/`StreamCodec` 载荷注册。仍未 boot，规则保持 prepared/unverified；证据 `runs/p16-balm/`。
@@ -48,7 +49,7 @@ python tools/run_contract.py --instance work/instances/fabric-1.21.1-server --ou
 5. **第三个样本 trashslot 仅到 BOOTED**：原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥已让专用服务端 `Done`；但无客户端连接，clientbound receiver 未安装，包 encode/decode 与 ItemStack NBT 桥未被玩家动作触发，客户端 GUI/玩法未验证。
 6. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
 7. **Forge 成员级分析**：目前只有命名空间级；需要 tsrg(SRG) + Mojang 映射的联合索引。
-8. **`BytecodeVerify`**：CenturyBridge 自带的数据流校验未跑。
+8. **`BytecodeVerify`**：已对三个顶层补丁 jar + 一个 nested jar 运行（0 failures，§7.23）；其他 nested jar/客户端路径未覆盖，且仅栈深度校验。
 9. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
 
 > 已完成（不要再当未解决）：`ItemPredicate.fromJson` 的 registry-aware 构造（2026-10-18 20:20，profile `passed_within_scope`）；lithium 的 `class_14.method_59` 调用点签名适配（20:50，§7.17）；lithium `ExplosionMixin` + POI storage 的 Mixin 目标描述符适配（21:05，§7.18）；lithium chunk access 的 1.21.1 实现类移植与 `BOOTED`（21:25，§7.19）；lithium+ironchests 联合容器契约（21:35，§7.20）。

@@ -685,6 +685,21 @@ classloader，顶层桥不保证可见。P18 改为每个 `patchEntries` 维护�
 - 新 patched+AW jar 启动 `Done`，容器契约 5/5 通过（放置/插入/NBT/重启/读回 5 钻石）。
   证据 `runs/p18-nested-bridges/`。
 
+### 7.23 BytecodeVerify 数据流校验
+
+编译 CenturyBridge 的 `core/tools/BytecodeVerify.java`（ASM 9.7.1 + asm-analysis），对三个已补丁
+样本的顶层类运行：
+
+- ironchests `-aw.jar`
+- lithium `lithium-patched-chunkport.jar`
+- trashslot `trashslot-patched-net2-aw.jar`
+
+结果：**650 classes / 3 jars，0 methods failed dataflow verification**，exit 0。又把 ironchests
+内嵌的 ResourcefulLib jar 单独跑：**141 classes，0 failures**，exit 0。
+
+边界：`BasicInterpreter` 只检查栈深度/`max_stack` 一致性，不是完整 JVM 类型校验；覆盖三个顶层
+jar 和一个 nested jar，其他嵌套 jar/客户端路径未覆盖。证据 `runs/p19-bytecode-verify/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
@@ -699,5 +714,5 @@ classloader，顶层桥不保证可见。P18 改为每个 `patchEntries` 维护�
 8. **trashslot 仅到 BOOTED**：原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥已让专用服务端 `Done (4.655s)`（§7.21）；但无客户端连接，clientbound receiver 未安装，包 encode/decode 与 ItemStack NBT 桥未被玩家动作触发，客户端 GUI/玩法未验证。
 9. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
 10. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
-11. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
+11. **BytecodeVerify**：已对三个顶层补丁 jar + 一个 nested ResourcefulLib jar 运行（§7.23，0 failures）；其他嵌套 jar/客户端路径仍未覆盖，且它只是栈深度校验，不是完整类型校验。
 12. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。

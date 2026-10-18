@@ -1,0 +1,24 @@
+{
+  "tool": "CenturyBridge core/tools/BytecodeVerify.java",
+  "interpreter": "ASM BasicInterpreter",
+  "scope": "top-level classes of three patched jars + nested ResourcefulLib jar",
+  "top_level": {
+    "jars": [
+      "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-aw.jar",
+      "work/cb/out/lithium/lithium-patched-chunkport.jar",
+      "work/cb/out/trashslot/trashslot-patched-net2-aw.jar"
+    ],
+    "classes": 650,
+    "failedMethods": 0,
+    "exitCode": 0
+  },
+  "nested": {
+    "jars": [
+      "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar"
+    ],
+    "classes": 141,
+    "failedMethods": 0,
+    "exitCode": 0
+  },
+  "limitations": "Dataflow/max_stack check only; not a full JVM type verifier. Other nested jars and client paths are not covered."
+}

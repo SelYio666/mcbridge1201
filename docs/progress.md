@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 21:53（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 21:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 21:55）：**BytecodeVerify 已跑**。编译 CenturyBridge 的 `BytecodeVerify.java`，对 ironchests/lithium/trashslot 三个补丁 jar 的顶层类验证：650 classes / 3 jars，0 failures；再对 ironchests 内嵌 ResourcefulLib：141 classes，0 failures。仍只是栈深度校验；证据 `runs/p19-bytecode-verify/`。
 更新（2026-10-18 21:53）：**嵌套 jar 的桥改为按 jar 嵌入**。`JarPatcher` 为每层 jar 记录 `used` 集合并把生成的/javac 桥嵌入使用它的那个 jar；新增 synthetic nested jar 测试，ironchests 重补丁只在 nested ResourcefulLib jar 多出 `IdentifierFactory`，容器契约 5/5 仍通过。测试 13/13；证据 `runs/p18-nested-bridges/`。
 更新（2026-10-18 21:50）：**trashslot 到达专用服务端 `Done`**。用原生 Balm 21.0.66 + call-site 桥（`Balm.initialize` 加 context；旧 Balm 网络注册 → Fabric `PacketType`/`StreamCodec` 载荷桥）+ 4 个 ItemStack/NBT 桥，`Done (4.655s)`，世界加载/保存。仍是 BOOTED，客户端 GUI/网络包往返未验证；证据 `runs/p17-balm-net/`。
 更新（2026-10-18 21:45）：**Balm 初始化调用点桥已推进 trashslot，但卡在 Balm 网络 API**。`Balm.initialize(String,Runnable)` → `initialize(String, EmptyLoadContext, Runnable)` 的 call-site 桥生效，旧的初始化 `NoSuchMethodError` 消失；下一失败是 `BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer)`，Balm 21 已改为 `PacketType`/`StreamCodec` 载荷注册。仍未 boot，规则保持 prepared/unverified；证据 `runs/p16-balm/`。
@@ -94,6 +95,13 @@
 54. **ironchests 回归**：重补丁规则计数与旧结果一致；顶层类/桥完全相同，唯一差异是 nested ResourcefulLib 多出 `IdentifierFactory.class`；整体 hash 变为 `aa589bbb...0430`（AW 前），属预期。新 jar 启动 `Done`，容器契约 5/5（放置/插入/NBT/重启读回 5 钻石）。
 55. **证据**：`runs/p18-nested-bridges/README.md`、`contract/verdict.json`、`gradle-test.log`。
 
+## 2026-10-18 21:55 更新：BytecodeVerify
+
+56. **编译**：CenturyBridge `core/tools/BytecodeVerify.java` + ASM 9.7.1/asm-analysis，输出到 `work/tmp/bytecodeverify`。
+57. **顶层**：ironchests/lithium/trashslot 三个补丁 jar，**650 classes / 3 jars，0 methods failed**，exit 0。
+58. **nested**：ironchests 的 ResourcefulLib jar，**141 classes，0 failures**，exit 0。
+59. **边界**：`BasicInterpreter` 只检查栈深度/`max_stack`；其他 nested jar/客户端路径未覆盖。证据 `runs/p19-bytecode-verify/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -130,6 +138,7 @@
 | Balm 初始化桥（仍受阻） | `runs/p16-balm/README.md`、`patch.log`、`server-balm2.log` |
 | trashslot BOOTED | `runs/p17-balm-net/README.md`、`verdict.json`、`server-net2.log` |
 | 嵌套 jar 桥 | `runs/p18-nested-bridges/README.md`、`contract/verdict.json`、`gradle-test.log` |
+| BytecodeVerify | `runs/p19-bytecode-verify/README.md`、`verdict.json`、`verify.log`、`verify-nested.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
@@ -145,7 +154,7 @@
 8. **第三个样本 trashslot 仅到 BOOTED**：原生 Balm 21 + 初始化/网络桥 + 4 个 NBT 桥已让专用服务端 `Done`；但无客户端连接，clientbound receiver 未安装，包 encode/decode 和 ItemStack NBT 桥未被玩家动作触发，客户端 GUI/玩法仍未验证。
 9. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
 10. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
-11. **BytecodeVerify** 未编译运行，转换件未做数据流校验。
+11. **BytecodeVerify** 已对三个顶层补丁 jar + 一个 nested jar 运行（0 failures）；其他 nested jar/客户端路径未覆盖，且只是栈深度校验，不是完整类型校验。
 12. **重映射器的覆盖面**：目前只验证了服务端 jar；客户端 jar、带资源的 jar、模块化 jar 未验证；输出未做签名清理以外的规范化（entry 时间固定）。
 
 ## 下一步精确命令
