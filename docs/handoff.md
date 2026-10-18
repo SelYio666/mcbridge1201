@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 23:58）：**字段 `@At` 解析测试**。FIELD target `class_14.field_99:L...;` 的 owner/name/desc/`atTargetField` 全部断言；测试 **20/20**。证据 `runs/p47-field-at/`。
 更新（2026-10-18 23:55）：**多 method injection 数组回归测试**。`method_59`+`method_60` 产生两条 Injection 且共享 at-target；测试 **19/19**。证据 `runs/p46-multi-method/`。
 更新（2026-10-18 23:50）：**剩余工作边界**。新增 `docs/remaining-work.md`：服务端/静态工作已覆盖；客户端 GUI/网络/多人因无 client fixture 未执行；chunk 优化、nested mixin 静态分析、Forge 分析列为非阻塞后续。没有新增“客户端通过”声明。
 更新（2026-10-18 23:45）：**三样本 bundle profile**。`profiles/bundle-all-three__fabric-1.21.1.json`，`passed_within_scope`：coexistence + 容器 5/5 + 225-chunk stress + CodecDispatch probe；client/GUI pending。证据 `profiles/`。

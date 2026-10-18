@@ -1,0 +1,12 @@
+{
+  "feature": "field @At target parsing",
+  "tests": {"total": 20, "failures": 0},
+  "case": {
+    "atValue": "FIELD",
+    "target": "Lnet/minecraft/class_14;field_99:Lnet/minecraft/class_1799;",
+    "owner": "net/minecraft/class_14",
+    "name": "field_99",
+    "desc": "Lnet/minecraft/class_1799;"
+  },
+  "evidence": "gradle-test.log"
+}

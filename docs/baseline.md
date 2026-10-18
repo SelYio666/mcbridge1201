@@ -980,6 +980,12 @@ P13 + ironchests P26 + trashslot P29/Balm 21 同服；contracts 为 boot `Done (
 断言产生两条 `Injection` 且都带 at-target。这钉住 P34 的修复（此前数组被折叠成一条，
 lithium 214→207）。测试总数 **19/19**。证据 `runs/p46-multi-method/`。
 
+### 7.49 字段 `@At` 目标回归
+
+新增 synthetic `@At(value="FIELD", target="Lnet/minecraft/class_14;field_99:Lnet/minecraft/class_1799;")`
+测试，断言 owner/name/desc、`atTargetField=true` 和 `atValue=FIELD`。测试总数 **20/20**。
+证据 `runs/p47-field-at/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

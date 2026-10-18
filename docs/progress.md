@@ -1,8 +1,9 @@
 # 进度交接
 
-最后更新：2026-10-18 23:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:58（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
-更新（2026-10-18 23:55）：**多 method injection 数组回归测试**。新增 `MixinInjectionScanTest`，断言 `method_59`+`method_60` 产生两条 Injection 且共享 at-target；测试 **19/19**。证据 `runs/p46-multi-method/`。
+更新（2026-10-18 23:58）：**字段 `@At` 解析测试**。`FIELD` target `class_14.field_99:L...;` 的 owner/name/desc/`atTargetField` 全部断言；测试 **20/20**。证据 `runs/p47-field-at/`。
+更新（2026-10-18 23:55）：**多 method injection 数组回归测试**。`method_59`+`method_60` 产生两条 Injection 且共享 at-target；测试 **19/19**。证据 `runs/p46-multi-method/`。
 更新（2026-10-18 23:50）：**剩余工作边界文档**。新增 `docs/remaining-work.md`：服务端/静态工作已覆盖；客户端 GUI/网络/多人因无 client fixture 未执行；chunk 优化、nested mixin 静态分析、Forge 分析列为非阻塞后续。没有新增“客户端通过”声明。
 更新（2026-10-18 23:45）：**三样本 bundle profile**。新增 `profiles/bundle-all-three__fabric-1.21.1.json`，`passed_within_scope`：coexistence + 容器 5/5 + 225-chunk stress + CodecDispatch probe；profiles 索引已更新。证据 `profiles/`。
 更新（2026-10-18 23:42）：**三样本 + CodecDispatch probe 通过**。all-three 实例加载 P37 probe，`Done (5.425s)`、`CODEC_DISPATCH_PROBE_OK`；证明安全 Codec 包装在 lithium/trashslot/Balm 同时加载时仍正常。证据 `runs/p43-all-three-codec/`。
@@ -307,6 +308,12 @@
 155. **结果**：19/19 通过；钉住 P34 的修复（此前数组被折叠成一条，lithium 214→207）。
 156. **证据**：`runs/p46-multi-method/README.md`、`verdict.json`、`gradle-test.log`。
 
+## 2026-10-18 23:58 更新：字段 @At
+
+157. **测试**：`@At(value="FIELD", target="Lnet/minecraft/class_14;field_99:Lnet/minecraft/class_1799;")`。
+158. **断言**：owner/name/desc、`atTargetField=true`、`atValue=FIELD`。
+159. **结果**：20/20 通过。证据 `runs/p47-field-at/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -371,6 +378,7 @@
 | 三样本 bundle profile | `profiles/bundle-all-three__fabric-1.21.1.json`、`profiles/README.md` |
 | 剩余工作边界 | `docs/remaining-work.md` |
 | 多 method 数组回归 | `runs/p46-multi-method/README.md`、`verdict.json`、`gradle-test.log` |
+| 字段 @At 解析 | `runs/p47-field-at/README.md`、`verdict.json`、`gradle-test.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

@@ -29,6 +29,10 @@ class MixinInjectionScanTest {
     }
 
     private static byte[] syntheticMixin(String[] methods, String atTarget) {
+        return syntheticMixin(methods, "INVOKE", atTarget);
+    }
+
+    private static byte[] syntheticMixin(String[] methods, String atValue, String atTarget) {
         ClassWriter cw = new ClassWriter(0);
         cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER, "test/TestMixin",
                 null, "java/lang/Object", null);
@@ -49,7 +53,7 @@ class MixinInjectionScanTest {
         }
         AnnotationVisitor at = inject.visitAnnotation(
                 "at", "Lorg/spongepowered/asm/mixin/injection/At;");
-        at.visit("value", "INVOKE");
+        at.visit("value", atValue);
         at.visit("target", atTarget);
         at.visitEnd();
         inject.visitEnd();
@@ -142,5 +146,27 @@ class MixinInjectionScanTest {
         assertEquals("method_60", a.mixins.get(0).injections.get(1).targetName);
         assertEquals("method_61", a.mixins.get(0).injections.get(0).atTargetName);
         assertEquals("method_61", a.mixins.get(0).injections.get(1).atTargetName);
+    }
+
+    @Test
+    void parsesFieldAtTarget() throws Exception {
+        Path dir = Path.of("build", "test-tmp", "mixin-field-at");
+        Files.createDirectories(dir);
+        Path jar = dir.resolve("mixin.jar");
+        Map<String, byte[]> entries = new LinkedHashMap<>();
+        entries.put("test.mixins.json", ("{\"package\":\"test\","
+                + "\"mixins\":[\"TestMixin\"]}").getBytes(StandardCharsets.UTF_8));
+        entries.put("test/TestMixin.class", syntheticMixin(
+                new String[]{"method_59()V"}, "FIELD",
+                "Lnet/minecraft/class_14;field_99:Lnet/minecraft/class_1799;"));
+        writeJar(jar, entries);
+
+        ArtifactScanner.Artifact a = ArtifactScanner.scan(jar);
+        ArtifactScanner.Injection inj = a.mixins.get(0).injections.get(0);
+        assertTrue(inj.atTargetField);
+        assertEquals("FIELD", inj.atValue);
+        assertEquals("net/minecraft/class_14", inj.atTargetOwner);
+        assertEquals("field_99", inj.atTargetName);
+        assertEquals("Lnet/minecraft/class_1799;", inj.atTargetDesc);
     }
 }
