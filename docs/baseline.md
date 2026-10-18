@@ -86,7 +86,7 @@
 
 判定规则保持保守：继承链中出现未索引的非 `java/lang/Object` 祖先时记 `UNKNOWN` 而不是缺失；Mojang 名/SRG 名引用单独计入 `unmappedNamespace`，不冒充损伤。`presentInSource` 为 true 表示“这条损伤在 1.20.1 索引里确实存在”，即真实跨版本变化。
 
-### 5.2 结果（`runs/p0-fabric-target/plan.json`，SHA-256 `edfcf09b...44c88`）
+### 5.2 结果（`runs/p0-fabric-target/plan.json`，SHA-256 `9ebfa5e9...e5316`）
 
 | 样本 | 判定 | MISSING_CLASS | MISSING_MEMBER | DESC_MISMATCH | FABRIC_API 缺失 | 源索引确认 | 备注 |
 |---|---|---|---|---|---|---|---|
