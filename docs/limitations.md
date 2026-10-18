@@ -14,7 +14,7 @@
 
 - 只判断**符号存在性/描述符一致性**。方法体语义、数据流、事件阶段、线程约束都不判断。
 - 继承解析依赖目标索引里的真实类文件；遇到未索引的非 `java/lang/Object` 祖先时记 `UNKNOWN`，会低估损伤。
-- Mixin 解析 `@Mixin` 的 `value`/`targets` 类，以及 `@Inject`/`@Redirect` 等的 `method` 目标；但只保守校验 intermediary 方法名+描述符，Yarn/refmap 映射、构造器、ordinal/slice/local capture 仍未解析。
+- Mixin 解析 `@Mixin` 的 `value`/`targets` 类，以及 `@Inject`/`@Redirect` 等的 `method` 目标；支持 refmap 和构造器，但只检查精确描述符，ordinal/slice/local capture 和非 refmap 命名目标仍未解析。
 - Forge 样本只做到命名空间级：`net/minecraftforge.*` 在 Fabric/NeoForge 目标下的类级消失、SRG 引用的数量，没有成员级映射。
 - 反射字符串、动态生成字节码、Kotlin/Scala 元数据中的引用不在覆盖范围。
 - 嵌套 jar（JiJ）：静态分析只展开一层；补丁已递归处理并把桥嵌入使用它的 jar（P18），但多层嵌套的静态分析仍未递归。

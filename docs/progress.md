@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 22:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 22:10（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 22:10）：**refmap 注入目标解析**。读取 mixin config 的 refmap，把命名目标映射到 `Lowner;method(desc)`（含构造器），`Analyzer` 现在能静态复现 lithium 的 3 个已知构造器变化：`class_4180`(POI)、`class_3610`(FluidState)、`class_1927`(Explosion)。测试 16/16；证据 `runs/p21-refmap/`。
 更新（2026-10-18 22:05）：**Mixin 注入目标提取 + 保守校验**。`ArtifactScanner` 解析 `@Inject`/`@Redirect` 等的 `method` 目标，`Analyzer` 新增 `mixinInjections`/`mixinInjectionsUnresolved`；只校验 intermediary 名称+描述符，命名/refmap/构造器跳过。测试 15/15；转换后 lithium 实跑 `214` 个注入目标、`0` unresolved；证据 `runs/p20-mixin-inject/`。
 更新（2026-10-18 21:55）：**BytecodeVerify 已跑**。编译 CenturyBridge 的 `BytecodeVerify.java`，对 ironchests/lithium/trashslot 三个补丁 jar 的顶层类验证：650 classes / 3 jars，0 failures；再对 ironchests 内嵌 ResourcefulLib：141 classes，0 failures。仍只是栈深度校验；证据 `runs/p19-bytecode-verify/`。
 更新（2026-10-18 21:53）：**嵌套 jar 的桥改为按 jar 嵌入**。`JarPatcher` 为每层 jar 记录 `used` 集合并把生成的/javac 桥嵌入使用它的那个 jar；新增 synthetic nested jar 测试，ironchests 重补丁只在 nested ResourcefulLib jar 多出 `IdentifierFactory`，容器契约 5/5 仍通过。测试 13/13；证据 `runs/p18-nested-bridges/`。
@@ -111,6 +112,14 @@
 63. **实跑**：转换后 lithium `mixins=202`、`mixinInjections=214`、`mixinInjectionsUnresolved=0`；0 是保守策略的结果（Yarn/refmap/构造器跳过），提取路径已被 214 个目标覆盖。
 64. **边界**：不是运行时 Mixin 验证；refmap/命名描述符/构造器/ordinal/slice/local capture 仍未解析。证据 `runs/p20-mixin-inject/`。
 
+## 2026-10-18 22:10 更新：refmap 注入目标解析
+
+65. **refmap**：`ArtifactScanner` 读取 mixin config 的 `refmap`，把命名目标映射到 `Lowner;method(desc)`；新增 `Injection.targetOwner/rawTarget`。
+66. **构造器**：`Analyzer` 现在校验 `<init>` 精确描述符，不再跳过。
+67. **验证**：转换后 lithium `mixinInjections=214`、`mixinInjectionsUnresolved=3`，正好是 `class_4180`(POI)、`class_3610`(FluidState)、`class_1927`(Explosion) 三个已知构造器变化；静态分析独立复现了 P11/P13 的运行时阻断。
+68. **测试**：新增 refmap 映射测试；`gradle test --rerun-tasks` **16/16**，exit 0。
+69. **边界**：只检查精确描述符；ordinal/slice/local capture、非 refmap 命名目标仍未解析。证据 `runs/p21-refmap/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -149,6 +158,7 @@
 | 嵌套 jar 桥 | `runs/p18-nested-bridges/README.md`、`contract/verdict.json`、`gradle-test.log` |
 | BytecodeVerify | `runs/p19-bytecode-verify/README.md`、`verdict.json`、`verify.log`、`verify-nested.log` |
 | Mixin 注入目标分析 | `runs/p20-mixin-inject/README.md`、`verdict.json`、`gradle-test.log`、`analyze-converted.log` |
+| refmap 注入目标 | `runs/p21-refmap/README.md`、`verdict.json`、`lithium-converted.json`、`analyze-converted.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
@@ -163,7 +173,7 @@
 7. **玩家侧 / 多人**：GUI、右键交互、渲染、两个客户端同步仍 pending；服务端只做了命令契约。
 8. **第三个样本 trashslot 仅到 BOOTED**：原生 Balm 21 + 初始化/网络桥 + 4 个 NBT 桥已让专用服务端 `Done`；但无客户端连接，clientbound receiver 未安装，包 encode/decode 和 ItemStack NBT 桥未被玩家动作触发，客户端 GUI/玩法仍未验证。
 9. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
-10. **Mixin 注入点级分析**：已提取 `@Inject`/`@Redirect` 等的 `method` 目标并保守校验 intermediary 方法；Yarn/refmap 映射、构造器、ordinal/slice/局部变量仍未解析。
+10. **Mixin 注入点级分析**：已提取 `@Inject`/`@Redirect` 的 `method` 目标，支持 refmap 和构造器，并静态复现 lithium 的 3 个已知构造器变化；ordinal/slice/局部变量和非 refmap 命名目标仍未解析。
 11. **BytecodeVerify** 已对三个顶层补丁 jar + 一个 nested jar 运行（0 failures）；其他 nested jar/客户端路径未覆盖，且只是栈深度校验，不是完整类型校验。
 12. **重映射器的覆盖面**：目前只验证了服务端 jar；客户端 jar、带资源的 jar、模块化 jar 未验证；输出未做签名清理以外的规范化（entry 时间固定）。
 

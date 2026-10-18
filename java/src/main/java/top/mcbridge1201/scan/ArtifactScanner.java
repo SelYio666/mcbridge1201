@@ -39,14 +39,18 @@ public final class ArtifactScanner {
 
     public static final class MixinInfo {
         public String configName;
+        public String mixinClass;
         public int declaredClasses;
         public final List<String> targets = new ArrayList<>();
         public final List<Injection> injections = new ArrayList<>();
+        public Map<String, String> refmap = Map.of();
     }
 
     /** One @Inject/@Redirect/... target method declared by a mixin handler. */
     public static final class Injection {
         public String annotation;
+        public String rawTarget;
+        public String targetOwner;
         public String targetName;
         public String targetDesc;
     }
@@ -252,6 +256,7 @@ public final class ArtifactScanner {
                 JsonObject o = GSON.fromJson(new String(zf.getInputStream(e).readAllBytes(), StandardCharsets.UTF_8), JsonObject.class);
                 if (o == null) continue;
                 String pkg = o.has("package") ? str(o, "package") : "";
+                Map<String, Map<String, String>> refmaps = readRefmap(zf, o);
                 for (String side : List.of("mixins", "client", "server")) {
                     if (!o.has(side) || !o.get(side).isJsonArray()) continue;
                     for (JsonElement el : o.getAsJsonArray(side)) {
@@ -262,14 +267,70 @@ public final class ArtifactScanner {
                         String internal = (pkg.isEmpty() ? cls : pkg + "." + cls).replace('.', '/');
                         a.ownClasses.add(internal);
                         MixinInfo parsed = mixinInfo(zf, internal);
+                        mi.mixinClass = internal;
+                        mi.refmap = refmaps.getOrDefault(internal, Map.of());
                         mi.targets.addAll(parsed.targets);
                         mi.injections.addAll(parsed.injections);
+                        for (Injection inj : mi.injections) resolveRefmapTarget(inj, mi);
                         a.mixins.add(mi);
                     }
                 }
             }
         } catch (IOException ex) {
             a.errors.add("mixin config: " + ex.getMessage());
+        }
+    }
+
+    private static Map<String, Map<String, String>> readRefmap(ZipFile zf, JsonObject config)
+            throws IOException {
+        if (!config.has("refmap") || !config.get("refmap").isJsonPrimitive()) return Map.of();
+        String name = config.get("refmap").getAsString();
+        ZipEntry e = zf.getEntry(name);
+        if (e == null) return Map.of();
+        JsonObject root = GSON.fromJson(new String(zf.getInputStream(e).readAllBytes(),
+                StandardCharsets.UTF_8), JsonObject.class);
+        if (root == null || !root.has("mappings") || !root.get("mappings").isJsonObject()) {
+            return Map.of();
+        }
+        Map<String, Map<String, String>> out = new HashMap<>();
+        for (var entry : root.getAsJsonObject("mappings").entrySet()) {
+            if (!entry.getValue().isJsonObject()) continue;
+            Map<String, String> values = new HashMap<>();
+            for (var v : entry.getValue().getAsJsonObject().entrySet()) {
+                if (v.getValue().isJsonPrimitive()) values.put(v.getKey(), v.getValue().getAsString());
+            }
+            out.put(entry.getKey(), values);
+        }
+        return out;
+    }
+
+    private static void resolveRefmapTarget(Injection inj, MixinInfo mi) {
+        if (inj.rawTarget == null || mi.refmap.isEmpty()) return;
+        String mapped = mi.refmap.get(inj.rawTarget);
+        if (mapped == null) {
+            for (String t : mi.targets) {
+                mapped = mi.refmap.get("L" + t + ";" + inj.rawTarget);
+                if (mapped != null) break;
+            }
+        }
+        if (mapped == null) return;
+        int paren = mapped.indexOf('(');
+        if (paren < 0) return;
+        String head = mapped.substring(0, paren);
+        String desc = mapped.substring(paren);
+        int semi = head.lastIndexOf(';');
+        if (semi > 0) {
+            String owner = head.substring(0, semi);
+            if (owner.startsWith("L")) owner = owner.substring(1);
+            inj.targetOwner = owner;
+            head = head.substring(semi + 1);
+        } else {
+            int dot = head.lastIndexOf('.');
+            if (dot >= 0) head = head.substring(dot + 1);
+        }
+        if (!head.isBlank()) {
+            inj.targetName = head;
+            inj.targetDesc = desc;
         }
     }
 
@@ -364,6 +425,7 @@ public final class ArtifactScanner {
         if (namePart.isBlank()) return;
         Injection inj = new Injection();
         inj.annotation = annotation;
+        inj.rawTarget = s;
         inj.targetName = namePart;
         inj.targetDesc = desc;
         info.injections.add(inj);

@@ -148,9 +148,12 @@ public final class Analyzer {
             }
             for (ArtifactScanner.Injection inj : mi.injections) {
                 r.mixinInjectionCount++;
-                if (inj.targetName == null || !inj.targetName.startsWith("method_")) continue;
-                if ("<init>".equals(inj.targetName) || "<clinit>".equals(inj.targetName)) continue;
-                for (String t : mi.targets) {
+                if (inj.targetName == null) continue;
+                boolean constructor = "<init>".equals(inj.targetName) || "<clinit>".equals(inj.targetName);
+                if (!inj.targetName.startsWith("method_") && !constructor) continue;
+                List<String> owners = inj.targetOwner != null
+                        ? List.of(inj.targetOwner) : mi.targets;
+                for (String t : owners) {
                     if (!isIntermediaryName(t) || !mc.hasClass(t)) continue;
                     String desc = inj.targetDesc == null ? "" : inj.targetDesc;
                     TargetIndex.Resolution res = mc.resolveMethod(t, inj.targetName, desc);

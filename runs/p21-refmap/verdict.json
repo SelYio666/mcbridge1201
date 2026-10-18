@@ -1,0 +1,21 @@
+{
+  "feature": "refmap-aware mixin injection target resolution including constructors",
+  "tests": {
+    "total": 16,
+    "failures": 0,
+    "new": ["MixinInjectionScanTest.mapsNamedInjectionTargetThroughRefmap"]
+  },
+  "lithium_converted": {
+    "jar": "work/cb/out/lithium/lithium-fabric-mc1.20.1-0.11.4+1.21.1.jar",
+    "mixins": 202,
+    "mixinInjections": 214,
+    "mixinInjectionsUnresolved": 3,
+    "unresolved": [
+      "net/minecraft/class_4180.<init>(Ljava/nio/file/Path;Ljava/util/function/Function;Ljava/util/function/Function;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;ZLnet/minecraft/class_5455;Lnet/minecraft/class_5539;)V",
+      "net/minecraft/class_3610.<init>(Lnet/minecraft/class_3611;Lcom/google/common/collect/ImmutableMap;Lcom/mojang/serialization/MapCodec;)V",
+      "net/minecraft/class_1927.<init>(Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;)V"
+    ],
+    "note": "These three are the known POI/FluidState/Explosion constructor changes from P11/P13, rediscovered statically."
+  },
+  "limitations": "Exact descriptor existence only; ordinal/slice/local capture and non-refmap named targets are not analyzed."
+}

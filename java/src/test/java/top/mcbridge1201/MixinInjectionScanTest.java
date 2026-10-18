@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Pins the mixin injection-target extraction used by the static analysis. */
 class MixinInjectionScanTest {
 
-    private static byte[] syntheticMixin() {
+    private static byte[] syntheticMixin(String method) {
         ClassWriter cw = new ClassWriter(0);
         cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER, "test/TestMixin",
                 null, "java/lang/Object", null);
@@ -32,13 +32,25 @@ class MixinInjectionScanTest {
         mv.visitCode();
         AnnotationVisitor inject = mv.visitAnnotation(
                 "Lorg/spongepowered/asm/mixin/injection/Inject;", true);
-        inject.visit("method", "method_59()V");
+        inject.visit("method", method);
         inject.visitEnd();
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 1);
         mv.visitEnd();
         cw.visitEnd();
         return cw.toByteArray();
+    }
+
+    private static void writeJar(Path jar, Map<String, byte[]> entries) throws Exception {
+        try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(jar))) {
+            for (Map.Entry<String, byte[]> e : entries.entrySet()) {
+                ZipEntry ze = new ZipEntry(e.getKey());
+                ze.setTime(0L);
+                zos.putNextEntry(ze);
+                zos.write(e.getValue());
+                zos.closeEntry();
+            }
+        }
     }
 
     @Test
@@ -49,16 +61,8 @@ class MixinInjectionScanTest {
         Map<String, byte[]> entries = new LinkedHashMap<>();
         entries.put("test.mixins.json", ("{\"package\":\"test\",\"mixins\":[\"TestMixin\"]}")
                 .getBytes(StandardCharsets.UTF_8));
-        entries.put("test/TestMixin.class", syntheticMixin());
-        try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(jar))) {
-            for (Map.Entry<String, byte[]> e : entries.entrySet()) {
-                ZipEntry ze = new ZipEntry(e.getKey());
-                ze.setTime(0L);
-                zos.putNextEntry(ze);
-                zos.write(e.getValue());
-                zos.closeEntry();
-            }
-        }
+        entries.put("test/TestMixin.class", syntheticMixin("method_59()V"));
+        writeJar(jar, entries);
 
         ArtifactScanner.Artifact a = ArtifactScanner.scan(jar);
         assertEquals(1, a.mixins.size());
@@ -68,6 +72,27 @@ class MixinInjectionScanTest {
         assertEquals(1, mi.injections.size());
         ArtifactScanner.Injection inj = mi.injections.get(0);
         assertEquals("Inject", inj.annotation);
+        assertEquals("method_59", inj.targetName);
+        assertEquals("()V", inj.targetDesc);
+    }
+
+    @Test
+    void mapsNamedInjectionTargetThroughRefmap() throws Exception {
+        Path dir = Path.of("build", "test-tmp", "mixin-refmap");
+        Files.createDirectories(dir);
+        Path jar = dir.resolve("mixin.jar");
+        Map<String, byte[]> entries = new LinkedHashMap<>();
+        entries.put("test.mixins.json", ("{\"package\":\"test\",\"refmap\":\"test.refmap.json\","
+                + "\"mixins\":[\"TestMixin\"]}").getBytes(StandardCharsets.UTF_8));
+        entries.put("test.refmap.json", ("{\"mappings\":{\"test/TestMixin\":{"
+                + "\"named()V\":\"Lnet/minecraft/class_14;method_59()V\"}}}")
+                .getBytes(StandardCharsets.UTF_8));
+        entries.put("test/TestMixin.class", syntheticMixin("named()V"));
+        writeJar(jar, entries);
+
+        ArtifactScanner.Artifact a = ArtifactScanner.scan(jar);
+        ArtifactScanner.Injection inj = a.mixins.get(0).injections.get(0);
+        assertEquals("net/minecraft/class_14", inj.targetOwner);
         assertEquals("method_59", inj.targetName);
         assertEquals("()V", inj.targetDesc);
     }

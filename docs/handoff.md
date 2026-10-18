@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 22:10）：**refmap 注入目标解析**。读取 mixin config 的 refmap，把命名目标映射到 `Lowner;method(desc)`（含构造器），`Analyzer` 静态复现 lithium 的 3 个已知构造器变化：`class_4180`(POI)、`class_3610`(FluidState)、`class_1927`(Explosion)。测试 16/16；证据 `runs/p21-refmap/`。
 更新（2026-10-18 22:05）：**Mixin 注入目标提取 + 保守校验**。`ArtifactScanner` 解析 `@Inject`/`@Redirect` 等的 `method` 目标，`Analyzer` 新增 `mixinInjections`/`mixinInjectionsUnresolved`；只校验 intermediary 名称+描述符，命名/refmap/构造器跳过。测试 15/15；转换后 lithium 实跑 214 个注入目标、0 unresolved；证据 `runs/p20-mixin-inject/`。
 更新（2026-10-18 21:55）：**BytecodeVerify 已跑**。对 ironchests/lithium/trashslot 三个补丁 jar 顶层类验证 650 classes / 0 failures；对 ironchests nested ResourcefulLib 验证 141 classes / 0 failures。仅栈深度校验；证据 `runs/p19-bytecode-verify/`。
 更新（2026-10-18 21:52）：**嵌套 jar 的桥改为按 jar 嵌入**。`JarPatcher` 为每层 jar 记录 `used` 集合并把生成的/javac 桥嵌入使用它的那个 jar；新增 synthetic nested jar 测试，ironchests 重补丁只在 nested ResourcefulLib jar 多出 `IdentifierFactory`，容器契约 5/5 仍通过。测试 13/13；证据 `runs/p18-nested-bridges/`。
@@ -51,7 +52,7 @@ python tools/run_contract.py --instance work/instances/fabric-1.21.1-server --ou
 6. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
 7. **Forge 成员级分析**：目前只有命名空间级；需要 tsrg(SRG) + Mojang 映射的联合索引。
 8. **`BytecodeVerify`**：已对三个顶层补丁 jar + 一个 nested jar 运行（0 failures，§7.23）；其他 nested jar/客户端路径未覆盖，且仅栈深度校验。
-9. **Mixin 注入点级分析**：已提取 `@Inject`/`@Redirect` 的 `method` 目标并保守校验 intermediary 方法；Yarn/refmap/构造器/ordinal/slice/局部变量仍未解析。
+9. **Mixin 注入点级分析**：已提取 `@Inject`/`@Redirect` 的 `method` 目标，支持 refmap 和构造器，并静态复现 lithium 的 3 个已知构造器变化；ordinal/slice/局部变量和非 refmap 命名目标仍未解析。
 
 > 已完成（不要再当未解决）：`ItemPredicate.fromJson` 的 registry-aware 构造（2026-10-18 20:20，profile `passed_within_scope`）；lithium 的 `class_14.method_59` 调用点签名适配（20:50，§7.17）；lithium `ExplosionMixin` + POI storage 的 Mixin 目标描述符适配（21:05，§7.18）；lithium chunk access 的 1.21.1 实现类移植与 `BOOTED`（21:25，§7.19）；lithium+ironchests 联合容器契约（21:35，§7.20）。
 

@@ -1,5 +1,9 @@
 # P20: mixin injection-target extraction and conservative resolution
 
+> P21 extends this with refmap and constructor resolution: the converted lithium jar now
+> reports 3 unresolved constructor injections (POI/FluidState/Explosion). This P20 file is
+> retained as the historical conservative step.
+
 Date: 2026-10-18 (Asia/Shanghai). Static-analysis improvement.
 
 ## What changed

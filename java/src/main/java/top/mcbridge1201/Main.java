@@ -366,9 +366,13 @@ public final class Main {
         JsonObject mixins = new JsonObject();
         mixins.addProperty("configs", a.mixinConfigs.size());
         mixins.addProperty("classes", r.mixinClassCount);
+        mixins.addProperty("injections", r.mixinInjectionCount);
         JsonArray mt = new JsonArray();
         r.unresolvedMixinTargets.forEach(mt::add);
         mixins.add("unresolvedTargets", mt);
+        JsonArray mi = new JsonArray();
+        r.unresolvedMixinInjections.forEach(mi::add);
+        mixins.add("unresolvedInjections", mi);
         o.add("mixins", mixins);
         JsonArray notes = new JsonArray();
         r.notes.forEach(notes::add);
@@ -403,8 +407,8 @@ public final class Main {
         sb.append("# Static damage matrix (generated)\n\n");
         sb.append("Target: ").append(t.get("minecraft").getAsString()).append(" / ")
                 .append(t.get("loader").getAsString()).append("\n\n");
-        sb.append("| artifact | loader | verdict | missing class | missing member | desc mismatch | api class | api member | unmapped ns refs | mixin targets unresolved |\n");
-        sb.append("|---|---|---|---|---|---|---|---|---|---|\n");
+        sb.append("| artifact | loader | verdict | missing class | missing member | desc mismatch | api class | api member | unmapped ns refs | mixin targets unresolved | mixin injections unresolved |\n");
+        sb.append("|---|---|---|---|---|---|---|---|---|---|---|\n");
         for (var el : plan.getAsJsonArray("artifacts")) {
             JsonObject a = el.getAsJsonObject();
             JsonObject c = a.getAsJsonObject("counts");
@@ -417,7 +421,8 @@ public final class Main {
                     .append(c.get("missingApiClass")).append(" | ")
                     .append(c.get("missingApiMember")).append(" | ")
                     .append(c.get("unmappedNamespaceRefs")).append(" | ")
-                    .append(c.get("mixinTargetsUnresolved")).append(" |\n");
+                    .append(c.get("mixinTargetsUnresolved")).append(" | ")
+                    .append(c.get("mixinInjectionsUnresolved")).append(" |\n");
         }
         sb.append("\nGenerated ").append(plan.get("generatedAt").getAsString())
                 .append(" by ").append(plan.get("tool").getAsString()).append(".\n");
