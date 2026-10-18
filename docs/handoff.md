@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 23:35）：**P29 client bridge 的 BytecodeVerify**。`trashslot-client-aw.jar` 顶层 47 classes / 0 failures，覆盖 `BalmNetworkingBridge`/`$Payload`/`$Client`；客户端分支仍未执行。证据 `runs/p38-client-bv/`。
 更新（2026-10-18 23:30）：**CodecDispatch 语义 probe 通过**。`RecordCodecBuilder` 的 `Box(int a)` 经 `CodecDispatch.dispatch` encode 为 `{"a":1,"type":"k"}`、decode 回 `Box(1)`，日志 `CODEC_DISPATCH_PROBE_OK`；服务端 `Done (4.847s)`、exit 0。直接验证 P26 安全 MapCodec 包装。证据 `runs/p37-codec-probe/`。
 更新（2026-10-18 23:25）：**at-target 补丁前后对照**。转换件 `214 injections / 86 at-targets / 3 unresolved`，补丁件 `209 / 84 / 0`；P11/P13 清掉已知构造器，at-target 解析保持一致。证据 `runs/p36-patched-at/`。
 更新（2026-10-18 23:20）：**refmap `@At` 目标解析**。`atRawTarget` 也走 refmap，lithium 的 `mixinAtTargets` 从 0 提升到 **86**，unresolved 仍 3（已知构造器），没有新增 false positive；测试 18/18。证据 `runs/p35-at-refmap/`。

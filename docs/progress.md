@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 23:30（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 23:35）：**P29 client bridge 的 BytecodeVerify**。`trashslot-client-aw.jar` 顶层 47 classes / 0 failures，覆盖 `BalmNetworkingBridge`/`$Payload`/`$Client`；客户端分支仍未执行。证据 `runs/p38-client-bv/`。
 更新（2026-10-18 23:30）：**CodecDispatch 语义 probe 通过**。用 `RecordCodecBuilder` 的 `Box(int a)` 做 `CodecDispatch.dispatch` encode/decode，期望 `{"a":1,"type":"k"}`，日志 `CODEC_DISPATCH_PROBE_OK`；服务端 `Done (4.847s)`、exit 0。直接验证了 P26 安全 MapCodec 包装的编解码语义。证据 `runs/p37-codec-probe/`。
 更新（2026-10-18 23:25）：**at-target 补丁前后对照**。转换件 `214 injections / 86 at-targets / 3 unresolved`，补丁件 `209 / 84 / 0`；P11/P13 规则清掉了 3 个已知构造器，at-target 解析保持一致。证据 `runs/p36-patched-at/`。
 更新（2026-10-18 23:20）：**refmap `@At` 目标解析**。`atRawTarget` 也走 refmap，lithium 的 `mixinAtTargets` 从 0 提升到 **86**，`mixinInjectionsUnresolved` 仍为 3（已知构造器），没有新增 false positive；测试 18/18。证据 `runs/p35-at-refmap/`。
@@ -241,6 +242,12 @@
 125. **结果**：服务端 `Done (4.847s)`、exit 0；直接验证 P26 安全 MapCodec 包装的编解码语义。证据 `runs/p37-codec-probe/`。
 126. **边界**：synthetic record，不是 ironchests ShapeTypes；无客户端。
 
+## 2026-10-18 23:35 更新：client bridge BytecodeVerify
+
+127. **验证**：P29 `trashslot-client-aw.jar`，47 classes / 1 jar，0 methods failed，exit 0。
+128. **覆盖**：`BalmNetworkingBridge`、`$Payload`、`$Client` 及 NBT 包桥；仍不证明客户端运行语义。
+129. **证据**：`runs/p38-client-bv/README.md`、`verdict.json`、`top-level.log`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -296,6 +303,7 @@
 | refmap @At | `runs/p35-at-refmap/README.md`、`verdict.json`、`lithium-converted.json` |
 | at-target 补丁前后 | `runs/p36-patched-at/README.md`、`verdict.json`、`lithium-patched.json` |
 | CodecDispatch 语义 probe | `runs/p37-codec-probe/README.md`、`verdict.json`、`server.log` |
+| client bridge BytecodeVerify | `runs/p38-client-bv/README.md`、`verdict.json`、`top-level.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

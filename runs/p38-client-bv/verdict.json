@@ -1,0 +1,9 @@
+{
+  "tool": "CenturyBridge core/tools/BytecodeVerify.java",
+  "artifact": "work/tmp/p29/trashslot-client-aw.jar",
+  "classes": 47,
+  "failedMethods": 0,
+  "exitCode": 0,
+  "covered": ["BalmNetworkingBridge", "BalmNetworkingBridge$Payload", "BalmNetworkingBridge$Client", "NBT packet bridges"],
+  "limitations": "Dataflow/max_stack only; client branch not executed; not a full type verifier."
+}

@@ -911,6 +911,12 @@ P11/P13 的规则清掉了 3 个已知构造器；补丁件仍解析 84 个 at-t
 验证了安全 MapCodec 包装的 encode/decode 语义。仍是 synthetic record，不是 ironchests
 `ShapeTypes`，也不覆盖客户端。证据 `runs/p37-codec-probe/`。
 
+### 7.40 client bridge 的 BytecodeVerify
+
+对 P29 的 `trashslot-client-aw.jar` 运行 BytecodeVerify：**47 classes / 1 jar，0 methods
+failed**，exit 0。覆盖 `BalmNetworkingBridge`、`$Payload`、`$Client` 以及 NBT 包桥。仍只是
+栈深度校验，客户端分支未执行；不能当成客户端通过。证据 `runs/p38-client-bv/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
