@@ -1,0 +1,14 @@
+{
+  "feature": "all trashslot packet codecs round-trip",
+  "probeMod": "work/tmp/p32/probe/codecprobe.jar",
+  "instance": "work/instances/fabric-1.21.1-server-trashslot",
+  "cases": [
+    {"packet": "MessageTrashSlotClick", "inputs": ["ItemStack.EMPTY", "ItemStack(DIAMOND,5)"], "passed": true},
+    {"packet": "MessageTrashSlotContent", "inputs": ["ItemStack.EMPTY", "ItemStack(DIAMOND,5)"], "passed": true},
+    {"packet": "MessageDeleteFromSlot", "inputs": ["slot=3,all=true"], "passed": true}
+  ],
+  "server": {"doneSeen": true, "doneLine": "Done (4.993s)! For help, type \"help\"", "exitCode": 0},
+  "marker": "TRASHSLOT_ALL_CODEC_OK",
+  "notCovered": ["ClientPlayNetworking delivery", "trash GUI", "player action"],
+  "scope": "dedicated server probe; no client"
+}

@@ -107,9 +107,9 @@
       "scope": "not triggered by player action"
     },
     {
-      "id": "trashslot.packet.codec",
+      "id": "trashslot.packets.all",
       "result": "passed",
-      "scope": "server-side probe, empty + 5 diamonds"
+      "scope": "three packet codecs, empty + 5 diamonds"
     },
     {
       "id": "client.gui.open",
@@ -139,6 +139,10 @@
     "packetCodec": {
       "path": "runs/p32-trashslot-codec/verdict.json",
       "sha256": "10022ddced5a8a7bb4538dba1c4c0979858fafe5de52d63e963d9a8a2958e507"
+    },
+    "allPackets": {
+      "path": "runs/p33-all-packets/verdict.json",
+      "sha256": "7a78d0a25a67b28b4b1d294db3dece0a722da714abec16fee2529c15742cea66"
     }
   }
 }

@@ -844,6 +844,18 @@ failed**，nested ResourcefulLib **142 classes，0 failures**，exit 0。覆盖 
 `ItemStack.CODEC`，而不是只验证启动。仍不含客户端 `ClientPlayNetworking` 投递、trash GUI
 或玩家动作。证据 `runs/p32-trashslot-codec/`。
 
+### 7.35 trashslot 三个包的 codec 往返
+
+扩展 P32 probe：
+
+- `MessageTrashSlotClick`：empty + `ItemStack(DIAMOND,5)`；
+- `MessageTrashSlotContent`：empty + `ItemStack(DIAMOND,5)`；
+- `MessageDeleteFromSlot(3,true)`：断言 slot/all 标志。
+
+日志 `TRASHSLOT_ALL_CODEC_OK`；服务端 `Done (4.993s)`、exit 0。三个包的 encode/decode 和
+双向 ItemStack/NBT 桥都已实际执行。仍不含客户端 `ClientPlayNetworking` 投递、trash GUI 或玩家
+动作。证据 `runs/p33-all-packets/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

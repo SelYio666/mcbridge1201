@@ -188,7 +188,7 @@ e489db35fc579debc417d0fc026d591934c2fe1e16066118e3293cb6d0cb0c16  runs/p29-clien
 6217d45ce2fbd9234a56fceb2b932b6bb51c7bb0eadb790ebed7a207907c33da  work/tmp/p29/trashslot-client-aw.jar
 dc8841624fbce94c1a374e86934efbff2c6924a869dd4eed86fea964c3530e24  profiles/README.md
 a64015edd12bc9fe2c2c0465ecd7296834ab98bbc811662b007bc938649f830e  profiles/lithium-0.11.4-fabric__fabric-1.21.1.json
-cba28045b313d08130046234c35e545afb974709e00774f5d8bcdf1b676eaae6  profiles/trashslot-15.1.5-fabric__fabric-1.21.1.json
+5ac0ac1cd59b994b168a2de2b606a6b94d7fd2862004a64b7fbe277709e2c041  profiles/trashslot-15.1.5-fabric__fabric-1.21.1.json
 156f453974bc38ced55a21e1d8da7f1e06bd74eb79e0c7cc944c99f7ae36dbda  runs/p31-codec-selection/README.md
 51df7256e20c4fa551964b09ad3d0850d76297485325246ae75c316c69db0e5b  runs/p31-codec-selection/verdict.json
 5f5da2cd78397dfbf5950b31017eb9dc662f485308b450d1f33db878834d8165  runs/p31-codec-selection/gradle-test.log
@@ -198,6 +198,12 @@ cba28045b313d08130046234c35e545afb974709e00774f5d8bcdf1b676eaae6  profiles/trash
 MISSING                                                           runs/p32-trashslot-codec/jar.log
 adb5fcffb56e4f345329908094c8aa85a332e3014d482952b58d6f7276902aae  runs/p32-trashslot-codec/server.log
 90ac16276c59b52880ba730dd75c717e2ead48f91327f3aa1c36ee9f60cc68a7  runs/p32-trashslot-codec/server.result.json
+465d797173edd60255aa2659f82bc9b7ded26f88181d32d92e2f7a9c80c865c1  runs/p33-all-packets/README.md
+7a78d0a25a67b28b4b1d294db3dece0a722da714abec16fee2529c15742cea66  runs/p33-all-packets/verdict.json
+00441575e7716b897b088005826eb8be16c4b9f0db71b93bd8ecbeb859faeb2b  runs/p33-all-packets/compile.log
+469d2ce7793bc62b3075632a95ce552f1277819eac1064ff475d7502d3c50387  runs/p33-all-packets/jar.log
+b5c86f23ec50a25cc5791b19eb741053359f78c066bf6f54198f11588adba06a  runs/p33-all-packets/server.log
+bb5db508b963d545c3632d721b091894f9d19308f3e1de64b44fcea3c6890e42  runs/p33-all-packets/server.result.json
 3b22187fc0f83ca4774b35ca2231994bdcc7b2c9778558ded60b2d229e304322  runs/p14-lithium-ironchests/README.md
 db94700abaa63997b5c1d604518eaaee676435c168a7fc854cd42cf0a345f05c  runs/p14-lithium-ironchests/verdict.json
 bb6beb117640ff248a0f4e01ac61311ba3c204c792314eded8de3b7e67202892  runs/p14-lithium-ironchests/step1-place-insert.log
