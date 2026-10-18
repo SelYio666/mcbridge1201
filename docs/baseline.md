@@ -1064,6 +1064,25 @@ ClassCastException: class_9129 cannot be cast to MessageTrashSlotContent
 payload 包装的 `value` 与 codec 参数顺序仍未对齐；世界/GUI/持久化/双客户端同步未执行。
 这不是客户端通过，也没有升级 profile 状态。证据 `runs/p52-client-balm/`。
 
+### 7.55 世界加入越过 Balm payload，遇到 lithium tombstone
+
+旧 Balm 1.20.1 的 writer 是 `BiConsumer<T, FriendlyByteBuf>`（packet 在前，buffer 在后）；
+`BalmNetworkingBridge` 改成 `writer.accept(value, buf)` 后，`trash_slot_content` 的
+`EncoderException`/`ClassCastException` 消失，客户端可以登录并开始世界生成。
+
+新的阻断是 lithium 的 tombstone：
+
+```text
+UnsupportedOperationException:
+  CenturyBridge tombstone: net.minecraft.class_2540.method_10815
+  at ...Tombstones_lithium...t2
+  at ...LithiumHashPalette.method_12290
+```
+
+1.20.1 的 `FriendlyByteBuf.getVarIntSize(int)` 在 1.21.1 移到 `VarInt.getByteSize(int)`；服务端
+225-chunk 测试使用已有世界，没有触发这条 palette 序列化路径。世界/GUI/持久化/双客户端仍未
+执行。证据 `runs/p53-client-world/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

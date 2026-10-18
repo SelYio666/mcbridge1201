@@ -18,12 +18,9 @@ claim that these paths work.
 
 ## Blocked: client GUI / network / multiplayer
 
-A PCL-based Fabric 1.21.1 client now exists (`D:\我的世界\.minecraft`,
-`fabric-loader-0.19.5-1.21.1`). With the ResourcefulLib networking bridge, the Balm client
-initializer bridge and the ironchests model-loading replacement, it **reaches the main menu**.
-Joining a world still fails while encoding trashslot's clientbound `trash_slot_content` payload
-(`ClassCastException: class_9129 -> MessageTrashSlotContent`), so the following remain
-**not executable**:
+A PCL-based Fabric 1.21.1 client now reaches the main menu and, after the Balm writer-order fix,
+logs in past the `trash_slot_content` payload. World generation still hits a lithium tombstone
+(`class_2540.method_10815`, the old `getVarIntSize`), so the following remain **not executable**:
 
 - trashslot client GUI, `ClientPlayNetworking` receiver, actual packet delivery;
 - lithium gameplay/rendering;

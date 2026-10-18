@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 00:55）：**世界加入越过 Balm payload**。修正旧 Balm writer 参数顺序 `(packet, buf)` 后，`trash_slot_content` 编码错误消失；客户端进入世界生成，新阻断为 lithium `class_2540.method_10815` tombstone（`VarInt.getByteSize`）。仍无 GUI/持久化/同步。证据 `runs/p53-client-world/`。
 更新（2026-10-19 00:50）：**客户端到达主菜单**。PCL Fabric 1.21.1 客户端加载五模组并进入主菜单；Balm 客户端初始化、ironchests 模型桥已补。进入世界时 `BalmNetworking.sendTo` payload 编码仍失败（`class_9129` vs `MessageTrashSlotContent`），未进入世界/GUI。证据 `runs/p52-client-balm/`。
 更新（2026-10-19 00:40）：**ResourcefulLib 客户端网络桥生效**。重写嵌套 RL 2.0.6 的 `FabricClientPacketHelper` 到 1.21.1 Payload API；客户端越过 ironchests **main** 入口点，新阻断为 `ModelLoadingRegistry` 缺失与 `BalmClient.initialize(String,Runnable)` 缺失。证据 `runs/p51-client-bridge/`。
 更新（2026-10-19 00:35）：**首次真实客户端运行（PCL）**。1.21.1 Fabric 客户端已装；五模组加载后 ironchests 入口点崩溃于 `ClientPlayNetworking$PlayChannelHandler` 缺失（旧 ResourcefulLib 2.0.6 客户端网络 API）。换 ResourcefulLib 3.0.12 又缺 `PacketHandler`。这是新的真实客户端阻断。证据 `runs/p50-client/`。

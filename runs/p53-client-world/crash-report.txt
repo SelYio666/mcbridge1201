@@ -1,0 +1,139 @@
+---- Minecraft Crash Report ----
+// There are four lights!
+
+Time: 2026-10-19 00:54:05
+Description: Exception in server tick loop
+
+java.lang.UnsupportedOperationException: CenturyBridge tombstone: net.minecraft.class_2540.method_10815 no longer exists in 1.21.1 (died @1.20.1->1.20.2)
+	at knot//centurybridge.gen.Tombstones_lithium_fabric_mc1_20_1_0_11_4.t2(Unknown Source)
+	at knot//me.jellysquid.mods.lithium.common.world.chunk.LithiumHashPalette.method_12290(LithiumHashPalette.java:152)
+	at knot//net.minecraft.class_2841$class_6561.method_38306(class_2841.java:321)
+	at knot//net.minecraft.class_2841.method_12327(class_2841.java:275)
+	at knot//net.minecraft.class_2826.method_12260(class_2826.java:176)
+	at knot//net.minecraft.class_6603.method_38589(class_6603.java:80)
+	at knot//net.minecraft.class_6603.<init>(class_6603.java:42)
+	at knot//net.minecraft.class_2672.<init>(class_2672.java:28)
+	at knot//net.minecraft.class_8608.method_52388(class_8608.java:88)
+	at knot//net.minecraft.class_8608.method_52386(class_8608.java:81)
+	at knot//net.minecraft.server.MinecraftServer.method_3813(MinecraftServer.java:1045)
+	at knot//net.minecraft.server.MinecraftServer.method_3748(MinecraftServer.java:912)
+	at knot//net.minecraft.class_1132.method_3748(class_1132.java:114)
+	at knot//net.minecraft.server.MinecraftServer.method_29741(MinecraftServer.java:697)
+	at knot//net.minecraft.server.MinecraftServer.method_29739(MinecraftServer.java:281)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.1
+	Minecraft Version ID: 1.21.1
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 21.0.7, Microsoft
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Microsoft
+	Memory: 120437536 bytes (114 MiB) / 538968064 bytes (514 MiB) up to 2147483648 bytes (2048 MiB)
+	CPUs: 16
+	Processor Vendor: AuthenticAMD
+	Processor Name: AMD Ryzen 7 H 260 w/ Radeon 780M Graphics       
+	Identifier: AuthenticAMD Family 25 Model 117 Stepping 2
+	Microarchitecture: Zen 3
+	Frequency (GHz): 3.79
+	Number of physical packages: 1
+	Number of physical CPUs: 8
+	Number of logical CPUs: 16
+	Graphics card #0 name: AMD Radeon 780M Graphics
+	Graphics card #0 vendor: Advanced Micro Devices, Inc.
+	Graphics card #0 VRAM (MiB): 512.00
+	Graphics card #0 deviceId: VideoController1
+	Graphics card #0 versionInfo: 32.0.22042.9001
+	Graphics card #1 name: NVIDIA GeForce RTX 5050 Laptop GPU
+	Graphics card #1 vendor: NVIDIA
+	Graphics card #1 VRAM (MiB): 8151.00
+	Graphics card #1 deviceId: VideoController2
+	Graphics card #1 versionInfo: 32.0.15.9613
+	Memory slot #0 capacity (MiB): 16384.00
+	Memory slot #0 clockSpeed (GHz): 5.60
+	Memory slot #0 type: Unknown
+	Virtual memory max (MiB): 31258.00
+	Virtual memory used (MiB): 21664.07
+	Swap memory total (MiB): 15629.00
+	Swap memory used (MiB): 757.15
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 21475.84, total: 203962.31
+	Space in storage for workdir (MiB): available: 62984.77, total: 253625.00
+	JVM Flags: 2 total; -Xmx2048M -Xms512M
+	Fabric Mods: 
+		balm: Balm 21.0.66
+			kuma_api: KumaAPI 21.0.8
+		fabric-api: Fabric API 0.102.0+1.21.1
+			fabric-api-base: Fabric API Base 0.4.42+6573ed8c6a
+			fabric-api-lookup-api-v1: Fabric API Lookup API (v1) 1.6.68+b55973446a
+			fabric-biome-api-v1: Fabric Biome API (v1) 13.0.29+5bd9f1bc6a
+			fabric-block-api-v1: Fabric Block API (v1) 1.0.22+0af3f5a76a
+			fabric-block-view-api-v2: Fabric BlockView API (v2) 1.0.10+6573ed8c6a
+			fabric-blockrenderlayer-v1: Fabric BlockRenderLayer Registration (v1) 1.1.52+0af3f5a76a
+			fabric-client-tags-api-v1: Fabric Client Tags 1.1.15+6573ed8c6a
+			fabric-command-api-v1: Fabric Command API (v1) 1.2.49+f71b366f6a
+			fabric-command-api-v2: Fabric Command API (v2) 2.2.28+6ced4dd96a
+			fabric-commands-v0: Fabric Commands (v0) 0.2.66+df3654b36a
+			fabric-content-registries-v0: Fabric Content Registries (v0) 8.0.16+b55973446a
+			fabric-convention-tags-v1: Fabric Convention Tags 2.0.19+7f945d5b6a
+			fabric-convention-tags-v2: Fabric Convention Tags (v2) 2.5.0+c5e2b5c66a
+			fabric-crash-report-info-v1: Fabric Crash Report Info (v1) 0.2.29+0af3f5a76a
+			fabric-data-attachment-api-v1: Fabric Data Attachment API (v1) 1.1.27+1daea2156a
+			fabric-data-generation-api-v1: Fabric Data Generation API (v1) 20.2.16+16c4ae256a
+			fabric-dimensions-v1: Fabric Dimensions API (v1) 4.0.0+6fc22b996a
+			fabric-entity-events-v1: Fabric Entity Events (v1) 1.6.12+6fc22b996a
+			fabric-events-interaction-v0: Fabric Events Interaction (v0) 0.7.12+ba9dae066a
+			fabric-game-rule-api-v1: Fabric Game Rule API (v1) 1.0.53+6ced4dd96a
+			fabric-item-api-v1: Fabric Item API (v1) 11.0.0+afdfc9216a
+			fabric-item-group-api-v1: Fabric Item Group API (v1) 4.1.4+780172706a
+			fabric-key-binding-api-v1: Fabric Key Binding API (v1) 1.0.47+0af3f5a76a
+			fabric-keybindings-v0: Fabric Key Bindings (v0) 0.2.45+df3654b36a
+			fabric-lifecycle-events-v1: Fabric Lifecycle Events (v1) 2.3.12+6c1df3606a
+			fabric-loot-api-v2: Fabric Loot API (v2) 3.0.14+3f89f5a56a
+			fabric-loot-api-v3: Fabric Loot API (v3) 1.0.2+3f89f5a56a
+			fabric-message-api-v1: Fabric Message API (v1) 6.0.13+6573ed8c6a
+			fabric-model-loading-api-v1: Fabric Model Loading API (v1) 2.0.0+fe474d6b6a
+			fabric-networking-api-v1: Fabric Networking API (v1) 4.2.2+60c3209b6a
+			fabric-object-builder-api-v1: Fabric Object Builder API (v1) 15.2.0+40875a936a
+			fabric-particles-v1: Fabric Particles (v1) 4.0.2+6573ed8c6a
+			fabric-recipe-api-v1: Fabric Recipe API (v1) 5.0.12+650897126a
+			fabric-registry-sync-v0: Fabric Registry Sync (v0) 5.1.2+60c3209b6a
+			fabric-renderer-api-v1: Fabric Renderer API (v1) 3.4.0+c705a49c6a
+			fabric-renderer-indigo: Fabric Renderer - Indigo 1.7.0+c705a49c6a
+			fabric-renderer-registries-v1: Fabric Renderer Registries (v1) 3.2.68+df3654b36a
+			fabric-rendering-data-attachment-v1: Fabric Rendering Data Attachment (v1) 0.3.48+73761d2e6a
+			fabric-rendering-fluids-v1: Fabric Rendering Fluids (v1) 3.1.6+1daea2156a
+			fabric-rendering-v0: Fabric Rendering (v0) 1.1.71+df3654b36a
+			fabric-rendering-v1: Fabric Rendering (v1) 5.0.5+df16efd06a
+			fabric-resource-conditions-api-v1: Fabric Resource Conditions API (v1) 4.3.0+8dc279b16a
+			fabric-resource-loader-v0: Fabric Resource Loader (v0) 1.3.0+565991296a
+			fabric-screen-api-v1: Fabric Screen API (v1) 2.0.24+b55973446a
+			fabric-screen-handler-api-v1: Fabric Screen Handler API (v1) 1.3.86+b55973446a
+			fabric-sound-api-v1: Fabric Sound API (v1) 1.0.23+6573ed8c6a
+			fabric-transfer-api-v1: Fabric Transfer API (v1) 5.1.16+3dccd3436a
+			fabric-transitive-access-wideners-v1: Fabric Transitive Access Wideners (v1) 6.1.0+1daea2156a
+		fabricloader: Fabric Loader 0.19.5
+			mixinextras: MixinExtras 0.5.5
+		ironchests: Iron Chests: Restocked 5.0.2
+			resourcefullib: Resourceful Lib 2.0.6
+				com_teamresourceful_yabn: yabn 1.0.3
+		java: OpenJDK 64-Bit Server VM 21
+		lithium: Lithium 0.11.4
+		minecraft: Minecraft 1.21.1
+		trashslot: TrashSlot 15.1.5
+	Server Running: true
+	Player Count: 1 / 8; [class_3222['TestPlayer'/19, l='ServerLevel[New World]', x=78.50, y=65.00, z=-70.50]]
+	Active Data Packs: vanilla, fabric, balm (incompatible), fabric-convention-tags-v2, ironchests
+	Available Data Packs: balm (incompatible), bundle, fabric, fabric-convention-tags-v2, ironchests, trade_rebalance, vanilla
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	World Seed: -7750724231195076575
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fabric'; Server brand changed to 'fabric'
+	Launched Version: fabric-loader-0.19.5-1.21.1

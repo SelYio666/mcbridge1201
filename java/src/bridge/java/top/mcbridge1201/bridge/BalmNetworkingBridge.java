@@ -33,7 +33,7 @@ public final class BalmNetworkingBridge {
     private BalmNetworkingBridge() {}
 
     public static <T> void registerServerbound(BalmNetworking self, class_2960 id, Class<T> type,
-                                               BiConsumer<class_2540, T> writer,
+                                               BiConsumer<T, class_2540> writer,
                                                Function<class_2540, T> reader,
                                                BiConsumer<class_3222, T> handler) {
         Payload<T> descriptor = new Payload<>(id);
@@ -45,7 +45,7 @@ public final class BalmNetworkingBridge {
     }
 
     public static <T> void registerClientbound(BalmNetworking self, class_2960 id, Class<T> type,
-                                               BiConsumer<class_2540, T> writer,
+                                               BiConsumer<T, class_2540> writer,
                                                Function<class_2540, T> reader,
                                                BiConsumer<net.minecraft.class_1657, T> handler) {
         Payload<T> descriptor = new Payload<>(id);
@@ -97,9 +97,9 @@ public final class BalmNetworkingBridge {
     }
 
     private static <T> class_9139<class_9129, Payload<T>> codec(
-            BiConsumer<class_2540, T> writer, Function<class_2540, T> reader, Payload<T> descriptor) {
+            BiConsumer<T, class_2540> writer, Function<class_2540, T> reader, Payload<T> descriptor) {
         return class_9139.method_56437(
-                (buf, payload) -> writer.accept(buf, payload.value()),
+                (buf, payload) -> writer.accept(payload.value(), buf),
                 buf -> {
                     T value = reader.apply(buf);
                     return descriptor.with(value);
