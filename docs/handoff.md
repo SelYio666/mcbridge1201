@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 21:40）：**第三个样本 trashslot 受阻于 Balm/Fabric networking**。trashslot 自身 4 个 ItemStack/NBT tombstone 已写桥并 patch，但依赖 Balm：转换 Balm 7.3.44 后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，原生 Balm 21.0.66 又缺 `Balm.initialize(String,Runnable)`。未 boot；规则标记 prepared/unverified，证据 `runs/p15-trashslot/`。
 更新（2026-10-18 21:35）：**lithium + ironchests 联合容器契约通过**。同一 Fabric 1.21.1 专用服务端实例加载两份转换件，两进程放置/插入/NBT/重启读回 5 钻石全部通过；P13 chunk access 移植没有破坏容器持久化，两样本可共存。证据 `runs/p14-lithium-ironchests/`，说明 `docs/baseline.md` §7.20。仍不含 lithium 自身玩法/客户端。
 更新（2026-10-18 21:25）：**lithium 到达专用服务端 `Done`**。`ServerChunkManagerMixin` 的 chunk access 实现移植到 1.21.1 `ChunkResult`/`GenerationChunkHolder` API（保留 mixin 类与 `@Overwrite`，不是 strip），启动 `Done (4.772s)`，世界加载/保存，命令 chunk 探针通过。规则 `mixinClassReplacements`，证据 `runs/p13-chunk-port/`，说明 `docs/baseline.md` §7.19。仍只是 BOOTED，不是玩法/客户端兼容。
 更新（2026-10-18 21:05）：**Mixin 目标描述符适配已实现**。lithium 的 `ExplosionMixin` 与 POI `SerializingRegionBasedStorageMixin` 两处 `@Inject` 目标签名迁移成功，服务端推进到 chunk access 的 `ChunkHolderExtended` cast；下一阻断是 1.21.1 chunk API 形状 + CenturyBridge tombstone，不是描述符。规则 `rules/fabric-1.21.1/lithium.json`，证据 `runs/p11-lithium-explosion/`，说明 `docs/baseline.md` §7.18。
@@ -41,10 +42,11 @@ python tools/run_contract.py --instance work/instances/fabric-1.21.1-server --ou
 2. **`mixinClassReplacements` 的覆盖面/优化**：chunk access 已用实现类替换打通；还需验证该模式在更多 API 形状变化上的可维护性，并决定是否重写被放弃的优化。
 3. **调用点适配的覆盖面**：已覆盖顶层 jar 的直接调用和 `MethodHandle`；嵌套 jar（JiJ）内的调用点尚未覆盖。
 4. **Mixin 目标描述符适配的覆盖面**：已处理 Explosion 与 POI storage；仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化。
-5. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
-6. **Forge 成员级分析**：目前只有命名空间级；需要 tsrg(SRG) + Mojang 映射的联合索引。
-7. **`BytecodeVerify`**：CenturyBridge 自带的数据流校验未跑。
-8. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
+5. **第三个样本 trashslot 的 Balm 依赖**：trashslot 自身 4 个 tombstone 已写桥并 patch，但 Balm 7.3.44 转换后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，原生 Balm 21.0.66 又缺 `Balm.initialize(String,Runnable)`。需要 Balm networking/API 桥或兼容 Balm 版本；boot 前不能把 trashslot 规则算通过。
+6. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
+7. **Forge 成员级分析**：目前只有命名空间级；需要 tsrg(SRG) + Mojang 映射的联合索引。
+8. **`BytecodeVerify`**：CenturyBridge 自带的数据流校验未跑。
+9. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
 
 > 已完成（不要再当未解决）：`ItemPredicate.fromJson` 的 registry-aware 构造（2026-10-18 20:20，profile `passed_within_scope`）；lithium 的 `class_14.method_59` 调用点签名适配（20:50，§7.17）；lithium `ExplosionMixin` + POI storage 的 Mixin 目标描述符适配（21:05，§7.18）；lithium chunk access 的 1.21.1 实现类移植与 `BOOTED`（21:25，§7.19）；lithium+ironchests 联合容器契约（21:35，§7.20）。
 

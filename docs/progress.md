@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 21:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 21:40（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 21:40）：**第三个样本 trashslot 尝试受阻于 Balm/Fabric networking**。trashslot 自身的 4 个 ItemStack/NBT tombstone 已写桥并 patch，但依赖 Balm：转换 Balm 7.3.44 后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，改用原生 Balm 21.0.66 又卡在 `Balm.initialize(String,Runnable)` 被移除。未 boot，未宣称通过；证据 `runs/p15-trashslot/`。
 更新（2026-10-18 21:35）：**lithium + ironchests 联合容器契约通过**。同一 Fabric 1.21.1 专用服务端实例加载两份转换件，`run_contract.py` 两进程放置/插入/NBT/重启读回 5 钻石全部通过；说明 P13 chunk access 移植没有破坏容器持久化，且两样本可共存。证据 `runs/p14-lithium-ironchests/`，说明 `docs/baseline.md` §7.20。仍不含 lithium 自身玩法/客户端。
 更新（2026-10-18 21:25）：**lithium 到达专用服务端 `Done`**。`ServerChunkManagerMixin` 的 chunk access 实现整体移植到 1.21.1 `ChunkResult`/`GenerationChunkHolder` API（保留 mixin 类与 `@Overwrite`，不是 strip），启动 `Done (4.772s)`，世界加载/保存，`forceload`/`setblock`/`data get` 命令探针通过。规则 `mixinClassReplacements`，证据 `runs/p13-chunk-port/`，说明 `docs/baseline.md` §7.19。仍只是 BOOTED，不是玩法/客户端兼容。
 更新（2026-10-18 21:05）：**Mixin 目标描述符适配已实现**：lithium 的 `ExplosionMixin` 与 POI `SerializingRegionBasedStorageMixin` 两处 `@Inject` 目标签名迁移成功，服务端推进到 chunk access 的 `ChunkHolderExtended` cast（下一阻断是 1.21.1 chunk API 形状 + CenturyBridge tombstone，不是描述符）。说明见 `docs/baseline.md` §7.18、`rules/fabric-1.21.1/lithium.json`、`runs/p11-lithium-explosion/`。
@@ -63,6 +64,13 @@
 39. **意义**：P13 的 chunk access 移植没有破坏容器 NBT 持久化，两份转换件可以共存；仍只是专用服务端 + 命令 API，不含 GUI/渲染/多人或 lithium 自身玩法。
 40. **证据**：`runs/p14-lithium-ironchests/README.md`、`verdict.json`、两步日志。
 
+## 2026-10-18 21:40 更新：第三个样本 trashslot（受阻）
+
+41. **转换**：trashslot 15.1.5 `ok_partial`，4 个 tombstone（ItemStack writeNbt/fromNbt、FriendlyByteBuf write/readItemStack）。
+42. **桥与规则**：`TrashSlotNbtBridge` + `rules/fabric-1.21.1/trashslot.json`，用 1.21.1 `ItemStack.CODEC` + `RegistryOps(NbtOps)` 和 `FriendlyByteBuf` NBT 方法；patch 命中 1+1+2+2 次。
+43. **依赖阻断**：trashslot 依赖 Balm。转换 Balm 7.3.44 后注入 AW，仍卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`；原生 Balm 21.0.66（1.21.1）又缺少 `Balm.initialize(String,Runnable)`。未 boot。
+44. **状态**：trashslot 规则标记为 **prepared / not boot-verified**；不是通过。证据 `runs/p15-trashslot/README.md`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -95,6 +103,7 @@
 | chunk access 移植 / BOOTED | `runs/p13-chunk-port/README.md`、`server-chunkport-rule.log`、`server-chunkport-commands.log`、`verdict.json` |
 | chunk access 测试 | `runs/p13-chunk-port/gradle-test.log`（12 tests, 0 failures） |
 | lithium+ironchests 联合契约 | `runs/p14-lithium-ironchests/README.md`、`verdict.json`、`step1-place-insert.log`、`step2-restart-read.log` |
+| trashslot 尝试（受阻） | `runs/p15-trashslot/README.md`、`convert.log`、`convert-balm.log`、`patch.log`、`server-trashslot3.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
@@ -107,10 +116,11 @@
 5. **`Codec.dispatch` 的可靠适配**：ironchests 契约虽已通过，但 `assumeMapUnsafe` 在部分路径仍可能 `Optional.of(null)`；应改成真正的 `MapCodec` 构造/显式诊断。
 6. **CenturyBridge 桥 jar 未构建**：`core/shims/1.21.1` 未编译，`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。
 7. **玩家侧 / 多人**：GUI、右键交互、渲染、两个客户端同步仍 pending；服务端只做了命令契约。
-8. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
-9. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
-10. **BytecodeVerify** 未编译运行，转换件未做数据流校验。
-11. **重映射器的覆盖面**：目前只验证了服务端 jar；客户端 jar、带资源的 jar、模块化 jar 未验证；输出未做签名清理以外的规范化（entry 时间固定）。
+8. **第三个样本 trashslot 的 Balm 依赖**：trashslot 自身 4 个 tombstone 已写桥，但 Balm 7.3.44 转换后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，原生 Balm 21.0.66 又缺 `Balm.initialize(String,Runnable)`。需要 Balm networking/API 桥或改用兼容 Balm 版本；在 boot 前不能把 trashslot 规则算通过。
+9. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
+10. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
+11. **BytecodeVerify** 未编译运行，转换件未做数据流校验。
+12. **重映射器的覆盖面**：目前只验证了服务端 jar；客户端 jar、带资源的 jar、模块化 jar 未验证；输出未做签名清理以外的规范化（entry 时间固定）。
 
 ## 下一步精确命令
 

@@ -146,6 +146,8 @@ def main():
         "ironchests-5.0.2-fabric.jar": "CONTRACT_PASSED（服务端命令范围）",
         "lithium-fabric-mc1.20.1-0.11.4.jar":
             "BOOTED（专用服务端 Done，世界加载/保存；chunk access 已移植，优化减少；与 ironchests 联合容器契约通过；无 lithium 玩法/客户端；2 条 mixinStrip；见 runs/p13-chunk-port/、runs/p14-lithium-ironchests/）",
+        "trashslot-fabric-1.20.1-15.1.5.jar":
+            "BLOCKED（4 个 ItemStack/NBT tombstone 已桥并 patch，但 Balm/Fabric networking 阻断启动；规则 prepared/unverified；见 runs/p15-trashslot/）",
     }
     for a in plan["artifacts"]:
         c = a["counts"]

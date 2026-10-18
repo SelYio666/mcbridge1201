@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "trashslot 15.1.5 (1.20.1 -> 1.21.1). CenturyBridge tombstoned four ItemStack/NBT helpers at the 1.20.4->1.20.5 component boundary; the bridges below restore them with the 1.21.1 registry-aware ItemStack codec. STATUS: prepared but NOT boot-verified — trashslot requires Balm, and both converted Balm 7.3.44 (Fabric networking ServerPlayNetworking$PlayChannelHandler removed) and native Balm 21.0.66 (Balm.initialize(String,Runnable) removed) fail before trashslot's entrypoint. Do not treat these rules as passed until a real boot/contract exists (see runs/p15-trashslot/README.md).",
+  "methodRedirects": [
+    {
+      "id": "trashslot.itemstack.write-nbt",
+      "sourceOwner": "centurybridge/gen/Tombstones_trashslot_fabric_1_20_1_15_1_5",
+      "sourceName": "t0",
+      "sourceDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/TrashSlotNbtBridge",
+      "bridgeMethod": "save",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+      "capability": "itemstack.nbt.components",
+      "risk": "medium",
+      "evidence": "Conversion report work/cb/out/trashslot/report.md: tombstoned net/minecraft/class_1799.method_7953(NbtCompound)NbtCompound at 1.20.4->1.20.5. Real call site: net/blay09/mods/trashslot/TrashHelper.setTrashItem passes an ItemStack and a new NbtCompound to the tombstone, then stores that compound under TrashSlot in the player's persistent data; the bridge encodes with 1.21.1 ItemStack.CODEC + RegistryOps(NbtOps) and copies the resulting compound into the supplied one, preserving the old writeNbt mutation contract."
+    },
+    {
+      "id": "trashslot.itemstack.from-nbt",
+      "sourceOwner": "centurybridge/gen/Tombstones_trashslot_fabric_1_20_1_15_1_5",
+      "sourceName": "t1",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/TrashSlotNbtBridge",
+      "bridgeMethod": "load",
+      "bridgeDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;",
+      "capability": "itemstack.nbt.components",
+      "risk": "medium",
+      "evidence": "Conversion report: tombstoned net/minecraft/class_1799.method_7915(NbtCompound)ItemStack at 1.20.4->1.20.5. Real call site: TrashHelper.getTrashItem reads the TrashSlot compound and passes it to the tombstone. The bridge parses with 1.21.1 ItemStack.CODEC + RegistryOps(NbtOps), falling back to ItemStack.EMPTY on failure, which is the same empty-stack result the old fromNbt returned for an empty compound."
+    },
+    {
+      "id": "trashslot.packet.write-itemstack",
+      "sourceOwner": "centurybridge/gen/Tombstones_trashslot_fabric_1_20_1_15_1_5",
+      "sourceName": "t2",
+      "sourceDesc": "(Lnet/minecraft/class_2540;Lnet/minecraft/class_1799;)Lnet/minecraft/class_2540;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/TrashSlotNbtBridge",
+      "bridgeMethod": "writeItem",
+      "bridgeDesc": "(Lnet/minecraft/class_2540;Lnet/minecraft/class_1799;)Lnet/minecraft/class_2540;",
+      "capability": "itemstack.packet.components",
+      "risk": "medium",
+      "evidence": "Conversion report: tombstoned net/minecraft/class_2540.method_10793(ItemStack)FriendlyByteBuf at 1.20.4->1.20.5. Real call sites: MessageTrashSlotClick.encode and MessageTrashSlotContent.encode pass an ItemStack. 1.21.1 FriendlyByteBuf dropped the item helpers; the bridge writes the ItemStack.CODEC NBT via FriendlyByteBuf.method_10794 (writeNbt). Both sides of the trashslot protocol are patched, so the internal packet format change is consistent."
+    },
+    {
+      "id": "trashslot.packet.read-itemstack",
+      "sourceOwner": "centurybridge/gen/Tombstones_trashslot_fabric_1_20_1_15_1_5",
+      "sourceName": "t3",
+      "sourceDesc": "(Lnet/minecraft/class_2540;)Lnet/minecraft/class_1799;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/TrashSlotNbtBridge",
+      "bridgeMethod": "readItem",
+      "bridgeDesc": "(Lnet/minecraft/class_2540;)Lnet/minecraft/class_1799;",
+      "capability": "itemstack.packet.components",
+      "risk": "medium",
+      "evidence": "Conversion report: tombstoned net/minecraft/class_2540.method_10819()ItemStack at 1.20.4->1.20.5. Real call sites: MessageTrashSlotClick.decode and MessageTrashSlotContent.decode. The bridge reads FriendlyByteBuf.method_10798 (readNbt) and parses ItemStack.CODEC with RegistryOps(NbtOps), matching the write side."
+    }
+  ]
+}

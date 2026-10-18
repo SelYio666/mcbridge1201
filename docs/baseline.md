@@ -629,6 +629,30 @@ Unloaded>>`），而 1.21.1 已改为 `CompletableFuture<ChunkResult<LevelChunk>
 这仍只是专用服务端 + 命令 API 范围，不覆盖 GUI/渲染/玩家交互/多人同步；lithium 的 chunk 优化
 减少与 2 条 `mixinStrips` 仍在。
 
+### 7.21 第三个样本 trashslot：4 个 tombstone 已桥接，但 Balm 依赖阻断启动
+
+trashslot 15.1.5（Fabric 1.20.1）转换结果 `ok_partial`，在 1.20.4→1.20.5 组件边界产生 4 个 tombstone：
+
+- `ItemStack.method_7953(NbtCompound)NbtCompound`（writeNbt）
+- `ItemStack.method_7915(NbtCompound)ItemStack`（fromNbt）
+- `FriendlyByteBuf.method_10793(ItemStack)FriendlyByteBuf`（write item）
+- `FriendlyByteBuf.method_10819()ItemStack`（read item）
+
+本轮新增 `TrashSlotNbtBridge` 与 `rules/fabric-1.21.1/trashslot.json`：用 1.21.1 的
+`ItemStack.CODEC` + `RegistryOps(NbtOps)` 编解码，并通过 `FriendlyByteBuf` 的 NBT 方法
+（`method_10794`/`method_10798`）传包；patch 命中 1+1+2+2 次，桥已嵌入。**但这条规则尚未
+boot 验证**，因为 trashslot 依赖 Balm：
+
+- 下载并转换 Balm 7.3.44（1.20.1）：`ok_degraded_partial`（4 tombstone + 9 stripped mixin）；
+  注入项目 access widener 解决私有 `Identifier` 构造器后，仍卡在 Fabric API 0.102 已移除的
+  `ServerPlayNetworking$PlayChannelHandler`；
+- 改用原生 Balm 21.0.66（1.21.1）：又因 trashslot 15.1.5 调用旧 API
+  `Balm.initialize(String,Runnable)` 而 `NoSuchMethodError`。
+
+因此没有 `Done`，也没有把 trashslot 规则算通过。规则状态是 **prepared / not boot-verified**；
+证据 `runs/p15-trashslot/README.md`、`convert.log`、`convert-balm.log`、`server-trashslot3.log`。
+下一步是 Balm networking/API 桥，或使用同时兼容旧 Balm API 与 1.21.1 Fabric API 的 Balm 版本。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
@@ -640,7 +664,8 @@ Unloaded>>`），而 1.21.1 已改为 `CompletableFuture<ChunkResult<LevelChunk>
 5. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
 6. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
 7. **WORLD_LOADED / 玩法契约**：lithium+ironchests 同实例的容器契约已通过（§7.20）；lithium 自身的玩法、`/give`/玩家交互/掉落/同步仍未覆盖，客户端仍 pending。
-8. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
-9. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
-10. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
-11. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
+8. **trashslot 的 Balm 依赖**：4 个 tombstone 已写桥并 patch，但 Balm 7.3.44 转换后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，原生 Balm 21.0.66 又缺 `Balm.initialize(String,Runnable)`；boot 前不能把 trashslot 规则算通过（§7.21）。
+9. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
+10. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
+11. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
+12. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
