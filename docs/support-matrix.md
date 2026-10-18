@@ -10,7 +10,7 @@
 | ironchests-5.0.2-fabric.jar | fabric | blocked_static | 1 | 20 | 19 | 7 | 52/52 | CONTRACT_PASSED（服务端命令范围） |
 | jei-1.20.1-forge-15.71.0.224.jar | forge | wrong_loader | 0 | 0 | 0 | 0 | 0/0 | 未运行 |
 | journeymap-forge-1.20.1-6.0.7.jar | forge | wrong_loader | 0 | 0 | 0 | 0 | 0/0 | 未运行 |
-| lithium-fabric-mc1.20.1-0.11.4.jar | fabric | blocked_static | 1 | 7 | 6 | 0 | 13/14 | BOOTED（专用服务端 Done，世界加载/保存；chunk access 已移植，优化减少；无玩法/客户端；2 条 mixinStrip；见 runs/p13-chunk-port/） |
+| lithium-fabric-mc1.20.1-0.11.4.jar | fabric | blocked_static | 1 | 7 | 6 | 0 | 13/14 | BOOTED（专用服务端 Done，世界加载/保存；chunk access 已移植，优化减少；与 ironchests 联合容器契约通过；无 lithium 玩法/客户端；2 条 mixinStrip；见 runs/p13-chunk-port/、runs/p14-lithium-ironchests/） |
 | modmenu-7.2.2.jar | fabric | blocked_static | 4 | 7 | 14 | 0 | 24/25 | 未运行 |
 | Patchouli-1.20.1-85-FORGE.jar | forge | wrong_loader | 0 | 0 | 0 | 0 | 0/0 | 未运行 |
 | trashslot-fabric-1.20.1-15.1.5.jar | fabric | blocked_static | 0 | 2 | 0 | 0 | 2/2 | 未运行 |

@@ -54,7 +54,7 @@
 
 合格的表述：
 
-> 在 2026-10-18 的 Windows 11 + Zulu 21 环境中，对 `ironchests-5.0.2-fabric.jar`（SHA-256 `6a0706...de6`）执行静态分析，得到 1 个消失类、20 个消失成员、19 个描述符变化、12 个 Fabric API 缺失，且 52 条损伤全部能在 1.20.1 索引中复现；CenturyBridge `convert` 产出 `ok_partial` 转换件，其中 28 个调用点被替换为惰性抛错的 tombstone。经本项目规则补丁（含 NBT 签名适配、access widener、registry-aware `fromJson`）后，该转换件在 Fabric 1.21.1 **专用服务端**到达 `Done`，并通过“放置 → 插入 → NBT → 进程重启 → 读回”的容器契约；客户端 GUI/渲染、玩家交互与多人同步**未验证**。lithium 的 `class_14.method_59` 调用点签名已用 javac 桥适配，`ExplosionMixin` 与 POI storage 的 Mixin 目标描述符也已迁移，chunk access 实现类已移植到 1.21.1 `ChunkResult` API；lithium 现在到达专用服务端 `Done` 并加载/保存世界，但仍无玩法/客户端契约，且 chunk 优化减少、2 条 mixinStrip 仍在。
+> 在 2026-10-18 的 Windows 11 + Zulu 21 环境中，对 `ironchests-5.0.2-fabric.jar`（SHA-256 `6a0706...de6`）执行静态分析，得到 1 个消失类、20 个消失成员、19 个描述符变化、12 个 Fabric API 缺失，且 52 条损伤全部能在 1.20.1 索引中复现；CenturyBridge `convert` 产出 `ok_partial` 转换件，其中 28 个调用点被替换为惰性抛错的 tombstone。经本项目规则补丁（含 NBT 签名适配、access widener、registry-aware `fromJson`）后，该转换件在 Fabric 1.21.1 **专用服务端**到达 `Done`，并通过“放置 → 插入 → NBT → 进程重启 → 读回”的容器契约；客户端 GUI/渲染、玩家交互与多人同步**未验证**。lithium 的 `class_14.method_59` 调用点签名已用 javac 桥适配，`ExplosionMixin` 与 POI storage 的 Mixin 目标描述符也已迁移，chunk access 实现类已移植到 1.21.1 `ChunkResult` API；lithium 现在到达专用服务端 `Done` 并加载/保存世界，且与 ironchests 同实例的容器契约通过，但仍无 lithium 自身玩法/客户端契约，且 chunk 优化减少、2 条 mixinStrip 仍在。
 
 不合格的表述：
 

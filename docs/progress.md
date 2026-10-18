@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 21:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 21:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 21:35）：**lithium + ironchests 联合容器契约通过**。同一 Fabric 1.21.1 专用服务端实例加载两份转换件，`run_contract.py` 两进程放置/插入/NBT/重启读回 5 钻石全部通过；说明 P13 chunk access 移植没有破坏容器持久化，且两样本可共存。证据 `runs/p14-lithium-ironchests/`，说明 `docs/baseline.md` §7.20。仍不含 lithium 自身玩法/客户端。
 更新（2026-10-18 21:25）：**lithium 到达专用服务端 `Done`**。`ServerChunkManagerMixin` 的 chunk access 实现整体移植到 1.21.1 `ChunkResult`/`GenerationChunkHolder` API（保留 mixin 类与 `@Overwrite`，不是 strip），启动 `Done (4.772s)`，世界加载/保存，`forceload`/`setblock`/`data get` 命令探针通过。规则 `mixinClassReplacements`，证据 `runs/p13-chunk-port/`，说明 `docs/baseline.md` §7.19。仍只是 BOOTED，不是玩法/客户端兼容。
 更新（2026-10-18 21:05）：**Mixin 目标描述符适配已实现**：lithium 的 `ExplosionMixin` 与 POI `SerializingRegionBasedStorageMixin` 两处 `@Inject` 目标签名迁移成功，服务端推进到 chunk access 的 `ChunkHolderExtended` cast（下一阻断是 1.21.1 chunk API 形状 + CenturyBridge tombstone，不是描述符）。说明见 `docs/baseline.md` §7.18、`rules/fabric-1.21.1/lithium.json`、`runs/p11-lithium-explosion/`。
 更新（2026-10-18 20:50）：**调用点签名适配已实现并用 lithium 的 `class_14.method_59` 验收**。补丁后 `NoSuchMethodError` 消失，启动推进到下一失败（`world.explosions.ExplosionMixin` 的注入目标变化）。规则、桥、命令、退出码与日志见 `docs/baseline.md` §7.17、`rules/fabric-1.21.1/lithium.json`、`runs/p10-lithium-signature/`。
@@ -55,6 +56,13 @@
 35. **结果**：lithium 补丁 `chunkresult-port` 1 次；服务端 `Done (4.772s)`，三主世界保存；命令探针 `forceload add 0 0` / `setblock` / `data get` 通过。仍是 BOOTED，不是玩法/客户端兼容。
 36. **测试**：新增 `MixinClassReplacementTest`；`gradle test --rerun-tasks` 12/12 通过。
 
+## 2026-10-18 21:35 更新：lithium + ironchests 联合契约
+
+37. **联合实例**：同一 Fabric 1.21.1 专用服务端加载 P13 lithium jar + P5 ironchests AW jar。
+38. **契约**：`run_contract.py` 两个真实进程，放置 `ironchests:iron_chest` → 插入 5 钻石 → NBT 出现 `Items` → 重启 → 读回 5；5 个断言全部 true，`passed=true`。
+39. **意义**：P13 的 chunk access 移植没有破坏容器 NBT 持久化，两份转换件可以共存；仍只是专用服务端 + 命令 API，不含 GUI/渲染/多人或 lithium 自身玩法。
+40. **证据**：`runs/p14-lithium-ironchests/README.md`、`verdict.json`、两步日志。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -86,6 +94,7 @@
 | chunk access 分析 | `runs/p12-chunk-access/README.md` |
 | chunk access 移植 / BOOTED | `runs/p13-chunk-port/README.md`、`server-chunkport-rule.log`、`server-chunkport-commands.log`、`verdict.json` |
 | chunk access 测试 | `runs/p13-chunk-port/gradle-test.log`（12 tests, 0 failures） |
+| lithium+ironchests 联合契约 | `runs/p14-lithium-ironchests/README.md`、`verdict.json`、`step1-place-insert.log`、`step2-restart-read.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

@@ -145,7 +145,7 @@ def main():
     runtime = {
         "ironchests-5.0.2-fabric.jar": "CONTRACT_PASSED（服务端命令范围）",
         "lithium-fabric-mc1.20.1-0.11.4.jar":
-            "BOOTED（专用服务端 Done，世界加载/保存；chunk access 已移植，优化减少；无玩法/客户端；2 条 mixinStrip；见 runs/p13-chunk-port/）",
+            "BOOTED（专用服务端 Done，世界加载/保存；chunk access 已移植，优化减少；与 ironchests 联合容器契约通过；无 lithium 玩法/客户端；2 条 mixinStrip；见 runs/p13-chunk-port/、runs/p14-lithium-ironchests/）",
     }
     for a in plan["artifacts"]:
         c = a["counts"]

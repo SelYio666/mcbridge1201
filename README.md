@@ -27,7 +27,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | **调用点签名适配** | `callSiteAdaptations` + javac 桥；lithium `class_14.method_59` 命中 2 处，`NoSuchMethodError` 消失 | [docs/baseline.md](docs/baseline.md) §7.17、`runs/p10-lithium-signature/` |
 | **Mixin 目标描述符适配** | `mixinCallbackAdaptations`（append/replace + refmap）；lithium `ExplosionMixin` 与 POI storage 两处通过 | [docs/baseline.md](docs/baseline.md) §7.18、`runs/p11-lithium-explosion/` |
 | **Mixin 实现类替换** | `mixinClassReplacements`；chunk access 移植到 1.21.1 `ChunkResult` API，lithium 到达 `Done` | [docs/baseline.md](docs/baseline.md) §7.19、`runs/p13-chunk-port/` |
-| 第二样本 lithium | 转换并加载成功；显式降级 2 条 mixin；调用点/2 处 Mixin 目标/chunk access 已适配，**专用服务端 BOOTED**（`Done (4.772s)`）；无玩法/客户端契约 | `runs/p6-lithium/`、`runs/p10-lithium-signature/`、`runs/p11-lithium-explosion/`、`runs/p13-chunk-port/`、`rules/fabric-1.21.1/lithium.json` |
+| 第二样本 lithium | 转换并加载成功；显式降级 2 条 mixin；调用点/2 处 Mixin 目标/chunk access 已适配，**专用服务端 BOOTED**（`Done (4.772s)`）；无 lithium 玩法/客户端契约 | `runs/p6-lithium/`、`runs/p10-lithium-signature/`、`runs/p11-lithium-explosion/`、`runs/p13-chunk-port/`、`rules/fabric-1.21.1/lithium.json` |
+| **lithium + ironchests 联合契约** | 同一实例两进程放置/插入/NBT/重启读回 5 钻石全部通过 | [docs/baseline.md](docs/baseline.md) §7.20、`runs/p14-lithium-ironchests/` |
 
 ## 交接
 

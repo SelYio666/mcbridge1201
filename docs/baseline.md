@@ -610,6 +610,25 @@ Unloaded>>`），而 1.21.1 已改为 `CompletableFuture<ChunkResult<LevelChunk>
 边界：只验证专用服务端；没有 lithium 的玩法契约、客户端 GUI/渲染或多人同步；没有提交游戏 jar、
 模组 jar 或转换件。
 
+### 7.20 联合契约：lithium + ironchests 同实例通过容器契约
+
+为验证 P13 的 chunk access 移植没有破坏容器持久化、两份转换件能共存，把 **lithium P13 jar**
+与 **ironchests P5 AW jar** 放进同一个 Fabric 1.21.1 专用服务端实例，运行
+`tools/run_contract.py`（两个真实进程）：
+
+| 步骤 | 结果 |
+|---|---|
+| 第一次启动 | `doneSeen=true`，exit 0 |
+| `setblock ironchests:iron_chest` + 插入 5 钻石 | 通过 |
+| `data get block` | `Items: [{count: 5, Slot: 0b, id: "minecraft:diamond"}]` |
+| 进程重启 | `doneSeen=true`，exit 0 |
+| 重启后读回 | 同上，`count_after_restart=true` |
+
+`verdict.json` 的 5 个断言全部 true，`passed=true`。证据：
+`runs/p14-lithium-ironchests/README.md`、`step1-place-insert.log`、`step2-restart-read.log`。
+这仍只是专用服务端 + 命令 API 范围，不覆盖 GUI/渲染/玩家交互/多人同步；lithium 的 chunk 优化
+减少与 2 条 `mixinStrips` 仍在。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
@@ -620,7 +639,7 @@ Unloaded>>`），而 1.21.1 已改为 `CompletableFuture<ChunkResult<LevelChunk>
 4. **Mixin 实现类替换的覆盖面**：`mixinClassReplacements` 已把 `ServerChunkManagerMixin` 移植到 1.21.1 并让 lithium 到达 `Done`（§7.19）；仍需验证该模式在更多 API 形状变化上的可维护性，并决定是否重写被放弃的 chunk 多入口缓存/off-thread 快路径。
 5. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
 6. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
-7. **WORLD_LOADED / 玩法契约**：lithium 只到专用服务端 BOOTED，没有玩法契约；ironchests 已做放置/插入/NBT/重启读回，但 `/give`、玩家交互、掉落与同步仍未覆盖。
+7. **WORLD_LOADED / 玩法契约**：lithium+ironchests 同实例的容器契约已通过（§7.20）；lithium 自身的玩法、`/give`/玩家交互/掉落/同步仍未覆盖，客户端仍 pending。
 8. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
 9. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
 10. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
