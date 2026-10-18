@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "0.1-draft",
+  "profileId": "bundle.all-three.fabric-1.21.1",
+  "status": "passed_within_scope",
+  "statusNote": "lithium (P13 chunk port), ironchests (P26 safe CodecDispatch) and trashslot (P29 client-bridge build) plus native Balm 21.0.66 coexist in one dedicated server. Boot reached Done (4.632s), the two-process container contract passed 5/5, the 225-chunk stress passed, and the CodecDispatch probe printed CODEC_DISPATCH_PROBE_OK. No client GUI, trash GUI, lithium gameplay or multiplayer was executed.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "loaderBuild": "0.19.5",
+    "fabricApi": "0.102.0+1.21.1",
+    "sides": [
+      "dedicated_server"
+    ]
+  },
+  "mods": [
+    {
+      "id": "lithium",
+      "profile": "profiles/lithium-0.11.4-fabric__fabric-1.21.1.json",
+      "role": "chunk access port"
+    },
+    {
+      "id": "ironchests",
+      "profile": "profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json",
+      "role": "container persistence + safe CodecDispatch"
+    },
+    {
+      "id": "trashslot",
+      "profile": "profiles/trashslot-15.1.5-fabric__fabric-1.21.1.json",
+      "role": "Balm initialization/network + NBT bridges"
+    },
+    {
+      "id": "balm-fabric",
+      "version": "21.0.66",
+      "role": "native 1.21.1 dependency"
+    }
+  ],
+  "requiredContracts": [
+    {
+      "id": "all-three.boot",
+      "result": "passed",
+      "scope": "dedicated server, Done 4.632s"
+    },
+    {
+      "id": "all-three.container",
+      "result": "passed",
+      "scope": "two-process restart contract 5/5"
+    },
+    {
+      "id": "all-three.chunk-stress",
+      "result": "passed",
+      "scope": "225 chunks save/restart"
+    },
+    {
+      "id": "all-three.codec-probe",
+      "result": "passed",
+      "scope": "synthetic CodecDispatch round-trip"
+    },
+    {
+      "id": "client.gui",
+      "result": "pending",
+      "scope": "needs client"
+    },
+    {
+      "id": "multiplayer.sync",
+      "result": "pending",
+      "scope": "needs clients"
+    }
+  ],
+  "evidence": {
+    "boot": {
+      "path": "runs/p41-all-three/verdict.json",
+      "sha256": "b9516790d5089a4faccf25fc6dd49dd9f59c58a3c63173f6ec2ab341bb507a22"
+    },
+    "container": {
+      "path": "runs/p41-all-three/contract/verdict.json",
+      "sha256": "e7873bc1ab7b596fa90656e9a1838ca86170fafd9ef55cbeab7a584b01d46592"
+    },
+    "chunkStress": {
+      "path": "runs/p42-all-three-chunk/verdict.json",
+      "sha256": "5b8616b7fd999b908cfaf7295e181ade4db0cc5eff075e1df489a2b5f4733577"
+    },
+    "codecProbe": {
+      "path": "runs/p43-all-three-codec/verdict.json",
+      "sha256": "823c2df95daea75d01357d68fa741297bd442d71300af8a3a6290423481a82a1"
+    }
+  },
+  "scope": "dedicated server + command API; coexistence and container/chunk correctness only"
+}

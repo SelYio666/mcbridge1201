@@ -960,6 +960,13 @@ failures/errors。它只检查既有证据一致性，不重新启动服务端/�
 说明安全 MapCodec 包装在 lithium/trashslot/Balm 同时加载时仍正常。合成 probe，不是
 ironchests `ShapeTypes`；无客户端。证据 `runs/p43-all-three-codec/`。
 
+### 7.46 三样本 bundle 档案
+
+新增 `profiles/bundle-all-three__fabric-1.21.1.json`，`status=passed_within_scope`：lithium
+P13 + ironchests P26 + trashslot P29/Balm 21 同服；contracts 为 boot `Done (4.632s)`、容器
+5/5、225-chunk stress、CodecDispatch probe；client/GUI/multiplayer 仍 pending。四项 evidence
+均 pin hash。索引在 `profiles/README.md`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
