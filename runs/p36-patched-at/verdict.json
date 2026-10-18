@@ -1,0 +1,7 @@
+{
+  "comparison": "lithium converted vs patched at-target analysis",
+  "converted": {"injections": 214, "atTargets": 86, "unresolved": 3},
+  "patched": {"injections": 209, "atTargets": 84, "unresolved": 0},
+  "meaning": "the same analysis flags the known constructor changes and clears them after P11/P13",
+  "scope": "static only; no runtime injection verification"
+}

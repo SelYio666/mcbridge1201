@@ -887,6 +887,17 @@ mixinInjectionsUnresolved: 3
 86 个 at-target 从“跳过”变为实际解析；3 个 unresolved 仍是已知的 POI/FluidState/Explosion
 构造器，没有新增 false positive。测试 **18/18**；证据 `runs/p34-at-targets/`、`runs/p35-at-refmap/`。
 
+### 7.38 at-target 补丁前后
+
+| artifact | injections | at-targets | unresolved |
+|---|---:|---:|---:|
+| lithium converted | 214 | 86 | **3** |
+| lithium patched (chunk-port) | 209 | 84 | **0** |
+
+P11/P13 的规则清掉了 3 个已知构造器；补丁件仍解析 84 个 at-target，说明 P35 的 refmap 检查
+不是只对转换件生效。减少的 5 个 injection / 2 个 at-target 对应被替换的 callback/实现类。
+静态检查，不含 ordinal/slice/local capture。证据 `runs/p36-patched-at/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
