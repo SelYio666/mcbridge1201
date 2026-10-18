@@ -18,9 +18,10 @@ claim that these paths work.
 
 ## Blocked: client GUI / network / multiplayer
 
-A PCL-based Fabric 1.21.1 client joins a singleplayer world, renders terrain/HUD, and shows the
-inventory with TrashSlot's trash button. Item transfer, persistence, ironchests GUI and sync are
-still **not verified**:
+A PCL-based Fabric 1.21.1 client joins a singleplayer world, renders terrain/HUD, shows the
+inventory + TrashSlot button, and can receive a real 5-diamond stack. Clicking/dragging that stack
+onto the trash button did **not** move it (it stayed on the cursor), so item transfer and
+persistence are still **not verified**:
 
 - trashslot client GUI, `ClientPlayNetworking` receiver, actual packet delivery;
 - lithium gameplay/rendering;

@@ -1110,6 +1110,20 @@ Loaded 2 advancements
 probe 是 work-only 测试入口，不是 patcher 的一部分；没有因此声称完整 GUI 通过。证据
 `runs/p55-client-gui/`。
 
+### 7.58 真实 ItemStack 进入背包，trash 拖放未成功
+
+客户端测试 probe 在 `ServerPlayConnectionEvents.JOIN` 给玩家 5 钻石；`inventory-with-diamonds.png`
+显示背包/快捷栏中的钻石，说明物品注入与背包渲染正常。
+
+随后尝试：
+
+1. 点击钻石堆，再点击右下角 TrashSlot 按钮；
+2. 把钻石放到空背包槽，再拖到 TrashSlot 按钮。
+
+两种操作后钻石仍停在光标（`trash-content.png`、`trash-drag.png`），trash 没有接收，日志
+无异常。因此**不能**记为 trash 转移/持久化通过；下一步要检查 TrashSlot 的 GUI slot 命中区/
+点击处理器，而不是放宽结论。证据 `runs/p56-client-item/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

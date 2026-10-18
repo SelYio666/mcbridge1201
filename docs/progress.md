@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 01:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 01:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。
 更新（2026-10-19 01:05）：**背包 + TrashSlot GUI 渲染**。合成 E 键不可靠，改用客户端测试 mod 自动打开 `InventoryScreen`；截图显示原版背包和右下角 TrashSlot 按钮。点击空 trash 按钮不改变界面；物品移入/移出、持久化、容器 GUI、同步仍未验证。证据 `runs/p55-client-gui/`。
 更新（2026-10-19 01:00）：**客户端进入世界并渲染**。补 `LithiumVarIntBridge`（`class_8703.method_53015`）后，世界生成通过，客户端加入单人世界、渲染地形/HUD；截图 `runs/p54-client-lithium/world.png`。trash GUI/容器持久化/同步仍未执行。证据 `runs/p54-client-lithium/`。
 更新（2026-10-19 00:55）：**世界加入越过 Balm payload**。修正旧 Balm writer 参数顺序 `(packet, buf)` 后，`trash_slot_content` 编码错误消失；客户端进入世界生成，新阻断为 lithium `class_2540.method_10815` tombstone（对应 1.21.1 `VarInt.getByteSize`）。证据 `runs/p53-client-world/`。
@@ -371,6 +372,12 @@
 183. **结果**：截图显示原版背包 + 右下角 TrashSlot 按钮；世界/HUD 背景正常。
 184. **边界**：点击空 trash 按钮无可见变化；物品移入/移出、重启持久化、ironchests GUI、同步未测。证据 `runs/p55-client-gui/`。
 
+## 2026-10-19 01:15 更新：真实物品 + trash 拖放
+
+185. **注入**：probe 在 `ServerPlayConnectionEvents.JOIN` 给玩家 5 钻石；背包/快捷栏显示正常。
+186. **尝试**：点击钻石再点 trash 按钮、或拖拽到按钮；物品仍停在光标，trash 未接收，日志无异常。
+187. **结论**：不能记为通过；需查 TrashSlot GUI slot 的点击路径/坐标/处理器。证据 `runs/p56-client-item/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -444,6 +451,7 @@
 | 世界加入 | `runs/p53-client-world/README.md`、`crash-report.txt`、`latest.log` |
 | 客户端进入世界 | `runs/p54-client-lithium/README.md`、`world.png`、`latest.log` |
 | 背包/TrashSlot GUI | `runs/p55-client-gui/README.md`、`inventory-probe.png`、`trash-click.png` |
+| 真实物品/trash 拖放 | `runs/p56-client-item/README.md`、`inventory-with-diamonds.png`、`trash-drag.png` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
