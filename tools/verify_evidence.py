@@ -82,6 +82,8 @@ def main() -> int:
     check("nested_mixins", "runs/p48-nested-mixins/ironchests.json",
           lambda d: d["artifacts"][0]["mixins"].get("classes") == 1
           and d["artifacts"][0]["mixins"].get("injections") == 1)
+    check("at_ordinals", "runs/p49-at-ordinal/lithium-converted.json",
+          lambda d: d["artifacts"][0]["mixins"].get("atOrdinals") == 10)
 
     tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True)
     jars = [line for line in tracked.stdout.splitlines() if line.endswith(".jar")]

@@ -55,6 +55,7 @@ public final class ArtifactScanner {
         public String targetName;
         public String targetDesc;
         public String atValue;
+        public Integer atOrdinal;
         public String atRawTarget;
         public String atTargetOwner;
         public String atTargetName;
@@ -540,6 +541,8 @@ public final class ArtifactScanner {
                     tmp.atValue = s;
                 } else if ("target".equals(n) && value instanceof String s) {
                     parseAtTarget(tmp, s);
+                } else if ("ordinal".equals(n) && value instanceof Integer i) {
+                    tmp.atOrdinal = i;
                 }
             }
 
@@ -553,6 +556,7 @@ public final class ArtifactScanner {
 
     private static void copyAt(Injection to, Injection from) {
         to.atValue = from.atValue;
+        to.atOrdinal = from.atOrdinal;
         to.atRawTarget = from.atRawTarget;
         to.atTargetOwner = from.atTargetOwner;
         to.atTargetName = from.atTargetName;

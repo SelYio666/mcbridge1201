@@ -2,6 +2,7 @@
 
 最后更新：2026-10-18 23:59（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 00:05）：**`@At.ordinal` 提取**。`Injection.atOrdinal` + `mixinAtOrdinals`；lithium 86 at-targets 中 10 个带 ordinal；仅提取，不做匹配指令计数/越界校验；测试 **22/22**。证据 `runs/p49-at-ordinal/`。
 更新（2026-10-18 23:59）：**nested jar mixin 展开**。scanner 读取 `META-INF/jars/*.jar` 内的 `.mixins.json`，带 `!/` 前缀；ironchests P26 从 0 mixin/0 injection 变为 **1/1**（unresolved 0），lithium 保持 202/214/86/3；测试 **21/21**。证据 `runs/p48-nested-mixins/`。
 更新（2026-10-18 23:58）：**字段 `@At` 解析测试**。`FIELD` target `class_14.field_99:L...;` 的 owner/name/desc/`atTargetField` 全部断言；测试 **20/20**。证据 `runs/p47-field-at/`。
 更新（2026-10-18 23:55）：**多 method injection 数组回归测试**。`method_59`+`method_60` 产生两条 Injection 且共享 at-target；测试 **19/19**。证据 `runs/p46-multi-method/`。
@@ -321,6 +322,12 @@
 161. **实跑**：ironchests P26 从 0/0/0 变为 1 config/1 class/1 injection（unresolved 0）；lithium 仍 202/214/86/3。
 162. **测试**：新增 nested synthetic 测试；21/21。证据 `runs/p48-nested-mixins/`。
 
+## 2026-10-19 00:05 更新：@At ordinal
+
+163. **提取**：`Injection.atOrdinal`；`@At` visitor 读 `ordinal`，多 method 数组共享。
+164. **计数**：lithium 86 at-targets 中 10 个带 ordinal；不改变 unresolved 3。
+165. **边界**：只提取，不统计目标方法匹配指令，也不判越界；测试 22/22。证据 `runs/p49-at-ordinal/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -387,6 +394,7 @@
 | 多 method 数组回归 | `runs/p46-multi-method/README.md`、`verdict.json`、`gradle-test.log` |
 | 字段 @At 解析 | `runs/p47-field-at/README.md`、`verdict.json`、`gradle-test.log` |
 | nested mixin 展开 | `runs/p48-nested-mixins/README.md`、`verdict.json`、`ironchests.json` |
+| @At ordinal | `runs/p49-at-ordinal/README.md`、`verdict.json`、`lithium-converted.json` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

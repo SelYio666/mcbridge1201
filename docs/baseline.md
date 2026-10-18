@@ -996,6 +996,15 @@ refmap 都走同一套解析。
 `1/1/1`，unresolved 仍 0；lithium converted 保持 `202/214/86/3`，没有重复或丢失。新增
 synthetic nested jar 测试；测试总数 **21/21**。证据 `runs/p48-nested-mixins/`。
 
+### 7.51 `@At` ordinal 提取
+
+`Injection.atOrdinal` 现在保存 `@At(ordinal=...)`，多 method 数组共享；`Analyzer` 统计
+`mixinAtOrdinals`，`Main` 输出 `atOrdinals`。转换后 lithium 的 86 个 at-target 中 **10** 个带
+ordinal，unresolved 仍 3。
+
+这只是提取：尚未统计目标方法中的匹配指令数，也不判断 ordinal 是否越界；slice/local capture
+仍未解析。新增 synthetic ordinal 测试；测试总数 **22/22**。证据 `runs/p49-at-ordinal/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

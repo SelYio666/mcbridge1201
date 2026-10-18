@@ -1,0 +1,8 @@
+{
+  "feature": "@At ordinal extraction",
+  "tests": {"total": 22, "failures": 0},
+  "lithium_converted": {"atTargets": 86, "atOrdinals": 10, "unresolved": 3},
+  "validated": false,
+  "note": "ordinal is parsed and counted; matching-instruction count and out-of-range validation are not implemented",
+  "evidence": ["gradle-test.log", "install-dist.log", "analyze.log", "lithium-converted.json"]
+}

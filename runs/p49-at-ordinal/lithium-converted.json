@@ -1,0 +1,994 @@
+{
+  "schemaVersion": "0.1-draft",
+  "generatedAt": "2026-10-18T23:58:41.5980935+08:00",
+  "tool": "mcbridge1201 0.1.0",
+  "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "clientJar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\java\\..\\work\\cb\\data\\jars\\client-1.21.1-intermediary.jar",
+    "clientJarSha256": "2cbf8e4a213228ba3fff9d09704ff31d0ddba64aebaac58fd83838979a81be12",
+    "mappings": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\java\\..\\work\\target\\intermediary-1.21.1-v2.jar",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "indexClasses": 8269,
+    "indexMembers": 73432,
+    "indexBuildMs": 369,
+    "apiJars": []
+  },
+  "artifacts": [
+    {
+      "file": "lithium-converted.jar",
+      "sha256": "2a94fff311bf5b30d0890865f4016f4a4252d9169129fbe333a5962d3cd3b52b",
+      "size": 655394,
+      "loader": "fabric",
+      "metadataFiles": [
+        "fabric.mod.json"
+      ],
+      "modId": "lithium",
+      "version": "0.11.4",
+      "displayName": "Lithium",
+      "environment": "*",
+      "depends": {
+        "fabricloader": "\u003e\u003d0.12.11",
+        "minecraft": "1.21.1"
+      },
+      "classes": 530,
+      "classFileMajorMax": 61,
+      "nestedJars": 0,
+      "signed": false,
+      "accessWideners": 2,
+      "verdict": "blocked_static",
+      "stage": "ANALYZED",
+      "counts": {
+        "unresolvedDueToHierarchy": 7,
+        "missingClass": 1,
+        "missingMember": 4,
+        "descMismatch": 6,
+        "missingApiClass": 26,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 79,
+        "mixins": 202,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 214,
+        "mixinAtTargets": 86,
+        "mixinAtOrdinals": 10,
+        "mixinInjectionsUnresolved": 3,
+        "missingConfirmedInSource": 0,
+        "externalPackages": 10
+      },
+      "missingClass": [
+        {
+          "owner": "net/minecraft/class_3193$class_3724",
+          "kind": "class",
+          "refs": 10,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/world/chunk/ChunkHolderExtended",
+            "me/jellysquid/mods/lithium/mixin/world/chunk_access/ChunkHolderMixin",
+            "me/jellysquid/mods/lithium/mixin/world/chunk_access/ServerChunkManagerMixin"
+          ]
+        }
+      ],
+      "missingMember": [
+        {
+          "owner": "net/minecraft/class_4048",
+          "name": "field_18067",
+          "desc": "F",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_4048",
+          "name": "field_18068",
+          "desc": "F",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_3210",
+          "name": "method_14081",
+          "desc": "(JJLnet/minecraft/class_3222;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/player_chunk_tick/ThreadedAnvilChunkStorageMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_3222",
+          "name": "method_14246",
+          "desc": "(Lnet/minecraft/class_1923;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/player_chunk_tick/ThreadedAnvilChunkStorageMixin"
+          ]
+        }
+      ],
+      "descMismatch": [
+        {
+          "owner": "net/minecraft/class_14",
+          "name": "method_59",
+          "desc": "(Lnet/minecraft/class_1922;Lnet/minecraft/class_2338$class_2339;Lnet/minecraft/class_7;)Lnet/minecraft/class_7;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/ai/pathing/PathNodeCache",
+            "me/jellysquid/mods/lithium/mixin/ai/pathing/AbstractBlockStateMixin"
+          ],
+          "note": "target has same name in net/minecraft/class_14 with desc (Lnet/minecraft/class_9316;IIILnet/minecraft/class_7;)Lnet/minecraft/class_7;"
+        },
+        {
+          "owner": "net/minecraft/class_2615",
+          "name": "method_11262",
+          "desc": "()Lnet/minecraft/class_265;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/hopper/HopperHelper",
+            "me/jellysquid/mods/lithium/mixin/entity/hopper_minecart/HopperBlockEntityMixin"
+          ],
+          "note": "target has same name in net/minecraft/class_2615 with desc ()Lnet/minecraft/class_238;"
+        },
+        {
+          "owner": "net/minecraft/class_4180",
+          "name": "\u003cinit\u003e",
+          "desc": "(Ljava/nio/file/Path;Ljava/util/function/Function;Ljava/util/function/Function;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;ZLnet/minecraft/class_5455;Lnet/minecraft/class_5539;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/poi/PointOfInterestStorageMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/poi/fast_portals/PointOfInterestStorageMixin"
+          ],
+          "note": "target has same name in net/minecraft/class_4180 with desc (Lnet/minecraft/class_9172;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/class_5455;Lnet/minecraft/class_9820;Lnet/minecraft/class_5539;)V"
+        },
+        {
+          "owner": "net/minecraft/class_3765",
+          "name": "method_16515",
+          "desc": "()Lnet/minecraft/class_1799;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/raid/PickupBannerAsLeaderGoalMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/raid/RaiderEntityMixin"
+          ],
+          "note": "target has same name in net/minecraft/class_3765 with desc (Lnet/minecraft/class_7871;)Lnet/minecraft/class_1799;"
+        },
+        {
+          "owner": "net/minecraft/class_2499",
+          "name": "add",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/tick_scheduler/ChunkTickSchedulerMixin"
+          ],
+          "note": "target has same name in net/minecraft/class_2483 with desc (ILjava/lang/Object;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2615",
+          "name": "field_12026",
+          "desc": "Lnet/minecraft/class_265;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/hopper/HopperHelper"
+          ],
+          "note": "target has same name in net/minecraft/class_2615 with desc Lnet/minecraft/class_238;"
+        }
+      ],
+      "missingApiClass": [
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getInstance",
+          "desc": "()Lnet/fabricmc/loader/api/FabricLoader;",
+          "kind": "method",
+          "refs": 8,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/block/BlockStateFlags$6",
+            "me/jellysquid/mods/lithium/common/compat/fabric_transfer_api_v1/FabricTransferApiCompat",
+            "me/jellysquid/mods/lithium/common/compat/worldedit/WorldEditCompat"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "kind": "class",
+          "refs": 8,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/block/BlockStateFlags$6",
+            "me/jellysquid/mods/lithium/common/compat/fabric_transfer_api_v1/FabricTransferApiCompat",
+            "me/jellysquid/mods/lithium/common/compat/worldedit/WorldEditCompat"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue",
+          "kind": "class",
+          "refs": 7,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getMappingResolver",
+          "desc": "()Lnet/fabricmc/loader/api/MappingResolver;",
+          "kind": "method",
+          "refs": 5,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/block/BlockStateFlags$6",
+            "me/jellysquid/mods/lithium/common/entity/EntityClassGroup$NoDragonClassGroup",
+            "me/jellysquid/mods/lithium/common/entity/EntityClassGroup"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/MappingResolver",
+          "kind": "class",
+          "refs": 5,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/block/BlockStateFlags$6",
+            "me/jellysquid/mods/lithium/common/entity/EntityClassGroup$NoDragonClassGroup",
+            "me/jellysquid/mods/lithium/common/entity/EntityClassGroup"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/MappingResolver",
+          "name": "mapMethodName",
+          "desc": "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+          "kind": "method",
+          "refs": 5,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/block/BlockStateFlags$6",
+            "me/jellysquid/mods/lithium/common/entity/EntityClassGroup$NoDragonClassGroup",
+            "me/jellysquid/mods/lithium/common/entity/EntityClassGroup"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "kind": "class",
+          "refs": 5,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue$CvType",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "getId",
+          "desc": "()Ljava/lang/String;",
+          "kind": "method",
+          "refs": 4,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "isModLoaded",
+          "desc": "(Ljava/lang/String;)Z",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/compat/fabric_transfer_api_v1/FabricTransferApiCompat",
+            "me/jellysquid/mods/lithium/common/compat/worldedit/WorldEditCompat"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/ModContainer",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue",
+          "name": "getType",
+          "desc": "()Lnet/fabricmc/loader/api/metadata/CustomValue$CvType;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/ModInitializer",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/LithiumMod"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/item/ItemStorage",
+          "name": "SIDED",
+          "desc": "Lnet/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/compat/fabric_transfer_api_v1/FabricTransferApiCompat"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/compat/fabric_transfer_api_v1/FabricTransferApiCompat"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup",
+          "name": "find",
+          "desc": "(Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Ljava/lang/Object;)Ljava/lang/Object;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/compat/fabric_transfer_api_v1/FabricTransferApiCompat"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getAllMods",
+          "desc": "()Ljava/util/Collection;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/ModContainer",
+          "name": "getMetadata",
+          "desc": "()Lnet/fabricmc/loader/api/metadata/ModMetadata;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "containsCustomValue",
+          "desc": "(Ljava/lang/String;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "getCustomValue",
+          "desc": "(Ljava/lang/String;)Lnet/fabricmc/loader/api/metadata/CustomValue;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue$CvType",
+          "name": "OBJECT",
+          "desc": "Lnet/fabricmc/loader/api/metadata/CustomValue$CvType;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue",
+          "name": "getAsObject",
+          "desc": "()Lnet/fabricmc/loader/api/metadata/CustomValue$CvObject;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue$CvObject",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue$CvObject",
+          "name": "iterator",
+          "desc": "()Ljava/util/Iterator;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue$CvType",
+          "name": "BOOLEAN",
+          "desc": "Lnet/fabricmc/loader/api/metadata/CustomValue$CvType;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/CustomValue",
+          "name": "getAsBoolean",
+          "desc": "()Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/common/config/LithiumConfig"
+          ]
+        }
+      ],
+      "missingApiMember": [],
+      "wrongLoaderNamespace": [],
+      "unmappedNamespace": [
+        {
+          "owner": "net/minecraft/world/World;getOtherEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;Ljava/util/function/Predicate;)Ljava/util/List",
+          "kind": "class",
+          "refs": 7,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/collisions/unpushable_cramming/AbstractMinecartEntityMixin",
+            "me/jellysquid/mods/lithium/mixin/entity/collisions/unpushable_cramming/BoatEntityMixin",
+            "me/jellysquid/mods/lithium/mixin/entity/collisions/unpushable_cramming/LivingEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/math/Direction;values()[Lnet/minecraft/util/math/Direction",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/alloc/enum_values/piston_block/PistonBlockMixin",
+            "me/jellysquid/mods/lithium/mixin/alloc/enum_values/piston_handler/PistonHandlerMixin",
+            "me/jellysquid/mods/lithium/mixin/alloc/enum_values/redstone_wire/RedstoneWireBlockMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/inactive_navigations/ServerWorldMixin",
+            "me/jellysquid/mods/lithium/mixin/profiler/ServerWorldMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/World;getClosestEntity(Ljava/util/List;Lnet/minecraft/entity/ai/TargetPredicate;Lnet/minecraft/entity/LivingEntity;DDD)Lnet/minecraft/entity/LivingEntity",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/World;getEntitiesByClass(Ljava/lang/Class;Lnet/minecraft/util/math/Box;Ljava/util/function/Predicate;)Ljava/util/List",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/poi/PointOfInterestStorage;getPosition(Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/world/poi/PointOfInterestStorage$OccupationStatus;Lnet/minecraft/util/math/BlockPos;ILnet/minecraft/util/math/random/Random;)Ljava/util/Optional",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/poi/tasks/HideInHomeTaskMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/poi/tasks/RaiderEntityAttackHomeGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/village/raid/Raid;getOminousBanner()Lnet/minecraft/item/ItemStack",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/raid/PickupBannerAsLeaderGoalMixin",
+            "me/jellysquid/mods/lithium/mixin/ai/raid/RaiderEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/ComposterBlock$ComposterInventory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/alloc/composter/ComposterMixin$ComposterBlockComposterInventoryMixin",
+            "me/jellysquid/mods/lithium/mixin/block/hopper/ComposterMixin$ComposterBlockComposterInventoryMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/ComposterBlock$DummyInventory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/alloc/composter/ComposterMixin$ComposterBlockDummyInventoryMixin",
+            "me/jellysquid/mods/lithium/mixin/block/hopper/ComposterMixin$ComposterBlockDummyInventoryMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/ComposterBlock$FullComposterInventory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/alloc/composter/ComposterMixin$ComposterBlockFullComposterInventoryMixin",
+            "me/jellysquid/mods/lithium/mixin/block/hopper/ComposterMixin$ComposterBlockFullComposterInventoryMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/entity/HopperBlockEntity;getOutputInventory(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Lnet/minecraft/inventory/Inventory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/block/hopper/HopperBlockEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/World;findSupportingBlockPos(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Ljava/util/Optional",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/entity/block_caching/block_support/EntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/chunk/WorldChunk$DirectBlockEntityTickInvoker",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/block_entity_ticking/support_cache/DirectBlockEntityTickInvokerMixin",
+            "me/jellysquid/mods/lithium/mixin/world/block_entity_ticking/world_border/DirectBlockEntityTickInvokerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/World;getClosestPlayer(Lnet/minecraft/entity/ai/TargetPredicate;Lnet/minecraft/entity/LivingEntity;DDD)Lnet/minecraft/entity/player/PlayerEntity",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/ai/pathing/BirdPathNodeMaker;getNodeTypeFromNeighbors(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos$Mutable;Lnet/minecraft/entity/ai/pathing/PathNodeType;)Lnet/minecraft/entity/ai/pathing/PathNodeType",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/pathing/BirdPathNodeMakerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/BlockView;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/pathing/LandPathNodeMakerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/math/BlockPos$Mutable;set(III)Lnet/minecraft/util/math/BlockPos$Mutable",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/pathing/LandPathNodeMakerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/ai/pathing/LandPathNodeMaker;getNodeTypeFromNeighbors(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos$Mutable;Lnet/minecraft/entity/ai/pathing/PathNodeType;)Lnet/minecraft/entity/ai/pathing/PathNodeType",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/pathing/LandPathNodeMakerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/poi/PointOfInterestStorage;getPosition(Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/util/math/BlockPos;ILnet/minecraft/world/poi/PointOfInterestStorage$OccupationStatus;)Ljava/util/Optional",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/poi/tasks/HideInHomeTaskMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/raid/RaiderEntity$AttackHomeGoal",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/ai/poi/tasks/RaiderEntityAttackHomeGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/world/ServerWorld;getRandomPosInChunk(IIII)Lnet/minecraft/util/math/BlockPos",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/alloc/chunk_random/ServerWorldMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/EquipmentSlot;values()[Lnet/minecraft/entity/EquipmentSlot",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/alloc/enum_values/living_entity/LivingEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/nbt/NbtCompound$1",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/alloc/nbt/NbtCompoundMixin$Type"
+          ]
+        },
+        {
+          "owner": "net/minecraft/nbt/NbtCompound;copy()Lnet/minecraft/nbt/NbtCompound",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/block/beehive/BeehiveBlockEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/ComposterBlock$ComposterInventory;removeStack(I)Lnet/minecraft/item/ItemStack",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/block/hopper/ComposterMixin$ComposterBlockComposterInventoryMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/entity/HopperBlockEntity;getInputInventory(Lnet/minecraft/world/World;Lnet/minecraft/block/entity/Hopper;)Lnet/minecraft/inventory/Inventory",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/block/hopper/HopperBlockEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/math/Direction;DOWN:Lnet/minecraft/util/math/Direction",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/block/hopper/HopperBlockEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/entity/HopperBlockEntity;getInputItemEntities(Lnet/minecraft/world/World;Lnet/minecraft/block/entity/Hopper;)Ljava/util/List",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/block/hopper/HopperBlockEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/chunk/ChunkSection;setBlockState(IIILnet/minecraft/block/BlockState;Z)Lnet/minecraft/block/BlockState",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/chunk/no_locking/ChunkSectionMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/World;getEntityCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Ljava/util/List",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/collisions/movement/EntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/Entity;adjustMovementForCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Lnet/minecraft/world/World;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/collisions/movement/EntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/collisions/unpushable_cramming/EntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/LivingEntity;getLandingBlockState()Lnet/minecraft/block/BlockState",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/fast_powder_snow_check/LivingEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/LivingEntity;getAttributeInstance(Lnet/minecraft/entity/attribute/EntityAttribute;)Lnet/minecraft/entity/attribute/EntityAttributeInstance",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/fast_powder_snow_check/LivingEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/mob/DrownedEntity$LeaveWaterGoal",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/inactive_navigations/DrownedEntityLeaveWaterGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/ai/pathing/EntityNavigation;findPathTo(Lnet/minecraft/util/math/BlockPos;I)Lnet/minecraft/entity/ai/pathing/Path",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/inactive_navigations/EntityNavigationMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/World;getOtherEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Ljava/util/List",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/replace_entitytype_predicates/AbstractMinecartEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/world/ServerWorld;getEntitiesByType(Lnet/minecraft/util/TypeFilter;Lnet/minecraft/util/math/Box;Ljava/util/function/Predicate;)Ljava/util/List",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/entity/replace_entitytype_predicates/IronGolemWanderAroundGoalMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/collection/SortedArraySet;create(I)Lnet/minecraft/util/collection/SortedArraySet",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/chunk_tickets/ChunkTicketManagerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/collection/SortedArraySet;addAndGet(Ljava/lang/Object;)Ljava/lang/Object",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/chunk_tickets/ChunkTicketManagerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/world/ChunkTicketManager;ticketsByPosition:Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/chunk_tickets/ChunkTicketManagerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/collection/SortedArraySet;iterator()Ljava/util/Iterator",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/chunk_tickets/ChunkTicketManagerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/entity/Entity;getBoundingBox()Lnet/minecraft/util/math/Box",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/entity/block_caching/block_support/EntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/World;getStatesInBoxIfLoaded(Lnet/minecraft/util/math/Box;)Ljava/util/stream/Stream",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/entity/block_caching/fire_lava_touching/EntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/math/BlockPos;stream(Lnet/minecraft/util/math/Box;)Ljava/util/stream/Stream",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/entity/block_caching/suffocation/EntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/world/ServerWorld;iterateEntities()Ljava/lang/Iterable",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/experimental/spawning/ServerChunkManagerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_16044",
+          "desc": "()Lnet/minecraft/class_3695;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/profiler/ServerWorldMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/shape/VoxelShape;getPointPositions(Lnet/minecraft/util/math/Direction$Axis;)Lit/unimi/dsi/fastutil/doubles/DoubleList",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/shapes/optimized_matching/VoxelShapesMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/BlockState;getFluidState()Lnet/minecraft/fluid/FluidState",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/util/block_tracking/ChunkSectionMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/border/WorldBorder$Area;getAreaInstance()Lnet/minecraft/world/border/WorldBorder$Area",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/util/world_border_listener/WorldBorderMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/chunk/BlockEntityTickInvoker;getPos()Lnet/minecraft/util/math/BlockPos",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/block_entity_ticking/sleeping/ServerWorldMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/util/collection/DefaultedList;set(ILjava/lang/Object;)Ljava/lang/Object",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/block_entity_ticking/sleeping/campfire/CampfireBlockEntityMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/chunk/WorldChunk;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/block_entity_ticking/support_cache/DirectBlockEntityTickInvokerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/BlockEntityProvider;createBlockEntity(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Lnet/minecraft/block/entity/BlockEntity",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/block_entity_ticking/support_cache/WorldChunkMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/WorldView;getFluidState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/fluid/FluidState",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/chunk_ticking/spread_ice/BiomeMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/fluid/FluidState;getFluid()Lnet/minecraft/fluid/Fluid",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/chunk_ticking/spread_ice/BiomeMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/lithium/mixin/world/chunk_ticking/spread_ice/BiomeMixin"
+          ]
+        }
+      ],
+      "externalPackages": [
+        {
+          "owner": "[I",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[J",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "[Ljava",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "[Lme",
+          "kind": "package",
+          "refs": 6
+        },
+        {
+          "owner": "[Lnet",
+          "kind": "package",
+          "refs": 5
+        },
+        {
+          "owner": "[S",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "com",
+          "kind": "package",
+          "refs": 39
+        },
+        {
+          "owner": "it",
+          "kind": "package",
+          "refs": 249
+        },
+        {
+          "owner": "net",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "org",
+          "kind": "package",
+          "refs": 46
+        }
+      ],
+      "mixins": {
+        "configs": 1,
+        "classes": 202,
+        "injections": 214,
+        "atTargets": 86,
+        "atOrdinals": 10,
+        "unresolvedTargets": [],
+        "unresolvedInjections": [
+          "lithium.mixins.json:mixins -\u003e net/minecraft/class_4180.\u003cinit\u003e(Ljava/nio/file/Path;Ljava/util/function/Function;Ljava/util/function/Function;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;ZLnet/minecraft/class_5455;Lnet/minecraft/class_5539;)V (Inject)",
+          "lithium.mixins.json:mixins -\u003e net/minecraft/class_3610.\u003cinit\u003e(Lnet/minecraft/class_3611;Lcom/google/common/collect/ImmutableMap;Lcom/mojang/serialization/MapCodec;)V (Inject)",
+          "lithium.mixins.json:mixins -\u003e net/minecraft/class_1927.\u003cinit\u003e(Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;)V (Inject)"
+        ]
+      },
+      "notes": [
+        "static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)"
+      ]
+    }
+  ],
+  "summary": {
+    "artifacts": 1,
+    "blockedStatic": 1,
+    "needsDependency": 0,
+    "cleanStatic": 0
+  }
+}

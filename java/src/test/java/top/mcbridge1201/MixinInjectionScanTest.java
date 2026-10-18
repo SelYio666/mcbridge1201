@@ -34,6 +34,11 @@ class MixinInjectionScanTest {
     }
 
     private static byte[] syntheticMixin(String[] methods, String atValue, String atTarget) {
+        return syntheticMixin(methods, atValue, atTarget, null);
+    }
+
+    private static byte[] syntheticMixin(String[] methods, String atValue, String atTarget,
+                                          Integer ordinal) {
         ClassWriter cw = new ClassWriter(0);
         cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER, "test/TestMixin",
                 null, "java/lang/Object", null);
@@ -56,6 +61,7 @@ class MixinInjectionScanTest {
                 "at", "Lorg/spongepowered/asm/mixin/injection/At;");
         at.visit("value", atValue);
         at.visit("target", atTarget);
+        if (ordinal != null) at.visit("ordinal", ordinal);
         at.visitEnd();
         inject.visitEnd();
         mv.visitInsn(Opcodes.RETURN);
@@ -208,5 +214,22 @@ class MixinInjectionScanTest {
         assertEquals("net/minecraft/class_14", mi.targets.get(0));
         assertEquals(1, mi.injections.size());
         assertEquals("method_59", mi.injections.get(0).targetName);
+    }
+
+    @Test
+    void parsesAtOrdinal() throws Exception {
+        Path dir = Path.of("build", "test-tmp", "mixin-at-ordinal");
+        Files.createDirectories(dir);
+        Path jar = dir.resolve("mixin.jar");
+        Map<String, byte[]> entries = new LinkedHashMap<>();
+        entries.put("test.mixins.json", ("{\"package\":\"test\","
+                + "\"mixins\":[\"TestMixin\"]}").getBytes(StandardCharsets.UTF_8));
+        entries.put("test/TestMixin.class", syntheticMixin(
+                new String[]{"method_59()V"}, "INVOKE",
+                "Lnet/minecraft/class_14;method_60()V", 2));
+        writeJar(jar, entries);
+
+        ArtifactScanner.Artifact a = ArtifactScanner.scan(jar);
+        assertEquals(Integer.valueOf(2), a.mixins.get(0).injections.get(0).atOrdinal);
     }
 }

@@ -52,6 +52,7 @@ public final class Analyzer {
         public int mixinClassCount;
         public int mixinInjectionCount;
         public int mixinAtTargetCount;
+        public int mixinAtOrdinalCount;
         public final List<String> notes = new ArrayList<>();
         public boolean truncated;
     }
@@ -170,6 +171,7 @@ public final class Analyzer {
                 if (inj.atTargetOwner != null && inj.atTargetName != null
                         && isIntermediaryName(inj.atTargetOwner) && mc.hasClass(inj.atTargetOwner)) {
                     r.mixinAtTargetCount++;
+                    if (inj.atOrdinal != null) r.mixinAtOrdinalCount++;
                     boolean field = inj.atTargetField || "FIELD".equals(inj.atValue);
                     boolean method = !field && (inj.atValue == null || "INVOKE".equals(inj.atValue));
                     String n = inj.atTargetName;
@@ -219,6 +221,7 @@ public final class Analyzer {
         r.counts.put("mixinTargetsUnresolved", r.unresolvedMixinTargets.size());
         r.counts.put("mixinInjections", r.mixinInjectionCount);
         r.counts.put("mixinAtTargets", r.mixinAtTargetCount);
+        r.counts.put("mixinAtOrdinals", r.mixinAtOrdinalCount);
         r.counts.put("mixinInjectionsUnresolved", r.unresolvedMixinInjections.size());
         int confirmed = 0;
         for (List<Item> l : List.of(r.missingClass, r.missingMember, r.descMismatch, r.missingApiClass, r.missingApiMember)) {
