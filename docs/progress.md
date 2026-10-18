@@ -15,7 +15,9 @@
 9. 这次崩溃暴露分析器漏报（字段解析把 JDK 接口祖先当未知），修正后 ironchests 确认损伤 47→52，新增的正是该字段 → 静态预测与真实崩溃一致。
 10. **第一条转换规则 + 桥**：`rules/fabric-1.21.1/container.json` 把 `ItemPredicate.ANY` 重定向到生成的 `ItemPredicateAny.any()`；`patch` 命令同时做常量池种类修正（class→interface，123 处 + 3 个 method handle），并递归处理 JiJ。ironchests 因此**通过入口点**。
 11. **第二、三条规则**：`codec.dispatch.mapcodec-shape`（重定向到生成桥，`MapCodec.assumeMapUnsafe`）与 `itempredicate.fromjson.static`（重建 1.20.1 的 `fromJson`，且调用点是 MethodHandle）。规则引擎现在支持字段/方法/句柄重定向、常量池种类修正、JiJ 递归。
-12. **当前缺口**：`assumeMapUnsafe` 只对真 MapCodec 安全，`MapCodec$7` 处 `Optional.of(null)` NPE；需要构造真正的 MapCodec 适配器。
+12. **access widener 打通注册**：1.21.1 私有化 `Identifier(String,String)`，逐点改写覆盖 13 处后仍有一处参数由方法调用产生；改为注入 `rules/fabric-1.21.1/mcbridge.accesswidener`（+ `tools/inject_aw.py`），转换件**随服务端到达 Done（1.134s），世界加载完成**。
+13. **最小容器契约（无客户端）**：`setblock` 放置 `ironchests:iron_chest` 成功、`item replace` 插入钻石成功；但 `data get block` 没有 `Items`，重启后仍无。对照 vanilla chest 同一命令有 `Items`。
+14. **根因已定位**：`GenericChestBlockEntity.method_11007/11014` 仍是 1 参数的旧签名，而 1.21.1 的 `BlockEntity` 已带 `WrapperLookup` 参数，导致方法不再 override，vanilla 保存走基类实现——静默丢物品。
 12. 产出 `docs/baseline.md`、`docs/engine-selection.md`、`docs/limitations.md`、`rules/README.md`、生成矩阵、`runs/SHA256SUMS.txt`。
 
 ## 证据在哪里
@@ -59,8 +61,9 @@
 python tools/run_server.py --instance work/instances/fabric-1.21.1-server `
   --log runs/p1-server-converted-ironchests/server.log --timeout 240
 
-# B. 重新设计 Codec.dispatch 适配（不要再用 assumeMapUnsafe）：构造 MapCodec.of(...)
-#    或等价路径；通过后再做 /give + 放置 + 容器契约
+# B. 实现 BlockEntity NBT 签名适配规则（1-arg -> 2-arg + WrapperLookup），
+#    重跑容器契约：setblock -> item replace -> data get -> save -> 重启 -> data get
+# C. 把 fromJson 的“解析失败回退 ANY”改成显式诊断或真正的 MapCodec 适配（当前是语义降级）
 
 # C. Forge 第二套索引（并行可做）
 #    下载 de.oceanlabs.mcp:mcp_config:1.20.1:joined.tsrg 与 NeoForge 1.21.1 universal jar，

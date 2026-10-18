@@ -309,9 +309,81 @@ Caused by: java.lang.NullPointerException
 
 这一点也说明：**“能过入口点”与“能加载数据”是两层不同的语义**，规则必须逐条有行为证据，不能只看异常消失。
 
+### 7.11 转换件随服务端启动成功（含世界加载）
+
+在 `Identifier` 构造器被 1.21.1 私有化后，最后一处 `IllegalAccessError` 来自 ResourcefulLib 的注册表代码。逐点改写只能覆盖“参数是纯压栈”的 13 处，剩下一处的参数由方法调用产生，保守匹配器不会动它。
+
+处理方式改为 **access widener**（`rules/fabric-1.21.1/mcbridge.accesswidener`）：
+
+```text
+accessWidener v2 intermediary
+accessible method net/minecraft/class_2960 <init> (Ljava/lang/String;Ljava/lang/String;)V
+```
+
+`tools/inject_aw.py` 把 AW 写进补丁 jar 并给 `fabric.mod.json` 加 `accessWidener`。之后：
+
+```text
+[18:59:47] Found new data pack ironchests, loading it automatically
+[18:59:50] Done (1.134s)! For help, type "help"
+{"doneSeen": true, "exitCode": 0}
+```
+
+日志：`runs/p3-server-accesswidener/server.log`。**这是转换后的 ironchests 第一次随 1.21.1 服务端完成启动与世界加载**（专用服务端的 "Done" 包含主世界生成与 tick 启动）。
+
+### 7.12 最小容器契约（无客户端）
+
+服务端控制台可以执行命令，因此做了不需要玩家客户端的容器契约。`tools/run_server.py --command ...` 在 `Done` 之后按序注入命令。
+
+放置与写入（`runs/p4-contract-place/server.log`）：
+
+```text
+# > setblock 0 100 0 ironchests:iron_chest
+# > item replace block 0 100 0 container.0 with minecraft:diamond 5
+[Server thread/INFO]: Replaced a slot at 0, 100, 0 with [Diamond]
+[Server thread/INFO]: 0, 100, 0 has the following block data: {x: 0, y: 100, z: 0, id: "ironchests:iron_chest"}
+```
+
+重启后（`runs/p4-contract-restart/server.log`）：方块仍在，`data get block` 依然没有 `Items`。
+
+对照组（`runs/p4-contract-vanilla-control/server.log`，同一实例、同一命令）：
+
+```text
+4, 100, 0 has the following block data: {x: 4, y: 100, z: 0, Items: [{count: 5, Slot: 0b, id: "minecraft:diamond"}], z: 0, id: "minecraft:chest"}
+```
+
+结论（严格按阶段）：
+
+| 契约 | 结果 |
+|---|---|
+| 方块注册与放置 | **通过**（`setblock` 成功、重启后仍在） |
+| 容器接收物品 | **通过**（`item replace` 报 Replaced，容器接口接受） |
+| NBT 持久化 | **失败**（`data get block` 无 `Items`，重启后仍无） |
+| 图形/GUI/渲染 | pending（无客户端） |
+
+### 7.13 持久化失败的根因（已定位）
+
+`GenericChestBlockEntity` 声明的是旧签名：
+
+```text
+public void method_11014(net.minecraft.class_2487);   // 读
+public void method_11007(net.minecraft.class_2487);   // 写
+```
+
+而 1.21.1 的 `BlockEntity` 是：
+
+```text
+protected void method_11014(net.minecraft.class_2487, net.minecraft.class_7225$class_7874);
+protected void method_11007(net.minecraft.class_2487, net.minecraft.class_7225$class_7874);
+```
+
+多了一个 `RegistryWrapper.WrapperLookup` 参数。转换件的方法**不再 override**，vanilla 保存时调用的是基类实现，所以物品从未被写进 NBT——不抛异常、不报错，正是最危险的“静默降级”。本项目静态分析器早已把 `class_2586.method_11014/38242` 列为 `DESC_MISMATCH`，运行时结果与之一致。
+
+这属于方案里的“签名变化”，需要专门的适配（把 1-arg 覆写改成 2-arg 并忽略/转发 lookup，同时处理调用点），不能用改名或空实现糊过去。
+
 ## 8. 未验证项与下一步
 
-1. **`Codec.dispatch` 的真正适配**：当前 `assumeMapUnsafe` 版本在 `MapCodec$7` 处 NPE（`Optional.of(null)`）。需要构造真正的 `MapCodec`（`MapCodec.of` / map 视图），或用 `KeyDispatchCodec` 的等价路径重建 dispatch；`ItemPredicate.ANY` 与 `fromJson` 已由 §7.7/§7.9 的规则解决。
+1. **BlockEntity NBT 签名适配**：`method_11007/11014` 需要补 `WrapperLookup` 参数才能重新 override，否则容器内容不落盘（当前已实测：物品插入成功、NBT 为空）。这是容器契约的第一优先级。
+2. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；已用“fromJson 解析失败回退 ANY”绕过一次，但那是**语义降级**，必须在最终规则里改成显式诊断或真正的 MapCodec 构造。
 2. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是"无桥"结果。
 3. **WORLD_LOADED / 玩法契约**：需要客户端或命令侧断言；服务端可先做 `/give` + 放置 + 容器存取 + 重启读回的命令行契约。
 4. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。

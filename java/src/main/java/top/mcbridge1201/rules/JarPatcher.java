@@ -100,10 +100,21 @@ public final class JarPatcher {
         ClassNode cn = new ClassNode();
         new ClassReader(bytes).accept(cn, 0);
         boolean changed = false;
+        boolean framesAffected = false;
         for (MethodNode mn : cn.methods) {
             InsnList insns = mn.instructions;
             for (AbstractInsnNode insn = insns.getFirst(); insn != null; ) {
                 AbstractInsnNode next = insn.getNext();
+                if (insn instanceof MethodInsnNode m && m.getOpcode() == Opcodes.INVOKESPECIAL
+                        && "<init>".equals(m.name)) {
+                    RuleSet.ConstructorRedirect r = rules.matchConstructor(m.owner, m.desc);
+                    if (r != null && rewriteConstructor(insns, m, r)) {
+                        st.applied.merge(r.id, 1, Integer::sum);
+                        st.bridges.add(r.bridgeClass);
+                        changed = true;
+                        framesAffected = true;
+                    }
+                }
                 if (insn instanceof FieldInsnNode f && f.getOpcode() == Opcodes.GETSTATIC) {
                     RuleSet.FieldRedirect r = rules.matchGetStatic(f.owner, f.name, f.desc);
                     if (r != null) {
@@ -146,10 +157,72 @@ public final class JarPatcher {
             }
         }
         if (!changed) return bytes;
-        ClassWriter cw = new ClassWriter(0); // stack shape unchanged
+        // A constructor redirect removes NEW/DUP, so frames must be recomputed.
+        ClassWriter cw = framesAffected ? new SafeClassWriter() : new ClassWriter(0);
         cn.accept(cw);
         st.classes++;
         return cw.toByteArray();
+    }
+
+    /**
+     * Rewrites {@code NEW X; DUP; <pure pushes>; INVOKESPECIAL X.<init>} into
+     * {@code <pure pushes>; INVOKESTATIC bridge}. Only used when the constructor became
+     * private and a public factory exists (Identifier in 1.21).
+     */
+    private static boolean rewriteConstructor(InsnList insns, MethodInsnNode call,
+                                              RuleSet.ConstructorRedirect r) {
+        // walk back over the argument pushes to the DUP that follows NEW
+        AbstractInsnNode dup = null;
+        for (AbstractInsnNode p = call.getPrevious(); p != null; p = p.getPrevious()) {
+            if (p instanceof org.objectweb.asm.tree.LabelNode
+                    || p instanceof org.objectweb.asm.tree.JumpInsnNode) {
+                return false; // control flow between allocation and call: do not touch
+            }
+            if (p instanceof org.objectweb.asm.tree.MethodInsnNode) return false;
+            if (p instanceof FieldInsnNode f) {
+                if (f.getOpcode() != Opcodes.GETSTATIC) return false;
+                continue;
+            }
+            if (p instanceof org.objectweb.asm.tree.InsnNode i && i.getOpcode() == Opcodes.DUP) {
+                dup = p;
+                break;
+            }
+            if (!isPurePush(p.getOpcode())) return false;
+        }
+        if (dup == null) return false;
+        AbstractInsnNode newInsn = dup.getPrevious();
+        if (!(newInsn instanceof org.objectweb.asm.tree.TypeInsnNode t)
+                || t.getOpcode() != Opcodes.NEW || !t.desc.equals(r.owner)) {
+            return false;
+        }
+        insns.remove(newInsn);
+        insns.remove(dup);
+        insns.set(call, new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass, r.bridgeMethod,
+                r.bridgeDesc, false));
+        return true;
+    }
+
+    private static boolean isPurePush(int opcode) {
+        return switch (opcode) {
+            case Opcodes.ALOAD, Opcodes.ILOAD, Opcodes.LLOAD, Opcodes.FLOAD, Opcodes.DLOAD,
+                 Opcodes.LDC, Opcodes.ACONST_NULL, Opcodes.ICONST_M1, Opcodes.ICONST_0, Opcodes.ICONST_1,
+                 Opcodes.ICONST_2, Opcodes.ICONST_3, Opcodes.ICONST_4, Opcodes.ICONST_5,
+                 Opcodes.LCONST_0, Opcodes.LCONST_1, Opcodes.FCONST_0, Opcodes.FCONST_1, Opcodes.FCONST_2,
+                 Opcodes.DCONST_0, Opcodes.DCONST_1, Opcodes.BIPUSH, Opcodes.SIPUSH -> true;
+            default -> false;
+        };
+    }
+
+    /** Frames are recomputed without resolving game types (not on this tool's classpath). */
+    private static final class SafeClassWriter extends ClassWriter {
+        SafeClassWriter() {
+            super(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        }
+
+        @Override
+        protected String getCommonSuperClass(String type1, String type2) {
+            return "java/lang/Object";
+        }
     }
 
     private static boolean fixKind(MethodInsnNode m, top.mcbridge1201.index.TargetIndex idx) {

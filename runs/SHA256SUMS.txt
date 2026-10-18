@@ -1,9 +1,14 @@
 9ebfa5e98d1882a64881a8c34981012f8e54398b50d52d344250be9138ce5316  runs/p0-fabric-target/plan.json
 d9fb6c3068e3c029390db66ab522cb783db69d4037a93b8c90a2ca6c43b6591a  docs/generated/static-matrix-fabric-1.21.1.md
 222c0d2ac8c1f26e1be959aee52ef4f03b4cfcf8fafd87fe9f047a20e7c45700  work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1.jar
-7ec705dd3191559a660dd4a916af268badbd374930d395df07ec897b8f635592  work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-patched.jar
+06ed47369c8ce11622614189477504e9431e5b48f341e7f9f92337acc848b38b  work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-patched.jar
 682f5cde837d61e5301b60808d38856d410f0545a21f2b05e4c0934af4f989f0  runs/p2-server-ironchests-rule1/server.log
-b66979147409118c9bd0ecd87dd67b4d7770ed7ede2a46b65264474892e96f0f  runs/p2-server-ironchests-rule2/server.log
+fcfac2f8c154ef13805b290aac69160957e8ca57d90852477749c2c4e1346856  runs/p2-server-ironchests-rule2/server.log
+9d2156296494bd85ab8b18775b99fc01c8498ec8699c318da06306850d8e1ab0  work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-aw.jar
+f95df672547c1bff9f1fba3dfbbe805c6dcde341cf9d6b186ad48149f13988b9  runs/p3-server-accesswidener/server.log
+623910bef57635c3b2b235a43748719917fdd5ab46ded8b5a0fb43cd1fecf4f0  runs/p4-contract-place/server.log
+b5bb26b44f81eecea86b6cae8850925dda6eeeb30cbfb7bf4290e6457d091c4d  runs/p4-contract-restart/server.log
+9f67fc861bf9d3102819d93e1c00c770fcb7c946d806b89caf8f546f5b6b502e  runs/p4-contract-vanilla-control/server.log
 56390e40bfb3a9bfe5d27c5b2842cfa7b537b5085def5bac56bd7377b163eedb  work/cb/out/ironchests/report.md
 f0a041bbe7c6487e0cbfba145ff2971c930a5926584d09e9fc5af04408a07eb3  work/cb/out/ironchests/full-audit.tsv
 27d29458a7e64512b592555c75fe52156260b784d2da46d90e34aba3bc17978d  work/remap/server-intermediary.jar

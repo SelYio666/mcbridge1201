@@ -30,6 +30,9 @@ def main() -> int:
     ap.add_argument("--java", default=os.environ.get("JAVA_HOME", "") + r"\bin\java.exe")
     ap.add_argument("--xmx", default="1536M")
     ap.add_argument("--no-stop", action="store_true", help="do not send stop after Done (crash tests)")
+    ap.add_argument("--command", action="append", default=[],
+                    help="console command to run after Done (repeatable, executed in order)")
+    ap.add_argument("--command-delay", type=float, default=0.8)
     args = ap.parse_args()
 
     inst = os.path.abspath(args.instance)
@@ -78,6 +81,16 @@ def main() -> int:
                     break
                 if state["done"] and not args.no_stop:
                     time.sleep(2)
+                    if args.command:
+                        for cmd in args.command:
+                            log.write(f"# > {cmd}\n")
+                            log.flush()
+                            try:
+                                p.stdin.write(cmd + "\n")
+                                p.stdin.flush()
+                            except Exception:
+                                pass
+                            time.sleep(args.command_delay)
                     try:
                         p.stdin.write("stop\n")
                         p.stdin.flush()

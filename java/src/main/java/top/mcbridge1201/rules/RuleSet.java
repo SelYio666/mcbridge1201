@@ -30,6 +30,23 @@ public final class RuleSet {
 
     public final List<FieldRedirect> fieldRedirects = new ArrayList<>();
     public final List<MethodRedirect> methodRedirects = new ArrayList<>();
+    public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
+
+    /**
+     * Replaces {@code new X(a,b) + invokespecial X.<init>(a,b)} with a static factory call.
+     * Needed when a constructor became private (e.g. {@code new Identifier(ns, path)} in 1.21.1).
+     */
+    public static final class ConstructorRedirect {
+        public String id;
+        public String owner;
+        public String desc;
+        public String bridgeClass;
+        public String bridgeMethod;
+        public String bridgeDesc;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
 
     /** Rewrites an interface/static call to a bridge method that adapts the callee's shape. */
     public static final class MethodRedirect {
@@ -63,7 +80,21 @@ public final class RuleSet {
                 rs.methodRedirects.add(new Gson().fromJson(el, MethodRedirect.class));
             }
         }
+        if (o.has("constructorRedirects")) {
+            for (var el : o.getAsJsonArray("constructorRedirects")) {
+                rs.constructorRedirects.add(new Gson().fromJson(el, ConstructorRedirect.class));
+            }
+        }
         return rs;
+    }
+
+    public ConstructorRedirect matchConstructor(String owner, String desc) {
+        for (ConstructorRedirect r : constructorRedirects) {
+            if (ownerMatches(r.owner, owner) && r.desc.equals(desc)) {
+                return r;
+            }
+        }
+        return null;
     }
 
     public MethodRedirect matchInvoke(String owner, String name, String desc, int opcode) {

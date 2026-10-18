@@ -23,6 +23,7 @@ public final class BridgeGenerator {
     public static final String CODEC_DISPATCH = "top/mcbridge1201/bridge/CodecDispatch";
     public static final String CODEC_DISPATCH_ADAPTER = "top/mcbridge1201/bridge/CodecDispatch$Adapter";
     public static final String ITEM_PREDICATE_FROM_JSON = "top/mcbridge1201/bridge/ItemPredicateFromJson";
+    public static final String IDENTIFIER_FACTORY = "top/mcbridge1201/bridge/IdentifierFactory";
 
     private static final String CODEC = "com/mojang/serialization/Codec";
     private static final String MAP_CODEC = "com/mojang/serialization/MapCodec";
@@ -40,6 +41,11 @@ public final class BridgeGenerator {
         }
         if (used.contains(ITEM_PREDICATE_FROM_JSON)) {
             out.put(ITEM_PREDICATE_FROM_JSON, itemPredicateFromJson());
+            // the fromJson bridge falls back to the generated "any" predicate
+            out.put(ITEM_PREDICATE_ANY, itemPredicateAny());
+        }
+        if (used.contains(IDENTIFIER_FACTORY)) {
+            out.put(IDENTIFIER_FACTORY, identifierFactory());
         }
         for (String name : used) {
             if (!out.containsKey(name)) {
@@ -160,7 +166,9 @@ public final class BridgeGenerator {
                 "(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;", true);
         m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "com/mojang/serialization/DataResult", "result",
                 "()Ljava/util/Optional;", true);
-        m.visitInsn(Opcodes.ACONST_NULL);
+        // DIAGNOSTIC: fall back to the "match everything" predicate instead of null so that a
+        // legacy predicate JSON that the 1.21.1 codec rejects does not become Success(null).
+        m.visitMethodInsn(Opcodes.INVOKESTATIC, ITEM_PREDICATE_ANY, "any", ITEM_PREDICATE_ANY_DESC, false);
         m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Optional", "orElse",
                 "(Ljava/lang/Object;)Ljava/lang/Object;", false);
         m.visitTypeInsn(Opcodes.CHECKCAST, "net/minecraft/class_2073");
@@ -172,11 +180,45 @@ public final class BridgeGenerator {
         return cw.toByteArray();
     }
 
-    private static byte[] codecDispatchAdapter() {
+    /**
+     * 1.21.1 made {@code Identifier(String,String)} private; the public factory is
+     * {@code Identifier.of(namespace, path)}. Constructor redirects replace
+     * {@code new Identifier(a,b)} with this call.
+     */
+    public static byte[] identifierFactory() {
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
+                IDENTIFIER_FACTORY, null, "java/lang/Object", null);
+
+        MethodVisitor init = cw.visitMethod(Opcodes.ACC_PRIVATE, "<init>", "()V", null, null);
+        init.visitCode();
+        init.visitVarInsn(Opcodes.ALOAD, 0);
+        init.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        init.visitInsn(Opcodes.RETURN);
+        init.visitMaxs(0, 0);
+        init.visitEnd();
+
+        MethodVisitor m = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "of",
+                "(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;", null, null);
+        m.visitCode();
+        m.visitVarInsn(Opcodes.ALOAD, 0);
+        m.visitVarInsn(Opcodes.ALOAD, 1);
+        m.visitMethodInsn(Opcodes.INVOKESTATIC, "net/minecraft/class_2960", "method_60655",
+                "(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;", false);
+        m.visitInsn(Opcodes.ARETURN);
+        m.visitMaxs(0, 0);
+        m.visitEnd();
+
+        cw.visitEnd();
+        return cw.toByteArray();
+    }
+
+    private static byte[] codecDispatchAdapter() {
+        ClassWriter cw = new SafeClassWriter();
         cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
                 CODEC_DISPATCH_ADAPTER, null, "java/lang/Object", new String[]{FUNCTION});
 
+        String mapCodecCodec = "com/mojang/serialization/MapCodec$MapCodecCodec";
         cw.visitField(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, "inner", "L" + FUNCTION + ";", null, null).visitEnd();
 
         MethodVisitor init = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "(L" + FUNCTION + ";)V", null, null);
@@ -198,6 +240,19 @@ public final class BridgeGenerator {
         apply.visitVarInsn(Opcodes.ALOAD, 1);
         apply.visitMethodInsn(Opcodes.INVOKEINTERFACE, FUNCTION, "apply",
                 "(Ljava/lang/Object;)Ljava/lang/Object;", true);
+        apply.visitVarInsn(Opcodes.ASTORE, 2);
+        // MapCodecCodec already wraps a MapCodec: unwrap it instead of assuming.
+        apply.visitVarInsn(Opcodes.ALOAD, 2);
+        apply.visitTypeInsn(Opcodes.INSTANCEOF, mapCodecCodec);
+        var fallback = new org.objectweb.asm.Label();
+        apply.visitJumpInsn(Opcodes.IFEQ, fallback);
+        apply.visitVarInsn(Opcodes.ALOAD, 2);
+        apply.visitTypeInsn(Opcodes.CHECKCAST, mapCodecCodec);
+        apply.visitMethodInsn(Opcodes.INVOKEVIRTUAL, mapCodecCodec, "codec",
+                "()L" + MAP_CODEC + ";", false);
+        apply.visitInsn(Opcodes.ARETURN);
+        apply.visitLabel(fallback);
+        apply.visitVarInsn(Opcodes.ALOAD, 2);
         apply.visitTypeInsn(Opcodes.CHECKCAST, CODEC);
         apply.visitMethodInsn(Opcodes.INVOKESTATIC, MAP_CODEC, "assumeMapUnsafe",
                 "(L" + CODEC + ";)L" + MAP_CODEC + ";", false);
@@ -207,5 +262,17 @@ public final class BridgeGenerator {
 
         cw.visitEnd();
         return cw.toByteArray();
+    }
+
+    /** Computes frames without resolving game types (they are not on this tool's classpath). */
+    private static final class SafeClassWriter extends ClassWriter {
+        SafeClassWriter() {
+            super(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        }
+
+        @Override
+        protected String getCommonSuperClass(String type1, String type2) {
+            return "java/lang/Object";
+        }
     }
 }

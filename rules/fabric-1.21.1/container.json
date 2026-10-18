@@ -42,5 +42,18 @@
       "risk": "medium",
       "evidence": "1.20.1 ItemPredicate.fromJson(JsonElement) was STATIC and used ItemPredicate.CODEC.parse(JsonOps.INSTANCE, json).result().orElse(null). CenturyBridge tombstoned the call (t6, died @1.20.2->1.20.3). The bridge reproduces the original implementation against the 1.21.1 codec. Match is by descriptor on CenturyBridge's generated tombstone class (names are per-artifact)."
     }
+  ],
+  "constructorRedirects": [
+    {
+      "id": "identifier.ctor.to-factory",
+      "owner": "net/minecraft/class_2960",
+      "desc": "(Ljava/lang/String;Ljava/lang/String;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/IdentifierFactory",
+      "bridgeMethod": "of",
+      "bridgeDesc": "(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;",
+      "capability": "identifier.construct",
+      "risk": "low",
+      "evidence": "1.21.1 made Identifier(String,String) private; Identifier.of(String,String) = method_60655 is the public factory. Runtime failure: IllegalAccessError in ResourcefulLib NetworkChannel.<init> (called from ironchests NetPacketHandler)."
+    }
   ]
 }
