@@ -21,6 +21,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 常量池种类修正 | 123 处 Methodref→InterfaceMethodref + 3 个 method handle（含 JiJ） | `java/.../rules/JarPatcher.java` |
 | 规则数 | 3 条（`ItemPredicate.ANY`、`fromJson`、`Codec.dispatch`）+ 常量池种类修正 | `rules/fabric-1.21.1/container.json` |
 | 容器契约（服务端命令） | **通过**：放置 → 插入 5 钻石 → NBT `Items` → 重启读回 5 | `runs/p5-contract-*/` |
+| 兼容档案 | ironchests @ Fabric 1.21.1，`status: degraded`（契约通过；fromJson 降级；缺客户端） | [profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json](profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json) |
+| 支持矩阵 | 10 份样本的静态结果 + 运行时阶段（未运行 ≠ 通过） | [docs/support-matrix.md](docs/support-matrix.md) |
 | 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
 | 第二样本 lithium | 转换并加载成功（131 配置项）；mixin 注入失败 → 显式降级 2 条；卡在 `class_14.method_59` 签名 | `runs/p6-lithium/`、`rules/fabric-1.21.1/lithium-degraded.json` |
 

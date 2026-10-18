@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "0.1-draft",
+  "profileId": "ironchests.5.0.2.fabric-1.20.1__fabric-1.21.1",
+  "status": "degraded",
+  "statusNote": "Container contract passed on a dedicated server (place/insert/NBT/restart). Overall verdict stays degraded because the ItemPredicate.fromJson bridge falls back to a match-everything predicate when the 1.21.1 codec rejects legacy JSON, and because client GUI/render and multiplayer were not executed.",
+  "source": {
+    "minecraft": "1.20.1",
+    "loader": "fabric",
+    "modId": "ironchests",
+    "modVersion": "5.0.2",
+    "jarSha256": "6a07065a3a68280e26a0fc8a3fc0d8dde10b0999432492ef6726cd583be96de6",
+    "originUrl": "https://cdn.modrinth.com/data/n2de3t2z/versions/gioHN8Aw/ironchests-5.0.2-fabric.jar",
+    "license": "LicenseRef-All-Rights-Reserved"
+  },
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "loaderBuild": "0.19.5",
+    "fabricApi": "0.102.0+1.21.1",
+    "clientJarSha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "sides": [
+      "dedicated_server"
+    ]
+  },
+  "engine": {
+    "name": "CenturyBridge",
+    "repo": "dextawa/CenturyBridge",
+    "commit": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
+    "license": "MIT",
+    "artifactSha256": "7088ff065b322f7ae76d6f702acb0fdc7ebaf3be3d9ebfe3325ad95904ac8b58",
+    "note": "engine compiled with a local no-op MixinCheck stub; mixin-check gate not verified"
+  },
+  "rulePackage": {
+    "path": "rules/fabric-1.21.1/container.json",
+    "sha256": "5ec89cec31da14ed35fb6bae4446ac063636684ddea25ab3465a64f590e5d168",
+    "accessWidener": "rules/fabric-1.21.1/mcbridge.accesswidener",
+    "accessWidenerSha256": "cfe9a78f3d96b58e125c0cd959cde5ca3ed38b1b7e84a2bb5bf8d214f44df292"
+  },
+  "appliedRules": [
+    {
+      "id": "itempredicate.any.static-field",
+      "capability": "item.predicate.any"
+    },
+    {
+      "id": "itempredicate.fromjson.static",
+      "capability": "item.predicate.json",
+      "degradation": "falls back to match-everything when the codec rejects legacy JSON"
+    },
+    {
+      "id": "codec.dispatch.mapcodec-shape",
+      "capability": "codec.dispatch.mapcodec"
+    },
+    {
+      "id": "identifier.ctor.to-factory",
+      "capability": "identifier.construct"
+    },
+    {
+      "id": "blockentity.nbt.read.lookup",
+      "capability": "blockentity.nbt.registries"
+    },
+    {
+      "id": "blockentity.nbt.write.lookup",
+      "capability": "blockentity.nbt.registries"
+    },
+    {
+      "id": "constant-kind-fix",
+      "capability": "dfu.interfaceization"
+    }
+  ],
+  "analysis": {
+    "missingClass": 1,
+    "missingMember": 20,
+    "descMismatch": 19,
+    "missingApiClass": 7,
+    "missingApiMember": 5,
+    "confirmedInSource": 52,
+    "planSha256": "9ebfa5e98d1882a64881a8c34981012f8e54398b50d52d344250be9138ce5316"
+  },
+  "requiredContracts": [
+    {
+      "id": "container.place",
+      "result": "passed",
+      "scope": "dedicated server"
+    },
+    {
+      "id": "container.insert",
+      "result": "passed",
+      "scope": "dedicated server"
+    },
+    {
+      "id": "container.nbt.write",
+      "result": "passed",
+      "scope": "dedicated server"
+    },
+    {
+      "id": "container.process.restart.persistence",
+      "result": "passed",
+      "scope": "two process runs"
+    },
+    {
+      "id": "container.gui.open",
+      "result": "pending",
+      "scope": "needs client"
+    },
+    {
+      "id": "container.two.clients.sync",
+      "result": "pending",
+      "scope": "needs 2 clients"
+    },
+    {
+      "id": "render.block.entity",
+      "result": "pending",
+      "scope": "needs client"
+    }
+  ],
+  "evidence": {
+    "boot": {
+      "path": "runs/p3-server-accesswidener/server.log",
+      "sha256": "f95df672547c1bff9f1fba3dfbbe805c6dcde341cf9d6b186ad48149f13988b9"
+    },
+    "contract": {
+      "path": "runs/p5-contract-script/verdict.json",
+      "sha256": "53579d7cedc31f92ada1172923376a3240d4ca7f4a4cfd1b75d829426930a410",
+      "passed": true
+    },
+    "engineReport": {
+      "path": "work/cb/out/ironchests/report.md",
+      "sha256": "56390e40bfb3a9bfe5d27c5b2842cfa7b537b5085def5bac56bd7377b163eedb"
+    },
+    "patchedJar": {
+      "path": "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-aw.jar",
+      "sha256": "7088ff065b322f7ae76d6f702acb0fdc7ebaf3be3d9ebfe3325ad95904ac8b58"
+    }
+  },
+  "knownLimitations": [
+    "GUI/render/multiplayer untested (no client instance).",
+    "fromJson fallback is a semantic degradation and must be replaced before publishing.",
+    "Game jar was locally remapped with this project's ASM remapper because the stock Fabric remap cannot write in this sandbox."
+  ]
+}
