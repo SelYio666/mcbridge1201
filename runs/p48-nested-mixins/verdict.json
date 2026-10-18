@@ -1,0 +1,10 @@
+{
+  "feature": "nested-jar mixin config expansion",
+  "tests": {"total": 21, "failures": 0},
+  "ironchests_p26": {
+    "before": {"configs": 0, "classes": 0, "injections": 0},
+    "after": {"configs": 1, "classes": 1, "injections": 1, "unresolvedInjections": 0}
+  },
+  "lithium_converted": {"configs": 202, "classes": 214, "injections": 86, "unresolved": 3, "regression": false},
+  "evidence": ["gradle-test.log", "install-dist.log", "analyze.log", "analyze-lithium.log", "ironchests.json", "lithium-converted.json"]
+}

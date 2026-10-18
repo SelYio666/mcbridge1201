@@ -20,6 +20,7 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  * Reads one mod jar: metadata, loader, mixin configuration, nested jars, signature
@@ -73,6 +74,8 @@ public final class ArtifactScanner {
         public String environment;
         public final Map<String, String> depends = new LinkedHashMap<>();
         public final List<String> nestedJars = new ArrayList<>();
+        public final List<String> nestedJarEntries = new ArrayList<>();
+        public final List<byte[]> nestedJarData = new ArrayList<>();
         public final List<String> mixinConfigs = new ArrayList<>();
         public final List<MixinInfo> mixins = new ArrayList<>();
         public final List<String> signatureFiles = new ArrayList<>();
@@ -162,9 +165,12 @@ public final class ArtifactScanner {
 
     private static void finalizeScan(Artifact a, Path jar) {
         readMixinConfig(a, jar);
+        readNestedMixinConfigs(a);
     }
 
     private static void scanNested(Artifact a, byte[] bytes, String entryName) {
+        a.nestedJarEntries.add(entryName);
+        a.nestedJarData.add(bytes);
         try (java.util.zip.ZipInputStream zin =
                      new java.util.zip.ZipInputStream(new java.io.ByteArrayInputStream(bytes))) {
             java.util.zip.ZipEntry e;
@@ -247,54 +253,95 @@ public final class ArtifactScanner {
     }
 
     /** Read mixin configs to count declared mixin classes and their @Mixin targets. */
+    @FunctionalInterface
+    private interface Source {
+        byte[] bytes(String name) throws IOException;
+    }
+
     public static void readMixinConfig(Artifact a, Path jar) {
         a.mixins.clear();
         try (ZipFile zf = new ZipFile(jar.toFile())) {
-            for (String cfg : a.mixinConfigs) {
-                if (cfg == null) continue;
-                ZipEntry e = zf.getEntry(cfg);
-                if (e == null) {
-                    MixinInfo mi = new MixinInfo();
-                    mi.configName = cfg;
-                    a.mixins.add(mi);
-                    continue;
-                }
-                JsonObject o = GSON.fromJson(new String(zf.getInputStream(e).readAllBytes(), StandardCharsets.UTF_8), JsonObject.class);
-                if (o == null) continue;
-                String pkg = o.has("package") ? str(o, "package") : "";
-                Map<String, Map<String, String>> refmaps = readRefmap(zf, o);
-                for (String side : List.of("mixins", "client", "server")) {
-                    if (!o.has(side) || !o.get(side).isJsonArray()) continue;
-                    for (JsonElement el : o.getAsJsonArray(side)) {
-                        MixinInfo mi = new MixinInfo();
-                        mi.configName = cfg + ":" + side;
-                        mi.declaredClasses = 1;
-                        String cls = el.getAsString();
-                        String internal = (pkg.isEmpty() ? cls : pkg + "." + cls).replace('.', '/');
-                        a.ownClasses.add(internal);
-                        MixinInfo parsed = mixinInfo(zf, internal);
-                        mi.mixinClass = internal;
-                        mi.refmap = refmaps.getOrDefault(internal, Map.of());
-                        mi.targets.addAll(parsed.targets);
-                        mi.injections.addAll(parsed.injections);
-                        for (Injection inj : mi.injections) resolveRefmapTarget(inj, mi);
-                        a.mixins.add(mi);
-                    }
-                }
-            }
+            Source source = name -> {
+                ZipEntry e = zf.getEntry(name);
+                return e == null ? null : readAll(zf.getInputStream(e));
+            };
+            for (String cfg : a.mixinConfigs) parseMixinConfig(a, cfg, source, "");
         } catch (IOException ex) {
             a.errors.add("mixin config: " + ex.getMessage());
         }
     }
 
-    private static Map<String, Map<String, String>> readRefmap(ZipFile zf, JsonObject config)
+    private static void readNestedMixinConfigs(Artifact a) {
+        for (int i = 0; i < a.nestedJarData.size(); i++) {
+            String entry = a.nestedJarEntries.get(i);
+            Map<String, byte[]> files = new HashMap<>();
+            try (ZipInputStream zin = new ZipInputStream(
+                    new ByteArrayInputStream(a.nestedJarData.get(i)))) {
+                ZipEntry e;
+                while ((e = zin.getNextEntry()) != null) {
+                    if (!e.isDirectory()) files.put(e.getName(), zin.readAllBytes());
+                }
+            } catch (IOException ex) {
+                a.errors.add("nested mixin jar " + entry + ": " + ex.getMessage());
+                continue;
+            }
+            Source source = files::get;
+            for (String name : files.keySet()) {
+                if (!name.endsWith(".mixins.json")) continue;
+                parseMixinConfig(a, name, source, entry + "!/");
+            }
+        }
+    }
+
+    private static void parseMixinConfig(Artifact a, String cfg, Source source, String prefix) {
+        if (cfg == null) return;
+        if (!prefix.isEmpty()) {
+            String display = prefix + cfg;
+            if (!a.mixinConfigs.contains(display)) a.mixinConfigs.add(display);
+        }
+        try {
+            byte[] configBytes = source.bytes(cfg);
+            if (configBytes == null) {
+                MixinInfo mi = new MixinInfo();
+                mi.configName = prefix + cfg;
+                a.mixins.add(mi);
+                return;
+            }
+            JsonObject o = GSON.fromJson(new String(configBytes, StandardCharsets.UTF_8),
+                    JsonObject.class);
+            if (o == null) return;
+            String pkg = o.has("package") ? str(o, "package") : "";
+            Map<String, Map<String, String>> refmaps = readRefmap(source, o);
+            for (String side : List.of("mixins", "client", "server")) {
+                if (!o.has(side) || !o.get(side).isJsonArray()) continue;
+                for (JsonElement el : o.getAsJsonArray(side)) {
+                    MixinInfo mi = new MixinInfo();
+                    mi.configName = prefix + cfg + ":" + side;
+                    mi.declaredClasses = 1;
+                    String cls = el.getAsString();
+                    String internal = (pkg.isEmpty() ? cls : pkg + "." + cls).replace('.', '/');
+                    a.ownClasses.add(internal);
+                    MixinInfo parsed = mixinInfo(source, internal);
+                    mi.mixinClass = internal;
+                    mi.refmap = refmaps.getOrDefault(internal, Map.of());
+                    mi.targets.addAll(parsed.targets);
+                    mi.injections.addAll(parsed.injections);
+                    for (Injection inj : mi.injections) resolveRefmapTarget(inj, mi);
+                    a.mixins.add(mi);
+                }
+            }
+        } catch (IOException ex) {
+            a.errors.add("mixin config " + prefix + cfg + ": " + ex.getMessage());
+        }
+    }
+
+    private static Map<String, Map<String, String>> readRefmap(Source source, JsonObject config)
             throws IOException {
         if (!config.has("refmap") || !config.get("refmap").isJsonPrimitive()) return Map.of();
         String name = config.get("refmap").getAsString();
-        ZipEntry e = zf.getEntry(name);
-        if (e == null) return Map.of();
-        JsonObject root = GSON.fromJson(new String(zf.getInputStream(e).readAllBytes(),
-                StandardCharsets.UTF_8), JsonObject.class);
+        byte[] bytes = source.bytes(name);
+        if (bytes == null) return Map.of();
+        JsonObject root = GSON.fromJson(new String(bytes, StandardCharsets.UTF_8), JsonObject.class);
         if (root == null || !root.has("mappings") || !root.get("mappings").isJsonObject()) {
             return Map.of();
         }
@@ -384,11 +431,11 @@ public final class ArtifactScanner {
             "Lorg/spongepowered/asm/mixin/injection/WrapOperation;",
             "Lorg/spongepowered/asm/mixin/injection/WrapWithCondition;");
 
-    private static MixinInfo mixinInfo(ZipFile zf, String internal) throws IOException {
+    private static MixinInfo mixinInfo(Source source, String internal) throws IOException {
         MixinInfo info = new MixinInfo();
-        ZipEntry e = zf.getEntry(internal + ".class");
-        if (e == null) return info;
-        new ClassReader(zf.getInputStream(e)).accept(new ClassVisitor(Opcodes.ASM9) {
+        byte[] classBytes = source.bytes(internal + ".class");
+        if (classBytes == null) return info;
+        new ClassReader(classBytes).accept(new ClassVisitor(Opcodes.ASM9) {
             @Override
             public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
                 if (!"Lorg/spongepowered/asm/mixin/Mixin;".equals(desc)) return null;

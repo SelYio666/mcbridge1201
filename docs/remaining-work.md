@@ -41,8 +41,8 @@ and a two-client sync check. Do not mark the profiles as client-compatible witho
 - **Chunk optimization**: the P13 port delegates to vanilla `method_14134`; the old lithium
   multi-entry cache/off-thread fast path is not reimplemented. It is a performance loss, not a
   correctness gap.
-- **Nested mixins**: bridge embedding is per-jar, but the static scanner still expands only
-  top-level mixins; ironchests' ResourcefulLib mixins are not fully analyzed.
+- **Nested mixins**: now expanded (P48); remaining gaps are `@At` ordinal/slice/local capture and
+  side-specific activation.
 - **Forge member-level analysis**: out of the current Fabric 1.21.1 target; would need an SRG /
   NeoForge index and a separate loader target.
 - **Client-only samples** (`appleskin`, `modmenu`): they cannot be meaningfully booted on a

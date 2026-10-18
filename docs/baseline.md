@@ -986,6 +986,16 @@ lithium 214→207）。测试总数 **19/19**。证据 `runs/p46-multi-method/`�
 测试，断言 owner/name/desc、`atTargetField=true` 和 `atValue=FIELD`。测试总数 **20/20**。
 证据 `runs/p47-field-at/`。
 
+### 7.50 nested jar mixin 展开
+
+`ArtifactScanner` 保留每个 `META-INF/jars/*.jar` 的字节，`readNestedMixinConfigs` 解析其中的
+`*.mixins.json`，configName 用 `<nested>!/` 前缀区分；`@Mixin` target、`@Inject`/`@At` 和
+refmap 都走同一套解析。
+
+实跑 P26 ironchests（nested ResourcefulLib）：mixin config/class/injection 从 `0/0/0` 变为
+`1/1/1`，unresolved 仍 0；lithium converted 保持 `202/214/86/3`，没有重复或丢失。新增
+synthetic nested jar 测试；测试总数 **21/21**。证据 `runs/p48-nested-mixins/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

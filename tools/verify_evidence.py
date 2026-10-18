@@ -79,6 +79,9 @@ def main() -> int:
           lambda d: d.get("marker") == "CODEC_DISPATCH_PROBE_OK")
     check("bundle_profile", "profiles/bundle-all-three__fabric-1.21.1.json",
           lambda d: d.get("status") == "passed_within_scope")
+    check("nested_mixins", "runs/p48-nested-mixins/ironchests.json",
+          lambda d: d["artifacts"][0]["mixins"].get("classes") == 1
+          and d["artifacts"][0]["mixins"].get("injections") == 1)
 
     tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True)
     jars = [line for line in tracked.stdout.splitlines() if line.endswith(".jar")]

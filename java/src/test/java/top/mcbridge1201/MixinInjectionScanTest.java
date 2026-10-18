@@ -7,6 +7,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import top.mcbridge1201.scan.ArtifactScanner;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -62,6 +63,20 @@ class MixinInjectionScanTest {
         mv.visitEnd();
         cw.visitEnd();
         return cw.toByteArray();
+    }
+
+    private static byte[] jarBytes(Map<String, byte[]> entries) throws Exception {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (ZipOutputStream zos = new ZipOutputStream(bos)) {
+            for (Map.Entry<String, byte[]> e : entries.entrySet()) {
+                ZipEntry ze = new ZipEntry(e.getKey());
+                ze.setTime(0L);
+                zos.putNextEntry(ze);
+                zos.write(e.getValue());
+                zos.closeEntry();
+            }
+        }
+        return bos.toByteArray();
     }
 
     private static void writeJar(Path jar, Map<String, byte[]> entries) throws Exception {
@@ -168,5 +183,30 @@ class MixinInjectionScanTest {
         assertEquals("net/minecraft/class_14", inj.atTargetOwner);
         assertEquals("field_99", inj.atTargetName);
         assertEquals("Lnet/minecraft/class_1799;", inj.atTargetDesc);
+    }
+
+    @Test
+    void scansMixinConfigInsideNestedJar() throws Exception {
+        Map<String, byte[]> nested = new LinkedHashMap<>();
+        nested.put("nested.mixins.json", ("{\"package\":\"test\","
+                + "\"mixins\":[\"TestMixin\"]}").getBytes(StandardCharsets.UTF_8));
+        nested.put("test/TestMixin.class", syntheticMixin("method_59()V"));
+
+        Path dir = Path.of("build", "test-tmp", "mixin-nested");
+        Files.createDirectories(dir);
+        Path jar = dir.resolve("outer.jar");
+        Map<String, byte[]> entries = new LinkedHashMap<>();
+        entries.put("fabric.mod.json", "{\"id\":\"outer\",\"version\":\"1\"}"
+                .getBytes(StandardCharsets.UTF_8));
+        entries.put("META-INF/jars/nested.jar", jarBytes(nested));
+        writeJar(jar, entries);
+
+        ArtifactScanner.Artifact a = ArtifactScanner.scan(jar);
+        assertEquals(1, a.mixins.size());
+        ArtifactScanner.MixinInfo mi = a.mixins.get(0);
+        assertTrue(mi.configName.startsWith("META-INF/jars/nested.jar!/"));
+        assertEquals("net/minecraft/class_14", mi.targets.get(0));
+        assertEquals(1, mi.injections.size());
+        assertEquals("method_59", mi.injections.get(0).targetName);
     }
 }

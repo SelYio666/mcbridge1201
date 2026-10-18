@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 23:58（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:59（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 23:59）：**nested jar mixin 展开**。scanner 读取 `META-INF/jars/*.jar` 内的 `.mixins.json`，带 `!/` 前缀；ironchests P26 从 0 mixin/0 injection 变为 **1/1**（unresolved 0），lithium 保持 202/214/86/3；测试 **21/21**。证据 `runs/p48-nested-mixins/`。
 更新（2026-10-18 23:58）：**字段 `@At` 解析测试**。`FIELD` target `class_14.field_99:L...;` 的 owner/name/desc/`atTargetField` 全部断言；测试 **20/20**。证据 `runs/p47-field-at/`。
 更新（2026-10-18 23:55）：**多 method injection 数组回归测试**。`method_59`+`method_60` 产生两条 Injection 且共享 at-target；测试 **19/19**。证据 `runs/p46-multi-method/`。
 更新（2026-10-18 23:50）：**剩余工作边界文档**。新增 `docs/remaining-work.md`：服务端/静态工作已覆盖；客户端 GUI/网络/多人因无 client fixture 未执行；chunk 优化、nested mixin 静态分析、Forge 分析列为非阻塞后续。没有新增“客户端通过”声明。
@@ -314,6 +315,12 @@
 158. **断言**：owner/name/desc、`atTargetField=true`、`atValue=FIELD`。
 159. **结果**：20/20 通过。证据 `runs/p47-field-at/`。
 
+## 2026-10-18 23:59 更新：nested mixin 展开
+
+160. **实现**：`scanNested` 保留嵌套 jar 字节；`readNestedMixinConfigs` 解析其中 `.mixins.json`，configName 带 `!/` 前缀，refmap/injection/at-target 一并解析。
+161. **实跑**：ironchests P26 从 0/0/0 变为 1 config/1 class/1 injection（unresolved 0）；lithium 仍 202/214/86/3。
+162. **测试**：新增 nested synthetic 测试；21/21。证据 `runs/p48-nested-mixins/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -379,6 +386,7 @@
 | 剩余工作边界 | `docs/remaining-work.md` |
 | 多 method 数组回归 | `runs/p46-multi-method/README.md`、`verdict.json`、`gradle-test.log` |
 | 字段 @At 解析 | `runs/p47-field-at/README.md`、`verdict.json`、`gradle-test.log` |
+| nested mixin 展开 | `runs/p48-nested-mixins/README.md`、`verdict.json`、`ironchests.json` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
