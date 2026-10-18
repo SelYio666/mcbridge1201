@@ -791,6 +791,13 @@ P26 的 javac `CodecDispatch` 换入 P14 的 lithium + ironchests 同实例后�
 
 契约范围仍是专用服务端 + 命令 API；无客户端 GUI/玩家/多人。证据 `runs/p27-combined-safe-codec/`。
 
+### 7.30 安全 Codec 构建的 BytecodeVerify
+
+对 P26 的 `ironchests-safe-aw.jar` 重跑 BytecodeVerify：顶层 **73 classes / 1 jar，0 methods
+failed**，nested ResourcefulLib **142 classes，0 failures**，exit 0。覆盖 javac
+`CodecDispatch`/`$1`/`$2` 与 nested 类；仍只是栈深度校验，运行语义由 §7.28/§7.29 的契约覆盖。
+证据 `runs/p28-codec-verify/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

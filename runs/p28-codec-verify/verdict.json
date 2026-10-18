@@ -1,0 +1,12 @@
+{
+  "tool": "CenturyBridge core/tools/BytecodeVerify.java",
+  "artifact": "work/tmp/p26-final/ironchests-safe-aw.jar",
+  "topLevel": {"classes": 73, "failedMethods": 0, "exitCode": 0},
+  "nested": {
+    "jar": "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar",
+    "classes": 142,
+    "failedMethods": 0,
+    "exitCode": 0
+  },
+  "limitations": "Dataflow/max_stack check only; not a full type verifier; runtime covered by p26/p27 contracts."
+}
