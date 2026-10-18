@@ -108,6 +108,23 @@ public final class JarPatcher {
             }
             st.external.add(used);
         }
+        // Full mixin implementation ports (API shape changed, not just a descriptor).
+        for (RuleSet.MixinClassReplacement r : rules.mixinClassReplacements) {
+            if (bridgeClasses == null || !bridgeClasses.containsKey(r.replacementClass)) {
+                throw new IllegalArgumentException("compiled mixin replacement missing: "
+                        + r.replacementClass + " (use --bridge-dir)");
+            }
+            patched.put(r.targetClass + ".class", bridgeClasses.get(r.replacementClass));
+            st.external.add(r.replacementClass);
+            for (String helper : r.alsoEmbed) {
+                if (bridgeClasses == null || !bridgeClasses.containsKey(helper)) {
+                    throw new IllegalArgumentException("compiled helper class missing: " + helper);
+                }
+                patched.put(helper + ".class", bridgeClasses.get(helper));
+                st.external.add(helper);
+            }
+            st.applied.merge(r.id, 1, Integer::sum);
+        }
         Files.createDirectories(out.toAbsolutePath().getParent());
         writeZip(patched, out);
         return new Result(st.applied, st.classes, st.bridges, st.nested, st.external);

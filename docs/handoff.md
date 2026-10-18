@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 21:25）：**lithium 到达专用服务端 `Done`**。`ServerChunkManagerMixin` 的 chunk access 实现移植到 1.21.1 `ChunkResult`/`GenerationChunkHolder` API（保留 mixin 类与 `@Overwrite`，不是 strip），启动 `Done (4.772s)`，世界加载/保存，命令 chunk 探针通过。规则 `mixinClassReplacements`，证据 `runs/p13-chunk-port/`，说明 `docs/baseline.md` §7.19。仍只是 BOOTED，不是玩法/客户端兼容。
 更新（2026-10-18 21:05）：**Mixin 目标描述符适配已实现**。lithium 的 `ExplosionMixin` 与 POI `SerializingRegionBasedStorageMixin` 两处 `@Inject` 目标签名迁移成功，服务端推进到 chunk access 的 `ChunkHolderExtended` cast；下一阻断是 1.21.1 chunk API 形状 + CenturyBridge tombstone，不是描述符。规则 `rules/fabric-1.21.1/lithium.json`，证据 `runs/p11-lithium-explosion/`，说明 `docs/baseline.md` §7.18。
 更新（2026-10-18 20:50）：**调用点签名适配已实现并用 lithium 的 `class_14.method_59` 验收**。补丁后 `NoSuchMethodError` 消失，启动推进到下一失败（`world.explosions.ExplosionMixin` 的注入目标变化）。规则 `rules/fabric-1.21.1/lithium.json`，证据 `runs/p10-lithium-signature/`，说明 `docs/baseline.md` §7.17。
 更新（2026-10-18 20:20）：`ItemPredicate.fromJson` 的降级已消除——改用反射读取 BuiltInRegistries 并通过 RegistryOps 解析 codec，启动日志不再出现 falling back，兼容档案已升为 `passed_within_scope`（服务端范围）。
@@ -23,7 +24,7 @@ python tools/run_contract.py --instance work/instances/fabric-1.21.1-server --ou
 | 机制 | 位置 | 作用 |
 |---|---|---|
 | body-preserving 重映射 | `java/.../remap/JarRemapper.java` | 解决本机 Fabric remap 被 zipfs 只读阻塞；方法/字段/lambda 名称传播 |
-| 规则引擎 | `java/.../rules/` | 字段/方法/句柄重定向、构造器重定向、常量池种类修正、**调用点签名适配**（javac 桥）、覆写签名适配、**Mixin 目标描述符适配**（append/replace + refmap）、**mixin 降级** |
+| 规则引擎 | `java/.../rules/` | 字段/方法/句柄重定向、构造器重定向、常量池种类修正、**调用点签名适配**（javac 桥）、覆写签名适配、**Mixin 目标描述符适配**（append/replace + refmap）、**Mixin 实现类替换**（API 形状变化）、**mixin 降级** |
 | 规则包 | `rules/fabric-1.21.1/container.json`、`lithium.json` | ironchests 7 条 + lithium 调用点/2 条 Mixin 目标规则，全部有触发证据 |
 | 降级档案 | `rules/fabric-1.21.1/lithium-degraded.json` | mixin 剥离，显式记录 |
 | 契约脚本 | `tools/run_contract.py` | 两进程重启 + 断言 + verdict.json |
@@ -31,19 +32,20 @@ python tools/run_contract.py --instance work/instances/fabric-1.21.1-server --ou
 
 ## 当前最高证据阶段
 
-`CONTRACT_PASSED`（**仅限**专用服务端 + 命令 API + 单进程重启）。ironchests 兼容档案状态 `passed_within_scope`；lithium 已适配调用点与 2 处 Mixin 目标，但卡在 chunk access 的 `ChunkHolderExtended` cast，未通过。
+`CONTRACT_PASSED`（**仅限**专用服务端 + 命令 API + 单进程重启）。ironchests 兼容档案状态 `passed_within_scope`；lithium 现在到达专用服务端 `BOOTED`（`Done (4.772s)`，世界加载/保存 + 命令 chunk 探针），但无玩法/客户端契约，且仍有 2 条显式 mixinStrip。
 
 ## 未解决（按优先级）
 
-1. **lithium 的 chunk access 阻断**：`class_3215.getChunkBlocking` 把 `class_3193` cast 到 `ChunkHolderExtended` 失败。CenturyBridge 移除了 `ChunkHolderMixin`；直接 re-add 会因 `@Shadow field_16425` 不存在而失败，本地化 field 的实验又撞上 `class_3898.method_17236` tombstone。需要真正移植 1.21.1 ChunkMap/chunk future API，或写非降级桥；不得用 mixin strip 掩盖。
-2. **调用点适配的覆盖面**：已覆盖顶层 jar 的直接调用和 `MethodHandle`；嵌套 jar（JiJ）内的调用点尚未覆盖。
-3. **Mixin 目标描述符适配的覆盖面**：已处理 Explosion 与 POI storage；仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化。
-4. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
-5. **Forge 成员级分析**：目前只有命名空间级；需要 tsrg(SRG) + Mojang 映射的联合索引。
-6. **`BytecodeVerify`**：CenturyBridge 自带的数据流校验未跑。
-7. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 的失败正是这类问题。
+1. **lithium 仅到 BOOTED**：专用服务端 `Done`、世界加载/保存、命令 chunk 探针通过；没有 lithium 玩法契约、客户端 GUI/渲染或多人同步。2 条显式 `mixinStrips` 仍在，chunk 优化也减少了（旧多入口缓存/off-thread 快路径未重写）。
+2. **`mixinClassReplacements` 的覆盖面/优化**：chunk access 已用实现类替换打通；还需验证该模式在更多 API 形状变化上的可维护性，并决定是否重写被放弃的优化。
+3. **调用点适配的覆盖面**：已覆盖顶层 jar 的直接调用和 `MethodHandle`；嵌套 jar（JiJ）内的调用点尚未覆盖。
+4. **Mixin 目标描述符适配的覆盖面**：已处理 Explosion 与 POI storage；仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化。
+5. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
+6. **Forge 成员级分析**：目前只有命名空间级；需要 tsrg(SRG) + Mojang 映射的联合索引。
+7. **`BytecodeVerify`**：CenturyBridge 自带的数据流校验未跑。
+8. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
 
-> 已完成（不要再当未解决）：`ItemPredicate.fromJson` 的 registry-aware 构造（2026-10-18 20:20，profile `passed_within_scope`）；lithium 的 `class_14.method_59` 调用点签名适配（20:50，§7.17）；lithium `ExplosionMixin` + POI storage 的 Mixin 目标描述符适配（21:05，§7.18）。
+> 已完成（不要再当未解决）：`ItemPredicate.fromJson` 的 registry-aware 构造（2026-10-18 20:20，profile `passed_within_scope`）；lithium 的 `class_14.method_59` 调用点签名适配（20:50，§7.17）；lithium `ExplosionMixin` + POI storage 的 Mixin 目标描述符适配（21:05，§7.18）；lithium chunk access 的 1.21.1 实现类移植与 `BOOTED`（21:25，§7.19）。
 
 ## 复现路径（从零）
 
@@ -66,14 +68,17 @@ mcbridge1201 patch --in <converted.jar> --out patched.jar --rules rules/fabric-1
 python tools/inject_aw.py --jar patched.jar --out final.jar --aw rules/fabric-1.21.1/mcbridge.accesswidener
 ```
 
-lithium 调用点 + Mixin 目标适配（完整命令和日志见 `runs/p10-lithium-signature/README.md`、`runs/p11-lithium-explosion/README.md`）：
+lithium 调用点 + Mixin 目标 + chunk access 移植（完整命令和日志见 `runs/p10-lithium-signature/README.md`、`runs/p11-lithium-explosion/README.md`、`runs/p13-chunk-port/README.md`）：
 
 ```powershell
 python tools/build_bridges.py --stub work/cb/data/jars/client-1.21.1-intermediary.jar `
   --lib work/lib/gson-2.11.0.jar --lib <datafixerupper.jar> --out work/bridges
+python tools/build_mixins.py --stub work/remap/server-intermediary.jar `
+  --lib <sponge-mixin.jar> --lib work/bridges --out work/mixins
 mcbridge1201 patch --in <lithium converted.jar> --out lithium-patched.jar `
   --rules rules/fabric-1.21.1/lithium-degraded.json `
-  --rules rules/fabric-1.21.1/lithium.json --bridge-dir work/bridges
+  --rules rules/fabric-1.21.1/lithium.json `
+  --bridge-dir work/bridges --bridge-dir work/mixins
 ```
 
 ## 不要做的事

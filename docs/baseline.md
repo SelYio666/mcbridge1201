@@ -565,9 +565,50 @@ CenturyBridge 转换时从 `lithium.mixins.json` 移除了 `world.chunk_access.C
 真正移植 `ServerChunkManagerMixin.getChunkBlocking` + `ChunkHolderExtended` 到 1.21.1 API，
 而不是再加一条描述符规则。
 
-因此 lithium 仍是 **degraded**，不是兼容通过；下一步是真正移植 chunk access 层或为 `method_17236` 写非降级桥。
+因此 lithium 仍是 **degraded**，不是兼容通过；下一步是真正移植 chunk access 层或为 `method_17236` 写非降级桥。**该移植已在 §7.19 完成，lithium 到达专用服务端 `Done`。**
 
 边界：只验证专用服务端启动；GUI/渲染/多人 pending。没有提交游戏 jar、模组 jar 或转换件。
+
+### 7.19 chunk access 迁移到 1.21.1 API：lithium 到达 Done
+
+§7.18 的下一层不是描述符问题：`ServerChunkManagerMixin` 的 `@Overwrite` 依赖
+`ChunkHolderExtended` 与旧的 `ChunkMap.method_17236`（`CompletableFuture<Either<ChunkAccess,
+Unloaded>>`），而 1.21.1 已改为 `CompletableFuture<ChunkResult<LevelChunk>>`（`class_9259`）+
+`GenerationChunkHolder`。本轮把该 mixin **实现类整体移植**到 1.21.1，而不是删除 mixin：
+
+- 新增规则类型 `mixinClassReplacements`：保留原 mixin 类名与 `@Overwrite`，把编译好的替换类写回
+  原路径，并嵌入 helper 类（`alsoEmbed`）。
+- 替换类 `java/src/mixin/java/.../ServerChunkManagerMixin.java`：
+  1. 调用 1.21.1 的 `ServerChunkManager.method_14134(x,z,status,create)`；
+  2. future 未完成时，用 `ChunkAccessPump` 反射调用私有队列
+     `field_18809.method_18857(() -> future.isDone())`（字段类型是 package-private 嵌套类，
+     普通 `@Shadow` 无法拿到精确描述符）；
+  3. join 后用 `ChunkResult.method_57130(null)` 取 chunk；`create && null` 时抛原版
+     `IllegalStateException`。
+- 编译：`tools/build_mixins.py` 对 `work/remap/server-intermediary.jar` + Sponge Mixin lib 编译；
+  `tools/build_bridges.py` 编译 `ChunkAccessPump`；`patch --bridge-dir work/bridges --bridge-dir
+  work/mixins` 统一嵌入。
+- 这不是 mixin strip，也不是默认值/空实现；旧的多入口缓存与 off-thread 快路径没有重写，属于
+  **性能优化减少**，不是存档/掉落/同步语义降级。P11 的两条 `mixinStrips` 仍然存在。
+
+**实际结果**
+
+| 步骤 | 命令（节选） | 退出码 | 结果 |
+|---|---|---|---|
+| 编译 bridge | `python tools/build_bridges.py --stub <client stub> --lib gson --lib dfu --out work/bridges` | 0 | 4 个 bridge（含 `ChunkAccessPump`） |
+| 编译 mixin | `python tools/build_mixins.py --stub work/remap/server-intermediary.jar --lib <sponge-mixin> --lib work/bridges --out work/mixins` | 0 | `ServerChunkManagerMixin.class` |
+| 打补丁 | `mcbridge1201 patch --in <converted lithium> --out lithium-patched-chunkport.jar --rules ... --bridge-dir work/bridges --bridge-dir work/mixins` | 0 | `chunkresult-port` 1 次 + 既有规则；`sha256 67013b3b...02ee` |
+| 启动 | `python tools/run_server.py --instance work/instances/fabric-1.21.1-server-lithium --log runs/p13-chunk-port/server-chunkport-rule.log --timeout 240` | 0（runner 0；`doneSeen=true`） | **`Done (4.772s)`**，世界加载并保存 |
+| 命令探针 | 同上 + `forceload add 0 0`、`setblock 0 100 0 minecraft:stone`、`data get block 0 100 0` | 0 | chunk 强制加载、方块修改成功、无异常 |
+| 单元测试 | `gradle --no-daemon test --rerun-tasks` | 0 | 12 个测试，0 失败 |
+
+证据：`runs/p13-chunk-port/README.md`、`server-chunkport-rule.log`、`server-chunkport-commands.log`、`verdict.json`。日志显示 `Done (4.772s)`、三主世界全部保存，无 Mixin/类转换错误。
+
+结论：lithium 在 Fabric 1.21.1 **专用服务端 BOOTED**（启动 + 世界加载/保存 + 命令 chunk 探针），
+不是玩法契约，也不是客户端/多人验证。两条既有 `mixinStrips` 与 chunk 优化减少都在档案中记录。
+
+边界：只验证专用服务端；没有 lithium 的玩法契约、客户端 GUI/渲染或多人同步；没有提交游戏 jar、
+模组 jar 或转换件。
 
 ## 8. 未验证项与下一步
 
@@ -576,11 +617,11 @@ CenturyBridge 转换时从 `lithium.mixins.json` 移除了 `world.chunk_access.C
 1. **图形/GUI 与多人**：服务端容器契约已通过；玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
 2. **调用点签名适配的覆盖面**：本轮已实现 `callSiteAdaptations` 并用 lithium `class_14.method_59` 验证（§7.17）。下一步把同一机制推广到其他样本，并处理 **嵌套 jar 内**的调用点（当前外部桥只嵌入顶层 jar）。
 3. **Mixin 目标描述符适配的覆盖面**：`mixinCallbackAdaptations` 已处理 Explosion 与 POI storage 两处（§7.18），但仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 两种模式在真实注入点上的边界。
-4. **lithium 的下一个阻断：chunk access 层**：CenturyBridge 移除了 `ChunkHolderMixin`，但保留的 `ServerChunkManagerMixin` 仍 cast 到 `ChunkHolderExtended`；直接 re-add 会因 `@Shadow field_16425` 不存在而失败，本地化 field 的实验又会撞上 `class_3898.method_17236` tombstone（§7.18）。需要真正移植 1.21.1 的 ChunkMap/chunk future API，或为 tombstone 写非降级桥；不得用 mixin strip 掩盖。
+4. **Mixin 实现类替换的覆盖面**：`mixinClassReplacements` 已把 `ServerChunkManagerMixin` 移植到 1.21.1 并让 lithium 到达 `Done`（§7.19）；仍需验证该模式在更多 API 形状变化上的可维护性，并决定是否重写被放弃的 chunk 多入口缓存/off-thread 快路径。
 5. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
 6. **CenturyBridge 桥 jar**：`core/shims/1.21.1` 未编译；`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。当前结论全部是“无桥”结果。
-7. **WORLD_LOADED / 玩法契约**：服务端已做放置/插入/NBT/重启读回；`/give`、玩家交互、掉落与同步仍未覆盖。
+7. **WORLD_LOADED / 玩法契约**：lithium 只到专用服务端 BOOTED，没有玩法契约；ironchests 已做放置/插入/NBT/重启读回，但 `/give`、玩家交互、掉落与同步仍未覆盖。
 8. **图形客户端**：无客户端实例与显示验证，渲染/截图全部 pending。
 9. **Forge 成员级分析**：需 SRG→Mojang 索引（`mcp_config` joined.tsrg + 1.21.1 Mojang 映射 + NeoForge 索引）。
 10. **BytecodeVerify**：未编译运行，转换产物尚未做数据流校验。
-11. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 的失败正是这类问题。
+11. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。

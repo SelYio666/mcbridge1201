@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 21:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 21:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 21:25）：**lithium 到达专用服务端 `Done`**。`ServerChunkManagerMixin` 的 chunk access 实现整体移植到 1.21.1 `ChunkResult`/`GenerationChunkHolder` API（保留 mixin 类与 `@Overwrite`，不是 strip），启动 `Done (4.772s)`，世界加载/保存，`forceload`/`setblock`/`data get` 命令探针通过。规则 `mixinClassReplacements`，证据 `runs/p13-chunk-port/`，说明 `docs/baseline.md` §7.19。仍只是 BOOTED，不是玩法/客户端兼容。
 更新（2026-10-18 21:05）：**Mixin 目标描述符适配已实现**：lithium 的 `ExplosionMixin` 与 POI `SerializingRegionBasedStorageMixin` 两处 `@Inject` 目标签名迁移成功，服务端推进到 chunk access 的 `ChunkHolderExtended` cast（下一阻断是 1.21.1 chunk API 形状 + CenturyBridge tombstone，不是描述符）。说明见 `docs/baseline.md` §7.18、`rules/fabric-1.21.1/lithium.json`、`runs/p11-lithium-explosion/`。
 更新（2026-10-18 20:50）：**调用点签名适配已实现并用 lithium 的 `class_14.method_59` 验收**。补丁后 `NoSuchMethodError` 消失，启动推进到下一失败（`world.explosions.ExplosionMixin` 的注入目标变化）。规则、桥、命令、退出码与日志见 `docs/baseline.md` §7.17、`rules/fabric-1.21.1/lithium.json`、`runs/p10-lithium-signature/`。
 
@@ -46,6 +47,14 @@
 30. **下一阻断分析**：CenturyBridge 移除了 `ChunkHolderMixin`（`field_16425` / `class_3193$class_3724` 消失），保留的 `ServerChunkManagerMixin` 仍 cast 到 `ChunkHolderExtended`。直接 re-add 失败（`@Shadow field_16425` 不存在）；本地化 field 的实验越过 cast 但撞上 `class_3898.method_17236` tombstone。两者都记录在 `runs/p11-lithium-explosion/`，**均未采用**，也没有用 mixin strip 掩盖。
 31. **测试**：新增 `MixinCallbackAdaptationTest`（append/replace/refmap 合成 jar），`gradle test --rerun-tasks` 11/11 通过。
 
+## 2026-10-18 21:25 更新：chunk access 移植，lithium BOOTED
+
+32. **`mixinClassReplacements`**：新增规则类型，保留原 mixin 类名/`@Overwrite`，用 javac 编译的 1.21.1 实现替换原类，并嵌入 helper 类。
+33. **`ServerChunkManagerMixin` 1.21.1 移植**：调用 `ServerChunkManager.method_14134`，用 `ChunkAccessPump` 反射泵私有 chunk 队列，`ChunkResult.method_57130(null)` 取 chunk；移除对 `ChunkHolderExtended`/`method_17236`/`Either` 的依赖。保留 mixin，不是 strip。
+34. **工具链**：`tools/build_mixins.py` 对 `work/remap/server-intermediary.jar` + Sponge Mixin lib 编译；`build_bridges.py` 编译 `ChunkAccessPump`；`patch --bridge-dir work/bridges --bridge-dir work/mixins` 统一嵌入。
+35. **结果**：lithium 补丁 `chunkresult-port` 1 次；服务端 `Done (4.772s)`，三主世界保存；命令探针 `forceload add 0 0` / `setblock` / `data get` 通过。仍是 BOOTED，不是玩法/客户端兼容。
+36. **测试**：新增 `MixinClassReplacementTest`；`gradle test --rerun-tasks` 12/12 通过。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -75,41 +84,48 @@
 | Mixin 适配补丁 / 启动 / 实验 | `runs/p11-lithium-explosion/README.md`、`patch-lithium3.log`、`server-explosion3.log`、`server-readd.log`、`server-chunkholder-local2.log` |
 | Mixin 适配测试 | `runs/p11-lithium-explosion/gradle-test.log`（11 tests, 0 failures） |
 | chunk access 分析 | `runs/p12-chunk-access/README.md` |
+| chunk access 移植 / BOOTED | `runs/p13-chunk-port/README.md`、`server-chunkport-rule.log`、`server-chunkport-commands.log`、`verdict.json` |
+| chunk access 测试 | `runs/p13-chunk-port/gradle-test.log`（12 tests, 0 failures） |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
 ## 未解决（按优先级）
 
-1. **lithium 的 chunk access 阻断**：`class_3215.getChunkBlocking` cast `class_3193` 到 `ChunkHolderExtended` 失败；CenturyBridge 移除了 `ChunkHolderMixin`，直接 re-add 会因 `@Shadow field_16425` 不存在而失败，本地化 field 的实验又撞上 `class_3898.method_17236` tombstone。需要真正移植 1.21.1 ChunkMap/chunk future API 或为非降级桥；不得用 mixin strip 掩盖。
-2. **调用点适配的覆盖面**：目前只验证了顶层 jar 的直接调用/句柄；嵌套 jar（JiJ）内的调用点尚未覆盖，需要把桥嵌入到对应嵌套 jar 或改用可见性更好的桥部署方式。
-3. **Mixin 目标描述符适配的覆盖面**：已处理 Explosion 与 POI storage 两处；仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 模式在真实注入点上的边界。
-3. **`Codec.dispatch` 的可靠适配**：ironchests 契约虽已通过，但 `assumeMapUnsafe` 在部分路径仍可能 `Optional.of(null)`；应改成真正的 `MapCodec` 构造/显式诊断。
-4. **CenturyBridge 桥 jar 未构建**：`core/shims/1.21.1` 未编译，`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。
-5. **玩家侧 / 多人**：GUI、右键交互、渲染、两个客户端同步仍 pending；服务端只做了命令契约。
-6. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
-7. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；`ExplosionMixin` 正是这类问题。
-8. **BytecodeVerify** 未编译运行，转换件未做数据流校验。
-9. **重映射器的覆盖面**：目前只验证了服务端 jar；客户端 jar、带资源的 jar、模块化 jar 未验证；输出未做签名清理以外的规范化（entry 时间固定）。
+1. **lithium 仅到 BOOTED**：专用服务端 Done、世界加载/保存、命令 chunk 探针通过；没有 lithium 玩法契约、客户端 GUI/渲染或多人同步。两条显式 `mixinStrips` 仍在。
+2. **`mixinClassReplacements` 的覆盖面/优化**：chunk access 已用实现类替换打通；被放弃的多入口缓存/off-thread 快路径可以后续重写，并需验证该模式在更多 API 形状变化上的可维护性。
+3. **调用点适配的覆盖面**：目前只验证了顶层 jar 的直接调用/句柄；嵌套 jar（JiJ）内的调用点尚未覆盖，需要把桥嵌入到对应嵌套 jar 或改用可见性更好的桥部署方式。
+4. **Mixin 目标描述符适配的覆盖面**：已处理 Explosion 与 POI storage 两处；仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 模式在真实注入点上的边界。
+5. **`Codec.dispatch` 的可靠适配**：ironchests 契约虽已通过，但 `assumeMapUnsafe` 在部分路径仍可能 `Optional.of(null)`；应改成真正的 `MapCodec` 构造/显式诊断。
+6. **CenturyBridge 桥 jar 未构建**：`core/shims/1.21.1` 未编译，`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。
+7. **玩家侧 / 多人**：GUI、右键交互、渲染、两个客户端同步仍 pending；服务端只做了命令契约。
+8. **Forge 成员级分析缺失**：需 `mcp_config` joined.tsrg（SRG）+ 1.21.1 Mojang 映射 + NeoForge 1.21.1 索引。
+9. **Mixin 注入点级分析**：只看目标类是否存在，未看 ordinal/slice/局部变量；chunk access 已通过实现类替换解决，但同类问题仍需分析器覆盖。
+10. **BytecodeVerify** 未编译运行，转换件未做数据流校验。
+11. **重映射器的覆盖面**：目前只验证了服务端 jar；客户端 jar、带资源的 jar、模块化 jar 未验证；输出未做签名清理以外的规范化（entry 时间固定）。
 
 ## 下一步精确命令
 
 ```powershell
-# A. 复现调用点适配（lithium）
+# A. 复现 lithium BOOTED（调用点 + 2 处 Mixin 目标 + chunk access 移植）
 $env:JAVA_HOME='C:\Users\27682\Documents\新建文件夹\.toolchain\jdk'
 cd java; gradle --no-daemon installDist; cd ..
 python tools/build_bridges.py --stub work/cb/data/jars/client-1.21.1-intermediary.jar `
   --lib work/lib/gson-2.11.0.jar `
   --lib work/instances/fabric-1.21.1-server/libraries/com/mojang/datafixerupper/8.0.16/datafixerupper-8.0.16.jar `
   --out work/bridges
+python tools/build_mixins.py --stub work/remap/server-intermediary.jar `
+  --lib work/instances/fabric-1.21.1-server-lithium/libraries/net/fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/sponge-mixin-0.17.4+mixin.0.8.7.jar `
+  --lib work/bridges --out work/mixins
 java\build\install\mcbridge1201\bin\mcbridge1201.bat patch `
   --in work/cb/out/lithium/lithium-fabric-mc1.20.1-0.11.4+1.21.1.jar `
-  --out work/cb/out/lithium/lithium-patched-callsite.jar `
+  --out work/cb/out/lithium/lithium-patched-chunkport.jar `
   --rules rules/fabric-1.21.1/lithium-degraded.json `
-  --rules rules/fabric-1.21.1/lithium.json --bridge-dir work/bridges
+  --rules rules/fabric-1.21.1/lithium.json `
+  --bridge-dir work/bridges --bridge-dir work/mixins
 python tools/run_server.py --instance work/instances/fabric-1.21.1-server-lithium `
-  --log runs/p10-lithium-signature/server-callsite.log --timeout 240
+  --log runs/p13-chunk-port/server-chunkport-rule.log --timeout 240
 
-# B. 下一个阻断：lithium ExplosionMixin 的 @Inject 目标（1.21.1 Explosion 构造器）
+# B. 下一步：lithium 玩法/客户端契约（当前只到 BOOTED）
 # C. 客户端侧：用 1.21.1 客户端实例测试 GUI/渲染（本机沙箱暂无法启动图形客户端）
 # D. Forge 第二套索引（并行可做）
 #    下载 de.oceanlabs.mcp:mcp_config:1.20.1:joined.tsrg 与 NeoForge 1.21.1 universal jar，

@@ -178,6 +178,7 @@ public final class Main {
             rules.constructorRedirects.addAll(part.constructorRedirects);
             rules.signatureAdaptations.addAll(part.signatureAdaptations);
             rules.mixinCallbackAdaptations.addAll(part.mixinCallbackAdaptations);
+            rules.mixinClassReplacements.addAll(part.mixinClassReplacements);
             rules.mixinStrips.addAll(part.mixinStrips);
         }
         TargetIndex idx = null;

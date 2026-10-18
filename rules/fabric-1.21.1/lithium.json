@@ -58,5 +58,18 @@
       "risk": "medium",
       "evidence": "Real crash after the ExplosionMixin fix: SectionStorage (class_4180) @Inject target '<init>(Path, Function, Function, DataFixer, class_4284, boolean, RegistryAccess, LevelHeightAccessor)' not found (runs/p11-lithium-explosion/server-explosion.log lines 66-67). 1.21.1 replaced the constructor with '(SimpleRegionStorage, Function, Function, RegistryAccess, ChunkIOErrorReporter, LevelHeightAccessor)': the path became SimpleRegionStorage, DataFixer/dataFixTypes/boolean were removed, and ChunkIOErrorReporter was added. The callback body only uses 'this' (it initializes the columns/listening maps and never reads a constructor argument), so replacing the captured args is semantics-preserving. The rule rewrites the callback descriptor and drops stale parameter/local-variable metadata; the @Inject annotation remains method=\"<init>\" and Mixin infers the new target from the callback args."
     }
+  ],
+  "mixinClassReplacements": [
+    {
+      "id": "lithium.serverchunkmanager.chunkresult-port",
+      "targetClass": "me/jellysquid/mods/lithium/mixin/world/chunk_access/ServerChunkManagerMixin",
+      "replacementClass": "me/jellysquid/mods/lithium/mixin/world/chunk_access/ServerChunkManagerMixin",
+      "alsoEmbed": [
+        "top/mcbridge1201/bridge/ChunkAccessPump"
+      ],
+      "capability": "chunk.access.chunkresult",
+      "risk": "medium",
+      "evidence": "Real crash after the Mixin target fixes: ClassCastException class_3193 cannot be cast to ChunkHolderExtended at class_3215.getChunkBlocking (runs/p11-lithium-explosion/server-explosion3.log). CenturyBridge removed ChunkHolderMixin because its @Shadow field_16425 and class_3193$class_3724 disappeared; re-adding it fails (@Shadow not located, server-readd.log), and localizing the field gets past the cast but hits the tombstone ChunkMap.method_17236 (server-chunkholder-local2.log). The old method returns CompletableFuture<Either<ChunkAccess, Unloaded>>; 1.21.1 uses CompletableFuture<ChunkResult<LevelChunk>> and GenerationChunkHolder. This replacement keeps the mixin class/name and its @Overwrite, but implements method_12121 on the 1.21.1 API: call ServerChunkManager.method_14134, pump the private chunk task queue while waiting (ChunkAccessPump reflection helper, because the executor field type is package-private), then convert ChunkResult.method_57130(null) and throw the vanilla IllegalStateException if create && null. It is a real port, not a mixin strip; the old multi-entry cache / off-thread fast path is not reimplemented (optimization loss, not save/drop/sync semantics)."
+    }
   ]
 }

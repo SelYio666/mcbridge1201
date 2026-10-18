@@ -34,6 +34,7 @@ public final class RuleSet {
     public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
     public final List<SignatureAdaptation> signatureAdaptations = new ArrayList<>();
     public final List<MixinCallbackAdaptation> mixinCallbackAdaptations = new ArrayList<>();
+    public final List<MixinClassReplacement> mixinClassReplacements = new ArrayList<>();
     public final List<MixinStrip> mixinStrips = new ArrayList<>();
 
     /**
@@ -79,6 +80,21 @@ public final class RuleSet {
         public String refmap;
         public String refmapKey;
         public String refmapValue;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
+
+    /**
+     * Replaces a mixin implementation class with a javac-compiled port for the target version.
+     * Used when the mixin body depends on an API whose shape changed (not just a descriptor).
+     * The replacement keeps the original mixin class name so the mixin config remains valid.
+     */
+    public static final class MixinClassReplacement {
+        public String id;
+        public String targetClass;
+        public String replacementClass;
+        public List<String> alsoEmbed = new ArrayList<>();
         public String capability;
         public String risk;
         public String evidence;
@@ -192,6 +208,11 @@ public final class RuleSet {
         if (o.has("mixinCallbackAdaptations")) {
             for (var el : o.getAsJsonArray("mixinCallbackAdaptations")) {
                 rs.mixinCallbackAdaptations.add(new Gson().fromJson(el, MixinCallbackAdaptation.class));
+            }
+        }
+        if (o.has("mixinClassReplacements")) {
+            for (var el : o.getAsJsonArray("mixinClassReplacements")) {
+                rs.mixinClassReplacements.add(new Gson().fromJson(el, MixinClassReplacement.class));
             }
         }
         if (o.has("mixinStrips")) {

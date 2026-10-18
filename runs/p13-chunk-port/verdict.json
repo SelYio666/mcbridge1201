@@ -1,0 +1,52 @@
+{
+  "sample": "lithium-fabric-mc1.20.1-0.11.4",
+  "target": "fabric-1.21.1",
+  "status": "BOOTED_DEDICATED_SERVER",
+  "rule": "lithium.serverchunkmanager.chunkresult-port",
+  "ruleFile": "rules/fabric-1.21.1/lithium.json",
+  "patch": {
+    "jar": "work/cb/out/lithium/lithium-patched-chunkport.jar",
+    "sha256": "67013b3bbf079e2c1046b163f0aae1e60bf98c455ac4fbd8e4f8450eb26c02ee",
+    "applied": {
+      "lithium.serverchunkmanager.chunkresult-port": 1,
+      "lithium.explosionmixin.ctor-callback": 1,
+      "lithium.poi.serializing-storage-ctor-callback": 1,
+      "lithium.poi.serializing-storage-ctor-callback/refmap": 1,
+      "walknodeevaluator.checkneighbourblocks.view-to-context": 2,
+      "lithium.strip.entity.collisions.movement": 2
+    },
+    "log": "runs/p13-chunk-port/patch-lithium-chunkport.log"
+  },
+  "server": {
+    "instance": "work/instances/fabric-1.21.1-server-lithium",
+    "log": "runs/p13-chunk-port/server-chunkport-rule.log",
+    "doneSeen": true,
+    "doneLine": "Done (4.772s)! For help, type \"help\"",
+    "runnerExitCode": 0,
+    "jvmExitCode": 0,
+    "worldSaved": true
+  },
+  "commandProbe": {
+    "log": "runs/p13-chunk-port/server-chunkport-commands.log",
+    "doneSeen": true,
+    "commands": [
+      "forceload add 0 0",
+      "setblock 0 100 0 minecraft:stone",
+      "data get block 0 100 0"
+    ],
+    "result": "chunk force-loaded, block changed, no exception"
+  },
+  "tests": {
+    "command": "gradle --no-daemon test --rerun-tasks (in java/)",
+    "exitCode": 0,
+    "tests": 12,
+    "failures": 0,
+    "log": "runs/p13-chunk-port/gradle-test.log"
+  },
+  "degradations": [
+    "The old multi-entry chunk cache / off-thread fast path is not reimplemented; vanilla 1.21.1 chunk access is used.",
+    "Two explicit mixinStrips remain (entity.collisions.movement.EntityMixin, block.flatten_states.FluidStateMixin)."
+  ],
+  "scope": "dedicated server boot + world load/save + command chunk probe; no lithium gameplay, client GUI/render, or multiplayer",
+  "notAClaim": "This is BOOTED, not a compatibility pass."
+}

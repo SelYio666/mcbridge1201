@@ -115,6 +115,34 @@ Mixin 回调，而不是删 mixin：
 - 这不是 `mixinStrips`：不改 mixin 列表、不删注入；如果目标 API 形状变化超出描述符迁移，
   必须停下来做真正的移植或显式降级，不能把 strip 当通过。
 
+## Mixin 实现类替换 schema
+
+当 mixin 的方法体依赖的 API **形状**整体变化（不是描述符能迁移的），用
+`mixinClassReplacements` 保留原 mixin 类名与注解，替换成针对目标版本重新编译的实现：
+
+```json
+{
+  "mixinClassReplacements": [
+    {
+      "id": "lithium.serverchunkmanager.chunkresult-port",
+      "targetClass": "me/jellysquid/mods/lithium/mixin/world/chunk_access/ServerChunkManagerMixin",
+      "replacementClass": "me/jellysquid/mods/lithium/mixin/world/chunk_access/ServerChunkManagerMixin",
+      "alsoEmbed": ["top/mcbridge1201/bridge/ChunkAccessPump"],
+      "capability": "chunk.access.chunkresult",
+      "risk": "medium",
+      "evidence": "触发它的真实 ClassCastException/InvalidInjectionException + 为什么不能只改描述符"
+    }
+  ]
+}
+```
+
+- 替换类必须编译到同样的内部类名，保留 `@Mixin`/`@Overwrite`，这样 mixin 配置无需改。
+- 源码放在 `java/src/mixin/java/...`，用 `tools/build_mixins.py --stub <server-intermediary.jar>
+  --lib <sponge-mixin> --lib work/bridges --out work/mixins` 编译（`-proc:none`）；helper 类由
+  `build_bridges.py` 编译。`patch --bridge-dir work/bridges --bridge-dir work/mixins` 统一嵌入。
+- 这不是 `mixinStrips`：mixin 仍在、注入仍在；如果替换导致优化退化（例如放弃缓存），必须在
+  规则的 risk/evidence、`runs/*/README.md` 和兼容档案里写明，不能当作无损替换。
+
 ## 现有规则
 
 | id | 目标 | 语义依据 | 状态 |
@@ -127,6 +155,7 @@ Mixin 回调，而不是删 mixin：
 | `walknodeevaluator.checkneighbourblocks.view-to-context` | `WalkNodeEvaluator.checkNeighbourBlocks(BlockGetter, MutableBlockPos, PathType)` → 1.21.1 的 `(PathfindingContext, int, int, int, PathType)` | 1.20.1 旧方法体逐条移植；旧调用点可传任意 `BlockGetter`（含 `SingleBlockBlockView`），无法安全构造 `PathfindingContext` | **已应用 2 处；lithium 启动不再抛 `NoSuchMethodError`（推进到下一失败）** |
 | `lithium.explosionmixin.ctor-callback` | `Explosion` 构造器从 10 参变为 13 参（追加 2×ParticleOptions + Holder<SoundEvent>） | 回调体只读 shadow 字段；append 3 个未使用参数槽，语义不变 | **已应用 1 处；该注入通过（样本仍卡在 chunk access）** |
 | `lithium.poi.serializing-storage-ctor-callback` | `SectionStorage` 构造器改为 `(SimpleRegionStorage, Function, Function, RegistryAccess, ChunkIOErrorReporter, LevelHeightAccessor)` | 回调体只用 `this`；replace 捕获参数并重写 refmap `<init>` 映射 | **已应用 1 处 + refmap 1 处；该注入通过（样本仍卡在 chunk access）** |
+| `lithium.serverchunkmanager.chunkresult-port` | `ServerChunkManagerMixin` 的 chunk access 实现 | 1.20.1 的 `ChunkHolderExtended`/`method_17236`/`Either` 在 1.21.1 变为 `ChunkResult`/`GenerationChunkHolder`；整体替换实现，调用 `method_14134` + `ChunkAccessPump` | **已应用 1 处；lithium 到达专用服务端 Done（优化减少）** |
 | `constant-kind-fix(-handle)` | class→interface 的常量池种类 | 1.20.5 的 DFU 接口化 | 已应用 123 + 3 处 |
 
 `signatureAdaptations` 会迁移方法描述符、平移局部变量槽、给指定调用补参数，并用 `COMPUTE_FRAMES` 重算帧；这是“签名变化”类损伤的通用处理形态，而不是单点改名。
