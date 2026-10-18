@@ -1,7 +1,25 @@
 {
   "schemaVersion": "0.1-draft",
   "target": "fabric-1.21.1",
-  "note": "trashslot 15.1.5 (1.20.1 -> 1.21.1). CenturyBridge tombstoned four ItemStack/NBT helpers at the 1.20.4->1.20.5 component boundary; the bridges below restore them with the 1.21.1 registry-aware ItemStack codec. STATUS: prepared but NOT boot-verified — trashslot requires Balm, and both converted Balm 7.3.44 (Fabric networking ServerPlayNetworking$PlayChannelHandler removed) and native Balm 21.0.66 (Balm.initialize(String,Runnable) removed) fail before trashslot's entrypoint. Do not treat these rules as passed until a real boot/contract exists (see runs/p15-trashslot/README.md).",
+  "note": "trashslot 15.1.5 (1.20.1 -> 1.21.1). CenturyBridge tombstoned four ItemStack/NBT helpers at the 1.20.4->1.20.5 component boundary; the bridges below restore them with the 1.21.1 registry-aware ItemStack codec. STATUS: prepared but NOT boot-verified. With native Balm 21.0.66 the Balm.initialize call-site bridge is verified to advance boot, but the next failure is BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer): Balm 21 networking is payload/PacketType/StreamCodec based, and the old API is gone. Do not treat these rules as passed until a real boot/contract exists (see runs/p15-trashslot/ and runs/p16-balm/).",
+  "callSiteAdaptations": [
+    {
+      "id": "trashslot.balm.initialize-context",
+      "sourceOwner": "net/blay09/mods/balm/api/Balm",
+      "sourceName": "initialize",
+      "sourceDesc": "(Ljava/lang/String;Ljava/lang/Runnable;)V",
+      "sourceOpcode": 184,
+      "targetOwner": "net/blay09/mods/balm/api/Balm",
+      "targetName": "initialize",
+      "targetDesc": "(Ljava/lang/String;Lnet/blay09/mods/balm/api/BalmRuntimeLoadContext;Ljava/lang/Runnable;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/BalmInitializeBridge",
+      "bridgeMethod": "initialize",
+      "bridgeDesc": "(Ljava/lang/String;Ljava/lang/Runnable;)V",
+      "capability": "balm.initialize.context",
+      "risk": "medium",
+      "evidence": "Native Balm 21.0.66 (1.21.1) boot: NoSuchMethodError 'void net.blay09.mods.balm.api.Balm.initialize(java.lang.String, java.lang.Runnable)' at net.blay09.mods.trashslot.FabricTrashSlot.onInitialize (runs/p15-trashslot/server-trashslot3.log). Balm 21 replaced the two-arg initializer with initialize(String, BalmRuntimeLoadContext, Runnable) / initializeMod. TrashSlot is a normal mod initializer, so Balm's EmptyLoadContext.INSTANCE is the equivalent context; the bridge calls the new method."
+    }
+  ],
   "methodRedirects": [
     {
       "id": "trashslot.itemstack.write-nbt",

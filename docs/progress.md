@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 21:40（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 21:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 21:45）：**Balm 初始化调用点桥已推进 trashslot，但卡在 Balm 网络 API**。`Balm.initialize(String,Runnable)` → `initialize(String, EmptyLoadContext, Runnable)` 的 call-site 桥生效，旧的初始化 `NoSuchMethodError` 消失；下一失败是 `BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer)`，Balm 21 已改为 `PacketType`/`StreamCodec` 载荷注册。仍未 boot，规则保持 prepared/unverified；证据 `runs/p16-balm/`。
 更新（2026-10-18 21:40）：**第三个样本 trashslot 尝试受阻于 Balm/Fabric networking**。trashslot 自身的 4 个 ItemStack/NBT tombstone 已写桥并 patch，但依赖 Balm：转换 Balm 7.3.44 后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，改用原生 Balm 21.0.66 又卡在 `Balm.initialize(String,Runnable)` 被移除。未 boot，未宣称通过；证据 `runs/p15-trashslot/`。
 更新（2026-10-18 21:35）：**lithium + ironchests 联合容器契约通过**。同一 Fabric 1.21.1 专用服务端实例加载两份转换件，`run_contract.py` 两进程放置/插入/NBT/重启读回 5 钻石全部通过；说明 P13 chunk access 移植没有破坏容器持久化，且两样本可共存。证据 `runs/p14-lithium-ironchests/`，说明 `docs/baseline.md` §7.20。仍不含 lithium 自身玩法/客户端。
 更新（2026-10-18 21:25）：**lithium 到达专用服务端 `Done`**。`ServerChunkManagerMixin` 的 chunk access 实现整体移植到 1.21.1 `ChunkResult`/`GenerationChunkHolder` API（保留 mixin 类与 `@Overwrite`，不是 strip），启动 `Done (4.772s)`，世界加载/保存，`forceload`/`setblock`/`data get` 命令探针通过。规则 `mixinClassReplacements`，证据 `runs/p13-chunk-port/`，说明 `docs/baseline.md` §7.19。仍只是 BOOTED，不是玩法/客户端兼容。
@@ -71,6 +72,12 @@
 43. **依赖阻断**：trashslot 依赖 Balm。转换 Balm 7.3.44 后注入 AW，仍卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`；原生 Balm 21.0.66（1.21.1）又缺少 `Balm.initialize(String,Runnable)`。未 boot。
 44. **状态**：trashslot 规则标记为 **prepared / not boot-verified**；不是通过。证据 `runs/p15-trashslot/README.md`。
 
+## 2026-10-18 21:45 更新：Balm 初始化桥（仍有网络阻断）
+
+45. **`BalmInitializeBridge`**：`Balm.initialize(String,Runnable)` → `initialize(String, EmptyLoadContext, Runnable)` 的 call-site 适配；patch 命中 1 次，旧的初始化 `NoSuchMethodError` 消失。
+46. **下一失败**：`BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer)`；Balm 21 改为 `PacketType`/`StreamCodec` 载荷注册，不是可简单补 context 的描述符。
+47. **状态**：trashslot 仍未 boot；NBT 桥 + Balm 初始化桥 prepared，整体 unverified。证据 `runs/p16-balm/README.md`、`server-balm2.log`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -104,6 +111,7 @@
 | chunk access 测试 | `runs/p13-chunk-port/gradle-test.log`（12 tests, 0 failures） |
 | lithium+ironchests 联合契约 | `runs/p14-lithium-ironchests/README.md`、`verdict.json`、`step1-place-insert.log`、`step2-restart-read.log` |
 | trashslot 尝试（受阻） | `runs/p15-trashslot/README.md`、`convert.log`、`convert-balm.log`、`patch.log`、`server-trashslot3.log` |
+| Balm 初始化桥（仍受阻） | `runs/p16-balm/README.md`、`patch.log`、`server-balm2.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

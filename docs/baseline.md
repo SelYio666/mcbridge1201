@@ -653,6 +653,13 @@ boot 验证**，因为 trashslot 依赖 Balm：
 证据 `runs/p15-trashslot/README.md`、`convert.log`、`convert-balm.log`、`server-trashslot3.log`。
 下一步是 Balm networking/API 桥，或使用同时兼容旧 Balm API 与 1.21.1 Fabric API 的 Balm 版本。
 
+P16 继续尝试原生 Balm 21.0.66：新增 `BalmInitializeBridge`，把旧的
+`Balm.initialize(String,Runnable)` 调用点适配为
+`initialize(String, EmptyLoadContext.INSTANCE, Runnable)`，旧的初始化 `NoSuchMethodError` 消失；
+但下一失败是 `BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function,
+BiConsumer)`——Balm 21 已改成 `PacketType`/`StreamCodec` 载荷注册，需要真正的网络包适配，不是
+补一个 context 就能解决。trashslot 仍未 boot；证据 `runs/p16-balm/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

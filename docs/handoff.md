@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 21:45）：**Balm 初始化调用点桥已推进 trashslot，但卡在 Balm 网络 API**。`Balm.initialize(String,Runnable)` → `initialize(String, EmptyLoadContext, Runnable)` 的 call-site 桥生效，旧的初始化 `NoSuchMethodError` 消失；下一失败是 `BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer)`，Balm 21 已改为 `PacketType`/`StreamCodec` 载荷注册。仍未 boot，规则保持 prepared/unverified；证据 `runs/p16-balm/`。
 更新（2026-10-18 21:40）：**第三个样本 trashslot 受阻于 Balm/Fabric networking**。trashslot 自身 4 个 ItemStack/NBT tombstone 已写桥并 patch，但依赖 Balm：转换 Balm 7.3.44 后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，原生 Balm 21.0.66 又缺 `Balm.initialize(String,Runnable)`。未 boot；规则标记 prepared/unverified，证据 `runs/p15-trashslot/`。
 更新（2026-10-18 21:35）：**lithium + ironchests 联合容器契约通过**。同一 Fabric 1.21.1 专用服务端实例加载两份转换件，两进程放置/插入/NBT/重启读回 5 钻石全部通过；P13 chunk access 移植没有破坏容器持久化，两样本可共存。证据 `runs/p14-lithium-ironchests/`，说明 `docs/baseline.md` §7.20。仍不含 lithium 自身玩法/客户端。
 更新（2026-10-18 21:25）：**lithium 到达专用服务端 `Done`**。`ServerChunkManagerMixin` 的 chunk access 实现移植到 1.21.1 `ChunkResult`/`GenerationChunkHolder` API（保留 mixin 类与 `@Overwrite`，不是 strip），启动 `Done (4.772s)`，世界加载/保存，命令 chunk 探针通过。规则 `mixinClassReplacements`，证据 `runs/p13-chunk-port/`，说明 `docs/baseline.md` §7.19。仍只是 BOOTED，不是玩法/客户端兼容。
@@ -42,7 +43,7 @@ python tools/run_contract.py --instance work/instances/fabric-1.21.1-server --ou
 2. **`mixinClassReplacements` 的覆盖面/优化**：chunk access 已用实现类替换打通；还需验证该模式在更多 API 形状变化上的可维护性，并决定是否重写被放弃的优化。
 3. **调用点适配的覆盖面**：已覆盖顶层 jar 的直接调用和 `MethodHandle`；嵌套 jar（JiJ）内的调用点尚未覆盖。
 4. **Mixin 目标描述符适配的覆盖面**：已处理 Explosion 与 POI storage；仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化。
-5. **第三个样本 trashslot 的 Balm 依赖**：trashslot 自身 4 个 tombstone 已写桥并 patch，但 Balm 7.3.44 转换后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，原生 Balm 21.0.66 又缺 `Balm.initialize(String,Runnable)`。需要 Balm networking/API 桥或兼容 Balm 版本；boot 前不能把 trashslot 规则算通过。
+5. **第三个样本 trashslot 的 Balm 依赖**：trashslot 自身 4 个 tombstone 已写桥并 patch；Balm 初始化桥已验证推进，但下一失败是 `BalmNetworking.registerServerboundPacket(Identifier,...)`，Balm 21 改为 `PacketType`/`StreamCodec` 载荷注册。需要 Balm 网络包适配；boot 前不能把 trashslot 规则算通过。
 6. **客户端侧**：GUI 打开、右键交互、渲染、两个客户端同步。本机无显示验证，需要客户端实例。
 7. **Forge 成员级分析**：目前只有命名空间级；需要 tsrg(SRG) + Mojang 映射的联合索引。
 8. **`BytecodeVerify`**：CenturyBridge 自带的数据流校验未跑。

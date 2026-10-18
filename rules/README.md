@@ -156,7 +156,7 @@ Mixin 回调，而不是删 mixin：
 | `lithium.explosionmixin.ctor-callback` | `Explosion` 构造器从 10 参变为 13 参（追加 2×ParticleOptions + Holder<SoundEvent>） | 回调体只读 shadow 字段；append 3 个未使用参数槽，语义不变 | **已应用 1 处；该注入通过（样本仍卡在 chunk access）** |
 | `lithium.poi.serializing-storage-ctor-callback` | `SectionStorage` 构造器改为 `(SimpleRegionStorage, Function, Function, RegistryAccess, ChunkIOErrorReporter, LevelHeightAccessor)` | 回调体只用 `this`；replace 捕获参数并重写 refmap `<init>` 映射 | **已应用 1 处 + refmap 1 处；该注入通过（样本仍卡在 chunk access）** |
 | `lithium.serverchunkmanager.chunkresult-port` | `ServerChunkManagerMixin` 的 chunk access 实现 | 1.20.1 的 `ChunkHolderExtended`/`method_17236`/`Either` 在 1.21.1 变为 `ChunkResult`/`GenerationChunkHolder`；整体替换实现，调用 `method_14134` + `ChunkAccessPump` | **已应用 1 处；lithium 到达专用服务端 Done（优化减少）** |
-| `trashslot.{itemstack,packet}.*` | trashslot 的 4 个 ItemStack/NBT tombstone | 1.20.5 组件化；桥用 `ItemStack.CODEC` + `RegistryOps(NbtOps)` 和 `FriendlyByteBuf` NBT 方法 | **已应用；未 boot 验证（Balm/Fabric networking 阻断）** |
+| `trashslot.{itemstack,packet}.*` + `trashslot.balm.initialize-context` | trashslot 的 4 个 ItemStack/NBT tombstone + 旧 Balm 初始化调用 | 1.20.5 组件化；NBT 桥 + `Balm.initialize(String, LoadContext, Runnable)` 调用点桥 | **prepared；Balm 初始化桥已推进，但 Balm 网络 API 仍阻断，未 boot 验证** |
 | `constant-kind-fix(-handle)` | class→interface 的常量池种类 | 1.20.5 的 DFU 接口化 | 已应用 123 + 3 处 |
 
 `signatureAdaptations` 会迁移方法描述符、平移局部变量槽、给指定调用补参数，并用 `COMPUTE_FRAMES` 重算帧；这是“签名变化”类损伤的通用处理形态，而不是单点改名。
