@@ -1,7 +1,7 @@
 # 交接摘要（一页）
 
 
-更新（2026-10-19 01:25）：**trash 持久化 probe 失败**。`setTrashItem` 后同会话读回 5 钻石；Save and Quit → 重进同一世界后 trash 为空，probe 再次 SET；玩家 NBT 有 `BalmData/TrashSlot` 但无 diamond 数据。这是真实持久化缺口，不能算通过。证据 `runs/p57-trash-persist/`。
+更新（2026-10-19 01:25，修正）：**trash 重进为空是 TrashSlot 登录重置**。`setTrashItem` 同会话读回 5 钻石，live `BalmData/TrashSlot` 也是 `{count:5,id:"minecraft:diamond"}`；但 `PlayerLoginEvent` 显式把 trash 设为 `ItemStack.EMPTY`，所以重进为空不能证明 NBT 桥失败。P57 原结论已修正；GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。
 更新（2026-10-19 01:05）：**背包 + TrashSlot GUI 渲染**。客户端 probe 自动打开 `InventoryScreen`；截图显示原版背包和右下角 TrashSlot 按钮。空 trash 按钮点击无可见变化；物品移入/移出、持久化、容器 GUI、同步仍未验证。证据 `runs/p55-client-gui/`。
 更新（2026-10-19 01:00）：**客户端进入世界并渲染**。补 `LithiumVarIntBridge` 后世界生成通过；客户端登录单人世界、渲染地形/HUD（`runs/p54-client-lithium/world.png`）。证据 `runs/p54-client-lithium/`。

@@ -20,8 +20,9 @@ claim that these paths work.
 
 A PCL-based Fabric 1.21.1 client joins a singleplayer world, renders terrain/HUD, shows the
 inventory + TrashSlot button, and can receive a real 5-diamond stack. A direct `TrashHelper`
-probe reads the stack back in-session, but **Save and Quit → reopen loses it**; GUI drag also did
-not transfer. Trash persistence and transfer are therefore still **not verified**:
+probe reads the stack back in-session; rejoin-empty is **TrashSlot's own login reset**
+(`setTrashItem(ItemStack.EMPTY)` in `PlayerLoginEvent`), not a bridge persistence failure. GUI
+drag still did not transfer. Trash transfer is therefore still **not verified**:
 
 - trashslot client GUI, `ClientPlayNetworking` receiver, actual packet delivery;
 - lithium gameplay/rendering;

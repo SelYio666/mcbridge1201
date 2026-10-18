@@ -1124,23 +1124,22 @@ probe 是 work-only 测试入口，不是 patcher 的一部分；没有因此声
 无异常。因此**不能**记为 trash 转移/持久化通过；下一步要检查 TrashSlot 的 GUI slot 命中区/
 点击处理器，而不是放宽结论。证据 `runs/p56-client-item/`。
 
-### 7.59 trash 持久化 probe：同会话通过，重进丢失
+### 7.59 trash 生命周期：登录重置，不是 NBT 桥失败
 
-用一个服务端 probe 直接调用 `TrashHelper`，绕开 GUI：
+用服务端 probe 直接调用 `TrashHelper`，绕开 GUI：
 
 ```text
 first join:  TRASH_PROBE_SET after=5 empty=false
+             TRASH_PROBE_NBT ... trash={count:5,id:"minecraft:diamond"}
 Save and Quit to Title -> reopen same world -> join
 second join: TRASH_PROBE_SET after=5 empty=false
 ```
 
-同会话 `setTrashItem` → `getTrashItem` 能读回 5 钻石，但重进后 trash 为空，probe 再次 SET。
-保存的玩家 NBT 有 `BalmData/TrashSlot`，但没有 `diamond`/`minecraft:diamond` payload；说明
-当前 save 路径没有把物品数据结构正确写进玩家持久数据。
-
-这是**真实持久化缺口**，与 P56 的 GUI 拖放未成功一致；不能声明 trash 保存通过。下一步检查
-`TrashHelper.setTrashItem` 是否修改到 live BalmData，以及 `ItemStack.CODEC` 写入目标/copy 是否
-正确。证据 `runs/p57-trash-persist/`。
+同会话写入/读回正确，live `BalmData/TrashSlot` 也含 5 钻石；重进后为空是因为
+`TrashSlot.lambda$initialize$0(PlayerLoginEvent)` 显式执行
+`setTrashItem(player, ItemStack.EMPTY)` 并发送空 content。**这是模组自己的登录重置**，不能据此
+判定 NBT 桥失败；原 P57“持久化缺口”结论已撤回。该版本没有可用的跨重进 trash 持久化契约。
+GUI 拖放仍是独立未解问题（P56）。证据 `runs/p57-trash-persist/`。
 
 ## 8. 未验证项与下一步
 

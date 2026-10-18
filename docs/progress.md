@@ -2,7 +2,7 @@
 
 最后更新：2026-10-19 01:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
-更新（2026-10-19 01:25）：**trash 持久化 probe 失败**。`TrashHelper.setTrashItem` 后同会话 `getTrashItem` 能读回 5 钻石；Save and Quit → 重进同一世界后 trash 为空，probe 再次 SET。玩家 NBT 有 `BalmData/TrashSlot` 但没有 diamond 数据。这是真实持久化缺口，不能算通过。证据 `runs/p57-trash-persist/`。
+更新（2026-10-19 01:25，修正）：**trash 重进为空是 TrashSlot 登录重置**。`setTrashItem` 同会话读回 5 钻石，live `BalmData/TrashSlot` 也是 `{count:5,id:"minecraft:diamond"}`；但 TrashSlot 的 `PlayerLoginEvent` 显式把 trash 设为 `ItemStack.EMPTY`，所以重进为空不能证明 NBT 桥失败。P57 原结论已修正；GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。
 更新（2026-10-19 01:05）：**背包 + TrashSlot GUI 渲染**。合成 E 键不可靠，改用客户端测试 mod 自动打开 `InventoryScreen`；截图显示原版背包和右下角 TrashSlot 按钮。点击空 trash 按钮不改变界面；物品移入/移出、持久化、容器 GUI、同步仍未验证。证据 `runs/p55-client-gui/`。
 更新（2026-10-19 01:00）：**客户端进入世界并渲染**。补 `LithiumVarIntBridge`（`class_8703.method_53015`）后，世界生成通过，客户端加入单人世界、渲染地形/HUD；截图 `runs/p54-client-lithium/world.png`。trash GUI/容器持久化/同步仍未执行。证据 `runs/p54-client-lithium/`。
@@ -379,11 +379,11 @@
 186. **尝试**：点击钻石再点 trash 按钮、或拖拽到按钮；物品仍停在光标，trash 未接收，日志无异常。
 187. **结论**：不能记为通过；需查 TrashSlot GUI slot 的点击路径/坐标/处理器。证据 `runs/p56-client-item/`。
 
-## 2026-10-19 01:25 更新：trash 持久化 probe
+## 2026-10-19 01:25 更新：trash 生命周期（修正）
 
-188. **同会话**：`TrashHelper.setTrashItem` 后立即 `getTrashItem` 读回 5 钻石（`TRASH_PROBE_SET after=5`）。
-189. **重进**：Save and Quit → 重进同一世界，trash 为空，probe 再次 SET；玩家 NBT 有 `BalmData/TrashSlot` 但无 diamond payload。
-190. **结论**：真实持久化缺口；GUI 拖放和持久化都不能算通过。证据 `runs/p57-trash-persist/`。
+188. **同会话**：`TrashHelper.setTrashItem` 后立即 `getTrashItem` 读回 5 钻石；live `BalmData/TrashSlot` 为 `{count:5,id:"minecraft:diamond"}`。
+189. **重进为空的原因**：`TrashSlot.lambda$initialize$0(PlayerLoginEvent)` 显式 `setTrashItem(player, ItemStack.EMPTY)` 并发送空 content；这是模组自己的登录重置，不是 NBT 桥失败。
+190. **结论**：P57 原“持久化缺口”结论撤回；trash 在该版本按登录重置，不能作为持久化契约。GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 
 ## 证据在哪里
 

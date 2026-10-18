@@ -1,4 +1,4 @@
-# P57: trash persistence probe — in-session works, reload loses it
+# P57: trash persistence probe — corrected: login reset is TrashSlot behavior
 
 Date: 2026-10-19 (Asia/Shanghai). Direct TrashHelper test, no GUI ambiguity.
 
@@ -22,9 +22,11 @@ First join:
 
 ```text
 TRASH_PROBE_SET after=5 empty=false
+TRASH_PROBE_NBT balmKeys={TrashSlot} trash={count:5,id:"minecraft:diamond"}
 ```
 
-So the two NBT bridges do work in-session: the 5-diamond stack is read back immediately.
+The two NBT bridges work in-session: the 5-diamond stack is read back immediately, and the live
+`BalmData/TrashSlot` compound contains the item.
 
 Then **Save and Quit to Title**, reopen the same `New World`, and join again:
 
@@ -32,29 +34,34 @@ Then **Save and Quit to Title**, reopen the same `New World`, and join again:
 TRASH_PROBE_SET after=5 empty=false
 ```
 
-The second join sees an empty trash, so the data written through `TrashHelper.setTrashItem` did not
-survive the player save/reload. The saved player NBT does contain `BalmData/TrashSlot`, but no
-`diamond`/`minecraft:diamond` string was present in that compound — the written trash payload is
-empty/not round-tripped.
+The second join sees an empty trash. The saved player NBT has `BalmData/TrashSlot`, but it is an
+empty compound (verified with a small NBT parser: `TrashSlot (10, {})`).
 
-## Interpretation
+## Correction: this is not a bridge persistence bug
 
-This is a **real persistence gap** in the current trashslot patch path, separate from the GUI
-drag issue:
+`TrashSlot.lambda$initialize$0(PlayerLoginEvent)` explicitly does:
 
-- in-session `setTrashItem` → `getTrashItem` works (5 diamonds);
-- after save/reload the player's trash is empty;
-- GUI drag (P56) also did not transfer an item.
+```text
+TrashHelper.setTrashItem(player, ItemStack.EMPTY)
+BalmNetworking.sendTo(player, new MessageTrashSlotContent(ItemStack.EMPTY))
+```
 
-The next investigation is the save path: whether `TrashHelper.setTrashItem` mutates the live
-Balm persistent-data compound, and why the saved `BalmData/TrashSlot` compound has no item payload
-(the `ItemStack.CODEC` encode target/copy may be wrong for this player-data path).
+So TrashSlot **clears the trash on every login by design** (or at least by its own code). The
+rejoin-empty result is therefore expected mod behavior, not evidence that the NBT bridge failed.
+The probe ran at `ServerPlayConnectionEvents.JOIN`; the mod's login event clears it afterward.
 
 ## Status
 
-- trash persistence: **not verified / currently failing**
-- no claim that `setTrashItem` or the GUI is a pass
-- do not ship this as a core-save fix until the NBT round-trip is correct
+- in-session `setTrashItem` → `getTrashItem`: works (5 diamonds);
+- reload persistence: **not a valid contract for this mod version**, because login resets it;
+- GUI drag (P56) still did not transfer an item; that remains an independent issue to investigate;
+- no persistence-pass claim either way.
+
+## Next
+
+- Check TrashSlot's intended lifecycle (is trash meant to be session-only?); do not "fix" the
+  login reset without evidence.
+- Focus the remaining GUI issue on the trash slot widget/hit-test, not on NBT.
 
 ## Evidence
 
