@@ -18,9 +18,9 @@ claim that these paths work.
 
 ## Blocked: client GUI / network / multiplayer
 
-A PCL-based Fabric 1.21.1 client now reaches the main menu and, after the Balm writer-order fix,
-logs in past the `trash_slot_content` payload. World generation still hits a lithium tombstone
-(`class_2540.method_10815`, the old `getVarIntSize`), so the following remain **not executable**:
+A PCL-based Fabric 1.21.1 client now **joins a singleplayer world and renders terrain/HUD** after
+the Balm writer-order and lithium `VarInt` bridges. Inventory/trash GUI interaction was not
+executed (synthetic `E` key injection did not open it), so the following remain **not verified**:
 
 - trashslot client GUI, `ClientPlayNetworking` receiver, actual packet delivery;
 - lithium gameplay/rendering;

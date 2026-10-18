@@ -1083,6 +1083,22 @@ UnsupportedOperationException:
 225-chunk 测试使用已有世界，没有触发这条 palette 序列化路径。世界/GUI/持久化/双客户端仍未
 执行。证据 `runs/p53-client-world/`。
 
+### 7.56 客户端进入世界并渲染
+
+Lithium palette 的 `method_10815` tombstone 通过 `LithiumVarIntBridge.getByteSize(int)` →
+`class_8703.method_53015`（`VarInt.getByteSize`）修复，规则 `lithium-varint.json` 命中 2 处。
+客户端随后完成世界生成并登录：
+
+```text
+Preparing start region for dimension minecraft:overworld
+TestPlayer joined the game
+Loaded 2 advancements
+```
+
+窗口 `Minecraft* 1.21.1 - Singleplayer`，`world.png` 显示地形、HUD、hotbar。**这是客户端进入
+世界并渲染**，但背包/trash GUI、容器持久化、clientbound 同步、双客户端仍未执行；自动化
+`E` 键未打开背包，不能当成 GUI 已测。证据 `runs/p54-client-lithium/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

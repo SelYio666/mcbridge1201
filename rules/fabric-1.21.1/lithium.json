@@ -71,5 +71,20 @@
       "risk": "medium",
       "evidence": "Real crash after the Mixin target fixes: ClassCastException class_3193 cannot be cast to ChunkHolderExtended at class_3215.getChunkBlocking (runs/p11-lithium-explosion/server-explosion3.log). CenturyBridge removed ChunkHolderMixin because its @Shadow field_16425 and class_3193$class_3724 disappeared; re-adding it fails (@Shadow not located, server-readd.log), and localizing the field gets past the cast but hits the tombstone ChunkMap.method_17236 (server-chunkholder-local2.log). The old method returns CompletableFuture<Either<ChunkAccess, Unloaded>>; 1.21.1 uses CompletableFuture<ChunkResult<LevelChunk>> and GenerationChunkHolder. This replacement keeps the mixin class/name and its @Overwrite, but implements method_12121 on the 1.21.1 API: call ServerChunkManager.method_14134, pump the private chunk task queue while waiting (ChunkAccessPump reflection helper, because the executor field type is package-private), then convert ChunkResult.method_57130(null) and throw the vanilla IllegalStateException if create && null. It is a real port, not a mixin strip; the old multi-entry cache / off-thread fast path is not reimplemented (optimization loss, not save/drop/sync semantics)."
     }
+  ],
+  "methodRedirects": [
+    {
+      "id": "lithium.varint.size",
+      "sourceOwner": "centurybridge/gen/Tombstones_lithium_fabric_mc1_20_1_0_11_4",
+      "sourceName": "t2",
+      "sourceDesc": "(I)I",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/LithiumVarIntBridge",
+      "bridgeMethod": "getByteSize",
+      "bridgeDesc": "(I)I",
+      "capability": "palette.varint.size",
+      "risk": "medium",
+      "evidence": "First client world generation (runs/p53-client-world/crash-report.txt): UnsupportedOperationException CenturyBridge tombstone net.minecraft.class_2540.method_10815 at LithiumHashPalette.method_12290. method_10815(I)I is the 1.20.1 FriendlyByteBuf.getVarIntSize; 1.21.1 moved it to VarInt.getByteSize (class_8703.method_53015). The bridge restores the exact serialized-size calculation."
+    }
   ]
 }

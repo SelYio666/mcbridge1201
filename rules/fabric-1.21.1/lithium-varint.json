@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "Lithium palette serialized-size bridge for the 1.21.1 VarInt move. Applied after the P13 chunk-port build.",
+  "methodRedirects": [
+    {
+      "id": "lithium.varint.size",
+      "sourceOwner": "centurybridge/gen/Tombstones_lithium_fabric_mc1_20_1_0_11_4",
+      "sourceName": "t2",
+      "sourceDesc": "(I)I",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/LithiumVarIntBridge",
+      "bridgeMethod": "getByteSize",
+      "bridgeDesc": "(I)I",
+      "capability": "palette.varint.size",
+      "risk": "medium",
+      "evidence": "First client world generation (runs/p53-client-world/crash-report.txt): UnsupportedOperationException CenturyBridge tombstone net.minecraft.class_2540.method_10815 at LithiumHashPalette.method_12290. method_10815(I)I is the 1.20.1 FriendlyByteBuf.getVarIntSize; 1.21.1 moved it to VarInt.getByteSize (class_8703.method_53015)."
+    }
+  ]
+}

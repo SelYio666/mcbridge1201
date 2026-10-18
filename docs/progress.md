@@ -1,8 +1,9 @@
 # 进度交接
 
-最后更新：2026-10-19 00:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 01:00（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
-更新（2026-10-19 00:55）：**世界加入越过 Balm payload**。修正旧 Balm writer 参数顺序 `(packet, buf)` 后，`trash_slot_content` 编码错误消失；客户端进入世界生成，新阻断为 lithium `class_2540.method_10815` tombstone（对应 1.21.1 `VarInt.getByteSize`）。仍无 GUI/持久化/同步。证据 `runs/p53-client-world/`。
+更新（2026-10-19 01:00）：**客户端进入世界并渲染**。补 `LithiumVarIntBridge`（`class_8703.method_53015`）后，世界生成通过，客户端加入单人世界、渲染地形/HUD；截图 `runs/p54-client-lithium/world.png`。trash GUI/容器持久化/同步仍未执行（合成键盘 E 未打开背包）。证据 `runs/p54-client-lithium/`。
+更新（2026-10-19 00:55）：**世界加入越过 Balm payload**。修正旧 Balm writer 参数顺序 `(packet, buf)` 后，`trash_slot_content` 编码错误消失；客户端进入世界生成，新阻断为 lithium `class_2540.method_10815` tombstone（对应 1.21.1 `VarInt.getByteSize`）。证据 `runs/p53-client-world/`。
 更新（2026-10-19 00:50）：**客户端到达主菜单**。PCL Fabric 1.21.1 客户端加载全部五个模组并进入主菜单（截图）；Balm 客户端初始化、ironchests 模型加载桥已补。创建/进入世界时 server 端 `BalmNetworking.sendTo` 的 payload 编码仍失败（`class_9129` vs `MessageTrashSlotContent`），未进入世界/GUI。证据 `runs/p52-client-balm/`。
 更新（2026-10-19 00:40）：**ResourcefulLib 客户端网络桥生效**。重写嵌套 RL 2.0.6 的 `FabricClientPacketHelper` 到 1.21.1 Payload API；客户端越过 ironchests **main** 入口点，新阻断为 `ModelLoadingRegistry` 缺失与 `BalmClient.initialize(String,Runnable)` 缺失。证据 `runs/p51-client-bridge/`。
 更新（2026-10-19 00:35）：**首次真实客户端运行（PCL）**。已装 1.21.1 Fabric 0.19.5 客户端；五个模组全部加载，ironchests 入口点崩溃：`ClientPlayNetworking$PlayChannelHandler` 缺失（旧 ResourcefulLib 2.0.6 客户端网络 API）。换 ResourcefulLib 3.0.12 会在 `PacketHandler` 处失败。这是新的真实客户端阻断，不是服务端问题。证据 `runs/p50-client/`。
@@ -357,6 +358,12 @@
 177. **结果**：`trash_slot_content` 编码错误消失，客户端登录并开始世界生成。
 178. **新阻断**：lithium `class_2540.method_10815` tombstone（1.20.1 `getVarIntSize`，1.21.1 移到 `VarInt.getByteSize`）。证据 `runs/p53-client-world/`。
 
+## 2026-10-19 01:00 更新：客户端进入世界
+
+179. **桥**：`LithiumVarIntBridge.getByteSize` → `class_8703.method_53015`；`lithium-varint.json` 命中 2 处。
+180. **结果**：世界生成通过，客户端登录并渲染地形/HUD（`world.png`，窗口 `Minecraft* 1.21.1 - Singleplayer`）。
+181. **未做**：trash GUI/容器持久化/同步；合成 E 键未打开背包，不声称已测。证据 `runs/p54-client-lithium/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -428,6 +435,7 @@
 | RL 客户端网络桥 | `runs/p51-client-bridge/README.md`、`FabricClientPacketHelper.java`、`crash-report.txt` |
 | 客户端主菜单 | `runs/p52-client-balm/README.md`、`main-menu.png`、`latest.log` |
 | 世界加入 | `runs/p53-client-world/README.md`、`crash-report.txt`、`latest.log` |
+| 客户端进入世界 | `runs/p54-client-lithium/README.md`、`world.png`、`latest.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
