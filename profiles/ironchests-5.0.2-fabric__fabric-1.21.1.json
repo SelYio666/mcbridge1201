@@ -89,6 +89,11 @@
       "scope": "dedicated server"
     },
     {
+      "id": "codec.dispatch.roundtrip",
+      "result": "passed",
+      "scope": "synthetic record probe"
+    },
+    {
       "id": "container.nbt.write",
       "result": "passed",
       "scope": "dedicated server"
@@ -131,6 +136,10 @@
     "patchedJar": {
       "path": "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-aw.jar",
       "sha256": "e9a9f790c03326228fb5fe9c23f7594836063c8ff0cac0d95bfdd618b5014ca0"
+    },
+    "codecProbe": {
+      "path": "runs/p37-codec-probe/verdict.json",
+      "sha256": "71527ae070f97ea8898fe31fe1d84e5c1a4140adeda5bcd1e0e9798c0af57a42"
     }
   },
   "knownLimitations": [

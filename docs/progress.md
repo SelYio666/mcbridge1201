@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 23:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 23:30（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 23:30）：**CodecDispatch 语义 probe 通过**。用 `RecordCodecBuilder` 的 `Box(int a)` 做 `CodecDispatch.dispatch` encode/decode，期望 `{"a":1,"type":"k"}`，日志 `CODEC_DISPATCH_PROBE_OK`；服务端 `Done (4.847s)`、exit 0。直接验证了 P26 安全 MapCodec 包装的编解码语义。证据 `runs/p37-codec-probe/`。
 更新（2026-10-18 23:25）：**at-target 补丁前后对照**。转换件 `214 injections / 86 at-targets / 3 unresolved`，补丁件 `209 / 84 / 0`；P11/P13 规则清掉了 3 个已知构造器，at-target 解析保持一致。证据 `runs/p36-patched-at/`。
 更新（2026-10-18 23:20）：**refmap `@At` 目标解析**。`atRawTarget` 也走 refmap，lithium 的 `mixinAtTargets` 从 0 提升到 **86**，`mixinInjectionsUnresolved` 仍为 3（已知构造器），没有新增 false positive；测试 18/18。证据 `runs/p35-at-refmap/`。
 更新（2026-10-18 23:15）：**`@At` 目标提取（保守）**。scanner 解析 `@Inject` 等的 `@At(value,target)`，analyzer 对 intermediary 的 INVOKE/FIELD 目标做存在性检查；转换后 lithium `mixinInjections=214`、`mixinAtTargets=0`（Yarn/refmap 目标跳过）、3 个已知构造器 unresolved；测试 18/18。证据 `runs/p34-at-targets/`。
@@ -233,6 +234,13 @@
 121. **意义**：P11/P13 规则清掉 3 个已知构造器，at-target 解析仍保留 84 个；P35 的检查与真实补丁方向一致。
 122. **边界**：静态检查；ordinal/slice/local capture 未解析。证据 `runs/p36-patched-at/`。
 
+## 2026-10-18 23:30 更新：CodecDispatch 语义 probe
+
+123. **Probe**：`record Box(int a)` + `RecordCodecBuilder` 作为 value codec；`CodecDispatch.dispatch(Codec.STRING, v->"k", k->valueCodec)`。
+124. **断言**：encode `Box(1)` 得到 `{"a":1,"type":"k"}`；parse 回 `Box(1)`；日志 `CODEC_DISPATCH_PROBE_OK`。
+125. **结果**：服务端 `Done (4.847s)`、exit 0；直接验证 P26 安全 MapCodec 包装的编解码语义。证据 `runs/p37-codec-probe/`。
+126. **边界**：synthetic record，不是 ironchests ShapeTypes；无客户端。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -287,6 +295,7 @@
 | @At 目标分析 | `runs/p34-at-targets/README.md`、`verdict.json`、`lithium-converted.json` |
 | refmap @At | `runs/p35-at-refmap/README.md`、`verdict.json`、`lithium-converted.json` |
 | at-target 补丁前后 | `runs/p36-patched-at/README.md`、`verdict.json`、`lithium-patched.json` |
+| CodecDispatch 语义 probe | `runs/p37-codec-probe/README.md`、`verdict.json`、`server.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

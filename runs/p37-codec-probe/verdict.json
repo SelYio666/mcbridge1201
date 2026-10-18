@@ -1,0 +1,10 @@
+{
+  "feature": "safe CodecDispatch semantic encode/decode",
+  "probe": "record Box(int a) with RecordCodecBuilder",
+  "input": "Box(1)",
+  "encodedExpected": "{\"a\":1,\"type\":\"k\"}",
+  "decoded": "Box(1)",
+  "marker": "CODEC_DISPATCH_PROBE_OK",
+  "server": {"doneSeen": true, "doneLine": "Done (4.847s)! For help, type \"help\"", "exitCode": 0},
+  "limitations": "synthetic record, not ironchests ShapeTypes; no client"
+}

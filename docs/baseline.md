@@ -898,6 +898,19 @@ P11/P13 的规则清掉了 3 个已知构造器；补丁件仍解析 84 个 at-t
 不是只对转换件生效。减少的 5 个 injection / 2 个 at-target 对应被替换的 callback/实现类。
 静态检查，不含 ordinal/slice/local capture。证据 `runs/p36-patched-at/`。
 
+### 7.39 安全 CodecDispatch 的语义 probe
+
+用一个 Fabric probe 在服务端启动后直接测试 P26 的 javac `CodecDispatch`：
+
+- `record Box(int a) {}`；
+- `valueCodec = RecordCodecBuilder`（字段 `a`）；
+- `dispatched = CodecDispatch.dispatch(Codec.STRING, Box -> "k", key -> valueCodec)`；
+- encode `Box(1)` 应为 `{"a":1,"type":"k"}`，decode 同 JSON 应回 `Box(1)`。
+
+日志 `CODEC_DISPATCH_PROBE_OK`；服务端 `Done (4.847s)`、exit 0。这比 P26 的容器契约更直接地
+验证了安全 MapCodec 包装的 encode/decode 语义。仍是 synthetic record，不是 ironchests
+`ShapeTypes`，也不覆盖客户端。证据 `runs/p37-codec-probe/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
