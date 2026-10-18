@@ -1,0 +1,18 @@
+{
+  "startedAt": "2026-10-18T23:37:22+08:00",
+  "instance": "C:\\Users\\27682\\Documents\\\ufffd\u00bd\ufffd\ufffd\u013c\ufffd\ufffd\ufffd\\mcbridge1201\\work\\instances\\fabric-1.21.1-server-all-three",
+  "argv": [
+    "C:\\Users\\27682\\Documents\\\ufffd\u00bd\ufffd\ufffd\u013c\ufffd\ufffd\ufffd\\.toolchain\\jdk\\bin\\java.exe",
+    "-Xmx1536M",
+    "-Xms512M",
+    "-Dfile.encoding=UTF-8",
+    "-Djava.io.tmpdir=C:\\Users\\27682\\Documents\\\ufffd\u00bd\ufffd\ufffd\u013c\ufffd\ufffd\ufffd\\mcbridge1201\\work\\instances\\fabric-1.21.1-server-all-three\\tmp",
+    "-jar",
+    "fabric-server-launch.jar",
+    "nogui"
+  ],
+  "doneSeen": true,
+  "exitCode": 0,
+  "durationSeconds": 19.9,
+  "processExitCode": 0
+}

@@ -1,0 +1,9 @@
+{
+  "contract": "all-three chunk stress",
+  "instance": "work/instances/fabric-1.21.1-server-all-three",
+  "chunksMarked": 225,
+  "passed": true,
+  "runs": 2,
+  "exitCodes": [0, 0],
+  "scope": "dedicated server + command API; no client/GUI/player/multiplayer"
+}

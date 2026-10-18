@@ -73,6 +73,8 @@ def main() -> int:
     check("all_three", "runs/p41-all-three/verdict.json",
           lambda d: d.get("container", {}).get("passed") is True
           and d.get("serverBoot", {}).get("doneSeen") is True)
+    check("all_three_chunk", "runs/p42-all-three-chunk/verdict.json",
+          lambda d: d.get("passed") is True and d.get("chunksMarked") == 225)
 
     tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True)
     jars = [line for line in tracked.stdout.splitlines() if line.endswith(".jar")]
