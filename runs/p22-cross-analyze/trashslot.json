@@ -1,0 +1,152 @@
+{
+  "schemaVersion": "0.1-draft",
+  "generatedAt": "2026-10-18T22:12:17.2552053+08:00",
+  "tool": "mcbridge1201 0.1.0",
+  "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "clientJar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\cb\\data\\jars\\client-1.21.1-intermediary.jar",
+    "clientJarSha256": "2cbf8e4a213228ba3fff9d09704ff31d0ddba64aebaac58fd83838979a81be12",
+    "mappings": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\intermediary-1.21.1-v2.jar",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "indexClasses": 8269,
+    "indexMembers": 73432,
+    "indexBuildMs": 353,
+    "apiJars": []
+  },
+  "artifacts": [
+    {
+      "file": "trashslot.jar",
+      "sha256": "8e9ce536ddbf8d1d76f127be891344a81b7dbc0338c1657d0f894d10aefd86ed",
+      "size": 116634,
+      "loader": "fabric",
+      "metadataFiles": [
+        "fabric.mod.json"
+      ],
+      "modId": "trashslot",
+      "version": "15.1.5",
+      "displayName": "TrashSlot",
+      "environment": "*",
+      "depends": {
+        "balm-fabric": "\u003e\u003d7.0.0",
+        "fabricloader": "\u003e\u003d0.14.21",
+        "fabric-api": "*",
+        "minecraft": "1.21.1",
+        "java": "\u003e\u003d17"
+      },
+      "classes": 42,
+      "classFileMajorMax": 61,
+      "nestedJars": 0,
+      "signed": false,
+      "accessWideners": 0,
+      "verdict": "blocked_static",
+      "stage": "ANALYZED",
+      "counts": {
+        "missingClass": 0,
+        "missingMember": 0,
+        "descMismatch": 0,
+        "missingApiClass": 4,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 0,
+        "mixins": 0,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 0,
+        "mixinInjectionsUnresolved": 0,
+        "missingConfirmedInSource": 0,
+        "externalPackages": 6
+      },
+      "missingClass": [],
+      "missingMember": [],
+      "descMismatch": [],
+      "missingApiClass": [
+        {
+          "owner": "net/fabricmc/api/Environment",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/trashslot/compat/ModMenuIntegration",
+            "net/blay09/mods/trashslot/compat/RoughlyEnoughItemsIntegration"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/trashslot/compat/ModMenuIntegration",
+            "net/blay09/mods/trashslot/compat/RoughlyEnoughItemsIntegration"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/ModInitializer",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/trashslot/FabricTrashSlot"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/ClientModInitializer",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/trashslot/client/FabricTrashSlotClient"
+          ]
+        }
+      ],
+      "missingApiMember": [],
+      "wrongLoaderNamespace": [],
+      "unmappedNamespace": [],
+      "externalPackages": [
+        {
+          "owner": "[Lnet",
+          "kind": "package",
+          "refs": 4
+        },
+        {
+          "owner": "com",
+          "kind": "package",
+          "refs": 11
+        },
+        {
+          "owner": "io",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "me",
+          "kind": "package",
+          "refs": 6
+        },
+        {
+          "owner": "net",
+          "kind": "package",
+          "refs": 88
+        },
+        {
+          "owner": "org",
+          "kind": "package",
+          "refs": 5
+        }
+      ],
+      "mixins": {
+        "configs": 1,
+        "classes": 0,
+        "injections": 0,
+        "unresolvedTargets": [],
+        "unresolvedInjections": []
+      },
+      "notes": [
+        "static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)"
+      ]
+    }
+  ],
+  "summary": {
+    "artifacts": 1,
+    "blockedStatic": 1,
+    "needsDependency": 0,
+    "cleanStatic": 0
+  }
+}

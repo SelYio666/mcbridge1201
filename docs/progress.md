@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 22:10（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 22:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 22:15）：**注入目标静态检查交叉验证**。同一 1.21.1 索引下：转换后 lithium `214/3`（3 个 unresolved 正是 P11/P13 的构造器阻断），补丁后 lithium `209/0`；Balm `43/0`，ironchests/trashslot 顶层无 mixin。说明 P21 的检查能在补丁前发现真实阻断、补丁后清零。证据 `runs/p22-cross-analyze/`。
 更新（2026-10-18 22:10）：**refmap 注入目标解析**。读取 mixin config 的 refmap，把命名目标映射到 `Lowner;method(desc)`（含构造器），`Analyzer` 现在能静态复现 lithium 的 3 个已知构造器变化：`class_4180`(POI)、`class_3610`(FluidState)、`class_1927`(Explosion)。测试 16/16；证据 `runs/p21-refmap/`。
 更新（2026-10-18 22:05）：**Mixin 注入目标提取 + 保守校验**。`ArtifactScanner` 解析 `@Inject`/`@Redirect` 等的 `method` 目标，`Analyzer` 新增 `mixinInjections`/`mixinInjectionsUnresolved`；只校验 intermediary 名称+描述符，命名/refmap/构造器跳过。测试 15/15；转换后 lithium 实跑 `214` 个注入目标、`0` unresolved；证据 `runs/p20-mixin-inject/`。
 更新（2026-10-18 21:55）：**BytecodeVerify 已跑**。编译 CenturyBridge 的 `BytecodeVerify.java`，对 ironchests/lithium/trashslot 三个补丁 jar 的顶层类验证：650 classes / 3 jars，0 failures；再对 ironchests 内嵌 ResourcefulLib：141 classes，0 failures。仍只是栈深度校验；证据 `runs/p19-bytecode-verify/`。
@@ -120,6 +121,13 @@
 68. **测试**：新增 refmap 映射测试；`gradle test --rerun-tasks` **16/16**，exit 0。
 69. **边界**：只检查精确描述符；ordinal/slice/local capture、非 refmap 命名目标仍未解析。证据 `runs/p21-refmap/`。
 
+## 2026-10-18 22:15 更新：注入目标交叉验证
+
+70. **转换 vs 补丁**：同一索引下，转换后 lithium `214` 个目标 / `3` unresolved；补丁后 lithium `209` / `0`。3 个 unresolved 正是 P11/P13 的 POI/FluidState/Explosion 构造器变化，补丁后清零。
+71. **其他样本**：Balm 转换后 `32` mixins / `43` 目标 / `0` unresolved；ironchests/trashslot 顶层无 mixin（nested 未展开）。
+72. **意义**：P21 的检查不是 synthetic-only；它能在补丁前发现真实阻断、补丁后确认清零。
+73. **边界**：顶层 mixin、精确描述符；ordinal/slice/local capture 与 nested mixin 未覆盖。证据 `runs/p22-cross-analyze/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -159,6 +167,7 @@
 | BytecodeVerify | `runs/p19-bytecode-verify/README.md`、`verdict.json`、`verify.log`、`verify-nested.log` |
 | Mixin 注入目标分析 | `runs/p20-mixin-inject/README.md`、`verdict.json`、`gradle-test.log`、`analyze-converted.log` |
 | refmap 注入目标 | `runs/p21-refmap/README.md`、`verdict.json`、`lithium-converted.json`、`analyze-converted.log` |
+| 注入目标交叉验证 | `runs/p22-cross-analyze/README.md`、`verdict.json`、`lithium-patched.json` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

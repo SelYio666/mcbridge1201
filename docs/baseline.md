@@ -719,9 +719,27 @@ mixin config 的 `refmap`，把命名目标映射为 `Lowner;method(desc)`（含
   `mixinInjectionsUnresolved=3`。3 条正是已知的构造器变化：
   `class_4180.<init>`（POI storage）、`class_3610.<init>`（FluidState）、
   `class_1927.<init>`（Explosion）——静态分析独立复现了 P11/P13 的运行时阻断。
+- 对补丁后的 lithium 实跑：`mixinInjections=209`、`mixinInjectionsUnresolved=0`；
+  P11/P13 的规则把 3 个构造器目标清掉，说明检查与真实修复一致（§7.25）。
 
 边界：只检查精确描述符是否存在；ordinal/slice/local capture、非 refmap 的命名目标仍未解析。
 这不是运行时 Mixin 验证。证据 `runs/p20-mixin-inject/`、`runs/p21-refmap/`。
+
+### 7.25 注入目标检查的交叉验证
+
+同一目标索引下比较转换件与补丁件：
+
+| artifact | mixins | injection targets | unresolved |
+|---|---:|---:|---:|
+| lithium converted | 202 | 214 | **3** |
+| lithium patched (chunk-port) | 202 | 209 | **0** |
+| Balm 7.3.44 converted | 32 | 43 | 0 |
+| ironchests converted | 0 | 0 | 0 |
+| trashslot converted | 0 | 0 | 0 |
+
+转换件 3 条 unresolved 与 P11/P13 的构造器阻断一一对应；补丁件清零，和实际 `Done` 结果一致。
+ironchests/trashslot 的 0 是“顶层 jar 没有 mixin”的意思，nested mixin 未展开，不应解读为
+“所有 mixin 都安全”。证据 `runs/p22-cross-analyze/`。
 
 ## 8. 未验证项与下一步
 

@@ -1,0 +1,997 @@
+{
+  "schemaVersion": "0.1-draft",
+  "generatedAt": "2026-10-18T22:12:16.451402+08:00",
+  "tool": "mcbridge1201 0.1.0",
+  "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "clientJar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\cb\\data\\jars\\client-1.21.1-intermediary.jar",
+    "clientJarSha256": "2cbf8e4a213228ba3fff9d09704ff31d0ddba64aebaac58fd83838979a81be12",
+    "mappings": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\intermediary-1.21.1-v2.jar",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "indexClasses": 8269,
+    "indexMembers": 73432,
+    "indexBuildMs": 354,
+    "apiJars": []
+  },
+  "artifacts": [
+    {
+      "file": "ironchests.jar",
+      "sha256": "222c0d2ac8c1f26e1be959aee52ef4f03b4cfcf8fafd87fe9f047a20e7c45700",
+      "size": 451766,
+      "loader": "fabric",
+      "metadataFiles": [
+        "fabric.mod.json"
+      ],
+      "modId": "ironchests",
+      "version": "5.0.2",
+      "displayName": "Iron Chests: Restocked",
+      "environment": "*",
+      "depends": {
+        "fabricloader": "*",
+        "fabric": "*",
+        "minecraft": "1.21.1",
+        "java": "\u003e\u003d17"
+      },
+      "classes": 67,
+      "classFileMajorMax": 61,
+      "nestedJars": 1,
+      "signed": false,
+      "accessWideners": 0,
+      "verdict": "blocked_static",
+      "stage": "ANALYZED",
+      "counts": {
+        "unresolvedDueToHierarchy": 4,
+        "missingClass": 1,
+        "missingMember": 6,
+        "descMismatch": 19,
+        "missingApiClass": 58,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 12,
+        "mixins": 0,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 0,
+        "mixinInjectionsUnresolved": 0,
+        "missingConfirmedInSource": 0,
+        "externalPackages": 8
+      },
+      "missingClass": [
+        {
+          "owner": "net/minecraft/class_2444",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/datagen/FinishedCodecRecipe [nested]"
+          ]
+        }
+      ],
+      "missingMember": [
+        {
+          "owner": "net/minecraft/class_2090",
+          "name": "field_9685",
+          "desc": "Lnet/minecraft/class_2090;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]",
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_7923",
+          "name": "field_41176",
+          "desc": "Lnet/minecraft/class_2378;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/EnchantmentPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2073",
+          "name": "field_9640",
+          "desc": "Lnet/minecraft/class_2073;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/api/chesttype/ChestType"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2102",
+          "name": "field_9709",
+          "desc": "Lnet/minecraft/class_2102;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2040",
+          "name": "field_9581",
+          "desc": "Lnet/minecraft/class_2040;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_2048",
+          "name": "field_9599",
+          "desc": "Lnet/minecraft/class_2048;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedEntityPredicate [nested]"
+          ]
+        }
+      ],
+      "descMismatch": [
+        {
+          "owner": "net/minecraft/class_2586",
+          "name": "method_38242",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem",
+            "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+        },
+        {
+          "owner": "net/minecraft/class_1293",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_1291;II)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1293 with desc (Lnet/minecraft/class_6880;IIZZZ)V"
+        },
+        {
+          "owner": "net/minecraft/class_1792",
+          "name": "method_7851",
+          "desc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Ljava/util/List;Lnet/minecraft/class_1836;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1792 with desc (Lnet/minecraft/class_1799;Lnet/minecraft/class_1792$class_9635;Ljava/util/List;Lnet/minecraft/class_1836;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2512",
+          "name": "method_10691",
+          "desc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2338;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/KeyItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2512 with desc (Lnet/minecraft/class_2487;Ljava/lang/String;)Ljava/util/Optional;"
+        },
+        {
+          "owner": "net/minecraft/class_2561$class_2562",
+          "name": "method_10877",
+          "desc": "(Ljava/lang/String;)Lnet/minecraft/class_5250;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/KeyItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2561$class_2562 with desc (Ljava/lang/String;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_5250;"
+        },
+        {
+          "owner": "net/minecraft/class_2512",
+          "name": "method_10692",
+          "desc": "(Lnet/minecraft/class_2338;)Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/UnlockableItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2512 with desc (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2520;"
+        },
+        {
+          "owner": "net/minecraft/class_2561$class_2562",
+          "name": "method_10867",
+          "desc": "(Lnet/minecraft/class_2561;)Ljava/lang/String;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/UnlockableItem",
+            "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2561$class_2562 with desc (Lnet/minecraft/class_2561;Lnet/minecraft/class_7225$class_7874;)Ljava/lang/String;"
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7956",
+          "desc": "(ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1799 with desc (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2586",
+          "name": "method_38243",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+        },
+        {
+          "owner": "net/minecraft/class_2586",
+          "name": "method_11014",
+          "desc": "(Lnet/minecraft/class_2487;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        {
+          "owner": "net/minecraft/class_1294",
+          "name": "field_5909",
+          "desc": "Lnet/minecraft/class_1291;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1294 with desc Lnet/minecraft/class_6880;"
+        },
+        {
+          "owner": "net/minecraft/class_1294",
+          "name": "field_5901",
+          "desc": "Lnet/minecraft/class_1291;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/items/DollyItem"
+          ],
+          "note": "target has same name in net/minecraft/class_1294 with desc Lnet/minecraft/class_6880;"
+        },
+        {
+          "owner": "net/minecraft/class_2540",
+          "name": "method_10794",
+          "desc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/network/SyncMessage$Handler"
+          ],
+          "note": "target has same name in net/minecraft/class_2540 with desc (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2540;"
+        },
+        {
+          "owner": "net/minecraft/class_2621",
+          "name": "method_11014",
+          "desc": "(Lnet/minecraft/class_2487;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        {
+          "owner": "net/minecraft/class_1262",
+          "name": "method_5429",
+          "desc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_1262 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2621",
+          "name": "method_11007",
+          "desc": "(Lnet/minecraft/class_2487;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_2586 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        {
+          "owner": "net/minecraft/class_1262",
+          "name": "method_5426",
+          "desc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_1262 with desc (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7950",
+          "desc": "(Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/client/utils/ScreenUtils [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_1799 with desc (Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;"
+        },
+        {
+          "owner": "net/minecraft/class_26",
+          "name": "method_17924",
+          "desc": "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/SaveHandler [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_26 with desc (Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;"
+        }
+      ],
+      "missingApiClass": [
+        {
+          "owner": "net/fabricmc/loader/api/ModContainer",
+          "kind": "class",
+          "refs": 16,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/utils/fabric/ModUtilsImpl",
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl$Info [nested]",
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/FabricItemGroupEntries",
+          "kind": "class",
+          "refs": 12,
+          "sources": [
+            "tech/thatgravyboat/ironchests/fabric/IronChestsFabric"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/PacketSender",
+          "kind": "class",
+          "refs": 10,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]",
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "kind": "class",
+          "refs": 8,
+          "sources": [
+            "com/teamresourceful/resourcefullib/client/highlights/base/Highlightable [nested]",
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]",
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/FabricItemGroupEntries",
+          "name": "method_45421",
+          "desc": "(Lnet/minecraft/class_1935;)V",
+          "kind": "method",
+          "refs": 6,
+          "sources": [
+            "tech/thatgravyboat/ironchests/fabric/IronChestsFabric"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/recipe/v1/ingredient/CustomIngredient",
+          "kind": "class",
+          "refs": 6,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/recipe/ingredient/fabric/FabricIngredient [nested]",
+            "com/teamresourceful/resourcefullib/common/recipe/ingredient/fabric/FabricIngredientSerializer [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getInstance",
+          "desc": "()Lnet/fabricmc/loader/api/FabricLoader;",
+          "kind": "method",
+          "refs": 5,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/utils/fabric/ModUtilsImpl",
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]",
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "kind": "class",
+          "refs": 5,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/utils/fabric/ModUtilsImpl",
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]",
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/recipe/v1/ingredient/CustomIngredientSerializer",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/recipe/ingredient/fabric/FabricIngredient [nested]",
+            "com/teamresourceful/resourcefullib/common/recipe/ingredient/fabric/FabricIngredientSerializer [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/Environment",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "com/teamresourceful/resourcefullib/client/highlights/base/Highlightable [nested]",
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/ModContainer",
+          "name": "getMetadata",
+          "desc": "()Lnet/fabricmc/loader/api/metadata/ModMetadata;",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl$Info [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "kind": "class",
+          "refs": 3,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl$Info [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getModContainer",
+          "desc": "(Ljava/lang/String;)Ljava/util/Optional;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/utils/fabric/ModUtilsImpl",
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/ItemGroupEvents",
+          "name": "modifyEntriesEvent",
+          "desc": "(Lnet/minecraft/class_5321;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/fabric/IronChestsFabric"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/Event",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/fabric/IronChestsFabric"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/ItemGroupEvents$ModifyEntries",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/fabric/IronChestsFabric"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/Event",
+          "name": "register",
+          "desc": "(Ljava/lang/Object;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/fabric/IronChestsFabric"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder$Factory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/registry/minecraft/fabric/BlockRegistryImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/ClientModInitializer",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient",
+            "com/teamresourceful/resourcefullib/fabric/ResourcefulLibFabricClient [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/ExtraModelProvider",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getEnvironmentType",
+          "desc": "()Lnet/fabricmc/api/EnvType;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "name": "CLIENT",
+          "desc": "Lnet/fabricmc/api/EnvType;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "name": "equals",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerFactory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/menu/fabric/MenuContentHelperImpl$ScreenFactory [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType$ExtendedFactory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/menu/fabric/MenuContentHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/IdentifiableResourceReloadListener",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "com/teamresourceful/resourcefullib/fabric/FabricHighlightHandler [nested]",
+            "com/teamresourceful/resourcefullib/fabric/ResourcefulLibFabricClient [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getConfigDir",
+          "desc": "()Ljava/nio/file/Path;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/utils/fabric/ModUtilsImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/ModContainer",
+          "name": "getOrigin",
+          "desc": "()Lnet/fabricmc/loader/api/metadata/ModOrigin;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/utils/fabric/ModUtilsImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModOrigin",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/utils/fabric/ModUtilsImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModOrigin",
+          "name": "getPaths",
+          "desc": "()Ljava/util/List;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/utils/fabric/ModUtilsImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/ModInitializer",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/fabric/IronChestsFabric"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap",
+          "name": "INSTANCE",
+          "desc": "Lnet/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsClientImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsClientImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap",
+          "name": "putBlock",
+          "desc": "(Lnet/minecraft/class_2248;Lnet/minecraft/class_1921;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsClientImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/BakedModelManagerHelper",
+          "name": "getModel",
+          "desc": "(Lnet/minecraft/class_1092;Lnet/minecraft/class_2960;)Lnet/minecraft/class_1087;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsClientImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder",
+          "name": "create",
+          "desc": "(Lnet/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder$Factory;[Lnet/minecraft/class_2248;)Lnet/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/registry/minecraft/fabric/BlockRegistryImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/registry/minecraft/fabric/BlockRegistryImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder",
+          "name": "build",
+          "desc": "()Lnet/minecraft/class_2591;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/registry/minecraft/fabric/BlockRegistryImpl"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+          "name": "INSTANCE",
+          "desc": "Lnet/fabricmc/fabric/api/client/model/ModelLoadingRegistry;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+          "name": "registerModelProvider",
+          "desc": "(Lnet/fabricmc/fabric/api/client/model/ExtraModelProvider;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "tech/thatgravyboat/ironchests/client/fabric/IronChestsFabricClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+          "name": "registerGlobalReceiver",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+          "name": "send",
+          "desc": "(Lnet/minecraft/class_3222;Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "getName",
+          "desc": "()Ljava/lang/String;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl$Info [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "getId",
+          "desc": "()Ljava/lang/String;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl$Info [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "getVersion",
+          "desc": "()Lnet/fabricmc/loader/api/Version;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl$Info [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/Version",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl$Info [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/Version",
+          "name": "getFriendlyString",
+          "desc": "()Ljava/lang/String;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/modinfo/fabric/ModInfoUtilsImpl$Info [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/menu/fabric/MenuContentHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType$ExtendedFactory;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/menu/fabric/MenuContentHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/FabricItemGroup",
+          "name": "builder",
+          "desc": "()Lnet/minecraft/class_1761$class_7913;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/item/tabs/fabric/ResourcefulCreativeTabImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+          "name": "registerGlobalReceiver",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+          "name": "send",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/FabricClientPacketHelper [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+          "name": "get",
+          "desc": "(Lnet/minecraft/class_3264;)Lnet/fabricmc/fabric/api/resource/ResourceManagerHelper;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/fabric/ResourcefulLibFabricClient [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/fabric/ResourcefulLibFabricClient [nested]"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+          "name": "registerReloadListener",
+          "desc": "(Lnet/fabricmc/fabric/api/resource/IdentifiableResourceReloadListener;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/fabric/ResourcefulLibFabricClient [nested]"
+          ]
+        }
+      ],
+      "missingApiMember": [],
+      "wrongLoaderNamespace": [],
+      "unmappedNamespace": [
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "kind": "class",
+          "refs": 9,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/NetworkChannel [nested]",
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]",
+            "com/teamresourceful/resourcefullib/common/utils/SaveHandler [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3760",
+          "desc": "()Lnet/minecraft/class_3324;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/NetworkChannel [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "execute",
+          "desc": "(Ljava/lang/Runnable;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/networking/fabric/PacketChannelHelperImpl [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_30002",
+          "desc": "()Lnet/minecraft/class_3218;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "com/teamresourceful/resourcefullib/common/utils/SaveHandler [nested]"
+          ]
+        }
+      ],
+      "externalPackages": [
+        {
+          "owner": "[Lcom",
+          "kind": "package",
+          "refs": 6
+        },
+        {
+          "owner": "[Ljava",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[Lnet",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[Ltech",
+          "kind": "package",
+          "refs": 4
+        },
+        {
+          "owner": "com",
+          "kind": "package",
+          "refs": 226
+        },
+        {
+          "owner": "dev",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "io",
+          "kind": "package",
+          "refs": 8
+        },
+        {
+          "owner": "org",
+          "kind": "package",
+          "refs": 45
+        }
+      ],
+      "mixins": {
+        "configs": 0,
+        "classes": 0,
+        "injections": 0,
+        "unresolvedTargets": [],
+        "unresolvedInjections": []
+      },
+      "notes": [
+        "static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)"
+      ]
+    }
+  ],
+  "summary": {
+    "artifacts": 1,
+    "blockedStatic": 1,
+    "needsDependency": 0,
+    "cleanStatic": 0
+  }
+}

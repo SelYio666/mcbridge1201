@@ -1,0 +1,2352 @@
+{
+  "schemaVersion": "0.1-draft",
+  "generatedAt": "2026-10-18T22:12:26.9630479+08:00",
+  "tool": "mcbridge1201 0.1.0",
+  "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "clientJar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\cb\\data\\jars\\client-1.21.1-intermediary.jar",
+    "clientJarSha256": "2cbf8e4a213228ba3fff9d09704ff31d0ddba64aebaac58fd83838979a81be12",
+    "mappings": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\intermediary-1.21.1-v2.jar",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "indexClasses": 8269,
+    "indexMembers": 73432,
+    "indexBuildMs": 372,
+    "apiJars": []
+  },
+  "artifacts": [
+    {
+      "file": "balm.jar",
+      "sha256": "d6a31b3b5955ad152e78234f12f8bb0e49a908a919d214a53e9f53ae51768f8f",
+      "size": 561283,
+      "loader": "fabric",
+      "metadataFiles": [
+        "fabric.mod.json"
+      ],
+      "modId": "balm",
+      "version": "7.3.44",
+      "displayName": "Balm",
+      "environment": "*",
+      "depends": {
+        "fabricloader": "\u003e\u003d0.14.21",
+        "fabric-api": "*",
+        "minecraft": "1.21.1",
+        "java": "\u003e\u003d17"
+      },
+      "classes": 415,
+      "classFileMajorMax": 61,
+      "nestedJars": 1,
+      "signed": false,
+      "accessWideners": 0,
+      "verdict": "blocked_static",
+      "stage": "ANALYZED",
+      "counts": {
+        "unresolvedDueToHierarchy": 1,
+        "missingClass": 0,
+        "missingMember": 0,
+        "descMismatch": 5,
+        "missingApiClass": 219,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 132,
+        "mixins": 32,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 43,
+        "mixinInjectionsUnresolved": 0,
+        "missingConfirmedInSource": 0,
+        "externalPackages": 11
+      },
+      "missingClass": [],
+      "missingMember": [],
+      "descMismatch": [
+        {
+          "owner": "net/minecraft/class_1100",
+          "name": "method_4753",
+          "desc": "(Lnet/minecraft/class_7775;Ljava/util/function/Function;Lnet/minecraft/class_3665;Lnet/minecraft/class_2960;)Lnet/minecraft/class_1087;",
+          "kind": "method",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/common/client/rendering/AbstractCachedDynamicModel",
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels$2",
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels$4"
+          ],
+          "note": "target has same name in net/minecraft/class_1100 with desc (Lnet/minecraft/class_7775;Ljava/util/function/Function;Lnet/minecraft/class_3665;)Lnet/minecraft/class_1087;"
+        },
+        {
+          "owner": "net/minecraft/class_2960",
+          "name": "\u003cinit\u003e",
+          "desc": "(Ljava/lang/String;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/api/client/rendering/BalmModels",
+            "net/blay09/mods/balm/fabric/compat/ConfiguredConfigProvider"
+          ],
+          "note": "target has same name in net/minecraft/class_2960 with desc (Ljava/lang/String;Ljava/lang/String;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2499",
+          "name": "add",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/api/container/ImplementedContainer"
+          ],
+          "note": "target has same name in net/minecraft/class_2483 with desc (ILjava/lang/Object;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2622",
+          "name": "method_39026",
+          "desc": "(Lnet/minecraft/class_2586;Ljava/util/function/Function;)Lnet/minecraft/class_2622;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/common/BalmBlockEntity"
+          ],
+          "note": "target has same name in net/minecraft/class_2622 with desc (Lnet/minecraft/class_2586;Ljava/util/function/BiFunction;)Lnet/minecraft/class_2622;"
+        },
+        {
+          "owner": "net/minecraft/class_1088",
+          "name": "field_5374",
+          "desc": "Lnet/minecraft/class_1091;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels"
+          ],
+          "note": "target has same name in net/minecraft/class_1088 with desc Lnet/minecraft/class_2960;"
+        }
+      ],
+      "missingApiClass": [
+        {
+          "owner": "net/fabricmc/fabric/api/event/Event",
+          "kind": "class",
+          "refs": 54,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/FabricBalm",
+            "net/blay09/mods/balm/fabric/client/FabricBalmClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/Event",
+          "name": "register",
+          "desc": "(Ljava/lang/Object;)V",
+          "kind": "method",
+          "refs": 54,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/FabricBalm",
+            "net/blay09/mods/balm/fabric/client/FabricBalmClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/PacketSender",
+          "kind": "class",
+          "refs": 25,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents",
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/ModContainer",
+          "kind": "class",
+          "refs": 24,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/fluid/FluidVariant",
+          "kind": "class",
+          "refs": 23,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm$2",
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup",
+          "kind": "class",
+          "refs": 21,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm",
+            "net/blay09/mods/balm/fabric/capability/FabricBalmCapabilities",
+            "net/blay09/mods/balm/fabric/compat/energy/RebornEnergy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/transaction/TransactionContext",
+          "kind": "class",
+          "refs": 14,
+          "sources": [
+            "net/blay09/mods/balm/fabric/compat/energy/RebornEnergyStorage",
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup$BlockApiProvider",
+          "kind": "class",
+          "refs": 11,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm$1",
+            "net/blay09/mods/balm/fabric/FabricBalm$2",
+            "net/blay09/mods/balm/fabric/FabricBalm"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/base/ResourceAmount",
+          "kind": "class",
+          "refs": 11,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getInstance",
+          "desc": "()Lnet/fabricmc/loader/api/FabricLoader;",
+          "kind": "method",
+          "refs": 10,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels",
+            "net/blay09/mods/balm/fabric/config/FabricBalmConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "kind": "class",
+          "refs": 10,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels",
+            "net/blay09/mods/balm/fabric/config/FabricBalmConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/Storage",
+          "kind": "class",
+          "refs": 8,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm$1",
+            "net/blay09/mods/balm/fabric/FabricBalm$2"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents$StartTick",
+          "kind": "class",
+          "refs": 7,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents$EndTick",
+          "kind": "class",
+          "refs": 7,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents$BeforeInit",
+          "kind": "class",
+          "refs": 6,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/fluid/FluidVariant",
+          "name": "getFluid",
+          "desc": "()Lnet/minecraft/class_3611;",
+          "kind": "method",
+          "refs": 6,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/FabricItemGroupEntries",
+          "kind": "class",
+          "refs": 6,
+          "sources": [
+            "net/blay09/mods/balm/fabric/item/FabricBalmItems"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/keybinding/v1/KeyBindingHelper",
+          "name": "registerKeyBinding",
+          "desc": "(Lnet/minecraft/class_304;)Lnet/minecraft/class_304;",
+          "kind": "method",
+          "refs": 5,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricManagedKeyMappingBuilder [nested]",
+            "net/blay09/mods/balm/fabric/client/keymappings/FabricBalmKeyMappings",
+            "net/blay09/mods/balm/fabric/compat/AmecsBalmKeyMappings"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/IdentifiableResourceReloadListener",
+          "kind": "class",
+          "refs": 5,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime$1",
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientRuntime$1"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "kind": "class",
+          "refs": 5,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime$3",
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/compat/ModMenuIntegration"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/PacketByteBufs",
+          "name": "create",
+          "desc": "()Lnet/minecraft/class_2540;",
+          "kind": "method",
+          "refs": 5,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup",
+          "name": "registerFallback",
+          "desc": "(Lnet/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup$BlockApiProvider;)V",
+          "kind": "method",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm",
+            "net/blay09/mods/balm/fabric/capability/FabricBalmCapabilities",
+            "net/blay09/mods/balm/fabric/compat/energy/RebornEnergy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getModContainer",
+          "desc": "(Ljava/lang/String;)Ljava/util/Optional;",
+          "kind": "method",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/ModContainer",
+          "name": "getMetadata",
+          "desc": "()Lnet/fabricmc/loader/api/metadata/ModMetadata;",
+          "kind": "method",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder$Factory",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/fabric/block/entity/FabricBalmBlockEntities"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/transaction/base/SnapshotParticipant",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/fabric/compat/energy/RebornEnergyStorage",
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+          "name": "send",
+          "desc": "(Lnet/minecraft/class_3222;Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/biome/v1/BiomeSelectionContext",
+          "kind": "class",
+          "refs": 4,
+          "sources": [
+            "net/blay09/mods/balm/fabric/world/FabricBalmWorldGen"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents",
+          "name": "AFTER_INIT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents$AfterInit",
+          "kind": "class",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/item/v1/FabricItemStack",
+          "kind": "class",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmHooks"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "name": "ordinal",
+          "desc": "()I",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime$3",
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+          "name": "get",
+          "desc": "(Lnet/minecraft/class_3264;)Lnet/fabricmc/fabric/api/resource/ResourceManagerHelper;",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+          "kind": "class",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+          "name": "registerReloadListener",
+          "desc": "(Lnet/fabricmc/fabric/api/resource/IdentifiableResourceReloadListener;)V",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup",
+          "name": "find",
+          "desc": "(Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2586;Ljava/lang/Object;)Ljava/lang/Object;",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/balm/fabric/capability/FabricBalmCapabilities",
+            "net/blay09/mods/balm/fabric/provider/FabricBalmProviders"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup",
+          "name": "get",
+          "desc": "(Lnet/minecraft/class_2960;Ljava/lang/Class;Ljava/lang/Class;)Lnet/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup;",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/balm/fabric/capability/FabricBalmCapabilities",
+            "net/blay09/mods/balm/fabric/provider/FabricBalmProviders"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/entity/EntityApiLookup",
+          "kind": "class",
+          "refs": 3,
+          "sources": [
+            "net/blay09/mods/balm/fabric/provider/FabricBalmProviders"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/ClientModInitializer",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/client/FabricBalmClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents",
+          "name": "END_CLIENT_TICK",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents$EndTick",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenMouseEvents",
+          "name": "allowMouseClick",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenMouseEvents$AllowMouseClick",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenKeyboardEvents",
+          "name": "allowKeyPress",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenKeyboardEvents$AllowKeyPress",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/kuma/fabric/FabricKumaAPI [nested]",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/item/ItemVariant",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm$1"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/item/InventoryStorage",
+          "name": "of",
+          "desc": "(Lnet/minecraft/class_1263;Lnet/minecraft/class_2350;)Lnet/fabricmc/fabric/api/transfer/v1/item/InventoryStorage;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm$1"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/item/InventoryStorage",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm$1"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/registry/FuelRegistry",
+          "name": "INSTANCE",
+          "desc": "Lnet/fabricmc/fabric/api/registry/FuelRegistry;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmHooks"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/registry/FuelRegistry",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmHooks"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/ModContainer",
+          "name": "findPath",
+          "desc": "(Ljava/lang/String;)Ljava/util/Optional;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "getVersion",
+          "desc": "()Lnet/fabricmc/loader/api/Version;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/Version",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime",
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder",
+          "name": "create",
+          "desc": "(Lnet/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder$Factory;[Lnet/minecraft/class_2248;)Lnet/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/block/entity/FabricBalmBlockEntities"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/block/entity/FabricBalmBlockEntities"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder",
+          "name": "build",
+          "desc": "()Lnet/minecraft/class_2591;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/block/entity/FabricBalmBlockEntities"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup$BlockEntityApiProvider",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/capability/FabricBalmCapabilities"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientLifecycleEvents",
+          "name": "CLIENT_STARTED",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClient",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientLifecycleEvents$ClientStarted",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClient",
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/loading/v1/ModelLoadingPlugin",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClient",
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/loading/v1/ModelLoadingPlugin$Context",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/MappingResolver",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/rendering/v1/ColorProviderRegistry",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/rendering/v1/ColorProviderRegistry",
+          "name": "register",
+          "desc": "(Ljava/lang/Object;[Ljava/lang/Object;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry",
+          "name": "getInstance",
+          "desc": "()Lnet/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry$PendingParticleFactory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/particle/v1/FabricSpriteProvider",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screenhandler/v1/ScreenRegistry$Factory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/screen/FabricBalmScreens"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/transaction/base/SnapshotParticipant",
+          "name": "\u003cinit\u003e",
+          "desc": "()V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/compat/energy/RebornEnergyStorage",
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/StoragePreconditions",
+          "name": "notNegative",
+          "desc": "(J)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/compat/energy/RebornEnergyStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayConnectionEvents",
+          "name": "JOIN",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayConnectionEvents$Join",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents",
+          "name": "END_SERVER_TICK",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents",
+          "name": "START_SERVER_TICK",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/base/SingleSlotStorage",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/StoragePreconditions",
+          "name": "notBlankNotNegative",
+          "desc": "(Lnet/fabricmc/fabric/api/transfer/v1/storage/TransferVariant;J)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/TransferVariant",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/fluid/FluidVariant",
+          "name": "isOf",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ScreenHandlerRegistry$ExtendedClientHandlerFactory",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/menu/FabricBalmMenus"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/ModInitializer",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/entity/event/v1/ServerPlayerEvents",
+          "name": "COPY_FROM",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/entity/event/v1/ServerPlayerEvents$CopyFrom",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/item/ItemStorage",
+          "name": "SIDED",
+          "desc": "Lnet/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/fluid/FluidStorage",
+          "name": "SIDED",
+          "desc": "Lnet/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalm"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/item/v1/FabricItemStack",
+          "name": "getRecipeRemainder",
+          "desc": "()Lnet/minecraft/class_1799;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmHooks"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/registry/FuelRegistry",
+          "name": "get",
+          "desc": "(Lnet/minecraft/class_1935;)Ljava/lang/Object;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmHooks"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/registry/FuelRegistry",
+          "name": "add",
+          "desc": "(Lnet/minecraft/class_1935;Ljava/lang/Object;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmHooks"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/resource/SimpleSynchronousResourceReloadListener",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime$2"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "name": "values",
+          "desc": "()[Lnet/fabricmc/api/EnvType;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime$3"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "name": "CLIENT",
+          "desc": "Lnet/fabricmc/api/EnvType;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime$3"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/EnvType",
+          "name": "SERVER",
+          "desc": "Lnet/fabricmc/api/EnvType;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime$3"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "isModLoaded",
+          "desc": "(Ljava/lang/String;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getEnvironmentType",
+          "desc": "()Lnet/fabricmc/api/EnvType;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "isDevelopmentEnvironment",
+          "desc": "()Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getAllMods",
+          "desc": "()Ljava/util/Collection;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "getId",
+          "desc": "()Ljava/lang/String;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/metadata/ModMetadata",
+          "name": "getName",
+          "desc": "()Ljava/lang/String;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/Version",
+          "name": "getFriendlyString",
+          "desc": "()Ljava/lang/String;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/FabricBalmRuntime"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup",
+          "name": "registerForBlockEntities",
+          "desc": "(Lnet/fabricmc/fabric/api/lookup/v1/block/BlockApiLookup$BlockEntityApiProvider;[Lnet/minecraft/class_2591;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/capability/FabricBalmCapabilities"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/loading/v1/ModelLoadingPlugin",
+          "name": "register",
+          "desc": "(Lnet/fabricmc/fabric/api/client/model/loading/v1/ModelLoadingPlugin;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClient"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandlerRegistry",
+          "name": "INSTANCE",
+          "desc": "Lnet/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandlerRegistry;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientProxy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandlerRegistry",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientProxy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/render/fluid/v1/SimpleFluidRenderHandler",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientProxy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/render/fluid/v1/SimpleFluidRenderHandler",
+          "name": "WATER_STILL",
+          "desc": "Lnet/minecraft/class_2960;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientProxy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/render/fluid/v1/SimpleFluidRenderHandler",
+          "name": "WATER_FLOWING",
+          "desc": "Lnet/minecraft/class_2960;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientProxy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/render/fluid/v1/SimpleFluidRenderHandler",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;I)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientProxy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandlerRegistry",
+          "name": "register",
+          "desc": "(Lnet/minecraft/class_3611;Lnet/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandler;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientProxy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandler",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/FabricBalmClientProxy"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/command/v2/ClientCommandRegistrationCallback",
+          "name": "EVENT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/internal/commands/FabricBalmClientCommands"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/command/v2/ClientCommandRegistrationCallback",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/internal/commands/FabricBalmClientCommands"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/model/loading/v1/ModelLoadingPlugin$Context",
+          "name": "addModels",
+          "desc": "(Ljava/util/Collection;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getMappingResolver",
+          "desc": "()Lnet/fabricmc/loader/api/MappingResolver;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/MappingResolver",
+          "name": "mapClassName",
+          "desc": "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmModels"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/rendering/v1/EntityRendererRegistry",
+          "name": "register",
+          "desc": "(Lnet/minecraft/class_1299;Lnet/minecraft/class_5617;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/rendering/v1/ColorProviderRegistry",
+          "name": "BLOCK",
+          "desc": "Lnet/fabricmc/fabric/api/client/rendering/v1/ColorProviderRegistry;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/rendering/v1/ColorProviderRegistry",
+          "name": "ITEM",
+          "desc": "Lnet/fabricmc/fabric/api/client/rendering/v1/ColorProviderRegistry;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap",
+          "name": "INSTANCE",
+          "desc": "Lnet/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap",
+          "name": "putBlock",
+          "desc": "(Lnet/minecraft/class_2248;Lnet/minecraft/class_1921;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry",
+          "name": "register",
+          "desc": "(Lnet/minecraft/class_2396;Lnet/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry$PendingParticleFactory;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry",
+          "name": "register",
+          "desc": "(Lnet/minecraft/class_2396;Lnet/minecraft/class_707;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/rendering/FabricBalmRenderers"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screenhandler/v1/ScreenRegistry",
+          "name": "register",
+          "desc": "(Lnet/minecraft/class_3917;Lnet/fabricmc/fabric/api/client/screenhandler/v1/ScreenRegistry$Factory;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/screen/FabricBalmScreens"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/Screens",
+          "name": "getButtons",
+          "desc": "(Lnet/minecraft/class_437;)Ljava/util/List;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/client/screen/FabricBalmScreens"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/command/v2/CommandRegistrationCallback",
+          "name": "EVENT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/command/FabricBalmCommands"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/command/v2/CommandRegistrationCallback",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/command/FabricBalmCommands"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/api/Environment",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/compat/ModMenuIntegration"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/loader/api/FabricLoader",
+          "name": "getConfigDir",
+          "desc": "()Ljava/nio/file/Path;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/config/FabricBalmConfig"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/entity/FabricDefaultAttributeRegistry",
+          "name": "register",
+          "desc": "(Lnet/minecraft/class_1299;Lnet/minecraft/class_5132$class_5133;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/entity/FabricBalmEntities"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerWorldEvents",
+          "name": "UNLOAD",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerWorldEvents$Unload",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerWorldEvents",
+          "name": "LOAD",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerWorldEvents$Load",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerChunkEvents",
+          "name": "CHUNK_LOAD",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerChunkEvents$Load",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerChunkEvents",
+          "name": "CHUNK_UNLOAD",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerChunkEvents$Unload",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerEntityEvents",
+          "name": "ENTITY_LOAD",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerEntityEvents$Load",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/entity/event/v1/ServerLivingEntityEvents",
+          "name": "ALLOW_DEATH",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/entity/event/v1/ServerLivingEntityEvents$AllowDeath",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/entity/event/v1/ServerPlayerEvents",
+          "name": "AFTER_RESPAWN",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/entity/event/v1/ServerPlayerEvents$AfterRespawn",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/player/PlayerBlockBreakEvents",
+          "name": "BEFORE",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/player/PlayerBlockBreakEvents$Before",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayConnectionEvents",
+          "name": "DISCONNECT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayConnectionEvents$Disconnect",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/player/UseItemCallback",
+          "name": "EVENT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/player/UseItemCallback",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/player/UseBlockCallback",
+          "name": "EVENT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/player/UseBlockCallback",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerLifecycleEvents",
+          "name": "SERVER_STOPPED",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerLifecycleEvents$ServerStopped",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerLifecycleEvents",
+          "name": "SERVER_STARTED",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerLifecycleEvents$ServerStarted",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerLifecycleEvents",
+          "name": "SERVER_STARTING",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerLifecycleEvents$ServerStarting",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents",
+          "name": "END_WORLD_TICK",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents$EndWorldTick",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents",
+          "name": "START_WORLD_TICK",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents$StartWorldTick",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents",
+          "name": "BEFORE_INIT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientChunkEvents",
+          "name": "CHUNK_LOAD",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientChunkEvents$Load",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientChunkEvents",
+          "name": "CHUNK_UNLOAD",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientChunkEvents$Unload",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/item/v1/ItemTooltipCallback",
+          "name": "EVENT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/item/v1/ItemTooltipCallback",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenKeyboardEvents",
+          "name": "afterKeyRelease",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenKeyboardEvents$AfterKeyRelease",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenKeyboardEvents",
+          "name": "allowKeyRelease",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenKeyboardEvents$AllowKeyRelease",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenKeyboardEvents",
+          "name": "afterKeyPress",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenKeyboardEvents$AfterKeyPress",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenMouseEvents",
+          "name": "afterMouseRelease",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenMouseEvents$AfterMouseRelease",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenMouseEvents",
+          "name": "allowMouseRelease",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenMouseEvents$AllowMouseRelease",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenMouseEvents",
+          "name": "afterMouseClick",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenMouseEvents$AfterMouseClick",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents",
+          "name": "afterRender",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents$AfterRender",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents",
+          "name": "beforeRender",
+          "desc": "(Lnet/minecraft/class_437;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents$BeforeRender",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayConnectionEvents",
+          "name": "DISCONNECT",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayConnectionEvents$Disconnect",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayConnectionEvents",
+          "name": "JOIN",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayConnectionEvents$Join",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents",
+          "name": "END_WORLD_TICK",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents$EndWorldTick",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents",
+          "name": "START_WORLD_TICK",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents$StartWorldTick",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents",
+          "name": "START_CLIENT_TICK",
+          "desc": "Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents$StartTick",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/client/FabricBalmClientEvents"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/fluid/FluidVariant",
+          "name": "isBlank",
+          "desc": "()Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/fluid/FluidVariant",
+          "name": "of",
+          "desc": "(Lnet/minecraft/class_3611;)Lnet/fabricmc/fabric/api/transfer/v1/fluid/FluidVariant;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/base/ResourceAmount",
+          "name": "\u003cinit\u003e",
+          "desc": "(Ljava/lang/Object;J)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/base/ResourceAmount",
+          "name": "resource",
+          "desc": "()Ljava/lang/Object;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/transfer/v1/storage/base/ResourceAmount",
+          "name": "amount",
+          "desc": "()J",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/fluid/BalmFluidStorage"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/ItemGroupEvents",
+          "name": "modifyEntriesEvent",
+          "desc": "(Lnet/minecraft/class_5321;)Lnet/fabricmc/fabric/api/event/Event;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/item/FabricBalmItems"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/ItemGroupEvents$ModifyEntries",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/item/FabricBalmItems"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/FabricItemGroup",
+          "name": "builder",
+          "desc": "()Lnet/minecraft/class_1761$class_7913;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/item/FabricBalmItems"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ScreenHandlerRegistry",
+          "name": "registerExtended",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/screenhandler/v1/ScreenHandlerRegistry$ExtendedClientHandlerFactory;)Lnet/minecraft/class_3917;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/menu/FabricBalmMenus"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerFactory",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking$1"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+          "name": "registerGlobalReceiver",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/PlayerLookup",
+          "name": "tracking",
+          "desc": "(Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)Ljava/util/Collection;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/PlayerLookup",
+          "name": "tracking",
+          "desc": "(Lnet/minecraft/class_1297;)Ljava/util/Collection;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/PlayerLookup",
+          "name": "all",
+          "desc": "(Lnet/minecraft/server/MinecraftServer;)Ljava/util/Collection;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+          "name": "send",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+          "name": "registerGlobalReceiver",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/particle/v1/FabricParticleTypes",
+          "name": "simple",
+          "desc": "(Z)Lnet/minecraft/class_2400;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/particle/FabricBalmParticles"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/entity/EntityApiLookup",
+          "name": "get",
+          "desc": "(Lnet/minecraft/class_2960;Ljava/lang/Class;Ljava/lang/Class;)Lnet/fabricmc/fabric/api/lookup/v1/entity/EntityApiLookup;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/provider/FabricBalmProviders"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/lookup/v1/entity/EntityApiLookup",
+          "name": "find",
+          "desc": "(Lnet/minecraft/class_1297;Ljava/lang/Object;)Ljava/lang/Object;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/provider/FabricBalmProviders"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/biome/v1/BiomeModifications",
+          "name": "addFeature",
+          "desc": "(Ljava/util/function/Predicate;Lnet/minecraft/class_2893$class_2895;Lnet/minecraft/class_5321;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/world/FabricBalmWorldGen"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/biome/v1/BiomeSelectionContext",
+          "name": "getBiomeKey",
+          "desc": "()Lnet/minecraft/class_5321;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/world/FabricBalmWorldGen"
+          ]
+        },
+        {
+          "owner": "net/fabricmc/fabric/api/biome/v1/BiomeSelectionContext",
+          "name": "getBiomeRegistryEntry",
+          "desc": "()Lnet/minecraft/class_6880;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/world/FabricBalmWorldGen"
+          ]
+        }
+      ],
+      "missingApiMember": [],
+      "wrongLoaderNamespace": [],
+      "unmappedNamespace": [
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "kind": "class",
+          "refs": 122,
+          "sources": [
+            "net/blay09/mods/balm/api/BalmHooks",
+            "net/blay09/mods/balm/api/event/ServerTickHandler",
+            "net/blay09/mods/balm/api/event/server/ServerReloadFinishedEvent"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3760",
+          "desc": "()Lnet/minecraft/class_3324;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/blay09/mods/balm/fabric/event/FabricBalmCommonEvents"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3767",
+          "desc": "()Lnet/minecraft/class_1928;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/common/command/BalmCommand"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3776",
+          "desc": "(Lnet/minecraft/class_1267;Z)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/common/command/BalmCommand"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_30002",
+          "desc": "()Lnet/minecraft/class_3218;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/common/command/BalmCommand"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3738",
+          "desc": "()Ljava/lang/Iterable;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/common/command/BalmCommand"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "execute",
+          "desc": "(Ljava/lang/Runnable;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/fabric/network/FabricBalmNetworking"
+          ]
+        },
+        {
+          "owner": "net/minecraft/world/level/block/state/BlockState;getValue(Lnet/minecraft/world/level/block/state/properties/Property;)Ljava/lang/Comparable",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/mixin/FabricStemBlockMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/client/Minecraft;screen:Lnet/minecraft/client/gui/screens/Screen",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/mixin/MinecraftMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/client/player/LocalPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/blay09/mods/balm/mixin/MinecraftMixin"
+          ]
+        }
+      ],
+      "externalPackages": [
+        {
+          "owner": "[Ljava",
+          "kind": "package",
+          "refs": 3
+        },
+        {
+          "owner": "[Lnet",
+          "kind": "package",
+          "refs": 21
+        },
+        {
+          "owner": "com",
+          "kind": "package",
+          "refs": 110
+        },
+        {
+          "owner": "de",
+          "kind": "package",
+          "refs": 11
+        },
+        {
+          "owner": "dev",
+          "kind": "package",
+          "refs": 4
+        },
+        {
+          "owner": "io",
+          "kind": "package",
+          "refs": 11
+        },
+        {
+          "owner": "mcp",
+          "kind": "package",
+          "refs": 19
+        },
+        {
+          "owner": "me",
+          "kind": "package",
+          "refs": 85
+        },
+        {
+          "owner": "org",
+          "kind": "package",
+          "refs": 36
+        },
+        {
+          "owner": "snownee",
+          "kind": "package",
+          "refs": 20
+        },
+        {
+          "owner": "team",
+          "kind": "package",
+          "refs": 2
+        }
+      ],
+      "mixins": {
+        "configs": 1,
+        "classes": 32,
+        "injections": 43,
+        "unresolvedTargets": [],
+        "unresolvedInjections": []
+      },
+      "notes": [
+        "static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)"
+      ]
+    }
+  ],
+  "summary": {
+    "artifacts": 1,
+    "blockedStatic": 1,
+    "needsDependency": 0,
+    "cleanStatic": 0
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "feature": "cross-sample static injection check",
+  "target": "fabric-1.21.1",
+  "results": {
+    "lithium_converted": {
+      "mixins": 202,
+      "injectionTargets": 214,
+      "unresolved": 3
+    },
+    "lithium_patched": {
+      "jar": "work/cb/out/lithium/lithium-patched-chunkport.jar",
+      "mixins": 202,
+      "injectionTargets": 209,
+      "unresolved": 0
+    },
+    "balm_converted": {
+      "mixins": 32,
+      "injectionTargets": 43,
+      "unresolved": 0
+    },
+    "ironchests_converted": {
+      "mixins": 0,
+      "injectionTargets": 0,
+      "unresolved": 0,
+      "note": "top-level only; nested ResourcefulLib mixins not expanded"
+    },
+    "trashslot_converted": {
+      "mixins": 0,
+      "injectionTargets": 0,
+      "unresolved": 0
+    }
+  },
+  "interpretation": "The 3 lithium constructor targets flagged in the converted jar are the P11/P13 blockers; the patched build clears them and reaches 0 unresolved. This validates the static check against real patch history.",
+  "limitations": "Top-level mixins only; no ordinal/slice/local capture; static only."
+}
