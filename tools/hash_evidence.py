@@ -59,6 +59,7 @@ FILES = [
     "runs/p11-lithium-explosion/gradle-test.log",
     "runs/p11-lithium-explosion/gradle-install.log",
     "work/cb/out/lithium/lithium-patched-explosion3.jar",
+    "runs/p12-chunk-access/README.md",
     "work/cb/out/lithium/lithium-patched-final.jar",
     "rules/fabric-1.21.1/lithium.json",
     "work/cb/out/ironchests/report.md",

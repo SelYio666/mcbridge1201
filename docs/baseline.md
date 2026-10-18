@@ -558,6 +558,13 @@ CenturyBridge 转换时从 `lithium.mixins.json` 移除了 `world.chunk_access.C
 - 直接 re-add `ChunkHolderMixin`：`server-readd.log` 报 `@Shadow field field_16425 was not located in net.minecraft.class_3193`。
 - 把 shadow 字段本地化（mixin 自己的字段 + 懒初始化）：`server-chunkholder-local2.log` 越过了 cast，但随即撞上 CenturyBridge tombstone `class_3898.method_17236`。这改变了 chunk future 记账语义，未做完整 1.21.1 ChunkMap 适配，因此不采用；也没有用 mixin strip 掩盖。
 
+进一步分析（`runs/p12-chunk-access/README.md`）：旧 `ChunkMap.method_17236` 返回
+`CompletableFuture<Either<ChunkAccess, Unloaded>>`，1.21.1 已移除该方法与 `Unloaded` 类型，改用
+`CompletableFuture<ChunkResult<...>>`（`class_9259`）和 `ChunkHolder` 的独立 future 字段。即使给
+`t3` 写一个返回新 future 的桥，`getChunkBlocking` 后面仍会 `checkcast Either` 失败；所以必须
+真正移植 `ServerChunkManagerMixin.getChunkBlocking` + `ChunkHolderExtended` 到 1.21.1 API，
+而不是再加一条描述符规则。
+
 因此 lithium 仍是 **degraded**，不是兼容通过；下一步是真正移植 chunk access 层或为 `method_17236` 写非降级桥。
 
 边界：只验证专用服务端启动；GUI/渲染/多人 pending。没有提交游戏 jar、模组 jar 或转换件。

@@ -74,6 +74,7 @@
 | Mixin 适配规则 | `rules/fabric-1.21.1/lithium.json`（`mixinCallbackAdaptations`） |
 | Mixin 适配补丁 / 启动 / 实验 | `runs/p11-lithium-explosion/README.md`、`patch-lithium3.log`、`server-explosion3.log`、`server-readd.log`、`server-chunkholder-local2.log` |
 | Mixin 适配测试 | `runs/p11-lithium-explosion/gradle-test.log`（11 tests, 0 failures） |
+| chunk access 分析 | `runs/p12-chunk-access/README.md` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
