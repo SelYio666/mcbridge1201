@@ -1005,6 +1005,26 @@ ordinal，unresolved 仍 3。
 这只是提取：尚未统计目标方法中的匹配指令数，也不判断 ordinal 是否越界；slice/local capture
 仍未解析。新增 synthetic ordinal 测试；测试总数 **22/22**。证据 `runs/p49-at-ordinal/`。
 
+### 7.52 首次真实客户端运行（PCL）
+
+利用 D 盘 PCL 的 `D:\我的世界\.minecraft` 安装 1.21.1 base + Fabric 0.19.5 profile，放入
+Fabric API、Balm 21、lithium、P26 ironchests、P29 trashslot。客户端 Fabric 成功加载全部模组，
+进入 `Initializing game`，随后 ironchests 入口点崩溃：
+
+```text
+NoClassDefFoundError:
+net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler
+  at ...resourcefullib...FabricClientPacketHelper.clientOnlyRegister
+```
+
+ResourcefulLib 2.0.6 使用旧 `PlayChannelHandler` / `Identifier` 客户端网络 API；1.21.1 改为
+`PlayPayloadHandler` / `CustomPayload`。将嵌套 ResourcefulLib 换成 3.0.12 后，又缺
+`networking.base.PacketHandler`，不是 drop-in 修复。
+
+这是**真实客户端阻断**，服务端测试覆盖不到；没有升级任何客户端 profile 状态。证据
+`runs/p50-client/`。下一步是实现 ResourcefulLib 客户端网络桥，或把其 client helper 改到
+1.21.1 API 且保留 ironchests 使用的 `PacketHandler`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

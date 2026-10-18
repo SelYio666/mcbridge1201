@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 23:59（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 00:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 00:35）：**首次真实客户端运行（PCL）**。已装 1.21.1 Fabric 0.19.5 客户端；五个模组全部加载，ironchests 入口点崩溃：`ClientPlayNetworking$PlayChannelHandler` 缺失（旧 ResourcefulLib 2.0.6 客户端网络 API）。换 ResourcefulLib 3.0.12 会在 `PacketHandler` 处失败。这是新的真实客户端阻断，不是服务端问题。证据 `runs/p50-client/`。
 更新（2026-10-19 00:05）：**`@At.ordinal` 提取**。`Injection.atOrdinal` + `mixinAtOrdinals`；lithium 86 at-targets 中 10 个带 ordinal；仅提取，不做匹配指令计数/越界校验；测试 **22/22**。证据 `runs/p49-at-ordinal/`。
 更新（2026-10-18 23:59）：**nested jar mixin 展开**。scanner 读取 `META-INF/jars/*.jar` 内的 `.mixins.json`，带 `!/` 前缀；ironchests P26 从 0 mixin/0 injection 变为 **1/1**（unresolved 0），lithium 保持 202/214/86/3；测试 **21/21**。证据 `runs/p48-nested-mixins/`。
 更新（2026-10-18 23:58）：**字段 `@At` 解析测试**。`FIELD` target `class_14.field_99:L...;` 的 owner/name/desc/`atTargetField` 全部断言；测试 **20/20**。证据 `runs/p47-field-at/`。
@@ -328,6 +329,13 @@
 164. **计数**：lithium 86 at-targets 中 10 个带 ordinal；不改变 unresolved 3。
 165. **边界**：只提取，不统计目标方法匹配指令，也不判越界；测试 22/22。证据 `runs/p49-at-ordinal/`。
 
+## 2026-10-19 00:35 更新：首次客户端运行
+
+166. **安装**：PCL 的 `D:\我的世界\.minecraft` 下装 1.21.1 base + Fabric 0.19.5 profile；用 PCL 的 Microsoft Java 21 跑 Fabric installer（工作区 JDK TLS 不可用）。
+167. **加载**：Fabric API、Balm 21、lithium、ironchests、trashslot 全部出现在 mod 列表，进入 `Initializing game`。
+168. **崩溃**：ironchests 入口点 `NoClassDefFoundError: ClientPlayNetworking$PlayChannelHandler`（旧 ResourcefulLib 2.0.6 客户端网络 API）；换 ResourcefulLib 3.0.12 又在 `PacketHandler` 失败。
+169. **结论**：这是新的真实客户端阻断，服务端测试覆盖不到。证据 `runs/p50-client/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -395,6 +403,7 @@
 | 字段 @At 解析 | `runs/p47-field-at/README.md`、`verdict.json`、`gradle-test.log` |
 | nested mixin 展开 | `runs/p48-nested-mixins/README.md`、`verdict.json`、`ironchests.json` |
 | @At ordinal | `runs/p49-at-ordinal/README.md`、`verdict.json`、`lithium-converted.json` |
+| 首次客户端运行 | `runs/p50-client/README.md`、`client.log`、`crash-report.txt` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

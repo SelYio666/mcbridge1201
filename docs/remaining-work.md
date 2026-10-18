@@ -18,8 +18,10 @@ claim that these paths work.
 
 ## Blocked: client GUI / network / multiplayer
 
-The host has no Minecraft client fixture (no client libraries/assets/display). The following
-are therefore **not executed**:
+A PCL-based Fabric 1.21.1 client now exists (`D:\我的世界\.minecraft`,
+`fabric-loader-0.19.5-1.21.1`) and loads all five mods, but **crashes at ironchests' entrypoint**
+because nested ResourcefulLib 2.0.6 needs the old `ClientPlayNetworking$PlayChannelHandler`.
+Until that client networking bridge is written, the following are **not executable**:
 
 - trashslot client GUI, `ClientPlayNetworking` receiver, actual packet delivery;
 - lithium gameplay/rendering;
