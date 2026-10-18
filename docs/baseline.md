@@ -741,6 +741,18 @@ mixin config 的 `refmap`，把命名目标映射为 `Lowner;method(desc)`（含
 ironchests/trashslot 的 0 是“顶层 jar 没有 mixin”的意思，nested mixin 未展开，不应解读为
 “所有 mixin 都安全”。证据 `runs/p22-cross-analyze/`。
 
+### 7.26 lithium chunk-access 压力测试
+
+P13 的 chunk 移植此前只做了单 chunk 命令探针。P23 在
+`fabric-1.21.1-server-lithium` 上 forceload **224 个 chunk**（`[-7,-7]` 到 `[7,7]`），在
+`(112,100,112)` 与 `(-112,100,-112)` 设置钻石/绿宝石块，`save-all flush` 后停止；新 JVM
+重启后 `forceload add` 显示 force-load 状态持久化，`execute if block` 两个远角块分别输出
+`STRESS_OK_A` / `STRESS_OK_B`。两次 `Done`、exit 0。
+
+这说明 `ServerChunkManager.method_14134` + `ChunkAccessPump` 的移植在更大 chunk 集与
+保存/重启路径上仍然正确。边界仍是专用服务端 + 命令 API，无客户端/玩家/多人；旧的多入口
+缓存/off-thread 快路径仍未恢复。证据 `runs/p23-chunk-stress/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

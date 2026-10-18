@@ -1,0 +1,19 @@
+{
+  "contract": "lithium.chunk-access.stress",
+  "instance": "work/instances/fabric-1.21.1-server-lithium",
+  "mod": "lithium-0.11.4+1.21.1-patched.jar",
+  "steps": {
+    "done_step1": true,
+    "forceload_chunks": 224,
+    "setblock_far_a": true,
+    "setblock_far_b": true,
+    "save": true,
+    "done_step2": true,
+    "restart_read_a": true,
+    "restart_read_b": true
+  },
+  "signals": ["STRESS_OK_A", "STRESS_OK_B"],
+  "exitCodes": [0, 0],
+  "scope": "dedicated server + command API; no client/GUI/player/multiplayer",
+  "passed": true
+}

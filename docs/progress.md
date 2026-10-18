@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 22:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 22:20（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 22:20）：**lithium chunk-access 压力测试通过**。224 个 forceload chunk（`[-7,-7]` 到 `[7,7]`），在远角设置钻石/绿宝石块，save/restart 后 `execute if block` 分别输出 `STRESS_OK_A/B`；两次 `Done`、exit 0。说明 P13 chunk 移植不只在单 chunk 探针上正确。证据 `runs/p23-chunk-stress/`。
 更新（2026-10-18 22:15）：**注入目标静态检查交叉验证**。同一 1.21.1 索引下：转换后 lithium `214/3`（3 个 unresolved 正是 P11/P13 的构造器阻断），补丁后 lithium `209/0`；Balm `43/0`，ironchests/trashslot 顶层无 mixin。说明 P21 的检查能在补丁前发现真实阻断、补丁后清零。证据 `runs/p22-cross-analyze/`。
 更新（2026-10-18 22:10）：**refmap 注入目标解析**。读取 mixin config 的 refmap，把命名目标映射到 `Lowner;method(desc)`（含构造器），`Analyzer` 现在能静态复现 lithium 的 3 个已知构造器变化：`class_4180`(POI)、`class_3610`(FluidState)、`class_1927`(Explosion)。测试 16/16；证据 `runs/p21-refmap/`。
 更新（2026-10-18 22:05）：**Mixin 注入目标提取 + 保守校验**。`ArtifactScanner` 解析 `@Inject`/`@Redirect` 等的 `method` 目标，`Analyzer` 新增 `mixinInjections`/`mixinInjectionsUnresolved`；只校验 intermediary 名称+描述符，命名/refmap/构造器跳过。测试 15/15；转换后 lithium 实跑 `214` 个注入目标、`0` unresolved；证据 `runs/p20-mixin-inject/`。
@@ -128,6 +129,13 @@
 72. **意义**：P21 的检查不是 synthetic-only；它能在补丁前发现真实阻断、补丁后确认清零。
 73. **边界**：顶层 mixin、精确描述符；ordinal/slice/local capture 与 nested mixin 未覆盖。证据 `runs/p22-cross-analyze/`。
 
+## 2026-10-18 22:20 更新：lithium chunk 压力测试
+
+74. **场景**：`fabric-1.21.1-server-lithium`，forceload `224` 个 chunk（`[-7,-7]` 到 `[7,7]`），在 `(112,100,112)` 与 `(-112,100,-112)` 设置钻石/绿宝石块，`save-all flush` 后停止。
+75. **重启**：新 JVM `forceload add` 显示“No chunks were marked”（force-load 状态持久化），`execute if block` 远角两块均输出 `STRESS_OK_A` / `STRESS_OK_B`；两次 `Done`，exit 0。
+76. **意义**：P13 chunk access 移植在更大 chunk 集与保存/重启路径上仍然正确，不只是单 chunk 命令探针。
+77. **边界**：专用服务端 + 命令 API；无客户端/玩家/多人；chunk 优化减少仍在。证据 `runs/p23-chunk-stress/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -168,6 +176,7 @@
 | Mixin 注入目标分析 | `runs/p20-mixin-inject/README.md`、`verdict.json`、`gradle-test.log`、`analyze-converted.log` |
 | refmap 注入目标 | `runs/p21-refmap/README.md`、`verdict.json`、`lithium-converted.json`、`analyze-converted.log` |
 | 注入目标交叉验证 | `runs/p22-cross-analyze/README.md`、`verdict.json`、`lithium-patched.json` |
+| lithium chunk 压力测试 | `runs/p23-chunk-stress/README.md`、`verdict.json`、`step1b.log`、`step2.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
