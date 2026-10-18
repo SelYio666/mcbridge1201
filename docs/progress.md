@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 01:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 01:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 01:25）：**trash 持久化 probe 失败**。`TrashHelper.setTrashItem` 后同会话 `getTrashItem` 能读回 5 钻石；Save and Quit → 重进同一世界后 trash 为空，probe 再次 SET。玩家 NBT 有 `BalmData/TrashSlot` 但没有 diamond 数据。这是真实持久化缺口，不能算通过。证据 `runs/p57-trash-persist/`。
 更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。
 更新（2026-10-19 01:05）：**背包 + TrashSlot GUI 渲染**。合成 E 键不可靠，改用客户端测试 mod 自动打开 `InventoryScreen`；截图显示原版背包和右下角 TrashSlot 按钮。点击空 trash 按钮不改变界面；物品移入/移出、持久化、容器 GUI、同步仍未验证。证据 `runs/p55-client-gui/`。
 更新（2026-10-19 01:00）：**客户端进入世界并渲染**。补 `LithiumVarIntBridge`（`class_8703.method_53015`）后，世界生成通过，客户端加入单人世界、渲染地形/HUD；截图 `runs/p54-client-lithium/world.png`。trash GUI/容器持久化/同步仍未执行。证据 `runs/p54-client-lithium/`。
@@ -378,6 +379,12 @@
 186. **尝试**：点击钻石再点 trash 按钮、或拖拽到按钮；物品仍停在光标，trash 未接收，日志无异常。
 187. **结论**：不能记为通过；需查 TrashSlot GUI slot 的点击路径/坐标/处理器。证据 `runs/p56-client-item/`。
 
+## 2026-10-19 01:25 更新：trash 持久化 probe
+
+188. **同会话**：`TrashHelper.setTrashItem` 后立即 `getTrashItem` 读回 5 钻石（`TRASH_PROBE_SET after=5`）。
+189. **重进**：Save and Quit → 重进同一世界，trash 为空，probe 再次 SET；玩家 NBT 有 `BalmData/TrashSlot` 但无 diamond payload。
+190. **结论**：真实持久化缺口；GUI 拖放和持久化都不能算通过。证据 `runs/p57-trash-persist/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -452,6 +459,7 @@
 | 客户端进入世界 | `runs/p54-client-lithium/README.md`、`world.png`、`latest.log` |
 | 背包/TrashSlot GUI | `runs/p55-client-gui/README.md`、`inventory-probe.png`、`trash-click.png` |
 | 真实物品/trash 拖放 | `runs/p56-client-item/README.md`、`inventory-with-diamonds.png`、`trash-drag.png` |
+| trash 持久化 probe | `runs/p57-trash-persist/README.md`、`latest.log`、`pause2.png` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
