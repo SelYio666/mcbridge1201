@@ -21,6 +21,12 @@ def read_json(rel: str):
     return json.loads((ROOT / rel).read_text(encoding="utf-8"))
 
 
+def _counts(data):
+    counts = data["artifacts"][0]["counts"]
+    return (counts.get("mixinInjections"), counts.get("mixinAtTargets"),
+            counts.get("mixinInjectionsUnresolved"))
+
+
 def main() -> int:
     checks: dict[str, bool] = {}
     details: dict[str, object] = {}
@@ -58,6 +64,12 @@ def main() -> int:
           lambda d: d.get("marker") == "CODEC_DISPATCH_PROBE_OK")
     check("client_bridge_bytecode", "runs/p38-client-bv/verdict.json",
           lambda d: d.get("failedMethods") == 0)
+    check("at_targets_converted", "runs/p35-at-refmap/lithium-converted.json",
+          lambda d: _counts(d) == (214, 86, 3))
+    check("at_targets_patched", "runs/p36-patched-at/lithium-patched.json",
+          lambda d: _counts(d) == (209, 84, 0))
+    check("profiles_present", "profiles/lithium-0.11.4-fabric__fabric-1.21.1.json",
+          lambda d: d.get("status") == "booted_within_scope")
 
     tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True)
     jars = [line for line in tracked.stdout.splitlines() if line.endswith(".jar")]

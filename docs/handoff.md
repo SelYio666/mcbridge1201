@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 23:45）：**证据总校验扩展**。`tools/verify_evidence.py` 增加 P35/P36 at-target 计数和 lithium profile 检查；全部 checks true，exit 0。证据 `runs/p40-verify-extended/`。
 更新（2026-10-18 23:40）：**证据总校验工具**。`tools/verify_evidence.py` 检查 18 个测试、P14/P24/P26/P27/P33/P37/P38 证据及“无 tracked jar”；`passed=true`，exit 0。证据 `runs/p39-verify-evidence/`。
 更新（2026-10-18 23:35）：**P29 client bridge 的 BytecodeVerify**。`trashslot-client-aw.jar` 顶层 47 classes / 0 failures，覆盖 `BalmNetworkingBridge`/`$Payload`/`$Client`；客户端分支仍未执行。证据 `runs/p38-client-bv/`。
 更新（2026-10-18 23:30）：**CodecDispatch 语义 probe 通过**。`RecordCodecBuilder` 的 `Box(int a)` 经 `CodecDispatch.dispatch` encode 为 `{"a":1,"type":"k"}`、decode 回 `Box(1)`，日志 `CODEC_DISPATCH_PROBE_OK`；服务端 `Done (4.847s)`、exit 0。直接验证 P26 安全 MapCodec 包装。证据 `runs/p37-codec-probe/`。

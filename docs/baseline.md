@@ -924,6 +924,13 @@ failed**，exit 0。覆盖 `BalmNetworkingBridge`、`$Payload`、`$Client` 以�
 failures/errors。它只检查既有证据一致性，不重新启动服务端/客户端。证据
 `runs/p39-verify-evidence/`。
 
+### 7.42 证据总校验扩展
+
+`tools/verify_evidence.py` 增加三项：P35 converted at-target 计数 `(214,86,3)`、P36 patched
+`(209,84,0)`、lithium profile `booted_within_scope`。连同原有测试/契约/无 tracked jar 检查，
+本次全部 true，exit 0。它只校验既有证据，不启动服务端/客户端。证据
+`runs/p40-verify-extended/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

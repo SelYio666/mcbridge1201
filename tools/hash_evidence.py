@@ -240,6 +240,8 @@ FILES = [
     "runs/p39-verify-evidence/README.md",
     "runs/p39-verify-evidence/verify.log",
     "tools/verify_evidence.py",
+    "runs/p40-verify-extended/README.md",
+    "runs/p40-verify-extended/verify.log",
     "runs/p14-lithium-ironchests/README.md",
     "runs/p14-lithium-ironchests/verdict.json",
     "runs/p14-lithium-ironchests/step1-place-insert.log",
