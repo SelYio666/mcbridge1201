@@ -26,6 +26,10 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
 | 第二样本 lithium | 转换并加载成功（131 配置项）；mixin 注入失败 → 显式降级 2 条；卡在 `class_14.method_59` 签名 | `runs/p6-lithium/`、`rules/fabric-1.21.1/lithium-degraded.json` |
 
+## 交接
+
+先读 [docs/handoff.md](docs/handoff.md)（一页版：能做什么、当前降级、下一步、复现命令）。
+
 ## 复现
 
 所有 Python 脚本只依赖标准库（本机 PowerShell/git 的 schannel TLS 不可用，Python 的 OpenSSL 可用）。
