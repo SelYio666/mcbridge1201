@@ -28,7 +28,7 @@
     "repo": "dextawa/CenturyBridge",
     "commit": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
     "license": "MIT",
-    "artifactSha256": "7088ff065b322f7ae76d6f702acb0fdc7ebaf3be3d9ebfe3325ad95904ac8b58",
+    "artifactSha256": "0ad28f9a5e9ccb435fd2cacde00d52c9ac1b1aacd7c5ae107be6d2a8bc07fcad",
     "note": "engine compiled with a local no-op MixinCheck stub; mixin-check gate not verified"
   },
   "rulePackage": {
@@ -130,12 +130,12 @@
     },
     "patchedJar": {
       "path": "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-aw.jar",
-      "sha256": "7088ff065b322f7ae76d6f702acb0fdc7ebaf3be3d9ebfe3325ad95904ac8b58"
+      "sha256": "0ad28f9a5e9ccb435fd2cacde00d52c9ac1b1aacd7c5ae107be6d2a8bc07fcad"
     }
   },
   "knownLimitations": [
     "GUI/render/multiplayer untested (no client instance).",
-    "fromJson fallback is a semantic degradation and must be replaced before publishing.",
+    "fromJson falls back to match-everything when the 1.21.1 codec rejects legacy predicate JSON (observed for {\"items\":[\"minecraft:dirt\"]}; likely needs RegistryOps); this weakens item filtering and is recorded as degraded.",
     "Game jar was locally remapped with this project's ASM remapper because the stock Fabric remap cannot write in this sandbox."
   ]
 }

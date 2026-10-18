@@ -142,7 +142,7 @@ public final class BridgeGenerator {
      * JsonOps, exactly how the 1.20.1 implementation was written.
      */
     public static byte[] itemPredicateFromJson() {
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        ClassWriter cw = new SafeClassWriter();
         cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL | Opcodes.ACC_SUPER,
                 ITEM_PREDICATE_FROM_JSON, null, "java/lang/Object", null);
 
@@ -166,11 +166,27 @@ public final class BridgeGenerator {
                 "(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;", true);
         m.visitMethodInsn(Opcodes.INVOKEINTERFACE, "com/mojang/serialization/DataResult", "result",
                 "()Ljava/util/Optional;", true);
-        // DIAGNOSTIC: fall back to the "match everything" predicate instead of null so that a
-        // legacy predicate JSON that the 1.21.1 codec rejects does not become Success(null).
+        m.visitVarInsn(Opcodes.ASTORE, 1);
+        m.visitVarInsn(Opcodes.ALOAD, 1);
+        m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Optional", "isPresent", "()Z", false);
+        var ok = new org.objectweb.asm.Label();
+        m.visitJumpInsn(Opcodes.IFNE, ok);
+        // VISIBLE diagnostic: a legacy predicate JSON that the 1.21.1 codec rejects must not
+        // silently become a match-everything predicate without a log line.
+        m.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "err", "Ljava/io/PrintStream;");
+        m.visitVarInsn(Opcodes.ALOAD, 0);
+        m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/google/gson/JsonElement", "toString",
+                "()Ljava/lang/String;", false);
+        m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+        m.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "err", "Ljava/io/PrintStream;");
+        m.visitLdcInsn("[mcbridge1201] ItemPredicate.fromJson: 1.21.1 codec rejected legacy JSON; "
+                + "falling back to match-everything predicate (recorded degradation)");
+        m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
         m.visitMethodInsn(Opcodes.INVOKESTATIC, ITEM_PREDICATE_ANY, "any", ITEM_PREDICATE_ANY_DESC, false);
-        m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Optional", "orElse",
-                "(Ljava/lang/Object;)Ljava/lang/Object;", false);
+        m.visitInsn(Opcodes.ARETURN);
+        m.visitLabel(ok);
+        m.visitVarInsn(Opcodes.ALOAD, 1);
+        m.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/util/Optional", "get", "()Ljava/lang/Object;", false);
         m.visitTypeInsn(Opcodes.CHECKCAST, "net/minecraft/class_2073");
         m.visitInsn(Opcodes.ARETURN);
         m.visitMaxs(0, 0);

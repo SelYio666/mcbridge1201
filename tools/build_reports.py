@@ -126,7 +126,7 @@ def main():
         },
         "knownLimitations": [
             "GUI/render/multiplayer untested (no client instance).",
-            "fromJson fallback is a semantic degradation and must be replaced before publishing.",
+            "fromJson falls back to match-everything when the 1.21.1 codec rejects legacy predicate JSON (observed for {\"items\":[\"minecraft:dirt\"]}; likely needs RegistryOps); this weakens item filtering and is recorded as degraded.",
             "Game jar was locally remapped with this project's ASM remapper because the stock Fabric remap cannot write in this sandbox.",
         ],
     }

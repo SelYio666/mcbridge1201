@@ -24,6 +24,8 @@ FILES = [
     "runs/p5-contract-script/step2-restart-read.log",
     "runs/p6-lithium/server.log",
     "runs/p6-contract-recheck/verdict.json",
+    "runs/p7-degradation-probe/server.log",
+    "runs/p7-contract-recheck/verdict.json",
     "work/cb/out/ironchests/report.md",
     "work/cb/out/ironchests/full-audit.tsv",
     "work/remap/server-intermediary.jar",

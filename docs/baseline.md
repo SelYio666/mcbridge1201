@@ -434,9 +434,30 @@ boot    → Loading 42 mods 含 lithium 0.11.4；读取了 131 个配置项；�
 
 实例随后恢复为 ironchests，并重跑容器契约确认仍通过（`runs/p6-contract-recheck/verdict.json`）。
 
+### 7.16 降级探针：`fromJson` 回退确实被触发
+
+把 `ItemPredicateFromJson` 改成「解析失败时打印原始 JSON + 明确告警」，重新补丁并启动 ironchests：
+
+```text
+[STDERR]: {"items":["minecraft:dirt"]}
+[STDERR]: [mcbridge1201] ItemPredicate.fromJson: 1.21.1 codec rejected legacy JSON;
+          falling back to match-everything predicate (recorded degradation)
+[19:33:43] Done (1.225s)!
+```
+
+由此确认两件事：
+
+1. 这个降级不是理论风险，**实际被触发**：mod 的 chest 定义里有 `{"items":["minecraft:dirt"]}` 这类谓词；
+2. 1.21.1 的 `ItemPredicate.CODEC` 对这份 JSON 解析失败。最可能的原因：`items` 字段在 1.21.1 是 `HolderSet`，解析需要 `RegistryOps`（带 registry lookup），而桥里用的是 `JsonOps.INSTANCE`，没有 registry 上下文。
+
+影响：所有通过 `fromJson` 构建的物品谓词都会退回「匹配所有」。对本样本而言，容器定义中的物品筛选语义被弱化——这是**记录在案的降级**，不是兼容通过。
+
+后续正确做法（已列为下一缺口）：不要用 `JsonOps` 解析 `ItemPredicate`，而是从 registry 上下文构建（`RegistryOps` 或直接用 `BuiltInRegistries.ITEM` 构造 `HolderSet` + 空 `DataComponentPredicate`），再用构造器生成谓词；这需要一个真正的运行时桥，而不是静态 JSON 解析。
+
 ## 8. 未验证项与下一步
 
-1. **图形/GUI 与多人**：服务端契约已通过；`WORLD_LOADED` 的玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
+1. **`ItemPredicate` 的 registry-aware 构造**：当前 `fromJson` 用 `JsonOps` 解析 `{"items":[...]}` 失败并退回全匹配（已实测触发）。要按 registry 构造 `HolderSet`，才能去掉这个降级。
+2. **图形/GUI 与多人**：服务端契约已通过；玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
 2. **方法签名变化的通用适配**：lithium 卡在 `class_14.method_59` 的 `NoSuchMethodError`；需要把 `signatureAdaptations` 从“覆写迁移”扩展到“调用点参数/描述符迁移”。
 2. **`fromJson` 的 ANY 回退是语义降级**：解析失败会变成“匹配所有物品”，必须改成显式诊断或真正的 MapCodec 适配后再对外。
 2. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；已用“fromJson 解析失败回退 ANY”绕过一次，但那是**语义降级**，必须在最终规则里改成显式诊断或真正的 MapCodec 构造。
