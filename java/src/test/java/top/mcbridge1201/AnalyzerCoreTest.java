@@ -85,12 +85,23 @@ class AnalyzerCoreTest {
         missing.targetDesc = "()V";
         mi.injections.add(ok);
         mi.injections.add(missing);
+        ArtifactScanner.Injection atMissing = new ArtifactScanner.Injection();
+        atMissing.annotation = "Inject";
+        atMissing.targetName = "method_59";
+        atMissing.targetDesc = "()V";
+        atMissing.atValue = "INVOKE";
+        atMissing.atTargetOwner = "net/minecraft/class_14";
+        atMissing.atTargetName = "method_99";
+        atMissing.atTargetDesc = "()V";
+        mi.injections.add(atMissing);
         a.mixins.add(mi);
 
         Analyzer.Result r = new Analyzer(mc, new TargetIndex("api"), "fabric").analyze(a);
-        assertEquals(2, r.mixinInjectionCount);
-        assertEquals(1, r.unresolvedMixinInjections.size());
-        assertTrue(r.unresolvedMixinInjections.get(0).contains("method_60"));
+        assertEquals(3, r.mixinInjectionCount);
+        assertEquals(1, r.mixinAtTargetCount);
+        assertEquals(2, r.unresolvedMixinInjections.size());
+        assertTrue(r.unresolvedMixinInjections.stream().anyMatch(s -> s.contains("method_60")));
+        assertTrue(r.unresolvedMixinInjections.stream().anyMatch(s -> s.contains("method_99")));
     }
 
     @Test

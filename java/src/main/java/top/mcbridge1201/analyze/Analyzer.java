@@ -51,6 +51,7 @@ public final class Analyzer {
         public final List<String> unresolvedMixinInjections = new ArrayList<>();
         public int mixinClassCount;
         public int mixinInjectionCount;
+        public int mixinAtTargetCount;
         public final List<String> notes = new ArrayList<>();
         public boolean truncated;
     }
@@ -166,6 +167,29 @@ public final class Analyzer {
                                 + inj.targetName + desc + " (" + inj.annotation + ")");
                     }
                 }
+                if (inj.atTargetOwner != null && inj.atTargetName != null
+                        && isIntermediaryName(inj.atTargetOwner) && mc.hasClass(inj.atTargetOwner)) {
+                    r.mixinAtTargetCount++;
+                    boolean field = inj.atTargetField || "FIELD".equals(inj.atValue);
+                    boolean method = !field && (inj.atValue == null || "INVOKE".equals(inj.atValue));
+                    String n = inj.atTargetName;
+                    if ((field && n.startsWith("field_")) || (method
+                            && (n.startsWith("method_") || n.equals("<init>") || n.equals("<clinit>")))) {
+                        String desc = inj.atTargetDesc == null ? "" : inj.atTargetDesc;
+                        TargetIndex.Resolution res = field
+                                ? mc.resolveField(inj.atTargetOwner, n, desc)
+                                : mc.resolveMethod(inj.atTargetOwner, n, desc);
+                        boolean missing = inj.atTargetDesc == null
+                                ? res.kind() == TargetIndex.Kind.MISSING_MEMBER
+                                : res.kind() == TargetIndex.Kind.MISSING_MEMBER
+                                        || res.kind() == TargetIndex.Kind.DESC_MISMATCH;
+                        if (missing) {
+                            r.unresolvedMixinInjections.add(mi.configName + " -> @At "
+                                    + inj.atValue + " " + inj.atTargetOwner + "." + n + desc
+                                    + " (" + inj.annotation + ")");
+                        }
+                    }
+                }
             }
         }
 
@@ -194,6 +218,7 @@ public final class Analyzer {
         r.counts.put("mixins", a.mixins.size());
         r.counts.put("mixinTargetsUnresolved", r.unresolvedMixinTargets.size());
         r.counts.put("mixinInjections", r.mixinInjectionCount);
+        r.counts.put("mixinAtTargets", r.mixinAtTargetCount);
         r.counts.put("mixinInjectionsUnresolved", r.unresolvedMixinInjections.size());
         int confirmed = 0;
         for (List<Item> l : List.of(r.missingClass, r.missingMember, r.descMismatch, r.missingApiClass, r.missingApiMember)) {

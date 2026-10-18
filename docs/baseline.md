@@ -856,6 +856,20 @@ failed**，nested ResourcefulLib **142 classes，0 failures**，exit 0。覆盖 
 双向 ItemStack/NBT 桥都已实际执行。仍不含客户端 `ClientPlayNetworking` 投递、trash GUI 或玩家
 动作。证据 `runs/p33-all-packets/`。
 
+### 7.36 `@At` 注入点目标（保守）
+
+`ArtifactScanner` 现在解析 `@Inject`/`@Redirect` 等的嵌套 `@At(value=..., target=...)`（单值或
+数组），并记录 `atValue`/`atTargetOwner`/`atTargetName`/`atTargetDesc`/`atTargetField`。同时修复
+了多 `method` 数组被合并成一条 injection 的问题（lithium 的 214 条恢复）。
+
+`Analyzer` 只对 **intermediary 的 INVOKE/FIELD `@At` 目标** 查 1.21.1 索引；缺失/描述符不匹配
+进入 `unresolvedMixinInjections`，并新增 `mixinAtTargets` 计数。命名/refmap 目标和
+ordinal/slice/local capture 仍未解析。
+
+实跑转换后 lithium：`mixinInjections=214`、`mixinAtTargets=0`（`@At` 目标为 Yarn/refmap 命名，
+跳过）、`mixinInjectionsUnresolved=3`（仍是已知构造器）。无新增 false positive。测试 **18/18**；
+证据 `runs/p34-at-targets/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

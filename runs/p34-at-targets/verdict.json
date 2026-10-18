@@ -1,0 +1,12 @@
+{
+  "feature": "conservative @At target extraction",
+  "tests": {"total": 18, "failures": 0},
+  "lithium_converted": {
+    "mixins": 202,
+    "mixinInjections": 214,
+    "mixinAtTargets": 0,
+    "mixinInjectionsUnresolved": 3,
+    "note": "at-targets use Yarn/refmap names and are skipped; the 3 unresolved are the known constructors"
+  },
+  "limitations": "No named/refmap at-target mapping; INVOKE/FIELD only; no ordinal/slice/local capture."
+}

@@ -367,6 +367,7 @@ public final class Main {
         mixins.addProperty("configs", a.mixinConfigs.size());
         mixins.addProperty("classes", r.mixinClassCount);
         mixins.addProperty("injections", r.mixinInjectionCount);
+        mixins.addProperty("atTargets", r.mixinAtTargetCount);
         JsonArray mt = new JsonArray();
         r.unresolvedMixinTargets.forEach(mt::add);
         mixins.add("unresolvedTargets", mt);

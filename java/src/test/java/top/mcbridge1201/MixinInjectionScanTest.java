@@ -33,6 +33,11 @@ class MixinInjectionScanTest {
         AnnotationVisitor inject = mv.visitAnnotation(
                 "Lorg/spongepowered/asm/mixin/injection/Inject;", true);
         inject.visit("method", method);
+        AnnotationVisitor at = inject.visitAnnotation(
+                "at", "Lorg/spongepowered/asm/mixin/injection/At;");
+        at.visit("value", "INVOKE");
+        at.visit("target", "Lnet/minecraft/class_14;method_59()V");
+        at.visitEnd();
         inject.visitEnd();
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 1);
@@ -74,6 +79,10 @@ class MixinInjectionScanTest {
         assertEquals("Inject", inj.annotation);
         assertEquals("method_59", inj.targetName);
         assertEquals("()V", inj.targetDesc);
+        assertEquals("INVOKE", inj.atValue);
+        assertEquals("net/minecraft/class_14", inj.atTargetOwner);
+        assertEquals("method_59", inj.atTargetName);
+        assertEquals("()V", inj.atTargetDesc);
     }
 
     @Test

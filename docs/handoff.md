@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-18 23:15）：**`@At` 目标提取（保守）**。scanner 解析 `@Inject` 等的 `@At(value,target)`，analyzer 对 intermediary 的 INVOKE/FIELD 目标做存在性检查；转换后 lithium `mixinInjections=214`、`mixinAtTargets=0`（Yarn/refmap 跳过）、3 个已知构造器 unresolved；测试 18/18。证据 `runs/p34-at-targets/`。
 更新（2026-10-18 23:10）：**trashslot 三个包 codec 全部往返通过**。`MessageTrashSlotClick`/`MessageTrashSlotContent` 的空栈与 5 钻石、`MessageDeleteFromSlot(3,true)` 均通过（`TRASHSLOT_ALL_CODEC_OK`）；服务端 `Done (4.993s)`、exit 0。仍不含客户端投递/GUI。证据 `runs/p33-all-packets/`。
 更新（2026-10-18 23:05）：**trashslot packet codec 往返通过**。服务器内 probe 对空栈与 5 钻石执行 `MessageTrashSlotClick.encode/decode`，断言 empty/count/item 全部通过（`TRASHSLOT_CODEC_OK`）；服务端 `Done (5.025s)`、exit 0。仍不含客户端网络投递。证据 `runs/p32-trashslot-codec/`。
 更新（2026-10-18 23:00）：**CodecDispatch 选择回归测试**。验证 `--bridge-dir` 提供的 javac `CodecDispatch` 优先于 generated fallback，且不嵌入 `CodecDispatch$Adapter`；测试 18/18。证据 `runs/p31-codec-selection/`。

@@ -53,6 +53,11 @@ public final class ArtifactScanner {
         public String targetOwner;
         public String targetName;
         public String targetDesc;
+        public String atValue;
+        public String atTargetOwner;
+        public String atTargetName;
+        public String atTargetDesc;
+        public boolean atTargetField;
     }
 
     public static final class Artifact {
@@ -385,23 +390,47 @@ public final class ArtifactScanner {
                     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
                         if (!INJECTION_ANNOTATIONS.contains(desc)) return null;
                         String annotation = desc.substring(desc.lastIndexOf('/') + 1, desc.length() - 1);
+                        List<Injection> created = new ArrayList<>();
+                        Injection pendingAt = new Injection();
                         return new AnnotationVisitor(Opcodes.ASM9) {
                             @Override
                             public void visit(String n, Object value) {
                                 if ("method".equals(n) && value instanceof String s) {
-                                    addInjection(info, annotation, s);
+                                    addMethod(created, annotation, s, pendingAt);
                                 }
                             }
 
                             @Override
                             public AnnotationVisitor visitArray(String n) {
-                                if (!"method".equals(n)) return null;
-                                return new AnnotationVisitor(Opcodes.ASM9) {
-                                    @Override
-                                    public void visit(String ignored, Object value) {
-                                        if (value instanceof String s) addInjection(info, annotation, s);
-                                    }
-                                };
+                                if ("method".equals(n)) {
+                                    return new AnnotationVisitor(Opcodes.ASM9) {
+                                        @Override
+                                        public void visit(String ignored, Object value) {
+                                            if (value instanceof String s) {
+                                                addMethod(created, annotation, s, pendingAt);
+                                            }
+                                        }
+                                    };
+                                }
+                                if ("at".equals(n)) {
+                                    return new AnnotationVisitor(Opcodes.ASM9) {
+                                        @Override
+                                        public AnnotationVisitor visitAnnotation(String ignored, String atDesc) {
+                                            return atVisitor(pendingAt, created);
+                                        }
+                                    };
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            public AnnotationVisitor visitAnnotation(String n, String atDesc) {
+                                return "at".equals(n) ? atVisitor(pendingAt, created) : null;
+                            }
+
+                            @Override
+                            public void visitEnd() {
+                                info.injections.addAll(created);
                             }
                         };
                     }
@@ -411,7 +440,46 @@ public final class ArtifactScanner {
         return info;
     }
 
-    private static void addInjection(MixinInfo info, String annotation, String spec) {
+    private static void addMethod(List<Injection> created, String annotation, String spec,
+                                  Injection pendingAt) {
+        if (spec == null) return;
+        Injection inj = new Injection();
+        inj.annotation = annotation;
+        parseMethodSpec(inj, spec);
+        if (inj.targetName == null) return;
+        copyAt(inj, pendingAt);
+        created.add(inj);
+    }
+
+    private static AnnotationVisitor atVisitor(Injection pendingAt, List<Injection> created) {
+        Injection tmp = new Injection();
+        return new AnnotationVisitor(Opcodes.ASM9) {
+            @Override
+            public void visit(String n, Object value) {
+                if ("value".equals(n) && value instanceof String s) {
+                    tmp.atValue = s;
+                } else if ("target".equals(n) && value instanceof String s) {
+                    parseAtTarget(tmp, s);
+                }
+            }
+
+            @Override
+            public void visitEnd() {
+                copyAt(pendingAt, tmp);
+                for (Injection inj : created) copyAt(inj, tmp);
+            }
+        };
+    }
+
+    private static void copyAt(Injection to, Injection from) {
+        to.atValue = from.atValue;
+        to.atTargetOwner = from.atTargetOwner;
+        to.atTargetName = from.atTargetName;
+        to.atTargetDesc = from.atTargetDesc;
+        to.atTargetField = from.atTargetField;
+    }
+
+    private static void parseMethodSpec(Injection inj, String spec) {
         if (spec == null) return;
         String s = spec.trim();
         if (s.isEmpty()) return;
@@ -423,12 +491,33 @@ public final class ArtifactScanner {
         int dot = namePart.lastIndexOf('.');
         if (dot >= 0) namePart = namePart.substring(dot + 1);
         if (namePart.isBlank()) return;
-        Injection inj = new Injection();
-        inj.annotation = annotation;
         inj.rawTarget = s;
         inj.targetName = namePart;
         inj.targetDesc = desc;
-        info.injections.add(inj);
+    }
+
+    private static void parseAtTarget(Injection inj, String target) {
+        if (target == null) return;
+        String s = target.trim();
+        if (s.isEmpty()) return;
+        int semi = s.indexOf(';');
+        String rest = s;
+        if (semi > 0) {
+            String owner = s.substring(0, semi);
+            if (owner.startsWith("L")) owner = owner.substring(1);
+            inj.atTargetOwner = owner;
+            rest = s.substring(semi + 1);
+        }
+        int paren = rest.indexOf('(');
+        int colon = rest.indexOf(':');
+        if (colon > 0 && (paren < 0 || colon < paren)) {
+            inj.atTargetField = true;
+            inj.atTargetName = rest.substring(0, colon);
+            inj.atTargetDesc = rest.substring(colon + 1);
+        } else {
+            inj.atTargetName = paren < 0 ? rest : rest.substring(0, paren);
+            inj.atTargetDesc = paren < 0 ? null : rest.substring(paren);
+        }
     }
 
     private static byte[] readAll(InputStream in) throws IOException {
