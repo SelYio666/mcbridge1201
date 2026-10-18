@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-18 21:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-18 21:53（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-18 21:53）：**嵌套 jar 的桥改为按 jar 嵌入**。`JarPatcher` 为每层 jar 记录 `used` 集合并把生成的/javac 桥嵌入使用它的那个 jar；新增 synthetic nested jar 测试，ironchests 重补丁只在 nested ResourcefulLib jar 多出 `IdentifierFactory`，容器契约 5/5 仍通过。测试 13/13；证据 `runs/p18-nested-bridges/`。
 更新（2026-10-18 21:50）：**trashslot 到达专用服务端 `Done`**。用原生 Balm 21.0.66 + call-site 桥（`Balm.initialize` 加 context；旧 Balm 网络注册 → Fabric `PacketType`/`StreamCodec` 载荷桥）+ 4 个 ItemStack/NBT 桥，`Done (4.655s)`，世界加载/保存。仍是 BOOTED，客户端 GUI/网络包往返未验证；证据 `runs/p17-balm-net/`。
 更新（2026-10-18 21:45）：**Balm 初始化调用点桥已推进 trashslot，但卡在 Balm 网络 API**。`Balm.initialize(String,Runnable)` → `initialize(String, EmptyLoadContext, Runnable)` 的 call-site 桥生效，旧的初始化 `NoSuchMethodError` 消失；下一失败是 `BalmNetworking.registerServerboundPacket(Identifier, Class, BiConsumer, Function, BiConsumer)`，Balm 21 已改为 `PacketType`/`StreamCodec` 载荷注册。仍未 boot，规则保持 prepared/unverified；证据 `runs/p16-balm/`。
 更新（2026-10-18 21:40）：**第三个样本 trashslot 尝试受阻于 Balm/Fabric networking**。trashslot 自身的 4 个 ItemStack/NBT tombstone 已写桥并 patch，但依赖 Balm：转换 Balm 7.3.44 后卡在 Fabric API 移除的 `ServerPlayNetworking$PlayChannelHandler`，改用原生 Balm 21.0.66 又卡在 `Balm.initialize(String,Runnable)` 被移除。未 boot，未宣称通过；证据 `runs/p15-trashslot/`。
@@ -86,6 +87,13 @@
 50. **范围**：BOOTED，不是客户端/玩法通过；没有客户端连接，clientbound receiver 未安装，包 encode/decode 与 ItemStack NBT 桥未被玩家动作触发。
 51. **证据**：`runs/p17-balm-net/README.md`、`verdict.json`、`server-net2.log`、`patch2.log`。
 
+## 2026-10-18 21:53 更新：嵌套 jar 桥按 jar 嵌入
+
+52. **修改**：`JarPatcher.patchEntries` 增加 per-jar `used` 集合；`recordBridge` 同时记入全局报告和当前 jar；`embedUsedBridges` 在每层 jar 结束时嵌入生成的/javac 桥。顶层未使用的桥不再溢出，nested jar 拿到自己的副本。
+53. **测试**：新增 `embedsBridgeInsideNestedJarThatUsesIt`（synthetic nested jar）；`gradle test --rerun-tasks` **13/13**，exit 0。
+54. **ironchests 回归**：重补丁规则计数与旧结果一致；顶层类/桥完全相同，唯一差异是 nested ResourcefulLib 多出 `IdentifierFactory.class`；整体 hash 变为 `aa589bbb...0430`（AW 前），属预期。新 jar 启动 `Done`，容器契约 5/5（放置/插入/NBT/重启读回 5 钻石）。
+55. **证据**：`runs/p18-nested-bridges/README.md`、`contract/verdict.json`、`gradle-test.log`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -121,6 +129,7 @@
 | trashslot 尝试（受阻） | `runs/p15-trashslot/README.md`、`convert.log`、`convert-balm.log`、`patch.log`、`server-trashslot3.log` |
 | Balm 初始化桥（仍受阻） | `runs/p16-balm/README.md`、`patch.log`、`server-balm2.log` |
 | trashslot BOOTED | `runs/p17-balm-net/README.md`、`verdict.json`、`server-net2.log` |
+| 嵌套 jar 桥 | `runs/p18-nested-bridges/README.md`、`contract/verdict.json`、`gradle-test.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
@@ -128,7 +137,7 @@
 
 1. **lithium 仅到 BOOTED**：专用服务端 Done、世界加载/保存、命令 chunk 探针通过；没有 lithium 玩法契约、客户端 GUI/渲染或多人同步。两条显式 `mixinStrips` 仍在。
 2. **`mixinClassReplacements` 的覆盖面/优化**：chunk access 已用实现类替换打通；被放弃的多入口缓存/off-thread 快路径可以后续重写，并需验证该模式在更多 API 形状变化上的可维护性。
-3. **调用点适配的覆盖面**：目前只验证了顶层 jar 的直接调用/句柄；嵌套 jar（JiJ）内的调用点尚未覆盖，需要把桥嵌入到对应嵌套 jar 或改用可见性更好的桥部署方式。
+3. **调用点适配的覆盖面**：目前验证了顶层 jar 的直接调用/句柄，以及 P18 的嵌套 jar 桥（synthetic + ironchests JiJ 回归）；还可继续覆盖更多样本、多层嵌套和更多句柄形状。
 4. **Mixin 目标描述符适配的覆盖面**：已处理 Explosion 与 POI storage 两处；仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 模式在真实注入点上的边界。
 5. **`Codec.dispatch` 的可靠适配**：ironchests 契约虽已通过，但 `assumeMapUnsafe` 在部分路径仍可能 `Optional.of(null)`；应改成真正的 `MapCodec` 构造/显式诊断。
 6. **CenturyBridge 桥 jar 未构建**：`core/shims/1.21.1` 未编译，`build.sh` 四道门禁未跑（`MixinCheck` 缺失）。

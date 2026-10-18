@@ -130,6 +130,72 @@ class JarPatcherCallSiteTest {
     }
 
     @Test
+    void embedsBridgeInsideNestedJarThatUsesIt() throws Exception {
+        Path dir = Path.of("build", "test-tmp", "callsite-nested");
+        Files.createDirectories(dir);
+        Path in = dir.resolve("in.jar");
+        Path out = dir.resolve("out.jar");
+
+        byte[] nestedJar = jarBytes(Map.of("test/SyntheticCaller.class", syntheticCaller()));
+        Map<String, byte[]> entries = new LinkedHashMap<>();
+        entries.put("META-INF/jars/nested.jar", nestedJar);
+        writeJar(in, entries);
+
+        Map<String, byte[]> bridges = new LinkedHashMap<>();
+        bridges.put(BRIDGE, dummyBridge());
+        JarPatcher.Result res = JarPatcher.patch(in, out, ruleSet(), null, bridges);
+
+        assertEquals(1, res.applied().get("synthetic.call-site"));
+        assertEquals(1, res.nestedJars());
+        assertTrue(res.externalBridges().contains(BRIDGE));
+
+        try (ZipFile zf = new ZipFile(out.toFile())) {
+            // The bridge is needed only by the nested jar, so it must not leak to the top level.
+            assertNull(zf.getEntry(BRIDGE + ".class"));
+            byte[] nested = zf.getInputStream(zf.getEntry("META-INF/jars/nested.jar")).readAllBytes();
+            Map<String, byte[]> nestedEntries = readJar(nested);
+            assertNotNull(nestedEntries.get(BRIDGE + ".class"),
+                    "nested jar must carry its own bridge copy");
+            ClassNode cn = new ClassNode();
+            new ClassReader(nestedEntries.get("test/SyntheticCaller.class")).accept(cn, 0);
+            MethodInsnNode call = null;
+            for (var mn : cn.methods) {
+                for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+                    if (insn instanceof MethodInsnNode mi) call = mi;
+                }
+            }
+            assertNotNull(call);
+            assertEquals(BRIDGE, call.owner);
+        }
+    }
+
+    private static byte[] jarBytes(Map<String, byte[]> entries) throws Exception {
+        java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+        try (ZipOutputStream zos = new ZipOutputStream(bos)) {
+            for (Map.Entry<String, byte[]> e : entries.entrySet()) {
+                ZipEntry ze = new ZipEntry(e.getKey());
+                ze.setTime(0L);
+                zos.putNextEntry(ze);
+                zos.write(e.getValue());
+                zos.closeEntry();
+            }
+        }
+        return bos.toByteArray();
+    }
+
+    private static Map<String, byte[]> readJar(byte[] bytes) throws Exception {
+        Map<String, byte[]> entries = new LinkedHashMap<>();
+        try (java.util.zip.ZipInputStream zis =
+                     new java.util.zip.ZipInputStream(new java.io.ByteArrayInputStream(bytes))) {
+            ZipEntry ze;
+            while ((ze = zis.getNextEntry()) != null) {
+                if (!ze.isDirectory()) entries.put(ze.getName(), zis.readAllBytes());
+            }
+        }
+        return entries;
+    }
+
+    @Test
     void rejectsUnknownBridgeInsteadOfEmittingDanglingCall() throws Exception {
         Path dir = Path.of("build", "test-tmp", "callsite-missing");
         Files.createDirectories(dir);

@@ -79,35 +79,7 @@ public final class JarPatcher {
             }
         }
         Stats st = new Stats();
-        Map<String, byte[]> patched = patchEntries(entries, rules, targetIndex, st, true);
-        // Bridges generated as ASM by the tool itself (existing rules).
-        Set<String> generatedNames = new TreeSet<>();
-        for (String name : st.bridges) {
-            if (BridgeGenerator.isGenerated(name)) generatedNames.add(name);
-        }
-        for (var e : BridgeGenerator.generate(generatedNames).entrySet()) {
-            patched.put(e.getKey() + ".class", e.getValue());
-        }
-        // Bridges compiled by javac (call-site adaptations). An unknown bridge is a hard error:
-        // silently emitting a call to a missing class would defer the failure to server boot.
-        for (String used : st.bridges) {
-            if (BridgeGenerator.isGenerated(used)) continue;
-            if (bridgeClasses == null || !bridgeClasses.containsKey(used)) {
-                throw new IllegalArgumentException("bridge class " + used
-                        + " is not generated and was not supplied (use --bridge-dir)");
-            }
-            boolean embedded = false;
-            for (var e : bridgeClasses.entrySet()) {
-                if (e.getKey().equals(used) || e.getKey().startsWith(used + "$")) {
-                    patched.put(e.getKey() + ".class", e.getValue());
-                    embedded = true;
-                }
-            }
-            if (!embedded) {
-                throw new IllegalArgumentException("compiled bridge class missing: " + used);
-            }
-            st.external.add(used);
-        }
+        Map<String, byte[]> patched = patchEntries(entries, rules, targetIndex, st, true, bridgeClasses);
         // Full mixin implementation ports (API shape changed, not just a descriptor).
         for (RuleSet.MixinClassReplacement r : rules.mixinClassReplacements) {
             if (bridgeClasses == null || !bridgeClasses.containsKey(r.replacementClass)) {
@@ -132,8 +104,10 @@ public final class JarPatcher {
 
     private static Map<String, byte[]> patchEntries(Map<String, byte[]> entries, RuleSet rules,
                                                     top.mcbridge1201.index.TargetIndex idx,
-                                                    Stats st, boolean topLevel) {
+                                                    Stats st, boolean topLevel,
+                                                    Map<String, byte[]> bridgeClasses) {
         Map<String, byte[]> out = new LinkedHashMap<>();
+        Set<String> used = new TreeSet<>();
         for (Map.Entry<String, byte[]> e : entries.entrySet()) {
             String name = e.getKey();
             if (name.startsWith("META-INF/") && (name.endsWith(".SF") || name.endsWith(".RSA")
@@ -142,7 +116,7 @@ public final class JarPatcher {
             }
             if (name.endsWith(".jar") && looksLikeZip(e.getValue())) {
                 Map<String, byte[]> nested = readZip(e.getValue());
-                Map<String, byte[]> fixed = patchEntries(nested, rules, idx, st, false);
+                Map<String, byte[]> fixed = patchEntries(nested, rules, idx, st, false, bridgeClasses);
                 out.put(name, writeZipBytes(fixed));
                 st.nested++;
                 continue;
@@ -161,14 +135,50 @@ public final class JarPatcher {
                 out.put(name, e.getValue());
                 continue;
             }
-            byte[] bytes = patchClass(e.getValue(), rules, idx, st);
+            byte[] bytes = patchClass(e.getValue(), rules, idx, st, used);
             out.put(name, bytes);
         }
+        embedUsedBridges(out, used, st, bridgeClasses);
         return out;
     }
 
+    /**
+     * Embeds only the bridges referenced by this jar into this jar. A bridge referenced from a
+     * nested jar must live in that nested jar: Fabric gives nested jars their own class loader,
+     * so a top-level copy is not visible there.
+     */
+    private static void embedUsedBridges(Map<String, byte[]> out, Set<String> used, Stats st,
+                                         Map<String, byte[]> bridgeClasses) {
+        Set<String> generatedNames = new TreeSet<>();
+        for (String name : used) {
+            if (BridgeGenerator.isGenerated(name)) generatedNames.add(name);
+        }
+        for (var e : BridgeGenerator.generate(generatedNames).entrySet()) {
+            out.put(e.getKey() + ".class", e.getValue());
+        }
+        for (String bridge : used) {
+            if (BridgeGenerator.isGenerated(bridge)) continue;
+            if (bridgeClasses == null || !bridgeClasses.containsKey(bridge)) {
+                throw new IllegalArgumentException("bridge class " + bridge
+                        + " is not generated and was not supplied (use --bridge-dir)");
+            }
+            boolean embedded = false;
+            for (var e : bridgeClasses.entrySet()) {
+                if (e.getKey().equals(bridge) || e.getKey().startsWith(bridge + "$")) {
+                    out.put(e.getKey() + ".class", e.getValue());
+                    embedded = true;
+                }
+            }
+            if (!embedded) {
+                throw new IllegalArgumentException("compiled bridge class missing: " + bridge);
+            }
+            st.external.add(bridge);
+        }
+    }
+
     private static byte[] patchClass(byte[] bytes, RuleSet rules,
-                                     top.mcbridge1201.index.TargetIndex idx, Stats st) {
+                                     top.mcbridge1201.index.TargetIndex idx, Stats st,
+                                     Set<String> used) {
         ClassNode cn = new ClassNode();
         new ClassReader(bytes).accept(cn, 0);
         boolean changed = false;
@@ -190,7 +200,7 @@ public final class JarPatcher {
                     RuleSet.ConstructorRedirect r = rules.matchConstructor(m.owner, m.desc);
                     if (r != null && rewriteConstructor(insns, m, r)) {
                         st.applied.merge(r.id, 1, Integer::sum);
-                        st.bridges.add(r.bridgeClass);
+                        recordBridge(st, used, r.bridgeClass);
                         changed = true;
                         framesAffected = true;
                     }
@@ -201,7 +211,7 @@ public final class JarPatcher {
                         insns.set(insn, new MethodInsnNode(Opcodes.INVOKESTATIC,
                                 r.bridgeClass, r.bridgeMethod, r.bridgeDesc, false));
                         st.applied.merge(r.id, 1, Integer::sum);
-                        st.bridges.add(r.bridgeClass);
+                        recordBridge(st, used, r.bridgeClass);
                         changed = true;
                     }
                 } else if (insn instanceof MethodInsnNode m0) {
@@ -217,7 +227,7 @@ public final class JarPatcher {
                         insns.set(insn, new MethodInsnNode(Opcodes.INVOKESTATIC,
                                 cs.bridgeClass, cs.bridgeMethod, cs.bridgeDesc, false));
                         st.applied.merge(cs.id, 1, Integer::sum);
-                        st.bridges.add(cs.bridgeClass);
+                        recordBridge(st, used, cs.bridgeClass);
                         changed = true;
                     } else {
                         RuleSet.MethodRedirect r =
@@ -226,7 +236,7 @@ public final class JarPatcher {
                             insns.set(insn, new MethodInsnNode(Opcodes.INVOKESTATIC,
                                     r.bridgeClass, r.bridgeMethod, r.bridgeDesc, false));
                             st.applied.merge(r.id, 1, Integer::sum);
-                            st.bridges.add(r.bridgeClass);
+                            recordBridge(st, used, r.bridgeClass);
                             changed = true;
                         }
                     }
@@ -246,7 +256,7 @@ public final class JarPatcher {
                 }
                 // Handles can carry a call-site adaptation even when no target index was
                 // supplied; the rule itself is exact, so it is safe to apply unconditionally.
-                if (applyHandleRules(insn, rules, st)) {
+                if (applyHandleRules(insn, rules, st, used)) {
                     changed = true;
                 }
             }
@@ -499,12 +509,13 @@ public final class JarPatcher {
      * instruction (observed: CenturyBridge's tombstone {@code t6(JsonElement)} was passed as a
      * MethodHandle to ResourcefulLib's passthrough). Handle matches are redirected like calls.
      */
-    private static boolean applyHandleRules(AbstractInsnNode insn, RuleSet rules, Stats st) {
+    private static boolean applyHandleRules(AbstractInsnNode insn, RuleSet rules, Stats st,
+                                            Set<String> used) {
         if (insn instanceof org.objectweb.asm.tree.InvokeDynamicInsnNode indy) {
             boolean any = false;
             for (int i = 0; i < indy.bsmArgs.length; i++) {
                 if (indy.bsmArgs[i] instanceof org.objectweb.asm.Handle h) {
-                    var fixed = redirectHandle(h, rules, st);
+                    var fixed = redirectHandle(h, rules, st, used);
                     if (fixed != null) {
                         indy.bsmArgs[i] = fixed;
                         any = true;
@@ -515,7 +526,7 @@ public final class JarPatcher {
         }
         if (insn instanceof org.objectweb.asm.tree.LdcInsnNode ldc
                 && ldc.cst instanceof org.objectweb.asm.Handle h) {
-            var fixed = redirectHandle(h, rules, st);
+            var fixed = redirectHandle(h, rules, st, used);
             if (fixed != null) {
                 ldc.cst = fixed;
                 return true;
@@ -524,23 +535,29 @@ public final class JarPatcher {
         return false;
     }
 
-    private static org.objectweb.asm.Handle redirectHandle(org.objectweb.asm.Handle h, RuleSet rules, Stats st) {
+    private static org.objectweb.asm.Handle redirectHandle(org.objectweb.asm.Handle h, RuleSet rules,
+                                                           Stats st, Set<String> used) {
         int opcode = h.getTag() == Opcodes.H_INVOKESTATIC ? Opcodes.INVOKESTATIC
                 : h.getTag() == Opcodes.H_INVOKEVIRTUAL ? Opcodes.INVOKEVIRTUAL : 0;
         if (opcode == 0) return null;
         RuleSet.CallSiteAdaptation cs = rules.matchCallSite(h.getOwner(), h.getName(), h.getDesc(), opcode);
         if (cs != null) {
             st.applied.merge(cs.id, 1, Integer::sum);
-            st.bridges.add(cs.bridgeClass);
+            recordBridge(st, used, cs.bridgeClass);
             return new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, cs.bridgeClass, cs.bridgeMethod,
                     cs.bridgeDesc, false);
         }
         RuleSet.MethodRedirect r = rules.matchInvoke(h.getOwner(), h.getName(), h.getDesc(), opcode);
         if (r == null) return null;
         st.applied.merge(r.id, 1, Integer::sum);
-        st.bridges.add(r.bridgeClass);
+        recordBridge(st, used, r.bridgeClass);
         return new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, r.bridgeClass, r.bridgeMethod,
                 r.bridgeDesc, false);
+    }
+
+    private static void recordBridge(Stats st, Set<String> used, String bridgeClass) {
+        st.bridges.add(bridgeClass);
+        used.add(bridgeClass);
     }
 
     private static boolean fixHandles(AbstractInsnNode insn, top.mcbridge1201.index.TargetIndex idx) {

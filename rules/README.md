@@ -77,7 +77,8 @@ mcbridge1201 patch --in <converted.jar> --out <patched.jar> \
   `tools/inject_bridges.py` 可独立替换/补齐桥类（输出确定性时间戳）。
 - 规则引用的桥如果既不是 `BridgeGenerator` 内建、也没有通过 `--bridge-dir` 提供，`patch` 会**硬失败**，
   不会产出悬空调用。
-- 当前边界：外部桥只嵌入顶层 jar；嵌套 jar（JiJ）内的调用点尚未覆盖。
+- 嵌套 jar（JiJ）：桥会嵌入**使用它的那个 jar**，而不是只放顶层；synthetic nested jar 与 ironchests 的 ResourcefulLib 已回归（`runs/p18-nested-bridges/`）。
+- 当前边界：客户端 GUI/网络包往返仍未验证；mixin 实现类替换仍只处理顶层 mixin。
 
 ## Mixin 目标描述符适配 schema
 

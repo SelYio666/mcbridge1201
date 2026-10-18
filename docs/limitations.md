@@ -17,7 +17,7 @@
 - Mixin 只解析 `@Mixin` 的 `value`/`targets` 类是否存在；`@Inject` 的 method/ordinal/slice/local capture **未分析**。
 - Forge 样本只做到命名空间级：`net/minecraftforge.*` 在 Fabric/NeoForge 目标下的类级消失、SRG 引用的数量，没有成员级映射。
 - 反射字符串、动态生成字节码、Kotlin/Scala 元数据中的引用不在覆盖范围。
-- 嵌套 jar（JiJ）只扫描一层；多层嵌套未递归。
+- 嵌套 jar（JiJ）：静态分析只展开一层；补丁已递归处理并把桥嵌入使用它的 jar（P18），但多层嵌套的静态分析仍未递归。
 
 ## 3. CenturyBridge 使用
 

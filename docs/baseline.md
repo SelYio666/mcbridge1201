@@ -516,7 +516,7 @@ invokestatic top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks.check
 | `lithium-patched-final.jar` | `4d9e5374e01d5ce51e0ded94293c307bfda7c0d33a43ccaf28b85be0320a9822` |
 | compiled bridge class | `679ed5ac5d33cd8e88caf517439e25d84df214323196593fcbadf345789e6ead` |
 
-边界：本轮只验证专用服务端启动；GUI/渲染/多人仍 pending。外部桥目前只嵌入顶层 jar，嵌套 jar 内的调用点尚未覆盖（已写入 `rules/README.md`）。
+边界：本轮只验证专用服务端启动；GUI/渲染/多人仍 pending。外部桥原先只嵌入顶层 jar，嵌套 jar 内的调用点未覆盖；P18 已改为“桥嵌入到使用它的那个 jar”，并用 synthetic nested jar + ironchests 的 ResourcefulLib 回归验证（§7.22）。
 
 ### 7.18 Mixin 目标描述符适配：lithium 的 `ExplosionMixin` 与 POI storage
 
@@ -600,7 +600,7 @@ Unloaded>>`），而 1.21.1 已改为 `CompletableFuture<ChunkResult<LevelChunk>
 | 打补丁 | `mcbridge1201 patch --in <converted lithium> --out lithium-patched-chunkport.jar --rules ... --bridge-dir work/bridges --bridge-dir work/mixins` | 0 | `chunkresult-port` 1 次 + 既有规则；`sha256 67013b3b...02ee` |
 | 启动 | `python tools/run_server.py --instance work/instances/fabric-1.21.1-server-lithium --log runs/p13-chunk-port/server-chunkport-rule.log --timeout 240` | 0（runner 0；`doneSeen=true`） | **`Done (4.772s)`**，世界加载并保存 |
 | 命令探针 | 同上 + `forceload add 0 0`、`setblock 0 100 0 minecraft:stone`、`data get block 0 100 0` | 0 | chunk 强制加载、方块修改成功、无异常 |
-| 单元测试 | `gradle --no-daemon test --rerun-tasks` | 0 | 12 个测试，0 失败 |
+| 单元测试 | `gradle --no-daemon test --rerun-tasks` | 0 | 13 个测试，0 失败（P18 新增 nested-jar 桥测试） |
 
 证据：`runs/p13-chunk-port/README.md`、`server-chunkport-rule.log`、`server-chunkport-commands.log`、`verdict.json`。日志显示 `Done (4.772s)`、三主世界全部保存，无 Mixin/类转换错误。
 
@@ -667,12 +667,30 @@ P17 完成网络桥：`BalmNetworkingBridge` 把旧注册调用重定向到 Fabr
 这是 **BOOTED**，不是客户端/玩法通过：没有客户端连接，clientbound receiver 未安装，包
 encode/decode 与 ItemStack NBT 桥未被玩家动作触发。证据 `runs/p17-balm-net/`。
 
+### 7.22 嵌套 jar 的桥按 jar 嵌入
+
+`JarPatcher` 原先把所有使用过的桥统一放进顶层 jar；嵌套 jar（`META-INF/jars/*.jar`）有独立的 Fabric
+classloader，顶层桥不保证可见。P18 改为每个 `patchEntries` 维护自己的 `used` 集合：
+`recordBridge` 同时记录全局报告和当前 jar；`embedUsedBridges` 在每层 jar 结束时把
+生成的 ASM 桥和 javac 桥嵌入**使用它的那个 jar**。顶层未使用的桥不会泄漏到顶层。
+
+回归：
+
+- 新增 synthetic nested jar 测试：补丁后桥只出现在 nested jar 内，顶层没有；nested caller 的调用
+  被改写。`gradle test --rerun-tasks` **13/13**（新增 1 个），exit 0。
+- ironchests 重补丁的规则计数与旧结果一致（36 classes、123 constant-kind、3 handle 等）；顶层
+  类与桥列表完全相同，唯一差异是 nested ResourcefulLib jar 现在带有自己的
+  `top/mcbridge1201/bridge/IdentifierFactory.class`。因此整体 hash 从 `7d89d452...bc9a1` 变为
+  `aa589bbb...0430`（AW 注入前），这是预期变化。
+- 新 patched+AW jar 启动 `Done`，容器契约 5/5 通过（放置/插入/NBT/重启/读回 5 钻石）。
+  证据 `runs/p18-nested-bridges/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
 
 1. **图形/GUI 与多人**：服务端容器契约已通过；玩家侧（打开 GUI、右键交互、两个客户端同步）仍 pending，需要客户端实例。
-2. **调用点签名适配的覆盖面**：本轮已实现 `callSiteAdaptations` 并用 lithium `class_14.method_59` 验证（§7.17）。下一步把同一机制推广到其他样本，并处理 **嵌套 jar 内**的调用点（当前外部桥只嵌入顶层 jar）。
+2. **调用点签名适配的覆盖面**：`callSiteAdaptations` 已用 lithium `class_14.method_59` 验证（§7.17）；P18 已把桥按 jar 嵌入嵌套 jar 并用 ironchests JiJ 回归（§7.22），仍可继续覆盖更多样本/多层嵌套/方法句柄场景。
 3. **Mixin 目标描述符适配的覆盖面**：`mixinCallbackAdaptations` 已处理 Explosion 与 POI storage 两处（§7.18），但仍需覆盖更多 `@Inject`/`@Redirect`/`@ModifyConstant` 目标变化，并验证 append/replace 两种模式在真实注入点上的边界。
 4. **Mixin 实现类替换的覆盖面**：`mixinClassReplacements` 已把 `ServerChunkManagerMixin` 移植到 1.21.1 并让 lithium 到达 `Done`（§7.19）；仍需验证该模式在更多 API 形状变化上的可维护性，并决定是否重写被放弃的 chunk 多入口缓存/off-thread 快路径。
 5. **`Codec.dispatch` 的可靠适配**：当前 `assumeMapUnsafe` 在部分路径会 `Optional.of(null)`；虽然 ironchests 的容器契约已通过，仍应改成真正的 `MapCodec` 构造/显式诊断，避免再次依赖回退。
