@@ -72,6 +72,7 @@ FILES = [
     "runs/p13-chunk-port/server-chunkport-commands.log",
     "runs/p13-chunk-port/server-chunk-port.log",
     "runs/p13-chunk-port/server-chunk-port2.log",
+    "runs/p13-chunk-port/ironchests-patch-recheck.log",
     "runs/p13-chunk-port/build-reports.log",
     "work/cb/out/lithium/lithium-patched-chunkport.jar",
     "work/cb/out/lithium/lithium-patched-final.jar",

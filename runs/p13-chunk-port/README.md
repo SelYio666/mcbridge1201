@@ -87,6 +87,9 @@ So lithium now **BOOTS on the Fabric 1.21.1 dedicated server and loads/saves the
 `BOOTED`, not a gameplay contract or compatibility pass: no lithium gameplay/client syncing was
 exercised, and the two earlier `mixinStrips` remain.
 
+Regression: re-patching ironchests with `container.json` still produces the byte-identical
+`7d89d452...bc9a1` jar (`ironchests-patch-recheck.log`).
+
 ## Hashes (SHA-256)
 
 | Artifact | SHA-256 |
