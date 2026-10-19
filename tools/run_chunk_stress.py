@@ -21,6 +21,35 @@ import sys
 from datetime import datetime, timezone
 
 
+def has_server_marker(text, marker):
+    """Only count real server output; run_server.py echoes sent commands as '# > ...'."""
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("# >"):
+            continue
+        if marker in stripped:
+            return True
+    return False
+
+
+def _self_test():
+    echo_only = (
+        "# > execute if block 0 0 0 minecraft:air run say STRESS_OK_A\n"
+        "# > execute if block 0 0 0 minecraft:air run say STRESS_OK_B\n"
+        "[12:00:00] [Server thread/INFO]: Done (1.0s)!\n"
+    )
+    real = (
+        echo_only
+        + "[12:00:00] [Server thread/INFO]: [Server] STRESS_OK_A\n"
+    )
+    assert not has_server_marker(echo_only, "STRESS_OK_A"), "echo must not count"
+    assert not has_server_marker(echo_only, "STRESS_OK_B"), "echo must not count"
+    assert has_server_marker(real, "STRESS_OK_A"), "real response must count"
+    assert not has_server_marker(real, "STRESS_OK_B"), "missing marker must not count"
+    print("SELF_TEST ok: echo lines ignored, real server output matched")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--instance", required=True)
@@ -83,16 +112,6 @@ def main() -> int:
     marked = re.search(r"Marked (\d+) chunks", log1)
     chunksMarked = int(marked.group(1)) if marked else 0
 
-    def has_server_marker(text, marker):
-        """Only count real server output; run_server.py echoes sent commands as '# > ...'."""
-        for line in text.splitlines():
-            stripped = line.strip()
-            if stripped.startswith("# >"):
-                continue
-            if marker in stripped:
-                return True
-        return False
-
     verdict = {
         "contract": "lithium.chunk-access.stress",
         "generatedAt": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
@@ -125,4 +144,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    if "--self-test" in sys.argv:
+        raise SystemExit(_self_test())
     raise SystemExit(main())

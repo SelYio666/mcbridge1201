@@ -36,7 +36,7 @@ git push -u origin master
 
 - 源码压缩包（GitHub 自动生成）；
 - 可选的 CLI 构建产物（`java/build/install/mcbridge1201/`，本项目自己的代码）；
-- `runs/SHA256SUMS.txt`。
+- `runs/SHA256SUMS.txt`（生成：`python tools/hash_evidence.py`；校验：`python tools/check_hashes.py`）。
 
 **不要**上传任何 `.jar` 游戏/模组/转换件。
 

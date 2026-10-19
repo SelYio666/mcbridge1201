@@ -156,6 +156,7 @@ FILES = [
     "runs/p24-chunk-stress-tool/step2.log",
     "runs/p24-chunk-stress-tool/step2.result.json",
     "tools/run_chunk_stress.py",
+    "tools/check_hashes.py",
     "tools/run_server.py",
     "tools/rebuild_ironchests_client.py",
     "runs/p25-codec-guard/README.md",
@@ -355,7 +356,6 @@ FILES = [
     "runs/p73-lithium-play/latest.log",
     "runs/p73-lithium-play/LithiumPlayProbe.java",
     "runs/p73-lithium-play/lithiumplayprobe.jar",
-    "runs/p73-lithium-play/compile.log",
     "runs/p74-two-client/README.md",
     "runs/p74-two-client/guest-screen3.png",
     "runs/p74-two-client/host.log",
@@ -392,8 +392,6 @@ FILES = [
     "runs/p77-two-client-close/host-close.log",
     "runs/p78-two-client-race/README.md",
     "runs/p78-two-client-race/server.log",
-    "runs/p78-two-client-race/guest.log",
-    "runs/p78-two-client-race/host.log",
     "runs/p78-two-client-race/DedicatedSyncProbe.java",
     "runs/p78-two-client-race/LanSyncProbe.java",
     "runs/p79-two-client-simultaneous/README.md",
@@ -406,7 +404,6 @@ FILES = [
     "runs/p80-two-client-clean/server.log",
     "runs/p80-two-client-clean/guest.log",
     "runs/p80-two-client-clean/host.log",
-    "runs/p80-two-client-clean/compile.log",
     "runs/p80-two-client-clean/DedicatedSyncProbe.java",
     "runs/p80-two-client-clean/LanSyncProbe.java",
     "runs/p81-esc-key/README.md",
@@ -421,23 +418,18 @@ FILES = [
     "runs/p83-esc-teleport/latest.log",
     "runs/p83-esc-teleport/EscProbe.java",
     "runs/p83-esc-teleport/escprobe.jar",
-    "runs/p83-esc-teleport/compile.log",
     "runs/p84-lithium-tps/README.md",
     "runs/p84-lithium-tps/server.log",
-    "runs/p84-lithium-tps/compile.log",
     "runs/p84-lithium-tps/TpsProbe.java",
     "runs/p84-lithium-tps/tpsprobe.jar",
     "runs/p85-empty-key/README.md",
     "runs/p85-empty-key/latest.log",
     "runs/p85-empty-key/TrashEmptyKeyProbe.java",
     "runs/p85-empty-key/trashemptykey.jar",
-    "runs/p85-empty-key/compile.log",
     "runs/p86-empty-hover/README.md",
     "runs/p86-empty-hover/latest.log",
     "runs/p86-empty-hover/TrashEmptyKeyProbe.java",
     "runs/p86-empty-hover/trashemptykey.jar",
-    "runs/p86-empty-hover/compile.log",
-    "runs/p86-empty-hover/compile2.log",
     "runs/p87-independent-test/README.md",
     "runs/p87-independent-test/TEST-REPORT.md",
     "runs/p87-independent-test/test-evidence.zip",
@@ -452,7 +444,6 @@ FILES = [
     "runs/p32-trashslot-codec/README.md",
     "runs/p32-trashslot-codec/verdict.json",
     "runs/p32-trashslot-codec/compile.log",
-    "runs/p32-trashslot-codec/jar.log",
     "runs/p32-trashslot-codec/server.log",
     "runs/p32-trashslot-codec/server.result.json",
     "runs/p33-all-packets/README.md",
@@ -553,12 +544,15 @@ def sha256(path):
 
 def main():
     lines = []
+    missing = []
     for rel in FILES:
         p = os.path.join(ROOT, rel.replace("/", os.sep))
-        if os.path.exists(p):
-            lines.append(f"{sha256(p)}  {rel}")
-        else:
-            lines.append(f"{'MISSING':64}  {rel}")
+        if not os.path.exists(p):
+            missing.append(rel)
+            continue
+        lines.append(f"{sha256(p)}  {rel}")
+    if missing:
+        raise SystemExit("manifest lists missing files:\n  " + "\n  ".join(missing))
     out = os.path.join(ROOT, "runs", "SHA256SUMS.txt")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8", newline="\n") as f:
