@@ -36,10 +36,12 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - the real UI key/action that invokes empty-trash;
 - ironchests clientbound traffic and two-client synchronization;
 - lithium gameplay/rendering;
-- ironchests GUI/render: the removed `BakedModelManagerHelper` model crash is fixed by a work-only
-  shim (`runs/p66-ironchests-gui/`), but opening the chest menu now hits
-  `NoSuchMethodError GenericChestBlockEntity.method_11007(NbtCompound)` — the 1.20.1 one-arg
-  `readNbt`; a BlockEntity NBT bridge is needed before any GUI screenshot.
+- ironchests GUI/render: the model crash is fixed by a work-only shim and the block-entity sync NBT is
+  fixed by two rules plus a `PacketByteBuf.writeNbt` widening (`runs/p67-ironchests-gui-nbt/`). Opening
+  the chest menu now fails in the nested ResourcefulLib 2.0.6
+  (`ServerPlayNetworking.send(ServerPlayer, Identifier, PacketByteBuf)`, removed in 1.21.1);
+  swapping in ResourcefulLib 3.0.12 breaks IronChests at startup (`NoClassDefFoundError PacketHandler`),
+  so that shim must be ported to payloads rather than replaced.
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls

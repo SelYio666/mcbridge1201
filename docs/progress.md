@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 09:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 09:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 09:45）：**IronChests 同步 NBT 已修，下一阻断是 ResourcefulLib 原始网络**。两条 call-site 规则（`getSyncTag`/`loadSyncTag` 被转换器调换的一参 readNbt/writeNbt，各命中 1 次）+ `PacketByteBuf.writeNbt(NbtCompound)` 加宽（1 次）后，开箱路径越过 NBT 错误，停在 `ServerPlayNetworking.send(ServerPlayer, Identifier, PacketByteBuf)`——这是 IronChests 内嵌的 ResourcefulLib 2.0.6 用的已删原始通道 API（栈在 `PacketChannelHelperImpl.sendToPlayer`）。换 1.21.1 的 ResourcefulLib 3.0.12 会在启动时 `NoClassDefFoundError PacketHandler`，所以只能移植内嵌库。证据 `runs/p67-ironchests-gui-nbt/`。
 更新（2026-10-19 09:25）：**IronChests 客户端模型已修好，下一阻断是 BlockEntity NBT**。加 work-only 兼容类 `BakedModelManagerHelper.getModel(manager,id) → class_1092.method_4742(class_1091.method_61078(id))` + `ModelLoadingPlugin` 入口后，箱子渲染不再 `NoClassDefFoundError`。服务端直接调用 `GenericChestBlock.method_9534` 打开菜单时出现 `NoSuchMethodError GenericChestBlockEntity.method_11007(NbtCompound)`（1.20.1 一参 readNbt）；下一步给它加 NBT 读桥。证据 `runs/p66-ironchests-gui/`。
 更新（2026-10-19 09:05）：**IronChests GUI 被客户端模型类阻断**。chat 命令因无 cheats 失败；server probe 成功放置 `ironchests:iron_chest`（`PLACED=true`），客户端渲染时 `NoClassDefFoundError net/fabricmc/fabric/api/client/model/BakedModelManagerHelper`（IronChestsClient.loadModel），在 GUI 打开前崩溃。需要先恢复模型加载桥。证据 `runs/p66-ironchests-gui/`。
 更新（2026-10-19 09:00）：**empty-trash 修复**。首次调用触发 `NoSuchMethodError BalmNetworking.reply(Object)`；新增 reply 桥（记录 serverbound handler 的当前玩家，回发 clientbound payload）+ 规则命中 2 处后，`EMPTY_BEFORE trash=5` → `EMPTY_AFTER trash=0`、`EMPTY_SERVER empty=true count=0`，无崩溃。real UI 键位未测。证据 `runs/p65-trash-empty/`。
@@ -444,6 +445,14 @@
 214. **模型修复**：work-only 兼容类 `BakedModelManagerHelper.getModel(manager,id)` = `class_1092.method_4742(class_1091.method_61078(id))`；`IronChestsFabricClient` 用 `ModelLoadingPlugin` 注册 lid/base。箱子渲染不再崩溃。
 215. **新阻断**：服务端调用 `GenericChestBlock.method_9534` → `NoSuchMethodError GenericChestBlockEntity.method_11007(NbtCompound)`（1.20.1 一参 readNbt）。下一步加 NBT 读桥后重测 GUI。证据 `runs/p66-ironchests-gui/latest-model-shim.log`。
 
+## 2026-10-19 09:45 更新：IronChests 同步 NBT 已修
+
+216. **规则 `ironchests.sync.write-tag`**：`getSyncTag` 里的一参 `method_11007` → `IronChestsNbtBridge.writeSyncTag`（命中 1）。
+217. **规则 `ironchests.sync.read-tag`**：`loadSyncTag` 里的一参 `method_11014` → `IronChestsNbtBridge.readSyncTag`（命中 1）。转换器把这两个同描述符方法调换了，桥按语义纠正。
+218. **规则 `nbt.packet.write-nbt-compound`**：`PacketByteBuf.method_10794(NbtCompound)` 加宽到 1.21.1 的 `method_10794(NbtElement)`（命中 1）。证据 `runs/p67-ironchests-gui-nbt/patch.log`。
+219. **下一阻断**：开箱路径现在停在 `ServerPlayNetworking.send(ServerPlayer, Identifier, PacketByteBuf)`（ResourcefulLib 2.0.6 的 `PacketChannelHelperImpl.sendToPlayer`），这是 1.21.1 已删除的原始通道 API。
+220. **不能换库**：装 ResourcefulLib 3.0.12 + 去掉内嵌 2.0.6 会在启动时 `NoClassDefFoundError com/teamresourceful/resourcefullib/common/networking/base/PacketHandler`，所以必须移植内嵌库。证据 `runs/p67-ironchests-gui-nbt/crash-rl3.txt`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -527,6 +536,7 @@
 | trash empty | `runs/p65-trash-empty/README.md`、`crash-report.txt`、`latest.log` |
 | IronChests GUI 阻断 | `runs/p66-ironchests-gui/README.md`、`crash-report.txt`、`latest.log` |
 | IronChests 模型 shim | `runs/p66-ironchests-gui/BakedModelManagerHelper.java`、`latest-model-shim.log` |
+| IronChests 同步 NBT | `runs/p67-ironchests-gui-nbt/patch.log`、`latest-rl2.log`、`crash-rl3.txt` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

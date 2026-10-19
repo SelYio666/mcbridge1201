@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "Generic 1.20.1 -> 1.21.1 packet-NBT widening. In 1.21.1 PacketByteBuf.writeNbt takes NbtElement instead of NbtCompound, so old calls with the narrower descriptor fail to link.",
+  "methodRedirects": [
+    {
+      "id": "nbt.packet.write-nbt-compound",
+      "sourceOwner": "net/minecraft/class_2540",
+      "sourceName": "method_10794",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/NbtPacketBridge",
+      "bridgeMethod": "writeNbt",
+      "bridgeDesc": "(Lnet/minecraft/class_2540;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;",
+      "capability": "nbt.packet.write",
+      "risk": "low",
+      "evidence": "IronChests chest open (runs/p67-ironchests-gui-nbt): after the sync-NBT redirect, SyncableData.sync writes its tag with NoSuchMethodError 'net.minecraft.class_2540 net.minecraft.class_2540.method_10794(net.minecraft.class_2487)'. 1.21.1 declares method_10794(NbtElement) only; NbtCompound is an NbtElement, so the bridge widens the argument and keeps the same PacketByteBuf return."
+    }
+  ]
+}

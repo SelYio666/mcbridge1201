@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "IronChests sync-NBT bridge for the converted 1.21.1 jar. The 1.20.1 one-argument readNbt/writeNbt calls survive inside GenericChestBlockEntity and, because both have the same descriptor, the conversion also swapped which one each sync method calls.",
+  "methodRedirects": [
+    {
+      "id": "ironchests.sync.write-tag",
+      "sourceOwner": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity",
+      "sourceName": "method_11007",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/IronChestsNbtBridge",
+      "bridgeMethod": "writeSyncTag",
+      "bridgeDesc": "(Lnet/minecraft/class_2586;Lnet/minecraft/class_2487;)V",
+      "capability": "ironchests.nbt.sync.write",
+      "risk": "medium",
+      "evidence": "First chest open (runs/p66-ironchests-gui/latest-model-shim.log): NoSuchMethodError 'void GenericChestBlockEntity.method_11007(class_2487)' at GenericChestBlockEntity.getSyncTag(GenericChestBlockEntity.java:192), reached from SyncableData.sync -> openersCounter -> method_5435 -> GenericChestMenu.<init> -> method_5465 -> ServerPlayer.openHandledScreen -> GenericChestBlock.method_9534. getSyncTag must serialise the entity, which is the 1.21.1 two-argument writeNbt (method_11014); the converted call names the one-argument readNbt instead."
+    },
+    {
+      "id": "ironchests.sync.read-tag",
+      "sourceOwner": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity",
+      "sourceName": "method_11014",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/IronChestsNbtBridge",
+      "bridgeMethod": "readSyncTag",
+      "bridgeDesc": "(Lnet/minecraft/class_2586;Lnet/minecraft/class_2487;)V",
+      "capability": "ironchests.nbt.sync.read",
+      "risk": "medium",
+      "evidence": "Same converted class: loadSyncTag(NbtCompound) calls the one-argument method_11014, which no longer exists in 1.21.1 (BlockEntity.writeNbt now takes a HolderLookup.Provider). loadSyncTag applies a received tag to the entity, i.e. the two-argument readNbt (method_11007); the conversion swapped it with getSyncTag's call."
+    }
+  ]
+}

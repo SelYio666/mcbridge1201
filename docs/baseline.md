@@ -1302,6 +1302,32 @@ NoSuchMethodError: 'void GenericChestBlockEntity.method_11007(net.minecraft.clas
 这是 1.20.1 一参 `readNbt(NbtCompound)`；1.21.1 是两参 `readNbt(NbtCompound, WrapperLookup)`。
 需要补 NBT 读桥后 GUI 才能打开。证据 `runs/p66-ironchests-gui/latest-model-shim.log`。
 
+### 7.68 IronChests 同步 NBT 桥与 ResourcefulLib 阻断
+
+三条规则，`patch.log` 报告各命中 1 次：
+
+| 规则 | 调用点 |
+|---|---|
+| `ironchests.sync.write-tag` | `getSyncTag` → 一参 `method_11007` |
+| `ironchests.sync.read-tag` | `loadSyncTag` → 一参 `method_11014` |
+| `nbt.packet.write-nbt-compound` | `PacketByteBuf.method_10794(NbtCompound)`，1.21.1 已加宽为 `NbtElement` |
+
+转换后的类保留 1.20.1 一参 `readNbt`/`writeNbt` 调用；由于两者描述符相同，转换器还把
+`getSyncTag` 与 `loadSyncTag` 的调用**对调**了。`IronChestsNbtBridge` 按语义纠正：`getSyncTag`
+调两参 `writeNbt`，`loadSyncTag` 调两参 `readNbt`，provider 取 `Level.registryAccess()`。
+
+修完后开箱路径越过 NBT，停在：
+
+```text
+NoSuchMethodError: 'void ServerPlayNetworking.send(ServerPlayer, Identifier, PacketByteBuf)'
+at com.teamresourceful.resourcefullib.common.networking.fabric.PacketChannelHelperImpl.sendToPlayer
+```
+
+这是 IronChests 内嵌 JiJ（`META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar`）用的、1.21.1 已删除的
+原始通道 API。把它换成 1.21.1 的 ResourcefulLib 3.0.12 会在启动时
+`NoClassDefFoundError .../networking/base/PacketHandler`，所以内嵌 2.0.6 必须移植而不是替换。
+证据 `runs/p67-ironchests-gui-nbt/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
