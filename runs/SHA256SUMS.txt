@@ -430,8 +430,8 @@ ed7ab206162a5236e5d03c55bbfdebae46fe3d2b0a2fdc6fdb60e3e777538506  runs/p86-empty
 83abfd519b8d5c29241eef5f8c18c90deae03b81374346c12a7697302da437cf  runs/p86-empty-hover/trashemptykey.jar
 MISSING                                                           runs/p86-empty-hover/compile.log
 MISSING                                                           runs/p86-empty-hover/compile2.log
-1a3644692464cb4d54eaccbe7490ac8dfa727570cffe556e2770f763c5ab32bb  runs/p87-independent-test/README.md
-8bc170caf725d5341b564cf4f7b3bc0257885d98b1763ae9de4dd75ed847345b  runs/p87-independent-test/测试报告.md
+353590be7fbda887065e14ca92f4eeb9d371d3e87385c26607016ffd35b7ac58  runs/p87-independent-test/README.md
+8bc170caf725d5341b564cf4f7b3bc0257885d98b1763ae9de4dd75ed847345b  runs/p87-independent-test/TEST-REPORT.md
 1b9a15a8ba633ffb975feda7cdfad0639e62429dc34b4e9658f01ff8d67f0032  runs/p87-independent-test/test-evidence.zip
 9762b082f4573804d8ab3d23a7cfc371416108caf1413bebc15c8455a52b9fb2  runs/p87-independent-test/run-server-exitcode.log
 654b9330a8f0f4e80e3404e6d83dff8c801a8bdf5d496115b49b071905dd1902  runs/p87-independent-test/CrashAfterDone.java

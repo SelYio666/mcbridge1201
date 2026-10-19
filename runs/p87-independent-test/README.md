@@ -4,7 +4,7 @@ Date: 2026-10-19. Report tested commit `d9e88a1`.
 
 Files:
 
-- `测试报告.md` — the independent report (Chinese), 3 × P1 + 3 × P2 findings;
+- `TEST-REPORT.md` — the independent report (Chinese), 3 × P1 + 3 × P2 findings;
 - `test-evidence.zip` — the tester's logs (build, JUnit XML, real server logs, negative
   controls). No game/mod/converted jars inside.
 

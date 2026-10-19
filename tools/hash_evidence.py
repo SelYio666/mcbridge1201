@@ -439,7 +439,7 @@ FILES = [
     "runs/p86-empty-hover/compile.log",
     "runs/p86-empty-hover/compile2.log",
     "runs/p87-independent-test/README.md",
-    "runs/p87-independent-test/测试报告.md",
+    "runs/p87-independent-test/TEST-REPORT.md",
     "runs/p87-independent-test/test-evidence.zip",
     "runs/p87-independent-test/run-server-exitcode.log",
     "runs/p87-independent-test/CrashAfterDone.java",
