@@ -2,6 +2,7 @@
 
 最后更新：2026-10-19 22:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 23:05）：**AppleSkin 食物 tombstone 已修**。`appleskin-food.json` + `AppleSkinFoodBridge` 把 `isFood/getFoodComponent/isAlwaysEdible/getHunger/getSaturationModifier` 映射到 `DataComponentTypes.FOOD`；HUD 不再抛 tombstone，客户端留在世界，仅剩原版 `icons.png` 材质缓存告警。证据 `runs/p89-legacy-networking/appleskin-hud.log`。
 更新（2026-10-19 22:50）：**旧 Fabric 网络桥**。新增 `FabricLegacyNetworking`（receiver/C2S packet/server send）+ `PlayChannelHandler` shim + 单参 `Identifier` 规则，`extraBridgeClasses` 机制让 shim 随规则嵌入。AppleSkin 初始化与 `SyncHandler` 不再崩（HUD 仍撞 `FoodHelper` tombstone），FallingTree 客户端可启动；入服路径未复测。证据 `runs/p89-legacy-networking/`。
 更新（2026-10-19 22:50）：**补两处验证**。①`run_chunk_stress.py --self-test`：`# >` 回显不算成功、真实 `[Server] STRESS_OK_A` 算；②新增 `tools/check_hashes.py` 校验清单，`hash_evidence.py` 不再写 `MISSING` 占位行（清单 525 项，0 失败）。
 更新（2026-10-19 22:35）：**扩模测试 6 个样本：5 阻断、1 仅启动**。报告与证据 `runs/p88-mod-expansion/`；分析器多 loader 误判已修（Fabric entrypoints 优先，`multiLoader` 记录；有 Fabric 入口时闲置 Forge 引用不再判 `wrong_loader`），`gradle test installDist` 23/23。六模组各自的缺口与所需规则见 `docs/mod-expansion.md`。

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "AppleSkin 2.5.2 was converted by CenturyBridge; the old 1.20.4-era Item/FoodComponent getters became tombstones. 1.21.1 moved food data to DataComponentTypes.FOOD (class_9334.field_50075). Matched by the converted artifact's tombstone class; the mapping follows the tombstone method order (t0 isFood, t1 getFoodComponent, t2 isAlwaysEdible, t3 hunger, t4 saturation).",
+  "methodRedirects": [
+    {
+      "id": "appleskin.food.is-food",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2",
+      "sourceName": "t0",
+      "sourceDesc": "(Lnet/minecraft/class_1792;)Z",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/AppleSkinFoodBridge",
+      "bridgeMethod": "isFood",
+      "bridgeDesc": "(Lnet/minecraft/class_1792;)Z",
+      "capability": "appleskin.food.isfood",
+      "risk": "low",
+      "evidence": "AppleSkin HUD render crashed at FoodHelper.isFood -> Tomstones...t0 UnsupportedOperationException 'class_1792.method_19263 no longer exists in 1.21.1' (runs/p89-legacy-networking/client.log)."
+    },
+    {
+      "id": "appleskin.food.component",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2",
+      "sourceName": "t1",
+      "sourceDesc": "(Lnet/minecraft/class_1792;)Lnet/minecraft/class_4174;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/AppleSkinFoodBridge",
+      "bridgeMethod": "foodComponent",
+      "bridgeDesc": "(Lnet/minecraft/class_1792;)Lnet/minecraft/class_4174;",
+      "capability": "appleskin.food.component",
+      "risk": "low",
+      "evidence": "Same tombstone class: class_1792.method_19264 (getFoodComponent) died at 1.20.5."
+    },
+    {
+      "id": "appleskin.food.always-edible",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2",
+      "sourceName": "t2",
+      "sourceDesc": "(Lnet/minecraft/class_4174;)Z",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/AppleSkinFoodBridge",
+      "bridgeMethod": "alwaysEdible",
+      "bridgeDesc": "(Lnet/minecraft/class_4174;)Z",
+      "capability": "appleskin.food.always-edible",
+      "risk": "low",
+      "evidence": "class_4174.method_19233 (isAlwaysEdible) died at 1.20.5; 1.21.1 accessor is comp_2493()."
+    },
+    {
+      "id": "appleskin.food.hunger",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2",
+      "sourceName": "t3",
+      "sourceDesc": "(Lnet/minecraft/class_4174;)I",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/AppleSkinFoodBridge",
+      "bridgeMethod": "hunger",
+      "bridgeDesc": "(Lnet/minecraft/class_4174;)I",
+      "capability": "appleskin.food.hunger",
+      "risk": "low",
+      "evidence": "class_4174.method_19230 (getHunger) died at 1.20.5; 1.21.1 accessor is comp_2491()."
+    },
+    {
+      "id": "appleskin.food.saturation",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2",
+      "sourceName": "t4",
+      "sourceDesc": "(Lnet/minecraft/class_4174;)F",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/AppleSkinFoodBridge",
+      "bridgeMethod": "saturation",
+      "bridgeDesc": "(Lnet/minecraft/class_4174;)F",
+      "capability": "appleskin.food.saturation",
+      "risk": "low",
+      "evidence": "class_4174.method_19231 (getSaturationModifier) died at 1.20.5; 1.21.1 accessor is comp_2492()."
+    }
+  ]
+}

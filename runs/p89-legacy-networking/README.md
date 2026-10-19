@@ -38,14 +38,41 @@ Date: 2026-10-19. Follow-up to the six-mod expansion report.
   (`fallingtree-client.log`). The server-side `send` redirect is applied to the jar
   (`fabric.legacy.server-send applied 1 time(s)`) but the join-time path was not re-run here.
 
+## Food bridge (second pass)
+
+`rules/fabric-1.21.1/appleskin-food.json` + `AppleSkinFoodBridge` replace the five tombstones the
+converter emitted for 1.20.4-era Item/FoodComponent getters:
+
+| tombstone | old member | bridge |
+|---|---|---|
+| `t0` | `Item.isFood` | `new ItemStack(item).get(DataComponentTypes.FOOD, null) != null` |
+| `t1` | `Item.getFoodComponent` | `get(FOOD, null)` |
+| `t2` | `FoodComponent.isAlwaysEdible` | `comp_2493()` |
+| `t3` | `FoodComponent.getHunger` | `comp_2491()` |
+| `t4` | `FoodComponent.getSaturationModifier` | `comp_2492()` |
+
+Runtime: the previous `UnsupportedOperationException` tombstone in `FoodHelper.isFood` is **gone**;
+the client stays in the singleplayer world and the only remaining AppleSkin-related line is a
+missing vanilla texture:
+
+```text
+[22:57:00] [Render thread/WARN]: Failed to load texture: minecraft:textures/gui/icons.png
+```
+
+That path is a vanilla asset (the cached asset set is incomplete on this machine, as the expansion
+report also noted); it is logged twice and does not crash the client. AppleSkin HUD visuals were not
+compared manually.
+
 ## Not done
 
-- AppleSkin still needs a rule/bridge for the old food/ItemStack API behind the tombstone;
+- AppleSkin status-effect tooltip still calls tombstone `t5` (`FoodComponent.getStatusEffects`
+  returning a `List`); not exercised by the HUD run;
 - FallingTree multiplayer join (server send + client receive end-to-end) and tree-felling behavior
   are still unverified;
 - no other mod from the expansion was retried.
 
 ## Evidence
 
-- `client.log` (AppleSkin run), `fallingtree-client.log` (FallingTree run);
+- `client.log` (AppleSkin init), `appleskin-hud.log` (food bridge + in-world HUD),
+  `fallingtree-client.log` (FallingTree run);
 - rule files and bridge sources are in the repository; converted jars stay out of git.

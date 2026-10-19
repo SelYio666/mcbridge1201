@@ -5,7 +5,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 
 | 模组 | 客户端 | 服务端/功能 | 结论 |
 |---|---|---|---|
-| AppleSkin 2.5.2 | 初始化已修；HUD 渲染遇 `FoodHelper` tombstone | 未测 | 部分修复 |
+| AppleSkin 2.5.2 | 初始化、同步包、HUD 食物 tombstone 已修；仅剩原版材质缓存告警 | 未测 | 部分修复 |
 | Mod Menu 7.2.2 | 主菜单崩溃：私有 `TitleScreen.field_32271` | 未打开列表 | 不兼容 |
 | Clumps 12.0.0.4 | 主菜单 120 tick | 3+7 经验球不合并（原版 1.21.1 会合并成 10） | 核心功能丢失 |
 | FallingTree 4.3.4 | 初始化已修 | 旧 send 已重定向；入服未复测 | 部分修复 |
@@ -24,9 +24,10 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 - 旧 `ServerPlayNetworking.send(player, id, buf)` → 包成 S2C 原始 payload；
 - `new Identifier(String)` → 拆 `namespace:path` 调 `Identifier.of`。
 
-实测：AppleSkin 初始化与 `SyncHandler.makeSyncPacket` 不再崩，FallingTree 客户端可启动；AppleSkin
-HUD 渲染仍撞上 `FoodHelper` 的 CenturyBridge tombstone（旧食物 API），FallingTree 入服路径未复测。
-证据 `runs/p89-legacy-networking/`。
+实测：AppleSkin 初始化与 `SyncHandler.makeSyncPacket` 不再崩；食物 tombstone 也已用
+`AppleSkinFoodBridge`（`appleskin-food.json`）映射到 `DataComponentTypes.FOOD`，HUD 不再抛
+`UnsupportedOperationException`，客户端保持在单人世界。仅剩原版 `icons.png` 材质缓存告警（环境
+资源不完整），FallingTree 入服路径未复测。证据 `runs/p89-legacy-networking/`。
 
 ## 需要新增的适配（按类型）
 
@@ -38,7 +39,9 @@ HUD 渲染仍撞上 `FoodHelper` 的 CenturyBridge tombstone（旧食物 API）�
 3. **Mixin 重建（Clumps / FerriteCore）**：转换器移除了 load-bearing mixin（经验球合并、
    FastMapStateHolder 等），只“启动”不等于功能保留。
 4. **NBT → 数据组件（ShulkerBoxTooltip）**：旧 `ItemStack` NBT 读取被 tombstone，需要桥接到
-   1.21.1 的 `CONTAINER` 数据组件。
+   1.21.1 的 `CONTAINER` 数据组件；
+5. **食物组件（AppleSkin）已补**：`appleskin-food.json` 把 5 个 tombstone 映射到
+   `DataComponentTypes.FOOD`（`runs/p89-legacy-networking/`）。
 
 ## 本次修掉的分析器误判
 

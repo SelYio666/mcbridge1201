@@ -440,6 +440,7 @@ FILES = [
     "runs/p88-mod-expansion/mod-expansion-evidence.zip",
     "runs/p89-legacy-networking/README.md",
     "runs/p89-legacy-networking/client.log",
+    "runs/p89-legacy-networking/appleskin-hud.log",
     "runs/p89-legacy-networking/fallingtree-client.log",
     "runs/p31-codec-selection/README.md",
     "runs/p31-codec-selection/verdict.json",

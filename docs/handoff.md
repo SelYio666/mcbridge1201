@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 23:05）：**AppleSkin 食物 tombstone 已修**。食物组件桥把 5 个旧 API 映射到 `DataComponentTypes.FOOD`；HUD 不再抛 tombstone，仅剩原版材质缓存告警。证据 `runs/p89-legacy-networking/appleskin-hud.log`。
 更新（2026-10-19 22:50）：**补两处验证**。区块压力测试的 `# >` 回显假阳性现在有 `--self-test` 负向用例；新增 `tools/check_hashes.py`，清单 525 项全部通过，`hash_evidence.py` 遇缺失文件直接失败。
 更新（2026-10-19 22:50）：**旧 Fabric 网络桥落地**。`FabricLegacyNetworking` + `PlayChannelHandler` shim + 单参 `Identifier` 规则；AppleSkin 初始化/发包已过（HUD 仍撞 tombstone），FallingTree 客户端可启动，入服未复测。证据 `runs/p89-legacy-networking/`。
 更新（2026-10-19 22:35）：**扩模 6 个样本：5 阻断、1 仅启动**。分析器多 loader 误判已修（Fabric entrypoints 优先，闲置 Forge 引用不再判 `wrong_loader`），`gradle test installDist` 23/23。缺口与所需规则见 `docs/mod-expansion.md`，报告与证据在 `runs/p88-mod-expansion/`。
