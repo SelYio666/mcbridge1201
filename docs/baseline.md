@@ -1503,6 +1503,22 @@ HOST    LAN_MENU player=HostA slot0=air
 通过。中途修复：访客离箱约 11 格时菜单失效、客户端槽位回落到 46 格导致越界崩溃；现在开箱前
 把访客传送到箱子旁，并在点击前检查槽位数。证据 `runs/p76-two-client-move/`。
 
+### 7.78 双端关屏：本地成功，服务端未关闭（部分）
+
+两端调用 `MinecraftClient.setScreen(null)`：
+
+```text
+GUEST  LAN_CLOSED player=GuestB screen=null
+HOST   LAN_CLOSED player=HostA screen=null
+SERVER DED_MENUS hostSlots=90 guestSlots=90   (tick 420)
+SERVER DED_MENUS hostSlots=90 guestSlots=90   (tick 520)
+```
+
+客户端本地关闭且无崩溃；但服务端 100 tick 后仍持有 90 格的箱子菜单，没有回落到 46 格背包。
+`setScreen(null)` 不足以让服务端丢弃菜单，需要走界面 `close()` 或显式发送
+`CloseHandledScreenC2SPacket`。**此项不算通过**，作为剩余问题记录。证据
+`runs/p77-two-client-close/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
