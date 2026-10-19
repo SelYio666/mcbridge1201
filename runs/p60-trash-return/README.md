@@ -35,6 +35,19 @@ This verifies the **return logic + packet + server state**, not the GUI mouse cl
 call it. The earlier P59 second click did not trigger return; that remains a GUI hit/event issue,
 not a broken `undeleteLast` implementation.
 
+A follow-up diagnostic called `screen.method_25402(235,210,0)` (slot top-left, absolute GUI
+coordinates) with the trash holding 5 diamonds:
+
+```text
+RETURN_CLICK x=235 y=210
+RETURN_AFTER cursor=0 trash=5 minecraft:diamond
+RETURN_SERVER empty=false count=5
+```
+
+The direct screen call did not trigger the handler either. The external OS click at
+`743,687` (physical) had worked for move-in, so the next step is to log the component's true
+`getRectangle()` and use its center, not the slot top-left.
+
 ## Not verified
 
 - actual mouse click that invokes `undeleteLast`;
@@ -45,5 +58,6 @@ not a broken `undeleteLast` implementation.
 ## Evidence
 
 - `client.log` (contains both render and server stdout)
+- `latest-screen-click.log`, `client-screen-click.log`
 - `latest.log` (server lines)
 - `TrashReturnProbe.java`

@@ -1,5 +1,6 @@
 package probe;
 
+import net.blay09.mods.balm.mixin.AbstractContainerScreenAccessor;
 import net.blay09.mods.trashslot.TrashHelper;
 import net.blay09.mods.trashslot.client.TrashSlotGuiHandler;
 import net.blay09.mods.trashslot.client.TrashSlotSlot;
@@ -13,6 +14,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.class_1799;
 import net.minecraft.class_1802;
 import net.minecraft.class_3222;
+import net.minecraft.class_465;
 import net.minecraft.class_490;
 
 public final class TrashReturnProbe implements ModInitializer, ClientModInitializer {
@@ -59,8 +61,13 @@ public final class TrashReturnProbe implements ModInitializer, ClientModInitiali
                 }
                 System.out.println("RETURN_GUI trash=" + (trash == null ? "null" : trash.method_7677())
                         + " provider=" + provider);
-                if (trash != null && provider != null) {
-                    provider.undeleteLast(client.field_1724, trash, false);
+                if (trash != null && client.field_1755 instanceof class_465<?> screen) {
+                    var accessor = (AbstractContainerScreenAccessor) screen;
+                    int x = trash.field_7873 + accessor.getLeftPos();
+                    int y = trash.field_7872 + accessor.getTopPos();
+                    System.out.println("RETURN_CLICK x=" + x + " y=" + y);
+                    screen.method_25402(x, y, 0);
+                    screen.method_25406(x, y, 0);
                     System.out.println("RETURN_AFTER cursor="
                             + client.field_1724.field_7512.method_34255()
                             + " trash=" + trash.method_7677());
