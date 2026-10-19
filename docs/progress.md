@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 20:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 20:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 20:45）：**同 tick 并发点击不复制**。两端在同一次点击窗口（world time 2700）点箱子槽：两端都预测 `slot54=7`，但服务端只给了一个人（`DED_TOTAL chest=0 host=0 guest=7`），总数仍 7；第二次跑观察到服务端槽位更新把失败方的客户端预测纠正为 0。第二次跑的库存未清空（guest 出现 14），需要干净重测。证据 `runs/p79-two-client-simultaneous/`。
 
 更新（2026-10-19 20:35）：**两客户端操作同一箱子不复制**。访客取走 7 钻石后主机再操作：`LAN_TAKE` 两端 + 服务端 `DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`，总数仍为 7。注意这是“先后争用”而非同一 tick 并发。证据 `runs/p78-two-client-race/`。
 
@@ -539,6 +541,10 @@
 
 260. **结果**：访客取走 7 钻石后主机再操作，服务端 `DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`，总数仍为 7，无复制。注意是先后争用，不是同一 tick 并发。证据 `runs/p78-two-client-race/`。
 
+## 2026-10-19 20:45 更新：同 tick 并发点击
+
+261. **同 tick**：两端在 world time 2700 同时点击，均预测 `slot54=7`；服务端 `DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`，只给一人，总数 7，无复制。第二次跑看到失败方被服务端槽位更新纠正（`LAN_POST slot54=0`），但该次库存未清空（guest 14），需干净重测。证据 `runs/p79-two-client-simultaneous/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -634,6 +640,7 @@
 | 双客户端取放 | `runs/p76-two-client-move/README.md`、`server.log`、`guest.log`、`host.log` |
 | 双端关屏 | `runs/p77-two-client-close/README.md`、`server-close.log`、`guest-close.log`、`host-close.log` |
 | 同箱子双客户端 | `runs/p78-two-client-race/README.md`、`server.log`、`guest.log`、`host.log` |
+| 同 tick 并发 | `runs/p79-two-client-simultaneous/README.md`、`server.log`、`guest.log`、`host.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

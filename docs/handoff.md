@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 20:45）：**同 tick 并发点击不复制**。两端同在世界时间 2700 点击，均预测 `slot54=7`，但服务端只给一人（`DED_TOTAL chest=0 host=0 guest=7`），总数 7；第二次跑看到失败方被服务端槽位更新纠正（`LAN_POST slot54=0`），但该次库存未清空，需干净重测。证据 `runs/p79-two-client-simultaneous/`。
 更新（2026-10-19 20:35）：**两客户端操作同一箱子不复制**。访客取走 7 钻石后主机再操作：服务端 `DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`，总数仍为 7。属于先后争用，非同一 tick 并发。证据 `runs/p78-two-client-race/`。
 更新（2026-10-19 20:25）：**双端关屏通过**。`setScreen(null)` 只关客户端（服务端仍 90 格）；改用 `Screen.close()`（`method_25419`）后两端 `LAN_CLOSED slots=46`，服务端 tick 420/520 均 `hostSlots=46 guestSlots=46`。真实 ESC 键未测。证据 `runs/p77-two-client-close/`。
 更新（2026-10-19 20:10）：**双客户端取放往返通过**。访客从箱子取走 7 钻石（`LAN_GUEST_MOVED slot0=air slot54=7`），服务端 `DED_AFTER slot0=air`，主机再开箱看到空箱（`LAN_MENU player=HostA slot0=air`）。中途修复“离箱 11 格菜单失效导致越界崩溃”。证据 `runs/p76-two-client-move/`。

@@ -386,6 +386,12 @@ MISSING                                                           runs/p78-two-c
 MISSING                                                           runs/p78-two-client-race/host.log
 6cd759e67f93fda8703b148a07afe4bda992be093aa2b85048485a4716b412b3  runs/p78-two-client-race/DedicatedSyncProbe.java
 4a5413ebb2503c3e62a953aabb80c5d6c2fde4ac7b9f64875b7003e037d1ff44  runs/p78-two-client-race/LanSyncProbe.java
+14633b5648769bf5fc0f06962d3c9b9f1b5bb85999891b93aaee8e05481ced9c  runs/p79-two-client-simultaneous/README.md
+6a9ec4caeb7be65991a5554507a7c63f9484a57bed5f167e216b3473a877e33e  runs/p79-two-client-simultaneous/server.log
+e931f74a42adde9c599895f8a3c966fc467fcdf8bae10cc5fce92bf6bbd7cba1  runs/p79-two-client-simultaneous/guest.log
+0042f80e4bd8bb1042495b124fd046f270604abbcb622541a46761a9f1bde776  runs/p79-two-client-simultaneous/host.log
+7c82ddfa8ea600a3b8ba37c428496c72f38efa9e54a317c2e2a8ed45a66aeaba  runs/p79-two-client-simultaneous/DedicatedSyncProbe.java
+2600ba3840c22b8a80d5017cd20a884fb3f973e14865b5ac05c722303393290e  runs/p79-two-client-simultaneous/LanSyncProbe.java
 156f453974bc38ced55a21e1d8da7f1e06bd74eb79e0c7cc944c99f7ae36dbda  runs/p31-codec-selection/README.md
 51df7256e20c4fa551964b09ad3d0850d76297485325246ae75c316c69db0e5b  runs/p31-codec-selection/verdict.json
 5f5da2cd78397dfbf5950b31017eb9dc662f485308b450d1f33db878834d8165  runs/p31-codec-selection/gradle-test.log
@@ -477,4 +483,4 @@ a2ad5d50329297405b17c5e546508361ca2aa475891bca25dca8198c0df3dbeb  manifests/envi
 6017ee9d46ba4b74315a2e47829214b69a3f7c37030a7699a4a4b04593ffebda  manifests/upstream.lock.json
 0f29e5bb455d68b6eb5002d854298a5e173cc9ff2c1103ef6117b2be19b691b1  profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json
 ab23bf626f10facc1cba10e8f3ad9410e3da4a6e471a42bedd42c28dd193be29  docs/support-matrix.md
-a0a1590acde68abea943cc08bd49cc2a2c812ef134e43df7f186960a650284ae  docs/remaining-work.md
+60e23fa8e05a139864124df6c3f76f207013ccb8b8a7b9cd359c314c58e73369  docs/remaining-work.md

@@ -63,8 +63,14 @@ untested.
 
 **Same-chest contention is conserved** (`runs/p78-two-client-race/`): after the guest took 7
 diamonds, the host acted on the same chest and the server total stayed 7
-(`DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`). This is sequential contention, not a same-tick
-race; a true simultaneous-click test would need both menus opened in one server tick.
+(`DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`).
+
+**Same-tick concurrent clicks** (`runs/p79-two-client-simultaneous/`): both clients clicked on the
+same world tick (2700). Both predicted success, but the server granted the stack to one player only
+(`DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`), so the server does not duplicate. A second run
+showed the loser's client being corrected by a slot update (`LAN_POST slot54=0`), but that run's
+inventories were not cleared (guest showed 14), so a clean same-tick re-test should clear both
+inventories and the chest first.
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls

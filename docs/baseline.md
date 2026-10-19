@@ -1539,6 +1539,22 @@ SERVER DED_TOTAL chest=air hostSlot54=air guestSlot54=7 diamonds
 “先后争用”，不是同一 tick 并发；同一 tick 并发点击仍需要专门的双端同 tick 开箱脚本才能验证。
 证据 `runs/p78-two-client-race/`。
 
+### 7.80 同 tick 并发点击：服务端只给一人，无复制
+
+服务端在同一个 tick 为两端开箱并放入 7 钻石；两端等同一个世界时间刻度（`world.getTime()%100`）
+再点击：
+
+```text
+GUEST  LAN_TAKE player=GuestB time=2700 slot0=air slot54=7 diamonds
+HOST   LAN_TAKE player=HostA  time=2700 slot0=air slot54=7 diamonds
+SERVER DED_TOTAL chest=air hostSlot54=air guestSlot54=7 diamonds
+```
+
+两端客户端都**预测**拿到了 7 钻石，但服务端只把物品给了一个人（访客），总数仍为 7 ——
+**服务端权威下无复制**。第二次跑观察到失败方的客户端预测被服务端槽位更新纠正
+（`LAN_POST slot54=0`），但该次库存未清空（访客出现 14），属于受污染数据；干净的同 tick
+重测仍需在开箱前清空双方背包。证据 `runs/p79-two-client-simultaneous/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
