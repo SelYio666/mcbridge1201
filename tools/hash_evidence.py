@@ -278,6 +278,8 @@ FILES = [
     "runs/p60-trash-return/latest.log",
     "runs/p60-trash-return/client.log",
     "runs/p60-trash-return/TrashReturnProbe.java",
+    "runs/p60-trash-return/latest-screen-click.log",
+    "runs/p60-trash-return/client-screen-click.log",
     "runs/p31-codec-selection/README.md",
     "runs/p31-codec-selection/verdict.json",
     "runs/p31-codec-selection/gradle-test.log",
