@@ -71,6 +71,11 @@ success, but the server granted the stack to one player only. In the clean re-ru
 and the chest cleared first) the winner kept `slot54=7`, the loser was corrected to
 `slot54=air`, and the server total stayed 7 — no duplication.
 
+**Physical ESC key is still unverified** (`runs/p81-esc-key/`): the ESC probe opened the chest via
+`openHandledScreen` + `BlockEntity.createMenu`, but the server handler was back to 46 slots by tick
+160 and the client never showed a `ChestScreen`, so there was no screen to press ESC on. Use the real
+`GenericChestBlock.onUse` path (the reflective `method_9534` from P68) to open the screen first.
+
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls
 `DeletionProvider.deleteMouseItem(player, mouseItem, trashSlot, rightClick)`; `TrashSlotComponent`

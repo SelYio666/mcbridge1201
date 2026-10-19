@@ -1569,6 +1569,21 @@ DED_TOTAL chest=air hostSlot54=air guestSlot54=7 diamonds
 两端同 tick 都预测成功；100 tick 后赢家保持 7、输家被服务端槽位更新纠正为 0；服务端总数仍为
 7，**无复制**。证据 `runs/p80-two-client-clean/`。
 
+### 7.82 物理 ESC 尝试：provider 开屏立即关闭，未验证
+
+探针用 `openHandledScreen` + `BlockEntity.createMenu` 开箱：
+
+```text
+ESC_OPEN opened=OptionalInt[1]
+ESC_SERVER_MENU tick=160 slots=46
+ESC_CLIENT tick=160 screen=null slots=46
+```
+
+服务端接受了打开请求，但 tick 160 时 handler 已回到 46 格背包，客户端从未出现 `ChestScreen`，
+因此没有界面可供 ESC 注入。**物理 ESC 仍未验证**；程序化的 `Screen.close()` 路径已由 §7.78
+验证。下一步应改用真实 `GenericChestBlock.onUse`（P68 的反射 `method_9534`）开屏后再注入 ESC。
+证据 `runs/p81-esc-key/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

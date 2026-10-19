@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 20:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 21:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 21:05）：**物理 ESC 尝试受阻**。探针用 provider 开箱后菜单立刻被服务端关掉（tick 160 已 46 格），客户端没出现 ChestScreen，按键注入没有对象；物理 ESC 仍未验证（程序化 `Screen.close()` 已由 P77 验证）。下一步改用真实 `onUse` 路径开屏后再注入 ESC。证据 `runs/p81-esc-key/`。
 
 更新（2026-10-19 20:55）：**干净的同 tick 并发验证完成**。先清空双方背包与箱子，再在同 tick 开箱、同世界时间 2700 点击：两端都预测 `slot54=7`，100 tick 后赢家仍是 7、输家被纠正为 0；服务端 `DED_TOTAL chest=0 host=0 guest=7`，总数 7 无复制。证据 `runs/p80-two-client-clean/`。
 
@@ -552,6 +554,10 @@
 262. **清场**：`DED_SET cleaned slot0=7 hostInv=air guestInv=air`。
 263. **结果**：两端 time=2700 点击；`LAN_POST` 赢家 `slot54=7`、输家 `slot54=0`；服务端 `DED_TOTAL chest=0 host=0 guest=7`，总数 7 无复制。证据 `runs/p80-two-client-clean/`。
 
+## 2026-10-19 21:05 更新：物理 ESC 尝试受阻
+
+264. **现象**：provider 开箱 `ESC_OPEN opened=OptionalInt[1]`，但 tick 160 服务端已是 `slots=46`、客户端 `screen=null`，没有可按键的界面。物理 ESC 仍未验证；下一步用真实 `onUse` 开屏。证据 `runs/p81-esc-key/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -649,6 +655,7 @@
 | 同箱子双客户端 | `runs/p78-two-client-race/README.md`、`server.log`、`guest.log`、`host.log` |
 | 同 tick 并发 | `runs/p79-two-client-simultaneous/README.md`、`server.log`、`guest.log`、`host.log` |
 | 干净同 tick 并发 | `runs/p80-two-client-clean/README.md`、`server.log`、`guest.log`、`host.log` |
+| 物理 ESC 尝试 | `runs/p81-esc-key/README.md`、`latest.log`、`EscProbe.java` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

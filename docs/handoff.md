@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 21:05）：**物理 ESC 尝试受阻**。provider 开箱后菜单立刻被服务端关掉（tick 160 已 46 格），客户端无 ChestScreen，按键注入无对象；物理 ESC 仍未验证，下一步用真实 `onUse` 开屏。证据 `runs/p81-esc-key/`。
 更新（2026-10-19 20:55）：**干净同 tick 并发验证完成**。清空双方背包与箱子后同 tick 点击：两端都预测 7，100 tick 后赢家仍 7、输家被纠正为 0；服务端 `DED_TOTAL chest=0 host=0 guest=7`，总数 7 无复制。证据 `runs/p80-two-client-clean/`。
 更新（2026-10-19 20:45）：**同 tick 并发点击不复制**。两端同在世界时间 2700 点击，均预测 `slot54=7`，但服务端只给一人（`DED_TOTAL chest=0 host=0 guest=7`），总数 7；第二次跑看到失败方被服务端槽位更新纠正（`LAN_POST slot54=0`），但该次库存未清空，需干净重测。证据 `runs/p79-two-client-simultaneous/`。
 更新（2026-10-19 20:35）：**两客户端操作同一箱子不复制**。访客取走 7 钻石后主机再操作：服务端 `DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`，总数仍为 7。属于先后争用，非同一 tick 并发。证据 `runs/p78-two-client-race/`。
