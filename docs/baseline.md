@@ -1487,6 +1487,22 @@ LAN_GUEST_MENU screen=ChestScreen sync=1 slot0=7 minecraft:diamond
 范围：验证的是服务端 → 第二客户端的内容同步；两端互相取放、双端关屏仍未测。证据
 `runs/p75-two-client-server/`。
 
+### 7.77 双客户端取放往返
+
+在同一专用服务器上继续：访客在箱子里把 7 钻石取走，主机随后开箱。
+
+```text
+GUEST   LAN_MENU player=GuestB slot0=7 minecraft:diamond
+GUEST   LAN_GUEST_MOVED slot0=air slot54=7 minecraft:diamond
+SERVER  DED_AFTER slot0=air
+SERVER  DED_OPEN_HOST
+HOST    LAN_MENU player=HostA slot0=air
+```
+
+访客的点击写回服务端（箱子变空），主机再开箱看到同一状态——**访客 → 服务端 → 主机** 的往返
+通过。中途修复：访客离箱约 11 格时菜单失效、客户端槽位回落到 46 格导致越界崩溃；现在开箱前
+把访客传送到箱子旁，并在点击前检查槽位数。证据 `runs/p76-two-client-move/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

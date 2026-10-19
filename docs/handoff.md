@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 20:10）：**双客户端取放往返通过**。访客从箱子取走 7 钻石（`LAN_GUEST_MOVED slot0=air slot54=7`），服务端 `DED_AFTER slot0=air`，主机再开箱看到空箱（`LAN_MENU player=HostA slot0=air`）。中途修复“离箱 11 格菜单失效导致越界崩溃”。证据 `runs/p76-two-client-move/`。
 更新（2026-10-19 20:00）：**双客户端同步通过（专用服务器）**。RL 移植拆成服务端安全的 `RawChannel` + 仅客户端 `FabricClientPacketHelper`，修掉专用服务器 `NoClassDefFoundError class_638`；专用服务器（online-mode=false）+ 两个离线客户端：`DED_SET slot0=7`、`DED_OPEN OptionalInt[1] guest=GuestB`、访客 `LAN_GUEST_MENU slot0=7 minecraft:diamond`。证据 `runs/p75-two-client-server/`。
 更新（2026-10-19 19:45）：**双客户端尝试被 LAN 正版验证阻断**。主机开 LAN 25566 成功，离线访客连入即被踢，画面 `Failed to log in: Invalid session`；写 `server.properties online-mode=false` 无效。下一步：专用服务器（online-mode=false）+ 把 RL 移植拆成服务端安全部分。证据 `runs/p74-two-client/`。
 更新（2026-10-19 19:25）：**lithium 玩法冒烟通过**。强制加载 9×9 区块 `81/81`，放石头并用 `ServerPlayerGameMode.destroyBlock` 真实破坏（stone → air），服务端 tick 160/240 存活、客户端 `LITHIUM_CLIENT_ALIVE`，无崩溃。冒烟，不含 TPS/长期稳定性。证据 `runs/p73-lithium-play/`。

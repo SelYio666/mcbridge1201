@@ -49,12 +49,13 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   (`java/src/nested/java/`) and the whole pipeline is one command
   (`tools/rebuild_ironchests_client.py`, `runs/p71-rebuild-pipeline/`).
 
-**Two-client sync now passes for server → second-client content** (`runs/p75-two-client-server/`):
+**Two-client sync passes both ways** (`runs/p75-two-client-server/`, `runs/p76-two-client-move/`):
 after splitting the ResourcefulLib port into server-safe `RawChannel` + client-only
-`FabricClientPacketHelper`, a dedicated server with `online-mode=false` sent a chest containing
-7 diamonds to a second client (`LAN_GUEST_MENU ... slot0=7 minecraft:diamond`). The earlier LAN
-attempt (`runs/p74-two-client/`) is superseded. Still untested: both clients moving items, and
-closing the screen on both sides.
+`FabricClientPacketHelper`, a dedicated server with `online-mode=false` sends chest contents to a
+second client, and the guest's take-out click is written back to the server and observed by the host
+(`LAN_GUEST_MOVED slot0=air` → `DED_AFTER slot0=air` → `LAN_MENU player=HostA slot0=air`). The
+earlier LAN attempt (`runs/p74-two-client/`) is superseded. Still untested: simultaneous edits from
+both clients and closing the screen on both sides.
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls
