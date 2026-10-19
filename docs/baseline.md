@@ -1212,6 +1212,19 @@ provider 级 `undeleteLast` 已在 §7.62 通过，所以失败点明确在 Tras
 事件/状态**，不是取回实现。empty-trash、容器 GUI、同步未验证。证据
 `runs/p61-trash-clean-return/`。
 
+### 7.64 TrashSlot 第二次点击：事件到达，handler 内未返回
+
+debug mixin 在 `TrashSlotGuiHandler.onMouseClick` HEAD 记录第三次点击：
+
+```text
+DEBUG_CLICK button=0 x=245.48 y=218.67 hovering=true carried=0 minecraft:air
+             trash=5 minecraft:diamond enabled=true provider=DefaultDeletionProvider
+```
+
+事件、命中、carried、trash、settings、provider 全部满足；点击后仍不取回。因此失败在 HEAD 之后，
+不是事件缺失或坐标错误。下一步做 RETURN 注入 + 服务端 `MessageTrashSlotClick.handle` 日志，判断
+`undeleteLast` 是否被调用、服务端是否覆盖客户端。证据 `runs/p63-trash-debug/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

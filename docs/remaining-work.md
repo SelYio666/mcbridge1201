@@ -28,7 +28,10 @@ serverbound Balm bridge, clicking a stack then the trash widget **moves it into 
 (`runs/p59-trash-send/after-send.png`), and the server probe reads 5 diamonds. A direct
 `DefaultDeletionProvider.undeleteLast` call moves the stack back to the cursor and empties the
 server trash (`runs/p60-trash-return/`); a clean single-stack GUI run still leaves the item in the
-trash on the second click (`runs/p61-trash-clean-return/`). Still **not verified**:
+trash on the second click (`runs/p61-trash-clean-return/`). A debug mixin proves the second click
+reaches `onMouseClick` with `hovering=true`, empty carried, trash=5, enabled and a provider
+(`runs/p63-trash-debug/`), so the remaining gap is after HEAD (`undeleteLast` or server overwrite).
+Still **not verified**:
 
 - actual mouse-driven trash return/undelete and empty-trash actions;
 - clientbound delivery / two-client synchronization;

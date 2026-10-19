@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "probe.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "TrashGuiDebugMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}
