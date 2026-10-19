@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 12:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 12:20（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 12:20）：**IronChests GUI 交互通过**。客户端 `clickSlot` 把 25 钻石从热键栏 81 放进箱子槽 0，再取回到背包槽 54；服务端同一菜单在 tick 220/260/300 的槽位状态与客户端完全一致，无复制/丢失。证据 `runs/p69-ironchests-interaction/`。
 更新（2026-10-19 12:15）：**IronChests 箱子 GUI 通过**。服务端开箱 `IRONCHESTS_USE result=CONSUME`，客户端 `IRONCHESTS_SCREEN=tech.thatgravyboat.ironchests.client.ChestScreen`，截图见 "Iron Chest" 标题 + 9×6 箱子格 + 背包 + 物品，无崩溃。为此：① work-only 移植内嵌 ResourcefulLib 2.0.6 服务端网络（RawPayload/payload 注册），并修正早期客户端 helper 的错误 channel 公式（`ironchests:main/sync`）；② 规则 `screen.render-background-one-arg` 修 `ChestScreen.method_25420(DrawContext)`；③ 规则 `ironchests.draw-texture` 修 `DrawContext.drawTexture` 墓碑。背景为纯灰（12 个旧参数只映射前 10 个），槽位/标题/物品正常。证据 `runs/p68-ironchests-gui/`。
 更新（2026-10-19 09:45）：**IronChests 同步 NBT 已修，下一阻断是 ResourcefulLib 原始网络**。两条 call-site 规则（`getSyncTag`/`loadSyncTag` 被转换器调换的一参 readNbt/writeNbt，各命中 1 次）+ `PacketByteBuf.writeNbt(NbtCompound)` 加宽（1 次）后，开箱路径越过 NBT 错误，停在 `ServerPlayNetworking.send(ServerPlayer, Identifier, PacketByteBuf)`——这是 IronChests 内嵌的 ResourcefulLib 2.0.6 用的已删原始通道 API（栈在 `PacketChannelHelperImpl.sendToPlayer`）。换 1.21.1 的 ResourcefulLib 3.0.12 会在启动时 `NoClassDefFoundError PacketHandler`，所以只能移植内嵌库。证据 `runs/p67-ironchests-gui-nbt/`。
 更新（2026-10-19 09:25）：**IronChests 客户端模型已修好，下一阻断是 BlockEntity NBT**。加 work-only 兼容类 `BakedModelManagerHelper.getModel(manager,id) → class_1092.method_4742(class_1091.method_61078(id))` + `ModelLoadingPlugin` 入口后，箱子渲染不再 `NoClassDefFoundError`。服务端直接调用 `GenericChestBlock.method_9534` 打开菜单时出现 `NoSuchMethodError GenericChestBlockEntity.method_11007(NbtCompound)`（1.20.1 一参 readNbt）；下一步给它加 NBT 读桥。证据 `runs/p66-ironchests-gui/`。
@@ -463,6 +464,13 @@
 225. **结果**：`IRONCHESTS_USE result=CONSUME`，客户端 `IRONCHESTS_SCREEN=tech.thatgravyboat.ironchests.client.ChestScreen`；截图显示 Iron Chest 标题、9×6 格子、背包、物品，无崩溃。背景纯灰是旧纹理参数只映射前 10 个所致。证据 `runs/p68-ironchests-gui/`。
 226. **未做**：GUI 内取放物品、关闭界面、clientbound 物品同步、双客户端；RL 服务端 helper 仍是 work-only，未进仓库流程。
 
+## 2026-10-19 12:20 更新：IronChests GUI 交互通过
+
+227. **放入**：客户端 `clickSlot(sync=1, 81→0, PICKUP)`，`CLICK_PUT slot0=25 diamonds source=air`；服务端 tick 220 同状态。
+228. **取回**：`clickSlot(0→54)`，`CLICK_TAKE slot0=air slot54=25 diamonds`；服务端 tick 260/300 同状态。
+229. **结论**：容器取放双向通过，服务端权威状态与客户端一致，无复制/丢失。证据 `runs/p69-ironchests-interaction/`。
+230. **未做**：关闭界面、clientbound 物品同步、双客户端；RL 服务端 helper 仍是 work-only。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -548,6 +556,7 @@
 | IronChests 模型 shim | `runs/p66-ironchests-gui/BakedModelManagerHelper.java`、`latest-model-shim.log` |
 | IronChests 同步 NBT | `runs/p67-ironchests-gui-nbt/patch.log`、`latest-rl2.log`、`crash-rl3.txt` |
 | IronChests GUI 通过 | `runs/p68-ironchests-gui/chest-gui.png`、`latest.log`、`patch-screen.log`、`patch-draw.log` |
+| IronChests GUI 交互 | `runs/p69-ironchests-interaction/README.md`、`latest.log`、`IronChestsGuiProbe.java` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

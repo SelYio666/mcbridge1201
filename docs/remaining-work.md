@@ -36,12 +36,13 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - the real UI key/action that invokes empty-trash;
 - ironchests clientbound traffic and two-client synchronization;
 - lithium gameplay/rendering;
-- ironchests GUI/render: **the chest GUI now opens and renders** (`runs/p68-ironchests-gui/`,
-  `chest-gui.png`) after porting the nested ResourcefulLib 2.0.6 server networking (work-only),
-  fixing the channel location to `ironchests:main/sync`, and adding the
-  `screen.render-background-one-arg` + `ironchests.draw-texture` rules. Still open: GUI item
-  take/put, closing, clientbound item sync, two-client sync, and moving the RL server-helper port
-  into the repo workflow (it is currently a manual nested-jar swap).
+- ironchests GUI/render: **chest GUI opens, renders and supports put/take round trips**
+  (`runs/p68-ironchests-gui/`, `runs/p69-ironchests-interaction/`; server-side menu state agrees at
+  ticks 220/260/300). Ported the nested ResourcefulLib 2.0.6 server networking (work-only), fixed the
+  channel location to `ironchests:main/sync`, and added the `screen.render-background-one-arg` +
+  `ironchests.draw-texture` rules. Still open: closing the screen, clientbound item sync, two-client
+  sync, and moving the RL server-helper port into the repo workflow (currently a manual nested-jar
+  swap).
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls

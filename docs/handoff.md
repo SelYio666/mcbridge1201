@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 12:20）：**IronChests GUI 交互通过**。客户端 `clickSlot` 把 25 钻石从热键栏 81 放进箱子槽 0，再取回到背包槽 54；服务端同一菜单 tick 220/260/300 的状态与客户端一致，无复制/丢失。证据 `runs/p69-ironchests-interaction/`。
 更新（2026-10-19 12:15）：**IronChests 箱子 GUI 通过**。服务端 `IRONCHESTS_USE result=CONSUME`，客户端 `IRONCHESTS_SCREEN=tech.thatgravyboat.ironchests.client.ChestScreen`；截图有 Iron Chest 标题、9×6 格子、背包和物品，无崩溃。为此移植了内嵌 ResourcefulLib 2.0.6 服务端网络（work-only）、修正 channel 公式为 `ironchests:main/sync`，并加了两条规则（`screen.render-background-one-arg`、`ironchests.draw-texture`）。背景纯灰是旧纹理参数只映射前 10 个。证据 `runs/p68-ironchests-gui/`。
 更新（2026-10-19 08:10）：**TrashSlot 不是普通 handler slot**。probe 取到 `TrashSlotSlot` 坐标 `152,165`、component anchor `231,211`，但 `handler.field_7761.indexOf(trash)=-1`（46 个槽），说明垃圾桶是客户端自定义 component 绘制/拦截，普通 `clickSlot` 无法定位。P56 的点击/拖拽失败由此解释；实际转移仍未完成。证据 `runs/p58-trash-click/`。
 更新（2026-10-19 01:25，修正）：**trash 重进为空是 TrashSlot 登录重置**。`setTrashItem` 同会话读回 5 钻石，live `BalmData/TrashSlot` 也是 `{count:5,id:"minecraft:diamond"}`；但 `PlayerLoginEvent` 显式把 trash 设为 `ItemStack.EMPTY`，所以重进为空不能证明 NBT 桥失败。P57 原结论已修正；GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。

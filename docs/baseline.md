@@ -1350,6 +1350,20 @@ IRONCHESTS_SCREEN=tech.thatgravyboat.ironchests.client.ChestScreen
 `chest-gui.png` 显示 Iron Chest 标题、9×6 箱子格、背包和物品，无崩溃。背景是纯灰：旧调用传了
 12 个 int，只有前 10 个能映射到 1.21.1，末尾两个旧参数被忽略。证据 `runs/p68-ironchests-gui/`。
 
+### 7.70 IronChests GUI 交互通过
+
+在打开的箱子上做真实 `clickSlot`：
+
+```text
+CLICK_PUT   slot0=25 diamonds  source=air
+SERVER_MENU tick=220 slot0=25 diamonds
+CLICK_TAKE  slot0=air          slot54=25 diamonds
+SERVER_MENU tick=260 slot0=air slot54=25 diamonds
+```
+
+25 钻石从热键栏 81 放进箱子槽 0，再取回到背包槽 54；服务端同一菜单在 tick 220/260/300 的状态
+与客户端一致，无复制、无丢失。证据 `runs/p69-ironchests-interaction/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
