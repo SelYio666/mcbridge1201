@@ -1200,6 +1200,18 @@ RETURN_SERVER empty=true count=0
 取回逻辑、serverbound 包、服务端清空都正常，无异常。真实鼠标第二次点击仍未触发取回，属于
 GUI 命中/事件问题；empty-trash、容器 GUI、同步未验证。证据 `runs/p60-trash-return/`。
 
+### 7.63 干净 GUI 取回复测：第二次点击仍不返回
+
+只给一个 5 钻石堆，不使用任何人工 seed：
+
+1. 点击钻石堆 → 点击垃圾桶：5 钻石进入 trash；
+2. 等待 2 秒，再次点击同一垃圾桶位置；
+3. 结果：trash 仍有 5 钻石，背包/快捷栏为空，无复制。
+
+provider 级 `undeleteLast` 已在 §7.62 通过，所以失败点明确在 TrashSlot GUI 的**第二次真实点击
+事件/状态**，不是取回实现。empty-trash、容器 GUI、同步未验证。证据
+`runs/p61-trash-clean-return/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

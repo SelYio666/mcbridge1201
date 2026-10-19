@@ -1,7 +1,7 @@
 # 交接摘要（一页）
 
 
-更新（2026-10-19 08:35）：**trash 取回逻辑通过（provider 级）**。quick-play 进世界后，服务端在登录重置后 seed 5 钻石，客户端直接调用 `undeleteLast`：cursor=5、client trash=0、server trash empty=true，无异常。真实鼠标第二次点击仍未触发取回，属于 GUI 命中/事件问题；empty-trash、容器 GUI、同步未验证。证据 `runs/p60-trash-return/`。
+更新（2026-10-19 08:40）：**干净复测：第二次真实点击仍不取回**。只给一个 5 钻石堆，点击移入 trash 成功；等待 2 秒后再次点同一图标，钻石仍在 trash、背包为空，无复制。provider 级 `undeleteLast` 已通过（P60），因此缺口在 TrashSlot GUI 的第二次点击事件/状态。证据 `runs/p61-trash-clean-return/`。
 更新（2026-10-19 08:10）：**TrashSlot 不是普通 handler slot**。probe 取到 `TrashSlotSlot` 坐标 `152,165`、component anchor `231,211`，但 `handler.field_7761.indexOf(trash)=-1`（46 个槽），说明垃圾桶是客户端自定义 component 绘制/拦截，普通 `clickSlot` 无法定位。P56 的点击/拖拽失败由此解释；实际转移仍未完成。证据 `runs/p58-trash-click/`。
 更新（2026-10-19 01:25，修正）：**trash 重进为空是 TrashSlot 登录重置**。`setTrashItem` 同会话读回 5 钻石，live `BalmData/TrashSlot` 也是 `{count:5,id:"minecraft:diamond"}`；但 `PlayerLoginEvent` 显式把 trash 设为 `ItemStack.EMPTY`，所以重进为空不能证明 NBT 桥失败。P57 原结论已修正；GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。

@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 08:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 08:40（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 08:40）：**干净复测：第二次真实点击仍不取回**。只给一个 5 钻石堆，点击移入 trash 成功；等待 2 秒后再次点同一图标，钻石仍在 trash、背包为空，无复制。provider 级 `undeleteLast` 已通过（P60），因此缺口在 TrashSlot GUI 的第二次点击事件/状态。证据 `runs/p61-trash-clean-return/`。
 更新（2026-10-19 08:35）：**trash 取回逻辑通过（provider 级）**。quick-play 进世界后，服务端在登录重置后 seed 5 钻石，客户端直接调用 `undeleteLast`：cursor=5、client trash=0、server trash empty=true，无异常。真实鼠标第二次点击仍未触发取回，属于 GUI 命中/事件问题；empty-trash、容器 GUI、同步未验证。证据 `runs/p60-trash-return/`。
 更新（2026-10-19 08:25）：**trash GUI 移入成功（含服务端）**。第一次真实点击暴露 `BalmNetworking.sendToServer(Object)` NoSuchMethodError；新增 `BalmNetworkingBridge.sendToServer` + 规则命中 4 处后，点击 5 钻石再点垃圾桶，钻石进入 trash slot（`after-send.png`），服务端 probe 读到 `SERVER_TRASH count=5 item=minecraft:diamond`，无崩溃。移除/undelete、容器 GUI、同步仍未验证。证据 `runs/p59-trash-send/`。
 更新（2026-10-19 08:10）：**TrashSlot 不是普通 handler slot**。probe 取到 `TrashSlotSlot` 坐标 `152,165`、component anchor `231,211`，但 `handler.field_7761.indexOf(trash)=-1`（46 个槽），说明垃圾桶是客户端自定义 component 绘制/拦截，普通 `clickSlot` 无法定位。P56 的点击/拖拽失败由此解释；仍未完成实际转移。证据 `runs/p58-trash-click/`。
@@ -406,6 +407,12 @@
 198. **结果**：`cursor=5`、client trash=0、`RETURN_SERVER empty=true count=0`，无异常。
 199. **边界**：真实鼠标第二次点击仍未触发取回，属 GUI 命中/事件；empty-trash/容器/同步未验证。证据 `runs/p60-trash-return/`。
 
+## 2026-10-19 08:40 更新：干净 GUI 取回复测
+
+200. **干净序列**：只给一个 5 钻石堆；点击钻石 → 点击垃圾桶，移入成功。
+201. **第二次点击**：等待 2 秒后点同一位置，钻石仍在 trash、背包为空，无复制。
+202. **结论**：provider 取回已通过（P60），失败点在 TrashSlot GUI 第二次点击事件/状态。证据 `runs/p61-trash-clean-return/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -482,6 +489,7 @@
 | TrashSlot handler 定位 | `runs/p58-trash-click/README.md`、`latest.log`、`TrashClickProbe.java` |
 | trash GUI 移入 | `runs/p59-trash-send/README.md`、`after-send.png`、`latest.log` |
 | trash 取回（provider） | `runs/p60-trash-return/README.md`、`client.log`、`TrashReturnProbe.java` |
+| trash 干净 GUI 取回 | `runs/p61-trash-clean-return/README.md`、`after-return.png`、`latest.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

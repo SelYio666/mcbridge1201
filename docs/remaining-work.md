@@ -27,8 +27,8 @@ client-side `TrashSlotComponent`, so ordinary `clickSlot` cannot target it. Afte
 serverbound Balm bridge, clicking a stack then the trash widget **moves it into the trash slot**
 (`runs/p59-trash-send/after-send.png`), and the server probe reads 5 diamonds. A direct
 `DefaultDeletionProvider.undeleteLast` call moves the stack back to the cursor and empties the
-server trash (`runs/p60-trash-return/`); the real mouse click that should invoke it still does not.
-Still **not verified**:
+server trash (`runs/p60-trash-return/`); a clean single-stack GUI run still leaves the item in the
+trash on the second click (`runs/p61-trash-clean-return/`). Still **not verified**:
 
 - actual mouse-driven trash return/undelete and empty-trash actions;
 - clientbound delivery / two-client synchronization;
