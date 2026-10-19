@@ -1584,6 +1584,22 @@ ESC_CLIENT tick=160 screen=null slots=46
 验证。下一步应改用真实 `GenericChestBlock.onUse`（P68 的反射 `method_9534`）开屏后再注入 ESC。
 证据 `runs/p81-esc-key/`。
 
+### 7.83 物理 ESC 二次尝试：真实 onUse 也留不住菜单
+
+改用真实 `onUse`：
+
+```text
+ESC_PLACED=false pos=class_2338{x=80, y=65, z=65}
+ESC_OPEN result=CONSUME
+ESC_SERVER_MENU tick=160 slots=46
+ESC_CLIENT tick=160 screen=null slots=46
+```
+
+`onUse` 返回 `CONSUME`（交互被接受），但同样在 80 tick 内菜单关闭、客户端没有 `ChestScreen`。
+两种开屏路径在当前世界状态下都留不住菜单，可能是菜单 `canUse` 检查（玩家位置/维度）或该位置
+残留方块实体导致；需要重置世界/位置或检查 `GenericChestMenu.canUse` 后再验。物理 ESC 仍未
+验证。证据 `runs/p82-esc-onuse/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

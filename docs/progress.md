@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 21:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 21:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 21:15）：**物理 ESC 二次尝试仍受阻**。改用真实 `onUse` 路径：`ESC_OPEN result=CONSUME`，但 80 tick 内服务端菜单已回 46 格、客户端无 `ChestScreen`，无界面可按键。两条开屏路径在本世界状态下都留不住菜单，需重置世界/位置或检查 `GenericChestMenu.canUse`。物理 ESC 仍未验证。证据 `runs/p82-esc-onuse/`。
 
 更新（2026-10-19 21:05）：**物理 ESC 尝试受阻**。探针用 provider 开箱后菜单立刻被服务端关掉（tick 160 已 46 格），客户端没出现 ChestScreen，按键注入没有对象；物理 ESC 仍未验证（程序化 `Screen.close()` 已由 P77 验证）。下一步改用真实 `onUse` 路径开屏后再注入 ESC。证据 `runs/p81-esc-key/`。
 
@@ -557,6 +559,7 @@
 ## 2026-10-19 21:05 更新：物理 ESC 尝试受阻
 
 264. **现象**：provider 开箱 `ESC_OPEN opened=OptionalInt[1]`，但 tick 160 服务端已是 `slots=46`、客户端 `screen=null`，没有可按键的界面。物理 ESC 仍未验证；下一步用真实 `onUse` 开屏。证据 `runs/p81-esc-key/`。
+265. **二次尝试**：真实 `onUse` 返回 `CONSUME`，但同样 80 tick 内菜单关闭、客户端无 `ChestScreen`。两条开屏路径在本世界状态都留不住菜单，需重置世界/位置或查 `canUse`。证据 `runs/p82-esc-onuse/`。
 
 | 证据 | 路径 |
 |---|---|
@@ -656,6 +659,7 @@
 | 同 tick 并发 | `runs/p79-two-client-simultaneous/README.md`、`server.log`、`guest.log`、`host.log` |
 | 干净同 tick 并发 | `runs/p80-two-client-clean/README.md`、`server.log`、`guest.log`、`host.log` |
 | 物理 ESC 尝试 | `runs/p81-esc-key/README.md`、`latest.log`、`EscProbe.java` |
+| 物理 ESC 二次尝试 | `runs/p82-esc-onuse/README.md`、`latest.log`、`EscProbe.java` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
