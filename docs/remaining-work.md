@@ -33,6 +33,11 @@ trash icon. Clientbound `MessageTrashSlotContent` also arrives (`S2C_CLIENT tras
 `runs/p64-trash-s2c/`), and the provider-level empty action clears both sides via the new reply
 bridge (`runs/p65-trash-empty/`). Still **not verified**:
 
+- legacy Fabric networking bridge (`runs/p89-legacy-networking/`): the deleted
+  `PlayChannelHandler` shim, old `ServerPlayNetworking.send` / `CustomPayloadC2SPacket` redirects and
+  the one-arg `Identifier` factory are implemented; AppleSkin now gets past init and packet
+  construction but still hits a `FoodHelper` tombstone at HUD render, and FallingTree's join path is
+  not re-tested;
 - chunk-stress marker matching: `tools/run_chunk_stress.py --self-test` now proves a `# >`
   command echo is not counted while a real `[Server] STRESS_OK_A` line is;
 - hash manifest: `tools/check_hashes.py` verifies every `runs/SHA256SUMS.txt` entry, and

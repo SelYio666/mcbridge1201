@@ -5,12 +5,28 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 
 | 模组 | 客户端 | 服务端/功能 | 结论 |
 |---|---|---|---|
-| AppleSkin 2.5.2 | 初始化崩溃：缺 `PlayChannelHandler` | 未测 | 不兼容 |
+| AppleSkin 2.5.2 | 初始化已修；HUD 渲染遇 `FoodHelper` tombstone | 未测 | 部分修复 |
 | Mod Menu 7.2.2 | 主菜单崩溃：私有 `TitleScreen.field_32271` | 未打开列表 | 不兼容 |
 | Clumps 12.0.0.4 | 主菜单 120 tick | 3+7 经验球不合并（原版 1.21.1 会合并成 10） | 核心功能丢失 |
-| FallingTree 4.3.4 | 初始化崩溃：缺客户端网络处理器 | 入服时旧 `ServerPlayNetworking.send` 崩溃 | 不兼容 |
+| FallingTree 4.3.4 | 初始化已修 | 旧 send 已重定向；入服未复测 | 部分修复 |
 | FerriteCore 6.0.1 | 主菜单 120 tick | 启动/200 tick/正常停服；移除 2 个 mixin | 仅启动、降级 |
 | ShulkerBoxTooltip 4.0.4 | 主菜单 | provider 读取旧 `ItemStack.method_7941` tombstone | 预览失败 |
+
+## 网络桥进展（2026-10-19 补）
+
+已新增 `rules/fabric-1.21.1/fabric-legacy-networking.json`、`identifier-single-arg.json`，以及
+`FabricLegacyNetworking` / `IdentifierBridge` 两个桥：
+
+- 旧 `ClientPlayNetworking.registerGlobalReceiver(Identifier, PlayChannelHandler)` → 注册原始
+  payload 并回调旧 handler；被删除的 `PlayChannelHandler` 由嵌入的 shim 提供（只嵌嵌套类，不覆盖
+  Fabric API 的 `ClientPlayNetworking`）；
+- 旧 `new CustomPayloadC2SPacket(Identifier, PacketByteBuf)` → 用新 `class_2658(payload)` 构造；
+- 旧 `ServerPlayNetworking.send(player, id, buf)` → 包成 S2C 原始 payload；
+- `new Identifier(String)` → 拆 `namespace:path` 调 `Identifier.of`。
+
+实测：AppleSkin 初始化与 `SyncHandler.makeSyncPacket` 不再崩，FallingTree 客户端可启动；AppleSkin
+HUD 渲染仍撞上 `FoodHelper` 的 CenturyBridge tombstone（旧食物 API），FallingTree 入服路径未复测。
+证据 `runs/p89-legacy-networking/`。
 
 ## 需要新增的适配（按类型）
 

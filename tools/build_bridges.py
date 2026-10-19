@@ -43,6 +43,34 @@ def main():
     if rc != 0:
         return rc
     print("compiled", len(sources), "bridge source(s) ->", args.out)
+
+    shim_root = os.path.join(ROOT, "java", "src", "bridge-shim", "java")
+    shim_sources = []
+    for dirpath, _, files in os.walk(shim_root):
+        for f in files:
+            if f.endswith(".java"):
+                shim_sources.append(os.path.join(dirpath, f))
+    if shim_sources:
+        shim_out = os.path.join(ROOT, "work", "tmp", "bridges-shim")
+        os.makedirs(shim_out, exist_ok=True)
+        shim_cmd = [javac, "-nowarn", "-proc:none", "-encoding", "UTF-8",
+                    "-cp", cp, "-d", shim_out] + shim_sources
+        rc = subprocess.call(shim_cmd)
+        if rc != 0:
+            return rc
+        nested = os.path.join(
+            shim_out, "net", "fabricmc", "fabric", "api", "client", "networking", "v1",
+            "ClientPlayNetworking$PlayChannelHandler.class")
+        if not os.path.exists(nested):
+            print("shim did not produce", nested, file=sys.stderr)
+            return 3
+        dest_dir = os.path.join(args.out, "net", "fabricmc", "fabric", "api", "client",
+                                "networking", "v1")
+        os.makedirs(dest_dir, exist_ok=True)
+        dest = os.path.join(dest_dir, "ClientPlayNetworking$PlayChannelHandler.class")
+        with open(nested, "rb") as src, open(dest, "wb") as dst:
+            dst.write(src.read())
+        print("embedded legacy shim ->", dest)
     return 0
 
 

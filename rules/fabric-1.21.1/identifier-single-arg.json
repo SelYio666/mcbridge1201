@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "1.21.1 made the single-argument Identifier(String) constructor private/removed; Identifier.of(String) is not exposed as a one-arg factory, so split namespace:path and call the two-argument factory. Seen in AppleSkin TextureHelper.<clinit> (new Identifier(\"textures/...\")) when the HUD renders.",
+  "constructorRedirects": [
+    {
+      "id": "identifier.one-arg-ctor",
+      "owner": "net/minecraft/class_2960",
+      "desc": "(Ljava/lang/String;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/IdentifierBridge",
+      "bridgeMethod": "of",
+      "bridgeDesc": "(Ljava/lang/String;)Lnet/minecraft/class_2960;",
+      "capability": "identifier.one-arg",
+      "risk": "low",
+      "evidence": "AppleSkin squeek.appleskin.helpers.TextureHelper.<clinit> throws NoSuchMethodError 'void class_2960.<init>(String)' on 1.21.1 (client launch with the networking bridge applied). The bridge splits on ':' and calls class_2960.method_60655(namespace, path)."
+    }
+  ]
+}

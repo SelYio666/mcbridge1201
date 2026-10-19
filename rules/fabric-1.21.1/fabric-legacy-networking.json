@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "Legacy Fabric networking channel API (1.20.1) onto 1.21.1 custom payloads. Old mods call ClientPlayNetworking.registerGlobalReceiver(Identifier, PlayChannelHandler) and ServerPlayNetworking.send(player, Identifier, PacketByteBuf); both signatures no longer exist. Applied to AppleSkin 2.5.2 and FallingTree 4.3.4, whose client init and server join crashed with NoClassDefFoundError/NoSuchMethodError (runs/p88-mod-expansion/).",
+  "methodRedirects": [    {
+      "id": "fabric.legacy.client-register-receiver",
+      "sourceOwner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+      "sourceName": "registerGlobalReceiver",
+      "sourceDesc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler;)Z",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "registerClientReceiver",
+      "bridgeDesc": "(Lnet/minecraft/class_2960;Ljava/lang/Object;)Z",
+      "extraBridgeClasses": [
+        "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler"
+      ],
+      "capability": "fabric.networking.client.receiver",
+      "risk": "medium",
+      "evidence": "AppleSkin squeek.appleskin.network.ClientSyncHandler.init and FallingTree fr.rakambda.fallingtree.fabric.client.network.FabricClientPacketHandler.registerClient call the 1.20.1 two-argument registerGlobalReceiver with an anonymous PlayChannelHandler; on 1.21.1 the mod crashed with NoClassDefFoundError ClientPlayNetworking$PlayChannelHandler (runs/p88-mod-expansion/EXPANSION-REPORT.md). The bridge registers a raw payload type and invokes the legacy handler's receive(client, networkHandler, buf, sender)."
+    },
+    {
+      "id": "fabric.legacy.server-send",
+      "sourceOwner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+      "sourceName": "send",
+      "sourceDesc": "(Lnet/minecraft/class_3222;Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "sendToPlayer",
+      "bridgeDesc": "(Lnet/minecraft/class_3222;Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+      "capability": "fabric.networking.server.send",
+      "risk": "medium",
+      "evidence": "FallingTree FabricServerPacketHandler.onPlayerConnected calls the 1.20.1 ServerPlayNetworking.send(ServerPlayer, Identifier, PacketByteBuf); a client joining the dedicated server crashed with NoSuchMethodError on that call (runs/p88-mod-expansion/EXPANSION-REPORT.md). The bridge wraps the bytes into a registered S2C raw payload."
+    }
+  ],
+  "constructorRedirects": [
+    {
+      "id": "fabric.legacy.client-packet-ctor",
+      "owner": "net/minecraft/class_2658",
+      "desc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "createClientPacket",
+      "bridgeDesc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)Lnet/minecraft/class_2658;",
+      "capability": "fabric.networking.client.packet",
+      "risk": "medium",
+      "evidence": "AppleSkin squeek.appleskin.network.SyncHandler.makeSyncPacket still builds the 1.20.1 CustomPayloadC2SPacket(Identifier, PacketByteBuf); after the receiver bridge let the mod initialize, the client crashed with NoSuchMethodError 'void class_2658.<init>(class_2960, class_2540)'. The factory returns a 1.21.1 C2S packet wrapping the same bytes."
+    }
+  ]
+}

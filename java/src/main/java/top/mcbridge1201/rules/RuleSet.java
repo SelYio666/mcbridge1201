@@ -144,6 +144,8 @@ public final class RuleSet {
         public String bridgeClass;
         public String bridgeMethod;
         public String bridgeDesc;
+        /** Extra classes to embed from --bridge-dir when this rule applies (e.g. API shims). */
+        public List<String> extraBridgeClasses;
         public String capability;
         public String risk;
         public String evidence;

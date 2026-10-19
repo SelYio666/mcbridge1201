@@ -244,6 +244,11 @@ public final class JarPatcher {
                                     r.bridgeClass, r.bridgeMethod, r.bridgeDesc, false));
                             st.applied.merge(r.id, 1, Integer::sum);
                             recordBridge(st, used, r.bridgeClass);
+                            if (r.extraBridgeClasses != null) {
+                                for (String extra : r.extraBridgeClasses) {
+                                    recordBridge(st, used, extra);
+                                }
+                            }
                             changed = true;
                         }
                     }
