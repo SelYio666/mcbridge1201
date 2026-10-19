@@ -46,6 +46,11 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - hash manifest: `tools/check_hashes.py` verifies every `runs/SHA256SUMS.txt` entry, and
   `tools/hash_evidence.py` now refuses to write a manifest with missing files
   (`MISSING` placeholder lines removed);
+- Clumps orb merging is still pending: the converter removed MixinExperienceOrb, and a draft
+  server-tick merge bridge (vanilla canMerge/merge via reflection) exists in `work/tmp/clumpsmerge`
+  but the fixture did not converge — summoned orbs could be created and read as objects, while world
+  entity queries returned 0 after restart. Next step: debug entity persistence/selector before
+  claiming any merge result;
 - Mod Menu title screen passes (`runs/p92-modmenu/`): the private field is read reflectively and the
   button widget overrides `renderWidget` after a `methodRenames` rule; the mod list screen itself
   and config UI are untested;
