@@ -267,6 +267,7 @@ FILES = [
     "runs/p59-trash-send/client.log",
     "runs/p59-trash-send/after-send.png",
     "runs/p59-trash-send/undelete.png",
+    "runs/p59-trash-send/after-take.png",
     "runs/p59-trash-send/TrashClickProbe.java",
     "runs/p59-trash-send/trashslot-sendtoserver.json",
     "runs/p59-trash-send/build-bridges.log",

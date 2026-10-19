@@ -1,16 +1,19 @@
 package probe;
 
 import net.blay09.mods.balm.mixin.AbstractContainerScreenAccessor;
+import net.blay09.mods.trashslot.TrashHelper;
 import net.blay09.mods.trashslot.client.TrashSlotGuiHandler;
 import net.blay09.mods.trashslot.client.TrashSlotSlot;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.class_1713;
 import net.minecraft.class_1735;
 import net.minecraft.class_1799;
 import net.minecraft.class_1802;
+import net.minecraft.class_3222;
 import net.minecraft.class_465;
 import net.minecraft.class_490;
 
@@ -19,11 +22,26 @@ public final class TrashClickProbe implements ModInitializer, ClientModInitializ
     private int ticks;
     private int diamondSlot = -1;
     private int trashSlot = -1;
+    private static class_3222 joined;
+    private static int serverTicks;
 
     @Override
     public void onInitialize() {
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-                handler.method_32311().method_7270(new class_1799(class_1802.field_8477, 5)));
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            joined = handler.method_32311();
+            joined.method_7270(new class_1799(class_1802.field_8477, 5));
+        });
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            if (joined == null) return;
+            serverTicks++;
+            if (serverTicks % 40 == 0) {
+                class_1799 trash = TrashHelper.getTrashItem(joined);
+                if (!trash.method_7960()) {
+                    System.out.println("SERVER_TRASH count=" + trash.method_7947()
+                            + " item=" + trash.method_7909());
+                }
+            }
+        });
     }
 
     @Override

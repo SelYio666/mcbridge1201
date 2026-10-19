@@ -1176,9 +1176,14 @@ Balm 21 的泛型 `sendToServer(T extends CustomPayload)` 擦除后与旧的 `Ob
 注册的 packet class 找到 payload，调用 `ClientPlayNetworking.send`；规则
 `trashslot-sendtoserver.json` 命中 4 处。
 
-补丁后点击 5 钻石再点垃圾桶，钻石进入 trash slot（`after-send.png`），无 `NoSuchMethodError`，
-客户端存活。已确认 **GUI 移入方向**；移除/undelete、服务端内容、容器 GUI、同步仍未验证。
-证据 `runs/p59-trash-send/`。
+补丁后点击 5 钻石再点垃圾桶，钻石进入 trash slot（`after-send.png`）；服务端 probe 读到：
+
+```text
+SERVER_TRASH count=5 item=minecraft:diamond
+```
+
+无 `NoSuchMethodError`，客户端存活。已确认 **GUI 移入方向 + 服务端内容**；移除/undelete、容器
+GUI、同步仍未验证。证据 `runs/p59-trash-send/`。
 
 ## 8. 未验证项与下一步
 

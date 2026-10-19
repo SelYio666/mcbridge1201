@@ -25,8 +25,18 @@ With the patched jar, clicking the diamond stack then the trash slot moved the *
 the trash slot** (`after-send.png`, tooltip `Diamond`). No `NoSuchMethodError`; the client stayed
 alive.
 
-A second click on the trash slot (`undelete.png`) left the stack in the trash slot; undelete/return
-path is not confirmed.
+A second click on the trash slot (`undelete.png`, `after-take.png`) did not return the stack; it
+remained in the trash slot. Undelete/return path is not confirmed.
+
+## Server confirmation
+
+A server-side tick probe reads `TrashHelper.getTrashItem(joined)` every 40 ticks. After the click:
+
+```text
+SERVER_TRASH count=5 item=minecraft:diamond
+```
+
+so the server accepted the serverbound packet and stored 5 diamonds. No `NoSuchMethodError`.
 
 ## Verified
 
@@ -34,13 +44,13 @@ path is not confirmed.
 |---|---|
 | click item then trash slot | **5 diamonds moved into trash** |
 | serverbound `sendToServer` link | no crash |
+| server-side trash content | **5 diamonds** |
 | client stays alive | yes |
 
 ## Not verified
 
-- return/undelete path (`undeleteLast`);
+- return/undelete path (`undeleteLast`; second click did not clear it);
 - empty-trash action;
-- server-side trash content after the packet;
 - restart persistence (TrashSlot clears trash on login by design);
 - ironchests GUI / clientbound delivery / two-client sync.
 
