@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 01:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 08:10（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 08:10）：**TrashSlot 不是普通 handler slot**。probe 取到 `TrashSlotSlot` 坐标 `152,165`、component anchor `231,211`，但 `handler.field_7761.indexOf(trash)=-1`（46 个槽），说明垃圾桶是客户端自定义 component 绘制/拦截，普通 `clickSlot` 无法定位。P56 的点击/拖拽失败由此解释；仍未完成实际转移。证据 `runs/p58-trash-click/`。
 更新（2026-10-19 01:25，修正）：**trash 重进为空是 TrashSlot 登录重置**。`setTrashItem` 同会话读回 5 钻石，live `BalmData/TrashSlot` 也是 `{count:5,id:"minecraft:diamond"}`；但 TrashSlot 的 `PlayerLoginEvent` 显式把 trash 设为 `ItemStack.EMPTY`，所以重进为空不能证明 NBT 桥失败。P57 原结论已修正；GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。
 更新（2026-10-19 01:05）：**背包 + TrashSlot GUI 渲染**。合成 E 键不可靠，改用客户端测试 mod 自动打开 `InventoryScreen`；截图显示原版背包和右下角 TrashSlot 按钮。点击空 trash 按钮不改变界面；物品移入/移出、持久化、容器 GUI、同步仍未验证。证据 `runs/p55-client-gui/`。
@@ -385,6 +386,12 @@
 189. **重进为空的原因**：`TrashSlot.lambda$initialize$0(PlayerLoginEvent)` 显式 `setTrashItem(player, ItemStack.EMPTY)` 并发送空 content；这是模组自己的登录重置，不是 NBT 桥失败。
 190. **结论**：P57 原“持久化缺口”结论撤回；trash 在该版本按登录重置，不能作为持久化契约。GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 
+## 2026-10-19 08:10 更新：TrashSlot 不是 handler slot
+
+191. **probe**：`TrashSlotSlot` 坐标 `152,165`，component anchor `231,211`，钻石槽 `36`。
+192. **关键**：`handler.field_7761.indexOf(trash) = -1`（共 46 个槽），垃圾桶不在普通 slot 列表；它是客户端 component 绘制/拦截。
+193. **结论**：普通 `clickSlot` 无法定位垃圾桶，P56 的点击/拖拽失败由此解释；实际转移仍未完成。证据 `runs/p58-trash-click/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -460,6 +467,7 @@
 | 背包/TrashSlot GUI | `runs/p55-client-gui/README.md`、`inventory-probe.png`、`trash-click.png` |
 | 真实物品/trash 拖放 | `runs/p56-client-item/README.md`、`inventory-with-diamonds.png`、`trash-drag.png` |
 | trash 持久化 probe | `runs/p57-trash-persist/README.md`、`latest.log`、`pause2.png` |
+| TrashSlot handler 定位 | `runs/p58-trash-click/README.md`、`latest.log`、`TrashClickProbe.java` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

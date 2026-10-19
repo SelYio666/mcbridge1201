@@ -1141,6 +1141,23 @@ second join: TRASH_PROBE_SET after=5 empty=false
 判定 NBT 桥失败；原 P57“持久化缺口”结论已撤回。该版本没有可用的跨重进 trash 持久化契约。
 GUI 拖放仍是独立未解问题（P56）。证据 `runs/p57-trash-persist/`。
 
+### 7.60 TrashSlot 不是普通 ScreenHandler slot
+
+客户端 probe 取得：
+
+```text
+TRASH_PROBE trash=152,165
+TRASH_PROBE componentAnchor=231,211
+TRASH_PROBE diamond slot=36 count=5
+TRASH_PROBE trashIndex=-1 slots=46
+```
+
+`handler.field_7761.indexOf(trash) = -1`：垃圾桶 `TrashSlotSlot` 不在 46 个普通 slot 中，而是
+由 `TrashSlotComponent` 在客户端绘制并拦截鼠标。普通 `clickSlot`/`ScreenHandler` 无法定位它，
+所以 P56 的屏幕坐标点击/拖拽没有完成转移——这是 GUI 命中路径问题，不是 NBT、输入法或物品
+路径问题。实际移入/移出仍未验证；下一步应对 component 的 `isInside`/拖拽状态或它自己的
+click 路径做测试。证据 `runs/p58-trash-click/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
