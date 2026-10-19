@@ -68,6 +68,8 @@ public final class ArtifactScanner {
         public String sha256;
         public long size;
         public String loader = "unknown";
+        /** True when the jar ships both Fabric and (Neo)Forge metadata. */
+        public boolean multiLoader;
         public String modId;
         public String version;
         public String displayName;
@@ -111,8 +113,16 @@ public final class ArtifactScanner {
                             toml == null ? null : "META-INF/mods.toml",
                             neotoml == null ? null : "META-INF/neoforge.mods.toml")
                     .filter(java.util.Objects::nonNull).toList());
-            // Multi-loader jars ship both metadata files; the loader-specific one wins.
-            if (neotoml != null) {
+            // Multi-loader jars ship both metadata files; a valid Fabric entrypoint set wins.
+            boolean fabricEntrypoints = false;
+            if (fmj != null) {
+                readFabricMeta(a, zf.getInputStream(fmj));
+                fabricEntrypoints = !a.entrypoints.isEmpty();
+            }
+            a.multiLoader = fmj != null && (toml != null || neotoml != null);
+            if (fabricEntrypoints) {
+                a.loader = "fabric";
+            } else if (neotoml != null) {
                 a.loader = "neoforge";
                 readModsToml(a, new String(zf.getInputStream(neotoml).readAllBytes(), StandardCharsets.UTF_8));
             } else if (toml != null) {
@@ -120,14 +130,9 @@ public final class ArtifactScanner {
                 readModsToml(a, new String(zf.getInputStream(toml).readAllBytes(), StandardCharsets.UTF_8));
             } else if (fmj != null) {
                 a.loader = "fabric";
-                readFabricMeta(a, zf.getInputStream(fmj));
             } else if (zf.getEntry("META-INF/MANIFEST.MF") != null) {
                 String mf = new String(zf.getInputStream(zf.getEntry("META-INF/MANIFEST.MF")).readAllBytes(), StandardCharsets.UTF_8);
                 if (mf.contains("FMLModType") || mf.contains("FMLCorePlugin")) a.loader = "forge-coremod?";
-            }
-            if (fmj != null && !"fabric".equals(a.loader)) {
-                // keep Fabric metadata available for mixed jars without overriding the loader
-                readFabricMeta(a, zf.getInputStream(fmj));
             }
             var en = zf.entries();
             while (en.hasMoreElements()) {

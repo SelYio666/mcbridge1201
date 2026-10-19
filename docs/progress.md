@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 21:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 22:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 22:35）：**扩模测试 6 个样本：5 阻断、1 仅启动**。报告与证据 `runs/p88-mod-expansion/`；分析器多 loader 误判已修（Fabric entrypoints 优先，`multiLoader` 记录；有 Fabric 入口时闲置 Forge 引用不再判 `wrong_loader`），`gradle test installDist` 23/23。六模组各自的缺口与所需规则见 `docs/mod-expansion.md`。
 更新（2026-10-19 21:50）：**按独立测试报告修复 3 个 P1 + 3 个 P2**。①文档改为三段流水线，单件 patch 注明只接受已转换输入；②区块压力测试不再把 `# >` 命令回显当成功；③`run_server.py` 传播 JVM 非零退出码；④Lithium 降级表述写进分发文档；⑤双客户端探针自铺平台并守卫 54 槽；⑥重新生成 SHA256SUMS（含 run_server/rebuild/distribution）。`verify_evidence.py` 仍 passed。证据见 `runs/p87-independent-test/`。
 
 
@@ -579,6 +580,7 @@
 269. **悬停后仍失败**：矩形 `(227,207)-(258,231)`、scale=3、物理 (1176,873)；Delete/Ctrl/Shift/Alt+Delete 都没清空。坐标已排除，剩下是注入路径/配置/修饰键问题。证据 `runs/p86-empty-hover/`。
 270. **Balm 事件诊断**：注册 `ScreenKeyEvent.Press.Post` 监听后注入 Delete，`KEY_EVENT` 计数 0；P83 ESC 能生效，说明按键到 GLFW 但没进 Balm 屏幕按键事件。物理 empty 按键暂无法用现有 harness 验证。
 271. **独立测试修复**：3 P1 + 3 P2 已处理（三段流水线文档、区块回显假阳性、run_server 退出码、Lithium 降级表述、探针平台与槽位守卫、SHA256SUMS 重生成）。报告与日志存 `runs/p87-independent-test/`。
+272. **扩模测试**：6 个新模组中 5 个阻断、1 个仅启动；分析器多 loader 误判已修（Fabric 入口优先）。报告与证据 `runs/p88-mod-expansion/`，缺口清单 `docs/mod-expansion.md`。
 
 | 证据 | 路径 |
 |---|---|

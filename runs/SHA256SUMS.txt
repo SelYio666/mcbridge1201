@@ -435,6 +435,9 @@ MISSING                                                           runs/p86-empty
 1b9a15a8ba633ffb975feda7cdfad0639e62429dc34b4e9658f01ff8d67f0032  runs/p87-independent-test/test-evidence.zip
 9762b082f4573804d8ab3d23a7cfc371416108caf1413bebc15c8455a52b9fb2  runs/p87-independent-test/run-server-exitcode.log
 654b9330a8f0f4e80e3404e6d83dff8c801a8bdf5d496115b49b071905dd1902  runs/p87-independent-test/CrashAfterDone.java
+af4110fd9757ad00fbc7e1df254707444cb28a14fc66799de6ccacc538b48e81  runs/p88-mod-expansion/README.md
+af4850e90433250cb4eca6bbb19bfffa9f2277fc11ec66a602181c78f88f2f85  runs/p88-mod-expansion/EXPANSION-REPORT.md
+e6afcc5505c5d75f21d53b7186b28a5566b0f0c1866d4ca99d088bc7b020df6c  runs/p88-mod-expansion/mod-expansion-evidence.zip
 156f453974bc38ced55a21e1d8da7f1e06bd74eb79e0c7cc944c99f7ae36dbda  runs/p31-codec-selection/README.md
 51df7256e20c4fa551964b09ad3d0850d76297485325246ae75c316c69db0e5b  runs/p31-codec-selection/verdict.json
 5f5da2cd78397dfbf5950b31017eb9dc662f485308b450d1f33db878834d8165  runs/p31-codec-selection/gradle-test.log
@@ -479,6 +482,7 @@ cb0fbb5bb742a3fd3043a61ad09bcefd4183df0a0f4776f5afd5f7f96c7f79c9  runs/p38-clien
 2ff13da810a82e2f31dc3de9ce7d85b77fafed2ecbdbc3305c29d9625fefcc3d  runs/p39-verify-evidence/verify.log
 915f67fb5d0a6fdcdcf3a7fc05e8758ddbba0f14db88ee3c5d9e0d322885d1c2  tools/verify_evidence.py
 c0ef9961d39200a1d2ad5ceb20183e9f3297197d848fdbfddcc71bcc3b751276  docs/distribution.md
+c245711923b6889e1b8d1b22accfa0bf46f9a08d095810de15a71e46af7b741b  docs/mod-expansion.md
 e500aeda7301f6a5929133cb27f4e108c89e6b85296134b7d26baa5d033aa9ff  runs/p40-verify-extended/README.md
 98da727f1d78606a3f694c47389e9f7c5f365ab0dba54d77f95cc8feed953758  runs/p40-verify-extended/verify.log
 a2cf9503505a561b7a2951dd4d4d111eab22258d11a590d59cf385d8f93df895  runs/p41-all-three/README.md
@@ -527,4 +531,4 @@ a2ad5d50329297405b17c5e546508361ca2aa475891bca25dca8198c0df3dbeb  manifests/envi
 6017ee9d46ba4b74315a2e47829214b69a3f7c37030a7699a4a4b04593ffebda  manifests/upstream.lock.json
 0f29e5bb455d68b6eb5002d854298a5e173cc9ff2c1103ef6117b2be19b691b1  profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json
 ab23bf626f10facc1cba10e8f3ad9410e3da4a6e471a42bedd42c28dd193be29  docs/support-matrix.md
-8d085025a72f99f0c55bb995ca60b9f52150a5a8d26faa77882c564453ee6017  docs/remaining-work.md
+18619b60ad35091d047aec3c231a6a6c2ef8de829a765f44d3187f8d4e8683e5  docs/remaining-work.md

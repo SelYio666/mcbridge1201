@@ -43,6 +43,11 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   server and client alive; `runs/p73-lithium-play/`) and a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), but mob AI, redstone and long sessions are still
   unverified;
+- **six new mods do not generalize the three-mod result** (`runs/p88-mod-expansion/`,
+  `docs/mod-expansion.md`): AppleSkin, Mod Menu, Clumps, FallingTree and ShulkerBoxTooltip have
+  concrete blockers (Fabric networking bridge, private title-screen field, removed orb-merge mixin,
+  old `ServerPlayNetworking.send`, NBT tombstone), and FerriteCore is boot-only with two mixins
+  removed. These need new rules/bridges; the analyzer's multi-loader misdetection is fixed;
 - ironchests GUI/render: **chest GUI opens, renders and supports put/take round trips**
   (`runs/p68-ironchests-gui/`, `runs/p69-ironchests-interaction/`; server-side menu state agrees at
   ticks 220/260/300). Ported the nested ResourcefulLib 2.0.6 server networking (work-only), fixed the

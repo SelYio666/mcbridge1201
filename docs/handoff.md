@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 22:35）：**扩模 6 个样本：5 阻断、1 仅启动**。分析器多 loader 误判已修（Fabric entrypoints 优先，闲置 Forge 引用不再判 `wrong_loader`），`gradle test installDist` 23/23。缺口与所需规则见 `docs/mod-expansion.md`，报告与证据在 `runs/p88-mod-expansion/`。
 更新（2026-10-19 21:50）：**独立测试报告的 6 项已修**。文档改成三段流水线（原始 jar 不能直接 patch）、区块压力测试过滤 `# >` 回显、`run_server.py` 传播 JVM 退出码、Lithium 降级写进文档、双客户端探针自铺平台并守卫 54 槽、SHA256SUMS 重生成。报告与日志在 `runs/p87-independent-test/`。`verify_evidence.py` 仍 passed。
 更新（2026-10-19 22:10）：**empty-trash 按键诊断**。注册 Balm `ScreenKeyEvent.Press.Post` 监听后注入 Delete，`KEY_EVENT` 计数 0；P83 ESC 能生效，说明按键到 GLFW 但没进 Balm 屏幕按键事件。物理 empty 暂无法用现有 harness 验证，动作本身 P65 已过。证据 `runs/p86-empty-hover/`。
 更新（2026-10-19 22:00）：**empty-trash 悬停后仍失败**。已量出矩形 `(227,207)-(258,231)`、scale=3、物理 (1176,873)；四种 Delete 组合都没清空。坐标已排除，剩下是注入路径/配置/修饰键问题。empty 本身 P65 已通过。证据 `runs/p86-empty-hover/`。

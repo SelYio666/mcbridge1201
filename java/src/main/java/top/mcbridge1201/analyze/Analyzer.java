@@ -231,9 +231,13 @@ public final class Analyzer {
 
         int hard = missClass.size() + missMember.size() + mismatch.size() + missApi.size() + missApiMember.size();
         if (a.errorCount() > 0) r.notes.add("class scan errors: " + a.errorCount());
-        if (!wrong.isEmpty() && "fabric".equals(targetLoader)) {
+        // Multi-loader jars carry Forge/NeoForge-only classes that Fabric never loads; those refs
+        // must not mask the Fabric entrypoints' real incompatibilities.
+        boolean fabricLoaded = !a.entrypoints.isEmpty();
+        if (!wrong.isEmpty() && "fabric".equals(targetLoader) && !fabricLoaded) {
             r.verdict = Verdict.WRONG_LOADER.name().toLowerCase(Locale.ROOT);
-        } else if (!"fabric".equals(a.loader) && !"neoforge".equals(targetLoader) && !wrong.isEmpty()) {
+        } else if (!"fabric".equals(a.loader) && !"neoforge".equals(targetLoader) && !wrong.isEmpty()
+                && !fabricLoaded) {
             r.verdict = Verdict.WRONG_LOADER.name().toLowerCase(Locale.ROOT);
         } else if (hard > 0 || !r.unresolvedMixinTargets.isEmpty()
                 || !r.unresolvedMixinInjections.isEmpty()) {
@@ -242,6 +246,10 @@ public final class Analyzer {
             r.verdict = Verdict.NEEDS_NAMESPACE_INDEX.name().toLowerCase(Locale.ROOT);
         } else if (!r.external.isEmpty()) {
             r.verdict = Verdict.NEEDS_DEPENDENCY.name().toLowerCase(Locale.ROOT);
+        }
+        if (!wrong.isEmpty() && fabricLoaded) {
+            r.notes.add(wrong.size() + " Forge/NeoForge refs in inactive classes ignored for the "
+                    + "verdict (multi-loader jar with Fabric entrypoints)");
         }
         r.notes.add("static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)");
         return r;

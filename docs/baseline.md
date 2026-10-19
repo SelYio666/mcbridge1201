@@ -1696,6 +1696,27 @@ harness 验证，动作本身已在 §7.66 通过。
 
 验证：`python tools/verify_evidence.py` 仍 `passed=true`；三个 Python 脚本 `py_compile` 通过。
 
+### 7.90 扩模 6 个样本：5 阻断、1 仅启动（2026-10-19）
+
+独立扩模测试把 6 个原始 1.20.1 模组重新转换并用 `container.json` patch：
+
+| 模组 | 结果 |
+|---|---|
+| AppleSkin 2.5.2 | 客户端缺 `ClientPlayNetworking$PlayChannelHandler`，初始化崩溃 |
+| Mod Menu 7.2.2 | 私有 `TitleScreen.field_32271` 访问崩溃 |
+| Clumps 12.0.0.4 | 启动成功但经验球不合并（3+7 不合并；原生 1.21.1 合并为 10） |
+| FallingTree 4.3.4 | 客户端缺网络处理器；入服时旧 `ServerPlayNetworking.send` 崩溃 |
+| FerriteCore 6.0.1 | 仅启动范围；移除 2 个 mixin |
+| ShulkerBoxTooltip 4.0.4 | provider 读取 `class_1799.method_7941` tombstone |
+
+结论：三样本的成功不能推广；这些需要新增网络桥、字段访问适配、mixin 重建与 NBT→数据组件桥。
+详见 `docs/mod-expansion.md` 与 `runs/p88-mod-expansion/`。
+
+同时修复分析器多 loader 误判：`ArtifactScanner` 先读 Fabric 元数据，有 entrypoints 时
+`loader=fabric` 并记录 `multiLoader`；`Analyzer` 对有效 Fabric 入口的 jar 不再把闲置
+Forge/NeoForge 引用判成 `wrong_loader`。`gradle test installDist` 23/23 通过。
+
+
 
 
 ## 8. 未验证项与下一步

@@ -124,4 +124,29 @@ class AnalyzerCoreTest {
         idx.classes.put(c.name, c);
         assertEquals(TargetIndex.Kind.UNKNOWN, idx.resolveMethod("net/minecraft/class_3", "custom", "()V").kind());
     }
+
+    @Test
+    void prefersFabricMetadataWhenEntrypointsArePresent() throws Exception {
+        // The host %TEMP% is not writable for this process; keep the fixture under build/.
+        java.nio.file.Path dir = java.nio.file.Files.createTempDirectory(
+                java.nio.file.Path.of("build"), "scanner-");
+        java.nio.file.Path jar = dir.resolve("multi-loader.jar");
+        try (var zos = new java.util.zip.ZipOutputStream(java.nio.file.Files.newOutputStream(jar))) {
+            put(zos, "fabric.mod.json", """
+                    {"schemaVersion":1,"id":"multi","version":"1.0.0",
+                     "entrypoints":{"main":["example.Main"]},"depends":{}}""");
+            put(zos, "META-INF/mods.toml", "modLoader=\"javafml\"\n[[mods]]\nmodId=\"multi\"\n");
+        }
+        ArtifactScanner.Artifact a = ArtifactScanner.scan(jar);
+        java.nio.file.Files.deleteIfExists(jar);
+        java.nio.file.Files.deleteIfExists(dir);
+        assertEquals("fabric", a.loader);
+        assertTrue(a.multiLoader);
+    }
+
+    private static void put(java.util.zip.ZipOutputStream zos, String name, String text) throws Exception {
+        zos.putNextEntry(new java.util.zip.ZipEntry(name));
+        zos.write(text.getBytes(StandardCharsets.UTF_8));
+        zos.closeEntry();
+    }
 }
