@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 21:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 21:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 21:25）：**物理 ESC 通过**。先清空坐标再放新箱子、把玩家传送到箱子旁（解决之前菜单不保持的问题），开箱后 `ESC_CLIENT screen=ChestScreen slots=90`，系统注入 ESC 后 `screen=class_433 slots=46`、服务端 `slots=46`——真实按键关箱成功。证据 `runs/p83-esc-teleport/`。
 
 更新（2026-10-19 21:15）：**物理 ESC 二次尝试仍受阻**。改用真实 `onUse` 路径：`ESC_OPEN result=CONSUME`，但 80 tick 内服务端菜单已回 46 格、客户端无 `ChestScreen`，无界面可按键。两条开屏路径在本世界状态下都留不住菜单，需重置世界/位置或检查 `GenericChestMenu.canUse`。物理 ESC 仍未验证。证据 `runs/p82-esc-onuse/`。
 
@@ -560,6 +562,7 @@
 
 264. **现象**：provider 开箱 `ESC_OPEN opened=OptionalInt[1]`，但 tick 160 服务端已是 `slots=46`、客户端 `screen=null`，没有可按键的界面。物理 ESC 仍未验证；下一步用真实 `onUse` 开屏。证据 `runs/p81-esc-key/`。
 265. **二次尝试**：真实 `onUse` 返回 `CONSUME`，但同样 80 tick 内菜单关闭、客户端无 `ChestScreen`。两条开屏路径在本世界状态都留不住菜单，需重置世界/位置或查 `canUse`。证据 `runs/p82-esc-onuse/`。
+266. **修复后通过**：清空坐标→放新箱子→把玩家传送到箱子旁；开箱后 `screen=ChestScreen slots=90`，系统 ESC 注入后 `screen=class_433 slots=46`、服务端 `slots=46`——**物理 ESC 关箱通过**。证据 `runs/p83-esc-teleport/`。
 
 | 证据 | 路径 |
 |---|---|
@@ -660,6 +663,7 @@
 | 干净同 tick 并发 | `runs/p80-two-client-clean/README.md`、`server.log`、`guest.log`、`host.log` |
 | 物理 ESC 尝试 | `runs/p81-esc-key/README.md`、`latest.log`、`EscProbe.java` |
 | 物理 ESC 二次尝试 | `runs/p82-esc-onuse/README.md`、`latest.log`、`EscProbe.java` |
+| 物理 ESC 通过 | `runs/p83-esc-teleport/README.md`、`latest.log`、`EscProbe.java` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

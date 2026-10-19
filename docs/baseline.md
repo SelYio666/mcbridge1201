@@ -1600,6 +1600,24 @@ ESC_CLIENT tick=160 screen=null slots=46
 残留方块实体导致；需要重置世界/位置或检查 `GenericChestMenu.canUse` 后再验。物理 ESC 仍未
 验证。证据 `runs/p82-esc-onuse/`。
 
+### 7.84 物理 ESC 通过
+
+按上述猜测修复后：先清空目标坐标为空气、再放新箱子（排除残留方块实体），并把玩家传送到
+`(chest.x+0.5, chest.y, chest.z+1.5)`（确保在 8 格内）。结果：
+
+```text
+ESC_PLACED=true pos=(80,65,65) player=80.5,65.0,66.44
+ESC_OPEN result=CONSUME
+ESC_CLIENT tick=160 screen=ChestScreen slots=90
+ESC_CLIENT tick=200 screen=ChestScreen slots=90
+      (系统注入 ESC)
+ESC_CLIENT tick=240 screen=net.minecraft.class_433 slots=46
+ESC_SERVER_MENU tick=240 slots=46
+```
+
+真实按键 ESC 关闭了箱子界面，客户端与服务端都回落到 46 格背包。**物理 ESC 路径通过**。证据
+`runs/p83-esc-teleport/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

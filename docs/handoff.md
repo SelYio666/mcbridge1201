@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 21:25）：**物理 ESC 通过**。清空坐标→放新箱子→玩家传送到箱子旁后，开箱 `screen=ChestScreen slots=90`；系统注入 ESC 后 `screen=class_433 slots=46`、服务端 `slots=46`。真实按键关箱成功。证据 `runs/p83-esc-teleport/`。
 更新（2026-10-19 21:15）：**物理 ESC 二次尝试仍受阻**。真实 `onUse` 返回 `CONSUME`，但 80 tick 内菜单关闭、客户端无 `ChestScreen`；两种开屏路径在当前世界状态都留不住菜单。物理 ESC 仍未验证，需重置世界/位置或查 `canUse`。证据 `runs/p82-esc-onuse/`。
 更新（2026-10-19 21:05）：**物理 ESC 尝试受阻**。provider 开箱后菜单立刻被服务端关掉（tick 160 已 46 格），客户端无 ChestScreen，按键注入无对象；物理 ESC 仍未验证，下一步用真实 `onUse` 开屏。证据 `runs/p81-esc-key/`。
 更新（2026-10-19 20:55）：**干净同 tick 并发验证完成**。清空双方背包与箱子后同 tick 点击：两端都预测 7，100 tick 后赢家仍 7、输家被纠正为 0；服务端 `DED_TOTAL chest=0 host=0 guest=7`，总数 7 无复制。证据 `runs/p80-two-client-clean/`。

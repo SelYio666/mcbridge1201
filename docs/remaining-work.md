@@ -71,12 +71,11 @@ success, but the server granted the stack to one player only. In the clean re-ru
 and the chest cleared first) the winner kept `slot54=7`, the loser was corrected to
 `slot54=air`, and the server total stayed 7 — no duplication.
 
-**Physical ESC key is still unverified** (`runs/p81-esc-key/`, `runs/p82-esc-onuse/`): both open
-routes (provider + `openHandledScreen`, and the real `GenericChestBlock.onUse`) return success, but
-the server handler falls back to 46 slots within 80 ticks and the client never shows a `ChestScreen`
-in the current world state. Likely the menu's `canUse` check (player position/dimension) or a stale
-block entity at that spot; reset the world/position or inspect `GenericChestMenu.canUse` before
-retrying the physical ESC key.
+**Physical ESC key now passes** (`runs/p83-esc-teleport/`): after clearing the target block and
+placing a fresh chest, then teleporting the player next to it, the chest screen stays open
+(`slots=90`); a physical ESC injection closes it and both the client and server handlers fall back to
+46 slots. The earlier blocked attempts (`runs/p81-esc-key/`, `runs/p82-esc-onuse/`) were caused by the
+player being out of menu range / a stale block entity.
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls
