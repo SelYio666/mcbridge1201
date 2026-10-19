@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 21:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 22:00（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 22:00）：**empty-trash 悬停按键仍失败**。已量出垃圾桶 GUI 矩形 `(227,207)-(258,231)`、屏幕 342×256、客户端区原点 (448,216)、scale=3 → 物理 (1176,873)；在该点注入 Delete/Ctrl/Shift/Alt+Delete 四种组合，trash 仍为 5。坐标已排除，剩下可能是注入未到 Balm 按键事件、配置禁用或修饰键不符。empty 动作本身 P65 已通过。证据 `runs/p86-empty-hover/`。
 
 更新（2026-10-19 21:45）：**empty-trash 真实按键受阻**。开背包、塞 5 钻石后只注入 Shift+Delete：trash 到 tick 360 仍是 5，说明按键处理要求鼠标悬停在垃圾桶上；需先算出组件屏幕矩形并移动鼠标。empty 本身已在 P65（provider 级）通过。证据 `runs/p85-empty-key/`。
 
@@ -569,6 +571,7 @@
 266. **修复后通过**：清空坐标→放新箱子→把玩家传送到箱子旁；开箱后 `screen=ChestScreen slots=90`，系统 ESC 注入后 `screen=class_433 slots=46`、服务端 `slots=46`——**物理 ESC 关箱通过**。证据 `runs/p83-esc-teleport/`。
 267. **lithium TPS**：289/289 区块、1200 tick/59.92s → 20.03 TPS，无掉 tick。单次 60 秒采样，非完整压测。证据 `runs/p84-lithium-tps/`。
 268. **empty-trash 真实按键受阻**：只注入 Shift+Delete 时 trash 到 tick 360 仍是 5，说明需要鼠标悬停；需先算组件矩形再移动鼠标。empty 本身已在 P65 通过。证据 `runs/p85-empty-key/`。
+269. **悬停后仍失败**：矩形 `(227,207)-(258,231)`、scale=3、物理 (1176,873)；Delete/Ctrl/Shift/Alt+Delete 都没清空。坐标已排除，剩下是注入路径/配置/修饰键问题。证据 `runs/p86-empty-hover/`。
 
 | 证据 | 路径 |
 |---|---|
@@ -672,6 +675,7 @@
 | 物理 ESC 通过 | `runs/p83-esc-teleport/README.md`、`latest.log`、`EscProbe.java` |
 | lithium TPS | `runs/p84-lithium-tps/README.md`、`server.log`、`TpsProbe.java` |
 | empty-key 尝试 | `runs/p85-empty-key/README.md`、`latest.log`、`TrashEmptyKeyProbe.java` |
+| empty 悬停尝试 | `runs/p86-empty-hover/README.md`、`latest.log`、`TrashEmptyKeyProbe.java` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

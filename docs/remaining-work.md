@@ -33,10 +33,12 @@ trash icon. Clientbound `MessageTrashSlotContent` also arrives (`S2C_CLIENT tras
 `runs/p64-trash-s2c/`), and the provider-level empty action clears both sides via the new reply
 bridge (`runs/p65-trash-empty/`). Still **not verified**:
 
-- the real UI key/action that invokes empty-trash: `Shift+Delete` without hovering does nothing
-  (`runs/p85-empty-key/`); the handler requires the cursor inside the trash component, so the next
-  step is to find the component rectangle and move the OS mouse there before pressing the key. The
-  action itself passes at provider level (`runs/p65-trash-empty/`);
+- the real UI key/action that invokes empty-trash: the geometry is now known (rect
+  `(227,207)-(258,231)`, scale 3, physical `(1176,873)`), but `Delete`, `Ctrl/Shift/Alt+Delete` all
+  leave the trash at 5 (`runs/p86-empty-hover/`). Coordinates are ruled out; the remaining suspects
+  are the synthetic key not reaching Balm's `ScreenKeyEvent$Press$Post`, the delete binding being
+  disabled by config, or a different modifier. The action itself passes at provider level
+  (`runs/p65-trash-empty/`);
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
   server and client alive; `runs/p73-lithium-play/`) and a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), but mob AI, redstone and long sessions are still

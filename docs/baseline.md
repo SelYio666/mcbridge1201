@@ -1643,6 +1643,22 @@ trash 没有被清空，说明按键处理要求鼠标悬停在垃圾桶上（`i
 键盘不够，需要先算出组件屏幕矩形、换算成物理坐标并移动鼠标。empty 动作本身已在 §7.66
 （provider 级）通过。证据 `runs/p85-empty-key/`。
 
+### 7.87 empty-trash 悬停后仍失败
+
+量出垃圾桶几何：
+
+```text
+TRASH_SLOT  x=152 y=165
+TRASH_RECT  l=227 t=207 r=258 b=231
+TRASH_SCREEN w=342 h=256
+client=1024x768 origin=(448,216) scale=3 → target=(1176,873)
+```
+
+在 `(1176,873)` 注入 `Delete`、`Ctrl+Delete`、`Shift+Delete`、`Alt+Delete` 四种组合后，trash 仍为
+5。坐标已排除，剩余可能：注入的按键没有到达 Balm 的 `ScreenKeyEvent$Press$Post`、配置里删除键被
+禁用、或修饰键与绑定不符。empty 动作本身（provider 级）已在 §7.66 通过。证据
+`runs/p86-empty-hover/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

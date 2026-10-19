@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 22:00）：**empty-trash 悬停后仍失败**。已量出矩形 `(227,207)-(258,231)`、scale=3、物理 (1176,873)；四种 Delete 组合都没清空。坐标已排除，剩下是注入路径/配置/修饰键问题。empty 本身 P65 已通过。证据 `runs/p86-empty-hover/`。
 更新（2026-10-19 21:45）：**empty-trash 真实按键受阻**。只注入 Shift+Delete 时 trash 仍是 5，说明需要鼠标悬停；需先算组件矩形再移动鼠标。empty 本身已在 P65 通过。证据 `runs/p85-empty-key/`。
 更新（2026-10-19 21:35）：**lithium TPS 采样通过**。289/289 区块、1200 tick/59.92s → 20.03 TPS，无掉 tick。单次 60 秒、无玩家/生物，属于健全性检查。证据 `runs/p84-lithium-tps/`。
 更新（2026-10-19 21:25）：**物理 ESC 通过**。清空坐标→放新箱子→玩家传送到箱子旁后，开箱 `screen=ChestScreen slots=90`；系统注入 ESC 后 `screen=class_433 slots=46`、服务端 `slots=46`。真实按键关箱成功。证据 `runs/p83-esc-teleport/`。
