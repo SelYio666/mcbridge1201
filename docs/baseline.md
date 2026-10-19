@@ -1462,6 +1462,31 @@ Failed to log in: Invalid session (Try restarting your game and the launcher)
 （`RawPayload`/`idFor` 不能依赖 `ClientPlayNetworking`），再用两个离线客户端重试。证据
 `runs/p74-two-client/`。
 
+### 7.76 双客户端同步通过（专用服务器）
+
+按 §7.75 的路线执行：
+
+1. 把 ResourcefulLib 移植拆成服务端安全的 `RawChannel`（payload id/codec、channel location、
+   `RawPayload`，无客户端引用）与仅客户端的 `FabricClientPacketHelper`
+   （`ClientPlayNetworking` 注册/发送）；`PacketChannelHelperImpl` 的服务端路径改用 `RawChannel`。
+   重建脚本同步替换新类并删除旧的 `FabricClientPacketHelper$RawPayload`，重建
+   sha256 `7e9d341f…`。
+2. 专用服务器 `online-mode=false`、`enforce-secure-profile=false`，装补丁版 IronChests 与
+   `dedprobe`。
+3. 两个离线客户端（HostA/GuestB）连接 `127.0.0.1:25565`。
+
+结果：
+
+```text
+DED_SET  slot0=7 minecraft:diamond
+DED_OPEN opened=OptionalInt[1] guest=GuestB
+LAN_GUEST_MENU screen=ChestScreen sync=1 slot0=7 minecraft:diamond
+```
+
+服务端写入的 7 钻石出现在第二客户端的箱子界面里——**双客户端 clientbound 内容同步通过**。
+范围：验证的是服务端 → 第二客户端的内容同步；两端互相取放、双端关屏仍未测。证据
+`runs/p75-two-client-server/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 19:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 20:00（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 20:00）：**双客户端同步通过（专用服务器）**。把 RL 移植拆成服务端安全的 `RawChannel` + 仅客户端的 `FabricClientPacketHelper`，修掉专用服务器上的 `NoClassDefFoundError class_638`；专用服务器（online-mode=false）+ 两个离线客户端：`DED_SET slot0=7`、`DED_OPEN opened=OptionalInt[1] guest=GuestB`、访客 `LAN_GUEST_MENU slot0=7 minecraft:diamond`。证据 `runs/p75-two-client-server/`。
 更新（2026-10-19 19:45）：**双客户端尝试：被 LAN 正版验证阻断**。主机开 LAN 25566 成功，但离线访客连入即被踢；访客画面显示 `Failed to log in: Invalid session`。integrated server 忽略 `server.properties` 的 `online-mode=false`。下一步需专用服务器（online-mode=false）+ 把 RL 移植拆成服务端安全部分（`RawPayload`/`idFor` 与 `ClientPlayNetworking` 分离），再重试。证据 `runs/p74-two-client/`。
 更新（2026-10-19 19:25）：**lithium 玩法冒烟通过**。强制加载 9×9 区块 `81/81`，放置石头、再用真实交互路径 `ServerPlayerGameMode.destroyBlock` 破坏（stone → air，`broke=true`）；服务端 tick 160/240 存活，客户端 `LITHIUM_CLIENT_ALIVE`，日志无崩溃/`NoSuchMethodError`。这是冒烟，不是完整玩法/渲染评估。证据 `runs/p73-lithium-play/`。
 更新（2026-10-19 19:20）：**IronChests 背景改为真实九宫格纹理**。查上游源码确认 `GeneratedScreenRenderer` 调的是 1.20.1 `drawNineSlicedTexture(...4,4,4,4,256,256,0,0)`，不是普通贴图；桥改为按九宫格拆 9 次 `method_25293`。截图背景已是带边框的浅色面板，不再纯灰。重建脚本默认先重编桥（修掉一次 stale bridge 的 `NoSuchMethodError`），产物 sha256 `20864ad9…` 与手工版一致。证据 `runs/p72-ironchests-nine-slice/`。
@@ -509,6 +510,13 @@
 247. **结果**：离线访客连入后立刻被踢，画面 `Failed to log in: Invalid session`；主机日志 `GuestB ... lost connection: Disconnected`。往主机目录写 `server.properties online-mode=false` 无效。
 248. **结论**：integrated LAN 强制正版验证；下一步需专用服务器（online-mode=false）+ 把 RL 移植拆成服务端安全部分（`RawPayload`/`idFor` 不能依赖 `ClientPlayNetworking`），再重试。证据 `runs/p74-two-client/`。
 
+## 2026-10-19 20:00 更新：双客户端同步通过
+
+249. **拆分**：新增服务端安全 `RawChannel`（payload/codec/channel location/`RawPayload`）；`FabricClientPacketHelper` 只保留 `ClientPlayNetworking` 注册/发送；`PacketChannelHelperImpl` 改用 `RawChannel`。
+250. **脚本**：重建脚本编译并替换 `RawChannel`（含嵌套类），删除旧的 `FabricClientPacketHelper$RawPayload`；重建 sha256 `7e9d341f…`。
+251. **服务器**：专用服务器 `online-mode=false`、`enforce-secure-profile=false`，装补丁版 ironchests + `dedprobe`。
+252. **结果**：`DED_SET slot0=7`、`DED_OPEN opened=OptionalInt[1] guest=GuestB`、访客 `LAN_GUEST_MENU slot0=7 minecraft:diamond`——服务端→第二客户端的内容同步通过。证据 `runs/p75-two-client-server/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -600,6 +608,7 @@
 | IronChests 九宫格背景 | `runs/p72-ironchests-nine-slice/chest-nine.png`、`latest.log`、`rebuild.log` |
 | lithium 玩法冒烟 | `runs/p73-lithium-play/README.md`、`latest.log`、`LithiumPlayProbe.java` |
 | 双客户端尝试 | `runs/p74-two-client/README.md`、`guest-screen3.png`、`host.log`、`guest.log` |
+| 双客户端通过 | `runs/p75-two-client-server/README.md`、`server.log`、`guest.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

@@ -31,6 +31,11 @@ RL_PACKAGE = "com/teamresourceful/resourcefullib/common/networking/fabric/"
 RL_CLASSES = [
     "PacketChannelHelperImpl.class",
     "FabricClientPacketHelper.class",
+    "RawChannel.class",
+    "RawChannel$RawPayload.class",
+]
+# Classes removed by the server-safe split; drop them so no stale copy remains.
+RL_DROP = [
     "FabricClientPacketHelper$RawPayload.class",
 ]
 NESTED = "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar"
@@ -60,10 +65,11 @@ def extract_nested(outer, dst):
     return dst
 
 
-def replace_in_zip(src, dst, replacements):
+def replace_in_zip(src, dst, replacements, drop=()):
+    drop = set(drop)
     with zipfile.ZipFile(src) as zin, zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as zout:
         for item in zin.infolist():
-            if item.filename in replacements:
+            if item.filename in replacements or item.filename in drop:
                 continue
             zout.writestr(item, zin.read(item.filename))
         for name, path in replacements.items():
@@ -165,7 +171,8 @@ def main():
                Path(args.loader), netty, rl_classes, java_home)
     replacements = {RL_PACKAGE + name: rl_classes / RL_PACKAGE / name for name in RL_CLASSES}
     patched_rl = tmp / "resourcefullib-patched.jar"
-    replace_in_zip(original_rl, patched_rl, replacements)
+    replace_in_zip(original_rl, patched_rl, replacements,
+                   drop=[RL_PACKAGE + name for name in RL_DROP])
     rl_fixed = tmp / "rlfixed.jar"
     replace_nested(nbt_jar, rl_fixed, patched_rl)
 
