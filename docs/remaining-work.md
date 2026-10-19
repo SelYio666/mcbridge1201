@@ -46,6 +46,9 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - hash manifest: `tools/check_hashes.py` verifies every `runs/SHA256SUMS.txt` entry, and
   `tools/hash_evidence.py` now refuses to write a manifest with missing files
   (`MISSING` placeholder lines removed);
+- ShulkerBoxTooltip provider contract passes (`runs/p91-shulker-provider/`): the old
+  BlockEntityTag/fromNbt tombstones, the DyeColor float[] accessor and the client/server channel
+  shims are bridged; a real GUI hover and `shouldDisplay` were not checked;
 - the real UI key/action that invokes empty-trash: the geometry is now known (rect
   `(227,207)-(258,231)`, scale 3, physical `(1176,873)`), but `Delete`, `Ctrl/Shift/Alt+Delete` all
   leave the trash at 5 (`runs/p86-empty-hover/`). A registered

@@ -445,6 +445,8 @@ FILES = [
     "runs/p90-fallingtree-join/server.log",
     "runs/p90-fallingtree-join/server.err",
     "runs/p90-fallingtree-join/client/client.log",
+    "runs/p91-shulker-provider/README.md",
+    "runs/p91-shulker-provider/client.log",
     "runs/p89-legacy-networking/fallingtree-client.log",
     "runs/p31-codec-selection/README.md",
     "runs/p31-codec-selection/verdict.json",

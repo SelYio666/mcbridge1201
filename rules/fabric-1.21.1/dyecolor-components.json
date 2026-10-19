@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "1.21.1 re-used DyeColor.method_7787 for an int colour; converted 1.20.x code still calls it as float[] (getColorComponents). ShulkerBoxTooltip ColorKey.ofDye crashed with NoSuchMethodError 'float[] class_1767.method_7787()'. The bridge unpacks 0xRRGGBB into the old three-float array.",
+  "methodRedirects": [
+    {
+      "id": "dyecolor.legacy-components",
+      "sourceOwner": "net/minecraft/class_1767",
+      "sourceName": "method_7787",
+      "sourceDesc": "()[F",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/DyeColorBridge",
+      "bridgeMethod": "legacyComponents",
+      "bridgeDesc": "(Lnet/minecraft/class_1767;)[F",
+      "capability": "dyecolor.color-components",
+      "risk": "low",
+      "evidence": "ShulkerBoxTooltip crashed on world join at ColorKey.ofDye with NoSuchMethodError 'float[] class_1767.method_7787()' (runs/p91-shulker-provider/client.log); the 1.21.1 method of the same name returns int."
+    }
+  ]
+}

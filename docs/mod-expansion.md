@@ -10,7 +10,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 | Clumps 12.0.0.4 | 主菜单 120 tick | 3+7 经验球不合并（原版 1.21.1 会合并成 10） | 核心功能丢失 |
 | FallingTree 4.3.4 | 初始化已修 | 入服 send/receive 已复测通过；砍树未测 | 部分修复 |
 | FerriteCore 6.0.1 | 主菜单 120 tick | 启动/200 tick/正常停服；移除 2 个 mixin | 仅启动、降级 |
-| ShulkerBoxTooltip 4.0.4 | 主菜单 | provider 读取旧 `ItemStack.method_7941` tombstone | 预览失败 |
+| ShulkerBoxTooltip 4.0.4 | 主菜单 | provider 契约通过：`diamondCount=5`；HUD 悬停未测 | 部分修复 |
 
 ## 网络桥进展（2026-10-19 补）
 
@@ -55,6 +55,20 @@ FallingTree 同一个 jar 同时带 `fabric.mod.json`（含 main/client 入口�
   只在 notes 里注明忽略了多少条。
 
 验证：`gradle test installDist` → 23 个测试全过（含新增的多 loader 用例）。
+
+## ShulkerBoxTooltip 进展（2026-10-19 补）
+
+`shulker-nbt.json` 把旧 `BlockEntityTag.Items` NBT 路径桥到 1.21.1 的 `CONTAINER` 组件，
+`dyecolor-components.json` 修掉 `DyeColor.method_7787` 返回类型变化，网络 shim 补齐客户端/集成服务端
+的旧 receiver。契约探针输出：
+
+```text
+SHULKER_FIXTURE nativeContainerCount=5
+SHULKER_PROVIDER class=...ShulkerBoxPreviewProvider
+SHULKER_CONTRACT_RESULT diamondCount=5 expected=5 shouldDisplay=false
+```
+
+证据 `runs/p91-shulker-provider/`；`shouldDisplay=false` 与真实悬停视觉未排查。
 
 ## 边界
 

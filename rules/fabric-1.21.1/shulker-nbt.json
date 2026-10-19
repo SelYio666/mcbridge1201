@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "ShulkerBoxTooltip 4.0.4 was converted by CenturyBridge; BlockEntityPreviewProvider still reads ItemStack.getSubNbt(\"BlockEntityTag\") (t0) and ItemStack.fromNbt(...) (t1), both tombstones. 1.21.1 keeps the same item list under the CONTAINER component (class_9334.field_49622). The bridge renders the component back into the old Items compound and parses item compounds back into stacks.",
+  "methodRedirects": [
+    {
+      "id": "shulker.legacy.block-entity-tag",
+      "sourceOwner": "centurybridge/gen/Tombstones_shulkerboxtooltip_fabric_4_0_4_1_20_1",
+      "sourceName": "t0",
+      "sourceDesc": "(Lnet/minecraft/class_1799;Ljava/lang/String;)Lnet/minecraft/class_2487;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/ShulkerBoxNbtBridge",
+      "bridgeMethod": "legacyBlockEntityTag",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Ljava/lang/String;)Lnet/minecraft/class_2487;",
+      "capability": "shulker.legacy.block-entity-tag",
+      "risk": "medium",
+      "evidence": "Expansion report: BlockEntityPreviewProvider.getInventory hit 'CenturyBridge tombstone: class_1799.method_7941 no longer exists in 1.21.1' (runs/p88-mod-expansion/EXPANSION-REPORT.md). The preview needs the Items list; the bridge rebuilds it from CONTAINER."
+    },
+    {
+      "id": "shulker.legacy.from-nbt",
+      "sourceOwner": "centurybridge/gen/Tombstones_shulkerboxtooltip_fabric_4_0_4_1_20_1",
+      "sourceName": "t1",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/ShulkerBoxNbtBridge",
+      "bridgeMethod": "legacyFromNbt",
+      "bridgeDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;",
+      "capability": "shulker.legacy.from-nbt",
+      "risk": "medium",
+      "evidence": "Same provider converts each Items entry through the 1.20.x ItemStack.fromNbt(NbtCompound), which is also a tombstone on 1.21.1. Items without a tag round-trip by id + Count."
+    }
+  ]
+}

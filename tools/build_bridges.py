@@ -58,19 +58,23 @@ def main():
         rc = subprocess.call(shim_cmd)
         if rc != 0:
             return rc
-        nested = os.path.join(
-            shim_out, "net", "fabricmc", "fabric", "api", "client", "networking", "v1",
-            "ClientPlayNetworking$PlayChannelHandler.class")
-        if not os.path.exists(nested):
-            print("shim did not produce", nested, file=sys.stderr)
-            return 3
-        dest_dir = os.path.join(args.out, "net", "fabricmc", "fabric", "api", "client",
-                                "networking", "v1")
-        os.makedirs(dest_dir, exist_ok=True)
-        dest = os.path.join(dest_dir, "ClientPlayNetworking$PlayChannelHandler.class")
-        with open(nested, "rb") as src, open(dest, "wb") as dst:
-            dst.write(src.read())
-        print("embedded legacy shim ->", dest)
+        shims = [
+            ("net", "fabricmc", "fabric", "api", "client", "networking", "v1",
+             "ClientPlayNetworking$PlayChannelHandler.class"),
+            ("net", "fabricmc", "fabric", "api", "networking", "v1",
+             "ServerPlayNetworking$PlayChannelHandler.class"),
+        ]
+        for parts in shims:
+            nested = os.path.join(shim_out, *parts)
+            if not os.path.exists(nested):
+                print("shim did not produce", nested, file=sys.stderr)
+                return 3
+            dest_dir = os.path.join(args.out, *parts[:-1])
+            os.makedirs(dest_dir, exist_ok=True)
+            dest = os.path.join(dest_dir, parts[-1])
+            with open(nested, "rb") as src, open(dest, "wb") as dst:
+                dst.write(src.read())
+            print("embedded legacy shim ->", dest)
     return 0
 
 

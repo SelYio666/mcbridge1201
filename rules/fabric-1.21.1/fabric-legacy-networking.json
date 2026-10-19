@@ -19,6 +19,35 @@
       "evidence": "AppleSkin squeek.appleskin.network.ClientSyncHandler.init and FallingTree fr.rakambda.fallingtree.fabric.client.network.FabricClientPacketHandler.registerClient call the 1.20.1 two-argument registerGlobalReceiver with an anonymous PlayChannelHandler; on 1.21.1 the mod crashed with NoClassDefFoundError ClientPlayNetworking$PlayChannelHandler (runs/p88-mod-expansion/EXPANSION-REPORT.md). The bridge registers a raw payload type and invokes the legacy handler's receive(client, networkHandler, buf, sender)."
     },
     {
+      "id": "fabric.legacy.client-register-receiver-plain",
+      "sourceOwner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+      "sourceName": "registerReceiver",
+      "sourceDesc": "(Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler;)Z",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "registerClientReceiver",
+      "bridgeDesc": "(Lnet/minecraft/class_2960;Ljava/lang/Object;)Z",
+      "extraBridgeClasses": [
+        "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler"
+      ],
+      "capability": "fabric.networking.client.receiver",
+      "risk": "medium",
+      "evidence": "ShulkerBoxTooltip ClientNetworkingImpl uses the non-global registerReceiver(Identifier, PlayChannelHandler); the same shim/registration bridge applies."
+    },
+    {
+      "id": "fabric.legacy.client-unregister-receiver",
+      "sourceOwner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+      "sourceName": "unregisterReceiver",
+      "sourceDesc": "(Lnet/minecraft/class_2960;)Lnet/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "unregisterClientReceiver",
+      "bridgeDesc": "(Lnet/minecraft/class_2960;)Ljava/lang/Object;",
+      "capability": "fabric.networking.client.unregister",
+      "risk": "low",
+      "evidence": "ShulkerBoxTooltip calls unregisterReceiver(Identifier) and immediately pops the result, so an Object-returning bridge is verifier-safe."
+    },
+    {
       "id": "fabric.legacy.server-send",
       "sourceOwner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
       "sourceName": "send",
@@ -30,6 +59,35 @@
       "capability": "fabric.networking.server.send",
       "risk": "medium",
       "evidence": "FallingTree FabricServerPacketHandler.onPlayerConnected calls the 1.20.1 ServerPlayNetworking.send(ServerPlayer, Identifier, PacketByteBuf); a client joining the dedicated server crashed with NoSuchMethodError on that call (runs/p88-mod-expansion/EXPANSION-REPORT.md). The bridge wraps the bytes into a registered S2C raw payload."
+    },
+    {
+      "id": "fabric.legacy.server-register-receiver",
+      "sourceOwner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+      "sourceName": "registerReceiver",
+      "sourceDesc": "(Lnet/minecraft/class_3244;Lnet/minecraft/class_2960;Lnet/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler;)Z",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "registerServerReceiver",
+      "bridgeDesc": "(Lnet/minecraft/class_3244;Lnet/minecraft/class_2960;Ljava/lang/Object;)Z",
+      "extraBridgeClasses": [
+        "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler"
+      ],
+      "capability": "fabric.networking.server.receiver",
+      "risk": "medium",
+      "evidence": "ShulkerBoxTooltip ServerNetworkingImpl.registerC2SReceiver uses the 1.20.1 three-argument registerReceiver(ServerPlayNetworkHandler, Identifier, PlayChannelHandler); the integrated server crashed with NoClassDefFoundError ServerPlayNetworking$PlayChannelHandler."
+    },
+    {
+      "id": "fabric.legacy.server-unregister-receiver",
+      "sourceOwner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+      "sourceName": "unregisterReceiver",
+      "sourceDesc": "(Lnet/minecraft/class_3244;Lnet/minecraft/class_2960;)Lnet/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "unregisterServerReceiver",
+      "bridgeDesc": "(Lnet/minecraft/class_3244;Lnet/minecraft/class_2960;)Ljava/lang/Object;",
+      "capability": "fabric.networking.server.unregister",
+      "risk": "low",
+      "evidence": "Same class; the unregister result is immediately popped."
     }
   ],
   "constructorRedirects": [
@@ -43,6 +101,17 @@
       "capability": "fabric.networking.client.packet",
       "risk": "medium",
       "evidence": "AppleSkin squeek.appleskin.network.SyncHandler.makeSyncPacket still builds the 1.20.1 CustomPayloadC2SPacket(Identifier, PacketByteBuf); after the receiver bridge let the mod initialize, the client crashed with NoSuchMethodError 'void class_2658.<init>(class_2960, class_2540)'. The factory returns a 1.21.1 C2S packet wrapping the same bytes."
+    },
+    {
+      "id": "fabric.legacy.serverbound-packet-ctor",
+      "owner": "net/minecraft/class_2817",
+      "desc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "createServerboundPacket",
+      "bridgeDesc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)Lnet/minecraft/class_2817;",
+      "capability": "fabric.networking.client.packet",
+      "risk": "medium",
+      "evidence": "ShulkerBoxTooltip crashed on join with 'NoSuchMethodError void class_2817.<init>(class_2960, class_2540)'; 1.21.1 keeps only the payload constructor."
     }
   ]
 }

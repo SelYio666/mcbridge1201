@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.class_2540;
 import net.minecraft.class_2658;
+import net.minecraft.class_2817;
 import net.minecraft.class_2960;
 import net.minecraft.class_310;
 import net.minecraft.class_3222;
@@ -29,6 +30,7 @@ import net.minecraft.class_9139;
  */
 public final class FabricLegacyNetworking {
     private static final Map<class_2960, class_8710.class_9154<RawPayload>> TYPES = new ConcurrentHashMap<>();
+    private static final Map<class_2960, Object> LEGACY_HANDLERS = new ConcurrentHashMap<>();
 
     private FabricLegacyNetworking() {
     }
@@ -59,9 +61,17 @@ public final class FabricLegacyNetworking {
         return new class_2658(new RawPayload(type(id), data));
     }
 
+    /** Replacement for the old {@code new ServerboundCustomPayloadPacket(Identifier, PacketByteBuf)}. */
+    public static class_2817 createServerboundPacket(class_2960 id, class_2540 buf) {
+        byte[] data = new byte[buf.readableBytes()];
+        buf.readBytes(data);
+        return new class_2817(new RawPayload(type(id), data));
+    }
+
     /** Replacement for the old two-argument {@code registerGlobalReceiver(Identifier, handler)}. */
     public static boolean registerClientReceiver(class_2960 id, Object legacyHandler) {
         class_8710.class_9154<RawPayload> type = type(id);
+        LEGACY_HANDLERS.put(id, legacyHandler);
         ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> {
             try {
                 receive(legacyHandler, context.client(), context.client().method_1562(),
@@ -72,6 +82,49 @@ public final class FabricLegacyNetworking {
             }
         });
         return true;
+    }
+
+    /** Replacement for the old {@code unregisterReceiver(Identifier)}; the caller pops the result. */
+    public static Object unregisterClientReceiver(class_2960 id) {
+        LEGACY_HANDLERS.remove(id);
+        ClientPlayNetworking.unregisterReceiver(id);
+        return null;
+    }
+
+    /** Replacement for the old {@code ServerPlayNetworking.registerReceiver(handler, id, handler)}. */
+    public static boolean registerServerReceiver(net.minecraft.class_3244 networkHandler,
+                                                 class_2960 id, Object legacyHandler) {
+        class_8710.class_9154<RawPayload> type = type(id);
+        ServerPlayNetworking.registerReceiver(networkHandler, type, (payload, context) -> {
+            try {
+                receiveServer(legacyHandler, context.server(), context.player(),
+                        context.player().field_13987,
+                        new class_2540(Unpooled.wrappedBuffer(payload.data)),
+                        context.responseSender());
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("legacy C2S channel " + id + " handler failed", e);
+            }
+        });
+        return true;
+    }
+
+    /** Replacement for the old {@code unregisterReceiver(handler, id)}; the caller pops the result. */
+    public static Object unregisterServerReceiver(net.minecraft.class_3244 networkHandler, class_2960 id) {
+        ServerPlayNetworking.unregisterReceiver(networkHandler, id);
+        return null;
+    }
+
+    private static void receiveServer(Object handler, net.minecraft.server.MinecraftServer server,
+                                      class_3222 player, net.minecraft.class_3244 networkHandler,
+                                      class_2540 buf, Object sender) throws ReflectiveOperationException {
+        for (Method m : handler.getClass().getMethods()) {
+            if (m.getParameterCount() == 5 && m.getReturnType() == void.class) {
+                m.setAccessible(true);
+                m.invoke(handler, server, player, networkHandler, buf, sender);
+                return;
+            }
+        }
+        throw new NoSuchMethodException(handler.getClass().getName() + ".receive");
     }
 
     /** Replacement for the old {@code ServerPlayNetworking.send(player, id, buf)}. */
