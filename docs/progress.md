@@ -388,7 +388,7 @@
 
 ## 2026-10-19 08:10 更新：TrashSlot 不是 handler slot
 
-191. **probe**：`TrashSlotSlot` 坐标 `152,165`，component anchor `231,211`，钻石槽 `36`。
+191. **probe**：`TrashSlotSlot` 相对坐标 `152,165`；screen `leftTop=83,45`，绝对 GUI 约 `235,210`；component anchor `231,211`。
 192. **关键**：`handler.field_7761.indexOf(trash) = -1`（共 46 个槽），垃圾桶不在普通 slot 列表；它是客户端 component 绘制/拦截。
 193. **结论**：普通 `clickSlot` 无法定位垃圾桶，P56 的点击/拖拽失败由此解释；实际转移仍未完成。证据 `runs/p58-trash-click/`。
 

@@ -1148,9 +1148,13 @@ GUI 拖放仍是独立未解问题（P56）。证据 `runs/p57-trash-persist/`�
 ```text
 TRASH_PROBE trash=152,165
 TRASH_PROBE componentAnchor=231,211
+TRASH_PROBE leftTop=83,45
 TRASH_PROBE diamond slot=36 count=5
 TRASH_PROBE trashIndex=-1 slots=46
 ```
+
+`152,165` is relative to `leftTop=83,45`, so the absolute GUI slot is about `235,210`; the component
+anchor `231,211` agrees. It is **not** the raw `152,165` screen rectangle.
 
 `handler.field_7761.indexOf(trash) = -1`：垃圾桶 `TrashSlotSlot` 不在 46 个普通 slot 中，而是
 由 `TrashSlotComponent` 在客户端绘制并拦截鼠标。普通 `clickSlot`/`ScreenHandler` 无法定位它，
