@@ -25,10 +25,12 @@ probe reads the stack back in-session; rejoin-empty is **TrashSlot's own login r
 shows the trash slot is **not in `ScreenHandler.field_7761`** (`indexOf = -1`, 46 slots); it is a
 client-side `TrashSlotComponent`, so ordinary `clickSlot` cannot target it. After adding the
 serverbound Balm bridge, clicking a stack then the trash widget **moves it into the trash slot**
-(`runs/p59-trash-send/after-send.png`), and the server probe reads 5 diamonds. Still **not
-verified**:
+(`runs/p59-trash-send/after-send.png`), and the server probe reads 5 diamonds. A direct
+`DefaultDeletionProvider.undeleteLast` call moves the stack back to the cursor and empties the
+server trash (`runs/p60-trash-return/`); the real mouse click that should invoke it still does not.
+Still **not verified**:
 
-- trash return/undelete and empty-trash actions;
+- actual mouse-driven trash return/undelete and empty-trash actions;
 - clientbound delivery / two-client synchronization;
 - lithium gameplay/rendering;
 - ironchests GUI/render.

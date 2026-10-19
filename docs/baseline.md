@@ -1185,6 +1185,21 @@ SERVER_TRASH count=5 item=minecraft:diamond
 无 `NoSuchMethodError`，客户端存活。已确认 **GUI 移入方向 + 服务端内容**；移除/undelete、容器
 GUI、同步仍未验证。证据 `runs/p59-trash-send/`。
 
+### 7.62 trash 取回：provider 级通过
+
+quick-play 进入世界，在 TrashSlot 登录重置后由服务端 seed 5 钻石；客户端直接调用
+`DefaultDeletionProvider.undeleteLast`：
+
+```text
+RETURN_GUI    trash=5 minecraft:diamond provider=DefaultDeletionProvider
+RETURN_AFTER  cursor=5 minecraft:diamond trash=0 minecraft:air
+RETURN_FINAL  cursor=5 minecraft:diamond trash=0 minecraft:air
+RETURN_SERVER empty=true count=0
+```
+
+取回逻辑、serverbound 包、服务端清空都正常，无异常。真实鼠标第二次点击仍未触发取回，属于
+GUI 命中/事件问题；empty-trash、容器 GUI、同步未验证。证据 `runs/p60-trash-return/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
