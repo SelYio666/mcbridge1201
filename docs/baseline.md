@@ -1630,6 +1630,19 @@ TPS_AVG tps=20.03 ticks=1200 seconds=59.92
 289/289 区块加载正常，1200 tick 用 59.92 秒，平均 20.03 TPS，无掉 tick。单次 60 秒、无玩家/
 生物，属于 TPS 健全性检查，不覆盖生物 AI、红石或长时间 soak。证据 `runs/p84-lithium-tps/`。
 
+### 7.86 empty-trash 真实按键：需要悬停，未验证
+
+开背包、往垃圾桶塞 5 钻石后只注入 `Shift+Delete`：
+
+```text
+TRASH_SEED  trash=5 diamonds
+TRASH_STATE tick=360 trash=5 diamonds
+```
+
+trash 没有被清空，说明按键处理要求鼠标悬停在垃圾桶上（`isInside`/`callIsHovering`）。只注入
+键盘不够，需要先算出组件屏幕矩形、换算成物理坐标并移动鼠标。empty 动作本身已在 §7.66
+（provider 级）通过。证据 `runs/p85-empty-key/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
