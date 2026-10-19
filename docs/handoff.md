@@ -1,7 +1,7 @@
 # 交接摘要（一页）
 
 
-更新（2026-10-19 09:00）：**empty-trash 修复**。首次调用触发 `NoSuchMethodError BalmNetworking.reply(Object)`；新增 reply 桥（记录 serverbound handler 的当前玩家，回发 clientbound payload）+ 规则命中 2 处后，`EMPTY_BEFORE trash=5` → `EMPTY_AFTER trash=0`、`EMPTY_SERVER empty=true count=0`，无崩溃。real UI 键位未测。证据 `runs/p65-trash-empty/`。
+更新（2026-10-19 09:05）：**IronChests GUI 被客户端模型类阻断**。chat 命令因无 cheats 失败；server probe 成功放置 `ironchests:iron_chest`（`PLACED=true`），客户端渲染时 `NoClassDefFoundError net/fabricmc/fabric/api/client/model/BakedModelManagerHelper`（IronChestsClient.loadModel），在 GUI 打开前崩溃。需要先恢复模型加载桥。证据 `runs/p66-ironchests-gui/`。
 更新（2026-10-19 08:10）：**TrashSlot 不是普通 handler slot**。probe 取到 `TrashSlotSlot` 坐标 `152,165`、component anchor `231,211`，但 `handler.field_7761.indexOf(trash)=-1`（46 个槽），说明垃圾桶是客户端自定义 component 绘制/拦截，普通 `clickSlot` 无法定位。P56 的点击/拖拽失败由此解释；实际转移仍未完成。证据 `runs/p58-trash-click/`。
 更新（2026-10-19 01:25，修正）：**trash 重进为空是 TrashSlot 登录重置**。`setTrashItem` 同会话读回 5 钻石，live `BalmData/TrashSlot` 也是 `{count:5,id:"minecraft:diamond"}`；但 `PlayerLoginEvent` 显式把 trash 设为 `ItemStack.EMPTY`，所以重进为空不能证明 NBT 桥失败。P57 原结论已修正；GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。

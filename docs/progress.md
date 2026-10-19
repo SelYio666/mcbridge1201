@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 09:00（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 09:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 09:05）：**IronChests GUI 被客户端模型类阻断**。chat 命令因无 cheats 失败；server probe 成功放置 `ironchests:iron_chest`（`PLACED=true`），客户端渲染时 `NoClassDefFoundError net/fabricmc/fabric/api/client/model/BakedModelManagerHelper`（IronChestsClient.loadModel），在 GUI 打开前崩溃。需要先恢复模型加载桥。证据 `runs/p66-ironchests-gui/`。
 更新（2026-10-19 09:00）：**empty-trash 修复**。首次调用触发 `NoSuchMethodError BalmNetworking.reply(Object)`；新增 reply 桥（记录 serverbound handler 的当前玩家，回发 clientbound payload）+ 规则命中 2 处后，`EMPTY_BEFORE trash=5` → `EMPTY_AFTER trash=0`、`EMPTY_SERVER empty=true count=0`，无崩溃。real UI 键位未测。证据 `runs/p65-trash-empty/`。
 更新（2026-10-19 08:55）：**clientbound TrashSlot content 通过**。服务端 tick 60 通过 `BalmNetworkingBridge.sendTo` 发 3 钻石的 `MessageTrashSlotContent`，客户端 tick 140 读到 `S2C_CLIENT trash=3 minecraft:diamond`，无异常。这验证了 S2C payload 注册、sendTo 桥和客户端 receiver；ironchests 同步/双客户端仍未验证。证据 `runs/p64-trash-s2c/`。
 更新（2026-10-19 08:50）：**trash GUI 双向通过（修正）**。debug mixin 证明移入和取回都执行：取回后 `DEBUG_AFTER_CLICK carried=5 trash=0`，服务端 `DEBUG_PACKET_RETURN serverCarried=5 serverTrash=0`；截图里物品看似在 trash，是因为它跟着光标停在图标上，移开光标后确认在光标上。P61 的“失败”是截图误判。证据 `runs/p63-trash-debug/`。
@@ -434,6 +435,12 @@
 209. **修复**：`BalmNetworkingBridge.reply` 记录 serverbound handler 当前玩家，回发注册的 clientbound payload；规则命中 2 处。
 210. **结果**：`EMPTY_BEFORE trash=5` → `EMPTY_AFTER trash=0`、`EMPTY_SERVER empty=true count=0`，无崩溃。证据 `runs/p65-trash-empty/`。
 
+## 2026-10-19 09:05 更新：IronChests GUI 客户端阻断
+
+211. **放置**：chat 命令因 world 无 cheats 失败；server probe 直接放置 `ironchests:iron_chest`，`PLACED=true`。
+212. **崩溃**：客户端渲染 chest 时 `NoClassDefFoundError net/fabricmc/fabric/api/client/model/BakedModelManagerHelper`（IronChestsClient.loadModel）。
+213. **结论**：GUI 测试被客户端模型桥阻断，不是容器/GUI 本身。需先恢复 model-loading 桥。证据 `runs/p66-ironchests-gui/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -515,6 +522,7 @@
 | trash 双向通过 | `runs/p63-trash-debug/cursor-away.png`、`latest-packet-return.log` |
 | trash clientbound | `runs/p64-trash-s2c/README.md`、`latest.log`、`TrashS2CProbe.java` |
 | trash empty | `runs/p65-trash-empty/README.md`、`crash-report.txt`、`latest.log` |
+| IronChests GUI 阻断 | `runs/p66-ironchests-gui/README.md`、`crash-report.txt`、`latest.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

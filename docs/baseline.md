@@ -1268,6 +1268,27 @@ EMPTY_SERVER empty=true count=0
 
 客户端/服务端都清空，无崩溃。真实 UI 键位未测。证据 `runs/p65-trash-empty/`。
 
+### 7.67 IronChests GUI：客户端模型类阻断
+
+world 无 cheats，chat `give`/`setblock` 返回 `Unknown or incomplete command`。改用 server probe
+直接放置：
+
+```text
+IRONCHESTS_SERVER block=Block{ironchests:iron_chest} item=1 ironchests:iron_chest
+IRONCHESTS_PLACED=true
+```
+
+客户端渲染时崩溃：
+
+```text
+NoClassDefFoundError: net/fabricmc/fabric/api/client/model/BakedModelManagerHelper
+at tech.thatgravyboat.ironchests.client.IronChestsClient.loadModel
+```
+
+所以 GUI 还没打开就被**客户端模型加载桥**阻断，不是容器/GUI handler 失败。需要恢复
+`IronChestsClient.loadModel` 的 1.21.1 ModelLoadingPlugin 桥后再重测。证据
+`runs/p66-ironchests-gui/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

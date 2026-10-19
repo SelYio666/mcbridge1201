@@ -36,7 +36,9 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - the real UI key/action that invokes empty-trash;
 - ironchests clientbound traffic and two-client synchronization;
 - lithium gameplay/rendering;
-- ironchests GUI/render.
+- ironchests GUI/render: a server-placed iron chest triggers
+  `NoClassDefFoundError net/fabricmc/fabric/api/client/model/BakedModelManagerHelper` in
+  `IronChestsClient.loadModel` before the GUI opens (`runs/p66-ironchests-gui/`).
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls
