@@ -54,3 +54,17 @@ server-side probe: **two-client clientbound chest sync works**.
 
 - `server.log`, `guest.log`, `host.log`
 - `DedicatedSyncProbe.java`, `LanSyncProbe.java`, `launch_client.py`, `dedprobe.jar`, `lansyncprobe.jar`
+
+## Regression check
+
+The split jar was also re-run on the single-player integrated server (`integrated-regression.log`):
+
+```text
+IRONCHESTS_SCREEN=ChestScreen
+IRONCHESTS_PUT slot0=64 minecraft:diamond
+IRONCHESTS_BE tick=320 slot0=64 minecraft:diamond
+IRONCHESTS_REOPEN screen=ChestScreen sync=2 slot0=64 minecraft:diamond
+```
+
+Opening, putting and close/reopen persistence still work, so the server-safe split did not break the
+client/integrated path.

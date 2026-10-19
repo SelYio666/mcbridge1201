@@ -370,6 +370,7 @@ FILES = [
     "runs/p75-two-client-server/launch_client.py",
     "runs/p75-two-client-server/dedprobe.jar",
     "runs/p75-two-client-server/lansyncprobe.jar",
+    "runs/p75-two-client-server/integrated-regression.log",
     "runs/p31-codec-selection/README.md",
     "runs/p31-codec-selection/verdict.json",
     "runs/p31-codec-selection/gradle-test.log",

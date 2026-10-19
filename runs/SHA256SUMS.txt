@@ -353,7 +353,7 @@ a3b2df10e554b58989412b2ca78d60fed2bd7389cd70adb47fbe2ff832340f82  runs/p74-two-c
 6da28f10c1d8c210951f494bb88f14e81ca9cff85d02083bee1a092647726f81  runs/p74-two-client/LanSyncProbe.java
 24bae52881311b4e951e56101169a5e562d97d25bddc616ea1ac2b344973d2cf  runs/p74-two-client/launch_client.py
 55edc4452b7fff187360d2ec39a99e945a404a72aae538792d9f634f851a8896  runs/p74-two-client/lansyncprobe.jar
-e4bebed4df6e5183ea457504298b2de3eb7e658491856199e8bce71ad41c426e  runs/p75-two-client-server/README.md
+5493a51b6a743e1c81c4d5d5edd0db6ddac280c05a2af6d847309f91562f1bec  runs/p75-two-client-server/README.md
 30b6bab06d0394a6452a0a8f6de6ae560c6ea8ae28c6180caae5568778f7559f  runs/p75-two-client-server/server.log
 c6857314df443e3208ebb9b96ce11c49dd10dae4ba1fc60dee51e86baddfc33c  runs/p75-two-client-server/guest.log
 0133a91ba2b9fa70db7b07593fc82984139ae844ac85b229035cfdf8d9e07911  runs/p75-two-client-server/host.log
@@ -362,6 +362,7 @@ c6857314df443e3208ebb9b96ce11c49dd10dae4ba1fc60dee51e86baddfc33c  runs/p75-two-c
 24bae52881311b4e951e56101169a5e562d97d25bddc616ea1ac2b344973d2cf  runs/p75-two-client-server/launch_client.py
 2181c7805080421611ec43237fdf94b2aba1d041c14fe1b52dc8d7eb0bc18c77  runs/p75-two-client-server/dedprobe.jar
 55edc4452b7fff187360d2ec39a99e945a404a72aae538792d9f634f851a8896  runs/p75-two-client-server/lansyncprobe.jar
+f0d93ea360d5e1412607a1bd755c188f0c59c07bdf86955512eb3e07a12b28e6  runs/p75-two-client-server/integrated-regression.log
 156f453974bc38ced55a21e1d8da7f1e06bd74eb79e0c7cc944c99f7ae36dbda  runs/p31-codec-selection/README.md
 51df7256e20c4fa551964b09ad3d0850d76297485325246ae75c316c69db0e5b  runs/p31-codec-selection/verdict.json
 5f5da2cd78397dfbf5950b31017eb9dc662f485308b450d1f33db878834d8165  runs/p31-codec-selection/gradle-test.log
