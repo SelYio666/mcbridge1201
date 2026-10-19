@@ -417,7 +417,8 @@
 ## 2026-10-19 08:45 更新：点击事件到达，但 handler 内未返回
 
 203. **debug mixin** 在 `TrashSlotGuiHandler.onMouseClick` HEAD 记录第三次点击：`hovering=true`、`carried=empty`、`trash=5 diamonds`、`enabled=true`、provider 存在。
-204. **结论**：事件/命中/前置条件都满足，失败在 handler HEAD 之后（`undeleteLast` 调用或服务端覆盖）。证据 `runs/p63-trash-debug/`。
+204. **provider + RETURN**：`DEBUG_PROVIDER_UNDELETE` 被调用，`DEBUG_AFTER_CLICK carried=5 trash=0`，客户端取回成功。
+205. **结论**：客户端 handler/provider 正常；物品随后重新出现在 trash，说明服务端状态/更新覆盖客户端。下一步查 serverbound 包处理。证据 `runs/p63-trash-debug/`。
 
 | 证据 | 路径 |
 |---|---|

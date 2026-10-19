@@ -42,4 +42,15 @@ public class TrashGuiDebugMixin {
                     + " x=" + event.getMouseX() + " y=" + event.getMouseY());
         }
     }
+
+    @Inject(method = "onMouseClick", at = @At("RETURN"), remap = false, require = 0)
+    private static void debugReturn(ScreenMouseEvent.Click.Pre event, CallbackInfo ci) {
+        var player = class_310.method_1551().field_1724;
+        TrashSlotSlot trash = TrashSlotGuiHandler.getTrashSlot();
+        if (player != null && trash != null) {
+            System.out.println("DEBUG_AFTER_CLICK carried="
+                    + player.field_7512.method_34255()
+                    + " trash=" + trash.method_7677());
+        }
+    }
 }

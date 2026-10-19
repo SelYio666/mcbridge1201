@@ -288,6 +288,8 @@ FILES = [
     "runs/p63-trash-debug/latest.log",
     "runs/p63-trash-debug/TrashGuiDebugMixin.java",
     "runs/p63-trash-debug/trashdebug.mixins.json",
+    "runs/p63-trash-debug/latest-provider-return.log",
+    "runs/p63-trash-debug/TrashProviderDebugMixin.java",
     "runs/p31-codec-selection/README.md",
     "runs/p31-codec-selection/verdict.json",
     "runs/p31-codec-selection/gradle-test.log",
