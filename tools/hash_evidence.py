@@ -435,6 +435,7 @@ FILES = [
     "runs/p86-empty-hover/TrashEmptyKeyProbe.java",
     "runs/p86-empty-hover/trashemptykey.jar",
     "runs/p86-empty-hover/compile.log",
+    "runs/p86-empty-hover/compile2.log",
     "runs/p31-codec-selection/README.md",
     "runs/p31-codec-selection/verdict.json",
     "runs/p31-codec-selection/gradle-test.log",

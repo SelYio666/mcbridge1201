@@ -35,10 +35,10 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 
 - the real UI key/action that invokes empty-trash: the geometry is now known (rect
   `(227,207)-(258,231)`, scale 3, physical `(1176,873)`), but `Delete`, `Ctrl/Shift/Alt+Delete` all
-  leave the trash at 5 (`runs/p86-empty-hover/`). Coordinates are ruled out; the remaining suspects
-  are the synthetic key not reaching Balm's `ScreenKeyEvent$Press$Post`, the delete binding being
-  disabled by config, or a different modifier. The action itself passes at provider level
-  (`runs/p65-trash-empty/`);
+  leave the trash at 5 (`runs/p86-empty-hover/`). A registered
+  `ScreenKeyEvent.Press.Post` listener never fired while the ESC injection in P83 did close the
+  chest, so the synthetic key reaches GLFW but not Balm's screen-key event dispatch. The action
+  itself passes at provider level (`runs/p65-trash-empty/`);
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
   server and client alive; `runs/p73-lithium-play/`) and a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), but mob AI, redstone and long sessions are still

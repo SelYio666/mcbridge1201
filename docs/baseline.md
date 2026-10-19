@@ -1659,6 +1659,21 @@ client=1024x768 origin=(448,216) scale=3 → target=(1176,873)
 禁用、或修饰键与绑定不符。empty 动作本身（provider 级）已在 §7.66 通过。证据
 `runs/p86-empty-hover/`。
 
+### 7.88 empty-trash 按键诊断：Balm 屏幕按键事件未触发
+
+探针注册 `Balm.getEvents().onEvent(ScreenKeyEvent.Press.Post.class, ...)` 监听后，在
+`(1176,873)` 注入 Delete：
+
+```text
+TRASH_SEED  trash=5 diamonds
+key_events=0
+TRASH_STATE tick=200..440 trash=5 diamonds
+```
+
+监听一次都没触发。P83 的 ESC 注入能关箱，说明 OS 按键到得了游戏 GLFW 窗口，但没有进入 Balm 的
+`ScreenKeyEvent$Press$Post` 路径；疑似 Balm 事件分发/注册时机问题。物理 empty 按键暂无法用现有
+harness 验证，动作本身已在 §7.66 通过。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

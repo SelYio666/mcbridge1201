@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 22:00（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 22:10（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 22:10）：**empty-trash 按键诊断**。探针注册 Balm `ScreenKeyEvent.Press.Post` 监听后注入 Delete：`KEY_EVENT` 计数为 0。P83 的 ESC 注入能关箱，说明按键到得了 GLFW，但没走到 Balm 的屏幕按键事件；疑似 Balm 事件分发/注册时机问题，非 TrashSlot 绑定或坐标问题。物理 empty 按键暂无法用现有 harness 验证，动作本身 P65 已过。证据 `runs/p86-empty-hover/`。
 
 更新（2026-10-19 22:00）：**empty-trash 悬停按键仍失败**。已量出垃圾桶 GUI 矩形 `(227,207)-(258,231)`、屏幕 342×256、客户端区原点 (448,216)、scale=3 → 物理 (1176,873)；在该点注入 Delete/Ctrl/Shift/Alt+Delete 四种组合，trash 仍为 5。坐标已排除，剩下可能是注入未到 Balm 按键事件、配置禁用或修饰键不符。empty 动作本身 P65 已通过。证据 `runs/p86-empty-hover/`。
 
@@ -572,6 +574,7 @@
 267. **lithium TPS**：289/289 区块、1200 tick/59.92s → 20.03 TPS，无掉 tick。单次 60 秒采样，非完整压测。证据 `runs/p84-lithium-tps/`。
 268. **empty-trash 真实按键受阻**：只注入 Shift+Delete 时 trash 到 tick 360 仍是 5，说明需要鼠标悬停；需先算组件矩形再移动鼠标。empty 本身已在 P65 通过。证据 `runs/p85-empty-key/`。
 269. **悬停后仍失败**：矩形 `(227,207)-(258,231)`、scale=3、物理 (1176,873)；Delete/Ctrl/Shift/Alt+Delete 都没清空。坐标已排除，剩下是注入路径/配置/修饰键问题。证据 `runs/p86-empty-hover/`。
+270. **Balm 事件诊断**：注册 `ScreenKeyEvent.Press.Post` 监听后注入 Delete，`KEY_EVENT` 计数 0；P83 ESC 能生效，说明按键到 GLFW 但没进 Balm 屏幕按键事件。物理 empty 按键暂无法用现有 harness 验证。
 
 | 证据 | 路径 |
 |---|---|

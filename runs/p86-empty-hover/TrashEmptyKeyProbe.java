@@ -2,6 +2,8 @@ package probe;
 
 import java.lang.reflect.Field;
 
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.event.client.screen.ScreenKeyEvent;
 import net.blay09.mods.trashslot.client.TrashSlotGuiHandler;
 import net.blay09.mods.trashslot.client.TrashSlotSlot;
 import net.blay09.mods.trashslot.client.gui.TrashSlotComponent;
@@ -27,6 +29,10 @@ public final class TrashEmptyKeyProbe implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        Balm.getEvents().onEvent(ScreenKeyEvent.Press.Post.class,
+                event -> System.out.println("KEY_EVENT screen=" + event.getScreen()
+                        + " key=" + event.getKey()
+                        + " scan=" + event.getScanCode()));
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.field_1724 == null) return;
             ticks++;

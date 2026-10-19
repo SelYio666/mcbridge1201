@@ -36,6 +36,25 @@ coordinates:
 - the delete binding may be disabled by TrashSlot config in this world;
 - the modifier the binding expects may differ from the four tried.
 
+## Follow-up diagnostic
+
+The probe registered a `ScreenKeyEvent.Press.Post` listener (`Balm.getEvents().onEvent(...)`) and
+injected Delete at `(1176,873)`:
+
+```text
+TRASH_SEED  trash=5 diamonds
+(no KEY_EVENT line)
+TRASH_STATE tick=200 trash=5 diamonds
+```
+
+The listener never fired. The earlier P83 ESC injection *did* close the chest, so OS key injection
+reaches the game's GLFW window, but the Balm `ScreenKeyEvent$Press$Post` path is not being triggered
+in this probe. This points at Balm's screen-key event dispatch (or event registration timing), not at
+TrashSlot's binding, config, or the coordinates.
+
+**Conclusion:** the physical empty-trash key cannot be verified with the current harness; the action
+itself passes at provider level (`runs/p65-trash-empty/`).
+
 ## Scope
 
 The empty-trash action itself passes at provider level (`runs/p65-trash-empty/`). Only the physical
