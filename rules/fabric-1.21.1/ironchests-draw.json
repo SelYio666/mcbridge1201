@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "IronChests GeneratedScreenRenderer's 1.20.1 DrawContext.drawTexture(12 ints) tombstone call -> 1.21.1 method_25291 overload.",
+  "methodRedirects": [
+    {
+      "id": "ironchests.draw-texture",
+      "sourceOwner": "centurybridge/gen/Tombstones_ironchests_5_0_2_fabric",
+      "sourceName": "t8",
+      "sourceDesc": "(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/DrawContextTextureBridge",
+      "bridgeMethod": "drawTexture",
+      "bridgeDesc": "(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
+      "capability": "screen.draw.texture",
+      "risk": "medium",
+      "evidence": "Chest GUI render (runs/p68-ironchests-gui): UnsupportedOperationException 'CenturyBridge tombstone: net.minecraft.class_332.method_48587 no longer exists in 1.21.1' from Tombstones_ironchests_5_0_2_fabric.t8, called by GeneratedScreenRenderer.render. Bytecode shows (texture, x, y, width, height, 4, 4, 4, 4, 256, 256, 0, 0); the first ten map to 1.21.1 method_25291, the two trailing legacy ints are ignored."
+    }
+  ]
+}

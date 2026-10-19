@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "1.20.1 Screen.renderBackground(DrawContext) -> 1.21.1 renderBackground(DrawContext, int, int, float).",
+  "methodRedirects": [
+    {
+      "id": "screen.render-background-one-arg",
+      "sourceOwner": "tech/thatgravyboat/ironchests/client/ChestScreen",
+      "sourceName": "method_25420",
+      "sourceDesc": "(Lnet/minecraft/class_332;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/ScreenRenderBridge",
+      "bridgeMethod": "renderBackground",
+      "bridgeDesc": "(Lnet/minecraft/class_437;Lnet/minecraft/class_332;)V",
+      "capability": "screen.render.background",
+      "risk": "low",
+      "evidence": "IronChests chest GUI (runs/p68-ironchests-gui): opening the chest now succeeds (IRONCHESTS_USE result=CONSUME), then rendering ChestScreen crashes with NoSuchMethodError 'void ChestScreen.method_25420(class_332)' at ChestScreen.method_25394(ChestScreen.java:25). 1.21.1 Screen declares method_25420(DrawContext, int, int, float) only; the bridge forwards the old one-argument call with 0,0,0."
+    }
+  ]
+}

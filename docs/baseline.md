@@ -1328,6 +1328,28 @@ at com.teamresourceful.resourcefullib.common.networking.fabric.PacketChannelHelp
 `NoClassDefFoundError .../networking/base/PacketHandler`，所以内嵌 2.0.6 必须移植而不是替换。
 证据 `runs/p67-ironchests-gui-nbt/`。
 
+### 7.69 IronChests 箱子 GUI 通过
+
+1. **ResourcefulLib 服务端网络移植**（work-only）：`PacketChannelHelperImpl` 改为 payload 实现
+   （`RawPayload` + `PayloadTypeRegistry` + `ServerPlayNetworking.send(player, CustomPayload)`），
+   与客户端 helper 共用同一 payload 类型。
+2. **channel 公式修正**：早期客户端 helper 产出 `ironchests/ironchests:main/sync`（非法
+   namespace）；两边统一为 `namespace:channelPath/packetPath` = `ironchests:main/sync`。
+3. **规则 `screen.render-background-one-arg`**：`ChestScreen.method_25420(DrawContext)` →
+   `ScreenRenderBridge` → `Screen.renderBackground(context, 0, 0, 0)`（1.21.1 四参形式），命中 1。
+4. **规则 `ironchests.draw-texture`**：墓碑 `t8`（`DrawContext.drawTexture` 12 个 int）→
+   `DrawContextTextureBridge` → `method_25293(texture, x, y, w, h, u, v, rw, rh, tw, th)`，命中 1。
+
+结果：
+
+```text
+IRONCHESTS_USE result=CONSUME
+IRONCHESTS_SCREEN=tech.thatgravyboat.ironchests.client.ChestScreen
+```
+
+`chest-gui.png` 显示 Iron Chest 标题、9×6 箱子格、背包和物品，无崩溃。背景是纯灰：旧调用传了
+12 个 int，只有前 10 个能映射到 1.21.1，末尾两个旧参数被忽略。证据 `runs/p68-ironchests-gui/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
