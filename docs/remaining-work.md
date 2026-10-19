@@ -31,6 +31,13 @@ cannot target it. Trash transfer is therefore still **not verified**:
 - two-client synchronization;
 - ironchests GUI/render.
 
+**Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
+not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls
+`DeletionProvider.deleteMouseItem(player, mouseItem, trashSlot, rightClick)`; `TrashSlotComponent`
+draws the slot and updates the `TrashSlotSlot` x/y in `drawBackground`. P58's stored `152,165` was
+read before/without that draw update, so the next probe must log `screen.leftPos/topPos`, the
+draw-updated slot position, and `component.getRectangle()` before clicking.
+
 To close these, provide a Fabric 1.21.1 client instance with:
 
 - the same Fabric loader/API versions as the server profiles;
