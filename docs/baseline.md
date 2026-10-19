@@ -1525,6 +1525,20 @@ SERVER DED_MENUS hostSlots=46 guestSlots=46   (tick 420/520)
 客户端与服务端都回落到 46 格背包，**双端关屏通过**。真实键盘 ESC 走同一 `close()` 路径，但物理
 按键未单独测试。证据 `runs/p77-two-client-close/`（`*-close.log`）。
 
+### 7.79 同一箱子的双客户端操作不复制
+
+访客先取走 7 钻石，主机随后对同一箱子操作：
+
+```text
+GUEST  LAN_TAKE player=GuestB slot0=air slot54=7 diamonds
+HOST   LAN_TAKE player=HostA slot0=air slot54=air
+SERVER DED_TOTAL chest=air hostSlot54=air guestSlot54=7 diamonds
+```
+
+总数仍为 7（箱子 0 + 主机 0 + 访客 7），**无复制**。注意主机开箱比访客取走晚约 2 秒，属于
+“先后争用”，不是同一 tick 并发；同一 tick 并发点击仍需要专门的双端同 tick 开箱脚本才能验证。
+证据 `runs/p78-two-client-race/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

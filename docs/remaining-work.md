@@ -59,7 +59,12 @@ earlier LAN attempt (`runs/p74-two-client/`) is superseded.
 **Close-screen now passes** (`runs/p77-two-client-close/`): `setScreen(null)` only closed the client,
 but calling `Screen.close()` (`method_25419`) makes both the client and the server drop the chest
 menu (`LAN_CLOSED slots=46`, `DED_MENUS hostSlots=46 guestSlots=46`). The physical ESC key path is
-untested. Simultaneous edits from both clients are also untested.
+untested.
+
+**Same-chest contention is conserved** (`runs/p78-two-client-race/`): after the guest took 7
+diamonds, the host acted on the same chest and the server total stayed 7
+(`DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`). This is sequential contention, not a same-tick
+race; a true simultaneous-click test would need both menus opened in one server tick.
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls

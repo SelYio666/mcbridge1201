@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 20:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 20:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 20:35）：**两客户端操作同一箱子不复制**。访客取走 7 钻石后主机再操作：`LAN_TAKE` 两端 + 服务端 `DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`，总数仍为 7。注意这是“先后争用”而非同一 tick 并发。证据 `runs/p78-two-client-race/`。
 
 更新（2026-10-19 20:25）：**双端关屏通过**。先用 `setScreen(null)` 只关了客户端（服务端仍 90 格）；改用 `Screen.close()`（`method_25419`）后：两端 `LAN_CLOSED slots=46`，服务端 tick 420/520 均 `hostSlots=46 guestSlots=46`。真实 ESC 键未测。证据 `runs/p77-two-client-close/`。
 更新（2026-10-19 20:20）：**双端关屏：本地关闭成功，服务端菜单未关闭**（已被 20:25 修复）。证据 `runs/p77-two-client-close/`。
@@ -533,6 +535,10 @@
 258. **结论**：`setScreen(null)` 不足以关闭服务端菜单；下一步走 `close()` 或显式 `CloseHandledScreenC2SPacket`。证据 `runs/p77-two-client-close/`。
 259. **修复验证**：改用 `Screen.close()`（`method_25419`）后，两端 `LAN_CLOSED slots=46`，服务端 tick 420/520 均 `hostSlots=46 guestSlots=46`——**双端关屏通过**。真实 ESC 键路径未测。证据 `runs/p77-two-client-close/`（`*-close.log`）。
 
+## 2026-10-19 20:35 更新：同一箱子的双客户端操作
+
+260. **结果**：访客取走 7 钻石后主机再操作，服务端 `DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`，总数仍为 7，无复制。注意是先后争用，不是同一 tick 并发。证据 `runs/p78-two-client-race/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -627,6 +633,7 @@
 | 双客户端通过 | `runs/p75-two-client-server/README.md`、`server.log`、`guest.log` |
 | 双客户端取放 | `runs/p76-two-client-move/README.md`、`server.log`、`guest.log`、`host.log` |
 | 双端关屏 | `runs/p77-two-client-close/README.md`、`server-close.log`、`guest-close.log`、`host-close.log` |
+| 同箱子双客户端 | `runs/p78-two-client-race/README.md`、`server.log`、`guest.log`、`host.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
