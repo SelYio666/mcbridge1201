@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 19:20）：**IronChests 背景改为真实九宫格纹理**。上游源码确认 `GeneratedScreenRenderer` 调用 1.20.1 `drawNineSlicedTexture(...4,4,4,4,256,256,0,0)`；桥改为 9 次 `method_25293`，截图显示带边框的浅色面板，不再纯灰。重建脚本默认先重编桥（修掉 stale bridge 的 `NoSuchMethodError`），sha256 `20864ad9…`。证据 `runs/p72-ironchests-nine-slice/`。
 更新（2026-10-19 12:45）：**IronChests 修复流水线入仓**。`tools/rebuild_ironchests_client.py` 把「NBT 规则 → 替换内嵌 ResourcefulLib → 屏幕/纹理规则」串成一条命令，RL helper 源码收进 `java/src/nested/java/`；重建产物 sha256 与手工验证版一致（`c0589eeb…`），冒烟测试 GUI 打开、放入 50 钻石、关箱重开仍在。证据 `runs/p71-rebuild-pipeline/`。
 更新（2026-10-19 12:25）：**修复关箱重开清空 + S2C 同步通过**。补测关箱发现重开清空箱子；根因是转换器对调了 `readNbt`/`writeNbt` 的方法体（`method_11007` 实际写、`method_11014` 实际清空并读），而 P67 的桥按名字调反。对调 `IronChestsNbtBridge` 后：关箱后 25 仍在，重开服务端/客户端都是 25。P67 已加更正说明。证据 `runs/p70-ironchests-persist/`。
 更新（2026-10-19 12:20）：**IronChests GUI 交互通过**。客户端 `clickSlot` 把 25 钻石从热键栏 81 放进箱子槽 0，再取回到背包槽 54；服务端同一菜单 tick 220/260/300 的状态与客户端一致，无复制/丢失。证据 `runs/p69-ironchests-interaction/`。

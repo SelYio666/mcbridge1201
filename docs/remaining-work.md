@@ -40,11 +40,12 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   (`runs/p68-ironchests-gui/`, `runs/p69-ironchests-interaction/`; server-side menu state agrees at
   ticks 220/260/300). Ported the nested ResourcefulLib 2.0.6 server networking (work-only), fixed the
   channel location to `ironchests:main/sync`, and added the `screen.render-background-one-arg` +
-  `ironchests.draw-texture` rules. Persistence across close/reopen and the clientbound chest-content
-  sync also pass (`runs/p70-ironchests-persist/`; the P67 NBT bridge direction was corrected there).
-  The ResourcefulLib server-helper port now lives in the repo (`java/src/nested/java/`) and the whole
-  pipeline is one command (`tools/rebuild_ironchests_client.py`, `runs/p71-rebuild-pipeline/`).
-  Still open: two-client sync.
+  `ironchests.draw-nine-sliced` rules. The background now renders the real nine-slice panel
+  (`runs/p72-ironchests-nine-slice/`). Persistence across close/reopen and the clientbound
+  chest-content sync also pass (`runs/p70-ironchests-persist/`; the P67 NBT bridge direction was
+  corrected there). The ResourcefulLib server-helper port now lives in the repo
+  (`java/src/nested/java/`) and the whole pipeline is one command
+  (`tools/rebuild_ironchests_client.py`, `runs/p71-rebuild-pipeline/`). Still open: two-client sync.
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls

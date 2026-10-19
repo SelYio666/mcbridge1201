@@ -1,20 +1,20 @@
 {
   "schemaVersion": "0.1-draft",
   "target": "fabric-1.21.1",
-  "note": "IronChests GeneratedScreenRenderer's 1.20.1 DrawContext.drawTexture(12 ints) tombstone call -> 1.21.1 method_25291 overload.",
+  "note": "IronChests GeneratedScreenRenderer's 1.20.1 drawNineSlicedTexture(12 ints) tombstone call -> a 1.21.1 nine-blit bridge.",
   "methodRedirects": [
     {
-      "id": "ironchests.draw-texture",
+      "id": "ironchests.draw-nine-sliced",
       "sourceOwner": "centurybridge/gen/Tombstones_ironchests_5_0_2_fabric",
       "sourceName": "t8",
       "sourceDesc": "(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
       "sourceOpcode": 184,
       "bridgeClass": "top/mcbridge1201/bridge/DrawContextTextureBridge",
-      "bridgeMethod": "drawTexture",
+      "bridgeMethod": "drawNineSliced",
       "bridgeDesc": "(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
-      "capability": "screen.draw.texture",
+      "capability": "screen.draw.nine-sliced",
       "risk": "medium",
-      "evidence": "Chest GUI render (runs/p68-ironchests-gui): UnsupportedOperationException 'CenturyBridge tombstone: net.minecraft.class_332.method_48587 no longer exists in 1.21.1' from Tombstones_ironchests_5_0_2_fabric.t8, called by GeneratedScreenRenderer.render. Bytecode shows (texture, x, y, width, height, 4, 4, 4, 4, 256, 256, 0, 0); the first ten map to 1.21.1 method_25291, the two trailing legacy ints are ignored."
+      "evidence": "Chest GUI render (runs/p68-ironchests-gui): UnsupportedOperationException 'CenturyBridge tombstone: net.minecraft.class_332.method_48587 no longer exists in 1.21.1' from Tombstones_ironchests_5_0_2_fabric.t8, called by GeneratedScreenRenderer.render. Upstream source (thatgravyboat/Ironchests 1.20.x, GeneratedScreenRenderer) calls drawNineSlicedTexture(BACKGROUND, x, y, width, height, 4, 4, 4, 4, 256, 256, 0, 0); the bridge rebuilds the nine patches with method_25293."
     }
   ]
 }

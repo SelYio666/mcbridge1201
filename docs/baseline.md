@@ -1401,6 +1401,24 @@ REOPEN screen=ChestScreen sync=2 slot0=25 diamonds
 重建产物与手工验证版 **sha256 相同**（`c0589eeb…`），冒烟测试 GUI 打开、放入 50 钻石、
 `BE tick=320 slot0=50`、重开 `slot0=50`。证据 `runs/p71-rebuild-pipeline/`。
 
+### 7.73 IronChests 九宫格背景
+
+上游 `thatgravyboat/Ironchests`（1.20.x）的 `GeneratedScreenRenderer` 实际调用：
+
+```java
+graphics.drawNineSlicedTexture(BACKGROUND, x, y, type.width(), type.height(),
+        4, 4, 4, 4, 256, 256, 0, 0);
+```
+
+即 1.20.1 的十二参 `drawNineSlicedTexture(..., left, top, right, bottom, centerW, centerH, u, v)`，
+不是普通贴图；P68 把它当单次 blit，因此背景是纯灰。桥改为
+`DrawContextTextureBridge.drawNineSliced`：用 9 次 `method_25293` 画四角、四边、中心
+（中心区 = 纹理尺寸 − 边框）。规则改名为 `ironchests.draw-nine-sliced`。
+
+`chest-nine.png` 显示真实面板：浅色背景 + 边框，槽位/标题/物品正常。GUI 打开、放入 64 钻石、
+关箱重开同步仍通过。`rebuild_ironchests_client.py` 现在默认先重编桥（stale bridge 曾触发
+`NoSuchMethodError`），重建 sha256 `20864ad9…` 与手工版一致。证据 `runs/p72-ironchests-nine-slice/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

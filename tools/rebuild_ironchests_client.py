@@ -101,6 +101,22 @@ def sha256(path):
     return h.hexdigest()
 
 
+def build_bridges(out_dir, netty, java_home):
+    out_dir.mkdir(parents=True, exist_ok=True)
+    cmd = [
+        sys.executable, str(ROOT / "tools" / "build_bridges.py"),
+        "--stub", str(ROOT / "work" / "cb" / "data" / "jars" / "client-1.21.1-intermediary.jar"),
+        "--lib", str(ROOT / "work" / "lib" / "gson-2.11.0.jar"),
+        "--lib", str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "com" / "mojang" / "datafixerupper" / "8.0.16" / "datafixerupper-8.0.16.jar"),
+        "--lib", str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / ".fabric" / "processedMods" / "fabric-networking-api-v1-4.2.2+60c3209b6a-cc18a5110f61c2c0.jar"),
+        "--lib", netty[0],
+        "--lib", netty[1],
+        "--lib", str(ROOT / "work" / "corpus" / "deps" / "balm-fabric-1.21.1-21.0.66.jar"),
+        "--out", str(out_dir),
+    ]
+    run(cmd, dict(os.environ, JAVA_HOME=java_home))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", default=str(ROOT / "work" / "client" / "ironchests-modelbridge2.jar"))
@@ -113,6 +129,8 @@ def main():
     ap.add_argument("--netty", action="append", default=None,
                     help="netty-buffer / netty-common jars (repeatable)")
     ap.add_argument("--java-home", default=os.environ.get("JAVA_HOME"))
+    ap.add_argument("--skip-bridges", action="store_true",
+                    help="reuse the existing bridge classes instead of recompiling them")
     args = ap.parse_args()
 
     java_home = args.java_home
@@ -130,6 +148,9 @@ def main():
         str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "io" / "netty" / "netty-buffer" / "4.1.97.Final" / "netty-buffer-4.1.97.Final.jar"),
         str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "io" / "netty" / "netty-common" / "4.1.97.Final" / "netty-common-4.1.97.Final.jar"),
     ]
+
+    if not args.skip_bridges:
+        build_bridges(Path(args.bridges), netty, java_home)
 
     nbt_jar = tmp / "nbt.jar"
     patch(input_jar, nbt_jar,
