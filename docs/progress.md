@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 08:10（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 08:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 08:25）：**trash GUI 移入成功**。第一次真实点击暴露 `BalmNetworking.sendToServer(Object)` NoSuchMethodError；新增 `BalmNetworkingBridge.sendToServer` + 规则命中 4 处后，点击 5 钻石再点垃圾桶，钻石进入 trash slot（`after-send.png`），无崩溃。移除/undelete、服务端内容、容器 GUI、同步仍未验证。证据 `runs/p59-trash-send/`。
 更新（2026-10-19 08:10）：**TrashSlot 不是普通 handler slot**。probe 取到 `TrashSlotSlot` 坐标 `152,165`、component anchor `231,211`，但 `handler.field_7761.indexOf(trash)=-1`（46 个槽），说明垃圾桶是客户端自定义 component 绘制/拦截，普通 `clickSlot` 无法定位。P56 的点击/拖拽失败由此解释；仍未完成实际转移。证据 `runs/p58-trash-click/`。
 更新（2026-10-19 01:25，修正）：**trash 重进为空是 TrashSlot 登录重置**。`setTrashItem` 同会话读回 5 钻石，live `BalmData/TrashSlot` 也是 `{count:5,id:"minecraft:diamond"}`；但 TrashSlot 的 `PlayerLoginEvent` 显式把 trash 设为 `ItemStack.EMPTY`，所以重进为空不能证明 NBT 桥失败。P57 原结论已修正；GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。
@@ -392,6 +393,12 @@
 192. **关键**：`handler.field_7761.indexOf(trash) = -1`（共 46 个槽），垃圾桶不在普通 slot 列表；它是客户端 component 绘制/拦截。
 193. **结论**：普通 `clickSlot` 无法定位垃圾桶，P56 的点击/拖拽失败由此解释；实际转移仍未完成。证据 `runs/p58-trash-click/`。
 
+## 2026-10-19 08:25 更新：trash GUI 移入成功
+
+194. **真实崩溃**：点击垃圾桶触发 `NoSuchMethodError BalmNetworking.sendToServer(Object)`（DefaultDeletionProvider:33）。
+195. **桥**：`BalmNetworkingBridge.sendToServer` + `trashslot-sendtoserver.json`；命中 4 处，注册 serverbound payload 并 `ClientPlayNetworking.send`。
+196. **结果**：5 钻石移入 trash slot（`after-send.png`），无崩溃；移除/undelete、服务端内容、容器 GUI、同步未验证。证据 `runs/p59-trash-send/`。
+
 ## 证据在哪里
 
 | 证据 | 路径 |
@@ -468,6 +475,7 @@
 | 真实物品/trash 拖放 | `runs/p56-client-item/README.md`、`inventory-with-diamonds.png`、`trash-drag.png` |
 | trash 持久化 probe | `runs/p57-trash-persist/README.md`、`latest.log`、`pause2.png` |
 | TrashSlot handler 定位 | `runs/p58-trash-click/README.md`、`latest.log`、`TrashClickProbe.java` |
+| trash GUI 移入 | `runs/p59-trash-send/README.md`、`after-send.png`、`latest.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

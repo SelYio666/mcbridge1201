@@ -127,6 +127,19 @@
       "capability": "itemstack.packet.components",
       "risk": "medium",
       "evidence": "Conversion report: tombstoned net/minecraft/class_2540.method_10819()ItemStack at 1.20.4->1.20.5. Real call sites: MessageTrashSlotClick.decode and MessageTrashSlotContent.decode. The bridge reads FriendlyByteBuf.method_10798 (readNbt) and parses ItemStack.CODEC with RegistryOps(NbtOps), matching the write side."
+    },
+    {
+      "id": "trashslot.balm.send-to-server",
+      "sourceOwner": "net/blay09/mods/balm/api/network/BalmNetworking",
+      "sourceName": "sendToServer",
+      "sourceDesc": "(Ljava/lang/Object;)V",
+      "sourceOpcode": 185,
+      "bridgeClass": "top/mcbridge1201/bridge/BalmNetworkingBridge",
+      "bridgeMethod": "sendToServer",
+      "bridgeDesc": "(Lnet/blay09/mods/balm/api/network/BalmNetworking;Ljava/lang/Object;)V",
+      "capability": "balm.network.send.serverbound",
+      "risk": "medium",
+      "evidence": "First real trash GUI click (runs/p58-trash-click/latest.log): NoSuchMethodError 'void net.blay09.mods.balm.api.network.BalmNetworking.sendToServer(java.lang.Object)' at TrashSlot DefaultDeletionProvider.deleteMouseItem (DefaultDeletionProvider.java:33). Balm 21's generic sendToServer(T extends CustomPayload) erases to CustomPayload, so the old Object call no longer links. The bridge reuses the payload registered by registerServerbound and calls ClientPlayNetworking.send."
     }
   ]
 }

@@ -21,12 +21,14 @@ claim that these paths work.
 A PCL-based Fabric 1.21.1 client joins a singleplayer world, renders terrain/HUD, shows the
 inventory + TrashSlot button, and can receive a real 5-diamond stack. A direct `TrashHelper`
 probe reads the stack back in-session; rejoin-empty is **TrashSlot's own login reset**
-(`setTrashItem(ItemStack.EMPTY)` in `PlayerLoginEvent`), not a bridge persistence failure. GUI
-drag still did not transfer. A probe shows the trash slot is **not in `ScreenHandler.field_7761`**
-(`indexOf = -1`, 46 slots); it is a client-side `TrashSlotComponent`, so ordinary `clickSlot`
-cannot target it. Trash transfer is therefore still **not verified**:
+(`setTrashItem(ItemStack.EMPTY)` in `PlayerLoginEvent`), not a bridge persistence failure. A probe
+shows the trash slot is **not in `ScreenHandler.field_7761`** (`indexOf = -1`, 46 slots); it is a
+client-side `TrashSlotComponent`, so ordinary `clickSlot` cannot target it. After adding the
+serverbound Balm bridge, clicking a stack then the trash widget **moves it into the trash slot**
+(`runs/p59-trash-send/after-send.png`). Still **not verified**:
 
-- trashslot client GUI, `ClientPlayNetworking` receiver, actual packet delivery;
+- trash return/undelete and empty-trash actions, server-side content;
+- clientbound delivery / two-client synchronization;
 - lithium gameplay/rendering;
 - two-client synchronization;
 - ironchests GUI/render.

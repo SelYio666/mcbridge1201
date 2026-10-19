@@ -29,6 +29,7 @@ import net.minecraft.class_9139;
  */
 public final class BalmNetworkingBridge {
     private static final Map<Class<?>, Function<Object, class_8710>> SENDERS = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, Function<Object, class_8710>> SERVERBOUND_SENDERS = new ConcurrentHashMap<>();
 
     private BalmNetworkingBridge() {}
 
@@ -40,6 +41,7 @@ public final class BalmNetworkingBridge {
         class_8710.class_9154<Payload<T>> packetType = descriptor.method_56479();
         class_9139<class_9129, Payload<T>> codec = codec(writer, reader, descriptor);
         PayloadTypeRegistry.playC2S().register(packetType, codec);
+        SERVERBOUND_SENDERS.put(type, value -> new Payload<>(packetType, type.cast(value)));
         ServerPlayNetworking.registerGlobalReceiver(packetType,
                 (payload, context) -> handler.accept(context.player(), payload.value()));
     }
@@ -72,6 +74,16 @@ public final class BalmNetworkingBridge {
             throw new IllegalArgumentException("unregistered Balm packet type: " + packet.getClass().getName());
         }
         ServerPlayNetworking.send(serverPlayer, sender.apply(packet));
+    }
+
+    /** Old Balm's client-to-server packet send; 1.21.1 Balm changed the erasure to CustomPayload. */
+    public static void sendToServer(BalmNetworking self, Object packet) {
+        Function<Object, class_8710> sender = SERVERBOUND_SENDERS.get(packet.getClass());
+        if (sender == null) {
+            throw new IllegalArgumentException("unregistered serverbound Balm packet type: "
+                    + packet.getClass().getName());
+        }
+        ClientPlayNetworking.send(sender.apply(packet));
     }
 
     private static boolean isClient() {

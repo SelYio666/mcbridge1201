@@ -1162,6 +1162,24 @@ anchor `231,211` agrees. It is **not** the raw `152,165` screen rectangle.
 路径问题。实际移入/移出仍未验证；下一步应对 component 的 `isInside`/拖拽状态或它自己的
 click 路径做测试。证据 `runs/p58-trash-click/`。
 
+### 7.61 trash GUI 移入：serverbound Balm 桥
+
+第一次真实点击垃圾桶，客户端崩溃：
+
+```text
+NoSuchMethodError: 'void BalmNetworking.sendToServer(java.lang.Object)'
+at DefaultDeletionProvider.deleteMouseItem(DefaultDeletionProvider.java:33)
+```
+
+Balm 21 的泛型 `sendToServer(T extends CustomPayload)` 擦除后与旧的 `Object` 调用不匹配。
+新增 `BalmNetworkingBridge.sendToServer(BalmNetworking, Object)`：按 `registerServerbound`
+注册的 packet class 找到 payload，调用 `ClientPlayNetworking.send`；规则
+`trashslot-sendtoserver.json` 命中 4 处。
+
+补丁后点击 5 钻石再点垃圾桶，钻石进入 trash slot（`after-send.png`），无 `NoSuchMethodError`，
+客户端存活。已确认 **GUI 移入方向**；移除/undelete、服务端内容、容器 GUI、同步仍未验证。
+证据 `runs/p59-trash-send/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
