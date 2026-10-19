@@ -1235,6 +1235,19 @@ DEBUG_PACKET_RETURN serverCarried=5 minecraft:diamond serverTrash=0
 因此 **GUI 移入、GUI 取回、服务端 delete、服务端 return 全部通过，无复制**。仍未验证
 empty-trash、ironchests GUI、clientbound 投递、双客户端同步。证据 `runs/p63-trash-debug/`。
 
+### 7.65 TrashSlot clientbound content 通过
+
+服务端 tick 60 通过 `BalmNetworkingBridge.sendTo` 发 `MessageTrashSlotContent(3 diamonds)`；
+客户端 tick 140 读取 trash slot：
+
+```text
+S2C_SENT
+S2C_CLIENT trash=3 minecraft:diamond
+```
+
+说明 S2C payload 注册、`sendTo` 桥和客户端 receiver 都正常，无异常。ironchests 的 clientbound
+流量和双客户端同步仍未验证。证据 `runs/p64-trash-s2c/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

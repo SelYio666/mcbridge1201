@@ -1,7 +1,7 @@
 # 交接摘要（一页）
 
 
-更新（2026-10-19 08:50）：**trash GUI 双向通过（修正）**。debug mixin 证明移入和取回都执行：取回后 `DEBUG_AFTER_CLICK carried=5 trash=0`，服务端 `DEBUG_PACKET_RETURN serverCarried=5 serverTrash=0`；截图里物品看似在 trash，是因为它跟着光标停在图标上，移开光标后确认在光标上。P61 的“失败”是截图误判。证据 `runs/p63-trash-debug/`。
+更新（2026-10-19 08:55）：**clientbound TrashSlot content 通过**。服务端 tick 60 通过 `BalmNetworkingBridge.sendTo` 发 3 钻石的 `MessageTrashSlotContent`，客户端 tick 140 读到 `S2C_CLIENT trash=3 minecraft:diamond`，无异常。这验证了 S2C payload 注册、sendTo 桥和客户端 receiver；ironchests 同步/双客户端仍未验证。证据 `runs/p64-trash-s2c/`。
 更新（2026-10-19 08:10）：**TrashSlot 不是普通 handler slot**。probe 取到 `TrashSlotSlot` 坐标 `152,165`、component anchor `231,211`，但 `handler.field_7761.indexOf(trash)=-1`（46 个槽），说明垃圾桶是客户端自定义 component 绘制/拦截，普通 `clickSlot` 无法定位。P56 的点击/拖拽失败由此解释；实际转移仍未完成。证据 `runs/p58-trash-click/`。
 更新（2026-10-19 01:25，修正）：**trash 重进为空是 TrashSlot 登录重置**。`setTrashItem` 同会话读回 5 钻石，live `BalmData/TrashSlot` 也是 `{count:5,id:"minecraft:diamond"}`；但 `PlayerLoginEvent` 显式把 trash 设为 `ItemStack.EMPTY`，所以重进为空不能证明 NBT 桥失败。P57 原结论已修正；GUI 拖放仍是独立未解问题。证据 `runs/p57-trash-persist/`。
 更新（2026-10-19 01:15）：**真实 ItemStack 进入背包，trash 拖放未成功**。probe 给玩家 5 钻石，背包显示正常；点击/拖拽到 TrashSlot 按钮后物品仍停在光标，trash 未接收，logs 无异常。这是未验证项，不声称通过。证据 `runs/p56-client-item/`。

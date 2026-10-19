@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 08:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 08:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 08:55）：**clientbound TrashSlot content 通过**。服务端 tick 60 通过 `BalmNetworkingBridge.sendTo` 发 3 钻石的 `MessageTrashSlotContent`，客户端 tick 140 读到 `S2C_CLIENT trash=3 minecraft:diamond`，无异常。这验证了 S2C payload 注册、sendTo 桥和客户端 receiver；ironchests 同步/双客户端仍未验证。证据 `runs/p64-trash-s2c/`。
 更新（2026-10-19 08:50）：**trash GUI 双向通过（修正）**。debug mixin 证明移入和取回都执行：取回后 `DEBUG_AFTER_CLICK carried=5 trash=0`，服务端 `DEBUG_PACKET_RETURN serverCarried=5 serverTrash=0`；截图里物品看似在 trash，是因为它跟着光标停在图标上，移开光标后确认在光标上。P61 的“失败”是截图误判。证据 `runs/p63-trash-debug/`。
 更新（2026-10-19 08:45）：**第二次点击到达 handler，前置条件满足**。debug 记录 `hovering=true`、`carried=empty`、`trash=5`、`enabled=true`、provider 存在；后续 P63 证明取回实际成功。证据 `runs/p63-trash-debug/`。
 更新（2026-10-19 08:40）：**干净复测：第二次真实点击仍不取回**。只给一个 5 钻石堆，点击移入 trash 成功；等待 2 秒后再次点同一图标，钻石仍在 trash、背包为空，无复制。provider 级 `undeleteLast` 已通过（P60），因此缺口在 TrashSlot GUI 的第二次点击事件/状态。证据 `runs/p61-trash-clean-return/`。
@@ -415,11 +416,16 @@
 201. **第二次点击**：等待 2 秒后点同一位置，钻石仍在 trash、背包为空，无复制。
 202. **修正**：截图里的钻石是跟着光标停在 trash 图标上；移开光标后确认物品在光标上，P61 的“失败”是截图误判。P63 补证。证据 `runs/p61-trash-clean-return/`、`runs/p63-trash-debug/`。
 
-## 2026-10-19 08:45 更新：点击事件到达，但 handler 内未返回
+## 2026-10-19 08:45 更新：点击事件到达，双向通过
 
 203. **debug mixin** 在 `TrashSlotGuiHandler.onMouseClick` HEAD 记录第三次点击：`hovering=true`、`carried=empty`、`trash=5 diamonds`、`enabled=true`、provider 存在。
 204. **provider + RETURN**：`DEBUG_PROVIDER_UNDELETE` 被调用，`DEBUG_AFTER_CLICK carried=5 trash=0`，客户端取回成功。
 205. **服务端包**：`DEBUG_PACKET_HEAD msg=0 serverTrash=5` → `DEBUG_PACKET_RETURN serverCarried=5 serverTrash=0`；移开光标截图确认物品在光标、trash 为空。**双向通过，无复制**。证据 `runs/p63-trash-debug/`。
+
+## 2026-10-19 08:55 更新：clientbound content
+
+206. **S2C**：服务端通过 `BalmNetworkingBridge.sendTo` 发 `MessageTrashSlotContent(3 diamonds)`。
+207. **结果**：`S2C_SENT` → 客户端 `S2C_CLIENT trash=3 minecraft:diamond`，无异常。证据 `runs/p64-trash-s2c/`。
 
 | 证据 | 路径 |
 |---|---|
@@ -500,6 +506,7 @@
 | trash 干净 GUI 取回 | `runs/p61-trash-clean-return/README.md`、`after-return.png`、`latest.log` |
 | trash 点击 debug | `runs/p63-trash-debug/README.md`、`latest.log`、`TrashGuiDebugMixin.java` |
 | trash 双向通过 | `runs/p63-trash-debug/cursor-away.png`、`latest-packet-return.log` |
+| trash clientbound | `runs/p64-trash-s2c/README.md`、`latest.log`、`TrashS2CProbe.java` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

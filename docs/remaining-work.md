@@ -29,10 +29,11 @@ serverbound Balm bridge, clicking a stack then the trash widget **moves it into 
 click path also **returns** the stack to the cursor and clears both client/server trash
 (`runs/p63-trash-debug/`: `carried=5`, server `serverTrash=0`; cursor-away screenshot confirms it).
 P61's "return failed" was a screenshot misread: the returned stack was on the cursor over the
-trash icon. Still **not verified**:
+trash icon. Clientbound `MessageTrashSlotContent` also arrives (`S2C_CLIENT trash=3`,
+`runs/p64-trash-s2c/`). Still **not verified**:
 
 - empty-trash action;
-- clientbound delivery / two-client synchronization;
+- ironchests clientbound traffic and two-client synchronization;
 - lithium gameplay/rendering;
 - ironchests GUI/render.
 
