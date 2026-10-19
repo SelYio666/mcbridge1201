@@ -1,6 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 20:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 20:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 20:55）：**干净的同 tick 并发验证完成**。先清空双方背包与箱子，再在同 tick 开箱、同世界时间 2700 点击：两端都预测 `slot54=7`，100 tick 后赢家仍是 7、输家被纠正为 0；服务端 `DED_TOTAL chest=0 host=0 guest=7`，总数 7 无复制。证据 `runs/p80-two-client-clean/`。
 
 更新（2026-10-19 20:45）：**同 tick 并发点击不复制**。两端在同一次点击窗口（world time 2700）点箱子槽：两端都预测 `slot54=7`，但服务端只给了一个人（`DED_TOTAL chest=0 host=0 guest=7`），总数仍 7；第二次跑观察到服务端槽位更新把失败方的客户端预测纠正为 0。第二次跑的库存未清空（guest 出现 14），需要干净重测。证据 `runs/p79-two-client-simultaneous/`。
 
@@ -545,6 +547,11 @@
 
 261. **同 tick**：两端在 world time 2700 同时点击，均预测 `slot54=7`；服务端 `DED_TOTAL chest=0 hostSlot54=0 guestSlot54=7`，只给一人，总数 7，无复制。第二次跑看到失败方被服务端槽位更新纠正（`LAN_POST slot54=0`），但该次库存未清空（guest 14），需干净重测。证据 `runs/p79-two-client-simultaneous/`。
 
+## 2026-10-19 20:55 更新：干净同 tick 并发
+
+262. **清场**：`DED_SET cleaned slot0=7 hostInv=air guestInv=air`。
+263. **结果**：两端 time=2700 点击；`LAN_POST` 赢家 `slot54=7`、输家 `slot54=0`；服务端 `DED_TOTAL chest=0 host=0 guest=7`，总数 7 无复制。证据 `runs/p80-two-client-clean/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -641,6 +648,7 @@
 | 双端关屏 | `runs/p77-two-client-close/README.md`、`server-close.log`、`guest-close.log`、`host-close.log` |
 | 同箱子双客户端 | `runs/p78-two-client-race/README.md`、`server.log`、`guest.log`、`host.log` |
 | 同 tick 并发 | `runs/p79-two-client-simultaneous/README.md`、`server.log`、`guest.log`、`host.log` |
+| 干净同 tick 并发 | `runs/p80-two-client-clean/README.md`、`server.log`、`guest.log`、`host.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

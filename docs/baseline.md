@@ -1555,6 +1555,20 @@ SERVER DED_TOTAL chest=air hostSlot54=air guestSlot54=7 diamonds
 （`LAN_POST slot54=0`），但该次库存未清空（访客出现 14），属于受污染数据；干净的同 tick
 重测仍需在开箱前清空双方背包。证据 `runs/p79-two-client-simultaneous/`。
 
+### 7.81 干净的同 tick 并发：输家被纠正，总数守恒
+
+清空双方背包与箱子后重跑：
+
+```text
+DED_SET cleaned slot0=7 diamonds hostInv=air guestInv=air
+GUEST LAN_TAKE time=2700 slot54=7  →  LAN_POST slot54=7 diamonds
+HOST  LAN_TAKE time=2700 slot54=7  →  LAN_POST slot54=air
+DED_TOTAL chest=air hostSlot54=air guestSlot54=7 diamonds
+```
+
+两端同 tick 都预测成功；100 tick 后赢家保持 7、输家被服务端槽位更新纠正为 0；服务端总数仍为
+7，**无复制**。证据 `runs/p80-two-client-clean/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
