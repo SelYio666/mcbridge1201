@@ -1435,6 +1435,33 @@ LITHIUM_CLIENT_ALIVE screen=null
 日志无崩溃或 `NoSuchMethodError`。这是**冒烟测试**，不覆盖 TPS、生物 AI、红石或长时间稳定性。
 证据 `runs/p73-lithium-play/`。
 
+### 7.75 双客户端尝试：被 LAN 正版验证阻断
+
+主机客户端开 LAN：
+
+```text
+LAN_OPEN ok=true port=25566
+Started serving on 25566
+```
+
+离线访客连入即被踢：
+
+```text
+GuestB (/127.0.0.1:65026) lost connection: Disconnected
+```
+
+访客画面（`guest-screen3.png`）：
+
+```text
+Failed to connect to the server
+Failed to log in: Invalid session (Try restarting your game and the launcher)
+```
+
+往主机目录写 `server.properties`（`online-mode=false`）不改变 integrated LAN 的行为。
+下一步需要专用服务器（`online-mode=false`），并把 ResourcefulLib 移植拆成服务端安全部分
+（`RawPayload`/`idFor` 不能依赖 `ClientPlayNetworking`），再用两个离线客户端重试。证据
+`runs/p74-two-client/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

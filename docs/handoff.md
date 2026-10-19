@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 19:45）：**双客户端尝试被 LAN 正版验证阻断**。主机开 LAN 25566 成功，离线访客连入即被踢，画面 `Failed to log in: Invalid session`；写 `server.properties online-mode=false` 无效。下一步：专用服务器（online-mode=false）+ 把 RL 移植拆成服务端安全部分。证据 `runs/p74-two-client/`。
 更新（2026-10-19 19:25）：**lithium 玩法冒烟通过**。强制加载 9×9 区块 `81/81`，放石头并用 `ServerPlayerGameMode.destroyBlock` 真实破坏（stone → air），服务端 tick 160/240 存活、客户端 `LITHIUM_CLIENT_ALIVE`，无崩溃。冒烟，不含 TPS/长期稳定性。证据 `runs/p73-lithium-play/`。
 更新（2026-10-19 19:20）：**IronChests 背景改为真实九宫格纹理**。上游源码确认 `GeneratedScreenRenderer` 调用 1.20.1 `drawNineSlicedTexture(...4,4,4,4,256,256,0,0)`；桥改为 9 次 `method_25293`，截图显示带边框的浅色面板，不再纯灰。重建脚本默认先重编桥（修掉 stale bridge 的 `NoSuchMethodError`），sha256 `20864ad9…`。证据 `runs/p72-ironchests-nine-slice/`。
 更新（2026-10-19 12:45）：**IronChests 修复流水线入仓**。`tools/rebuild_ironchests_client.py` 把「NBT 规则 → 替换内嵌 ResourcefulLib → 屏幕/纹理规则」串成一条命令，RL helper 源码收进 `java/src/nested/java/`；重建产物 sha256 与手工验证版一致（`c0589eeb…`），冒烟测试 GUI 打开、放入 50 钻石、关箱重开仍在。证据 `runs/p71-rebuild-pipeline/`。

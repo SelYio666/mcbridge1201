@@ -47,7 +47,13 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   chest-content sync also pass (`runs/p70-ironchests-persist/`; the P67 NBT bridge direction was
   corrected there). The ResourcefulLib server-helper port now lives in the repo
   (`java/src/nested/java/`) and the whole pipeline is one command
-  (`tools/rebuild_ironchests_client.py`, `runs/p71-rebuild-pipeline/`). Still open: two-client sync.
+  (`tools/rebuild_ironchests_client.py`, `runs/p71-rebuild-pipeline/`).
+
+**Two-client sync is blocked, not untried** (`runs/p74-two-client/`): hosting a LAN world works,
+but the integrated server enforces online-mode, so an offline guest is rejected with
+`Invalid session`, and writing `server.properties online-mode=false` does not change it. The next
+attempt needs a dedicated server with `online-mode=false` plus a server-safe split of the
+ResourcefulLib port (`RawPayload`/`idFor` must not pull in `ClientPlayNetworking`).
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls
