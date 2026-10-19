@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 12:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 12:45（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 12:45）：**IronChests 修复流水线入仓**。`tools/rebuild_ironchests_client.py` 把「NBT 规则 → 替换内嵌 ResourcefulLib → 屏幕/纹理规则」串成一条命令，RL helper 源码收进 `java/src/nested/java/`；重建产物 sha256 与手工验证版完全一致（`c0589eeb…`），冒烟测试 GUI 打开、放入 50 钻石、关箱重开仍在。证据 `runs/p71-rebuild-pipeline/`。
 更新（2026-10-19 12:25）：**修复关箱重开清空物品 + 验证 S2C 箱子同步**。P69 只测了取放、没测关箱；补测发现重开把箱子清空（tick 280 仍有 25，tick 320 变 0）。根因：转换器对调的是 `readNbt`/`writeNbt` 的**方法体**（`method_11007` 实际写、`method_11014` 实际清空并读），而 P67 的桥按名字调反了。把 `IronChestsNbtBridge` 两个方向对调后：关箱后 25 仍在，重开服务端/客户端都是 25，S2C 内容同步同时得到验证。证据 `runs/p70-ironchests-persist/`；P67 已加更正说明。
 更新（2026-10-19 12:20）：**IronChests GUI 交互通过**。客户端 `clickSlot` 把 25 钻石从热键栏 81 放进箱子槽 0，再取回到背包槽 54；服务端同一菜单在 tick 220/260/300 的槽位状态与客户端完全一致，无复制/丢失。证据 `runs/p69-ironchests-interaction/`。
 更新（2026-10-19 12:15）：**IronChests 箱子 GUI 通过**。服务端开箱 `IRONCHESTS_USE result=CONSUME`，客户端 `IRONCHESTS_SCREEN=tech.thatgravyboat.ironchests.client.ChestScreen`，截图见 "Iron Chest" 标题 + 9×6 箱子格 + 背包 + 物品，无崩溃。为此：① work-only 移植内嵌 ResourcefulLib 2.0.6 服务端网络（RawPayload/payload 注册），并修正早期客户端 helper 的错误 channel 公式（`ironchests:main/sync`）；② 规则 `screen.render-background-one-arg` 修 `ChestScreen.method_25420(DrawContext)`；③ 规则 `ironchests.draw-texture` 修 `DrawContext.drawTexture` 墓碑。背景为纯灰（12 个旧参数只映射前 10 个），槽位/标题/物品正常。证据 `runs/p68-ironchests-gui/`。
@@ -480,6 +481,12 @@
 234. **结果**：关箱后 `tick=280 slot0=25`，重开 `tick=320 slot0=25`，服务端菜单 `sync=2 slot0=25`，客户端 `REOPEN slot0=25 diamonds`——持久化与 S2C 内容同步同时通过。证据 `runs/p70-ironchests-persist/`。
 235. **P67 更正**：P67 声称的 NBT 修复方向错误，已在该 README 加更正说明；真正正确性以 P70 为准。
 
+## 2026-10-19 12:45 更新：修复流水线入仓
+
+236. **脚本**：`tools/rebuild_ironchests_client.py` = NBT 规则 → 替换内嵌 RL（编译+替换 3 个类）→ 屏幕/纹理规则，一条命令产出。
+237. **源码入仓**：`java/src/nested/java/.../PacketChannelHelperImpl.java`、`FabricClientPacketHelper.java`。
+238. **验证**：重建 sha256 `c0589eeb…` 与手工验证版一致；冒烟测试 GUI 打开、放入 50 钻石、`BE tick=320 slot0=50`、重开 `slot0=50`。证据 `runs/p71-rebuild-pipeline/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -567,6 +574,7 @@
 | IronChests GUI 通过 | `runs/p68-ironchests-gui/chest-gui.png`、`latest.log`、`patch-screen.log`、`patch-draw.log` |
 | IronChests GUI 交互 | `runs/p69-ironchests-interaction/README.md`、`latest.log`、`IronChestsGuiProbe.java` |
 | IronChests 持久化/S2C | `runs/p70-ironchests-persist/README.md`、`latest.log`、`IronChestsNbtBridge.java` |
+| IronChests 重建流水线 | `runs/p71-rebuild-pipeline/README.md`、`latest.log`、`rebuild.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

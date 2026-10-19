@@ -1389,6 +1389,18 @@ REOPEN screen=ChestScreen sync=2 slot0=25 diamonds
 关箱不丢、重开仍在，且客户端重开后看到服务端内容——S2C 箱子同步同时通过。证据
 `runs/p70-ironchests-persist/`。§7.68 的方向性结论以本节为准（该 README 已加更正说明）。
 
+### 7.72 IronChests 修复流水线入仓
+
+`tools/rebuild_ironchests_client.py` 把此前手工执行的步骤串成一条命令：
+
+1. `ironchests-nbt.json` + `nbt-packet.json`；
+2. 抽内嵌 `resourcefullib-fabric-1.20-2.0.6.jar`，编译 `java/src/nested/java/` 下的两个 helper，
+   替换 3 个类后放回；
+3. `ironchests-screen.json` + `ironchests-draw.json`。
+
+重建产物与手工验证版 **sha256 相同**（`c0589eeb…`），冒烟测试 GUI 打开、放入 50 钻石、
+`BE tick=320 slot0=50`、重开 `slot0=50`。证据 `runs/p71-rebuild-pipeline/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
