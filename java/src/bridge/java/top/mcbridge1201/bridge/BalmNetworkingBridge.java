@@ -30,6 +30,7 @@ import net.minecraft.class_9139;
 public final class BalmNetworkingBridge {
     private static final Map<Class<?>, Function<Object, class_8710>> SENDERS = new ConcurrentHashMap<>();
     private static final Map<Class<?>, Function<Object, class_8710>> SERVERBOUND_SENDERS = new ConcurrentHashMap<>();
+    private static final ThreadLocal<class_3222> REPLY_PLAYER = new ThreadLocal<>();
 
     private BalmNetworkingBridge() {}
 
@@ -43,7 +44,14 @@ public final class BalmNetworkingBridge {
         PayloadTypeRegistry.playC2S().register(packetType, codec);
         SERVERBOUND_SENDERS.put(type, value -> new Payload<>(packetType, type.cast(value)));
         ServerPlayNetworking.registerGlobalReceiver(packetType,
-                (payload, context) -> handler.accept(context.player(), payload.value()));
+                (payload, context) -> {
+                    REPLY_PLAYER.set(context.player());
+                    try {
+                        handler.accept(context.player(), payload.value());
+                    } finally {
+                        REPLY_PLAYER.remove();
+                    }
+                });
     }
 
     public static <T> void registerClientbound(BalmNetworking self, class_2960 id, Class<T> type,
@@ -84,6 +92,20 @@ public final class BalmNetworkingBridge {
                     + packet.getClass().getName());
         }
         ClientPlayNetworking.send(sender.apply(packet));
+    }
+
+    /** Old Balm's reply inside a serverbound handler; send back to the packet's sender. */
+    public static void reply(BalmNetworking self, Object packet) {
+        class_3222 player = REPLY_PLAYER.get();
+        if (player == null) {
+            throw new IllegalStateException("No context to reply to");
+        }
+        Function<Object, class_8710> sender = SENDERS.get(packet.getClass());
+        if (sender == null) {
+            throw new IllegalArgumentException("unregistered clientbound Balm packet type: "
+                    + packet.getClass().getName());
+        }
+        ServerPlayNetworking.send(player, sender.apply(packet));
     }
 
     private static boolean isClient() {

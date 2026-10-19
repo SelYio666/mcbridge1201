@@ -1248,6 +1248,26 @@ S2C_CLIENT trash=3 minecraft:diamond
 说明 S2C payload 注册、`sendTo` 桥和客户端 receiver 都正常，无异常。ironchests 的 clientbound
 流量和双客户端同步仍未验证。证据 `runs/p64-trash-s2c/`。
 
+### 7.66 empty-trash：Balm reply 桥
+
+首次调用 `emptyTrashSlot` 触发：
+
+```text
+NoSuchMethodError: 'void BalmNetworking.reply(java.lang.Object)'
+at MessageDeleteFromSlot.handle(MessageDeleteFromSlot.java:44)
+```
+
+新增 `BalmNetworkingBridge.reply`：在 serverbound handler 执行期间记录当前玩家，回发已注册的
+clientbound payload；规则 `trashslot.balm.reply` 命中 2 处。结果：
+
+```text
+EMPTY_BEFORE trash=5 minecraft:diamond
+EMPTY_AFTER  trash=0 minecraft:air
+EMPTY_SERVER empty=true count=0
+```
+
+客户端/服务端都清空，无崩溃。真实 UI 键位未测。证据 `runs/p65-trash-empty/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

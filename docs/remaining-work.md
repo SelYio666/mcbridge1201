@@ -30,9 +30,10 @@ click path also **returns** the stack to the cursor and clears both client/serve
 (`runs/p63-trash-debug/`: `carried=5`, server `serverTrash=0`; cursor-away screenshot confirms it).
 P61's "return failed" was a screenshot misread: the returned stack was on the cursor over the
 trash icon. Clientbound `MessageTrashSlotContent` also arrives (`S2C_CLIENT trash=3`,
-`runs/p64-trash-s2c/`). Still **not verified**:
+`runs/p64-trash-s2c/`), and the provider-level empty action clears both sides via the new reply
+bridge (`runs/p65-trash-empty/`). Still **not verified**:
 
-- empty-trash action;
+- the real UI key/action that invokes empty-trash;
 - ironchests clientbound traffic and two-client synchronization;
 - lithium gameplay/rendering;
 - ironchests GUI/render.

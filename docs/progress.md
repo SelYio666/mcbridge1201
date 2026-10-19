@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 08:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 09:00（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 09:00）：**empty-trash 修复**。首次调用触发 `NoSuchMethodError BalmNetworking.reply(Object)`；新增 reply 桥（记录 serverbound handler 的当前玩家，回发 clientbound payload）+ 规则命中 2 处后，`EMPTY_BEFORE trash=5` → `EMPTY_AFTER trash=0`、`EMPTY_SERVER empty=true count=0`，无崩溃。real UI 键位未测。证据 `runs/p65-trash-empty/`。
 更新（2026-10-19 08:55）：**clientbound TrashSlot content 通过**。服务端 tick 60 通过 `BalmNetworkingBridge.sendTo` 发 3 钻石的 `MessageTrashSlotContent`，客户端 tick 140 读到 `S2C_CLIENT trash=3 minecraft:diamond`，无异常。这验证了 S2C payload 注册、sendTo 桥和客户端 receiver；ironchests 同步/双客户端仍未验证。证据 `runs/p64-trash-s2c/`。
 更新（2026-10-19 08:50）：**trash GUI 双向通过（修正）**。debug mixin 证明移入和取回都执行：取回后 `DEBUG_AFTER_CLICK carried=5 trash=0`，服务端 `DEBUG_PACKET_RETURN serverCarried=5 serverTrash=0`；截图里物品看似在 trash，是因为它跟着光标停在图标上，移开光标后确认在光标上。P61 的“失败”是截图误判。证据 `runs/p63-trash-debug/`。
 更新（2026-10-19 08:45）：**第二次点击到达 handler，前置条件满足**。debug 记录 `hovering=true`、`carried=empty`、`trash=5`、`enabled=true`、provider 存在；后续 P63 证明取回实际成功。证据 `runs/p63-trash-debug/`。
@@ -427,6 +428,12 @@
 206. **S2C**：服务端通过 `BalmNetworkingBridge.sendTo` 发 `MessageTrashSlotContent(3 diamonds)`。
 207. **结果**：`S2C_SENT` → 客户端 `S2C_CLIENT trash=3 minecraft:diamond`，无异常。证据 `runs/p64-trash-s2c/`。
 
+## 2026-10-19 09:00 更新：empty-trash
+
+208. **崩溃**：`MessageDeleteFromSlot.handle` 调用 `BalmNetworking.reply(Object)` → `NoSuchMethodError`。
+209. **修复**：`BalmNetworkingBridge.reply` 记录 serverbound handler 当前玩家，回发注册的 clientbound payload；规则命中 2 处。
+210. **结果**：`EMPTY_BEFORE trash=5` → `EMPTY_AFTER trash=0`、`EMPTY_SERVER empty=true count=0`，无崩溃。证据 `runs/p65-trash-empty/`。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -507,6 +514,7 @@
 | trash 点击 debug | `runs/p63-trash-debug/README.md`、`latest.log`、`TrashGuiDebugMixin.java` |
 | trash 双向通过 | `runs/p63-trash-debug/cursor-away.png`、`latest-packet-return.log` |
 | trash clientbound | `runs/p64-trash-s2c/README.md`、`latest.log`、`TrashS2CProbe.java` |
+| trash empty | `runs/p65-trash-empty/README.md`、`crash-report.txt`、`latest.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 
