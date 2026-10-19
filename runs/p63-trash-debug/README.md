@@ -1,47 +1,54 @@
-# P63: TrashSlot second-click event reaches the handler but does not return
+# P63: TrashSlot GUI move-in and return both pass
 
-Date: 2026-10-19 (Asia/Shanghai). Debug mixin at `TrashSlotGuiHandler.onMouseClick` HEAD.
+Date: 2026-10-19 (Asia/Shanghai). Debug mixin + clean real-mouse run; **corrected from the earlier
+"return fails" interpretation**.
 
-## Result
+## Move-in
 
-Three real clicks in a clean run:
+Third-click debug at `onMouseClick` HEAD (second real click, moving the stack in):
 
 ```text
-DEBUG_CLICK button=0 x=99.19 y=193.0 hovering=false carried=0 ... enabled=true provider=DefaultDeletionProvider
-DEBUG_CLICK button=0 x=245.48 y=218.67 hovering=true carried=5 minecraft:diamond ... enabled=true provider=DefaultDeletionProvider
-DEBUG_CLICK button=0 x=245.48 y=218.67 hovering=true carried=0 minecraft:air trash=5 minecraft:diamond ... enabled=true provider=DefaultDeletionProvider
+DEBUG_CLICK ... hovering=true carried=5 minecraft:diamond trash=0
+DEBUG_AFTER_CLICK carried=0 minecraft:air trash=5 minecraft:diamond
+DEBUG_PACKET_HEAD msg=5 minecraft:diamond serverCarried=5 serverTrash=0
+DEBUG_PACKET_RETURN serverCarried=0 serverTrash=5
 ```
 
-Third click is the return attempt. At handler entry it satisfies every visible precondition:
+## Return
 
-- event arrived;
-- `hovering=true`;
-- carried is empty;
-- trash has 5 diamonds;
-- settings enabled;
-- deletion provider is present.
-
-Adding a provider HEAD mixin and an `onMouseClick` RETURN mixin showed the handler **does** run the
-return:
+Next click (empty carried):
 
 ```text
+DEBUG_CLICK ... hovering=true carried=0 minecraft:air trash=5 minecraft:diamond
 DEBUG_PROVIDER_UNDELETE trash=5 minecraft:diamond right=false
 DEBUG_AFTER_CLICK carried=5 minecraft:diamond trash=0 minecraft:air
+DEBUG_PACKET_HEAD msg=0 minecraft:air serverCarried=0 serverTrash=5
+DEBUG_PACKET_RETURN serverCarried=5 minecraft:diamond serverTrash=0
 ```
 
-So the client handler/provider succeed. The item later reappears in the trash, which means the
-server state or a server update reverts the client. The remaining issue is serverbound return
-handling / sync, not the GUI event or `undeleteLast`.
+## Screenshot correction
 
-## Not verified
+`final-return.png` looked like the trash still had diamonds because the returned stack is held on
+the **cursor**, which was over the trash icon. Moving the cursor away (`cursor-away.png`) shows the
+5-diamond stack following the cursor at the top-left; the trash is empty.
 
-- whether the server receives the return packet (a server-side mixin was not applied in the
-  integrated server in this run);
-- whether the server handler rejects `MessageTrashSlotClick(EMPTY)` because of server carried state;
-- empty-trash;
-- ironchests GUI / clientbound / two-client sync.
+So:
+
+- GUI move-in: **pass**;
+- GUI return: **pass**;
+- server packet delete: **pass**;
+- server packet return: **pass**;
+- no duplication.
+
+## Still not verified
+
+- empty-trash action;
+- ironchests GUI / clientbound delivery / two-client sync;
+- restart persistence (TrashSlot login reset by design).
 
 ## Evidence
 
-- `latest.log`, `latest-provider-return.log`, `TrashGuiDebugMixin.java`,
-  `TrashProviderDebugMixin.java`, `trashdebug.mixins.json`
+- `latest-provider-return.log` (client provider/RETURN)
+- `latest-packet-return.log` (server packet HEAD/RETURN)
+- `final-return.png`, `cursor-away.png`
+- `TrashGuiDebugMixin.java`, `TrashProviderDebugMixin.java`, `TrashPacketDebugMixin.java`

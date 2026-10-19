@@ -1212,21 +1212,28 @@ provider 级 `undeleteLast` 已在 §7.62 通过，所以失败点明确在 Tras
 事件/状态**，不是取回实现。empty-trash、容器 GUI、同步未验证。证据
 `runs/p61-trash-clean-return/`。
 
-### 7.64 TrashSlot 第二次点击：客户端取回成功，随后被服务端覆盖
+### 7.64 TrashSlot 双向通过：移入 + 取回
 
-debug mixin 在 `TrashSlotGuiHandler.onMouseClick` HEAD、`DefaultDeletionProvider.undeleteLast`
-HEAD 和 `onMouseClick` RETURN 记录：
+debug mixin 在 GUI、provider、服务端包三处记录：
 
 ```text
-DEBUG_CLICK button=0 x=245.48 y=218.67 hovering=true carried=0 minecraft:air
-             trash=5 minecraft:diamond enabled=true provider=DefaultDeletionProvider
-DEBUG_PROVIDER_UNDELETE trash=5 minecraft:diamond right=false
-DEBUG_AFTER_CLICK carried=5 minecraft:diamond trash=0 minecraft:air
+DEBUG_CLICK ... hovering=true carried=5 minecraft:diamond trash=0
+DEBUG_AFTER_CLICK carried=0 trash=5
+DEBUG_PACKET_HEAD msg=5 serverCarried=5 serverTrash=0
+DEBUG_PACKET_RETURN serverCarried=0 serverTrash=5
+
+DEBUG_CLICK ... hovering=true carried=0 trash=5
+DEBUG_PROVIDER_UNDELETE trash=5 right=false
+DEBUG_AFTER_CLICK carried=5 minecraft:diamond trash=0
+DEBUG_PACKET_HEAD msg=0 serverCarried=0 serverTrash=5
+DEBUG_PACKET_RETURN serverCarried=5 minecraft:diamond serverTrash=0
 ```
 
-事件、命中、provider 和客户端取回都成功；但随后客户端又回到 trash=5，说明服务端状态/更新覆盖了
-客户端。失败点因此移到 **serverbound 包处理/服务端状态同步**，不是 GUI 事件或 `undeleteLast`。
-证据 `runs/p63-trash-debug/`。
+截图 `final-return.png` 看似 trash 仍有钻石，是因为物品在**光标**上，而光标停在垃圾桶图标；
+移开光标后 `cursor-away.png` 确认钻石在光标、trash 为空。P61 的“失败”是截图误判。
+
+因此 **GUI 移入、GUI 取回、服务端 delete、服务端 return 全部通过，无复制**。仍未验证
+empty-trash、ironchests GUI、clientbound 投递、双客户端同步。证据 `runs/p63-trash-debug/`。
 
 ## 8. 未验证项与下一步
 
