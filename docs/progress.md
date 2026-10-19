@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 12:20（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 12:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 12:25）：**修复关箱重开清空物品 + 验证 S2C 箱子同步**。P69 只测了取放、没测关箱；补测发现重开把箱子清空（tick 280 仍有 25，tick 320 变 0）。根因：转换器对调的是 `readNbt`/`writeNbt` 的**方法体**（`method_11007` 实际写、`method_11014` 实际清空并读），而 P67 的桥按名字调反了。把 `IronChestsNbtBridge` 两个方向对调后：关箱后 25 仍在，重开服务端/客户端都是 25，S2C 内容同步同时得到验证。证据 `runs/p70-ironchests-persist/`；P67 已加更正说明。
 更新（2026-10-19 12:20）：**IronChests GUI 交互通过**。客户端 `clickSlot` 把 25 钻石从热键栏 81 放进箱子槽 0，再取回到背包槽 54；服务端同一菜单在 tick 220/260/300 的槽位状态与客户端完全一致，无复制/丢失。证据 `runs/p69-ironchests-interaction/`。
 更新（2026-10-19 12:15）：**IronChests 箱子 GUI 通过**。服务端开箱 `IRONCHESTS_USE result=CONSUME`，客户端 `IRONCHESTS_SCREEN=tech.thatgravyboat.ironchests.client.ChestScreen`，截图见 "Iron Chest" 标题 + 9×6 箱子格 + 背包 + 物品，无崩溃。为此：① work-only 移植内嵌 ResourcefulLib 2.0.6 服务端网络（RawPayload/payload 注册），并修正早期客户端 helper 的错误 channel 公式（`ironchests:main/sync`）；② 规则 `screen.render-background-one-arg` 修 `ChestScreen.method_25420(DrawContext)`；③ 规则 `ironchests.draw-texture` 修 `DrawContext.drawTexture` 墓碑。背景为纯灰（12 个旧参数只映射前 10 个），槽位/标题/物品正常。证据 `runs/p68-ironchests-gui/`。
 更新（2026-10-19 09:45）：**IronChests 同步 NBT 已修，下一阻断是 ResourcefulLib 原始网络**。两条 call-site 规则（`getSyncTag`/`loadSyncTag` 被转换器调换的一参 readNbt/writeNbt，各命中 1 次）+ `PacketByteBuf.writeNbt(NbtCompound)` 加宽（1 次）后，开箱路径越过 NBT 错误，停在 `ServerPlayNetworking.send(ServerPlayer, Identifier, PacketByteBuf)`——这是 IronChests 内嵌的 ResourcefulLib 2.0.6 用的已删原始通道 API（栈在 `PacketChannelHelperImpl.sendToPlayer`）。换 1.21.1 的 ResourcefulLib 3.0.12 会在启动时 `NoClassDefFoundError PacketHandler`，所以只能移植内嵌库。证据 `runs/p67-ironchests-gui-nbt/`。
@@ -471,6 +472,14 @@
 229. **结论**：容器取放双向通过，服务端权威状态与客户端一致，无复制/丢失。证据 `runs/p69-ironchests-interaction/`。
 230. **未做**：关闭界面、clientbound 物品同步、双客户端；RL 服务端 helper 仍是 work-only。
 
+## 2026-10-19 12:25 更新：关箱重开持久化 + S2C 同步
+
+231. **发现**：P69 未测关箱；补测 `BE tick=240 slot0=25` → 关闭 → `BE tick=280 slot0=25` → 重开 → `BE tick=320 slot0=0`，重开清空箱子。
+232. **根因**：转换器对调的是方法体：`method_11007` 写（`class_1262.method_5426`），`method_11014` 清空并读（`class_1262.method_5429`）。P67 的桥按名字调反，`getSyncTag` 走了读路径，用空 tag 清空 items。
+233. **修复**：`IronChestsNbtBridge.writeSyncTag` 改调 `method_11007`，`readSyncTag` 改调 `method_11014`；规则不变。
+234. **结果**：关箱后 `tick=280 slot0=25`，重开 `tick=320 slot0=25`，服务端菜单 `sync=2 slot0=25`，客户端 `REOPEN slot0=25 diamonds`——持久化与 S2C 内容同步同时通过。证据 `runs/p70-ironchests-persist/`。
+235. **P67 更正**：P67 声称的 NBT 修复方向错误，已在该 README 加更正说明；真正正确性以 P70 为准。
+
 | 证据 | 路径 |
 |---|---|
 | 环境探针 | `work/evidence/doctor.json` |
@@ -557,6 +566,7 @@
 | IronChests 同步 NBT | `runs/p67-ironchests-gui-nbt/patch.log`、`latest-rl2.log`、`crash-rl3.txt` |
 | IronChests GUI 通过 | `runs/p68-ironchests-gui/chest-gui.png`、`latest.log`、`patch-screen.log`、`patch-draw.log` |
 | IronChests GUI 交互 | `runs/p69-ironchests-interaction/README.md`、`latest.log`、`IronChestsGuiProbe.java` |
+| IronChests 持久化/S2C | `runs/p70-ironchests-persist/README.md`、`latest.log`、`IronChestsNbtBridge.java` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

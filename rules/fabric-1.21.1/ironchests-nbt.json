@@ -1,7 +1,7 @@
 {
   "schemaVersion": "0.1-draft",
   "target": "fabric-1.21.1",
-  "note": "IronChests sync-NBT bridge for the converted 1.21.1 jar. The 1.20.1 one-argument readNbt/writeNbt calls survive inside GenericChestBlockEntity and, because both have the same descriptor, the conversion also swapped which one each sync method calls.",
+  "note": "IronChests sync-NBT bridge for the converted 1.21.1 jar. The 1.20.1 one-argument readNbt/writeNbt calls inside GenericChestBlockEntity no longer link, and the converted two-argument method bodies are swapped relative to their names: method_11007 writes the inventory into the tag while method_11014 clears and reads it from the tag. The bridge follows the bodies, not the names.",
   "methodRedirects": [
     {
       "id": "ironchests.sync.write-tag",
@@ -14,7 +14,7 @@
       "bridgeDesc": "(Lnet/minecraft/class_2586;Lnet/minecraft/class_2487;)V",
       "capability": "ironchests.nbt.sync.write",
       "risk": "medium",
-      "evidence": "First chest open (runs/p66-ironchests-gui/latest-model-shim.log): NoSuchMethodError 'void GenericChestBlockEntity.method_11007(class_2487)' at GenericChestBlockEntity.getSyncTag(GenericChestBlockEntity.java:192), reached from SyncableData.sync -> openersCounter -> method_5435 -> GenericChestMenu.<init> -> method_5465 -> ServerPlayer.openHandledScreen -> GenericChestBlock.method_9534. getSyncTag must serialise the entity, which is the 1.21.1 two-argument writeNbt (method_11014); the converted call names the one-argument readNbt instead."
+      "evidence": "First chest open (runs/p66-ironchests-gui/latest-model-shim.log): NoSuchMethodError 'void GenericChestBlockEntity.method_11007(class_2487)' at GenericChestBlockEntity.getSyncTag(GenericChestBlockEntity.java:192). getSyncTag must serialise the entity; in the converted class that behaviour lives in the two-argument method_11007 (class_1262.method_5426 writes), not in method_11014, whose body clears the inventory and reads the tag (runs/p70-ironchests-persist/README.md)."
     },
     {
       "id": "ironchests.sync.read-tag",
@@ -27,7 +27,7 @@
       "bridgeDesc": "(Lnet/minecraft/class_2586;Lnet/minecraft/class_2487;)V",
       "capability": "ironchests.nbt.sync.read",
       "risk": "medium",
-      "evidence": "Same converted class: loadSyncTag(NbtCompound) calls the one-argument method_11014, which no longer exists in 1.21.1 (BlockEntity.writeNbt now takes a HolderLookup.Provider). loadSyncTag applies a received tag to the entity, i.e. the two-argument readNbt (method_11007); the conversion swapped it with getSyncTag's call."
+      "evidence": "Same converted class: loadSyncTag(NbtCompound) calls the one-argument method_11014, which no longer links in 1.21.1. loadSyncTag applies a received tag to the entity; that behaviour lives in the converted method_11014 body (it clears items and calls class_1262.method_5429 to read the tag), as shown by the close/reopen test in runs/p70-ironchests-persist/README.md."
     }
   ]
 }

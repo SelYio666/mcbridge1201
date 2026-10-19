@@ -89,3 +89,11 @@ Each channel id needs a `CustomPayload` type carrying the raw bytes plus a recei
 
 - `latest-rl2.log`, `crash-rl3.txt`, `patch.log`
 - `IronChestsNbtBridge.java`, `NbtPacketBridge.java`, `ironchests-nbt.json`, `nbt-packet.json`
+
+## Correction (P70)
+
+This page's first NBT bridge direction was **wrong**. The converted class swapped the method
+**bodies**, not the call sites: `method_11007` writes the inventory into the tag, `method_11014`
+clears and reads it. The bridge here called `method_11014` for `getSyncTag`, so every chest open ran
+the read path with an empty tag and wiped the contents. P70 swaps the bridge calls and proves the
+close/reopen persistence (`runs/p70-ironchests-persist/`).

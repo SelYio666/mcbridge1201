@@ -40,9 +40,10 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   (`runs/p68-ironchests-gui/`, `runs/p69-ironchests-interaction/`; server-side menu state agrees at
   ticks 220/260/300). Ported the nested ResourcefulLib 2.0.6 server networking (work-only), fixed the
   channel location to `ironchests:main/sync`, and added the `screen.render-background-one-arg` +
-  `ironchests.draw-texture` rules. Still open: closing the screen, clientbound item sync, two-client
-  sync, and moving the RL server-helper port into the repo workflow (currently a manual nested-jar
-  swap).
+  `ironchests.draw-texture` rules. Persistence across close/reopen and the clientbound chest-content
+  sync also pass (`runs/p70-ironchests-persist/`; the P67 NBT bridge direction was corrected there).
+  Still open: two-client sync and moving the RL server-helper port into the repo workflow (currently
+  a manual nested-jar swap).
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls

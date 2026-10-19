@@ -1364,6 +1364,31 @@ SERVER_MENU tick=260 slot0=air slot54=25 diamonds
 25 钻石从热键栏 81 放进箱子槽 0，再取回到背包槽 54；服务端同一菜单在 tick 220/260/300 的状态
 与客户端一致，无复制、无丢失。证据 `runs/p69-ironchests-interaction/`。
 
+### 7.71 关箱重开持久化与 S2C 内容同步（并更正 §7.68）
+
+补测关箱/重开后发现物品被清空：
+
+```text
+BE tick=240 slot0=25 diamonds
+CLOSED screen=null
+BE tick=280 slot0=25 diamonds
+BE tick=320 slot0=0 air          <- 重开清空
+```
+
+根因是转换器对调了方法**体**而不是调用点：`method_11007` 写（`class_1262.method_5426`），
+`method_11014` 清空并读（`class_1262.method_5429`）。§7.68 的桥按名字调用，`getSyncTag` 走了读
+路径，用空 tag 清空 items。把 `IronChestsNbtBridge` 的两个方向对调后：
+
+```text
+BE tick=280 slot0=25 diamonds
+BE tick=320 slot0=25 diamonds
+SERVER_MENU tick=320 sync=2 slot0=25 diamonds
+REOPEN screen=ChestScreen sync=2 slot0=25 diamonds
+```
+
+关箱不丢、重开仍在，且客户端重开后看到服务端内容——S2C 箱子同步同时通过。证据
+`runs/p70-ironchests-persist/`。§7.68 的方向性结论以本节为准（该 README 已加更正说明）。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

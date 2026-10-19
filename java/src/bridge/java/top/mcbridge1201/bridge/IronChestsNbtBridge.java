@@ -27,12 +27,15 @@ public final class IronChestsNbtBridge {
 
     /** {@code getSyncTag()} wants to serialise the entity into the tag. */
     public static void writeSyncTag(class_2586 entity, class_2487 tag) {
-        invoke(entity, "method_11014", tag);
+        // The converted class keeps the 1.20.1 method names but its bodies are swapped:
+        // method_11007(NbtCompound, Provider) writes the inventory into the tag, while
+        // method_11014(NbtCompound, Provider) clears and reads the inventory from the tag.
+        invoke(entity, "method_11007", tag);
     }
 
     /** {@code loadSyncTag(tag)} wants to deserialise the tag into the entity. */
     public static void readSyncTag(class_2586 entity, class_2487 tag) {
-        invoke(entity, "method_11007", tag);
+        invoke(entity, "method_11014", tag);
     }
 
     private static void invoke(class_2586 entity, String name, class_2487 tag) {
