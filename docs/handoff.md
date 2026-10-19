@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-19 23:10）：**FallingTree 入服通过**。服务端旧 send 走桥、客户端 receiver 收包，`TestPlayer joined the game`；砍树未测。证据 `runs/p90-fallingtree-join/`。
 更新（2026-10-19 23:05）：**AppleSkin 食物 tombstone 已修**。食物组件桥把 5 个旧 API 映射到 `DataComponentTypes.FOOD`；HUD 不再抛 tombstone，仅剩原版材质缓存告警。证据 `runs/p89-legacy-networking/appleskin-hud.log`。
 更新（2026-10-19 22:50）：**补两处验证**。区块压力测试的 `# >` 回显假阳性现在有 `--self-test` 负向用例；新增 `tools/check_hashes.py`，清单 525 项全部通过，`hash_evidence.py` 遇缺失文件直接失败。
 更新（2026-10-19 22:50）：**旧 Fabric 网络桥落地**。`FabricLegacyNetworking` + `PlayChannelHandler` shim + 单参 `Identifier` 规则；AppleSkin 初始化/发包已过（HUD 仍撞 tombstone），FallingTree 客户端可启动，入服未复测。证据 `runs/p89-legacy-networking/`。
