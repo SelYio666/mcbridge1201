@@ -56,11 +56,10 @@ second client, and the guest's take-out click is written back to the server and 
 (`LAN_GUEST_MOVED slot0=air` → `DED_AFTER slot0=air` → `LAN_MENU player=HostA slot0=air`). The
 earlier LAN attempt (`runs/p74-two-client/`) is superseded.
 
-**Close-screen gap** (`runs/p77-two-client-close/`): both clients close locally without crashing
-(`LAN_CLOSED screen=null`), but the server still holds the 90-slot chest menu 100+ ticks later
-(`hostSlots=90 guestSlots=90`). `setScreen(null)` is not enough; the next step is to close through
-the screen's `close()` or send an explicit `CloseHandledScreenC2SPacket`. Simultaneous edits from
-both clients are also untested.
+**Close-screen now passes** (`runs/p77-two-client-close/`): `setScreen(null)` only closed the client,
+but calling `Screen.close()` (`method_25419`) makes both the client and the server drop the chest
+menu (`LAN_CLOSED slots=46`, `DED_MENUS hostSlots=46 guestSlots=46`). The physical ESC key path is
+untested. Simultaneous edits from both clients are also untested.
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls

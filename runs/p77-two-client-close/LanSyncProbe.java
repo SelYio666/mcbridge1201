@@ -121,9 +121,14 @@ public final class LanSyncProbe implements ModInitializer, ClientModInitializer 
                 String playerName = client.field_1724.method_7334().getName();
                 System.out.println("LAN_CLOSING player=" + playerName
                         + " screen=" + client.field_1755);
-                client.method_1507(null);
+                if (client.field_1755 != null) {
+                    client.field_1755.method_25419();
+                } else {
+                    client.method_1507(null);
+                }
                 System.out.println("LAN_CLOSED player=" + playerName
-                        + " screen=" + client.field_1755);
+                        + " screen=" + client.field_1755
+                        + " slots=" + client.field_1724.field_7512.field_7761.size());
             }
             if (moveDelay > 0 && --moveDelay == 0) {
                 var handler = client.field_1724.field_7512;

@@ -1503,21 +1503,27 @@ HOST    LAN_MENU player=HostA slot0=air
 通过。中途修复：访客离箱约 11 格时菜单失效、客户端槽位回落到 46 格导致越界崩溃；现在开箱前
 把访客传送到箱子旁，并在点击前检查槽位数。证据 `runs/p76-two-client-move/`。
 
-### 7.78 双端关屏：本地成功，服务端未关闭（部分）
+### 7.78 双端关屏：setScreen(null) 不够，Screen.close() 通过
 
-两端调用 `MinecraftClient.setScreen(null)`：
+两端先调用 `MinecraftClient.setScreen(null)`：
 
 ```text
 GUEST  LAN_CLOSED player=GuestB screen=null
 HOST   LAN_CLOSED player=HostA screen=null
-SERVER DED_MENUS hostSlots=90 guestSlots=90   (tick 420)
-SERVER DED_MENUS hostSlots=90 guestSlots=90   (tick 520)
+SERVER DED_MENUS hostSlots=90 guestSlots=90   (tick 420/520)
 ```
 
-客户端本地关闭且无崩溃；但服务端 100 tick 后仍持有 90 格的箱子菜单，没有回落到 46 格背包。
-`setScreen(null)` 不足以让服务端丢弃菜单，需要走界面 `close()` 或显式发送
-`CloseHandledScreenC2SPacket`。**此项不算通过**，作为剩余问题记录。证据
-`runs/p77-two-client-close/`。
+客户端本地关闭且无崩溃；但服务端仍持有 90 格的箱子菜单。改为调用界面 `close()`
+（`method_25419`）后：
+
+```text
+GUEST  LAN_CLOSED player=GuestB screen=null slots=46
+HOST   LAN_CLOSED player=HostA screen=null slots=46
+SERVER DED_MENUS hostSlots=46 guestSlots=46   (tick 420/520)
+```
+
+客户端与服务端都回落到 46 格背包，**双端关屏通过**。真实键盘 ESC 走同一 `close()` 路径，但物理
+按键未单独测试。证据 `runs/p77-two-client-close/`（`*-close.log`）。
 
 ## 8. 未验证项与下一步
 
