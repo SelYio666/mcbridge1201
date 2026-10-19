@@ -114,6 +114,12 @@ def main() -> int:
     print(json.dumps(result, ensure_ascii=False, indent=2))
     if not state["done"]:
         return 10 if result.get("timeout") else 11
+    if result.get("timeout"):
+        return 10
+    exit_code = result.get("exitCode")
+    if exit_code is not None and exit_code != 0:
+        # "Done" was printed, but the JVM later failed; never report success.
+        return exit_code if exit_code > 0 else 12
     return 0
 
 

@@ -82,6 +82,17 @@ def main() -> int:
     log1 = open(os.path.join(out, "step1.log"), encoding="utf-8", errors="replace").read()
     marked = re.search(r"Marked (\d+) chunks", log1)
     chunksMarked = int(marked.group(1)) if marked else 0
+
+    def has_server_marker(text, marker):
+        """Only count real server output; run_server.py echoes sent commands as '# > ...'."""
+        for line in text.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("# >"):
+                continue
+            if marker in stripped:
+                return True
+        return False
+
     verdict = {
         "contract": "lithium.chunk-access.stress",
         "generatedAt": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
@@ -95,8 +106,8 @@ def main() -> int:
             "step2Done": bool(step2.get("doneSeen")),
             "step2Exit0": step2.get("processExitCode") == 0,
             "forceloadMarked": chunksMarked > 0,
-            "markerA": "STRESS_OK_A" in log2,
-            "markerB": "STRESS_OK_B" in log2,
+            "markerA": has_server_marker(log2, "STRESS_OK_A"),
+            "markerB": has_server_marker(log2, "STRESS_OK_B"),
         },
         "step1Log": os.path.join(out, "step1.log"),
         "step2Log": os.path.join(out, "step2.log"),

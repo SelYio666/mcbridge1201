@@ -1,6 +1,9 @@
 # 进度交接
 
-最后更新：2026-10-19 22:10（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 21:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+
+更新（2026-10-19 21:50）：**按独立测试报告修复 3 个 P1 + 3 个 P2**。①文档改为三段流水线，单件 patch 注明只接受已转换输入；②区块压力测试不再把 `# >` 命令回显当成功；③`run_server.py` 传播 JVM 非零退出码；④Lithium 降级表述写进分发文档；⑤双客户端探针自铺平台并守卫 54 槽；⑥重新生成 SHA256SUMS（含 run_server/rebuild/distribution）。`verify_evidence.py` 仍 passed。证据见 `runs/p87-independent-test/`。
+
 
 更新（2026-10-19 22:10）：**empty-trash 按键诊断**。探针注册 Balm `ScreenKeyEvent.Press.Post` 监听后注入 Delete：`KEY_EVENT` 计数为 0。P83 的 ESC 注入能关箱，说明按键到得了 GLFW，但没走到 Balm 的屏幕按键事件；疑似 Balm 事件分发/注册时机问题，非 TrashSlot 绑定或坐标问题。物理 empty 按键暂无法用现有 harness 验证，动作本身 P65 已过。证据 `runs/p86-empty-hover/`。
 
@@ -575,6 +578,7 @@
 268. **empty-trash 真实按键受阻**：只注入 Shift+Delete 时 trash 到 tick 360 仍是 5，说明需要鼠标悬停；需先算组件矩形再移动鼠标。empty 本身已在 P65 通过。证据 `runs/p85-empty-key/`。
 269. **悬停后仍失败**：矩形 `(227,207)-(258,231)`、scale=3、物理 (1176,873)；Delete/Ctrl/Shift/Alt+Delete 都没清空。坐标已排除，剩下是注入路径/配置/修饰键问题。证据 `runs/p86-empty-hover/`。
 270. **Balm 事件诊断**：注册 `ScreenKeyEvent.Press.Post` 监听后注入 Delete，`KEY_EVENT` 计数 0；P83 ESC 能生效，说明按键到 GLFW 但没进 Balm 屏幕按键事件。物理 empty 按键暂无法用现有 harness 验证。
+271. **独立测试修复**：3 P1 + 3 P2 已处理（三段流水线文档、区块回显假阳性、run_server 退出码、Lithium 降级表述、探针平台与槽位守卫、SHA256SUMS 重生成）。报告与日志存 `runs/p87-independent-test/`。
 
 | 证据 | 路径 |
 |---|---|

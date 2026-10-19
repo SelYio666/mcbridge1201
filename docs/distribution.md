@@ -40,7 +40,7 @@ git push -u origin master
 
 **不要**上传任何 `.jar` 游戏/模组/转换件。
 
-## 3. 别人怎么用
+## 3. 别人怎么用（注意：不是“原始 jar 一步到位”）
 
 对方需要：
 
@@ -48,30 +48,41 @@ git push -u origin master
 2. 自己的 1.20.1 模组 jar（从 Modrinth/CurseForge 下载，不随仓库分发）；
 3. `fabric-api-0.102.0+1.21.1.jar` 与 Fabric Loader 1.21.1。
 
-步骤：
+**IronChests 的真实流程是三段，不能只跑单件 `patch`：**
+
+1. **CenturyBridge 转换**：原始 `ironchests-*-fabric.jar` → 基础转换件；
+2. **基础规则 + 模型适配**：得到 `ironchests-modelbridge2.jar`（中间件，不在仓库里）；
+3. **本仓库重建流水线**：`tools/rebuild_ironchests_client.py --input <中间件>` 编译桥、处理嵌套
+   ResourcefulLib、应用 NBT/屏幕/九宫格规则，产出 `ironchests-rebuilt.jar`。
+
+单件 `patch` 示例只对**已经转换过的输入**有效；直接喂原始 1.20.1 jar 会在 1.21.1 启动时报
+`NoSuchMethodError`（例如 `class_2073.method_8971`），这不是“单件 patch 能修好”的范围。
 
 ```powershell
-git clone https://github.com/<你的账号>/mcbridge1201.git
+git clone https://github.com/SelYio666/mcbridge1201.git
 cd mcbridge1201
 $env:JAVA_HOME='<JDK 21>'
 cd java; gradle --no-daemon installDist; cd ..
 
-# 单件转换（示例：IronChests）
+# 单件 patch（输入必须是 CenturyBridge 转换后的 jar，不是原始 1.20.1 jar）
 java\build\install\mcbridge1201\bin\mcbridge1201.bat patch `
-  --in <自己的 ironchests 1.20.1.jar> `
+  --in <已转换的 ironchests jar> `
   --out <输出目录>\ironchests-rebuilt.jar `
   --rules rules\fabric-1.21.1\ironchests-nbt.json `
   --rules rules\fabric-1.21.1\ironchests-draw.json `
   --bridge-dir work\bridges
 ```
 
-IronChests 一键流水线（会编译桥、处理嵌套 ResourcefulLib）：
+IronChests 重建流水线（输入同样是上一步的已转换中间件）：
 
 ```powershell
 python tools\rebuild_ironchests_client.py `
+  --input <已转换的 ironchests 中间件 jar> `
   --fabric-api "<fabric-api-0.102.0+1.21.1.jar>" `
   --out work\client\ironchests-rebuilt.jar
 ```
+
+如果缺中间件，脚本会直接报错并指出缺少的是“CenturyBridge 转换后的输入”，而不是假装成功。
 
 ## 4. 精确版本
 
@@ -98,5 +109,10 @@ python tools\rebuild_ironchests_client.py `
 - empty-trash 物理按键：合成按键未进入 Balm 屏幕按键事件；
 - Lithium 生物 AI、红石、长时间 soak；
 - 其他任何模组。
+
+**Lithium 是显式降级，不是“功能原样保留”：** `rules/fabric-1.21.1/lithium-degraded.json` 禁用了
+`entity.collisions.movement.EntityMixin` 和 `block.flatten_states.FluidStateMixin`；区块访问替代
+实现只委托原版接口，旧的多入口缓存和异线程快速路径没有重写。对外介绍应写成
+“保留已验证玩法，部分优化显式降级”，降级列表以 `lithium-degraded.json` 为准。
 
 完整证据见 `docs/baseline.md`、`docs/progress.md`、`docs/remaining-work.md`。

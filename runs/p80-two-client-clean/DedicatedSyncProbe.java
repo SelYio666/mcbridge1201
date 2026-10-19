@@ -23,6 +23,13 @@ public final class DedicatedSyncProbe implements ModInitializer {
     private static int twoPlayerTicks = -1;
     private static class_2338 chestPos;
 
+    /** Read inventory slot 54 only when the chest menu is actually open. */
+    private static String slot54(class_3222 player) {
+        var handler = player.field_7512;
+        return handler.field_7761.size() > 54
+                ? handler.method_7611(54).method_7677().toString() : "n/a";
+    }
+
     private static void openChest(class_3222 guest, class_2338 pos) {
         var world = guest.method_51469();
         guest.method_14251(world, pos.method_10263() + 0.5, pos.method_10264(),
@@ -65,10 +72,23 @@ public final class DedicatedSyncProbe implements ModInitializer {
                 int y = (int) Math.floor(host.method_23318());
                 int z = (int) Math.floor(host.method_23319());
                 chestPos = new class_2338(x, y, z);
+                var world = host.method_51469();
+                class_2248 stone = class_7923.field_41175.method_10223(
+                        class_2960.method_60655("minecraft", "stone"));
+                class_2248 air = class_7923.field_41175.method_10223(
+                        class_2960.method_60655("minecraft", "air"));
+                // Self-contained platform: the menu must stay valid regardless of the world terrain.
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dz = -1; dz <= 1; dz++) {
+                        world.method_8652(new class_2338(x + dx, y - 1, z + dz),
+                                stone.method_9564(), 3);
+                        world.method_8652(new class_2338(x + dx, y + 1, z + dz),
+                                air.method_9564(), 3);
+                    }
+                }
                 class_2248 chest = class_7923.field_41175.method_10223(
                         class_2960.method_60655("ironchests", "iron_chest"));
-                boolean placed = host.method_51469().method_8652(
-                        chestPos, chest.method_9564(), 3);
+                boolean placed = world.method_8652(chestPos, chest.method_9564(), 3);
                 System.out.println("DED_PLACED placed=" + placed + " pos=" + chestPos);
             }
             if (twoPlayerTicks == 100 && chestPos != null) {
@@ -103,8 +123,8 @@ public final class DedicatedSyncProbe implements ModInitializer {
                 String chest = be instanceof class_1263 inv
                         ? inv.method_5438(0).toString() : "no-inventory";
                 System.out.println("DED_TOTAL chest=" + chest
-                        + " hostSlot54=" + host.field_7512.method_7611(54).method_7677()
-                        + " guestSlot54=" + guest.field_7512.method_7611(54).method_7677());
+                        + " hostSlot54=" + slot54(host)
+                        + " guestSlot54=" + slot54(guest));
             }
         });
     }

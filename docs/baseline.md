@@ -1674,6 +1674,30 @@ TRASH_STATE tick=200..440 trash=5 diamonds
 `ScreenKeyEvent$Press$Post` 路径；疑似 Balm 事件分发/注册时机问题。物理 empty 按键暂无法用现有
 harness 验证，动作本身已在 §7.66 通过。
 
+### 7.89 独立测试报告发现的问题与修复（2026-10-19）
+
+一份独立测试（提交 `d9e88a1`，见 `runs/p87-independent-test/`）发现 3 个 P1 和 3 个 P2 问题，均已处理：
+
+1. **发布文档把补丁步骤写成原始模组转换**：按 `docs/distribution.md` 对原始 1.20.1 jar 跑单件
+   `patch` 会得到启动即 `NoSuchMethodError class_2073.method_8971` 的 jar；重建脚本默认输入
+   `ironchests-modelbridge2.jar` 是仓库外的中间件。现在文档明确写成三段流水线（CenturyBridge →
+   基础规则/模型适配 → 本仓库重建），单件 `patch` 注明只接受已转换输入；缺输入时脚本直接报错并
+   指向文档，不再假装成功。
+2. **区块压力测试把命令回显当成功**：`tools/run_chunk_stress.py` 的 `markerA/B` 改为只匹配非
+   `# >` 回显行；原先 `execute if block` 条件不满足也会被判 true。
+3. **启动脚本吞掉 JVM 失败退出码**：`tools/run_server.py` 现在在出现 `Done` 后仍检查 JVM 退出码，
+   非零即失败；超时同样失败。
+4. **Lithium 降级表述**：`docs/distribution.md` 明确写明禁用的两个 mixin 和区块访问快速路径未重写，
+   对外措辞改为“保留已验证玩法，部分优化显式降级”。
+5. **双客户端探针地形/菜单依赖**：`runs/p80-two-client-clean/DedicatedSyncProbe.java` 自行铺 3×3
+   平台、清空上方，并在读槽位前检查菜单是否仍有 54+ 槽；`slot54` 返回 `n/a` 而不是越界。
+6. **SHA256 清单过期**：`runs/SHA256SUMS.txt` 重新生成，新增 `tools/run_server.py`、
+   `tools/rebuild_ironchests_client.py`、`docs/distribution.md`。
+
+验证：`python tools/verify_evidence.py` 仍 `passed=true`；三个 Python 脚本 `py_compile` 通过。
+
+
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

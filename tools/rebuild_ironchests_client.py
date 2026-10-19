@@ -144,7 +144,14 @@ def main():
         sys.exit("JAVA_HOME is not set (or pass --java-home)")
     input_jar = Path(args.input)
     if not input_jar.exists():
-        sys.exit(f"input jar not found: {input_jar}")
+        sys.exit(
+            f"input jar not found: {input_jar}\n"
+            "This script rebuilds the *already converted* IronChests client jar; it does not "
+            "convert the raw 1.20.1 mod.\n"
+            "Required stage before it: CenturyBridge conversion + base model adaptation "
+            "(see docs/distribution.md, section 3).\n"
+            "Pass --input <converted-client.jar> pointing at that intermediate artifact."
+        )
 
     tmp = ROOT / "work" / "tmp" / "rebuild-ironchests"
     shutil.rmtree(tmp, ignore_errors=True)

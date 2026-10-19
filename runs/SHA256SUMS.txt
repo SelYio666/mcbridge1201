@@ -147,7 +147,9 @@ e023e999a2fbd3d0f734583c802d7d2ed6cd15977be04f7b508b142150d4778d  runs/p24-chunk
 a6b86aa862497995b78ebfa95bf23938655902efdbf4692480a5c47adad5b66c  runs/p24-chunk-stress-tool/step1.result.json
 7ec59f49120c152e6de39d309a1adea7ee54ad3cbfcdbb0e3c7dac691cda033d  runs/p24-chunk-stress-tool/step2.log
 6737887ecd4a59cc73de76ea3c46cc3efb35addb3fa0657480bb72f1c2314a82  runs/p24-chunk-stress-tool/step2.result.json
-04cf316aec9e3965ad7126e009efd2054dfa934d61f51a034d654273255f32ad  tools/run_chunk_stress.py
+a68dd241301dfd5887f20bf5e303dbe08a75c485861e30ba63a321dc0c47f20d  tools/run_chunk_stress.py
+1fbf5cff372589ee75b79d45fbbc6610ebf1a90afc6a43cea03e133bb7c1594d  tools/run_server.py
+8c91138b61bd90e4a50066fae5ae8509aa81e19083913d9a1d7a8d3b32d80170  tools/rebuild_ironchests_client.py
 2a93e5a575edd8c2c1b7dced3c415d592ec6cfde6a20d69dfc36fab8c951385f  runs/p25-codec-guard/README.md
 2c02efdccd4b287e135bf119b04cb704e7b19f046c065e69215ecf18827aae2d  runs/p25-codec-guard/verdict.json
 b7387f2b49beefa903af7ae0b8d3f64c5e0cd50f6eeffe873e1079ee844938d3  runs/p25-codec-guard/patch.log
@@ -397,7 +399,7 @@ d4237e8837756f34ea5274ff6ffdf242eff9c92deb3e59f0db579cb2ab5e191a  runs/p80-two-c
 68d28b7e8bb07c6b2e90a03fd0f8842d46ad7ca0c3f1b9a315e787396d536f57  runs/p80-two-client-clean/guest.log
 8bfd6076eb0fe32f11c939abfa09893e558743e83e1a972c1f1b045570910b9d  runs/p80-two-client-clean/host.log
 MISSING                                                           runs/p80-two-client-clean/compile.log
-1605e6001a01197b338134a987887c5d6fb377d91cf2fc8fd0107db411731f67  runs/p80-two-client-clean/DedicatedSyncProbe.java
+cb01b928c12ce416a85379e51d0c90a5b55570f612ea6302d99190824b4ee3ac  runs/p80-two-client-clean/DedicatedSyncProbe.java
 2600ba3840c22b8a80d5017cd20a884fb3f973e14865b5ac05c722303393290e  runs/p80-two-client-clean/LanSyncProbe.java
 dfcf5f659ec698e718b008792fa6ff4dc1468709c2d746af4dd613d3cb3fe75f  runs/p81-esc-key/README.md
 37377e873eb767bea39680ed95b7166f613f363704f5694da84948c85b4a978a  runs/p81-esc-key/latest.log
@@ -428,6 +430,11 @@ ed7ab206162a5236e5d03c55bbfdebae46fe3d2b0a2fdc6fdb60e3e777538506  runs/p86-empty
 83abfd519b8d5c29241eef5f8c18c90deae03b81374346c12a7697302da437cf  runs/p86-empty-hover/trashemptykey.jar
 MISSING                                                           runs/p86-empty-hover/compile.log
 MISSING                                                           runs/p86-empty-hover/compile2.log
+1a3644692464cb4d54eaccbe7490ac8dfa727570cffe556e2770f763c5ab32bb  runs/p87-independent-test/README.md
+8bc170caf725d5341b564cf4f7b3bc0257885d98b1763ae9de4dd75ed847345b  runs/p87-independent-test/测试报告.md
+1b9a15a8ba633ffb975feda7cdfad0639e62429dc34b4e9658f01ff8d67f0032  runs/p87-independent-test/test-evidence.zip
+9762b082f4573804d8ab3d23a7cfc371416108caf1413bebc15c8455a52b9fb2  runs/p87-independent-test/run-server-exitcode.log
+654b9330a8f0f4e80e3404e6d83dff8c801a8bdf5d496115b49b071905dd1902  runs/p87-independent-test/CrashAfterDone.java
 156f453974bc38ced55a21e1d8da7f1e06bd74eb79e0c7cc944c99f7ae36dbda  runs/p31-codec-selection/README.md
 51df7256e20c4fa551964b09ad3d0850d76297485325246ae75c316c69db0e5b  runs/p31-codec-selection/verdict.json
 5f5da2cd78397dfbf5950b31017eb9dc662f485308b450d1f33db878834d8165  runs/p31-codec-selection/gradle-test.log
@@ -470,7 +477,8 @@ cb0fbb5bb742a3fd3043a61ad09bcefd4183df0a0f4776f5afd5f7f96c7f79c9  runs/p38-clien
 2b59dc88051f44e1966eccda3e70e15173a91f8160adb3e0b1caab9267785e10  runs/p38-client-bv/top-level.log
 73041aa16a8acf4e825dabf83f7b9abaf1b52ce3717fa507210d63284726731f  runs/p39-verify-evidence/README.md
 2ff13da810a82e2f31dc3de9ce7d85b77fafed2ecbdbc3305c29d9625fefcc3d  runs/p39-verify-evidence/verify.log
-2ed944ceeab47a9f981fb17786df833e45a3578eb571bc2c786dcdf3a1e6a745  tools/verify_evidence.py
+915f67fb5d0a6fdcdcf3a7fc05e8758ddbba0f14db88ee3c5d9e0d322885d1c2  tools/verify_evidence.py
+c0ef9961d39200a1d2ad5ceb20183e9f3297197d848fdbfddcc71bcc3b751276  docs/distribution.md
 e500aeda7301f6a5929133cb27f4e108c89e6b85296134b7d26baa5d033aa9ff  runs/p40-verify-extended/README.md
 98da727f1d78606a3f694c47389e9f7c5f365ab0dba54d77f95cc8feed953758  runs/p40-verify-extended/verify.log
 a2cf9503505a561b7a2951dd4d4d111eab22258d11a590d59cf385d8f93df895  runs/p41-all-three/README.md
