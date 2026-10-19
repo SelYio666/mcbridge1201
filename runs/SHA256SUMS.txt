@@ -341,6 +341,11 @@ fcbbb3a7c36283451e9185b80eeeb03aa2a9113902d164b8fdac590bbf08691a  runs/p72-ironc
 26be2c31eedcda7f00fc36a32ad8a1f8748dfa7b3940d1e35fdea5a23ecf1565  runs/p72-ironchests-nine-slice/rebuild.log
 9c15b012853891e6f2f36daac52d9dd0676bdcd096aadf814f6d2349d2fd0413  runs/p72-ironchests-nine-slice/DrawContextTextureBridge.java
 b2b4c5db71ea8656a73549350ee8242eb637bc297ddf7b0674c63837a7d6f755  runs/p72-ironchests-nine-slice/ironchests-draw.json
+0ebf6aabb74ced3ce18439321e1db3873166b36fcc5066a69a224f13cac9fbcc  runs/p73-lithium-play/README.md
+1f5e3df90fb39f5b600f83949cf3eec399f9c783de2bf62ff2eddbba96a26214  runs/p73-lithium-play/latest.log
+834e9190f62a2ca0089d6ea00128b10964e72c951de870e9dc2205747964012b  runs/p73-lithium-play/LithiumPlayProbe.java
+0a8e471782ec08ec5f146b3d40480c5a170ce101dc30629503922274b0ef6154  runs/p73-lithium-play/lithiumplayprobe.jar
+MISSING                                                           runs/p73-lithium-play/compile.log
 156f453974bc38ced55a21e1d8da7f1e06bd74eb79e0c7cc944c99f7ae36dbda  runs/p31-codec-selection/README.md
 51df7256e20c4fa551964b09ad3d0850d76297485325246ae75c316c69db0e5b  runs/p31-codec-selection/verdict.json
 5f5da2cd78397dfbf5950b31017eb9dc662f485308b450d1f33db878834d8165  runs/p31-codec-selection/gradle-test.log
@@ -432,4 +437,4 @@ a2ad5d50329297405b17c5e546508361ca2aa475891bca25dca8198c0df3dbeb  manifests/envi
 6017ee9d46ba4b74315a2e47829214b69a3f7c37030a7699a4a4b04593ffebda  manifests/upstream.lock.json
 0f29e5bb455d68b6eb5002d854298a5e173cc9ff2c1103ef6117b2be19b691b1  profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json
 ab23bf626f10facc1cba10e8f3ad9410e3da4a6e471a42bedd42c28dd193be29  docs/support-matrix.md
-881a178b16886bfeca29a59351144eed9ca4d465875d9565282de76e8813a101  docs/remaining-work.md
+3974a0322c036dce6c98ba0dcef9d6d216ddb0841661bf095a58681a8ec4abf6  docs/remaining-work.md

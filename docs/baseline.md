@@ -1419,6 +1419,22 @@ graphics.drawNineSlicedTexture(BACKGROUND, x, y, type.width(), type.height(),
 关箱重开同步仍通过。`rebuild_ironchests_client.py` 现在默认先重编桥（stale bridge 曾触发
 `NoSuchMethodError`），重建 sha256 `20864ad9…` 与手工版一致。证据 `runs/p72-ironchests-nine-slice/`。
 
+### 7.74 lithium 玩法冒烟
+
+探针强制加载玩家周围 9×9 区块、放置石头、再用真实服务端交互破坏：
+
+```text
+LITHIUM_CHUNKS loaded=81/81 center=4,4
+LITHIUM_PLACE placed=true state=Block{minecraft:stone}
+LITHIUM_BREAK_REAL broke=true after=Block{minecraft:air}
+LITHIUM_SERVER_ALIVE tick=240
+LITHIUM_CLIENT_ALIVE screen=null
+```
+
+区块访问路径（lithium mixin 的作用区）和方块放置/破坏都正常，服务端持续 tick、客户端留在世界，
+日志无崩溃或 `NoSuchMethodError`。这是**冒烟测试**，不覆盖 TPS、生物 AI、红石或长时间稳定性。
+证据 `runs/p73-lithium-play/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
