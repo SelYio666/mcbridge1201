@@ -40,6 +40,33 @@ public final class IronChestsGuiProbe implements ModInitializer, ClientModInitia
                         new class_2338(78, 65, -68), chest.method_9564(), 3);
                 System.out.println("IRONCHESTS_PLACED=" + placed);
             }
+            if (serverTicks == 60) {
+                System.out.println("IRONCHESTS_STATE="
+                        + joined.method_51469().method_8320(new class_2338(78, 65, -68)));
+            }
+            if (serverTicks == 80) {
+                var world = joined.method_51469();
+                var pos = new class_2338(78, 65, -68);
+                var state = world.method_8320(pos);
+                var hit = new class_3965(new class_243(78.5, 65.5, -68.0),
+                        class_2350.field_11043, pos, false);
+                class_2248 chestBlock = class_7923.field_41175.method_10223(
+                        class_2960.method_60655("ironchests", "iron_chest"));
+                try {
+                    var method = chestBlock.getClass().getMethod("method_9534",
+                            net.minecraft.class_2680.class, net.minecraft.class_1937.class,
+                            class_2338.class, net.minecraft.class_1657.class,
+                            class_1268.class, class_3965.class);
+                    var result = method.invoke(chestBlock, state, world, pos, joined,
+                            class_1268.field_5808, hit);
+                    System.out.println("IRONCHESTS_USE result=" + result + " state=" + state);
+                } catch (ReflectiveOperationException e) {
+                    System.out.println("IRONCHESTS_USE_ERROR cause=" + e.getCause());
+                    if (e.getCause() != null) {
+                        e.getCause().printStackTrace(System.out);
+                    }
+                }
+            }
         });
     }
 
@@ -48,16 +75,14 @@ public final class IronChestsGuiProbe implements ModInitializer, ClientModInitia
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.field_1724 == null) return;
             ticks++;
-            if (state == 0 && ticks == 120) {
-                var pos = new class_2338(78, 65, -68);
-                var hit = new class_3965(new class_243(78.5, 65.5, -67.5),
-                        class_2350.field_11036, pos, false);
-                client.field_1761.method_2896(client.field_1724, class_1268.field_5808, hit);
-                System.out.println("IRONCHESTS_INTERACT screen=" + client.field_1755);
+            if (state == 0 && ticks == 140) {
+                System.out.println("IRONCHESTS_SCREEN=" + client.field_1755
+                        + " class=" + (client.field_1755 == null ? "null"
+                                : client.field_1755.getClass().getName()));
                 state = 1;
                 ticks = 0;
-            } else if (state == 1 && ticks == 40) {
-                System.out.println("IRONCHESTS_SCREEN=" + client.field_1755);
+            } else if (state == 1 && ticks == 60) {
+                System.out.println("IRONCHESTS_SCREEN_LATE=" + client.field_1755);
                 state = 2;
             }
         });

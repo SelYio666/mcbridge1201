@@ -1289,6 +1289,19 @@ at tech.thatgravyboat.ironchests.client.IronChestsClient.loadModel
 `IronChestsClient.loadModel` 的 1.21.1 ModelLoadingPlugin 桥后再重测。证据
 `runs/p66-ironchests-gui/`。
 
+**后续（09:25）**：work-only 兼容类
+`net.fabricmc.fabric.api.client.model.BakedModelManagerHelper.getModel(class_1092, Identifier)` 实现为
+`manager.method_4742(class_1091.method_61078(id))`，并把入口换成调用 `IronChestsClient.init()` +
+`ModelLoadingPlugin` 的 `IronChestsFabricClient`。箱子渲染不再崩溃。服务端直接调用
+`GenericChestBlock.method_9534` 打开菜单时出现新阻断：
+
+```text
+NoSuchMethodError: 'void GenericChestBlockEntity.method_11007(net.minecraft.class_2487)'
+```
+
+这是 1.20.1 一参 `readNbt(NbtCompound)`；1.21.1 是两参 `readNbt(NbtCompound, WrapperLookup)`。
+需要补 NBT 读桥后 GUI 才能打开。证据 `runs/p66-ironchests-gui/latest-model-shim.log`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。

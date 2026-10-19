@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 09:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-19 09:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 09:25）：**IronChests 客户端模型已修好，下一阻断是 BlockEntity NBT**。加 work-only 兼容类 `BakedModelManagerHelper.getModel(manager,id) → class_1092.method_4742(class_1091.method_61078(id))` + `ModelLoadingPlugin` 入口后，箱子渲染不再 `NoClassDefFoundError`。服务端直接调用 `GenericChestBlock.method_9534` 打开菜单时出现 `NoSuchMethodError GenericChestBlockEntity.method_11007(NbtCompound)`（1.20.1 一参 readNbt）；下一步给它加 NBT 读桥。证据 `runs/p66-ironchests-gui/`。
 更新（2026-10-19 09:05）：**IronChests GUI 被客户端模型类阻断**。chat 命令因无 cheats 失败；server probe 成功放置 `ironchests:iron_chest`（`PLACED=true`），客户端渲染时 `NoClassDefFoundError net/fabricmc/fabric/api/client/model/BakedModelManagerHelper`（IronChestsClient.loadModel），在 GUI 打开前崩溃。需要先恢复模型加载桥。证据 `runs/p66-ironchests-gui/`。
 更新（2026-10-19 09:00）：**empty-trash 修复**。首次调用触发 `NoSuchMethodError BalmNetworking.reply(Object)`；新增 reply 桥（记录 serverbound handler 的当前玩家，回发 clientbound payload）+ 规则命中 2 处后，`EMPTY_BEFORE trash=5` → `EMPTY_AFTER trash=0`、`EMPTY_SERVER empty=true count=0`，无崩溃。real UI 键位未测。证据 `runs/p65-trash-empty/`。
 更新（2026-10-19 08:55）：**clientbound TrashSlot content 通过**。服务端 tick 60 通过 `BalmNetworkingBridge.sendTo` 发 3 钻石的 `MessageTrashSlotContent`，客户端 tick 140 读到 `S2C_CLIENT trash=3 minecraft:diamond`，无异常。这验证了 S2C payload 注册、sendTo 桥和客户端 receiver；ironchests 同步/双客户端仍未验证。证据 `runs/p64-trash-s2c/`。
@@ -440,6 +441,8 @@
 211. **放置**：chat 命令因 world 无 cheats 失败；server probe 直接放置 `ironchests:iron_chest`，`PLACED=true`。
 212. **崩溃**：客户端渲染 chest 时 `NoClassDefFoundError net/fabricmc/fabric/api/client/model/BakedModelManagerHelper`（IronChestsClient.loadModel）。
 213. **结论**：GUI 测试被客户端模型桥阻断，不是容器/GUI 本身。需先恢复 model-loading 桥。证据 `runs/p66-ironchests-gui/`。
+214. **模型修复**：work-only 兼容类 `BakedModelManagerHelper.getModel(manager,id)` = `class_1092.method_4742(class_1091.method_61078(id))`；`IronChestsFabricClient` 用 `ModelLoadingPlugin` 注册 lid/base。箱子渲染不再崩溃。
+215. **新阻断**：服务端调用 `GenericChestBlock.method_9534` → `NoSuchMethodError GenericChestBlockEntity.method_11007(NbtCompound)`（1.20.1 一参 readNbt）。下一步加 NBT 读桥后重测 GUI。证据 `runs/p66-ironchests-gui/latest-model-shim.log`。
 
 | 证据 | 路径 |
 |---|---|
@@ -523,6 +526,7 @@
 | trash clientbound | `runs/p64-trash-s2c/README.md`、`latest.log`、`TrashS2CProbe.java` |
 | trash empty | `runs/p65-trash-empty/README.md`、`crash-report.txt`、`latest.log` |
 | IronChests GUI 阻断 | `runs/p66-ironchests-gui/README.md`、`crash-report.txt`、`latest.log` |
+| IronChests 模型 shim | `runs/p66-ironchests-gui/BakedModelManagerHelper.java`、`latest-model-shim.log` |
 | 早期阻塞日志 | `runs/p0-server-baseline/` |
 | 证据 hash 清单 | `runs/SHA256SUMS.txt` |
 

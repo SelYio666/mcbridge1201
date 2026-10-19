@@ -1,43 +1,66 @@
-# P66: IronChests GUI blocked by a missing client model helper
+# P66: IronChests client model fixed; next blocker is BlockEntity NBT
 
-Date: 2026-10-19 (Asia/Shanghai). Real server-placed iron chest; client rendering crash.
+Date: 2026-10-19 (Asia/Shanghai). Iterative real-client test of the IronChests GUI path.
 
-## Setup
+## 1. First blocker: removed Fabric model helper (fixed)
 
-Chat commands failed because the world has cheats disabled (`Unknown or incomplete command`). A
-server probe then placed the block directly:
-
-```text
-IRONCHESTS_SERVER block=Block{ironchests:iron_chest} item=1 ironchests:iron_chest
-IRONCHESTS_PLACED=true
-```
-
-The client then interacted with `(78,65,-68)`.
-
-## Crash
+Rendering the server-placed chest crashed with:
 
 ```text
-java.lang.NoClassDefFoundError: net/fabricmc/fabric/api/client/model/BakedModelManagerHelper
-at tech.thatgravyboat.ironchests.client.IronChestsClient.loadModel(IronChestsClient.java)
-at tech.thatgravyboat.ironchests.client.ChestRenderer.initModels(ChestRenderer.java:99)
+NoClassDefFoundError: net/fabricmc/fabric/api/client/model/BakedModelManagerHelper
+at tech.thatgravyboat.ironchests.client.IronChestsClient.loadModel
 ```
 
-The 1.20.1 IronChests client model code calls the removed Fabric API helper while rendering the
-placed chest. This is a client model bridge gap, not a container/GUI handler failure.
+Root cause: the 1.20.1 IronChests client calls `BakedModelManagerHelper.getModel(BakedModelManager,
+Identifier)`, removed in 1.21.1. Work-only fix (not shipped yet):
+
+- `BakedModelManagerHelper.java`: compatibility shim implementing
+  `getModel(class_1092 manager, class_2960 id)` as
+  `manager.method_4742(class_1091.method_61078(id))`;
+- `IronChestsFabricClient.java`: 1.21.1 entrypoint that calls `IronChestsClient.init()` and
+  registers the lid/base models through `ModelLoadingPlugin`;
+- both were compiled and injected into the client mod jar for this test.
+
+After that, the chest **renders without crashing**.
+
+## 2. Second blocker: 1.20.1 `BlockEntity.readNbt`
+
+Driving the chest's own `onUse` server-side (`GenericChestBlock.method_9534`) now reaches:
+
+```text
+IRONCHESTS_USE_ERROR cause=java.lang.NoSuchMethodError:
+  'void tech.thatgravyboat.ironchests.common.blocks.GenericChestBlockEntity.method_11007(net.minecraft.class_2487)'
+```
+
+That is the old one-argument `readNbt(NbtCompound)`. 1.21.1 uses
+`readNbt(NbtCompound, RegistryWrapper.WrapperLookup)`, so the converted block entity no longer has
+the one-arg method that another call site still invokes. This must be bridged before the chest menu
+can open; it is the same NBT-signature family as the TrashSlot bridges.
+
+## 3. Other observations
+
+- chat `give`/`setblock` fail: the test world has cheats disabled (`Unknown or incomplete command`);
+- the block is placed successfully via a server probe
+  (`IRONCHESTS_STATE=Block{ironchests:iron_chest}[facing=north,lock=no_lock,...]`);
+- `PLACED=false` on later runs just means the block is already present;
+- no `NoClassDefFoundError`/model crash after the shim.
 
 ## Status
 
-- block exists and is placed on the server (`PLACED=true`);
-- client crashes before a chest GUI can open;
-- no IronChests GUI claim;
-- existing work-only `IronChestsFabricClient` model replacement may be the fix, but it is not in the
-  shipped jar and must be compiled/injected properly.
+| step | result |
+|---|---|
+| IronChests client model rendering | **fixed by shim (work-only)** |
+| chest block placement | pass |
+| chest menu open | blocked by `method_11007(NbtCompound)` |
+| GUI screenshot | not yet |
 
 ## Next
 
-Restore the IronChests model-loading bridge (or port `IronChestsClient.loadModel` to
-`ModelLoadingPlugin`), then repeat the server-placed chest + client interact test.
+Add a `method_11007(NbtCompound)` → 1.21.1 NBT-read bridge for the IronChests block entity (or a
+class replacement that supplies the one-arg method delegating to the two-arg form), then repeat the
+server-use + client screenshot test.
 
 ## Evidence
 
-- `crash-report.txt`, `latest.log`, `IronChestsGuiProbe.java`
+- `crash-report.txt` (first model crash), `latest-model-shim.log` (shim result + new blocker)
+- `BakedModelManagerHelper.java`, `IronChestsFabricClient.java`, `IronChestsGuiProbe.java`

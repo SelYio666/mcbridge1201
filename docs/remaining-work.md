@@ -36,9 +36,10 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - the real UI key/action that invokes empty-trash;
 - ironchests clientbound traffic and two-client synchronization;
 - lithium gameplay/rendering;
-- ironchests GUI/render: a server-placed iron chest triggers
-  `NoClassDefFoundError net/fabricmc/fabric/api/client/model/BakedModelManagerHelper` in
-  `IronChestsClient.loadModel` before the GUI opens (`runs/p66-ironchests-gui/`).
+- ironchests GUI/render: the removed `BakedModelManagerHelper` model crash is fixed by a work-only
+  shim (`runs/p66-ironchests-gui/`), but opening the chest menu now hits
+  `NoSuchMethodError GenericChestBlockEntity.method_11007(NbtCompound)` — the 1.20.1 one-arg
+  `readNbt`; a BlockEntity NBT bridge is needed before any GUI screenshot.
 
 **Source check (TwelveIterations/TrashSlot v21.1.11):** `TrashSlotGuiHandler.onMouseClick` does
 not use `Slot` placement. It checks `callIsHovering(trashSlot, mouseX, mouseY)` and then calls
