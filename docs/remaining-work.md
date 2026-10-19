@@ -46,6 +46,9 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - hash manifest: `tools/check_hashes.py` verifies every `runs/SHA256SUMS.txt` entry, and
   `tools/hash_evidence.py` now refuses to write a manifest with missing files
   (`MISSING` placeholder lines removed);
+- Mod Menu title screen passes (`runs/p92-modmenu/`): the private field is read reflectively and the
+  button widget overrides `renderWidget` after a `methodRenames` rule; the mod list screen itself
+  and config UI are untested;
 - ShulkerBoxTooltip provider contract passes (`runs/p91-shulker-provider/`): the old
   BlockEntityTag/fromNbt tombstones, the DyeColor float[] accessor and the client/server channel
   shims are bridged; a real GUI hover and `shouldDisplay` were not checked;

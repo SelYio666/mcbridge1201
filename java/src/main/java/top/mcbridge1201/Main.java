@@ -174,6 +174,7 @@ public final class Main {
             if (rules.target == null) rules.target = part.target;
             rules.fieldRedirects.addAll(part.fieldRedirects);
             rules.methodRedirects.addAll(part.methodRedirects);
+            rules.methodRenames.addAll(part.methodRenames);
             rules.callSiteAdaptations.addAll(part.callSiteAdaptations);
             rules.constructorRedirects.addAll(part.constructorRedirects);
             rules.signatureAdaptations.addAll(part.signatureAdaptations);

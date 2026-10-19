@@ -2,6 +2,7 @@
 
 最后更新：2026-10-19 22:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-19 23:25）：**Mod Menu 主菜单渲染通过**。私有 `TitleScreen.field_32271` 反射桥 + 新规则类型 `methodRenames`（`render`→`renderWidget`，保留更新角标）；无 ICCE / IllegalAccessError / 新崩溃。模组列表未打开。证据 `runs/p92-modmenu/`。
 更新（2026-10-19 23:15）：**ShulkerBoxTooltip provider 契约通过**。`shulker-nbt.json` 把旧 `BlockEntityTag.Items` 桥到 `CONTAINER`，`DyeColor.method_7787` 返回类型变化补桥，客户端/服务端网络 shim 补齐；探针 `diamondCount=5 expected=5`。证据 `runs/p91-shulker-provider/`。
 更新（2026-10-19 23:10）：**FallingTree 入服通过**。专用服务器 + 客户端同装补丁件，`TestPlayer joined the game`，旧的 `ServerPlayNetworking.send` 不再抛错；砍树玩法未测。证据 `runs/p90-fallingtree-join/`。
 更新（2026-10-19 23:05）：**AppleSkin 食物 tombstone 已修**。`appleskin-food.json` + `AppleSkinFoodBridge` 把 `isFood/getFoodComponent/isAlwaysEdible/getHunger/getSaturationModifier` 映射到 `DataComponentTypes.FOOD`；HUD 不再抛 tombstone，客户端留在世界，仅剩原版 `icons.png` 材质缓存告警。证据 `runs/p89-legacy-networking/appleskin-hud.log`。

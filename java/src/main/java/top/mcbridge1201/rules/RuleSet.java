@@ -30,6 +30,7 @@ public final class RuleSet {
 
     public final List<FieldRedirect> fieldRedirects = new ArrayList<>();
     public final List<MethodRedirect> methodRedirects = new ArrayList<>();
+    public final List<MethodRename> methodRenames = new ArrayList<>();
     public final List<CallSiteAdaptation> callSiteAdaptations = new ArrayList<>();
     public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
     public final List<SignatureAdaptation> signatureAdaptations = new ArrayList<>();
@@ -135,8 +136,24 @@ public final class RuleSet {
     }
 
     /** Rewrites an interface/static call to a bridge method that adapts the callee's shape. */
-    public static final class MethodRedirect {
+    /**
+     * Renames a method declaration inside one class and (optionally) rewrites {@code invokespecial}
+     * calls to it. Needed when a parent method became final and the child must override the new
+     * render hook instead (e.g. ButtonWidget.render → renderWidget in 1.21.1).
+     */
+    public static final class MethodRename {
         public String id;
+        public String owner;
+        public String oldName;
+        public String oldDesc;
+        public String newName;
+        public boolean rewriteSuperCalls;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
+
+    public static final class MethodRedirect {        public String id;
         public String sourceOwner;
         public String sourceName;
         public String sourceDesc;
@@ -190,6 +207,11 @@ public final class RuleSet {
         if (o.has("methodRedirects")) {
             for (var el : o.getAsJsonArray("methodRedirects")) {
                 rs.methodRedirects.add(new Gson().fromJson(el, MethodRedirect.class));
+            }
+        }
+        if (o.has("methodRenames")) {
+            for (var el : o.getAsJsonArray("methodRenames")) {
+                rs.methodRenames.add(new Gson().fromJson(el, MethodRename.class));
             }
         }
         if (o.has("callSiteAdaptations")) {

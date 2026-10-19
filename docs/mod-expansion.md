@@ -6,7 +6,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 | 模组 | 客户端 | 服务端/功能 | 结论 |
 |---|---|---|---|
 | AppleSkin 2.5.2 | 初始化、同步包、HUD 食物 tombstone 已修；仅剩原版材质缓存告警 | 未测 | 部分修复 |
-| Mod Menu 7.2.2 | 主菜单崩溃：私有 `TitleScreen.field_32271` | 未打开列表 | 不兼容 |
+| Mod Menu 7.2.2 | 主菜单渲染通过（字段反射 + renderWidget 改名） | 模组列表未打开 | 部分修复 |
 | Clumps 12.0.0.4 | 主菜单 120 tick | 3+7 经验球不合并（原版 1.21.1 会合并成 10） | 核心功能丢失 |
 | FallingTree 4.3.4 | 初始化已修 | 入服 send/receive 已复测通过；砍树未测 | 部分修复 |
 | FerriteCore 6.0.1 | 主菜单 120 tick | 启动/200 tick/正常停服；移除 2 个 mixin | 仅启动、降级 |
@@ -55,6 +55,14 @@ FallingTree 同一个 jar 同时带 `fabric.mod.json`（含 main/client 入口�
   只在 notes 里注明忽略了多少条。
 
 验证：`gradle test installDist` → 23 个测试全过（含新增的多 loader 用例）。
+
+## Mod Menu 进展（2026-10-19 补）
+
+- 私有 `TitleScreen.field_32271` 用反射桥读取；
+- 新增规则类型 `methodRenames`：把 `ModMenuButtonWidget.method_25394` 改名为 1.21.1 的
+  `renderWidget`（`method_48579`），并把 `super` 调用改到新钩子，避免删掉更新角标绘制；
+- 真实客户端主菜单不再抛 `IllegalAccessError` / `IncompatibleClassChangeError`，无新崩溃报告；
+  模组列表界面未打开验证。证据 `runs/p92-modmenu/`。
 
 ## ShulkerBoxTooltip 进展（2026-10-19 补）
 

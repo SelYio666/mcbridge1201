@@ -183,6 +183,33 @@ public final class JarPatcher {
         }
     }
 
+    /** Renames a method declaration and, optionally, the invokespecial calls that targeted it. */
+    private static boolean applyMethodRenames(ClassNode cn, RuleSet rules, Stats st) {
+        boolean changed = false;
+        for (RuleSet.MethodRename rr : rules.methodRenames) {
+            if (!cn.name.equals(rr.owner)) {
+                continue;
+            }
+            for (MethodNode mn : cn.methods) {
+                if (!mn.name.equals(rr.oldName) || !mn.desc.equals(rr.oldDesc)) {
+                    continue;
+                }
+                mn.name = rr.newName;
+                st.applied.merge(rr.id, 1, Integer::sum);
+                changed = true;
+                if (rr.rewriteSuperCalls) {
+                    for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+                        if (insn instanceof MethodInsnNode m && m.getOpcode() == Opcodes.INVOKESPECIAL
+                                && m.name.equals(rr.oldName) && m.desc.equals(rr.oldDesc)) {
+                            m.name = rr.newName;
+                        }
+                    }
+                }
+            }
+        }
+        return changed;
+    }
+
     private static byte[] patchClass(byte[] bytes, RuleSet rules,
                                      top.mcbridge1201.index.TargetIndex idx, Stats st,
                                      Set<String> used) {
@@ -190,6 +217,10 @@ public final class JarPatcher {
         new ClassReader(bytes).accept(cn, 0);
         boolean changed = false;
         boolean framesAffected = false;
+        if (applyMethodRenames(cn, rules, st)) {
+            changed = true;
+            framesAffected = true;
+        }
         if (applyMixinCallbackAdaptations(cn, rules, st)) {
             changed = true;
             framesAffected = true;
