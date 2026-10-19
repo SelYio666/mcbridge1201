@@ -34,10 +34,10 @@ trash icon. Clientbound `MessageTrashSlotContent` also arrives (`S2C_CLIENT tras
 bridge (`runs/p65-trash-empty/`). Still **not verified**:
 
 - the real UI key/action that invokes empty-trash;
-- ironchests clientbound traffic and two-client synchronization;
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
-  server and client alive; `runs/p73-lithium-play/`), but TPS, mob AI, redstone and long sessions are
-  still unverified;
+  server and client alive; `runs/p73-lithium-play/`) and a 60-second TPS sample reports 20.03 with
+  289/289 chunks (`runs/p84-lithium-tps/`), but mob AI, redstone and long sessions are still
+  unverified;
 - ironchests GUI/render: **chest GUI opens, renders and supports put/take round trips**
   (`runs/p68-ironchests-gui/`, `runs/p69-ironchests-interaction/`; server-side menu state agrees at
   ticks 220/260/300). Ported the nested ResourcefulLib 2.0.6 server networking (work-only), fixed the

@@ -1618,6 +1618,18 @@ ESC_SERVER_MENU tick=240 slots=46
 真实按键 ESC 关闭了箱子界面，客户端与服务端都回落到 46 格背包。**物理 ESC 路径通过**。证据
 `runs/p83-esc-teleport/`。
 
+### 7.85 lithium TPS 采样
+
+专用服务器装 lithium，探针强制加载 17×17 区块并测 1200 tick：
+
+```text
+TPS_START loaded=289/289
+TPS_AVG tps=20.03 ticks=1200 seconds=59.92
+```
+
+289/289 区块加载正常，1200 tick 用 59.92 秒，平均 20.03 TPS，无掉 tick。单次 60 秒、无玩家/
+生物，属于 TPS 健全性检查，不覆盖生物 AI、红石或长时间 soak。证据 `runs/p84-lithium-tps/`。
+
 ## 8. 未验证项与下一步
 
 > 说明：§7.16 记录的 `fromJson` 全匹配回退已在后续 `p9-registryops` 中改为 registry-aware 构造，兼容档案状态为 `passed_within_scope`；该条不再列为未解决，保留 §7.16 作为历史探针记录。
