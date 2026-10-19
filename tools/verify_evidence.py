@@ -87,8 +87,15 @@ def main() -> int:
 
     tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True)
     jars = [line for line in tracked.stdout.splitlines() if line.endswith(".jar")]
-    checks["no_tracked_jars"] = not jars
+    # Probe jars under runs/ are our own tools and carry their Java source next to them;
+    # anything else (game/mod/converted jars) must never be tracked.
+    def is_probe_jar(rel):
+        path = ROOT / rel
+        return rel.startswith("runs/") and any(f.suffix == ".java" for f in path.parent.iterdir())
+    bad = [j for j in jars if not is_probe_jar(j)]
+    checks["no_tracked_jars"] = not bad
     details["tracked_jars"] = jars
+    details["unexpected_jars"] = bad
 
     result = {
         "passed": all(checks.values()),

@@ -40,7 +40,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 
 ## 交接
 
-先读 [docs/handoff.md](docs/handoff.md)（一页版：能做什么、当前降级、下一步、复现命令）。
+先读 [docs/handoff.md](docs/handoff.md)（一页版：能做什么、当前降级、下一步、复现命令）。发布/分发边界与步骤见 [docs/distribution.md](docs/distribution.md)。
 
 ## 复现
 
