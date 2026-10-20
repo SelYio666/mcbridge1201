@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 20:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 21:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 21:05）：**刷怪压力 soak 通过**。午夜+晴天刷 40 只僵尸，Lithium 3 分钟每窗 20.00 TPS，堆 221-326 MB 锯齿；结束时仍能读到活僵尸。红石与多小时长跑未测。证据 `runs/p103-mob-soak/`。
 更新（2026-10-20 20:35）：**FallingTree 倒树通过**。补第 3 个桥 `ItemStack.damage`→`method_7970` 后，生存模式持斧砍标准橡树整棵倒下（20→16，服务端无崩溃）。之前的“不倒树”主要是测试端：空手时 `isValidTool` 直接 INVALID_PLAYER_STATE。证据 `runs/p102-fallingtree-fell/`。
 更新（2026-10-20 20:10）：**FallingTree 倒树根因缩小**。服务端事件探针证明 `PlayerBlockBreakEvents.BEFORE/AFTER` 都触发、`BlockTags.LOGS` 存在，排除“事件未投递”；缺口在 `TreeHandler.breakTree`（检测或静默返回）。证据 `runs/p102-fallingtree-fell/server-events.log`。
 更新（2026-10-20 20:05）：**FallingTree 单块破坏通过、倒树未触发**。用 RCON 在出生点造了标准橡树（4 原木+树叶），探针真实破坏底部原木成功；补了 2 个 tombstone 桥（附魔表、挖掘速度）。但只掉 1 根、其余原木不动，且无崩溃/tombstone。失败假设与证据见 `runs/p102-fallingtree-fell/`。

@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 21:05）：**刷怪压力 soak 通过**（40 僵尸，3 分钟 20.00 TPS）。红石/多小时未测。证据 `runs/p103-mob-soak/`。
 更新（2026-10-20 20:35）：**FallingTree 倒树通过**（20→16，持斧生存）。补 `ItemStack.damage` 桥；空手会 INVALID_PLAYER_STATE 是 mod 行为。证据 `runs/p102-fallingtree-fell/`。
 更新（2026-10-20 20:10）：**FallingTree 倒树根因缩小**：事件已投递、LOGS 标签正常，缺口在 `TreeHandler.breakTree`。证据 `runs/p102-fallingtree-fell/`。
 更新（2026-10-20 20:05）：**FallingTree 单块破坏过、倒树未触发**。补 2 个 tombstone 桥；倒树失败已如实记录在 `runs/p102-fallingtree-fell/`。
