@@ -1,5 +1,11 @@
 package top.mcbridge1201.bridge;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mojang.datafixers.util.Pair;
+
+import net.minecraft.class_1293;
 import net.minecraft.class_1792;
 import net.minecraft.class_1799;
 import net.minecraft.class_4174;
@@ -31,5 +37,16 @@ public final class AppleSkinFoodBridge {
 
     public static float saturation(class_4174 food) {
         return food == null ? 0.0f : food.comp_2492();
+    }
+
+    /** 1.20.1 FoodComponent.getStatusEffects() -> 1.21.1 status effect entries. */
+    public static List<Pair<class_1293, Float>> statusEffects(class_4174 food) {
+        List<Pair<class_1293, Float>> out = new ArrayList<>();
+        if (food != null) {
+            for (class_4174.class_9423 entry : food.comp_2495()) {
+                out.add(Pair.of(entry.comp_2496(), entry.comp_2497()));
+            }
+        }
+        return out;
     }
 }

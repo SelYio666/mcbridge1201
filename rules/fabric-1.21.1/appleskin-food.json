@@ -67,6 +67,19 @@
       "capability": "appleskin.food.saturation",
       "risk": "low",
       "evidence": "class_4174.method_19231 (getSaturationModifier) died at 1.20.5; 1.21.1 accessor is comp_2492()."
+    },
+    {
+      "id": "appleskin.food.status-effects",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2",
+      "sourceName": "t5",
+      "sourceDesc": "(Lnet/minecraft/class_4174;)Ljava/util/List;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/AppleSkinFoodBridge",
+      "bridgeMethod": "statusEffects",
+      "bridgeDesc": "(Lnet/minecraft/class_4174;)Ljava/util/List;",
+      "capability": "appleskin.food.status-effects",
+      "risk": "medium",
+      "evidence": "class_4174.getStatusEffects() died at 1.20.5. 1.21.1 stores List<FoodComponent.StatusEffectEntry> (comp_2495(), entry accessors comp_2496/comp_2497); the bridge rebuilds the old List<Pair<StatusEffect, Float>> so AppleSkin's tooltip loop keeps its shape."
     }
   ]
 }

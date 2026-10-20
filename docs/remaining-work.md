@@ -34,8 +34,9 @@ trash icon. Clientbound `MessageTrashSlotContent` also arrives (`S2C_CLIENT tras
 bridge (`runs/p65-trash-empty/`). Still **not verified**:
 
 - legacy Fabric networking bridge (`runs/p89-legacy-networking/`, `runs/p90-fallingtree-join/`):
-  AppleSkin init/SyncHandler and the FallingTree join (server send + client receive) now pass;
-  AppleSkin HUD still needs the status-effect tooltip bridge (`t5`), and FallingTree tree-felling
+  AppleSkin init/SyncHandler, the HUD food path and the status-effect tooltip path
+  (`runs/p95-appleskin-tooltip/`) now pass; a real tooltip hover is still untested, and
+  FallingTree tree-felling
   behavior is untested. Original bullet: the deleted
   `PlayChannelHandler` shim, old `ServerPlayNetworking.send` / `CustomPayloadC2SPacket` redirects and
   the one-arg `Identifier` factory are implemented; AppleSkin now gets past init and packet

@@ -465,6 +465,8 @@ FILES = [
     "rules/fabric-1.21.1/modmenu-textfield.json",
     "java/src/bridge/java/top/mcbridge1201/bridge/LegacyTexturedButton.java",
     "java/src/bridge/java/top/mcbridge1201/bridge/TextFieldTickBridge.java",
+    "runs/p95-appleskin-tooltip/README.md",
+    "runs/p95-appleskin-tooltip/client.log",
     "runs/p89-legacy-networking/fallingtree-client.log",
     "runs/p31-codec-selection/README.md",
     "runs/p31-codec-selection/verdict.json",
