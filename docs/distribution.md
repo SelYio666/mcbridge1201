@@ -136,6 +136,15 @@ python tools/build_clumps_companion.py --stub <client-1.21.1-intermediary.jar>  
 `--bridge-dir` 重新生成**所有**补丁 jar；否则旧桥会遮蔽新方法（实测：旧 AppleSkin 的
 `FabricLegacyNetworking` 缺少 `sendPacket`，导致 Shulker 握手 NoSuchMethodError）。
 
+检查已安装的补丁 jar 是否使用同一套桥：
+
+```text
+python tools/check_bridge_consistency.py --bridge-dir work/bridges \
+  --jar runs/.../a.jar --jar runs/.../b.jar
+```
+
+补丁器现在会用当前桥**覆盖** jar 内已有同名桥类（不删除未引用桥，避免多阶段管线缺类）。
+
 ## 桥编译依赖提示
 
 LegacyTexturedButton（Mod Menu 纹理按钮桥）引用 class_2561 的字面量工厂，javac 因此需要

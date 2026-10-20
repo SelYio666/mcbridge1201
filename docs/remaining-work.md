@@ -47,6 +47,10 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - hash manifest: `tools/check_hashes.py` verifies every `runs/SHA256SUMS.txt` entry, and
   `tools/hash_evidence.py` now refuses to write a manifest with missing files
   (`MISSING` placeholder lines removed);
+- Bridge consistency is now a tool + a patcher behaviour (`runs/p98-bridge-consistency/`):
+  `tools/check_bridge_consistency.py` hashes every embedded bridge and fails on stale copies;
+  `JarPatcher.embedUsedBridges` overwrites present bridge classes with the canonical bytes but keeps
+  unreferenced ones (a multi-stage pipeline such as IronChests still needs `CodecDispatch`).
 - Combined smoke passes with AppleSkin + Mod Menu + ShulkerBoxTooltip + TrashSlot + IronChests +
   Lithium + Balm (`runs/p96-combined-smoke/`): world loads with no tombstones/crash. Shulker's
   ender-chest sync is re-serialised as Slot/id/Count; item components beyond id/count are not carried.

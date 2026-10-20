@@ -147,8 +147,30 @@ public final class JarPatcher {
      * nested jar must live in that nested jar: Fabric gives nested jars their own class loader,
      * so a top-level copy is not visible there.
      */
+    private static boolean isBridgeArtifact(String name) {
+        return name.startsWith("top/mcbridge1201/bridge/");
+    }
+
     private static void embedUsedBridges(Map<String, byte[]> out, Set<String> used, Stats st,
                                          Map<String, byte[]> bridgeClasses) {
+        // Re-patching on top of an older patched jar can leave stale bridge copies. Overwrite every
+        // embedded bridge that has a canonical counterpart (or is generated) so the current bridge
+        // version is the one that will be loaded. Classes without a counterpart are kept: a
+        // multi-stage pipeline may still need a bridge embedded by an earlier stage.
+        for (String name : new ArrayList<>(out.keySet())) {
+            if (!name.endsWith(".class") || !isBridgeArtifact(name)) {
+                continue;
+            }
+            String cls = name.substring(0, name.length() - 6);
+            if (bridgeClasses != null && bridgeClasses.containsKey(cls)) {
+                out.put(name, bridgeClasses.get(cls));
+            } else if (BridgeGenerator.isGenerated(cls)) {
+                var regenerated = BridgeGenerator.generate(Set.of(cls));
+                if (regenerated.containsKey(cls)) {
+                    out.put(name, regenerated.get(cls));
+                }
+            }
+        }
         Set<String> generatedNames = new TreeSet<>();
         for (String name : used) {
             boolean supplied = bridgeClasses != null && bridgeClasses.containsKey(name);
