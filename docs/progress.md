@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 23:10（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 23:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 23:15）：**5 分钟综合负载 soak 通过**。168 强制加载区块 + 40 僵尸 + 红石时钟 + IronChests/Lithium：首窗 15.75（区块生成），之后每窗 20.00，末窗 19.98；堆 260-645 MB 锯齿。证据 `runs/p108-combined-soak/`。
 更新（2026-10-20 23:10）：**mixin 完整性审计工具落地**。`tools/audit_mixins.py` 检查配置列出的类是否存在、以及混入包里带 `@Mixin` 却未被任何配置引用的“惰性 mixin”。跑转换后的 5 个模组，准确抓出 AppleSkin 2、Shulker 3、FerriteCore 2 个惰性 mixin，FallingTree 干净。证据 `runs/p107-mixin-audit/`。
 更新（2026-10-20 23:00）：**FerriteCore 审计完成**。9 个 mixin 配置里 `fastmap` 与 `mrl` 被清空（类仍在、钩子失效），属内存优化丢失而非正确性问题；恢复需重写 1.21.1 模型类 mixin。证据 `runs/p106-ferrite-audit/`。
 更新（2026-10-20 22:50）：**红石时钟 soak 通过**。相邻互看观察者时钟，Lithium 3 分钟每窗 20.00 TPS，堆 207-322 MB 锯齿。时钟活动由结构推断（观察者无可读 NBT），未做二次信号采样。证据 `runs/p105-redstone-soak/`。

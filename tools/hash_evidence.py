@@ -506,6 +506,8 @@ FILES = [
     "runs/p106-ferrite-audit/README.md",
     "runs/p107-mixin-audit/README.md",
     "runs/p107-mixin-audit/report.txt",
+    "runs/p108-combined-soak/README.md",
+    "runs/p108-combined-soak/soak.log",
     "tools/audit_mixins.py",
     "runs/p102-fallingtree-fell/commands.txt",
     "rules/fabric-1.21.1/fallingtree-tombstones.json",

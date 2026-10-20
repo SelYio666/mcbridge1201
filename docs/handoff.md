@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 23:15）：**5 分钟综合负载 soak 通过**（168 区块+40 僵尸+红石，20.00 TPS）。证据 `runs/p108-combined-soak/`。
 更新（2026-10-20 23:10）：**mixin 完整性审计工具**：抓出 AppleSkin/Shulker/FerriteCore 的惰性 mixin。证据 `runs/p107-mixin-audit/`。
 更新（2026-10-20 23:00）：**FerriteCore 审计完成**：`fastmap`/`mrl` 两个 mixin 被清空，性能降级非正确性问题。证据 `runs/p106-ferrite-audit/`。
 更新（2026-10-20 22:50）：**红石时钟 soak 通过**（观察者时钟，3 分钟 20.00 TPS）。活动由结构推断。证据 `runs/p105-redstone-soak/`。
