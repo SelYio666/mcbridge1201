@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 12:50）：**Mod Menu 列表行可见**。修复 Screen.render 误改名 + 新增 bodyRedirects（列表/描述面板用 DrawContext 重绘）。背景简化为填充；洋红棋盘=本机缺材质。证据 `runs/p94-modmenu-list/`。
 更新（2026-10-20 12:40）：**Mod Menu 列表截图**：界面/按钮正常、8 条目存在，但列表行未绘制（视觉缺陷）；截图 `runs/p94-modmenu-list/modmenu-list.png`，下一步查行/滚动几何。
 更新（2026-10-20 12:35）：**AppleSkin tooltip 状态效果路径通过**（契约级，金苹果 size=2）。真实悬停未测。证据 `runs/p95-appleskin-tooltip/`。
 更新（2026-10-20 12:25）：**Mod Menu 模组列表通过（日志级）**。打开并稳定 60 tick；新增纹理按钮重绘桥、TextWidget tick 桥、构造重定向宽松回退、列表父类桥。未测：截图、滚动/搜索/配置交互。证据 `runs/p94-modmenu-list/`。

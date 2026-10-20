@@ -15,5 +15,20 @@
       "risk": "low",
       "evidence": "ModMenuEventHandler.shiftButtons throws 'IllegalAccessError: tried to access private field net.minecraft.class_442.field_32271' on 1.21.1 (runs/p88-mod-expansion/EXPANSION-REPORT.md). Reflection keeps the comparison behaviour."
     }
+  ],
+  "methodRedirects": [
+    {
+      "id": "modmenu.screen.render-background",
+      "sourceOwner": "com/terraformersmc/modmenu/gui/ModsScreen",
+      "sourceName": "method_25434",
+      "sourceDesc": "(Lnet/minecraft/class_332;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/ModMenuTitleScreenBridge",
+      "bridgeMethod": "renderBackground",
+      "bridgeDesc": "(Lnet/minecraft/class_437;Lnet/minecraft/class_332;)V",
+      "capability": "modmenu.screen.render-background",
+      "risk": "low",
+      "evidence": "After the screen render was restored, ModsScreen crashed with NoSuchMethodError 'ModsScreen.method_25434(class_332)' because 1.21.1 renamed the one-argument renderBackground to class_437.method_25420(ctx,mx,my,delta). The background does not use pointer coordinates, so neutral values are forwarded."
+    }
   ]
 }

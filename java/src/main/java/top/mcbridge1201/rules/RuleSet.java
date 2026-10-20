@@ -33,6 +33,24 @@ public final class RuleSet {
      * changed shape (e.g. EntryListWidget 1.20.1's six-argument constructor becoming the
      * five-argument one in 1.21.1). The bridge subclass keeps the old constructor signature.
      */
+    /**
+     * Replaces an entire method body with a call to a bridge method (the original body is dropped).
+     * Used when the old body depends on APIs that cannot be bridged (e.g. removed RenderSystem
+     * shader access in a custom list renderer).
+     */
+    public static final class BodyRedirect {
+        public String id;
+        public String owner;
+        public String name;
+        public String desc;
+        public String bridgeClass;
+        public String bridgeMethod;
+        public String bridgeDesc;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
+
     public static final class SuperclassReplacement {
         public String id;
         public String oldSuper;
@@ -46,6 +64,7 @@ public final class RuleSet {
     public final List<FieldRedirect> fieldRedirects = new ArrayList<>();
     public final List<MethodRedirect> methodRedirects = new ArrayList<>();
     public final List<MethodRename> methodRenames = new ArrayList<>();
+    public final List<BodyRedirect> bodyRedirects = new ArrayList<>();
     public final List<SuperclassReplacement> superclassReplacements = new ArrayList<>();
     public final List<CallSiteAdaptation> callSiteAdaptations = new ArrayList<>();
     public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
@@ -164,6 +183,8 @@ public final class RuleSet {
         public String oldDesc;
         public String newName;
         public boolean rewriteSuperCalls;
+        /** If set, classes whose direct superclass equals this name are left untouched. */
+        public String excludeSuper;
         public String capability;
         public String risk;
         public String evidence;
@@ -228,6 +249,11 @@ public final class RuleSet {
         if (o.has("methodRenames")) {
             for (var el : o.getAsJsonArray("methodRenames")) {
                 rs.methodRenames.add(new Gson().fromJson(el, MethodRename.class));
+            }
+        }
+        if (o.has("bodyRedirects")) {
+            for (var el : o.getAsJsonArray("bodyRedirects")) {
+                rs.bodyRedirects.add(new Gson().fromJson(el, BodyRedirect.class));
             }
         }
         if (o.has("superclassReplacements")) {

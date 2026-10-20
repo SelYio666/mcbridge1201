@@ -51,21 +51,30 @@ So the list has eight entries, the scroll amount is 0, the first row's top is at
 widget's own visibility test says the row is visible. Geometry therefore looks sane, yet nothing is
 painted.
 
-Prime suspect: `ModListWidget.method_25311` (the overridden list render body) starts with
-`RenderSystem.getShader()` and then calls the **unbridged** tombstone
-`Tombstones_modmenu_7_2_2.t1(class_289)`, which throws
-`UnsupportedOperationException: class_289.method_1349 no longer exists in 1.21.1`.
-Its sibling tombstones `t2`/`t3`/`t4` are also still unbridged. No tombstone exception appears in the
-log, which means this render body is apparently not being reached at all — that contradiction is the
-next thing to resolve (verify whether `ModListWidget.method_25311` is called, and bridge or replace
-the `t1`–`t4` RenderSystem/Shader/VertexConsumer calls).
+Root cause found in two steps:
+
+1. The wildcard `render-widget-override` rename had also renamed `ModsScreen.render`
+   (`method_25394`) to `method_48579`, so the whole screen render body was silently disabled. The
+   rule now excludes direct `class_437` subclasses.
+2. With the screen render restored, the list body reached `ModListWidget.method_25311` /
+   `DescriptionListWidget.method_25394`, which draw through removed RenderSystem/Shader calls
+   (`Tombstones_modmenu_7_2_2.t1`, `class_289.method_1349`). Those cannot be forwarded, so a new
+   `bodyRedirects` rule replaces both method bodies with `ModMenuListRenderBridge.renderList`: it
+   paints a plain translucent row background with `DrawContext` and calls each entry's unchanged
+   `Entry.method_25343` hook.
+
+The screenshot now shows the mod list rows (icons, names, description panel, scrollbar). Remaining
+visual noise: the magenta/black checkerboard is the missing-texture background this machine already
+shows for other screens, and the list backdrop is the simplified translucent fill (recorded
+degradation instead of the old shader gradient).
 
 ## Scope
 
 - Verified: the screen initialises, ticks and renders for at least 60 ticks with no exception and no
   crash report; a screenshot was captured.
-- Not verified: the list rows are invisible (see the visual evidence above); scrolling, search input
-  and opening a mod's config were not tested.
+- Verified: list rows render (icons/names/description/scrollbar visible in the screenshot).
+- Not verified: scrolling, search input and opening a mod's config were not tested; the row backdrop
+  is simplified and the magenta checkerboard comes from the machine's missing assets.
 - Textured buttons draw with the original texture atlas because the old drawing was re-implemented,
   but their hover/pressed states were not compared pixel by pixel with 1.20.1.
 

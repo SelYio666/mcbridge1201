@@ -184,6 +184,44 @@ public final class JarPatcher {
     }
 
     /** Renames a method declaration and, optionally, the invokespecial calls that targeted it. */
+    /** Replaces a method body with a call to a bridge method (bodyRedirects). */
+    private static boolean applyBodyRedirects(ClassNode cn, RuleSet rules, Stats st,
+                                              Set<String> used) {
+        boolean changed = false;
+        for (RuleSet.BodyRedirect r : rules.bodyRedirects) {
+            if (!r.owner.equals(cn.name)) {
+                continue;
+            }
+            for (MethodNode mn : cn.methods) {
+                if (!mn.name.equals(r.name) || !mn.desc.equals(r.desc)) {
+                    continue;
+                }
+                mn.instructions.clear();
+                mn.tryCatchBlocks.clear();
+                mn.localVariables = null;
+                mn.visibleLocalVariableAnnotations = null;
+                mn.invisibleLocalVariableAnnotations = null;
+                InsnList il = new InsnList();
+                il.add(new org.objectweb.asm.tree.VarInsnNode(Opcodes.ALOAD, 0));
+                int slot = 1;
+                for (Type t : Type.getArgumentTypes(mn.desc)) {
+                    il.add(new org.objectweb.asm.tree.VarInsnNode(t.getOpcode(Opcodes.ILOAD), slot));
+                    slot += t.getSize();
+                }
+                il.add(new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass, r.bridgeMethod,
+                        r.bridgeDesc, false));
+                il.add(new org.objectweb.asm.tree.InsnNode(Opcodes.RETURN));
+                mn.instructions.add(il);
+                mn.maxStack = 64;
+                mn.maxLocals = slot;
+                st.applied.merge(r.id, 1, Integer::sum);
+                recordBridge(st, used, r.bridgeClass);
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
     /** Retargets classes whose old superclass constructor no longer exists to a bridge superclass. */
     private static boolean applySuperclassReplacements(ClassNode cn, RuleSet rules, Stats st,
                                                        Set<String> used) {
@@ -212,6 +250,9 @@ public final class JarPatcher {
         boolean changed = false;
         for (RuleSet.MethodRename rr : rules.methodRenames) {
             if (!"*".equals(rr.owner) && !cn.name.equals(rr.owner)) {
+                continue;
+            }
+            if (rr.excludeSuper != null && rr.excludeSuper.equals(cn.superName)) {
                 continue;
             }
             var toRemove = new java.util.ArrayList<MethodNode>();
@@ -257,6 +298,10 @@ public final class JarPatcher {
         new ClassReader(bytes).accept(cn, 0);
         boolean changed = false;
         boolean framesAffected = false;
+        if (applyBodyRedirects(cn, rules, st, used)) {
+            changed = true;
+            framesAffected = true;
+        }
         if (applySuperclassReplacements(cn, rules, st, used)) {
             changed = true;
             framesAffected = true;

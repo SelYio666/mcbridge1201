@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "ModListWidget.method_25311 draws its custom list background through 1.20.1 RenderSystem/Shader calls that were removed in 1.21.1 (tombstones t1-t4). They cannot be forwarded sensibly, so the body is replaced with a DrawContext-based renderer that paints a plain row background and then calls the unchanged Entry.method_25343 hook for every entry.",
+  "bodyRedirects": [
+    {
+      "id": "modmenu.list.render-body",
+      "owner": "com/terraformersmc/modmenu/gui/widget/ModListWidget",
+      "name": "method_25311",
+      "desc": "(Lnet/minecraft/class_332;IIF)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ModMenuListRenderBridge",
+      "bridgeMethod": "renderList",
+      "bridgeDesc": "(Ljava/lang/Object;Lnet/minecraft/class_332;IIF)V",
+      "capability": "modmenu.list.render",
+      "risk": "medium",
+      "evidence": "Opening the list after the screen render was restored crashed with 'CenturyBridge tombstone: net.minecraft.class_289.method_1349 no longer exists in 1.21.1' inside ModListWidget.method_25311 (runs/p94-modmenu-list/). The replacement keeps row rendering (entries, scrolling geometry) but drops the old shader-based backdrop, which is recorded as a visual degradation."
+    },
+    {
+      "id": "modmenu.description.render-body",
+      "owner": "com/terraformersmc/modmenu/gui/widget/DescriptionListWidget",
+      "name": "method_25394",
+      "desc": "(Lnet/minecraft/class_332;IIF)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ModMenuListRenderBridge",
+      "bridgeMethod": "renderList",
+      "bridgeDesc": "(Ljava/lang/Object;Lnet/minecraft/class_332;IIF)V",
+      "capability": "modmenu.description.render",
+      "risk": "medium",
+      "evidence": "After the mod list body was replaced, the description panel crashed with the same class_289.method_1349 tombstone (DescriptionListWidget.method_25394); it uses the same generic entry-list rendering."
+    }
+  ]
+}
