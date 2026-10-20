@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 23:20（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 23:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 23:25）：**最终回归联测通过**。用本轮重打的 AppleSkin/Mod Menu/Shulker/重建 IronChests/Lithium/TrashSlot 一起进世界：`COMBINED_SMOKE in-world`，无崩溃/新异常。证据 `runs/p109-combined-regression/`。
 更新（2026-10-20 23:20）：**v0.2.0 状态总览落地**。新增 `docs/STATUS.md`（门禁、模组矩阵、工具清单、诚实边界、发布）；全门禁复跑全绿（23/23、verify passed、615 哈希、桥 0 问题、mixin 审计 0 问题）。
 更新（2026-10-20 23:15）：**5 分钟综合负载 soak 通过**。168 强制加载区块 + 40 僵尸 + 红石时钟 + IronChests/Lithium：首窗 15.75（区块生成），之后每窗 20.00，末窗 19.98；堆 260-645 MB 锯齿。证据 `runs/p108-combined-soak/`。
 更新（2026-10-20 23:10）：**mixin 完整性审计工具落地**。`tools/audit_mixins.py` 检查配置列出的类是否存在、以及混入包里带 `@Mixin` 却未被任何配置引用的“惰性 mixin”。跑转换后的 5 个模组，准确抓出 AppleSkin 2、Shulker 3、FerriteCore 2 个惰性 mixin，FallingTree 干净。证据 `runs/p107-mixin-audit/`。

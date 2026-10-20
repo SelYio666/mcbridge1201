@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 23:25）：**最终回归联测通过**（多模组进世界无崩溃）。证据 `runs/p109-combined-regression/`。
 更新（2026-10-20 23:20）：**v0.2.0 状态总览** `docs/STATUS.md`；全门禁复跑全绿。
 更新（2026-10-20 23:15）：**5 分钟综合负载 soak 通过**（168 区块+40 僵尸+红石，20.00 TPS）。证据 `runs/p108-combined-soak/`。
 更新（2026-10-20 23:10）：**mixin 完整性审计工具**：抓出 AppleSkin/Shulker/FerriteCore 的惰性 mixin。证据 `runs/p107-mixin-audit/`。

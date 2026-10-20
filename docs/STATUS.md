@@ -18,6 +18,7 @@ FallingTree / ShulkerBoxTooltip 的核心功能有实测证据，FerriteCore 只
 | 哈希清单 | `python tools/check_hashes.py` | 615 项，0 mismatch / 0 missing |
 | 桥版本一致 | `python tools/check_bridge_consistency.py --bridge-dir work/bridges ...` | 6 个 jar，`problems = 0` |
 | mixin 完整性 | `python tools/audit_mixins.py --allow-inert ...` | `problems = 0`（惰性 mixin 已知且记录） |
+| 多模组回归 | quickplay + 探针（`runs/p109-combined-regression/`） | `COMBINED_SMOKE in-world`，无崩溃 |
 
 ## 模组矩阵
 
