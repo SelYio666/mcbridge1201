@@ -43,6 +43,13 @@ public class PreviewTooltipDataMixin {
         }
         System.out.println("SBT_COMPONENT " + component + " item=" + stack.method_7909()
                 + " count=" + stack.method_7947() + " items=" + items);
+        System.out.println("SBT_MAP " + stack.method_57380());
+        var player = net.minecraft.class_310.method_1551().field_1724;
+        if (player != null) {
+            var held = player.method_31548().method_5438(player.method_31548().field_7545);
+            System.out.println("SBT_INV " + (held == null ? "null" : held.method_57380())
+                    + " same=" + (held == stack));
+        }
         if (component instanceof net.minecraft.class_9288 c) {
             int iter = 0;
             for (var s : c.method_59714()) {
@@ -50,9 +57,19 @@ public class PreviewTooltipDataMixin {
                     iter++;
                 }
             }
+            long raw1 = c.method_57489().count();
+            long raw2 = c.method_59712().count();
+            var first = c.method_59714().iterator();
+            String head = "none";
+            while (first.hasNext()) {
+                var st = first.next();
+                head = st.method_7909() + "x" + st.method_7947() + " empty=" + st.method_7960();
+                break;
+            }
             long stream1 = c.method_57489().filter(s -> !s.method_7960()).count();
             long stream2 = c.method_59712().filter(s -> !s.method_7960()).count();
-            System.out.println("SBT_ITER iter=" + iter + " stream1=" + stream1 + " stream2=" + stream2);
+            System.out.println("SBT_ITER raw1=" + raw1 + " raw2=" + raw2 + " head=" + head
+                    + " stream1=" + stream1 + " stream2=" + stream2);
         }
         if (provider == null) {
             System.out.println("SBT_PREVIEW_NOPROVIDER " + stack.method_7909());
