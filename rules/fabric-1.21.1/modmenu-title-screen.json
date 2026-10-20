@@ -15,18 +15,5 @@
       "risk": "low",
       "evidence": "ModMenuEventHandler.shiftButtons throws 'IllegalAccessError: tried to access private field net.minecraft.class_442.field_32271' on 1.21.1 (runs/p88-mod-expansion/EXPANSION-REPORT.md). Reflection keeps the comparison behaviour."
     }
-  ],
-  "methodRenames": [
-    {
-      "id": "modmenu.button-widget-render",
-      "owner": "com/terraformersmc/modmenu/gui/widget/ModMenuButtonWidget",
-      "oldName": "method_25394",
-      "oldDesc": "(Lnet/minecraft/class_332;IIF)V",
-      "newName": "method_48579",
-      "rewriteSuperCalls": true,
-      "capability": "modmenu.button-widget-render",
-      "risk": "medium",
-      "evidence": "1.21.1 made ButtonWidget.render (class_339.method_25394) final and moved the override point to the protected renderWidget (class_4264.method_48579). The child override caused IncompatibleClassChangeError on title-screen init (runs/p92-modmenu/); renaming keeps the update-badge drawing and rewrites the super call to the new hook."
-    }
   ]
 }

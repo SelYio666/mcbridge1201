@@ -28,9 +28,25 @@ public final class RuleSet {
         public String evidence;
     }
 
+    /**
+     * Retargets a converted class to a bridge superclass when a Minecraft superclass constructor
+     * changed shape (e.g. EntryListWidget 1.20.1's six-argument constructor becoming the
+     * five-argument one in 1.21.1). The bridge subclass keeps the old constructor signature.
+     */
+    public static final class SuperclassReplacement {
+        public String id;
+        public String oldSuper;
+        public String newSuper;
+        public String bridgeClass;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
+
     public final List<FieldRedirect> fieldRedirects = new ArrayList<>();
     public final List<MethodRedirect> methodRedirects = new ArrayList<>();
     public final List<MethodRename> methodRenames = new ArrayList<>();
+    public final List<SuperclassReplacement> superclassReplacements = new ArrayList<>();
     public final List<CallSiteAdaptation> callSiteAdaptations = new ArrayList<>();
     public final List<ConstructorRedirect> constructorRedirects = new ArrayList<>();
     public final List<SignatureAdaptation> signatureAdaptations = new ArrayList<>();
@@ -212,6 +228,11 @@ public final class RuleSet {
         if (o.has("methodRenames")) {
             for (var el : o.getAsJsonArray("methodRenames")) {
                 rs.methodRenames.add(new Gson().fromJson(el, MethodRename.class));
+            }
+        }
+        if (o.has("superclassReplacements")) {
+            for (var el : o.getAsJsonArray("superclassReplacements")) {
+                rs.superclassReplacements.add(new Gson().fromJson(el, SuperclassReplacement.class));
             }
         }
         if (o.has("callSiteAdaptations")) {

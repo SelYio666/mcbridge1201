@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "1.21.1 changed EntryListWidget (class_4280) from a six-argument constructor (client,width,height,top,bottom,itemHeight) to five (client,width,height,y,itemHeight). Converted subclasses still call the old super constructor. This rule retargets them to LegacyEntryListWidget, which keeps the old signature and forwards height=bottom-top.",
+  "superclassReplacements": [
+    {
+      "id": "fabric.entrylist.old-constructor",
+      "oldSuper": "net/minecraft/class_4280",
+      "newSuper": "top/mcbridge1201/bridge/LegacyEntryListWidget",
+      "bridgeClass": "top/mcbridge1201/bridge/LegacyEntryListWidget",
+      "capability": "fabric.entrylist.old-constructor",
+      "risk": "medium",
+      "evidence": "Mod Menu's mod list failed with NoSuchMethodError 'void class_4280.<init>(class_310,int,int,int,int,int)' after the render override was fixed; 1.21.1 keeps only the five-argument constructor (runs/p94-modmenu-list/)."
+    },
+    {
+      "id": "fabric.entrylist.parent-old-constructor",
+      "oldSuper": "net/minecraft/class_350",
+      "newSuper": "top/mcbridge1201/bridge/LegacyParentWidget",
+      "bridgeClass": "top/mcbridge1201/bridge/LegacyParentWidget",
+      "capability": "fabric.entrylist.parent-old-constructor",
+      "risk": "medium",
+      "evidence": "Mod Menu's DescriptionListWidget extends class_350 directly and still calls the 1.20.1 six-argument constructor; 1.21.1 has five arguments (runs/p94-modmenu-list/)."
+    }
+  ]
+}

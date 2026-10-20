@@ -175,6 +175,7 @@ public final class Main {
             rules.fieldRedirects.addAll(part.fieldRedirects);
             rules.methodRedirects.addAll(part.methodRedirects);
             rules.methodRenames.addAll(part.methodRenames);
+            rules.superclassReplacements.addAll(part.superclassReplacements);
             rules.callSiteAdaptations.addAll(part.callSiteAdaptations);
             rules.constructorRedirects.addAll(part.constructorRedirects);
             rules.signatureAdaptations.addAll(part.signatureAdaptations);

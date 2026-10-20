@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "1.21.1 made ClickableWidget/ButtonWidget.render (class_339.method_25394) final and moved the override point to the protected method_48579 (renderWidget, implemented by class_4264). Any converted class that still declares/overrides method_25394 fails to load with IncompatibleClassChangeError. This generic rule renames every such declaration to method_48579 and rewrites its invokespecial super call, so the drawing code keeps running.",
+  "methodRenames": [
+    {
+      "id": "fabric.legacy.render-widget-override",
+      "owner": "*",
+      "oldName": "method_25394",
+      "oldDesc": "(Lnet/minecraft/class_332;IIF)V",
+      "newName": "method_48579",
+      "rewriteSuperCalls": true,
+      "capability": "fabric.render.widget-override",
+      "risk": "medium",
+      "evidence": "Mod Menu 7.2.2 crashed at the title screen with 'class ModMenuButtonWidget overrides final method class_339.method_25394' and at the mod list with 'class ModsScreen$1 overrides final method class_339.method_25394'; the override point is now class_4264.method_48579 (runs/p92-modmenu/, runs/p94-modmenu-list/). Renaming keeps the drawing code instead of deleting it."
+    },
+    {
+      "id": "fabric.legacy.clickable-text-override",
+      "owner": "*",
+      "oldName": "method_37020",
+      "oldDesc": "(Lnet/minecraft/class_6382;)V",
+      "newName": "method_47399",
+      "rewriteSuperCalls": true,
+      "capability": "fabric.render.clickable-text-override",
+      "risk": "medium",
+      "evidence": "ClickableWidget.method_37020 became final in 1.21.1 and delegates to the protected abstract method_47399; Mod Menu's DescriptionListWidget override caused IncompatibleClassChangeError when opening the mod list (runs/p94-modmenu-list/)."
+    }
+  ]
+}

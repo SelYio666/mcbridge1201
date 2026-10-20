@@ -184,14 +184,53 @@ public final class JarPatcher {
     }
 
     /** Renames a method declaration and, optionally, the invokespecial calls that targeted it. */
+    /** Retargets classes whose old superclass constructor no longer exists to a bridge superclass. */
+    private static boolean applySuperclassReplacements(ClassNode cn, RuleSet rules, Stats st,
+                                                       Set<String> used) {
+        boolean changed = false;
+        for (RuleSet.SuperclassReplacement r : rules.superclassReplacements) {
+            if (!cn.superName.equals(r.oldSuper)) {
+                continue;
+            }
+            cn.superName = r.newSuper;
+            st.applied.merge(r.id, 1, Integer::sum);
+            recordBridge(st, used, r.bridgeClass);
+            changed = true;
+            for (MethodNode mn : cn.methods) {
+                for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+                    if (insn instanceof MethodInsnNode m && m.getOpcode() == Opcodes.INVOKESPECIAL
+                            && m.owner.equals(r.oldSuper)) {
+                        m.owner = r.newSuper;
+                    }
+                }
+            }
+        }
+        return changed;
+    }
+
     private static boolean applyMethodRenames(ClassNode cn, RuleSet rules, Stats st) {
         boolean changed = false;
         for (RuleSet.MethodRename rr : rules.methodRenames) {
-            if (!cn.name.equals(rr.owner)) {
+            if (!"*".equals(rr.owner) && !cn.name.equals(rr.owner)) {
                 continue;
             }
+            var toRemove = new java.util.ArrayList<MethodNode>();
             for (MethodNode mn : cn.methods) {
                 if (!mn.name.equals(rr.oldName) || !mn.desc.equals(rr.oldDesc)) {
+                    continue;
+                }
+                boolean hasNew = false;
+                for (MethodNode other : cn.methods) {
+                    if (other != mn && other.name.equals(rr.newName) && other.desc.equals(rr.oldDesc)) {
+                        hasNew = true;
+                        break;
+                    }
+                }
+                if (hasNew) {
+                    toRemove.add(mn);
+                    st.external.add("dropped duplicate override " + cn.name + "." + rr.oldName);
+                    st.applied.merge(rr.id, 1, Integer::sum);
+                    changed = true;
                     continue;
                 }
                 mn.name = rr.newName;
@@ -206,6 +245,7 @@ public final class JarPatcher {
                     }
                 }
             }
+            cn.methods.removeAll(toRemove);
         }
         return changed;
     }
@@ -217,6 +257,10 @@ public final class JarPatcher {
         new ClassReader(bytes).accept(cn, 0);
         boolean changed = false;
         boolean framesAffected = false;
+        if (applySuperclassReplacements(cn, rules, st, used)) {
+            changed = true;
+            framesAffected = true;
+        }
         if (applyMethodRenames(cn, rules, st)) {
             changed = true;
             framesAffected = true;
