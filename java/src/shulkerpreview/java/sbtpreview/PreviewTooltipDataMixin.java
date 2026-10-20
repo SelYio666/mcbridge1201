@@ -27,15 +27,27 @@ import top.mcbridge1201.bridge.ShulkerBoxNbtBridge;
  */
 @Mixin(class_1799.class)
 public class PreviewTooltipDataMixin {
+    /** Snapshot taken at the start of getTooltip, before the tooltip path strips the container. */
+    private static final java.util.Map<class_1799, class_1799> SNAPSHOTS =
+            java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
+
+    @Inject(method = "method_7950", at = @At("HEAD"))
+    private void sbtpreview$snapshot(net.minecraft.class_1792.class_9635 context,
+                                     net.minecraft.class_1657 player, net.minecraft.class_1836 type,
+                                     org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable<
+                                             java.util.List<net.minecraft.class_2561>> cir) {
+        SNAPSHOTS.put((class_1799) (Object) this, ((class_1799) (Object) this).method_7972());
+    }
     @Inject(method = "method_32347", at = @At("HEAD"), cancellable = true)
     private void sbtpreview$inject(CallbackInfoReturnable<Optional<class_5632>> cir) {
-        class_1799 stack = (class_1799) (Object) this;
-        if (stack.method_7960()) {
+        class_1799 live = (class_1799) (Object) this;
+        if (live.method_7960()) {
             return;
         }
-        System.out.println("SBT_TOP map=" + stack.method_57380());
-        class_1799 snapshot = stack.method_7972();
-        System.out.println("SBT_SNAP map=" + snapshot.method_57380());
+        class_1799 cached = SNAPSHOTS.get(live);
+        class_1799 stack = cached != null ? cached : live;
+        System.out.println("SBT_TOP live=" + live.method_57380()
+                + " cached=" + (cached == null ? "null" : cached.method_57380()));
         PreviewProvider provider = PreviewProviderRegistry.getInstance().get(stack);
         Object component = stack.method_57379(net.minecraft.class_9334.field_49622, null);
         class_2487 tag = ShulkerBoxNbtBridge.legacyBlockEntityTag(stack, "BlockEntityTag");
@@ -101,8 +113,8 @@ public class PreviewTooltipDataMixin {
             return;
         }
         PreviewContext drawContext = mc.field_1724 == null
-                ? PreviewContext.of(snapshot)
-                : PreviewContext.of(snapshot, mc.field_1724);
+                ? PreviewContext.of(stack)
+                : PreviewContext.of(stack, mc.field_1724);
         System.out.println("SBT_SNAP_SHOW " + provider.shouldDisplay(drawContext)
                 + " inv=" + provider.getInventory(drawContext).size());
         cir.setReturnValue(Optional.of(new PreviewTooltipData(provider, drawContext)));

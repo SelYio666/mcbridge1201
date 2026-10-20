@@ -69,19 +69,24 @@ This is outside the converter's scope (component contents differ between server 
 stack). A future run should compare the raw slot-update packet with the server stack, or reproduce
 with a vanilla-only client and the same command.
 
-### Vanilla control
+### Vanilla control (no Shulker, no companion)
 
-A minimal inventory probe (Fabric API only, or Fabric API + the patched Shulker mod) reads the same
-server-given stack and prints a **normal** map:
+A minimal inventory probe with only Fabric API reads the stack after the same RCON give:
 
 ```text
-INV0 item=minecraft:shulker_box map={minecraft:container=>net.minecraft.class_9288@...}
+item replace FreshHover10 hotbar.0 ... => Replaced a slot on FreshHover10 with [Shulker Box]
+inv0 (server) => components: {"minecraft:container": [{item: {count: 5, id: "minecraft:diamond"}, slot: 0}]}
+INV0 item=minecraft:shulker_box map={!minecraft:container} comp=raw=0 nonAir=0
 ```
 
-With the companion installed, the very first `getTooltipData` call already sees
-`SBT_TOP map={!minecraft:container}` and the copied snapshot has the same form, even though the
-same inventory probe printed a normal map moments earlier. So the removal form appears in the
-tooltip path with the companion present; the exact interaction was not identified.
+**The vanilla-only client sees the same empty container**: map in removal form, zero slots. (An
+earlier probe run printed a normal map value, but that was a stack restored from player data, not a
+freshly given one.)
+
+So this is not caused by the converted mod or the companion. The environment's client stack for a
+command-created container item exposes an empty/removed container component while the server-side
+NBT is correct. Reproducing on a stock 1.21.1 client+server with `/item replace` is the next step;
+until then the grid preview cannot be tested at all in this harness.
 
 ## Honest status
 
