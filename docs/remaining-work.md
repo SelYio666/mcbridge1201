@@ -46,11 +46,12 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - hash manifest: `tools/check_hashes.py` verifies every `runs/SHA256SUMS.txt` entry, and
   `tools/hash_evidence.py` now refuses to write a manifest with missing files
   (`MISSING` placeholder lines removed);
-- Clumps orb merging is still pending: the converter removed MixinExperienceOrb, and a draft
-  server-tick merge bridge (vanilla canMerge/merge via reflection) exists in `work/tmp/clumpsmerge`
-  but the fixture did not converge — summoned orbs could be created and read as objects, while world
-  entity queries returned 0 after restart. Next step: debug entity persistence/selector before
-  claiming any merge result;
+- Clumps orb merging passes through the companion in `java/src/compat-clumps/` (built by
+  `tools/build_clumps_companion.py`): 3 + 7 orbs merge to 10 on a dedicated server
+  (`runs/p93-clumps-merge/`). Vanilla canMerge cannot be reused (same value + 40-tick phase only) and
+  vanilla merge() keeps min(value); the companion writes the summed value and discards the other orb.
+  Residual: tick-driven instead of inside ExperienceOrbEntity.tick, fixed 2-block radius, ignores
+  Clumps' config;
 - Mod Menu title screen passes (`runs/p92-modmenu/`): the private field is read reflectively and the
   button widget overrides `renderWidget` after a `methodRenames` rule; the mod list screen itself
   and config UI are untested;

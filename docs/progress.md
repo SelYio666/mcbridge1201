@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-19 22:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 11:30（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 11:30）：**Clumps 经验球合并通过（companion 桥）**。服务端 tick 每 20 tick 把 2 格内的球合并：反射把 `field_6159` 写成和、另一颗 `discard()`；专用服务器实测 3+7→10（`runs/p93-clumps-merge/`）。原版 `canMerge` 只合并同值同 40-tick 相位，`merge()` 取 min，不能复用。范围：tick 驱动、固定 2 格、不读 Clumps 配置。
 更新（2026-10-19 23:35）：**Clumps 合并桥草拟，fixture 未收敛**。`work/tmp/clumpsmerge` 用服务端 tick + 原版 `canMerge/merge` 反射实现合并；经验球可被 summon 且对象数值可读，但世界实体查询/重启后为 0，尚未得到合并断言。未提交、未宣称通过。
 更新（2026-10-19 23:25）：**Mod Menu 主菜单渲染通过**。私有 `TitleScreen.field_32271` 反射桥 + 新规则类型 `methodRenames`（`render`→`renderWidget`，保留更新角标）；无 ICCE / IllegalAccessError / 新崩溃。模组列表未打开。证据 `runs/p92-modmenu/`。
 更新（2026-10-19 23:15）：**ShulkerBoxTooltip provider 契约通过**。`shulker-nbt.json` 把旧 `BlockEntityTag.Items` 桥到 `CONTAINER`，`DyeColor.method_7787` 返回类型变化补桥，客户端/服务端网络 shim 补齐；探针 `diamondCount=5 expected=5`。证据 `runs/p91-shulker-provider/`。

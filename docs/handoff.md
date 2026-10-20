@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 11:30）：**Clumps 合并通过（companion 桥）**。`java/src/compat-clumps/` 每 20 tick 合并 2 格内的球，写和 + discard；实测 3+7→10。tick 驱动、固定 2 格、不读配置。证据 `runs/p93-clumps-merge/`。
 更新（2026-10-19 23:35）：**Clumps 仍待办**。服务端 tick 合并桥草拟在 `work/tmp/clumpsmerge`；经验球可 summon，但实体查询/重启后为 0，fixture 未收敛，未声称通过。
 更新（2026-10-19 23:25）：**Mod Menu 主菜单通过**。私有字段反射 + `methodRenames`（render→renderWidget），无 ICCE/IllegalAccess，新崩溃无；模组列表未打开。证据 `runs/p92-modmenu/`。
 更新（2026-10-19 23:15）：**ShulkerBoxTooltip provider 契约通过**。旧 NBT 路径桥到 `CONTAINER`、`DyeColor` 颜色分量补桥、网络 shim 补齐；探针 `diamondCount=5 expected=5`，真实悬停未测。证据 `runs/p91-shulker-provider/`。

@@ -116,3 +116,15 @@ python tools\rebuild_ironchests_client.py `
 “保留已验证玩法，部分优化显式降级”，降级列表以 `lithium-degraded.json` 为准。
 
 完整证据见 `docs/baseline.md`、`docs/progress.md`、`docs/remaining-work.md`。
+
+## Clumps 经验球 companion
+
+转换后的 Clumps 不再合并经验球（原 `MixinExperienceOrb` 被移除，见 `runs/p93-clumps-merge/`）。
+构建 companion 并与转换后的 Clumps 一起安装：
+
+```text
+python tools/build_clumps_companion.py --stub <client-1.21.1-intermediary.jar>   --lib <fabric-lifecycle-events.jar> --lib <fabric-api-base.jar> --lib <fabric-loader.jar>   --out work/compat/mcbridge-clumps-merge.jar
+```
+
+服务端每 20 tick 合并 2 格范围内的经验球（写和 + discard），不读 Clumps 配置；客户端无需安装。
+仓库只提供源码与构建脚本，不附带 jar。

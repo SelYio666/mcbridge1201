@@ -7,7 +7,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 |---|---|---|---|
 | AppleSkin 2.5.2 | 初始化、同步包、HUD 食物 tombstone 已修；仅剩原版材质缓存告警 | 未测 | 部分修复 |
 | Mod Menu 7.2.2 | 主菜单渲染通过（字段反射 + renderWidget 改名） | 模组列表未打开 | 部分修复 |
-| Clumps 12.0.0.4 | 主菜单 120 tick | 3+7 经验球不合并（原版 1.21.1 会合并成 10） | 核心功能丢失 |
+| Clumps 12.0.0.4 | 主菜单 120 tick | 经验球合并通过（companion 桥：3+7→10；tick 驱动、固定 2 格） | 核心功能恢复 |
 | FallingTree 4.3.4 | 初始化已修 | 入服 send/receive 已复测通过；砍树未测 | 部分修复 |
 | FerriteCore 6.0.1 | 主菜单 120 tick | 启动/200 tick/正常停服；移除 2 个 mixin | 仅启动、降级 |
 | ShulkerBoxTooltip 4.0.4 | 主菜单 | provider 契约通过：`diamondCount=5`；HUD 悬停未测 | 部分修复 |
@@ -38,7 +38,9 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 2. **字段访问权限（Mod Menu）**：`TitleScreen.field_32271` 在 1.21.1 变私有，需要 accessor/mixin
    或改用公开 API。
 3. **Mixin 重建（Clumps / FerriteCore）**：转换器移除了 load-bearing mixin（经验球合并、
-   FastMapStateHolder 等），只“启动”不等于功能保留。
+   FastMapStateHolder 等），只“启动”不等于功能保留。Clumps 的合并已用 companion 桥恢复
+   （`java/src/compat-clumps/` + `tools/build_clumps_companion.py`，证据 `runs/p93-clumps-merge/`）；
+   FerriteCore 仍未做。
 4. **NBT → 数据组件（ShulkerBoxTooltip）**：旧 `ItemStack` NBT 读取被 tombstone，需要桥接到
    1.21.1 的 `CONTAINER` 数据组件；
 5. **食物组件（AppleSkin）已补**：`appleskin-food.json` 把 5 个 tombstone 映射到

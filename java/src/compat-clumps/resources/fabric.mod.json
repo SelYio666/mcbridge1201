@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "mcbridge_clumps_merge",
+  "version": "1.0.0",
+  "name": "mcbridge Clumps merge companion",
+  "description": "Restores experience orb merging for the converted Clumps mod.",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["probe.ClumpsMerge"]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "fabric-api": "*"
+  }
+}
