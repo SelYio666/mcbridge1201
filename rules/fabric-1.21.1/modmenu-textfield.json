@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "Mod Menu's search box calls the 1.20.1 TextFieldWidget.tick() (class_342.method_1865), which CenturyBridge replaced with a tombstone because the method died in 1.20.2. 1.21.1 derives the cursor blink from real time, so the old counter increment has no equivalent; the bridge keeps the call site linking.",
+  "methodRedirects": [
+    {
+      "id": "modmenu.textfield.tick",
+      "sourceOwner": "centurybridge/gen/Tombstones_modmenu_7_2_2",
+      "sourceName": "t0",
+      "sourceDesc": "(Lnet/minecraft/class_342;)V",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/TextFieldTickBridge",
+      "bridgeMethod": "tick",
+      "bridgeDesc": "(Lnet/minecraft/class_342;)V",
+      "capability": "modmenu.textfield.tick",
+      "risk": "low",
+      "evidence": "Opening the mod list crashed on tick with 'UnsupportedOperationException: CenturyBridge tombstone: class_342.method_1865' (runs/p94-modmenu-list/client.log); that method only incremented the cursor-blink counter, and 1.21.1 computes the blink from wall-clock time."
+    }
+  ]
+}

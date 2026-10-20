@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "1.20.1 TexturedButtonWidget (class_344) took a texture Identifier plus atlas u/v/texWidth/texHeight; 1.21.1 takes WidgetSprites (whole GUI sprites) and can no longer express an atlas sub-region. LegacyTexturedButton keeps the old constructor and re-implements the old quad+label drawing, so icons keep their original look instead of showing a missing sprite.",
+  "constructorRedirects": [
+    {
+      "id": "modmenu.textured-button-old-ctor",
+      "owner": "net/minecraft/class_344",
+      "desc": "(IIIIIIILnet/minecraft/class_2960;IILnet/minecraft/class_4185$class_4241;Lnet/minecraft/class_2561;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/LegacyTexturedButton",
+      "bridgeMethod": "create",
+      "bridgeDesc": "(IIIIIIILnet/minecraft/class_2960;IILnet/minecraft/class_4185$class_4241;Lnet/minecraft/class_2561;)Lnet/minecraft/class_344;",
+      "capability": "modmenu.textured-button",
+      "risk": "medium",
+      "evidence": "Mod Menu's mod list crashed with NoSuchMethodError 'void class_344.<init>(IIIIIIILclass_2960;IILclass_4185$class_4241;Lclass_2561;)' after the list constructors were fixed (runs/p94-modmenu-list/)."
+    }
+  ],
+  "superclassReplacements": [
+    {
+      "id": "modmenu.textured-button-super",
+      "oldSuper": "net/minecraft/class_344",
+      "newSuper": "top/mcbridge1201/bridge/LegacyTexturedButton",
+      "bridgeClass": "top/mcbridge1201/bridge/LegacyTexturedButton",
+      "capability": "modmenu.textured-button-super",
+      "risk": "medium",
+      "evidence": "UpdateCheckerTexturedButtonWidget extends class_344 and its constructor calls the old super constructor; retargeting it to LegacyTexturedButton keeps that super call valid."
+    }
+  ]
+}

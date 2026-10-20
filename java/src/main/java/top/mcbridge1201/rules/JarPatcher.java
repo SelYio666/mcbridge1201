@@ -511,6 +511,11 @@ public final class JarPatcher {
      */
     private static boolean rewriteConstructor(InsnList insns, MethodInsnNode call,
                                               RuleSet.ConstructorRedirect r) {
+        return rewriteConstructorStrict(insns, call, r) || rewriteConstructorLoose(insns, call, r);
+    }
+
+    private static boolean rewriteConstructorStrict(InsnList insns, MethodInsnNode call,
+                                                    RuleSet.ConstructorRedirect r) {
         // walk back over the argument pushes to the DUP that follows NEW
         AbstractInsnNode dup = null;
         for (AbstractInsnNode p = call.getPrevious(); p != null; p = p.getPrevious()) {
@@ -529,7 +534,7 @@ public final class JarPatcher {
             }
             if (!isPurePush(p.getOpcode())) return false;
         }
-        if (dup == null) return false;
+        if (dup == null) return rewriteConstructorLoose(insns, call, r);
         AbstractInsnNode newInsn = dup.getPrevious();
         if (!(newInsn instanceof org.objectweb.asm.tree.TypeInsnNode t)
                 || t.getOpcode() != Opcodes.NEW || !t.desc.equals(r.owner)) {
@@ -540,6 +545,42 @@ public final class JarPatcher {
         insns.set(call, new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass, r.bridgeMethod,
                 r.bridgeDesc, false));
         return true;
+    }
+
+    /**
+     * Loose variant for argument lists that contain ordinary method calls (e.g. getWidth()).
+     * It only needs the NEW of the redirected class and its DUP; the argument computation is left
+     * untouched. Control flow (labels/jumps) between the allocation and the constructor still aborts
+     * the rewrite, so the object reference cannot escape on another path.
+     */
+    private static boolean rewriteConstructorLoose(InsnList insns, MethodInsnNode call,
+                                                   RuleSet.ConstructorRedirect r) {
+        for (AbstractInsnNode p = call.getPrevious(); p != null; p = p.getPrevious()) {
+            if (p instanceof org.objectweb.asm.tree.JumpInsnNode) {
+                return false;
+            }
+            if (p instanceof org.objectweb.asm.tree.LabelNode
+                    || p instanceof org.objectweb.asm.tree.LineNumberNode) {
+                continue;
+            }
+            if (p instanceof org.objectweb.asm.tree.TypeInsnNode t
+                    && t.getOpcode() == Opcodes.NEW && t.desc.equals(r.owner)) {
+                AbstractInsnNode after = t.getNext();
+                while (after != null && (after instanceof org.objectweb.asm.tree.LabelNode
+                        || after instanceof org.objectweb.asm.tree.LineNumberNode)) {
+                    after = after.getNext();
+                }
+                if (after != null && after.getOpcode() == Opcodes.DUP) {
+                    insns.remove(t);
+                    insns.remove(after);
+                    insns.set(call, new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
+                            r.bridgeMethod, r.bridgeDesc, false));
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
     }
 
     private static boolean isPurePush(int opcode) {

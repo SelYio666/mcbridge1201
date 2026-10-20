@@ -6,7 +6,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 | 模组 | 客户端 | 服务端/功能 | 结论 |
 |---|---|---|---|
 | AppleSkin 2.5.2 | 初始化、同步包、HUD 食物 tombstone 已修；仅剩原版材质缓存告警 | 未测 | 部分修复 |
-| Mod Menu 7.2.2 | 主菜单渲染通过；模组列表推进到纹理按钮构造 | 列表仍有 `class_344` 构造阻断 | 部分修复 |
+| Mod Menu 7.2.2 | 主菜单 + 模组列表打开并稳定 60 tick | 悬停/滚动/配置界面未测 | 通过（日志级） |
 | Clumps 12.0.0.4 | 主菜单 120 tick | 经验球合并通过（companion 桥：3+7→10；tick 驱动、固定 2 格） | 核心功能恢复 |
 | FallingTree 4.3.4 | 初始化已修 | 入服 send/receive 已复测通过；砍树未测 | 部分修复 |
 | FerriteCore 6.0.1 | 主菜单 120 tick | 启动/200 tick/正常停服；移除 2 个 mixin | 仅启动、降级 |
@@ -60,11 +60,12 @@ FallingTree 同一个 jar 同时带 `fabric.mod.json`（含 main/client 入口�
 
 ## Mod Menu 列表进展（2026-10-20 补）
 
-模组列表已依次越过：final `render`/`method_37020` 覆盖（通用改名规则，含重复方法丢弃）、
-`class_4280`/`class_350` 旧构造（`LegacyEntryListWidget`/`LegacyParentWidget` + 旧字段与
-`setLeftPos`）、`Identifier(String)`。当前阻断：1.20.1 `TexturedButtonWidget`（`class_344`）用
-`Identifier`+图集坐标构造，1.21.1 改为 `WidgetSprites`；映射会改变贴图绘制方式，未在本轮猜测。
-证据 `runs/p94-modmenu-list/`。
+模组列表**打开并稳定 60 tick**（无异常、无崩溃报告）。越过：final `render`/`method_37020`
+覆盖（通用改名 + 重复方法丢弃）、`class_4280`/`class_350` 旧构造（`LegacyEntryListWidget`/
+`LegacyParentWidget` + 旧字段与 `setLeftPos`）、`Identifier(String)`、`TexturedButtonWidget`
+旧纹理构造（`LegacyTexturedButton` 用 `DrawContext.drawTexture` 重绘旧图集区域）、
+`TextFieldWidget.tick()`（1.21.1 改为按真实时间闪烁，桥仅保持调用点可链接）。
+未测：截图、滚动/搜索/配置界面交互。证据 `runs/p94-modmenu-list/`。
 
 ## Mod Menu 进展（2026-10-19 补）
 

@@ -52,11 +52,10 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   vanilla merge() keeps min(value); the companion writes the summed value and discards the other orb.
   Residual: tick-driven instead of inside ExperienceOrbEntity.tick, fixed 2-block radius, ignores
   Clumps' config;
-- Mod Menu mod list is still blocked: the screen now gets past final render/clickable-text overrides,
-  the EntryListWidget/class_350 constructors and Identifier(String), but fails at
-  `TexturedButtonWidget` (class_344) because 1.20.1 passes a texture Identifier plus atlas
-  coordinates while 1.21.1 takes WidgetSprites; mapping that changes texture drawing and was not
-  guessed (`runs/p94-modmenu-list/`);
+- Mod Menu mod list now opens and stays stable for 60 ticks (`runs/p94-modmenu-list/`): final
+  overrides, EntryListWidget/class_350 constructors, Identifier(String), the old TexturedButtonWidget
+  texture-atlas constructor and TextFieldWidget.tick() are all handled. Screenshots and real
+  scrolling/search/config interaction are still unverified;
 - Mod Menu title screen passes (`runs/p92-modmenu/`): the private field is read reflectively and the
   button widget overrides `renderWidget` after a `methodRenames` rule; the mod list screen itself
   and config UI are untested;

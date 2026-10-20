@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 12:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 12:25（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 12:25）：**Mod Menu 模组列表通过（日志级）**。打开后稳定 60 tick，无异常/崩溃；新增 `LegacyTexturedButton`（重绘旧纹理图集区域）、`TextFieldTickBridge`、构造重定向宽松回退、`LegacyEntryListWidget`/`LegacyParentWidget`。未测截图与滚动/搜索/配置交互。证据 `runs/p94-modmenu-list/`。
 更新（2026-10-20 12:15）：**Mod Menu 模组列表仍未通过，但已推进到纹理按钮**。新增通用 `methodRenames` 通配 + 重复覆盖丢弃、`superclassReplacements` 与 `LegacyEntryListWidget`/`LegacyParentWidget` 桥（旧字段 + setLeftPos）；当前阻断 `class_344` 旧纹理构造 → `WidgetSprites`，未猜。证据 `runs/p94-modmenu-list/`。
 更新（2026-10-20 11:30）：**Clumps 经验球合并通过（companion 桥）**。服务端 tick 每 20 tick 把 2 格内的球合并：反射把 `field_6159` 写成和、另一颗 `discard()`；专用服务器实测 3+7→10（`runs/p93-clumps-merge/`）。原版 `canMerge` 只合并同值同 40-tick 相位，`merge()` 取 min，不能复用。范围：tick 驱动、固定 2 格、不读 Clumps 配置。
 更新（2026-10-19 23:35）：**Clumps 合并桥草拟，fixture 未收敛**。`work/tmp/clumpsmerge` 用服务端 tick + 原版 `canMerge/merge` 反射实现合并；经验球可被 summon 且对象数值可读，但世界实体查询/重启后为 0，尚未得到合并断言。未提交、未宣称通过。

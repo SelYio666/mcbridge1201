@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 12:25）：**Mod Menu 模组列表通过（日志级）**。打开并稳定 60 tick；新增纹理按钮重绘桥、TextWidget tick 桥、构造重定向宽松回退、列表父类桥。未测：截图、滚动/搜索/配置交互。证据 `runs/p94-modmenu-list/`。
 更新（2026-10-20 12:15）：**Mod Menu 列表未通过**，已推进到 `class_344` 纹理按钮构造阻断；本轮新增通用覆盖改名/重复丢弃、超类替换与两个列表桥。证据 `runs/p94-modmenu-list/`。
 更新（2026-10-20 11:30）：**Clumps 合并通过（companion 桥）**。`java/src/compat-clumps/` 每 20 tick 合并 2 格内的球，写和 + discard；实测 3+7→10。tick 驱动、固定 2 格、不读配置。证据 `runs/p93-clumps-merge/`。
 更新（2026-10-19 23:35）：**Clumps 仍待办**。服务端 tick 合并桥草拟在 `work/tmp/clumpsmerge`；经验球可 summon，但实体查询/重启后为 0，fixture 未收敛，未声称通过。

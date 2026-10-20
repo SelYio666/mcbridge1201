@@ -128,3 +128,9 @@ python tools/build_clumps_companion.py --stub <client-1.21.1-intermediary.jar>  
 
 服务端每 20 tick 合并 2 格范围内的经验球（写和 + discard），不读 Clumps 配置；客户端无需安装。
 仓库只提供源码与构建脚本，不附带 jar。
+
+## 桥编译依赖提示
+
+LegacyTexturedButton（Mod Menu 纹理按钮桥）引用 class_2561 的字面量工厂，javac 因此需要
+brigadier（com.mojang:brigadier，随 Minecraft 提供）。构建桥时把 brigadier jar 一并放进
+--lib，否则只有该桥会编译失败。
