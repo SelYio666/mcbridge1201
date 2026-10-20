@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 23:10）：**mixin 完整性审计工具**：抓出 AppleSkin/Shulker/FerriteCore 的惰性 mixin。证据 `runs/p107-mixin-audit/`。
 更新（2026-10-20 23:00）：**FerriteCore 审计完成**：`fastmap`/`mrl` 两个 mixin 被清空，性能降级非正确性问题。证据 `runs/p106-ferrite-audit/`。
 更新（2026-10-20 22:50）：**红石时钟 soak 通过**（观察者时钟，3 分钟 20.00 TPS）。活动由结构推断。证据 `runs/p105-redstone-soak/`。
 更新（2026-10-20 21:10）：**真实滚轮注入未成功**（scroll 恒 0.0，环境限制）。程序化滚动此前已过。证据 `runs/p104-wheel-input/`。
