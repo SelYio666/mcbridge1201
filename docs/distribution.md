@@ -129,6 +129,13 @@ python tools/build_clumps_companion.py --stub <client-1.21.1-intermediary.jar>  
 服务端每 20 tick 合并 2 格范围内的经验球（写和 + discard），不读 Clumps 配置；客户端无需安装。
 仓库只提供源码与构建脚本，不附带 jar。
 
+## 多补丁 jar 的桥版本
+
+每个补丁 jar 都会内嵌一份桥类（如 `FabricLegacyNetworking`、`IdentifierBridge`）。多个补丁 jar
+同时安装时，**先加载的那份桥生效**，其余副本被忽略。因此桥代码更新后，必须用同一个
+`--bridge-dir` 重新生成**所有**补丁 jar；否则旧桥会遮蔽新方法（实测：旧 AppleSkin 的
+`FabricLegacyNetworking` 缺少 `sendPacket`，导致 Shulker 握手 NoSuchMethodError）。
+
 ## 桥编译依赖提示
 
 LegacyTexturedButton（Mod Menu 纹理按钮桥）引用 class_2561 的字面量工厂，javac 因此需要

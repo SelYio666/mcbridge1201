@@ -28,6 +28,45 @@
       "capability": "shulker.legacy.from-nbt",
       "risk": "medium",
       "evidence": "Same provider converts each Items entry through the 1.20.x ItemStack.fromNbt(NbtCompound), which is also a tombstone on 1.21.1. Items without a tag round-trip by id + Count."
+    },
+    {
+      "id": "shulker.legacy.send-packet",
+      "sourceOwner": "centurybridge/gen/Tombstones_shulkerboxtooltip_fabric_4_0_4_1_20_1",
+      "sourceName": "t3",
+      "sourceDesc": "(Lnet/minecraft/class_634;Lnet/minecraft/class_2596;)V",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "sendPacket",
+      "bridgeDesc": "(Lnet/minecraft/class_634;Lnet/minecraft/class_2596;)V",
+      "capability": "shulker.legacy.send-packet",
+      "risk": "medium",
+      "evidence": "The C2S handshake calls C2SChannel.sendToServer -> old ClientPlayNetworkHandler.sendPacket(Packet) (class_634.method_2883), tombstoned on 1.21.1; in the combined smoke run this threw 'class_634.method_2883 no longer exists' (runs/p96-combined-smoke/). The bridge forwards to handler.getConnection().send(packet)."
+    },
+    {
+      "id": "shulker.enderchest.write",
+      "sourceOwner": "net/minecraft/class_1730",
+      "sourceName": "method_7660",
+      "sourceDesc": "()Lnet/minecraft/class_2499;",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/ShulkerBoxNbtBridge",
+      "bridgeMethod": "writeEnderChest",
+      "bridgeDesc": "(Lnet/minecraft/class_1730;)Lnet/minecraft/class_2499;",
+      "capability": "shulker.enderchest.write",
+      "risk": "medium",
+      "evidence": "S2CEnderChestUpdate.create called the 1.20.1 EnderChestInventory.writeNbt(); 1.21.1 requires RegistryOps, so the integrated server crashed with NoSuchMethodError (runs/p96-combined-smoke/). The bridge serialises slots as Slot/id/Count, the same shape the mod's client reader expects."
+    },
+    {
+      "id": "shulker.enderchest.read",
+      "sourceOwner": "net/minecraft/class_1730",
+      "sourceName": "method_7659",
+      "sourceDesc": "(Lnet/minecraft/class_2499;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/ShulkerBoxNbtBridge",
+      "bridgeMethod": "readEnderChest",
+      "bridgeDesc": "(Lnet/minecraft/class_1730;Lnet/minecraft/class_2499;)V",
+      "capability": "shulker.enderchest.read",
+      "risk": "medium",
+      "evidence": "The client handler calls the single-argument EnderChestInventory.readNbt(NbtList) (1.21.1 added RegistryOps), which would throw NoSuchMethodError on receipt. The bridge restores the Slot/id/Count items."
     }
   ]
 }

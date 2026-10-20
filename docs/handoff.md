@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 13:20）：**多模组联合冒烟通过**（进世界无崩溃）。修 Shulker sendPacket/writeNbt/末影箱 NBT。注意桥内嵌冲突：多 jar 需同 bridge-dir 重打。证据 `runs/p96-combined-smoke/`。
 更新（2026-10-20 13:10）：**搜索过滤通过**（"menu" 8→2，Showing 2/8）。真实输入与配置界面仍未测。
 更新（2026-10-20 12:55）：**滚动联动通过**（scroll 0→40、rowTop 71→31，两张截图）。真实滚轮/搜索/配置界面未测。
 更新（2026-10-20 12:50）：**Mod Menu 列表行可见**。修复 Screen.render 误改名 + 新增 bodyRedirects（列表/描述面板用 DrawContext 重绘）。背景简化为填充；洋红棋盘=本机缺材质。证据 `runs/p94-modmenu-list/`。

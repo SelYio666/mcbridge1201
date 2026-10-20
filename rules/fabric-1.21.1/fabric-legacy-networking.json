@@ -88,6 +88,19 @@
       "capability": "fabric.networking.server.unregister",
       "risk": "low",
       "evidence": "Same class; the unregister result is immediately popped."
+    },
+    {
+      "id": "fabric.legacy.buf-write-nbt",
+      "sourceOwner": "net/minecraft/class_2540",
+      "sourceName": "method_10794",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/FabricLegacyNetworking",
+      "bridgeMethod": "writeNbt",
+      "bridgeDesc": "(Lnet/minecraft/class_2540;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;",
+      "capability": "fabric.networking.buf-write-nbt",
+      "risk": "low",
+      "evidence": "ShulkerBoxTooltip's handshake writes NBT with the 1.20.1 writeNbt(NbtCompound) descriptor; 1.21.1 keeps method_10794 but widens it to NbtElement, so the old call throws NoSuchMethodError (runs/p96-combined-smoke/)."
     }
   ],
   "constructorRedirects": [

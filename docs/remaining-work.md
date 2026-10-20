@@ -47,6 +47,11 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 - hash manifest: `tools/check_hashes.py` verifies every `runs/SHA256SUMS.txt` entry, and
   `tools/hash_evidence.py` now refuses to write a manifest with missing files
   (`MISSING` placeholder lines removed);
+- Combined smoke passes with AppleSkin + Mod Menu + ShulkerBoxTooltip + TrashSlot + IronChests +
+  Lithium + Balm (`runs/p96-combined-smoke/`): world loads with no tombstones/crash. Shulker's
+  ender-chest sync is re-serialised as Slot/id/Count; item components beyond id/count are not carried.
+  Rebuild every patched jar against the same bridge dir after a bridge change, because each jar embeds
+  its own bridge copy and the first loaded one wins;
 - Clumps orb merging passes through the companion in `java/src/compat-clumps/` (built by
   `tools/build_clumps_companion.py`): 3 + 7 orbs merge to 10 on a dedicated server
   (`runs/p93-clumps-merge/`). Vanilla canMerge cannot be reused (same value + 40-tick phase only) and

@@ -2,10 +2,12 @@ package top.mcbridge1201.bridge;
 
 import java.util.List;
 
+import net.minecraft.class_1730;
 import net.minecraft.class_1792;
 import net.minecraft.class_1799;
 import net.minecraft.class_2487;
 import net.minecraft.class_2499;
+import net.minecraft.class_2520;
 import net.minecraft.class_2960;
 import net.minecraft.class_7923;
 import net.minecraft.class_9288;
@@ -61,6 +63,42 @@ public final class ShulkerBoxNbtBridge {
     /** Kept for callers that used the old getNbt() to inspect anything but the container. */
     public static class_2487 legacyNbt(class_1799 stack) {
         return legacyBlockEntityTag(stack, "BlockEntityTag");
+    }
+
+    /** 1.20.1 EnderChestInventory.writeNbt() -> Slot/id/Count list (1.21.1 needs RegistryOps). */
+    public static class_2499 writeEnderChest(class_1730 inventory) {
+        class_2499 items = new class_2499();
+        for (int slot = 0; slot < inventory.method_5439(); slot++) {
+            class_1799 stack = inventory.method_5438(slot);
+            if (stack == null || stack.method_7960()) {
+                continue;
+            }
+            class_2487 entry = new class_2487();
+            entry.method_10569("Slot", slot);
+            entry.method_10582("id",
+                    class_7923.field_41178.method_10221(stack.method_7909()).toString());
+            entry.method_10569("Count", stack.method_7947());
+            items.add(entry);
+        }
+        return items;
+    }
+
+    /** 1.20.1 EnderChestInventory.readNbt(NbtList) -> fill the inventory from Slot/id/Count. */
+    public static void readEnderChest(class_1730 inventory, class_2499 items) {
+        for (class_2520 element : items) {
+            if (!(element instanceof class_2487 entry)) {
+                continue;
+            }
+            int slot = entry.method_10550("Slot");
+            String id = entry.method_10558("id");
+            int count = entry.method_10550("Count");
+            int colon = id.indexOf(':');
+            class_2960 key = colon >= 0
+                    ? class_2960.method_60655(id.substring(0, colon), id.substring(colon + 1))
+                    : class_2960.method_60655("minecraft", id);
+            inventory.method_5447(slot,
+                    new class_1799(class_7923.field_41178.method_10223(key), Math.max(1, count)));
+        }
     }
 
     static List<class_1799> ignored() {

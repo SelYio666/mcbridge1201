@@ -58,6 +58,15 @@ FallingTree 同一个 jar 同时带 `fabric.mod.json`（含 main/client 入口�
 
 验证：`gradle test installDist` → 23 个测试全过（含新增的多 loader 用例）。
 
+## 多模组联合冒烟（2026-10-20 补）
+
+AppleSkin + Mod Menu + ShulkerBoxTooltip + TrashSlot + IronChests + Lithium + Balm 同时装入，
+quickplay 进世界：`COMBINED_SMOKE in-world`，无 tombstone / NoSuchMethodError / 新崩溃报告，
+截图 `runs/p96-combined-smoke/combined-world.png`。联测额外修掉 Shulker 的三条旧网络路径：
+`ClientPlayNetworkHandler.sendPacket`、`PacketByteBuf.writeNbt` 描述符、末影箱 NBT 读写
+（改为 `Slot/id/Count` 手工序列化）。同时发现部署陷阱：**多个补丁 jar 各自内嵌桥类，先加载的
+那份生效**，桥更新后必须用同一 `--bridge-dir` 重打所有 jar。
+
 ## Mod Menu 列表进展（2026-10-20 补）
 
 模组列表**打开并稳定 60 tick**（无异常、无崩溃报告），截图见

@@ -8,12 +8,15 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.class_2487;
 import net.minecraft.class_2540;
+import net.minecraft.class_2596;
 import net.minecraft.class_2658;
 import net.minecraft.class_2817;
 import net.minecraft.class_2960;
 import net.minecraft.class_310;
 import net.minecraft.class_3222;
+import net.minecraft.class_634;
 import net.minecraft.class_8710;
 import net.minecraft.class_9129;
 import net.minecraft.class_9139;
@@ -52,6 +55,16 @@ public final class FabricLegacyNetworking {
         PayloadTypeRegistry.playC2S().register(type, codec);
         TYPES.put(id, type);
         return type;
+    }
+
+    /** Replacement for the removed ClientPlayNetworkHandler.sendPacket(Packet). */
+    public static void sendPacket(class_634 handler, class_2596<?> packet) {
+        handler.method_48296().method_10743(packet);
+    }
+
+    /** 1.20.1 PacketByteBuf.writeNbt(NbtCompound) -> 1.21.1 writeNbt(NbtElement). */
+    public static class_2540 writeNbt(class_2540 buffer, class_2487 nbt) {
+        return buffer.method_10794(nbt);
     }
 
     /** Replacement for the old {@code new CustomPayloadC2SPacket(Identifier, PacketByteBuf)}. */
