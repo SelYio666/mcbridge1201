@@ -99,8 +99,9 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   server and client alive; `runs/p73-lithium-play/`), a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), a four-minute dedicated soak reports 20.00 TPS with
   flat heap growth (`runs/p99-lithium-soak/`), and a three-minute soak with 40 zombies ticking
-  and pathfinding also holds 20.00 TPS (`runs/p103-mob-soak/`). Redstone machines and multi-hour
-  sessions are still unverified;
+  and pathfinding also holds 20.00 TPS (`runs/p103-mob-soak/`). An observer redstone clock also
+  holds 20.00 TPS for three minutes (`runs/p105-redstone-soak/`, clock activity inferred from the
+  construction). Large redstone machines and multi-hour sessions are still unverified;
 - **six new mods do not generalize the three-mod result** (`runs/p88-mod-expansion/`,
   `docs/mod-expansion.md`): AppleSkin, Mod Menu, Clumps, FallingTree and ShulkerBoxTooltip have
   concrete blockers (Fabric networking bridge, private title-screen field, removed orb-merge mixin,

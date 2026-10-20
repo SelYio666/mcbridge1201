@@ -501,6 +501,8 @@ FILES = [
     "runs/p104-wheel-input/client.log",
     "runs/p104-wheel-input/modmenu-wheel-before.png",
     "runs/p104-wheel-input/modmenu-wheel-after.png",
+    "runs/p105-redstone-soak/README.md",
+    "runs/p105-redstone-soak/soak.log",
     "runs/p102-fallingtree-fell/commands.txt",
     "rules/fabric-1.21.1/fallingtree-tombstones.json",
     "java/src/bridge/java/top/mcbridge1201/bridge/FallingTreeBridge.java",

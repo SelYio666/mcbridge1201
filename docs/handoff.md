@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 22:50）：**红石时钟 soak 通过**（观察者时钟，3 分钟 20.00 TPS）。活动由结构推断。证据 `runs/p105-redstone-soak/`。
 更新（2026-10-20 21:10）：**真实滚轮注入未成功**（scroll 恒 0.0，环境限制）。程序化滚动此前已过。证据 `runs/p104-wheel-input/`。
 更新（2026-10-20 21:05）：**刷怪压力 soak 通过**（40 僵尸，3 分钟 20.00 TPS）。红石/多小时未测。证据 `runs/p103-mob-soak/`。
 更新（2026-10-20 20:35）：**FallingTree 倒树通过**（20→16，持斧生存）。补 `ItemStack.damage` 桥；空手会 INVALID_PLAYER_STATE 是 mod 行为。证据 `runs/p102-fallingtree-fell/`。
