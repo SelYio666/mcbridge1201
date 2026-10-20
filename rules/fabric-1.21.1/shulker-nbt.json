@@ -67,6 +67,19 @@
       "capability": "shulker.enderchest.read",
       "risk": "medium",
       "evidence": "The client handler calls the single-argument EnderChestInventory.readNbt(NbtList) (1.21.1 added RegistryOps), which would throw NoSuchMethodError on receipt. The bridge restores the Slot/id/Count items."
+    },
+    {
+      "id": "shulker.nbt-list-contains",
+      "sourceOwner": "net/minecraft/class_2487",
+      "sourceName": "method_10573",
+      "sourceDesc": "(Ljava/lang/String;I)Z",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/NbtListCompatBridge",
+      "bridgeMethod": "contains",
+      "bridgeDesc": "(Lnet/minecraft/class_2487;Ljava/lang/String;I)Z",
+      "capability": "nbt.list-contains-compat",
+      "risk": "medium",
+      "evidence": "BlockEntityPreviewProvider.getInventory guards with nbt.contains(\"Items\", 9); 1.21.1 tests the element type there, so the legacy check is always false and the preview inventory stays empty (observed with a server-given shulker box, runs/p110-shulker-grid/). The bridge keeps the old 'is a list' meaning for type 9."
     }
   ]
 }

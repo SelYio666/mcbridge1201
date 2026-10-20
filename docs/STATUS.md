@@ -32,7 +32,7 @@ FallingTree / ShulkerBoxTooltip 的核心功能有实测证据，FerriteCore 只
 | Clumps | 经验球合并 companion：3+7→10 | `p93` | 仅 2 格半径、无配置读取 |
 | FallingTree | 真实砍标准橡树整棵倒下（20→16），3 个桥 | `p90/p102` | 需主手斧；其他木材/巨型树 |
 | FerriteCore | 启动/200 tick/正常停服 | `p106` | `fastmap`/`mrl` 两个 mixin 被剥离，性能降级 |
-| ShulkerBoxTooltip | 真实悬停摘要 tooltip（`Diamond x5`） | `p100` | 网格预览 mixin 被剥离；需替代渲染器 |
+| ShulkerBoxTooltip | 真实悬停摘要 tooltip（`Diamond x5`）；网格预览伴生 mixin 已写但未打通 | `p100/p110` | 客户端容器组件读取为空，网格仍不可用 |
 
 ## 工具链
 

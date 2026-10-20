@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "sbtpreview",
+  "version": "1.0.0",
+  "name": "Shulker preview tooltip fix",
+  "environment": "client",
+  "mixins": [
+    "sbtpreview.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "shulkerboxtooltip": "*"
+  }
+}
