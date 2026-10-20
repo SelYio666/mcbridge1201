@@ -8,7 +8,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 | AppleSkin 2.5.2 | 真实悬停追加 `FoodOverlayTextComponent` 行 | 数字因缺 icons.png 不可读；逐效果截图未做 | 通过（悬停） |
 | Mod Menu 7.2.2 | 主菜单 + 列表行可见；滚动与搜索过滤均验证（截图） | 背景简化为填充；真实输入/配置界面未测 | 通过（视觉级） |
 | Clumps 12.0.0.4 | 主菜单 120 tick | 经验球合并通过（companion 桥：3+7→10；tick 驱动、固定 2 格） | 核心功能恢复 |
-| FallingTree 4.3.4 | 初始化已修 | 入服 send/receive 已复测通过；砍树未测 | 部分修复 |
+| FallingTree 4.3.4 | 单块破坏通过（底部原木真实移除） | **倒树未触发**：只掉 1 根，无崩溃/tombstone | 部分修复（倒树待查） |
 | FerriteCore 6.0.1 | 主菜单 120 tick | 启动/200 tick/正常停服；移除 2 个 mixin | 仅启动、降级 |
 | ShulkerBoxTooltip 4.0.4 | 真实悬停 tooltip 显示 `Shulker Box / Diamond x5` | 网格预览变体未测 | 通过（悬停） |
 

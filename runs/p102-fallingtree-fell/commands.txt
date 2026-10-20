@@ -1,0 +1,12 @@
+forceload add 100 100
+setblock 100 64 100 minecraft:oak_log[axis=y]
+setblock 100 65 100 minecraft:oak_log[axis=y]
+setblock 100 66 100 minecraft:oak_log[axis=y]
+setblock 100 67 100 minecraft:oak_log[axis=y]
+setblock 101 66 100 minecraft:oak_leaves[persistent=true]
+setblock 99 66 100 minecraft:oak_leaves[persistent=true]
+setblock 100 66 101 minecraft:oak_leaves[persistent=true]
+setblock 100 66 99 minecraft:oak_leaves[persistent=true]
+setblock 101 67 100 minecraft:oak_leaves[persistent=true]
+setblock 99 67 100 minecraft:oak_leaves[persistent=true]
+setblock 100 68 100 minecraft:oak_leaves[persistent=true]

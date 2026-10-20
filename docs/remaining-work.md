@@ -38,7 +38,11 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   (`runs/p95-appleskin-tooltip/`) now pass, and a real hover appends AppleSkin's
   `FoodOverlayTextComponent` through the new ItemTooltipCallback bridge
   (`runs/p101-appleskin-hover/`); the numbers are unreadable here because `icons.png` is
-  missing, and FallingTree tree-felling behavior is untested. Original bullet: the deleted
+  missing. FallingTree: join and a real single-log break now pass after bridging two more
+  tombstones (enchantment map, mining speed), but tree felling does **not** trigger: only the
+  broken log disappears and there is no crash/tombstone (`runs/p102-fallingtree-fell/`).
+  Open hypotheses: PlayerBlockBreakEvents.Before not fired on this path, tree detection
+  rejecting the test tree, or a silent return inside TreeHandler. Original bullet: the deleted
   `PlayChannelHandler` shim, old `ServerPlayNetworking.send` / `CustomPayloadC2SPacket` redirects and
   the one-arg `Identifier` factory are implemented; AppleSkin now gets past init and packet
   construction but still hits a `FoodHelper` tombstone at HUD render, and FallingTree's join path is

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "CenturyBridge tombstoned FallingTree's 1.20.1 enchantment map and mining-speed helpers. Bridge them to the 1.21.1 component/enchantment APIs.",
+  "methodRedirects": [
+    {
+      "id": "fallingtree.enchantments",
+      "sourceOwner": "centurybridge/gen/Tombstones_FallingTree_1_20_1_4_3_4",
+      "sourceName": "t0",
+      "sourceDesc": "(Lnet/minecraft/class_1799;)Ljava/util/Map;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FallingTreeBridge",
+      "bridgeMethod": "enchantments",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;)Ljava/util/Map;",
+      "capability": "fallingtree.enchantments",
+      "risk": "medium",
+      "evidence": "Breaking a tree threw 'CenturyBridge tombstone: class_1890.method_8222 no longer exists' from ItemStackWrapper.getAnyEnchant -> TreeHandler.getBreakMode (runs/p102-fallingtree-fell/)."
+    },
+    {
+      "id": "fallingtree.mining-speed",
+      "sourceOwner": "centurybridge/gen/Tombstones_FallingTree_1_20_1_4_3_4",
+      "sourceName": "t1",
+      "sourceDesc": "(Lnet/minecraft/class_1792;Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;)F",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/FallingTreeBridge",
+      "bridgeMethod": "miningSpeed",
+      "bridgeDesc": "(Lnet/minecraft/class_1792;Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;)F",
+      "capability": "fallingtree.mining-speed",
+      "risk": "medium",
+      "evidence": "ItemWrapper.getDestroySpeed -> tombstoned Item.getMiningSpeedMultiplier(ItemStack, BlockState); 1.21.1 renamed it to method_58404 (runs/p102-fallingtree-fell/)."
+    }
+  ]
+}
