@@ -613,3 +613,4 @@ a2ad5d50329297405b17c5e546508361ca2aa475891bca25dca8198c0df3dbeb  manifests/envi
 0f29e5bb455d68b6eb5002d854298a5e173cc9ff2c1103ef6117b2be19b691b1  profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json
 ab23bf626f10facc1cba10e8f3ad9410e3da4a6e471a42bedd42c28dd193be29  docs/support-matrix.md
 99488b6ed7c6666973782d98ccf74e6e29cc42fa9500c1f1d379cd27258e5902  docs/remaining-work.md
+95370997108d8a04a38929a1cdb45c9a9be17cd8756a2abbb129ec7d8665078a  docs/STATUS.md
