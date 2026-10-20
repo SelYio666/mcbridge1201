@@ -31,12 +31,24 @@ attempts all aborted with hard JVM errors at different stages.
 7. **TextFieldWidget.tick()** — `class_342.method_1865` died in 1.20.2; 1.21.1 derives the cursor
    blink from wall-clock time, so `TextFieldTickBridge` only keeps the call site linking.
 
+## Visual evidence (2026-10-20 update)
+
+A screenshot was captured with the screen open (`modmenu-list.png`). It shows the Mod Menu chrome
+("Toggle Filter Options", "Website", "Issues", "Open Mods Folder", "Done") and a probe reading
+`MODMENU_LIST items=8`, i.e. the list data exists.
+
+**The list rows themselves are not drawn**: the list area is black. This is a real visual defect, not
+just the missing panorama/asset noise (the magenta checkerboard is the missing-texture background
+that this machine already shows elsewhere). Likely cause: the converted `ModListWidget` render body
+still derives row/scroll geometry from 1.20.1 list fields, while 1.21.1 lays entries out through its
+own selection-list state.
+
 ## Scope
 
-- Verified at the log level: the screen initialises, ticks and renders for at least 60 ticks with no
-  exception and no crash report.
-- A screenshot and real mouse interaction (scrolling, search typing, opening a mod's config) were not
-  captured; they remain untested.
+- Verified: the screen initialises, ticks and renders for at least 60 ticks with no exception and no
+  crash report; a screenshot was captured.
+- Not verified: the list rows are invisible (see the visual evidence above); scrolling, search input
+  and opening a mod's config were not tested.
 - Textured buttons draw with the original texture atlas because the old drawing was re-implemented,
   but their hover/pressed states were not compared pixel by pixel with 1.20.1.
 

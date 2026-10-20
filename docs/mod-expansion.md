@@ -6,7 +6,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 | 模组 | 客户端 | 服务端/功能 | 结论 |
 |---|---|---|---|
 | AppleSkin 2.5.2 | 初始化、同步包、HUD、状态效果 tooltip 路径均通过（契约级） | 真实悬停未测 | 基本修复 |
-| Mod Menu 7.2.2 | 主菜单 + 模组列表打开并稳定 60 tick | 悬停/滚动/配置界面未测 | 通过（日志级） |
+| Mod Menu 7.2.2 | 主菜单 + 模组列表打开并稳定 60 tick；列表有 8 条目 | 列表行未绘制（黑区）、滚动/搜索/配置未测 | 部分通过（视觉缺陷） |
 | Clumps 12.0.0.4 | 主菜单 120 tick | 经验球合并通过（companion 桥：3+7→10；tick 驱动、固定 2 格） | 核心功能恢复 |
 | FallingTree 4.3.4 | 初始化已修 | 入服 send/receive 已复测通过；砍树未测 | 部分修复 |
 | FerriteCore 6.0.1 | 主菜单 120 tick | 启动/200 tick/正常停服；移除 2 个 mixin | 仅启动、降级 |
@@ -60,7 +60,9 @@ FallingTree 同一个 jar 同时带 `fabric.mod.json`（含 main/client 入口�
 
 ## Mod Menu 列表进展（2026-10-20 补）
 
-模组列表**打开并稳定 60 tick**（无异常、无崩溃报告）。越过：final `render`/`method_37020`
+模组列表**打开并稳定 60 tick**（无异常、无崩溃报告），截图见
+`runs/p94-modmenu-list/modmenu-list.png`；但**列表行未绘制**（探针读到 8 个条目，画面黑区），
+属真实视觉缺陷，疑似 1.20.1 列表几何字段与新选择列表状态不一致。越过：final `render`/`method_37020`
 覆盖（通用改名 + 重复方法丢弃）、`class_4280`/`class_350` 旧构造（`LegacyEntryListWidget`/
 `LegacyParentWidget` + 旧字段与 `setLeftPos`）、`Identifier(String)`、`TexturedButtonWidget`
 旧纹理构造（`LegacyTexturedButton` 用 `DrawContext.drawTexture` 重绘旧图集区域）、

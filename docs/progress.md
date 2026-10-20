@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 12:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 12:40（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 12:40）：**Mod Menu 列表截图取证：界面/按钮正常，8 条目存在，但列表行未绘制**（黑区，真实视觉缺陷）。截图 `runs/p94-modmenu-list/modmenu-list.png`；疑似 1.20.1 行/滚动几何与1.21.1 选择列表状态不一致，下一步查 `ModListWidget` 渲染用的字段。
 更新（2026-10-20 12:35）：**AppleSkin 状态效果 tooltip 路径通过（契约级）**。`t5` 桥把 1.21.1 `comp_2495()` 的 StatusEffectEntry 还原成旧 `Pair<StatusEffect,Float>` 列表；真实客户端金苹果探针：`hunger=4 sat=9.6`、`size=2 probability=1.0`，无 tombstone。真实悬停未测。证据 `runs/p95-appleskin-tooltip/`。
 更新（2026-10-20 12:25）：**Mod Menu 模组列表通过（日志级）**。打开后稳定 60 tick，无异常/崩溃；新增 `LegacyTexturedButton`（重绘旧纹理图集区域）、`TextFieldTickBridge`、构造重定向宽松回退、`LegacyEntryListWidget`/`LegacyParentWidget`。未测截图与滚动/搜索/配置交互。证据 `runs/p94-modmenu-list/`。
 更新（2026-10-20 12:15）：**Mod Menu 模组列表仍未通过，但已推进到纹理按钮**。新增通用 `methodRenames` 通配 + 重复覆盖丢弃、`superclassReplacements` 与 `LegacyEntryListWidget`/`LegacyParentWidget` 桥（旧字段 + setLeftPos）；当前阻断 `class_344` 旧纹理构造 → `WidgetSprites`，未猜。证据 `runs/p94-modmenu-list/`。
