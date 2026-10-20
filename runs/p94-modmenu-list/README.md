@@ -39,9 +39,26 @@ A screenshot was captured with the screen open (`modmenu-list.png`). It shows th
 
 **The list rows themselves are not drawn**: the list area is black. This is a real visual defect, not
 just the missing panorama/asset noise (the magenta checkerboard is the missing-texture background
-that this machine already shows elsewhere). Likely cause: the converted `ModListWidget` render body
-still derives row/scroll geometry from 1.20.1 list fields, while 1.21.1 lays entries out through its
-own selection-list state.
+that this machine already shows elsewhere).
+
+Latest diagnostics (probe, tick 260):
+
+```text
+MODMENU_LIST items=8 w=163 h=153 scroll=0.0 row0Visible=true rowTop0=71
+```
+
+So the list has eight entries, the scroll amount is 0, the first row's top is at y=71 and the
+widget's own visibility test says the row is visible. Geometry therefore looks sane, yet nothing is
+painted.
+
+Prime suspect: `ModListWidget.method_25311` (the overridden list render body) starts with
+`RenderSystem.getShader()` and then calls the **unbridged** tombstone
+`Tombstones_modmenu_7_2_2.t1(class_289)`, which throws
+`UnsupportedOperationException: class_289.method_1349 no longer exists in 1.21.1`.
+Its sibling tombstones `t2`/`t3`/`t4` are also still unbridged. No tombstone exception appears in the
+log, which means this render body is apparently not being reached at all — that contradiction is the
+next thing to resolve (verify whether `ModListWidget.method_25311` is called, and bridge or replace
+the `t1`–`t4` RenderSystem/Shader/VertexConsumer calls).
 
 ## Scope
 
