@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 20:10）：**FallingTree 倒树根因缩小**：事件已投递、LOGS 标签正常，缺口在 `TreeHandler.breakTree`。证据 `runs/p102-fallingtree-fell/`。
 更新（2026-10-20 20:05）：**FallingTree 单块破坏过、倒树未触发**。补 2 个 tombstone 桥；倒树失败已如实记录在 `runs/p102-fallingtree-fell/`。
 更新（2026-10-20 19:30）：**AppleSkin 真实悬停通过**（tooltip 追加 FoodOverlay 行）。修复状态效果 API ×4、ItemTooltipCallback 桥、bodyRedirect 静态方法。证据 `runs/p101-appleskin-hover/`。
 更新（2026-10-20 14:15）：**Shulker 真实悬停通过**（tooltip `Diamond x5`）。修复二参 Identifier 私有构造；单机水下出生/端间模组一致性已记录。证据 `runs/p100-shulker-hover/`。

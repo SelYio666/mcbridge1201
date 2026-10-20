@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 20:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 20:10（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 20:10）：**FallingTree 倒树根因缩小**。服务端事件探针证明 `PlayerBlockBreakEvents.BEFORE/AFTER` 都触发、`BlockTags.LOGS` 存在，排除“事件未投递”；缺口在 `TreeHandler.breakTree`（检测或静默返回）。证据 `runs/p102-fallingtree-fell/server-events.log`。
 更新（2026-10-20 20:05）：**FallingTree 单块破坏通过、倒树未触发**。用 RCON 在出生点造了标准橡树（4 原木+树叶），探针真实破坏底部原木成功；补了 2 个 tombstone 桥（附魔表、挖掘速度）。但只掉 1 根、其余原木不动，且无崩溃/tombstone。失败假设与证据见 `runs/p102-fallingtree-fell/`。
 更新（2026-10-20 19:30）：**AppleSkin 真实悬停通过**。tooltip 追加了 `FoodOverlayTextComponent`（探针取文本证据）；修复 4 处状态效果 API（getEffectType 返回 RegistryEntry、HUNGER/POISON/WITHER 常量、hasStatusEffect 入参），并用 ItemTooltipCallback 桥替代已被删除的 ItemStack mixin。顺带修复 bodyRedirect 对静态方法误压 `this` 的 VerifyError。数字因缺 icons.png 不可读。证据 `runs/p101-appleskin-hover/`。
 更新（2026-10-20 14:15）：**Shulker 真实悬停通过**。专用服务器 + 客户端探针 + 系统光标注入，tooltip 显示 `Shulker Box / Diamond x5`。途中修复 `new Identifier(ns,path)` 私有构造（6 处），并记录单机出生点水下会淹死、端间模组必须一致。网格预览变体未测。证据 `runs/p100-shulker-hover/`。

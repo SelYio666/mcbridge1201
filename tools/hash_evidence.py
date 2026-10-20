@@ -489,6 +489,8 @@ FILES = [
     "runs/p102-fallingtree-fell/README.md",
     "runs/p102-fallingtree-fell/client.log",
     "runs/p102-fallingtree-fell/server.log",
+    "runs/p102-fallingtree-fell/server-events.log",
+    "runs/p102-fallingtree-fell/server-tag.log",
     "runs/p102-fallingtree-fell/commands.txt",
     "rules/fabric-1.21.1/fallingtree-tombstones.json",
     "java/src/bridge/java/top/mcbridge1201/bridge/FallingTreeBridge.java",

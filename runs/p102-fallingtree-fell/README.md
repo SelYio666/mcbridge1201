@@ -48,8 +48,18 @@ exception in `server.log`; the mod's mixin config is byte-identical to the origi
 
 Honest status: **break path verified, felling unverified/broken**. Remaining hypotheses, in order:
 
-1. `PlayerBlockBreakEvents.Before` is not fired for this server break path in the converted setup
-   (would need a probe listening to the same event);
+1. ~~`PlayerBlockBreakEvents.Before` is not fired for this server break path~~ — **ruled out**. A
+   second probe registered `PlayerBlockBreakEvents.BEFORE/AFTER` and both fired for the exact break:
+
+   ```text
+   BREAK_BEFORE pos=class_2338{x=30, y=65, z=83} block=Block{minecraft:oak_log}[axis=y] player=yes
+   BREAK_AFTER  pos=class_2338{x=30, y=65, z=83} block=Block{minecraft:oak_log}[axis=y]
+   ```
+
+   `LOGS_TAG present=true` shows `BlockTags.LOGS` resolves on 1.21.1, so the tag source used by
+   `isLogBlock` is not empty either. The failure is therefore inside `TreeHandler.breakTree`
+   (detection or a silent early return), not in event delivery or tag lookup.
+
 2. the mod's tree detection rejects the artificial tree (`WHOLE_TREE`, `minimumLeavesAroundRequired=1`);
 3. a silent early return inside `TreeHandler`/`FallingTreeCommon` after the conversion.
 
