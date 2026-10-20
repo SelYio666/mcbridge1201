@@ -458,6 +458,7 @@ FILES = [
     "runs/p94-modmenu-list/README.md",
     "runs/p94-modmenu-list/client.log",
     "runs/p94-modmenu-list/modmenu-list.png",
+    "runs/p94-modmenu-list/modmenu-scrolled.png",
     "java/src/bridge/java/top/mcbridge1201/bridge/LegacyEntryListWidget.java",
     "java/src/bridge/java/top/mcbridge1201/bridge/LegacyParentWidget.java",
     "rules/fabric-1.21.1/render-widget-override.json",

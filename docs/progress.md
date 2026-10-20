@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 12:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 12:55（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 12:55）：**Mod Menu 滚动联动通过**。`setScrollAmount(40)` 后 `scroll 0→40`、`rowTop0 71→31`，两张截图对比可见行移动。真实滚轮事件、搜索输入、模组配置界面仍未测。证据 `runs/p94-modmenu-list/modmenu-scrolled.png`。
 更新（2026-10-20 12:50）：**Mod Menu 列表行通过视觉验证**。修了两处根因：① 通配改名误把 `ModsScreen.render` 也改名（已排除 class_437 子类）；② 列表/描述面板的渲染体依赖已删除的 shader API（t1），新增 `bodyRedirects` 用`ModMenuListRenderBridge` 以 DrawContext 逐行重绘。截图可见图标/名称/描述/滚动条；背景简化为半透明填充（记录为降级），洋红棋盘是本机缺材质。证据 `runs/p94-modmenu-list/`。
 更新（2026-10-20 12:40）：**Mod Menu 列表截图取证：界面/按钮正常，8 条目存在，但列表行未绘制**（黑区，真实视觉缺陷）。截图 `runs/p94-modmenu-list/modmenu-list.png`；疑似 1.20.1 行/滚动几何与1.21.1 选择列表状态不一致，下一步查 `ModListWidget` 渲染用的字段。
 更新（2026-10-20 12:35）：**AppleSkin 状态效果 tooltip 路径通过（契约级）**。`t5` 桥把 1.21.1 `comp_2495()` 的 StatusEffectEntry 还原成旧 `Pair<StatusEffect,Float>` 列表；真实客户端金苹果探针：`hunger=4 sat=9.6`、`size=2 probability=1.0`，无 tombstone。真实悬停未测。证据 `runs/p95-appleskin-tooltip/`。

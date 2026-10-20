@@ -68,13 +68,28 @@ visual noise: the magenta/black checkerboard is the missing-texture background t
 shows for other screens, and the list backdrop is the simplified translucent fill (recorded
 degradation instead of the old shader gradient).
 
+## Scroll interaction (2026-10-20 update 2)
+
+A second probe run exercised the list scroll state programmatically through the public list API
+(`setScrollAmount(double)`):
+
+```text
+MODMENU_SCROLL before=0.0 after=40.0 rowTop0=31
+```
+
+The row top moved from 71 to 31 (exactly the 40 px scroll) and the second screenshot
+(`modmenu-scrolled.png`) shows the rows shifted up, so scrolling geometry and entry rendering are
+wired together. Mouse-wheel input itself was not injected; this tests the list state and renderer.
+
 ## Scope
 
 - Verified: the screen initialises, ticks and renders for at least 60 ticks with no exception and no
   crash report; a screenshot was captured.
 - Verified: list rows render (icons/names/description/scrollbar visible in the screenshot).
-- Not verified: scrolling, search input and opening a mod's config were not tested; the row backdrop
-  is simplified and the magenta checkerboard comes from the machine's missing assets.
+- Verified: rows render, and the scroll state moves rows (screenshots `modmenu-list.png` and
+  `modmenu-scrolled.png`).
+- Not verified: real mouse-wheel input, search input and opening a mod's config; the row backdrop is
+  simplified and the magenta checkerboard comes from the machine's missing assets.
 - Textured buttons draw with the original texture atlas because the old drawing was re-implemented,
   but their hover/pressed states were not compared pixel by pixel with 1.20.1.
 

@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 12:55）：**滚动联动通过**（scroll 0→40、rowTop 71→31，两张截图）。真实滚轮/搜索/配置界面未测。
 更新（2026-10-20 12:50）：**Mod Menu 列表行可见**。修复 Screen.render 误改名 + 新增 bodyRedirects（列表/描述面板用 DrawContext 重绘）。背景简化为填充；洋红棋盘=本机缺材质。证据 `runs/p94-modmenu-list/`。
 更新（2026-10-20 12:40）：**Mod Menu 列表截图**：界面/按钮正常、8 条目存在，但列表行未绘制（视觉缺陷）；截图 `runs/p94-modmenu-list/modmenu-list.png`，下一步查行/滚动几何。
 更新（2026-10-20 12:35）：**AppleSkin tooltip 状态效果路径通过**（契约级，金苹果 size=2）。真实悬停未测。证据 `runs/p95-appleskin-tooltip/`。
