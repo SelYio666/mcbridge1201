@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 13:50（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 14:05（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 14:05）：**Lithium 4 分钟 soak 通过**。首窗 17.81（含启动/生成），之后每窗 20.00；堆 261→282 MB，增长平缓；无异常/崩溃。刷怪、红石、多小时长跑仍未测。证据 `runs/p99-lithium-soak/`。
 更新（2026-10-20 13:50）：**桥一致性门禁 + 修补策略修复**。新增 `tools/check_bridge_consistency.py`；`embedUsedBridges` 改为覆盖同名桥而非删除未引用桥（删除曾导致 IronChests 缺 `CodecDispatch`）。六件套检查 `problems = 0`，联合冒烟恢复 `COMBINED_SMOKE in-world`。证据 `runs/p98-bridge-consistency/`。
 更新（2026-10-20 13:40）：**Mod Menu 配置界面通过**。修复 OptionsList 旧构造（parent 从当前屏取）、render 改名规则排除 `class_4667`（间接 Screen）、旧 `renderBackground` 转发；截图可见 10 行选项，无崩溃。其他模组的 Cloth Config 界面与单选项交互未测。证据 `runs/p97-modmenu-config/`。
 更新（2026-10-20 13:20）：**多模组联合冒烟通过**。Quickplay 进世界、无崩溃；联测修掉 Shulker 的 `sendPacket`、`PacketByteBuf.writeNbt` 描述符、末影箱 NBT 读写（Slot/id/Count 手工序列化）。发现桥类内嵌冲突：多 jar 各自带桥，先加载者生效，桥更新后必须同 bridge-dir 重打全部 jar。证据 `runs/p96-combined-smoke/`。

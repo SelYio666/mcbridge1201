@@ -83,8 +83,9 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   chest, so the synthetic key reaches GLFW but not Balm's screen-key event dispatch. The action
   itself passes at provider level (`runs/p65-trash-empty/`);
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
-  server and client alive; `runs/p73-lithium-play/`) and a 60-second TPS sample reports 20.03 with
-  289/289 chunks (`runs/p84-lithium-tps/`), but mob AI, redstone and long sessions are still
+  server and client alive; `runs/p73-lithium-play/`), a 60-second TPS sample reports 20.03 with
+  289/289 chunks (`runs/p84-lithium-tps/`), and a four-minute dedicated soak reports 20.00 TPS with
+  flat heap growth (`runs/p99-lithium-soak/`). Mob AI, redstone and multi-hour sessions are still
   unverified;
 - **six new mods do not generalize the three-mod result** (`runs/p88-mod-expansion/`,
   `docs/mod-expansion.md`): AppleSkin, Mod Menu, Clumps, FallingTree and ShulkerBoxTooltip have

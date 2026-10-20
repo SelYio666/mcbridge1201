@@ -474,6 +474,8 @@ FILES = [
     "runs/p98-bridge-consistency/client.log",
     "runs/p98-bridge-consistency/combined-world.png",
     "tools/check_bridge_consistency.py",
+    "runs/p99-lithium-soak/README.md",
+    "runs/p99-lithium-soak/soak.log",
     "java/src/bridge/java/top/mcbridge1201/bridge/LegacyEntryListWidget.java",
     "java/src/bridge/java/top/mcbridge1201/bridge/LegacyParentWidget.java",
     "rules/fabric-1.21.1/render-widget-override.json",
