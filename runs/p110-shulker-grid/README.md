@@ -69,12 +69,26 @@ This is outside the converter's scope (component contents differ between server 
 stack). A future run should compare the raw slot-update packet with the server stack, or reproduce
 with a vanilla-only client and the same command.
 
+### Vanilla control
+
+A minimal inventory probe (Fabric API only, or Fabric API + the patched Shulker mod) reads the same
+server-given stack and prints a **normal** map:
+
+```text
+INV0 item=minecraft:shulker_box map={minecraft:container=>net.minecraft.class_9288@...}
+```
+
+With the companion installed, the very first `getTooltipData` call already sees
+`SBT_TOP map={!minecraft:container}` and the copied snapshot has the same form, even though the
+same inventory probe printed a normal map moments earlier. So the removal form appears in the
+tooltip path with the companion present; the exact interaction was not identified.
+
 ## Honest status
 
 **Grid preview is not restored in this run.** The companion mixin, the builder and the NBT compat
-rule are in place and apply correctly; the blocker is a client-side container-component contents
-discrepancy visible even with a fresh player and a minimal mod set. Recording it here avoids claiming
-a visual win that did not happen.
+rule are in place and apply correctly; the blocker is a client-side container-component discrepancy
+between the server stack and the stack the tooltip path sees. Recording it here avoids claiming a
+visual win that did not happen; this line is parked until a packet-level comparison is done.
 
 ## Evidence
 

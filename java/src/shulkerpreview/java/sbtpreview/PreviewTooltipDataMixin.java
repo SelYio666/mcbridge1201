@@ -33,6 +33,9 @@ public class PreviewTooltipDataMixin {
         if (stack.method_7960()) {
             return;
         }
+        System.out.println("SBT_TOP map=" + stack.method_57380());
+        class_1799 snapshot = stack.method_7972();
+        System.out.println("SBT_SNAP map=" + snapshot.method_57380());
         PreviewProvider provider = PreviewProviderRegistry.getInstance().get(stack);
         Object component = stack.method_57379(net.minecraft.class_9334.field_49622, null);
         class_2487 tag = ShulkerBoxNbtBridge.legacyBlockEntityTag(stack, "BlockEntityTag");
@@ -97,6 +100,11 @@ public class PreviewTooltipDataMixin {
         if (size == 0) {
             return;
         }
-        cir.setReturnValue(Optional.of(new PreviewTooltipData(provider, context)));
+        PreviewContext drawContext = mc.field_1724 == null
+                ? PreviewContext.of(snapshot)
+                : PreviewContext.of(snapshot, mc.field_1724);
+        System.out.println("SBT_SNAP_SHOW " + provider.shouldDisplay(drawContext)
+                + " inv=" + provider.getInventory(drawContext).size());
+        cir.setReturnValue(Optional.of(new PreviewTooltipData(provider, drawContext)));
     }
 }
