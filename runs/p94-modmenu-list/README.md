@@ -81,6 +81,19 @@ The row top moved from 71 to 31 (exactly the 40 px scroll) and the second screen
 (`modmenu-scrolled.png`) shows the rows shifted up, so scrolling geometry and entry rendering are
 wired together. Mouse-wheel input itself was not injected; this tests the list state and renderer.
 
+## Search filter (2026-10-20 update 3)
+
+The search path was exercised through the same public entry point the text box uses
+(`ModListWidget.filter(String, boolean)`, which ModsScreen wires as the changed-listener):
+
+```text
+MODMENU_SEARCH before=8 after=2
+```
+
+Filtering by "menu" reduced the visible list to 2 rows; `modmenu-search.png` shows "Showing 2/8" and
+the reduced row area. A query that matches only hidden library mods (e.g. "fabric") yields 0, which
+is consistent with library filtering rather than a search failure.
+
 ## Scope
 
 - Verified: the screen initialises, ticks and renders for at least 60 ticks with no exception and no
@@ -88,8 +101,10 @@ wired together. Mouse-wheel input itself was not injected; this tests the list s
 - Verified: list rows render (icons/names/description/scrollbar visible in the screenshot).
 - Verified: rows render, and the scroll state moves rows (screenshots `modmenu-list.png` and
   `modmenu-scrolled.png`).
-- Not verified: real mouse-wheel input, search input and opening a mod's config; the row backdrop is
+- Not verified: real mouse-wheel/keyboard input and opening a mod's config; the row backdrop is
   simplified and the magenta checkerboard comes from the machine's missing assets.
+- Verified programmatically: scrolling (0→40, rows move) and search filtering (8→2 rows, shown as
+  "Showing 2/8").
 - Textured buttons draw with the original texture atlas because the old drawing was re-implemented,
   but their hover/pressed states were not compared pixel by pixel with 1.20.1.
 

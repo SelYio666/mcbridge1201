@@ -57,8 +57,8 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   `render-widget-override` rule no longer renames `Screen.render`, and `bodyRedirects` replaces the
   two shader-based list renderers with a DrawContext row renderer. The row backdrop is simplified and
   the magenta checkerboard is this machine's missing assets; scrolling/search/config interaction is
-  scrolling state and row movement are verified with two screenshots; real mouse-wheel events,
-  search typing and the mod config screen are still unverified;
+  scrolling state and search filtering are verified with screenshots (0→40 rows move; "menu" 8→2);
+  real mouse-wheel/keyboard events and the mod config screen are still unverified;
 - Mod Menu title screen passes (`runs/p92-modmenu/`): the private field is read reflectively and the
   button widget overrides `renderWidget` after a `methodRenames` rule; the mod list screen itself
   and config UI are untested;
