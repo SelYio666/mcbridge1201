@@ -67,6 +67,14 @@ quickplay 进世界：`COMBINED_SMOKE in-world`，无 tombstone / NoSuchMethodEr
 （改为 `Slot/id/Count` 手工序列化）。同时发现部署陷阱：**多个补丁 jar 各自内嵌桥类，先加载的
 那份生效**，桥更新后必须用同一 `--bridge-dir` 重打所有 jar。
 
+## Mod Menu 配置界面（2026-10-20 补）
+
+`ModMenu.getConfigScreen("modmenu", current)` 打开 `ModMenuOptionsScreen`，探针读到
+`items=10 w=342 h=190 y=33 rowTop0=37`，截图可见 10 行选项与 Done。修复：`OptionsList` 旧构造
+（新构造需要 `OptionsSubScreen`，桥从当前屏幕取 parent）、`MethodRenames.excludeSuper` 支持
+逗号列表并排除 `class_4667`（OptionsSubScreen 间接继承 Screen）、旧 `renderBackground` 转发。
+证据 `runs/p97-modmenu-config/`。
+
 ## Mod Menu 列表进展（2026-10-20 补）
 
 模组列表**打开并稳定 60 tick**（无异常、无崩溃报告），截图见

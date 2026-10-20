@@ -252,8 +252,17 @@ public final class JarPatcher {
             if (!"*".equals(rr.owner) && !cn.name.equals(rr.owner)) {
                 continue;
             }
-            if (rr.excludeSuper != null && rr.excludeSuper.equals(cn.superName)) {
-                continue;
+            if (rr.excludeSuper != null) {
+                boolean excluded = false;
+                for (String superName : rr.excludeSuper.split(",")) {
+                    if (superName.trim().equals(cn.superName)) {
+                        excluded = true;
+                        break;
+                    }
+                }
+                if (excluded) {
+                    continue;
+                }
             }
             var toRemove = new java.util.ArrayList<MethodNode>();
             for (MethodNode mn : cn.methods) {

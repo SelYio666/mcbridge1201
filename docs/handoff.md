@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 13:40）：**Mod Menu 配置界面通过**（10 行选项可见）。修复 OptionsList 旧构造、Screen 排除加 class_4667、旧 renderBackground 转发。证据 `runs/p97-modmenu-config/`。
 更新（2026-10-20 13:20）：**多模组联合冒烟通过**（进世界无崩溃）。修 Shulker sendPacket/writeNbt/末影箱 NBT。注意桥内嵌冲突：多 jar 需同 bridge-dir 重打。证据 `runs/p96-combined-smoke/`。
 更新（2026-10-20 13:10）：**搜索过滤通过**（"menu" 8→2，Showing 2/8）。真实输入与配置界面仍未测。
 更新（2026-10-20 12:55）：**滚动联动通过**（scroll 0→40、rowTop 71→31，两张截图）。真实滚轮/搜索/配置界面未测。

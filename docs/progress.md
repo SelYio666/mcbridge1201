@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 13:20（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 13:40（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 13:40）：**Mod Menu 配置界面通过**。修复 OptionsList 旧构造（parent 从当前屏取）、render 改名规则排除 `class_4667`（间接 Screen）、旧 `renderBackground` 转发；截图可见 10 行选项，无崩溃。其他模组的 Cloth Config 界面与单选项交互未测。证据 `runs/p97-modmenu-config/`。
 更新（2026-10-20 13:20）：**多模组联合冒烟通过**。Quickplay 进世界、无崩溃；联测修掉 Shulker 的 `sendPacket`、`PacketByteBuf.writeNbt` 描述符、末影箱 NBT 读写（Slot/id/Count 手工序列化）。发现桥类内嵌冲突：多 jar 各自带桥，先加载者生效，桥更新后必须同 bridge-dir 重打全部 jar。证据 `runs/p96-combined-smoke/`。
 更新（2026-10-20 13:10）：**Mod Menu 搜索过滤通过**。`filter("menu")` 后列表 8→2，界面显示 `Showing 2/8`（截图 `modmenu-search.png`）。`fabric` 过滤为 0 是库隐藏语义，非失败。真实滚轮/键盘输入、模组配置界面仍未测。
 更新（2026-10-20 12:55）：**Mod Menu 滚动联动通过**。`setScrollAmount(40)` 后 `scroll 0→40`、`rowTop0 71→31`，两张截图对比可见行移动。真实滚轮事件、搜索输入、模组配置界面仍未测。证据 `runs/p94-modmenu-list/modmenu-scrolled.png`。

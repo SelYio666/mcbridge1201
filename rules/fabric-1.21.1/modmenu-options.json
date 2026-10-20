@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "1.20.1 OptionsList took (client,width,height,top,bottom,itemHeight); 1.21.1 takes (client,width,OptionsSubScreen parent) and reads the parent's layout. ModMenuOptionsScreen is an OptionsSubScreen and is the current screen while it builds the list, so the factory takes the parent from the client.",
+  "constructorRedirects": [
+    {
+      "id": "modmenu.options-list-old-ctor",
+      "owner": "net/minecraft/class_353",
+      "desc": "(Lnet/minecraft/class_310;IIIII)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ModMenuOptionsListBridge",
+      "bridgeMethod": "create",
+      "bridgeDesc": "(Lnet/minecraft/class_310;IIIII)Lnet/minecraft/class_353;",
+      "capability": "modmenu.options-list",
+      "risk": "medium",
+      "evidence": "Opening Mod Menu's own config screen (ModMenuOptionsScreen) threw NoSuchMethodError 'class_353.<init>(class_310,IIIII)' (runs/p97-modmenu-config/)."
+    }
+  ],
+  "methodRedirects": [
+    {
+      "id": "modmenu.options.render-background",
+      "sourceOwner": "com/terraformersmc/modmenu/gui/ModMenuOptionsScreen",
+      "sourceName": "method_25434",
+      "sourceDesc": "(Lnet/minecraft/class_332;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/ModMenuTitleScreenBridge",
+      "bridgeMethod": "renderBackground",
+      "bridgeDesc": "(Lnet/minecraft/class_437;Lnet/minecraft/class_332;)V",
+      "capability": "modmenu.options.render-background",
+      "risk": "low",
+      "evidence": "With its render restored, ModMenuOptionsScreen crashed with NoSuchMethodError 'ModMenuOptionsScreen.method_25434(class_332)' because 1.21.1 renamed the one-argument renderBackground (runs/p97-modmenu-config/). Forwarded with neutral pointer coordinates like ModsScreen."
+    }
+  ]
+}
