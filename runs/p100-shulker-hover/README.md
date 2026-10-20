@@ -36,8 +36,13 @@ there. Client and server mod sets must also match, or Fabric disconnects on regi
 
 ## Scope
 
-- The tooltip shown is the item-summary variant (`Diamond x5`), not the full grid preview; the grid
-  may need the server-side mod channel / a different preview mode.
+- The tooltip shown is the item-summary variant (`Diamond x5`), not the full grid preview. Root
+  cause found later: the conversion dropped the `ItemStackMixin` entries that render the grid. The
+  raw mixin configs list `client.ItemStackMixin` / `client.fabric.ItemStackMixin` and
+  `client.ShulkerBoxBlockMixin`, while the converted configs keep only
+  `DrawContextMixin`, `HandledScreenMixin`, `KeyboardMixin`, `TooltipBackgroundRendererMixin` and
+  `client.fabric.HandledScreenMixin` — the same "dead mixin target" stripping as AppleSkin's
+  tooltip mixin. Restoring the grid needs a replacement tooltip renderer, not just config.
 - Hover is verified for one slot with the hotbar selected; other slots and shulker variants are not.
 
 ## Evidence

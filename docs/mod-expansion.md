@@ -10,7 +10,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 | Clumps 12.0.0.4 | 主菜单 120 tick | 经验球合并通过（companion 桥：3+7→10；tick 驱动、固定 2 格） | 核心功能恢复 |
 | FallingTree 4.3.4 | 标准橡树整体倒下（20 → 16 根原木，服务端无崩溃） | 需主手斧头（mod 默认行为）；其他木材/巨型树未测 | 通过（倒树） |
 | FerriteCore 6.0.1 | 主菜单 120 tick | 启动/200 tick/正常停服；移除 2 个 mixin | 仅启动、降级 |
-| ShulkerBoxTooltip 4.0.4 | 真实悬停 tooltip 显示 `Shulker Box / Diamond x5` | 网格预览变体未测 | 通过（悬停） |
+| ShulkerBoxTooltip 4.0.4 | 真实悬停 tooltip 显示 `Shulker Box / Diamond x5` | 网格预览渲染 mixin 被转换剥离；摘要 tooltip 可用 | 部分修复（摘要悬停） |
 
 ## 网络桥进展（2026-10-19 补）
 
