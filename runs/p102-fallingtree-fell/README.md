@@ -1,68 +1,56 @@
-# P102: FallingTree break path and felling attempt
+# P102: FallingTree tree felling
 
 Date: 2026-10-20.
 
-## Setup
-
-Dedicated server (Fabric API + converted FallingTree 4.3.4) and a client with the same patched
-FallingTree jar plus a probe. RCON builds a textbook oak tree next to spawn:
+## Final status: **felling works**
 
 ```text
-setblock 30 65..68 83 minecraft:oak_log[axis=y]
-leaves at 31/29,83; 30,84/82 (y=65/67) and 30,69,83
+TREE_FIXED pos=class_2338{x=30, y=65, z=83} logsBefore=20
+TREE_ARRIVED at={32.6,65.2,83.5}
+TREE_BROKEN ticks=13
+TREE_RESULT logsBefore=20 logsAfter=16
 ```
 
-The probe walks to the trunk, breaks the bottom log with the real client interaction manager and
-counts logs before/after within 13x25x13 blocks.
+A textbook oak (four oak logs plus persistent leaves, placed via RCON next to spawn) is broken with a
+real client break while holding a diamond axe in survival. All four trunk logs disappear, so
+FallingTree's server-side felling ran end to end; the server log has no tombstone or
+`NoSuchMethodError`.
 
-## What works
+## What had to be fixed
 
-- FallingTree loads on both sides and the player joins (`TestPlayer joined the game`).
-- The bottom log is really broken: `TREE_BROKEN ticks=72`.
+| problem | fix |
+|---|---|
+| `EnchantmentHelper.get(ItemStack)` tombstoned (`class_1890.method_8222`) | `FallingTreeBridge.enchantments` reads the 1.21.1 component and unwraps `RegistryEntry.comp_349()` |
+| `Item.getMiningSpeedMultiplier` tombstoned | `miningSpeed` calls the renamed `method_58404` |
+| `ItemStack.damage(int, LivingEntity, Consumer)` removed (server crashed mid-felling) | `damage` forwards to `method_7970(int, LivingEntity, EquipmentSlot.MAINHAND)`; the bridge keeps the legacy `Consumer` parameter so the call-site stack stays valid |
 
-Two more CenturyBridge tombstones surfaced on the break path and were bridged:
+`rules/fabric-1.21.1/fallingtree-tombstones.json` applies all three (2 + 1 + 1 sites).
 
-| tombstone | 1.20.1 call | 1.21.1 replacement |
-|---|---|---|
-| `t0` | `EnchantmentHelper.get(ItemStack)` → `Map<Enchantment,Integer>` | `EnchantmentHelper.method_57532` component, unwrap `RegistryEntry.comp_349()` |
-| `t1` | `Item.getMiningSpeedMultiplier(ItemStack, BlockState)` | `Item.method_58404(ItemStack, BlockState)` |
+## What the failures were
 
-`fallingtree-tombstones.json` redirects both call sites (2 + 1 occurrences).
+- Without an axe in the main hand, `isValidTool` rejects the player, so `TreeHandler.breakTree`
+  returns `ABORTED(INVALID_PLAYER_STATE)` and only the broken log disappears. This is the mod's
+  default behaviour, not a conversion gap.
+- The earlier "no felling" runs were therefore a test-harness issue; the only real conversion gaps
+  were the three API bridges above.
 
-## What does not work
+## How the test works
 
-Tree felling never happens: only the broken log disappears.
+1. RCON `setblock` builds the tree at `30,65..68,83` with leaves, and
+   `item replace entity TestPlayer weapon.mainhand with minecraft:diamond_axe`.
+2. A client probe walks to the trunk, breaks the bottom log with the real interaction manager.
+3. The probe counts logs in a 13x25x13 box before and after.
+4. Server runs with `gamemode=survival` and `force-gamemode=true`.
 
-```text
-TREE_FIXED pos=class_2338{x=30, y=65, z=83} logsBefore=19
-TREE_ARRIVED at={32.6,65.2,83.5} yaw=-113.92363
-TREE_BROKEN ticks=72
-TREE_RESULT logsBefore=19 logsAfter=18
-```
+## Earlier failed runs (kept as evidence)
 
-The same result was observed on a natural trunk earlier (18 -> 17) and after adding persistent
-leaves directly next to the bottom log (19 -> 18). There is no tombstone, NoSuchMethodError or
-exception in `server.log`; the mod's mixin config is byte-identical to the original and
-`LevelMixin`/`AbstractBlockMixin` apply without warnings. `BlockBreakListener` (a
-`PlayerBlockBreakEvents.Before`) is registered by `FallingTreeCommonsImpl.register()`.
-
-Honest status: **break path verified, felling unverified/broken**. Remaining hypotheses, in order:
-
-1. ~~`PlayerBlockBreakEvents.Before` is not fired for this server break path~~ — **ruled out**. A
-   second probe registered `PlayerBlockBreakEvents.BEFORE/AFTER` and both fired for the exact break:
-
-   ```text
-   BREAK_BEFORE pos=class_2338{x=30, y=65, z=83} block=Block{minecraft:oak_log}[axis=y] player=yes
-   BREAK_AFTER  pos=class_2338{x=30, y=65, z=83} block=Block{minecraft:oak_log}[axis=y]
-   ```
-
-   `LOGS_TAG present=true` shows `BlockTags.LOGS` resolves on 1.21.1, so the tag source used by
-   `isLogBlock` is not empty either. The failure is therefore inside `TreeHandler.breakTree`
-   (detection or a silent early return), not in event delivery or tag lookup.
-
-2. the mod's tree detection rejects the artificial tree (`WHOLE_TREE`, `minimumLeavesAroundRequired=1`);
-3. a silent early return inside `TreeHandler`/`FallingTreeCommon` after the conversion.
+- `runs/p102-fallingtree-fell/server.log` etc.: hand-breaking, creative mode, no axe; only one log
+  removed.
+- `server-call*.log`: direct `TreeHandler.breakTree` calls returning `ABORTED(INVALID_PLAYER_STATE)`.
+- `server-events.log`: proves `PlayerBlockBreakEvents.BEFORE/AFTER` fire.
+- `server-tag.log`: `LOGS_TAG present=true`.
+- `server-axe.log`: server crash from the damage tombstone before the bridge was fixed.
 
 ## Evidence
 
-`client.log`, `server.log` (`server-final.log` is the same file after the run), `commands.txt`.
+`client-success.log`, `server-fell2.log`, `commands.txt`; failure logs listed above.

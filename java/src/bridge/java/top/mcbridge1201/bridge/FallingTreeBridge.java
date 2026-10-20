@@ -31,4 +31,10 @@ public final class FallingTreeBridge {
     public static float miningSpeed(class_1792 item, class_1799 stack, class_2680 state) {
         return item.method_58404(stack, state);
     }
+
+    /** 1.20.1 ItemStack.damage(int, LivingEntity, Consumer); 1.21.1 uses damage(int, LivingEntity, EquipmentSlot). */
+    public static void damage(class_1799 stack, int amount, net.minecraft.class_1309 entity,
+                              java.util.function.Consumer<net.minecraft.class_1792> unused) {
+        stack.method_7970(amount, entity, net.minecraft.class_1304.field_6174);
+    }
 }

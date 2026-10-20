@@ -28,6 +28,19 @@
       "capability": "fallingtree.mining-speed",
       "risk": "medium",
       "evidence": "ItemWrapper.getDestroySpeed -> tombstoned Item.getMiningSpeedMultiplier(ItemStack, BlockState); 1.21.1 renamed it to method_58404 (runs/p102-fallingtree-fell/)."
+    },
+    {
+      "id": "fallingtree.damage-tool",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7956",
+      "sourceDesc": "(ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/FallingTreeBridge",
+      "bridgeMethod": "damage",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+      "capability": "fallingtree.damage-tool",
+      "risk": "medium",
+      "evidence": "With an axe in hand the felling path finally ran and the server crashed: NoSuchMethodError 'class_1799.method_7956(int,LivingEntity,Consumer)' from ItemStackWrapper.damage. 1.21.1 uses method_7970(int, LivingEntity, EquipmentSlot); the bridge passes MAINHAND (runs/p102-fallingtree-fell/)."
     }
   ]
 }

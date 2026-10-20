@@ -41,8 +41,11 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   missing. FallingTree: join and a real single-log break now pass after bridging two more
   tombstones (enchantment map, mining speed), but tree felling does **not** trigger: only the
   broken log disappears and there is no crash/tombstone (`runs/p102-fallingtree-fell/`).
-  Event delivery is ruled out (BREAK_BEFORE/AFTER fire and BlockTags.LOGS resolves), so the gap
-  is inside TreeHandler detection or a silent return; see runs/p102-fallingtree-fell/. Original bullet: the deleted
+  Felling now works end to end (`logsBefore=20 logsAfter=16`) after bridging the enchantment
+  map, mining speed and `ItemStack.damage`; the earlier failures were the test harness (no axe
+  in the main hand makes `isValidTool` abort with INVALID_PLAYER_STATE) plus that damage API
+  change. Only oak and a small artificial tree were tested; other wood types, big trees and
+  the in-game toggle command are untested. See runs/p102-fallingtree-fell/. Original bullet: the deleted
   `PlayChannelHandler` shim, old `ServerPlayNetworking.send` / `CustomPayloadC2SPacket` redirects and
   the one-arg `Identifier` factory are implemented; AppleSkin now gets past init and packet
   construction but still hits a `FoodHelper` tombstone at HUD render, and FallingTree's join path is
