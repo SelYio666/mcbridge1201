@@ -75,7 +75,9 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   two shader-based list renderers with a DrawContext row renderer. The row backdrop is simplified and
   the magenta checkerboard is this machine's missing assets; scrolling/search/config interaction is
   scrolling state and search filtering are verified with screenshots (0→40 rows move; "menu" 8→2);
-  real mouse-wheel/keyboard events are still unverified; Mod Menu's own config screen opens and
+  real mouse-wheel/keyboard events are still unverified (three OS injection methods left the
+  scroll amount at 0.0, so this is an input-injection limitation, not a conversion regression;
+  see runs/p104-wheel-input/); Mod Menu's own config screen opens and
   draws ten option rows (`runs/p97-modmenu-config/`), but other mods' Cloth-Config screens and
   individual toggles are untested;
 - Mod Menu title screen passes (`runs/p92-modmenu/`): the private field is read reflectively and the
