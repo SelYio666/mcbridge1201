@@ -1,7 +1,8 @@
 # 进度交接
 
-最后更新：2026-10-20 14:15（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-20 19:30（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
 
+更新（2026-10-20 19:30）：**AppleSkin 真实悬停通过**。tooltip 追加了 `FoodOverlayTextComponent`（探针取文本证据）；修复 4 处状态效果 API（getEffectType 返回 RegistryEntry、HUNGER/POISON/WITHER 常量、hasStatusEffect 入参），并用 ItemTooltipCallback 桥替代已被删除的 ItemStack mixin。顺带修复 bodyRedirect 对静态方法误压 `this` 的 VerifyError。数字因缺 icons.png 不可读。证据 `runs/p101-appleskin-hover/`。
 更新（2026-10-20 14:15）：**Shulker 真实悬停通过**。专用服务器 + 客户端探针 + 系统光标注入，tooltip 显示 `Shulker Box / Diamond x5`。途中修复 `new Identifier(ns,path)` 私有构造（6 处），并记录单机出生点水下会淹死、端间模组必须一致。网格预览变体未测。证据 `runs/p100-shulker-hover/`。
 更新（2026-10-20 14:05）：**Lithium 4 分钟 soak 通过**。首窗 17.81（含启动/生成），之后每窗 20.00；堆 261→282 MB，增长平缓；无异常/崩溃。刷怪、红石、多小时长跑仍未测。证据 `runs/p99-lithium-soak/`。
 更新（2026-10-20 13:50）：**桥一致性门禁 + 修补策略修复**。新增 `tools/check_bridge_consistency.py`；`embedUsedBridges` 改为覆盖同名桥而非删除未引用桥（删除曾导致 IronChests 缺 `CodecDispatch`）。六件套检查 `problems = 0`，联合冒烟恢复 `COMBINED_SMOKE in-world`。证据 `runs/p98-bridge-consistency/`。

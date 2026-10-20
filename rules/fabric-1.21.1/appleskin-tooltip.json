@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "AppleSkin 2.5.2 injected its tooltip lines with a mixin on ItemStack.getTooltip(PlayerEntity,TooltipType); 1.21.1 replaced that method, so the conversion dropped the mixin entry. Re-register the mod's own TooltipOverlayHandler through Fabric's current ItemTooltipCallback instead of re-enabling a mixin that cannot apply.",
+  "bodyRedirects": [
+    {
+      "id": "appleskin.tooltip.register",
+      "owner": "squeek/appleskin/client/TooltipOverlayHandler",
+      "name": "init",
+      "desc": "()V",
+      "bridgeClass": "top/mcbridge1201/bridge/AppleSkinTooltipBridge",
+      "bridgeMethod": "init",
+      "bridgeDesc": "()V",
+      "capability": "appleskin.tooltip-register",
+      "risk": "medium",
+      "evidence": "With the mixin gone, hovering a golden apple showed only the vanilla name (runs/p101-appleskin-hover/). The bridge keeps the mod handler and forwards Fabric's callback to onItemTooltip."
+    }
+  ]
+}

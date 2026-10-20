@@ -5,7 +5,7 @@ CenturyBridge 转换和现有通用规则 patch，但 5 个有明确兼容性阻
 
 | 模组 | 客户端 | 服务端/功能 | 结论 |
 |---|---|---|---|
-| AppleSkin 2.5.2 | 初始化、同步包、HUD、状态效果 tooltip 路径均通过（契约级） | 真实悬停未测 | 基本修复 |
+| AppleSkin 2.5.2 | 真实悬停追加 `FoodOverlayTextComponent` 行 | 数字因缺 icons.png 不可读；逐效果截图未做 | 通过（悬停） |
 | Mod Menu 7.2.2 | 主菜单 + 列表行可见；滚动与搜索过滤均验证（截图） | 背景简化为填充；真实输入/配置界面未测 | 通过（视觉级） |
 | Clumps 12.0.0.4 | 主菜单 120 tick | 经验球合并通过（companion 桥：3+7→10；tick 驱动、固定 2 格） | 核心功能恢复 |
 | FallingTree 4.3.4 | 初始化已修 | 入服 send/receive 已复测通过；砍树未测 | 部分修复 |

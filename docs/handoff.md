@@ -1,6 +1,7 @@
 # 交接摘要（一页）
 
 
+更新（2026-10-20 19:30）：**AppleSkin 真实悬停通过**（tooltip 追加 FoodOverlay 行）。修复状态效果 API ×4、ItemTooltipCallback 桥、bodyRedirect 静态方法。证据 `runs/p101-appleskin-hover/`。
 更新（2026-10-20 14:15）：**Shulker 真实悬停通过**（tooltip `Diamond x5`）。修复二参 Identifier 私有构造；单机水下出生/端间模组一致性已记录。证据 `runs/p100-shulker-hover/`。
 更新（2026-10-20 14:05）：**Lithium 4 分钟 soak 通过**（20.00 TPS，堆平稳）。刷怪/红石/长时未测。证据 `runs/p99-lithium-soak/`。
 更新（2026-10-20 13:50）：**桥一致性门禁通过**（六件套 problems=0）。新增检查脚本；补丁器覆盖同名桥、保留未引用桥。证据 `runs/p98-bridge-consistency/`。

@@ -35,9 +35,10 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
 
 - legacy Fabric networking bridge (`runs/p89-legacy-networking/`, `runs/p90-fallingtree-join/`):
   AppleSkin init/SyncHandler, the HUD food path and the status-effect tooltip path
-  (`runs/p95-appleskin-tooltip/`) now pass; a real tooltip hover is still untested, and
-  FallingTree tree-felling
-  behavior is untested. Original bullet: the deleted
+  (`runs/p95-appleskin-tooltip/`) now pass, and a real hover appends AppleSkin's
+  `FoodOverlayTextComponent` through the new ItemTooltipCallback bridge
+  (`runs/p101-appleskin-hover/`); the numbers are unreadable here because `icons.png` is
+  missing, and FallingTree tree-felling behavior is untested. Original bullet: the deleted
   `PlayChannelHandler` shim, old `ServerPlayNetworking.send` / `CustomPayloadC2SPacket` redirects and
   the one-arg `Identifier` factory are implemented; AppleSkin now gets past init and packet
   construction but still hits a `FoodHelper` tombstone at HUD render, and FallingTree's join path is

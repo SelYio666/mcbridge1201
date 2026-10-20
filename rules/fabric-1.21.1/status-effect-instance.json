@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "StatusEffectInstance.getEffectType() changed its return type from StatusEffect to RegistryEntry<StatusEffect> in 1.21.1, so a legacy call site compiled against the old descriptor fails with NoSuchMethodError. The bridge calls the new method and unwraps comp_349().",
+  "methodRedirects": [
+    {
+      "id": "statuseffect.get-type",
+      "sourceOwner": "net/minecraft/class_1293",
+      "sourceName": "method_5579",
+      "sourceDesc": "()Lnet/minecraft/class_1291;",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/StatusEffectInstanceBridge",
+      "bridgeMethod": "effectType",
+      "bridgeDesc": "(Lnet/minecraft/class_1293;)Lnet/minecraft/class_1291;",
+      "capability": "statuseffect.get-type",
+      "risk": "low",
+      "evidence": "AppleSkin FoodHelper.isRotten compared the effect to StatusEffects.HUNGER; opening the inventory crashed with NoSuchMethodError 'class_1293.method_5579()' (runs/p101-appleskin-hover/)."
+    },
+    {
+      "id": "statuseffect.has-effect",
+      "sourceOwner": "net/minecraft/class_1657",
+      "sourceName": "method_6059",
+      "sourceDesc": "(Lnet/minecraft/class_1291;)Z",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/StatusEffectInstanceBridge",
+      "bridgeMethod": "hasStatusEffect",
+      "bridgeDesc": "(Lnet/minecraft/class_1657;Lnet/minecraft/class_1291;)Z",
+      "capability": "statuseffect.has-effect",
+      "risk": "low",
+      "evidence": "LivingEntity.hasStatusEffect now takes RegistryEntry<StatusEffect>, so the estimated-health path threw NoSuchMethodError 'class_1657.method_6059(class_1291)' (runs/p101-appleskin-hover/). The bridge compares the unwrapped effect values."
+    }
+  ],
+  "fieldRedirects": [
+    {
+      "id": "statuseffect.hunger-field",
+      "sourceOwner": "net/minecraft/class_1294",
+      "sourceName": "field_5899",
+      "sourceDesc": "Lnet/minecraft/class_1291;",
+      "bridgeClass": "top/mcbridge1201/bridge/StatusEffectInstanceBridge",
+      "bridgeMethod": "hunger",
+      "bridgeDesc": "()Lnet/minecraft/class_1291;",
+      "capability": "statuseffect.hunger-field",
+      "risk": "low",
+      "evidence": "StatusEffects.HUNGER became a RegistryEntry constant, so AppleSkin's estimated-health path threw NoSuchFieldError 'class_1294.field_5899' (runs/p101-appleskin-hover/). The bridge resolves 'minecraft:hunger' from Registries.STATUS_EFFECT."
+    },
+    {
+      "id": "statuseffect.poison-field",
+      "sourceOwner": "net/minecraft/class_1294",
+      "sourceName": "field_5920",
+      "sourceDesc": "Lnet/minecraft/class_1291;",
+      "bridgeClass": "top/mcbridge1201/bridge/StatusEffectInstanceBridge",
+      "bridgeMethod": "poison",
+      "bridgeDesc": "()Lnet/minecraft/class_1291;",
+      "capability": "statuseffect.poison-field",
+      "risk": "low",
+      "evidence": "The same estimated-health method also reads StatusEffects.POISON (field_5920), which is a RegistryEntry on 1.21.1 (runs/p101-appleskin-hover/)."
+    },
+    {
+      "id": "statuseffect.wither-field",
+      "sourceOwner": "net/minecraft/class_1294",
+      "sourceName": "field_5924",
+      "sourceDesc": "Lnet/minecraft/class_1291;",
+      "bridgeClass": "top/mcbridge1201/bridge/StatusEffectInstanceBridge",
+      "bridgeMethod": "wither",
+      "bridgeDesc": "()Lnet/minecraft/class_1291;",
+      "capability": "statuseffect.wither-field",
+      "risk": "low",
+      "evidence": "The same method reads StatusEffects.WITHER (field_5924), also a RegistryEntry on 1.21.1 (runs/p101-appleskin-hover/)."
+    }
+  ]
+}

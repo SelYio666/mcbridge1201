@@ -224,8 +224,11 @@ public final class JarPatcher {
                 mn.visibleLocalVariableAnnotations = null;
                 mn.invisibleLocalVariableAnnotations = null;
                 InsnList il = new InsnList();
-                il.add(new org.objectweb.asm.tree.VarInsnNode(Opcodes.ALOAD, 0));
-                int slot = 1;
+                int slot = 0;
+                if ((mn.access & Opcodes.ACC_STATIC) == 0) {
+                    il.add(new org.objectweb.asm.tree.VarInsnNode(Opcodes.ALOAD, 0));
+                    slot = 1;
+                }
                 for (Type t : Type.getArgumentTypes(mn.desc)) {
                     il.add(new org.objectweb.asm.tree.VarInsnNode(t.getOpcode(Opcodes.ILOAD), slot));
                     slot += t.getSize();
