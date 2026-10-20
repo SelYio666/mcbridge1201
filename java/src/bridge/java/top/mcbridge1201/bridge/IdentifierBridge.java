@@ -2,7 +2,7 @@ package top.mcbridge1201.bridge;
 
 import net.minecraft.class_2960;
 
-/** Replacement for the removed {@code new Identifier(String)} constructor. */
+/** Replacements for the removed Identifier constructors. */
 public final class IdentifierBridge {
     private IdentifierBridge() {
     }
@@ -13,5 +13,10 @@ public final class IdentifierBridge {
             return class_2960.method_60655(value.substring(0, colon), value.substring(colon + 1));
         }
         return class_2960.method_60655("minecraft", value);
+    }
+
+    /** The two-argument constructor became private in 1.21.1; the factory is the public path. */
+    public static class_2960 of(String namespace, String path) {
+        return class_2960.method_60655(namespace, path);
     }
 }

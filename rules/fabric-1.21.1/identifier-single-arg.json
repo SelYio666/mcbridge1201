@@ -13,6 +13,17 @@
       "capability": "identifier.one-arg",
       "risk": "low",
       "evidence": "AppleSkin squeek.appleskin.helpers.TextureHelper.<clinit> throws NoSuchMethodError 'void class_2960.<init>(String)' on 1.21.1 (client launch with the networking bridge applied). The bridge splits on ':' and calls class_2960.method_60655(namespace, path)."
+    },
+    {
+      "id": "identifier.two-arg-ctor",
+      "owner": "net/minecraft/class_2960",
+      "desc": "(Ljava/lang/String;Ljava/lang/String;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/IdentifierBridge",
+      "bridgeMethod": "of",
+      "bridgeDesc": "(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;",
+      "capability": "identifier.two-arg",
+      "risk": "low",
+      "evidence": "ShulkerBoxTooltipUtil.id does new Identifier(namespace, path); 1.21.1 made that constructor private, so the mod aborted with 'IllegalAccessError ... class_2960.<init>(String,String)' at startup (runs/p100-shulker-hover/). IdentifierBridge.of(namespace,path) calls the public method_60655 factory."
     }
   ]
 }
