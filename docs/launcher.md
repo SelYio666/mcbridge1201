@@ -227,4 +227,7 @@ RESULT: OK
 报 WinError 2）。
 
 实测：自建最小包（`minecraft 1.21.1` + `fabric-loader 0.19.5`，无 files，overrides 放一个测试文件）
-安装成功，输出 `done: mcbridge test pack 1.0.0`，`config/mcbridge-test.txt` 内容正确。
+安装成功，任务消息为 `mcbridge test pack 1.0.0|fabric-loader-0.19.5-1.21.1`，
+`config/mcbridge-test.txt` 内容正确。
+
+安装完成后界面会**自动选中并启动** `|` 后面的启动版本（`get_mrpack_launch_version` 给出）。

@@ -157,7 +157,12 @@ def install_mrpack(path: Path, root: Path, progress=None) -> dict:
     _install_network_shims()
     mll_mrpack.install_mrpack(str(path), str(root), callback=_callback(progress),
                               mrpack_install_options={"skipDependenciesInstall": True})
-    return {"name": info.get("name"), "version": info.get("versionId"), "minecraft": mc}
+    try:
+        launch = mll_mrpack.get_mrpack_launch_version(str(path))
+    except Exception:  # noqa: BLE001
+        launch = None
+    return {"name": info.get("name"), "version": info.get("versionId"),
+            "minecraft": mc, "launch": launch}
 
 
 def jvm_runtimes() -> list[str]:

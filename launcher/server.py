@@ -256,7 +256,10 @@ class Handler(BaseHTTPRequestHandler):
                     import backend
                     TASK.set(phase="download", message=f"mrpack {pack_path.name}")
                     info = backend.install_mrpack(pack_path, Path(cfg["root"]), TASK)
-                    TASK.set(phase="done", message=f"{info['name']} {info['version']}")
+                    label = f"{info['name']} {info['version']}"
+                    if info.get("launch"):
+                        label += "|" + info["launch"]
+                    TASK.set(phase="done", message=label)
                 except Exception as exc:  # noqa: BLE001
                     TASK.set(phase="error", error=str(exc))
 
