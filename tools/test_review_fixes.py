@@ -285,10 +285,114 @@ def test_launcher() -> None:
         httpd.shutdown()
 
 
+def test_neoforge_install() -> None:
+    """NeoForge install completeness: a profile json alone must not count as installed."""
+    sys.path.insert(0, str(ROOT / "launcher"))
+    try:
+        import mclaunch
+    except Exception as exc:  # noqa: BLE001
+        check("NEOFORGE import mclaunch", False, f"import failed: {exc}")
+        return
+
+    import shutil
+
+    lib = WORK / "neoforge-unit"
+    if lib.exists():
+        shutil.rmtree(lib)
+    lib.mkdir(parents=True)
+    ver, vid = "21.1.264", "neoforge-21.1.264"
+
+    arts = mclaunch.loader_artifacts(vid, lib)
+    check("NEOFORGE empty root reports all artifacts missing",
+          bool(arts) and not any(arts.values()), str(arts))
+
+    # a minimal installed profile: base version json + jar + empty asset index
+    base = lib / "versions" / "1.21.1"
+    base.mkdir(parents=True)
+    (base / "1.21.1.json").write_text(json.dumps(
+        {"id": "1.21.1", "libraries": [], "assetIndex": {"id": "unit"}, "assets": "unit"}),
+        encoding="utf-8")
+    (base / "1.21.1.jar").write_bytes(b"jar")
+    (lib / "assets" / "indexes").mkdir(parents=True)
+    (lib / "assets" / "indexes" / "unit.json").write_text(json.dumps({"objects": {}}), encoding="utf-8")
+    vdir = lib / "versions" / vid
+    vdir.mkdir(parents=True)
+    (vdir / f"{vid}.json").write_text(json.dumps(
+        {"id": vid, "inheritsFrom": "1.21.1", "libraries": [],
+         "mainClass": "net.minecraft.client.main.Main",
+         "arguments": {"game": [], "jvm": []}}), encoding="utf-8")
+
+    rep = mclaunch.verify_install(vid, lib)
+    check("NEOFORGE verify rejects profile-only install", rep["ok"] is False
+          and rep["items"].get("loader_artifacts", {}).get("neoforge_universal") is False,
+          str(rep["items"].get("loader_artifacts")))
+
+    try:
+        mclaunch.build_command(vid, lib, "UnitUser")
+        refused = False
+    except RuntimeError as exc:
+        refused = "incomplete" in str(exc)
+    check("NEOFORGE build_command refuses incomplete install", refused)
+
+    # installer library seeding: a library already present with the right sha1 is not re-downloaded
+    installer = WORK / "fake-neoforge-installer.jar"
+    seeded = lib / "libraries" / "net" / "example" / "x" / "1" / "x-1.jar"
+    seeded.parent.mkdir(parents=True)
+    seeded.write_bytes(b"x")
+    digest = mclaunch.sha1_of(seeded)
+    entry = {"downloads": {"artifact": {"path": "net/example/x/1/x-1.jar",
+                                        "url": "https://invalid.example/x-1.jar",
+                                        "sha1": digest}}}
+    with zipfile.ZipFile(installer, "w") as z:
+        z.writestr("install_profile.json", json.dumps({"libraries": [entry]}))
+        z.writestr("version.json", json.dumps({"libraries": [entry]}))
+    check("NEOFORGE installer seeding skips verified files",
+          mclaunch.prepare_installer_libraries(installer, lib) == 0)
+
+    # the four game files FancyModLoader needs for the 'minecraft' / 'neoforge' modules
+    mcjars = lib / "libraries" / "net" / "minecraft" / "client" / "1.21.1-20240808.144430"
+    mcjars.mkdir(parents=True)
+    (mcjars / "client-1.21.1-20240808.144430-srg.jar").write_bytes(b"s")
+    (mcjars / "client-1.21.1-20240808.144430-extra.jar").write_bytes(b"e")
+    nf = lib / "libraries" / "net" / "neoforged" / "neoforge" / ver
+    nf.mkdir(parents=True)
+    universal = nf / f"neoforge-{ver}-universal.jar"
+    (nf / f"neoforge-{ver}-client.jar").write_bytes(b"c")
+    universal.write_bytes(b"u")
+
+    check("NEOFORGE artifacts detected once present",
+          all(mclaunch.loader_artifacts(vid, lib).values()))
+    check("NEOFORGE verify accepts a complete install", mclaunch.verify_install(vid, lib)["ok"] is True)
+
+    # force our own command builder: the mll backend needs a real profile to add credentials
+    backend_mod = None
+    orig_available = None
+    try:
+        import backend as backend_mod  # noqa: E402
+        orig_available = backend_mod.AVAILABLE
+        backend_mod.AVAILABLE = False
+    except Exception:  # noqa: BLE001
+        backend_mod = None
+    try:
+        cmd, _log, _root = mclaunch.build_command(vid, lib, "UnitUser")
+    finally:
+        if backend_mod is not None:
+            backend_mod.AVAILABLE = orig_available
+    check("NEOFORGE complete install builds a command", "--username" in cmd
+          and "UnitUser" in cmd, str(cmd[:3]))
+
+    universal.unlink()
+    rep = mclaunch.verify_install(vid, lib)
+    check("NEOFORGE verify flags a missing universal jar", rep["ok"] is False
+          and rep["items"]["loader_artifacts"]["neoforge_universal"] is False,
+          str(rep["items"]["loader_artifacts"]))
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
     test_launcher()
+    test_neoforge_install()
     failed = [name for name, ok, _ in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed"
           + (f", skipped: {', '.join(SKIPPED)}" if SKIPPED else ""))

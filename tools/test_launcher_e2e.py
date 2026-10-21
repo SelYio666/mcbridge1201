@@ -29,11 +29,56 @@ def find_installed(root: Path, mc: str) -> str | None:
     return None
 
 
+def _grab_window(path: str) -> None:
+    """Bring the Minecraft window to the front and save a screenshot (best effort)."""
+    try:
+        import ctypes
+        from ctypes import wintypes
+
+        from PIL import ImageGrab
+    except ImportError:
+        print("screenshot skipped: Pillow missing")
+        return
+    user32 = ctypes.windll.user32
+    found: list[int] = []
+
+    @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+    def _enum(hwnd, _lparam):  # noqa: ANN001
+        buf = ctypes.create_unicode_buffer(256)
+        user32.GetWindowTextW(hwnd, buf, 256)
+        if "minecraft" in buf.value.lower() and user32.IsWindowVisible(hwnd):
+            found.append(hwnd)
+        return True
+
+    user32.EnumWindows(_enum, 0)
+    if not found:
+        print("screenshot skipped: no Minecraft window")
+        return
+    hwnd = found[0]
+    user32.ShowWindow(hwnd, 9)  # SW_RESTORE
+    user32.SetForegroundWindow(hwnd)
+    time.sleep(1)
+    rect = wintypes.RECT()
+    user32.GetWindowRect(hwnd, ctypes.byref(rect))
+    bbox = (rect.left, rect.top, rect.right, rect.bottom)
+    try:
+        img = ImageGrab.grab(bbox=bbox)
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        img.save(path)
+        print("screenshot ->", path, img.size)
+    except Exception as exc:  # noqa: BLE001
+        print("screenshot failed:", exc)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=str(ROOT / "work" / "launcher-e2e"))
     ap.add_argument("--mc", default="1.21.1")
+    ap.add_argument("--version", help="launch this installed version id instead of installing Fabric")
     ap.add_argument("--username", default="E2EUser")
+    ap.add_argument("--require", action="append", default=[],
+                    help="extra log marker that must appear (repeatable), e.g. 'Sound engine started'")
+    ap.add_argument("--screenshot", help="PNG path: grab the game window once the markers matched")
     ap.add_argument("--no-install", action="store_true")
     ap.add_argument("--timeout", type=int, default=180)
     args = ap.parse_args()
@@ -41,7 +86,12 @@ def main() -> int:
     root = Path(args.root).resolve()
     root.mkdir(parents=True, exist_ok=True)
     try:
-        if args.no_install:
+        if args.version:
+            vid = args.version
+            if not (root / "versions" / vid / f"{vid}.json").exists():
+                print(f"no installed version {vid} under {root}")
+                return 2
+        elif args.no_install:
             vid = find_installed(root, args.mc)
             if not vid:
                 print(f"no fabric version for {args.mc} under {root}; drop --no-install")
@@ -67,8 +117,12 @@ def main() -> int:
                 if proc.poll() is not None:
                     break
                 text = log.read_text(encoding="utf-8", errors="replace") if log.exists() else ""
-                if f"Setting user: {args.username}" in text and "Backend library" in text:
+                if (f"Setting user: {args.username}" in text and "Backend library" in text
+                        and all(marker in text for marker in args.require)):
                     ok = True
+                    if args.screenshot:
+                        time.sleep(4)  # let the main menu finish drawing
+                        _grab_window(args.screenshot)
                     break
                 time.sleep(1)
         finally:

@@ -1,5 +1,12 @@
 # p115 — NeoForge 1.21.1: install works, launch blocked in ModLauncher
 
+> **Superseded (2026-10-21):** see `runs/p116-neoforge-launch`. The blocker was NOT the
+> classpath / `-p` module path — our java command line matched the official profile exactly.
+> The official installer's client processors had never run (Java HTTP could not reach
+> `maven.neoforged.net`), so the `neoforge` module never existed. Fixed by pre-seeding the
+> installer libraries with our own downloader and requiring the four game artifacts before
+> calling an install complete. NeoForge 21.1.264 now boots to the main menu.
+
 Goal: turn the launcher's "NeoForge 未实测" note into a real result.
 
 ## What worked

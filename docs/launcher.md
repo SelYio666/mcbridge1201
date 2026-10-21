@@ -47,7 +47,7 @@ python launcher/server.py
 | 网页 GUI：版本列表、筛选、安装进度、控制台、启动 | ✅ 实测 |
 | BMCLAPI 镜像兜底（资源 CDN 被墙时） | ✅ 实测（官方 CDN 超时时自动切镜像） |
 | Forge 1.20.1 安装 + 启动 | ✅ 已接入 `minecraft-launcher-lib`（BSD-2）并实测到达主菜单 |
-| NeoForge 安装 + 启动 | ⚠️ 安装走库的 `mod_loader`，尚未实测 |
+| NeoForge 1.21.1 安装 + 启动 | ✅ 实测空 NeoForge 21.1.264 到主菜单（`runs/p116-neoforge-launch/`） |
 | 正版登录 / 皮肤 / 多人认证 | ❌ 不做，仅离线 |
 
 ## 设计约束
@@ -76,7 +76,13 @@ python launcher/mclaunch.py launch fabric-loader-0.19.5-1.21.1 "D:\mc" Player
 
 - 资源 CDN 在部分网络下不可达，镜像优先可绕过，但全量 assets 下载仍受带宽限制（本机实测下载 3911 个对象时很慢）。
 - 本机 `.minecraft/assets` 本身缺对象（字体等），启动器可修复，但需要完整跑一次原版安装。
-- Forge/NeoForge 依赖 `minecraft-launcher-lib`（`pip install minecraft-launcher-lib`，BSD-2）；Forge 已验证，NeoForge 未验证。
+- Forge/NeoForge 的官方安装器需要 Java 自己的 HTTP 去下库；本机 Java 连 `maven.neoforged.net`
+  会超时，所以启动器先用 Python 下载器把 `install_profile.json` / `version.json` 列出的库
+  预置好（SHA1 校验），再让官方处理离线跑。`NeoForge` 以四件文件（`neoforge-client`、
+  `neoforge-universal`、`client-*-srg`、`client-*-extra`）齐全才算安装成功，缺一件就报错并指向
+  安装日志，不会拿「profile json 存在」冒充成功。
+- Forge/NeoForge 的 `minecraft-launcher-lib` 路径仍在，作为直接安装失败时的回退；
+  空 NeoForge 已实测（`runs/p116-neoforge-launch/`）。
 - Fabric / 原版使用本项目自己的命令拼装（镜像下载 + 已验证的启动参数），不依赖该库。
 - GUI 是本地网页，不是独立 exe；要打包成单文件 exe 需另加 PyInstaller 一类工具（未做）。
 
@@ -87,7 +93,23 @@ python launcher/mclaunch.py launch fabric-loader-0.19.5-1.21.1 "D:\mc" Player
 ## 加载器后端分工
 
 - 原版 / Fabric：本项目 `mclaunch.py`（自有镜像下载器 + 已验证启动参数）；
-- Forge / NeoForge：`launcher/backend.py` 调用 `minecraft-launcher-lib`，由库处理 installer、`-DlegacyClassPath`、模块路径与 Java 版本；Java 按版本自动选（1.20.4 及以下用 17，1.20.5+ 用 21）。
+- Forge / NeoForge：`launcher/backend.py` 优先调用官方安装器（`install_neoforge_direct`，库由
+  Python 预置），失败时回退 `minecraft-launcher-lib`；启动命令通过 `minecraft-launcher-lib`
+  拼装，由库处理 `-DignoreList`、模块路径与 Java 版本；Java 按版本自动选（1.20.4 及以下用 17，
+  1.20.5+ 用 21）。
+- NeoForge 21.1（FancyModLoader 4）的启动命令与官方 `version.json` 完全一致；真正生效的游戏代码
+  不来自 classpath 末尾那个 `<id>.jar`（官方 `-DignoreList` 明确忽略它），而来自安装器生成的
+  `client-*-srg.jar` + `client-*-extra.jar` + `neoforge-<ver>-client.jar` 合并出的 `minecraft` 模块，
+  以及 `neoforge-<ver>-universal.jar` 提供的 `neoforge` 模块。缺这些文件时 FML 会在
+  `DisplayWindow.updateModuleReads` 里抛 `No value present`，所以启动前会先检查并直接报错。
+
+## NeoForge 安装与校验（1.21.1，实测 21.1.264）
+
+```text
+python launcher/mclaunch.py install 1.21.1 <root> neoforge   # 官方安装器 + 预置库
+python launcher/mclaunch.py verify neoforge-21.1.264 <root>  # 报告四件 loader 文件
+python tools/test_launcher_e2e.py --root <root> --version neoforge-21.1.264 --require "Sound engine started"
+```
 
 ## 兼容性与“换启动器”
 

@@ -353,10 +353,76 @@ def install_vanilla_launcher_profile(mc: str, root: Path) -> None:
     ensure_natives(mc, root)
 
 
+NEOFORGE_MAVEN = "https://maven.neoforged.net/releases/"
+
+
+def prepare_installer_libraries(installer: Path, root: Path, progress: Progress | None = None) -> int:
+    """Pre-download every library an official Forge/NeoForge installer needs.
+
+    The installers fetch their libraries with Java's own HTTP stack, which times out on
+    some networks even when Python downloads fine. Seeding the files here keeps the
+    official processors (jarsplitter / renaming / binarypatcher) as the source of truth
+    for the install, but lets them run offline.
+    """
+    root = Path(root)
+    wanted: dict[str, tuple[str, str | None]] = {}
+    with zipfile.ZipFile(installer) as jar:
+        for entry in ("install_profile.json", "version.json"):
+            try:
+                data = json.loads(jar.read(entry).decode("utf-8"))
+            except KeyError:
+                continue
+            for lib in data.get("libraries", []):
+                art = (lib.get("downloads") or {}).get("artifact") or {}
+                path = art.get("path")
+                if not path:
+                    continue
+                wanted[path] = (art.get("url") or NEOFORGE_MAVEN + path, art.get("sha1"))
+    total = len(wanted)
+    downloaded = 0
+    progress and progress.set(phase="download", message=f"loader libraries {total}", total=total, done=0)
+    for i, (rel, (url, digest)) in enumerate(sorted(wanted.items()), 1):
+        dest = root / "libraries" / rel
+        if not (dest.exists() and digest and sha1_of(dest) == digest):
+            download(url, dest, digest)
+            downloaded += 1
+        progress and progress.set(done=i)
+    return downloaded
+
+
+def loader_artifacts(version_id: str, root: Path) -> dict[str, bool]:
+    """Game artifacts a loader profile must provide before it can boot.
+
+    NeoForge 1.21.1 (FancyModLoader 4) builds the *minecraft* mod file from
+    libraries/net/minecraft/client/<neoform>/client-...-{srg,extra}.jar plus
+    libraries/net/neoforged/neoforge/<version>/neoforge-<version>-client.jar, and the
+    *neoforge* mod file from neoforge-<version>-universal.jar. A profile JSON plus a
+    renamed vanilla jar is NOT an install: without these files the client dies in
+    DisplayWindow.updateModuleReads looking for the "neoforge" module.
+    """
+    root = Path(root)
+    libs = root / "libraries"
+    items: dict[str, bool] = {}
+    if version_id.startswith("neoforge-"):
+        ver = version_id.split("-", 1)[1]
+        base = libs / "net" / "neoforged" / "neoforge" / ver
+        items["neoforge_client"] = (base / f"neoforge-{ver}-client.jar").exists()
+        items["neoforge_universal"] = (base / f"neoforge-{ver}-universal.jar").exists()
+    client_dir = libs / "net" / "minecraft" / "client"
+    if client_dir.exists():
+        items["minecraft_srg"] = bool(list(client_dir.glob("*/client-*-srg.jar")))
+        items["minecraft_extra"] = bool(list(client_dir.glob("*/client-*-extra.jar")))
+    return items
+
+
 def _run_installer(jar: Path, root: Path, log_path: Path) -> int:
     java = find_java()
+    # the installer runs with cwd=<root>, so both paths must be absolute
+    jar = Path(jar).resolve()
+    root = Path(root).resolve()
+    log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("w", encoding="utf-8", errors="replace") as log:
-        log.write(f"$ {java} -jar {jar.name} --installClient {root}\n")
+        log.write(f"$ {java} -jar {jar} --installClient {root}\n")
         log.flush()
         proc = subprocess.run([java, "-jar", str(jar), "--installClient", str(root)],
                               cwd=str(root), stdout=log, stderr=subprocess.STDOUT)
@@ -378,6 +444,7 @@ def install_forge(mc: str, root: Path, progress: Progress | None = None, version
     installer = root / "installers" / f"forge-{forge_ver}-installer.jar"
     url = f"https://maven.minecraftforge.net/net/minecraftforge/forge/{forge_ver}/forge-{forge_ver}-installer.jar"
     download(url, installer)
+    prepare_installer_libraries(installer, root, progress)
     progress and progress.set(message="running forge installer")
     rc = _run_installer(installer, root, root / "installers" / f"forge-{forge_ver}.log")
     if rc != 0 or not (vdir / f"{vid}.json").exists():
@@ -388,32 +455,38 @@ def install_forge(mc: str, root: Path, progress: Progress | None = None, version
     return vid
 
 
+def _version_key(v: str):
+    """Sort loader version strings numerically ("21.1.9" < "21.1.264")."""
+    return [int(x) if x.isdigit() else x for x in v.replace("-", ".").split(".")]
+
+
 def install_neoforge(mc: str, root: Path, progress: Progress | None = None, version: str | None = None) -> str:
     root = Path(root)
     data = http_json(NEOFORGE_VERSIONS)
     all_versions = data.get("versions", [])
-    prefix = mc.split("-")[0]  # 1.21.1 -> 21.1
-    major = ".".join(mc.split(".")[:2])  # 1.21
-    cands = [v for v in all_versions if v.startswith(major + ".") or v.startswith(prefix)]
+    prefix = ".".join(mc.split(".")[1:]) + "."  # 1.21.1 -> "21.1."
+    cands = [v for v in all_versions if v.startswith(prefix)]
     if not cands:
         raise RuntimeError(f"no neoforge build matched {mc}")
-    version = version or cands[-1]
+    version = version or sorted(cands, key=_version_key)[-1]
     vid = f"neoforge-{version}"
     vdir = root / "versions" / vid
-    if (vdir / f"{vid}.json").exists():
+    if (vdir / f"{vid}.json").exists() and all(loader_artifacts(vid, root).values()):
         return vid
     progress and progress.set(phase="download", message=f"neoforge installer {version}")
     installer = root / "installers" / f"neoforge-{version}-installer.jar"
-    url = f"https://maven.neoforged.net/releases/net/neoforged/neoforge/{version}/neoforge-{version}-installer.jar"
+    url = f"{NEOFORGE_MAVEN}net/neoforged/neoforge/{version}/neoforge-{version}-installer.jar"
     download(url, installer)
+    prepare_installer_libraries(installer, root, progress)
     progress and progress.set(message="running neoforge installer")
-    rc = _run_installer(installer, root, root / "installers" / f"neoforge-{version}.log")
-    if rc != 0 and not (vdir / f"{vid}.json").exists():
-        found = sorted((root / "versions").glob("neoforge-*"))
-        if found:
-            return found[-1].name
-        raise RuntimeError(f"neoforge installer failed rc={rc}")
-    return vid if (vdir / f"{vid}.json").exists() else sorted((root / "versions").glob("neoforge-*"))[-1].name
+    log_path = root / "installers" / f"neoforge-{version}.log"
+    rc = _run_installer(installer, root, log_path)
+    missing = [name for name, present in loader_artifacts(vid, root).items() if not present]
+    if rc != 0 or not (vdir / f"{vid}.json").exists() or missing:
+        raise RuntimeError(
+            f"neoforge installer incomplete (rc={rc}, missing: {', '.join(missing) or 'profile json'}); "
+            f"see {log_path}")
+    return vid
 
 
 
@@ -442,6 +515,12 @@ def verify_install(version_id: str, root: Path) -> dict:
     }
     if not jar.exists():
         report["ok"] = False
+
+    if version_id.startswith("neoforge-"):
+        artifacts = loader_artifacts(version_id, root)
+        report["items"]["loader_artifacts"] = artifacts
+        if not all(artifacts.values()):
+            report["ok"] = False
 
     libs = []
     lib_missing = []
@@ -497,6 +576,10 @@ def print_report(report: dict) -> None:
     print(f"  libraries    : {lib.get('total', 0) - lib.get('missing', 0)}/{lib.get('total', 0)} present")
     if lib.get("missing_sample"):
         print(f"    missing e.g.: {', '.join(lib['missing_sample'])}")
+    loader = items.get("loader_artifacts")
+    if loader:
+        print("  loader files : " + ", ".join(
+            f"{name}={'ok' if present else 'MISSING'}" for name, present in loader.items()))
     nat = items.get("natives", {})
     print(f"  natives      : {nat.get('dll', 0)} dll {nat.get('sample', [])}")
     assets = items.get("assets", {})
@@ -649,6 +732,13 @@ def offline_uuid(name: str) -> str:
 
 def build_command(version_id: str, root: Path, username: str, max_mem="2G",
                   extra_jvm=None, extra_game=None) -> tuple[list[str], Path, Path]:
+    if version_id.startswith("neoforge-"):
+        missing = [name for name, present in loader_artifacts(version_id, Path(root)).items()
+                   if not present]
+        if missing:
+            raise RuntimeError(
+                f"neoforge install is incomplete ({', '.join(missing)}); reinstall it — "
+                "a profile json plus a renamed vanilla jar cannot boot (earlydisplay needs the module)")
     try:
         import backend
         if backend.AVAILABLE and ("-forge-" in version_id or version_id.startswith("neoforge")):

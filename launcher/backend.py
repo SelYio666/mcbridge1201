@@ -257,17 +257,28 @@ def install_neoforge_direct(mc: str, root: Path, version: str | None = None,
     else:
         raise RuntimeError(f"no neoforge build for {mc}")
     vid = f"neoforge-{ver}"
-    if (root / "versions" / vid / f"{vid}.json").exists():
+    if (root / "versions" / vid / f"{vid}.json").exists() and all(
+            mclaunch.loader_artifacts(vid, root).values()):
         return vid
     progress and progress.set(message=f"neoforge installer {ver}")
     installer = root / "installers" / f"neoforge-{ver}-installer.jar"
     mclaunch.download(f"{NEOFORGE_MAVEN}/{ver}/neoforge-{ver}-installer.jar", installer)
+    mclaunch.prepare_installer_libraries(installer, root, progress)
     java = java or mclaunch.find_java()
     progress and progress.set(message="running neoforge installer")
+    root = root.resolve()
+    installer = installer.resolve()
+    log_path = root / "installers" / f"neoforge-{ver}.log"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
     proc = subprocess.run([java, "-jar", str(installer), "--installClient", str(root)],
                           cwd=str(root), capture_output=True, text=True)
-    if proc.returncode != 0:
-        raise RuntimeError("neoforge installer failed: " + (proc.stdout or proc.stderr)[-400:])
+    log_path.write_text((proc.stdout or "") + (proc.stderr or ""), encoding="utf-8", errors="replace")
+    missing = [name for name, present in mclaunch.loader_artifacts(vid, root).items() if not present]
+    if proc.returncode != 0 or missing:
+        detail = (proc.stdout or proc.stderr or "").strip().splitlines()[-1:] or [""]
+        raise RuntimeError(
+            f"neoforge installer incomplete (rc={proc.returncode}, missing: "
+            f"{', '.join(missing) or 'profile json'}, {detail[0]}); see {log_path}")
     if (root / "versions" / vid / f"{vid}.json").exists():
         return vid
     found = sorted(p.name for p in (root / "versions").glob("neoforge-*"))
