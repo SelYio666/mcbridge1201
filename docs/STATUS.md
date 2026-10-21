@@ -47,6 +47,9 @@ FallingTree / ShulkerBoxTooltip 的核心功能有实测证据，FerriteCore 只
 ## 诚实边界
 
 - 转换会剥离目标已死的 mixin（AppleSkin tooltip、Shulker 网格、FerriteCore 两项优化）；恢复需重写。
+- 热门模组抽样（`p111`，Modrinth 下载榜 1.20.1 Fabric）：VeinMiner 转换后服务端启动通过但功能未验；
+  EntityCulling 启动并进服，但转换报告标明剥离了 load-bearing `EntityRendererMixin`，不算功能通过；
+  ImmediatelyFast 在 `@Overwrite` 目标签名变化处 mixin apply 崩溃。渲染类模组的门槛是 mixin，不是普通调用点。
 - 本机缺 GUI 材质（洋红棋盘、`icons.png`），部分视觉/数字无法像素级验收。
 - 真实鼠标滚轮与部分键盘事件在本环境注入不到游戏；程序化状态验证可替代一部分。
 - 未做：多小时长跑、大型红石机器、Shulker 网格渲染替代实现、nested mixin 的 ordinal/slice 级校验。
