@@ -507,6 +507,7 @@ FILES = [
     "docs/media/mcbridge1201-promo-v2.mp4",
     "docs/review-fixes-2026-10-21.md",
     "docs/FINAL-STATUS.md",
+    "LICENSE",
     "docs/build.md",
     "tools/test_review_fixes.py",
     "tools/test_launcher_e2e.py",

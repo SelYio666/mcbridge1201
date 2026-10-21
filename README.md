@@ -99,3 +99,7 @@ patches/         对上游缺件的显式本地补丁（带说明，不是上游
 - `work/` 下的游戏 jar、模组 jar、转换产物**只在本机**，不随仓库分发；对外只应分发工具、规则与 hash 清单。
 - 静态分析只到 `ANALYZED` 阶段。`CLEAN_STATIC` 不代表能启动，更不代表玩法通过。
 - 第三方作者自报（Retromod 的 26.2 工件、CenturyBridge 的 1.21.1 案例）与本仓库独立结果分开记录。
+
+## License
+
+MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecraft-launcher-lib（BSD-2，可选依赖）。

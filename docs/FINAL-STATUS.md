@@ -43,7 +43,7 @@
 | Shulker 网格预览 | ⏸ 封存 | 环境侧容器组件问题，需抓包复现 |
 | TrashSlot 完整 UI 流程 | ⏸ | 旧桥版本已跑通（p63–p65）；当前桥只做 bridge 级 + 探针 |
 | mrpack 含 files 的真实包 | ⏸ | 只测过无 files 的最小包 |
-| LICENSE | ❓ | 仓库未声明许可证，需项目作者选择 |
+| LICENSE | ✅ MIT | 见仓库根目录 `LICENSE`（第三方 CenturyBridge 为 MIT，minecraft-launcher-lib 为 BSD-2 可选依赖） |
 | 干净机器构建 / Gradle Wrapper | ⚠️ | 干净目录已验证；无 wrapper（与“仓库不放 jar”策略冲突） |
 | 平台 | ⚠️ | 启动器仅 Windows 实测 |
 
