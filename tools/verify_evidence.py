@@ -111,6 +111,8 @@ def main() -> int:
             "rc": proc.returncode,
             "summary": tail[-1] if tail else "no summary",
             "skipped": proc.returncode == 2,
+            "stdout_tail": proc.stdout.splitlines()[-8:],
+            "stderr_tail": proc.stderr.splitlines()[-8:],
         }
     else:
         checks["review_regressions"] = True

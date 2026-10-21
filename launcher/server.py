@@ -21,6 +21,7 @@ HERE = Path(__file__).resolve().parent
 WEB = HERE / "web"
 CONFIG = HERE / "config.json"
 TASK = Progress()
+_JVM_CACHE = {"ts": 0.0, "data": None}
 TASK_LOCK = threading.Lock()
 LAUNCHES = []
 
@@ -191,18 +192,22 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/jvm":
             cfg = load_config()
             import backend
-            try:
-                available = backend.jvm_runtimes()
-            except Exception as exc:  # noqa: BLE001
-                available = []
-                err = str(exc)
+            now = time.time()
+            if _JVM_CACHE["data"] and now - _JVM_CACHE["ts"] < 300:
+                data = dict(_JVM_CACHE["data"])
             else:
-                err = None
-            return self._send(200, {
-                "available": available,
-                "installed": backend.installed_runtimes(Path(cfg["root"])),
-                "error": err,
-            })
+                try:
+                    backend._install_network_shims()
+                    available = backend.jvm_runtimes()
+                    err = None
+                except Exception as exc:  # noqa: BLE001
+                    available = []
+                    err = str(exc)
+                data = {"available": available, "error": err}
+                if available:
+                    _JVM_CACHE.update(ts=now, data=data)
+            data["installed"] = backend.installed_runtimes(Path(cfg["root"]))
+            return self._send(200, data)
 
         if path == "/api/loader-versions":
             qs = parse_qs(urlparse(self.path).query)
