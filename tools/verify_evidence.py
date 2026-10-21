@@ -97,6 +97,25 @@ def main() -> int:
     details["tracked_jars"] = jars
     details["unexpected_jars"] = bad
 
+    # External review regressions (ISSUE-02/03/05..08). They need the built CLI; without it
+    # the suite self-skips (exit 2) and the gate records a skip instead of a false failure.
+    review_script = ROOT / "tools" / "test_review_fixes.py"
+    cli = ROOT / "java" / "build" / "install" / "mcbridge1201" / "bin" / (
+        "mcbridge1201.bat" if sys.platform == "win32" else "mcbridge1201")
+    if review_script.exists() and cli.exists():
+        proc = subprocess.run([sys.executable, "-B", str(review_script)], cwd=ROOT,
+                              capture_output=True, text=True)
+        checks["review_regressions"] = proc.returncode in (0, 2)
+        tail = [line for line in proc.stdout.splitlines() if "checks passed" in line]
+        details["review_regressions"] = {
+            "rc": proc.returncode,
+            "summary": tail[-1] if tail else "no summary",
+            "skipped": proc.returncode == 2,
+        }
+    else:
+        checks["review_regressions"] = True
+        details["review_regressions"] = "skipped (CLI not built; run gradle installDist)"
+
     result = {
         "passed": all(checks.values()),
         "checks": checks,
