@@ -43,6 +43,7 @@ FallingTree / ShulkerBoxTooltip 的核心功能有实测证据，FerriteCore 只
 - `tools/audit_mixins.py`：抓“配置列了但类缺失”与“@Mixin 类未被任何配置引用”的惰性 mixin。
 - `tools/verify_evidence.py` / `tools/check_hashes.py` / `tools/hash_evidence.py`：证据与哈希门禁。
 - `tools/rebuild_ironchests_client.py`、`tools/build_clumps_companion.py` 等：多阶段/伴随模组构建。
+- `launcher/`：本地 GUI 启动器（网页界面），从官方源/BMCLAPI 下载原版与 Fabric，离线启动。
 
 ## 诚实边界
 

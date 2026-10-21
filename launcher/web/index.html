@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>mcbridge launcher</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">m</div>
+      <div>
+        <div class="title">mcbridge launcher</div>
+        <div class="sub">离 线 安 装 与 启 动</div>
+      </div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button data-filter="all" class="on">全部</button>
+      <button data-filter="vanilla">原版</button>
+      <button data-filter="fabric">Fabric</button>
+      <button data-filter="forge">Forge</button>
+      <button data-filter="neoforge">NeoForge</button>
+    </div>
+    <div class="verlist" id="verlist"></div>
+    <div class="foot">仅单机 / 局域网 · 不打包游戏文件</div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div class="statusline">
+        <span class="dot" id="dot"></span>
+        <span id="statusText">未连接</span>
+      </div>
+      <div class="buttons">
+        <button class="ghost" id="refresh">刷新列表</button>
+        <button class="ghost" id="openRoot">打开目录</button>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="row">
+        <label>离线用户名</label>
+        <input id="username" placeholder="Player">
+        <label>内存</label>
+        <input id="mem" class="narrow" placeholder="2G">
+      </div>
+      <div class="row">
+        <label>游戏目录</label>
+        <input id="root" class="grow" placeholder="D:\.....minecraft">
+      </div>
+      <div class="row">
+        <label>安装版本</label>
+        <input id="mcver" list="mcvers" placeholder="1.21.1">
+        <datalist id="mcvers"></datalist>
+        <select id="loader">
+          <option value="vanilla">原版</option>
+          <option value="fabric">Fabric</option>
+          <option value="forge">Forge</option>
+          <option value="neoforge">NeoForge</option>
+        </select>
+        <button id="install">下载 / 安装</button>
+        <button class="ghost" id="save">保存设置</button>
+      </div>
+      <div class="progress"><div id="bar"></div></div>
+      <div class="taskmsg" id="taskmsg">就绪</div>
+    </section>
+
+    <section class="card grow">
+      <div class="row between">
+        <div class="selinfo" id="selinfo">未选择版本</div>
+        <button id="play" disabled>离线启动</button>
+      </div>
+      <pre class="console" id="console"></pre>
+    </section>
+  </main>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

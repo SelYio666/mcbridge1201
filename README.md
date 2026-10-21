@@ -40,6 +40,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 
 ## 交接
 
+配套的本地 GUI 启动器（离线安装/启动原版与 Fabric，界面在浏览器里）见 [docs/launcher.md](docs/launcher.md)。
+
 先读 [docs/handoff.md](docs/handoff.md)（一页版：能做什么、当前降级、下一步、复现命令）。发布/分发边界与步骤见 [docs/distribution.md](docs/distribution.md)。
 
 ## 复现
