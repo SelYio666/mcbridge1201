@@ -54,6 +54,7 @@ def main() -> int:
         return 2
 
     cmd, log, _ = mclaunch.build_command(vid, root, args.username, "2G")
+    log.parent.mkdir(parents=True, exist_ok=True)
     print("launching", vid, "->", log)
     with open(log, "w", encoding="utf-8", errors="replace") as out:
         out.write(" ".join(cmd) + "\n")

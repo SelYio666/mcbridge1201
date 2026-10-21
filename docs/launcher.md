@@ -253,5 +253,6 @@ python tools/test_launcher_e2e.py --root work/launcher-e2e --mc 1.21.1
 第二种会先装原版 + Fabric，再启动客户端，等日志出现 `Setting user` 与 `Backend library` 后判定
 `RESULT: OK` 并结束进程；`--no-install` 复用已装目录（秒级）。
 
-实测：`--no-install` 用 `work/launcher-fresh2` 通过；从零安装的那次受网络影响（3911 个资源对象
-约 1.4 个/秒）耗时较长，结果以该次运行为准，不预先冒充通过。
+实测：`--no-install` 用 `work/launcher-fresh2` 通过；从零安装一次约 36 分钟（约 915 MB，网络慢），
+`verify` 后 `RESULT: OK`；首次运行暴露了“先开日志文件后建 logs 目录”的脚本 bug，已修复并复跑启动阶段通过。
+证据见 `runs/p114-launcher-e2e/`。
