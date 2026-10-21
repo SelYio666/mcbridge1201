@@ -504,6 +504,12 @@ def print_report(report: dict) -> None:
     print("RESULT:", "OK" if report["ok"] else "INCOMPLETE")
 
 
+def find_runtime_java(root: Path) -> str | None:
+    """A Java runtime installed under <root>/runtime by the launcher, if any."""
+    matches = sorted((Path(root) / "runtime").glob("**/bin/java.exe"))
+    return str(matches[0]) if matches else None
+
+
 def find_java() -> str:
     env = os.environ.get("MC_JAVA") or os.environ.get("JAVA_HOME")
     if env:
@@ -688,7 +694,7 @@ def build_command(version_id: str, root: Path, username: str, max_mem="2G",
     ensure("--accessToken", "0")
     ensure("--userType", "msa")
     ensure("--versionType", data.get("type", "release"))
-    java = find_java()
+    java = find_runtime_java(root) or find_java()
     cmd = [java, f"-Xmx{max_mem}"] + jvm_args + [main_class] + game_args
     if extra_game:
         cmd += extra_game

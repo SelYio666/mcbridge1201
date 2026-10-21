@@ -200,3 +200,17 @@ RESULT: OK
   `minecraft-launcher-lib` 的 `mod_loader`（实测 1.20.1 Forge 返回 137 个）；
 - 安装请求可带 `loader_version`，不传则用最新稳定版；实测指定 Fabric `0.20.1` 安装出
   `fabric-loader-0.20.1-1.21.1` 配置。
+
+## Java 运行时
+
+“高级设置”里有一行 **Java 运行时**：
+
+- 下拉列出 Mojang 官方 JVM 组件（`jre-legacy`、`java-runtime-gamma/delta/epsilon` 等）；
+- 点“安装到游戏目录”会装到 `<root>/runtime/<组件>/...`，启动器会**优先使用**这份 Java；
+- 接口：`GET /api/jvm`（可用 + 已安装）、`POST /api/install-jvm {"id":"java-runtime-delta"}`。
+
+实测：`java-runtime-delta` 装进临时目录，得到 OpenJDK **21.0.7**；`find_runtime_java(root)` 能选中它，
+空目录返回 None。由于 Mojang 的 launchermeta/piston-meta 在本网络下偶发 SSL 断连，安装做了 **3 次重试**，
+第二次尝试成功。
+
+注意：这是给“本机没有 Java”的用户兜底的方案；如果系统已有合适 JDK，仍优先用系统/官方启动器运行时。

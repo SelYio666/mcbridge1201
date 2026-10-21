@@ -259,6 +259,7 @@ $("install").onclick = oneClick;
 $("play").onclick = () => play();
 $("allsnap").onchange = () => { renderManifest(false); renderVersions(); };
 $("loader").onchange = loadLoaderVersions;
+$("jvmInstall").onclick = installJvm;
 $("mcver").onchange = loadLoaderVersions;
 $("pickRelease").onclick = () => { if (state.latest.release) { $("mcver").value = state.latest.release; } };
 $("pickSnapshot").onclick = () => {
@@ -274,5 +275,7 @@ $("openRoot").onclick = async () => {
 
 refresh();
 loadManifest();
+loadJvm();
+setInterval(loadJvm, 15000);
 setInterval(pollTask, 1200);
 setInterval(refresh, 5000);

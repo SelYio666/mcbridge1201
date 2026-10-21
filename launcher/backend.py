@@ -80,6 +80,44 @@ def _callback(progress):
     return {"setStatus": set_status, "setMax": set_max, "setProgress": set_progress}
 
 
+def jvm_runtimes() -> list[str]:
+    if not AVAILABLE:
+        return []
+    from minecraft_launcher_lib import runtime as mll_runtime
+
+    return list(mll_runtime.get_jvm_runtimes())
+
+
+def installed_runtimes(root: Path) -> list[str]:
+    if not AVAILABLE:
+        return []
+    from minecraft_launcher_lib import runtime as mll_runtime
+
+    try:
+        return list(mll_runtime.get_installed_jvm_runtimes(str(root)))
+    except Exception:  # noqa: BLE001
+        return []
+
+
+def install_jvm(root: Path, jvm_id: str, progress=None) -> str:
+    if not AVAILABLE:
+        raise RuntimeError("minecraft-launcher-lib not installed")
+    import time
+
+    from minecraft_launcher_lib import runtime as mll_runtime
+
+    last = None
+    for attempt in range(3):
+        try:
+            progress and progress.set(message=f"java {jvm_id}" + (f" (retry {attempt})" if attempt else ""))
+            mll_runtime.install_jvm_runtime(jvm_id, str(root), _callback(progress))
+            return jvm_id
+        except Exception as exc:  # noqa: BLE001 - the Mojang endpoints are flaky on this network
+            last = exc
+            time.sleep(3 * (attempt + 1))
+    raise RuntimeError(f"java runtime install failed after retries: {last}")
+
+
 def loader_versions(loader: str, mc: str) -> list[str]:
     """Available loader versions for one game version (newest first where the source allows)."""
     if not AVAILABLE:

@@ -162,6 +162,22 @@ class Handler(BaseHTTPRequestHandler):
                 java_error = str(exc)
             return self._send(200, {"root": cfg["root"], "versions": installed_versions(Path(cfg["root"])),
                                     "java": java, "java_error": java_error})
+        if path == "/api/jvm":
+            cfg = load_config()
+            import backend
+            try:
+                available = backend.jvm_runtimes()
+            except Exception as exc:  # noqa: BLE001
+                available = []
+                err = str(exc)
+            else:
+                err = None
+            return self._send(200, {
+                "available": available,
+                "installed": backend.installed_runtimes(Path(cfg["root"])),
+                "error": err,
+            })
+
         if path == "/api/loader-versions":
             qs = parse_qs(urlparse(self.path).query)
             loader = (qs.get("loader", ["fabric"])[0] or "fabric").lower()
@@ -222,6 +238,28 @@ class Handler(BaseHTTPRequestHandler):
             cfg.update({k: body[k] for k in ("root", "username", "mem") if k in body})
             save_config(cfg)
             return self._send(200, cfg)
+        if path == "/api/install-jvm":
+            cfg = load_config()
+            jvm_id = str(body.get("id", "")).strip()
+            if not jvm_id:
+                return self._send(400, {"error": "id required"})
+            if TASK.snapshot()["phase"] in ("start", "download"):
+                return self._send(409, {"error": "a task is running"})
+
+            def run_jvm():
+                with TASK_LOCK:
+                    TASK.__init__()
+                try:
+                    import backend
+                    TASK.set(phase="download", message=f"java {jvm_id}")
+                    backend.install_jvm(Path(cfg["root"]), jvm_id, TASK)
+                    TASK.set(phase="done", message=jvm_id)
+                except Exception as exc:  # noqa: BLE001
+                    TASK.set(phase="error", error=str(exc))
+
+            threading.Thread(target=run_jvm, daemon=True).start()
+            return self._send(200, {"started": True})
+
         if path == "/api/install":
             mc = str(body.get("mc", "")).strip()
             loader = str(body.get("loader", "vanilla"))
