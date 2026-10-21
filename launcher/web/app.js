@@ -261,6 +261,7 @@ $("allsnap").onchange = () => { renderManifest(false); renderVersions(); };
 $("loader").onchange = loadLoaderVersions;
 $("jvmInstall").onclick = installJvm;
 $("mrpackInstall").onclick = installMrpack;
+$("mrpackPick").onchange = () => { if ($("mrpackPick").value) $("mrpackPath").value = $("mrpackPick").value; };
 $("mcver").onchange = loadLoaderVersions;
 $("pickRelease").onclick = () => { if (state.latest.release) { $("mcver").value = state.latest.release; } };
 $("pickSnapshot").onclick = () => {
@@ -277,6 +278,7 @@ $("openRoot").onclick = async () => {
 refresh();
 loadManifest();
 loadJvm();
+loadMrpacks();
 setInterval(loadJvm, 15000);
 setInterval(pollTask, 1200);
 setInterval(refresh, 5000);

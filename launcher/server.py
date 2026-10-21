@@ -162,6 +162,32 @@ class Handler(BaseHTTPRequestHandler):
                 java_error = str(exc)
             return self._send(200, {"root": cfg["root"], "versions": installed_versions(Path(cfg["root"])),
                                     "java": java, "java_error": java_error})
+        if path == "/api/mrpacks":
+            cfg = load_config()
+            qs = parse_qs(urlparse(self.path).query)
+            roots = []
+            if qs.get("dir", [""])[0]:
+                roots = [Path(qs["dir"][0])]
+            else:
+                roots = [Path(cfg["root"]) / "packs", Path.home() / "Downloads"]
+            packs = []
+            for d in roots:
+                if not d.is_dir():
+                    continue
+                for pack in sorted(d.glob("*.mrpack"))[:50]:
+                    entry = {"path": str(pack), "name": pack.stem, "version": "", "minecraft": ""}
+                    try:
+                        import zipfile
+                        with zipfile.ZipFile(pack) as z:
+                            idx = json.loads(z.read("modrinth.index.json"))
+                        entry["name"] = idx.get("name") or pack.stem
+                        entry["version"] = idx.get("versionId") or ""
+                        entry["minecraft"] = (idx.get("dependencies") or {}).get("minecraft", "")
+                    except Exception:  # noqa: BLE001 - unreadable pack is still listed
+                        entry["error"] = "unreadable modrinth.index.json"
+                    packs.append(entry)
+            return self._send(200, {"dirs": [str(d) for d in roots], "packs": packs})
+
         if path == "/api/jvm":
             cfg = load_config()
             import backend

@@ -217,9 +217,11 @@ RESULT: OK
 
 ## Modrinth 整合包（.mrpack）
 
-“高级设置 → 整合包”填 `.mrpack` 路径，点“安装整合包”即可；接口：
+“高级设置 → 整合包”会**自动扫描** `<root>/packs` 和 `~/Downloads`（也可传 `dir` 参数），
+下拉选择或手填路径，点“安装整合包”；接口：
 
-- `POST /api/install-mrpack {"path":"<本地 .mrpack>"}`。
+- `GET /api/mrpacks?dir=<可选目录>`：列出发现的包（名称 / 包版本 / MC 版本）
+- `POST /api/install-mrpack {"path":"<本地 .mrpack>"}`
 
 实现策略：**依赖由本项目自己装**（原版走我们的镜像下载器、Fabric/Forge/NeoForge 走已验证路径），
 然后调用 `minecraft-launcher-lib` 的 `install_mrpack(..., skipDependenciesInstall=True)` 只装
