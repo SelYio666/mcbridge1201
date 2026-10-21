@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the mcbridge1201 promo video from code (Pillow frames -> ffmpeg H.264)."""
+"""Render the mcbridge1201 explainer video from code (Pillow frames -> ffmpeg H.264)."""
 import subprocess
 from pathlib import Path
 
@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "docs" / "media" / "mcbridge1201-promo.mp4"
 
 W, H, FPS = 1920, 1080, 30
-DUR = 30.0
+DUR = 45.0
 FONT_CN = "C:/Windows/Fonts/msyh.ttc"
 FONT_CN_B = "C:/Windows/Fonts/msyhbd.ttc"
 FONT_CODE = "C:/Windows/Fonts/consola.ttf"
@@ -110,9 +110,9 @@ def init_assets():
     global BASE, SHOTS
     BASE = bg_image()
     SHOTS = [
-        load_shot("p94-modmenu-list/modmenu-list.png", (560, 315)),
-        load_shot("p101-appleskin-hover/appleskin-hover.png", (560, 315)),
-        load_shot("p96-combined-smoke/combined-world.png", (560, 315)),
+        load_shot("p94-modmenu-list/modmenu-list.png", (520, 293)),
+        load_shot("p101-appleskin-hover/appleskin-hover.png", (520, 293)),
+        load_shot("p96-combined-smoke/combined-world.png", (520, 293)),
     ]
 
 
@@ -125,24 +125,42 @@ def caption(draw, txt, alpha=1.0):
     draw.text((W / 2 - w / 2, 982), txt, font=f, fill=WHITE + (int(255 * alpha),))
 
 
-def scene_title(t):
+def scene_hook(t):
     img = BASE.copy()
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     a = fade_in(t)
-    tag_f = font(FONT_CODE_B, 34)
-    center_text(d, "FABRIC  1.20.1  ->  1.21.1", tag_f, W / 2, 250, CYAN + (int(220 * a),))
-    title_f = font(FONT_CN_B, 168)
-    y = 340 - int(26 * (1 - ease_out(t / 0.9)))
-    center_text(d, "mcbridge1201", title_f, W / 2, y, WHITE + (int(255 * a),))
-    sub_f = font(FONT_CN_B, 56)
-    center_text(d, "让老模组在 1.21.1 里活过来", sub_f, W / 2, 560, (203, 225, 255, int(235 * a)))
-    line_f = font(FONT_CN, 40)
-    center_text(d, "保体积重映射 · 规则修补 · javac 桥", line_f, W / 2, 660, DIM + (int(220 * a),))
-    grow = ease_out(t / 1.1)
-    lw = int(560 * grow)
-    d.rounded_rectangle([W / 2 - lw / 2, 742, W / 2 + lw / 2, 748], radius=3, fill=CYAN + (int(220 * a),))
-    caption(d, "代码驱动的迁移工具链", a)
+    tag_f = font(FONT_CN, 36)
+    center_text(d, "MINECRAFT 1.20.1  →  1.21.1  ·  FABRIC", tag_f, W / 2, 196, CYAN + (int(220 * a),))
+    head_f = font(FONT_CN_B, 100)
+    center_text(d, "让老模组在 1.21.1 上跑起来", head_f, W / 2, 268, WHITE + (int(255 * a),))
+    sub_f = font(FONT_CN_B, 54)
+    center_text(d, "mcbridge1201", sub_f, W / 2, 452, (203, 225, 255, int(235 * a)))
+    plain_f = font(FONT_CN, 44)
+    center_text(d, "自动转换  +  打补丁  +  兼容小类", plain_f, W / 2, 548, DIM + (int(225 * a),))
+    # flow diagram: old jar -> tool -> new jar
+    y = 700
+    box_f = font(FONT_CN, 36)
+    items = [("1.20.1 模组 jar", AMBER), ("自动改写", CYAN), ("1.21.1 可运行", GREEN)]
+    xs = [330, 960, 1590]
+    for i, ((label, col), x) in enumerate(zip(items, xs)):
+        k = ease_out((t - 0.4 - i * 0.35) / 0.5)
+        if k <= 0:
+            continue
+        bw = 330
+        panel(d, [x - bw / 2, y, x + bw / 2, y + 110], radius=20,
+              fill=(255, 255, 255, int(10 * k)), outline=col + (int(130 * k),))
+        cw = text_w(d, label, box_f)
+        d.text((x - cw / 2, y + 32), label, font=box_f, fill=col + (int(240 * k),))
+        if i < 2:
+            ax = x + bw / 2 + 20
+            grow = ease_out((t - 0.9 - i * 0.35) / 0.5)
+            if grow > 0:
+                d.line([(ax, y + 55), (ax + 300 * grow - 40, y + 55)],
+                       fill=CYAN + (int(200 * grow),), width=5)
+                d.polygon([(ax + 300 * grow - 44, y + 45), (ax + 300 * grow - 44, y + 65),
+                           (ax + 300 * grow - 26, y + 55)], fill=CYAN + (int(200 * grow),))
+    caption(d, "不用等作者更新，也不用改源码", a)
     img.alpha_composite(ov)
     return img
 
@@ -152,109 +170,112 @@ def scene_problem(t):
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     a = fade_in(t)
-    head_f = font(FONT_CN_B, 72)
-    center_text(d, "为什么升不上去？", head_f, W / 2, 110, WHITE + (int(255 * a),))
-    box = [200, 230, 1720, 600]
-    panel(d, box, radius=24, fill=(6, 10, 22, 210), outline=(79, 209, 255, 70))
-    lines = [
-        ("CenturyBridge tombstone: class_1890.method_8222 no longer exists", AMBER),
-        ("NoSuchMethodError: 'class_634.method_2883(...)'", AMBER),
-        ("NoClassDefFoundError: top/mcbridge1201/bridge/CodecDispatch", AMBER),
-        ("-> 换 jar = 崩；删 mixin = 假通过；旧桥 = 遮蔽新桥", GREEN),
+    head_f = font(FONT_CN_B, 76)
+    center_text(d, "不处理会怎样？", head_f, W / 2, 100, WHITE + (int(255 * a),))
+    plain_f = font(FONT_CN, 40)
+    center_text(d, "1.21.1 改了大量方法名，还删掉了旧入口——老模组里的调用全指错。",
+                plain_f, W / 2, 208, (203, 225, 255, int(235 * a)))
+    cards = [
+        ("启动就崩", "NoSuchMethodError:\nclass_634.method_2883", AMBER),
+        ("功能静默失效", "FallingTree 砍树\n只掉 1 根", (239, 68, 68)),
     ]
-    code_f = font(FONT_CODE, 32)
-    note_f = font(FONT_CN, 34)
-    line_fonts = [code_f, code_f, code_f, note_f]
-    line_h = 74
-    for i, (txt, col) in enumerate(lines):
-        if t > 0.35 + i * 0.5:
-            d.text((250, 264 + i * line_h), txt, font=line_fonts[i], fill=col + (int(240 * a),))
-    chips = ["签名变了", "mixin 目标没了", "桥类版本冲突"]
-    chip_f = font(FONT_CN, 40)
-    for i, c in enumerate(chips):
-        cw = text_w(d, c, chip_f)
-        bx = 260 + i * 470
-        panel(d, [bx, 700, bx + cw + 56, 786], radius=40, fill=(79, 209, 255, 26),
-              outline=(79, 209, 255, 80))
-        d.text((bx + 28, 714), c, font=chip_f, fill=WHITE + (int(245 * a),))
-    caption(d, "直接换 jar：崩。删 mixin：假通过。", a)
+    card_f = font(FONT_CN_B, 48)
+    line_f = font(FONT_CODE, 30)
+    cn_f = font(FONT_CN, 36)
+    body_fonts = [line_f, cn_f]
+    for i, (title, body, col) in enumerate(cards):
+        k = ease_out((t - 0.4 - i * 0.45) / 0.6)
+        if k <= 0:
+            continue
+        x = 230 + i * 760
+        panel(d, [x, 300, x + 700, 610], radius=26,
+              fill=(255, 255, 255, int(10 * k)), outline=col + (int(140 * k),))
+        d.text((x + 44, 336), title, font=card_f, fill=col + (int(255 * k),))
+        d.text((x + 44, 430), body, font=body_fonts[i], fill=WHITE + (int(235 * k),), spacing=14)
+    note_f = font(FONT_CN, 38)
+    if t > 2.6:
+        k = ease_out((t - 2.6) / 0.6)
+        center_text(d, "> 这不是 bug，是版本换代——需要有人把旧调用翻译成新写法。",
+                    note_f, W / 2, 690, (220, 255, 235, int(235 * k)))
+    caption(d, "模组写死了 1.20.1 的调用，升级后找不到", a)
     img.alpha_composite(ov)
     return img
 
 
-def scene_pipeline(t):
+def scene_what(t):
     img = BASE.copy()
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     a = fade_in(t)
-    head_f = font(FONT_CN_B, 72)
-    center_text(d, "三步迁移：每一步都有证据", head_f, W / 2, 96, WHITE + (int(255 * a),))
+    head_f = font(FONT_CN_B, 76)
+    center_text(d, "这个工具做三件事", head_f, W / 2, 92, WHITE + (int(255 * a),))
     stages = [
-        ("1  转换", "CenturyBridge 7 段重映射\n死调用标记为 tombstone", CYAN),
-        ("2  修补", "field / method / body\nsuperclass / ctor / rename / mixin", BLUE),
-        ("3  桥接", "javac 生成桥类\n同一 bridge-dir 对齐", GREEN),
+        ("1  翻译", "把旧方法名、字段名\n换成 1.21.1 的；\n翻不了的先标记出来", CYAN),
+        ("2  打补丁", "按规则改代码：\n方法、字段、构造器、\n父类、混入、渲染", BLUE),
+        ("3  补零件", "生成兼容小类，\n替旧 API 干活：\n网络、NBT、食物、预览…", GREEN),
     ]
-    card_w, card_h = 560, 380
+    card_w, card_h = 560, 400
     gap = 50
-    total = 3 * card_w + 2 * gap
-    x0 = (W - total) / 2
+    x0 = (W - (3 * card_w + 2 * gap)) / 2
     body_f = font(FONT_CN, 30)
     for i, (title, body, col) in enumerate(stages):
-        local = t - i * 0.65
+        local = t - i * 0.8
         if local < 0:
             continue
         k = ease_out(local / 0.6)
         x = x0 + i * (card_w + gap)
-        y = 300 + int(40 * (1 - k))
+        y = 250 + int(40 * (1 - k))
         panel(d, [x, y, x + card_w, y + card_h], radius=26,
-              fill=(255, 255, 255, int(12 * k)), outline=col + (int(120 * k),))
-        d.text((x + 36, y + 32), title, font=font(FONT_CN_B, 54), fill=col + (int(255 * k),))
-        d.text((x + 36, y + 140), body, font=body_f, fill=WHITE + (int(230 * k),), spacing=16)
-        if i < 2:
-            ax = x + card_w + 8
-            ay = y + card_h // 2
-            grow = ease_out((local - 0.7) / 0.5)
-            if grow > 0:
-                d.line([(ax, ay), (ax + gap * grow - 16, ay)], fill=CYAN + (int(200 * grow),), width=5)
-                d.polygon([(ax + gap * grow - 16, ay - 10), (ax + gap * grow - 16, ay + 10),
-                           (ax + gap * grow - 2, ay)], fill=CYAN + (int(200 * grow),))
-    caption(d, "capability / risk / evidence 绑定每一条规则", a)
+              fill=(255, 255, 255, int(10 * k)), outline=col + (int(120 * k),))
+        d.text((x + 36, y + 30), title, font=font(FONT_CN_B, 54), fill=col + (int(255 * k),))
+        d.text((x + 36, y + 130), body, font=body_f, fill=WHITE + (int(230 * k),), spacing=18)
+    analogy_f = font(FONT_CN_B, 46)
+    if t > 3.4:
+        k = ease_out((t - 3.4) / 0.6)
+        center_text(d, "像给老模组配了一个翻译官 + 一批转接头。", analogy_f, W / 2, 720,
+                    (220, 255, 235, int(240 * k)))
+    caption(d, "改完仍是原模组，只是换了个能跑的写法", a)
     img.alpha_composite(ov)
     return img
 
 
-def scene_evidence(t):
+def scene_proof(t):
     img = BASE.copy()
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     a = fade_in(t)
-    head_f = font(FONT_CN_B, 72)
-    center_text(d, "不是能启动，是能用", head_f, W / 2, 78, WHITE + (int(255 * a),))
-    caps = ["Mod Menu 列表 / 搜索 / 配置屏", "AppleSkin 真实悬停 tooltip", "多模组联测进世界"]
+    head_f = font(FONT_CN_B, 76)
+    center_text(d, "不是能启动，是真能用", head_f, W / 2, 78, WHITE + (int(255 * a),))
+    caps = ["Mod Menu：列表能滚、能搜、能开配置", "AppleSkin：悬停看到食物数值", "多模组一起进世界"]
     cap_f = font(FONT_CN, 32)
     for i, shot in enumerate(SHOTS if SHOTS else []):
         local = t - i * 0.55
         if local < 0:
             continue
         k = ease_out(local / 0.6)
-        x = 120 + i * 600
-        y = 190 + int(34 * (1 - k))
-        panel(d, [x - 6, y - 6, x + 566, y + 327], radius=20,
+        x = 130 + i * 560
+        y = 180 + int(34 * (1 - k))
+        panel(d, [x - 6, y - 6, x + 526, y + 299], radius=20,
               fill=(255, 255, 255, 0), outline=CYAN + (int(110 * k),))
-        base = Image.new("RGBA", (566, 327), (12, 18, 34, 255))
+        base = Image.new("RGBA", (520, 293), (12, 18, 34, 255))
         base.alpha_composite(shot, (0, 0))
         alpha_mask = Image.new("L", base.size, int(255 * k))
         img.paste(base, (x, y), alpha_mask)
         cw = text_w(d, caps[i], cap_f)
-        d.text((x + 280 - cw / 2, y + 340), caps[i], font=cap_f, fill=WHITE + (int(235 * k),))
-    stats_f = font(FONT_CODE_B, 30)
-    stats = "23 tests  |  627 evidence hashes  |  bridge consistency: 0  |  combined smoke: in-world"
-    if t > 2.2:
-        k = ease_out((t - 2.2) / 0.6)
-        box = [150, 780, 1770, 876]
+        d.text((x + 260 - cw / 2, y + 312), caps[i], font=cap_f, fill=WHITE + (int(235 * k),))
+    stats_f = font(FONT_CN, 36)
+    stats = "9 个模组实测   ·   23 项自动测试   ·   630 条证据哈希"
+    if t > 2.4:
+        k = ease_out((t - 2.4) / 0.6)
+        box = [330, 760, 1590, 862]
         panel(d, box, radius=22, fill=(34, 197, 94, int(18 * k)), outline=GREEN + (int(120 * k),))
-        center_text(d, stats, stats_f, W / 2, 808, (220, 255, 235, int(240 * k)))
-    caption(d, "日志、截图、哈希全部入库", a)
+        center_text(d, stats, stats_f, W / 2, 792, (220, 255, 235, int(240 * k)))
+    if t > 3.2:
+        k = ease_out((t - 3.2) / 0.6)
+        note_f = font(FONT_CN, 34)
+        center_text(d, "每个结论都有日志 / 截图 / 哈希，可以逐条复核。", note_f, W / 2, 888,
+                    (148, 163, 184, int(220 * k)))
+    caption(d, "证据在仓库里，不是嘴上说", a)
     img.alpha_composite(ov)
     return img
 
@@ -264,38 +285,43 @@ def scene_close(t):
     ov = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(ov)
     a = fade_in(t)
-    head_f = font(FONT_CN_B, 84)
-    center_text(d, "已验证的模组", head_f, W / 2, 130, WHITE + (int(255 * a),))
-    rows = [
-        ("Lithium  ·  IronChests  ·  TrashSlot", 0.25, CYAN),
-        ("AppleSkin  ·  Mod Menu  ·  Clumps", 0.50, BLUE),
-        ("FallingTree  ·  ShulkerBoxTooltip  ·  FerriteCore*", 0.75, GREEN),
-    ]
-    row_f = font(FONT_CN_B, 48)
-    for idx, (txt, delay, col) in enumerate(rows):
-        if t > delay:
-            k = ease_out((t - delay) / 0.6)
-            center_text(d, txt, row_f, W / 2, 268 + idx * 96, col + (int(240 * k),))
-    if t > 1.6:
-        k = ease_out((t - 1.6) / 0.7)
-        link_f = font(FONT_CODE_B, 62)
-        center_text(d, "github.com/SelYio666/mcbridge1201", link_f, W / 2, 630, WHITE + (int(255 * k),))
-        ver_f = font(FONT_CN, 40)
-        center_text(d, "v0.2.5  ·  工具 / 规则 / 证据开源", ver_f, W / 2, 730, DIM + (int(230 * k),))
+    head_f = font(FONT_CN_B, 72)
+    center_text(d, "适合谁？", head_f, W / 2, 120, WHITE + (int(255 * a),))
+    chips = ["整合包作者", "服务器服主", "老模组玩家"]
+    chip_f = font(FONT_CN, 44)
+    for i, c in enumerate(chips):
+        cw = text_w(d, c, chip_f)
+        bx = W / 2 - (cw + 56) / 2 + (i - 1) * 360
+        k = ease_out((t - 0.3 - i * 0.2) / 0.5)
+        if k <= 0:
+            continue
+        panel(d, [bx, 250, bx + cw + 56, 340], radius=45, fill=(79, 209, 255, int(24 * k)),
+              outline=(79, 209, 255, int(110 * k)))
+        d.text((bx + 28, 262), c, font=chip_f, fill=WHITE + (int(245 * k),))
+    if t > 1.4:
+        k = ease_out((t - 1.4) / 0.6)
+        line_f = font(FONT_CN_B, 50)
+        center_text(d, "把 1.20.1 的模组，搬进 1.21.1", line_f, W / 2, 430, (203, 225, 255, int(240 * k)))
+    if t > 2.2:
+        k = ease_out((t - 2.2) / 0.7)
+        link_f = font(FONT_CODE_B, 60)
+        center_text(d, "github.com/SelYio666/mcbridge1201", link_f, W / 2, 560, WHITE + (int(255 * k),))
+        ver_f = font(FONT_CN, 38)
+        center_text(d, "v0.2.5  ·  只提供工具 / 规则 / 证据", ver_f, W / 2, 668, DIM + (int(230 * k),))
         note_f = font(FONT_CN, 32)
-        center_text(d, "* FerriteCore 仅启动 + 性能降级；不分发游戏/模组 jar", note_f, W / 2, 800,
+        center_text(d, "* 不分发游戏或模组 jar；个别功能仍需手工移植", note_f, W / 2, 728,
                     (148, 163, 184, int(200 * k)))
-    caption(d, "从崩溃日志到可复现的兼容层", a)
+    caption(d, "mcbridge1201 · 开源兼容层", a)
     img.alpha_composite(ov)
     return img
 
 
 SCENES = [
-    (0.0, 4.8, scene_title),
-    (4.8, 11.0, scene_problem),
-    (11.0, 17.6, scene_pipeline),
-    (17.6, 24.6, scene_evidence),
-    (24.6, 30.0, scene_close),
+    (0.0, 6.0, scene_hook),
+    (6.0, 15.5, scene_problem),
+    (15.5, 27.5, scene_what),
+    (27.5, 38.5, scene_proof),
+    (38.5, 45.0, scene_close),
 ]
 FADE = 0.5
 
