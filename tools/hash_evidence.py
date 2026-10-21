@@ -504,6 +504,8 @@ FILES = [
     "runs/p110-shulker-grid/grid-window.png",
     "docs/media/README.md",
     "docs/media/mcbridge1201-promo.mp4",
+    "docs/media/mcbridge1201-promo-v2.mp4",
+    "tools/make_promo_v2.py",
     "docs/launcher.md",
     "docs/launcher-research.md",
     "launcher/mclaunch.py",

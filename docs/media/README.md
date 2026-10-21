@@ -45,3 +45,22 @@ python -m pip install imageio-ffmpeg
 
 Numbers in the proof scene are a 2026-10-20 snapshot (23 tests / 630 hashes); edit the `stats`
 string in `scene_proof` and re-render if they change.
+
+
+## v2 (2026-10-21) — 辅助定位版
+
+55 秒，1080p30，`mcbridge1201-promo-v2.mp4`，由 `tools/make_promo_v2.py` 渲染。
+
+定位按用户要求修正为**辅助**，不替代 PCL：
+
+1. 钩子：Minecraft 版本迁移辅助工具箱 —— “帮 1.20.1 的模组搬家，不是来替代启动器的”；
+2. 问题：版本换代导致崩溃 / 功能静默失效；
+3. 引擎：转换 → 修补 → 桥接（核心价值）；
+4. 启动器：明确写成“顺手带个小启动器（验证用）”，三条点分别是能装能测 / 标准目录（PCL 可直接识别）/
+   不抢位置（日常还是用 PCL）；
+5. 证据：多模组进世界、Forge 主菜单、AppleSkin 悬停 + 9 模组 / 23 测试 / 641 哈希；
+6. 收尾：把模组搬进 1.21.1 后“交回你最顺手的启动器”，并注明 NeoForge 未实测、不分发 jar。
+
+```text
+python tools/make_promo_v2.py
+```
