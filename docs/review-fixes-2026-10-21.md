@@ -24,4 +24,4 @@
 - ISSUE-01 已用客户端探针做运行期回归（p113），但完整 TrashSlot UI 流程（开面板→移物品→关箱→重进）仍未重跑。
 - ISSUE-04 的“干净目录”已验证（复制 java/ 到空目录 + `gradle --offline test installDist` 成功），但没在无缓存的干净机器上验证。
 - 报告提到的 Gradle Wrapper 缺失、CenturyBridge 的 no-op `MixinCheck` 仍未处理。
-- 已固化为 `tools/test_review_fixes.py`（16 项检查），但这轮仍未覆盖 ISSUE-01 的游戏内行为。
+- 已固化为 `tools/test_review_fixes.py`（18 项检查），但这轮仍未覆盖 ISSUE-01 的游戏内行为。

@@ -233,3 +233,12 @@ RESULT: OK
 `config/mcbridge-test.txt` 内容正确。
 
 安装完成后界面会**自动选中并启动** `|` 后面的启动版本（`get_mrpack_launch_version` 给出）。
+
+## 删除已安装版本
+
+“已安装”列表里每个版本带一个“删除”链接（二次确认）。接口：
+
+- `POST /api/delete-version {"id":"<版本 id>"}`
+
+只删 `<root>/versions/<id>` 目录，不动 `saves/`、`mods/`、`libraries/`、`assets/`；返回释放的字节数。
+路径穿越（`../`）会被拒绝（400）。回归套件覆盖“删除成功”和“拒绝穿越”两项。

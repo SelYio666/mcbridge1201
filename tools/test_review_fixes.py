@@ -203,6 +203,14 @@ def test_launcher() -> None:
         with urllib.request.urlopen(f"http://127.0.0.1:{port}{path}", timeout=timeout) as r:
             return r.status, r.read()
 
+    def post(path: str, payload: dict):
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{port}{path}",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"}, method="POST")
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return r.status, r.read()
+
     # launcher API surface added after the review: pack scanning and runtime listing
     packs = lib / "packs"
     packs.mkdir(exist_ok=True)
@@ -215,6 +223,19 @@ def test_launcher() -> None:
     packs_data = json.loads(body)
     names = [p.get("name") for p in packs_data.get("packs", [])]
     check("launcher /api/mrpacks lists packs", status == 200 and "probe pack" in names, str(names))
+
+    del_dir = lib / "versions" / "fabric-delete-probe-1.21.1"
+    del_dir.mkdir(parents=True, exist_ok=True)
+    (del_dir / "fabric-delete-probe-1.21.1.json").write_text("{}", encoding="utf-8")
+    status, body = post("/api/delete-version", {"id": "fabric-delete-probe-1.21.1"})
+    gone = not del_dir.exists()
+    check("launcher deletes an installed version", status == 200 and gone, f"status={status} gone={gone}")
+    try:
+        post("/api/delete-version", {"id": "../escape"})
+        rejected = False
+    except urllib.error.HTTPError as exc:
+        rejected = exc.code == 400
+    check("launcher rejects path traversal in delete", rejected)
 
     try:
         status, body = get("/api/jvm", timeout=60)

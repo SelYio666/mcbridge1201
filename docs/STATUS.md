@@ -47,7 +47,7 @@ FallingTree / ShulkerBoxTooltip 的核心功能有实测证据，FerriteCore 只
 - `tools/verify_evidence.py` / `tools/check_hashes.py` / `tools/hash_evidence.py`：证据与哈希门禁。
 - `tools/rebuild_ironchests_client.py`、`tools/build_clumps_companion.py` 等：多阶段/伴随模组构建。
 - `tools/verify_evidence.py`：统一门禁；除单测/契约/哈希外，会调用 `test_review_fixes.py` （CLI 未构建时记为 skip）。
-- `tools/test_review_fixes.py`：外部问题汇总的 16 项回归（含启动器新接口）（patch 校验、审计、日志路径、版本过滤、NeoForge 检测、缺 Java）。
+- `tools/test_review_fixes.py`：外部问题汇总的 18 项回归（含启动器新接口）（patch 校验、审计、日志路径、版本过滤、NeoForge 检测、缺 Java）。
 - `launcher/`：本地 GUI 启动器（网页界面），从官方源/BMCLAPI 下载原版与 Fabric，离线启动。
 
 ## 诚实边界

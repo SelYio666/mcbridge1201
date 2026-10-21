@@ -329,6 +329,24 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(409, {"error": "a task is running"})
             threading.Thread(target=run_install, args=(mc, loader, version), daemon=True).start()
             return self._send(200, {"started": True})
+        if path == "/api/delete-version":
+            cfg = load_config()
+            vid = str(body.get("id", "")).strip()
+            if not vid:
+                return self._send(400, {"error": "id required"})
+            import shutil
+            vroot = Path(cfg["root"]) / "versions"
+            target = vroot / vid
+            try:
+                target.resolve().relative_to(vroot.resolve())
+            except Exception:  # noqa: BLE001
+                return self._send(400, {"error": "invalid version id"})
+            if not target.is_dir():
+                return self._send(404, {"error": "not installed"})
+            size = sum(f.stat().st_size for f in target.rglob("*") if f.is_file())
+            shutil.rmtree(target)
+            return self._send(200, {"deleted": vid, "freed_bytes": size})
+
         if path == "/api/launch":
             vid = str(body.get("version_id", "")).strip()
             cfg = load_config()

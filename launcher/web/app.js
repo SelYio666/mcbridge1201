@@ -46,8 +46,14 @@ function renderVersions() {
     el.className = "ver" + (state.selected === v.id ? " sel" : "");
     const type = v.inherits ? kind(v.id) : (v.type === "release" ? "正式版" : (TYPE_LABEL[v.type] || v.type));
     el.innerHTML = `<div class="id">${v.id}${inst.has(v.id) ? ' <span class="badge">已安装</span>' : ""}</div>
-      <div class="meta">${type}${v.inherits ? " · 基于 " + v.inherits : ""}</div>`;
-    el.onclick = () => {
+      <div class="meta">${type}${v.inherits ? " · 基于 " + v.inherits : ""}
+        ${inst.has(v.id) ? '<a class="del" data-id="' + v.id + '">删除</a>' : ""}</div>`;
+    el.onclick = (e) => {
+      if (e.target.classList && e.target.classList.contains("del")) {
+        e.stopPropagation();
+        deleteVersion(e.target.dataset.id);
+        return;
+      }
       state.selected = v.id;
       if ($("mcver")) $("mcver").value = v.id;
       $("selinfo").textContent = "已选择：" + v.id;
@@ -142,6 +148,20 @@ function renderManifest(initial) {
   sel.value = initial || !prev ? fallback : prev;
   if (!sel.value) sel.value = fallback;
   if ($("vercount")) $("vercount").textContent = `共 ${state.manifest.length} 个版本可选（当前列出 ${sel.options.length} 个）`;
+}
+
+async function deleteVersion(id) {
+  if (!confirm("删除版本 " + id + "？只删 versions/ 下的这个版本，不动存档和模组。")) return;
+  try {
+    const r = await api("/api/delete-version", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id })
+    });
+    $("taskmsg").textContent = "已删除 " + r.deleted + "，释放 " + Math.round(r.freed_bytes / 1048576) + " MB";
+    refresh();
+  } catch (e) {
+    alert("删除失败: " + e.message);
+  }
 }
 
 function setButton(busy, text) {

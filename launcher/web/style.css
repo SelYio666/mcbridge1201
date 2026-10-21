@@ -102,3 +102,5 @@ input.narrow { width: 90px; min-width: 90px; }
 .search { margin: 0 12px 6px; width: calc(100% - 24px); }
 .badge { background: rgba(34,197,94,.18); color: #86efac; border: 1px solid rgba(34,197,94,.4);
   border-radius: 999px; padding: 1px 7px; font-size: 10px; margin-left: 6px; }
+
+.del { color: #f87171; margin-left: 8px; cursor: pointer; text-decoration: underline; font-size: 11px; }
