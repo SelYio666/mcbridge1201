@@ -611,7 +611,7 @@ def build_command(version_id: str, root: Path, username: str, max_mem="2G",
                 return cmd, log, root
     except Exception:
         pass
-    root = Path(root)
+    root = Path(root).resolve()
     data = load_version(version_id, root)
     libs = [lib for lib in data.get("libraries", []) if allowed_win(lib)]
     cp = []

@@ -508,6 +508,7 @@ FILES = [
     "docs/review-fixes-2026-10-21.md",
     "docs/build.md",
     "tools/test_review_fixes.py",
+    "tools/test_launcher_e2e.py",
     "tools/build_strict_probe.py",
     "probes/strictprobe/src/probe/StrictProbe.java",
     "probes/strictprobe/fabric.mod.json",
