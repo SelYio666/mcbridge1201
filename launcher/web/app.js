@@ -1,4 +1,5 @@
-let state = { cfg: null, versions: [], filter: "all", selected: null, logOffset: 0, logPath: null };
+let state = { cfg: null, versions: [], filter: "all", selected: null, logOffset: 0, logPath: null, manifest: [] };
+let oneClickTimer = null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -29,7 +30,7 @@ function renderVersions() {
     el.ondblclick = () => play(v.id);
     list.appendChild(el);
   }
-  if (!items.length) list.innerHTML = `<div class="ver"><div class="meta">还没有安装版本，先在上方“下载 / 安装”</div></div>`;
+  if (!items.length) list.innerHTML = `<div class="ver"><div class="meta">还没有安装版本，填个版本号点“安装并启动”</div></div>`;
 }
 
 function select(id) {
@@ -43,9 +44,9 @@ async function refresh() {
   try {
     const cfg = await api("/api/config");
     state.cfg = cfg;
-    $("username").value = cfg.username || "Player";
-    $("mem").value = cfg.mem || "2G";
-    $("root").value = cfg.root || "";
+    if (!$("username").value) $("username").value = cfg.username || "Player";
+    if (!$("mem").value) $("mem").value = cfg.mem || "2G";
+    if (!$("root").value) $("root").value = cfg.root || "";
     const st = await api("/api/status");
     state.versions = st.versions || [];
     $("dot").classList.add("ok");
@@ -80,15 +81,47 @@ function renderManifest() {
   }
 }
 
-async function install() {
+function setButton(busy, text) {
+  const b = $("install");
+  b.disabled = busy;
+  b.textContent = text;
+}
+
+async function oneClick() {
   const mc = $("mcver").value.trim();
   if (!mc) return alert("先填版本号，例如 1.21.1");
+  setButton(true, "安装中…");
+  $("console").textContent = "开始安装 " + mc + " …\n";
   try {
-    await api("/api/install", { method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mc, loader: $("loader").value }) });
+    await api("/api/install", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mc, loader: $("loader").value })
+    });
   } catch (e) {
     alert("安装失败: " + e.message);
+    setButton(false, "安装并启动");
+    return;
   }
+  clearInterval(oneClickTimer);
+  oneClickTimer = setInterval(async () => {
+    let t;
+    try { t = await api("/api/task"); } catch { return; }
+    if (t.phase === "error") {
+      clearInterval(oneClickTimer);
+      setButton(false, "安装并启动");
+      $("taskmsg").textContent = "错误: " + t.error;
+      alert("安装失败: " + t.error);
+      return;
+    }
+    if (t.phase === "done") {
+      clearInterval(oneClickTimer);
+      setButton(false, "安装并启动");
+      await refresh();
+      const vid = t.message && t.message.includes("loader") || t.message && t.message.includes("forge") || t.message && t.message.includes("neoforge")
+        ? t.message : mc;
+      await play(vid);
+    }
+  }, 1500);
 }
 
 function pollTask() {
@@ -97,7 +130,6 @@ function pollTask() {
     $("bar").style.width = pct + "%";
     $("taskmsg").textContent = t.error ? "错误: " + t.error
       : `${t.phase} · ${t.message} ${t.total ? `(${t.done}/${t.total})` : ""}`;
-    if (t.phase === "done") { setTimeout(refresh, 500); }
   }).catch(() => {});
 }
 
@@ -105,8 +137,10 @@ async function play(versionId) {
   const vid = versionId || state.selected;
   if (!vid) return;
   try {
-    const r = await api("/api/launch", { method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ version_id: vid, username: $("username").value.trim() || "Player" }) });
+    const r = await api("/api/launch", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ version_id: vid, username: $("username").value.trim() || "Player" })
+    });
     state.logPath = r.log;
     state.logOffset = 0;
     $("console").textContent = "启动中 pid=" + r.pid + "\n";
@@ -131,9 +165,14 @@ function pollLog() {
 }
 
 async function saveCfg() {
-  await api("/api/config", { method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ root: $("root").value.trim(), username: $("username").value.trim(),
-      mem: $("mem").value.trim() || "2G" }) });
+  await api("/api/config", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      root: $("root").value.trim() || state.cfg.root,
+      username: $("username").value.trim() || "Player",
+      mem: $("mem").value.trim() || "2G"
+    })
+  });
   refresh();
 }
 
@@ -146,7 +185,7 @@ $("tabs").onclick = (e) => {
 };
 $("refresh").onclick = refresh;
 $("save").onclick = saveCfg;
-$("install").onclick = install;
+$("install").onclick = oneClick;
 $("play").onclick = () => play();
 $("allsnap").onchange = renderManifest;
 $("openRoot").onclick = async () => {

@@ -38,39 +38,43 @@
       </div>
     </header>
 
-    <section class="card">
+    <section class="card hero">
       <div class="row">
-        <label>离线用户名</label>
-        <input id="username" placeholder="Player">
-        <label>内存</label>
-        <input id="mem" class="narrow" placeholder="2G">
-      </div>
-      <div class="row">
-        <label>游戏目录</label>
-        <input id="root" class="grow" placeholder="D:\.....minecraft">
-      </div>
-      <div class="row">
-        <label>安装版本</label>
-        <input id="mcver" list="mcvers" placeholder="1.21.1">
+        <input id="mcver" list="mcvers" placeholder="版本号，例如 1.21.1">
         <datalist id="mcvers"></datalist>
-        <label class="chk"><input type="checkbox" id="allsnap"> 含快照/远古</label>
         <select id="loader">
+          <option value="fabric">Fabric（推荐）</option>
           <option value="vanilla">原版</option>
-          <option value="fabric">Fabric</option>
           <option value="forge">Forge</option>
           <option value="neoforge">NeoForge</option>
         </select>
-        <button id="install">下载 / 安装</button>
-        <button class="ghost" id="save">保存设置</button>
+        <button id="install" class="primary big">安装并启动</button>
       </div>
+      <div class="hint">没装过会先自动下载安装，装完自动进游戏；已安装则直接启动。</div>
       <div class="progress"><div id="bar"></div></div>
       <div class="taskmsg" id="taskmsg">就绪</div>
+
+      <details class="adv">
+        <summary>高级设置</summary>
+        <div class="row">
+          <label>用户名</label>
+          <input id="username" placeholder="Player">
+          <label>内存</label>
+          <input id="mem" class="narrow" placeholder="2G">
+          <label class="chk"><input type="checkbox" id="allsnap"> 含快照/远古</label>
+        </div>
+        <div class="row">
+          <label>游戏目录</label>
+          <input id="root" class="grow" placeholder="留空则自动检测 .minecraft">
+          <button class="ghost" id="save">保存</button>
+        </div>
+      </details>
     </section>
 
     <section class="card grow">
       <div class="row between">
         <div class="selinfo" id="selinfo">未选择版本</div>
-        <button id="play" disabled>离线启动</button>
+        <button id="play" class="ghost" disabled>启动已选版本</button>
       </div>
       <pre class="console" id="console"></pre>
     </section>

@@ -50,3 +50,13 @@ the existing `1.20.1-forge-47.4.16` profile:
 
 Fabric keeps using our own command builder (`Loading Minecraft 1.21.1 with Fabric Loader 0.19.5`), because
 the library's generic command did not include the vanilla jar for the inherited Fabric profile.
+
+
+## One-click UI (later)
+
+- The hero card is now a single flow: version input + loader + **安装并启动**. It installs (if needed),
+  polls `/api/task`, then calls `/api/launch` automatically; advanced settings are collapsed.
+- `launcher/run.bat` starts the server and opens the browser for users who do not want a terminal.
+- Verified by driving the same API sequence the button uses: `install fabric 1.21.1` → task `done
+  fabric-loader-0.19.5-1.21.1` → launch → `Setting user: OneClick`, `Backend library: LWJGL`.
+- Screenshot: `launcher-gui-oneclick.png` (headless Edge capture).

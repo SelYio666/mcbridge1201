@@ -22,10 +22,25 @@ TASK_LOCK = threading.Lock()
 LAUNCHES = []
 
 
+def default_root() -> str:
+    cands = [
+        Path(os.environ.get("APPDATA", "")) / ".minecraft",
+        Path(r"D:\我的世界\.minecraft"),
+        Path.home() / ".minecraft",
+    ]
+    for c in cands:
+        try:
+            if c.exists() and (c / "versions").exists():
+                return str(c)
+        except OSError:
+            continue
+    return str(Path.home() / ".mcbridge" / "mc")
+
+
 def load_config():
     if CONFIG.exists():
         return json.loads(CONFIG.read_text(encoding="utf-8"))
-    return {"root": str(Path.home() / ".mcbridge" / "mc"), "username": "Player", "mem": "2G"}
+    return {"root": default_root(), "username": "Player", "mem": "2G"}
 
 
 def save_config(cfg):
