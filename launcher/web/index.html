@@ -15,13 +15,11 @@
         <div class="sub">离 线 安 装 与 启 动</div>
       </div>
     </div>
-    <div class="tabs" id="tabs">
-      <button data-filter="all" class="on">全部</button>
-      <button data-filter="vanilla">原版</button>
-      <button data-filter="fabric">Fabric</button>
-      <button data-filter="forge">Forge</button>
-      <button data-filter="neoforge">NeoForge</button>
+    <div class="modebar">
+      <button id="modeInstall" class="on">可安装 <span id="cntInstall"></span></button>
+      <button id="modeInstalled">已安装 <span id="cntInstalled"></span></button>
     </div>
+    <input id="verSearch" class="search" placeholder="搜索版本号，例如 1.20 / fabric">
     <div class="verlist" id="verlist"></div>
     <div class="foot">仅单机 / 局域网 · 不打包游戏文件</div>
   </aside>

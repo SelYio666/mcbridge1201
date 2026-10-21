@@ -1,4 +1,4 @@
-let state = { cfg: null, versions: [], filter: "all", selected: null, logOffset: 0, logPath: null, manifest: [], latest: {} };
+let state = { cfg: null, versions: [], mode: "installable", query: "", selected: null, logOffset: 0, logPath: null, manifest: [], latest: {} };
 let oneClickTimer = null;
 
 const $ = (id) => document.getElementById(id);
@@ -17,20 +17,57 @@ function kind(id) {
   return "vanilla";
 }
 
+function installedIds() {
+  return new Set((state.versions || []).map(v => v.id));
+}
+
 function renderVersions() {
   const list = $("verlist");
-  const items = state.versions.filter(v => state.filter === "all" || kind(v.id) === state.filter);
+  const inst = installedIds();
   list.innerHTML = "";
-  for (const v of items) {
+  const q = state.query.trim().toLowerCase();
+
+  let items;
+  if (state.mode === "installed") {
+    items = (state.versions || []).filter(v => !q || v.id.toLowerCase().includes(q));
+  } else {
+    const all = $("allsnap") && $("allsnap").checked;
+    items = (state.manifest || [])
+      .filter(v => all || v.type === "release")
+      .filter(v => !q || v.id.toLowerCase().includes(q))
+      .map(v => ({ id: v.id, type: v.type, inherits: null }));
+  }
+
+  if ($("cntInstall")) $("cntInstall").textContent = `(${(state.manifest || []).length})`;
+  if ($("cntInstalled")) $("cntInstalled").textContent = `(${(state.versions || []).length})`;
+
+  for (const v of items.slice(0, 400)) {
     const el = document.createElement("div");
     el.className = "ver" + (state.selected === v.id ? " sel" : "");
-    el.innerHTML = `<div class="id">${v.id}</div>
-      <div class="meta">${kind(v.id)}${v.inherits ? " · 基于 " + v.inherits : ""}</div>`;
-    el.onclick = () => select(v.id);
-    el.ondblclick = () => play(v.id);
+    const type = v.inherits ? kind(v.id) : (v.type === "release" ? "正式版" : (TYPE_LABEL[v.type] || v.type));
+    el.innerHTML = `<div class="id">${v.id}${inst.has(v.id) ? ' <span class="badge">已安装</span>' : ""}</div>
+      <div class="meta">${type}${v.inherits ? " · 基于 " + v.inherits : ""}</div>`;
+    el.onclick = () => {
+      state.selected = v.id;
+      if ($("mcver")) $("mcver").value = v.id;
+      $("selinfo").textContent = "已选择：" + v.id;
+      $("play").disabled = !inst.has(v.id);
+      renderVersions();
+    };
+    el.ondblclick = () => {
+      if ($("mcver")) $("mcver").value = v.id;
+      oneClick();
+    };
     list.appendChild(el);
   }
-  if (!items.length) list.innerHTML = `<div class="ver"><div class="meta">还没有安装版本，填个版本号点“安装并启动”</div></div>`;
+  if (!items.length) {
+    list.innerHTML = `<div class="ver"><div class="meta">没有匹配的版本</div></div>`;
+  } else if (items.length > 400) {
+    const more = document.createElement("div");
+    more.className = "ver";
+    more.innerHTML = `<div class="meta">还有 ${items.length - 400} 个，用搜索缩小范围</div>`;
+    list.appendChild(more);
+  }
 }
 
 function select(id) {
@@ -202,18 +239,24 @@ async function saveCfg() {
   refresh();
 }
 
-$("tabs").onclick = (e) => {
-  if (e.target.tagName !== "BUTTON") return;
-  for (const b of $("tabs").children) b.classList.remove("on");
-  e.target.classList.add("on");
-  state.filter = e.target.dataset.filter;
+$("modeInstall").onclick = () => {
+  state.mode = "installable";
+  $("modeInstall").classList.add("on");
+  $("modeInstalled").classList.remove("on");
   renderVersions();
 };
+$("modeInstalled").onclick = () => {
+  state.mode = "installed";
+  $("modeInstalled").classList.add("on");
+  $("modeInstall").classList.remove("on");
+  renderVersions();
+};
+$("verSearch").oninput = (e) => { state.query = e.target.value; renderVersions(); };
 $("refresh").onclick = refresh;
 $("save").onclick = saveCfg;
 $("install").onclick = oneClick;
 $("play").onclick = () => play();
-$("allsnap").onchange = () => renderManifest(false);
+$("allsnap").onchange = () => { renderManifest(false); renderVersions(); };
 $("pickRelease").onclick = () => { if (state.latest.release) { $("mcver").value = state.latest.release; } };
 $("pickSnapshot").onclick = () => {
   if (!state.latest.snapshot) return;

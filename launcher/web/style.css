@@ -94,3 +94,11 @@ input.narrow { width: 90px; min-width: 90px; }
   border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 500; }
 .chip:hover { border-color: #3b6b8f; }
 .quick { gap: 8px; }
+
+.modebar { display: flex; gap: 6px; padding: 4px 12px 6px; }
+.modebar button { flex: 1; background: var(--panel2); border: 1px solid var(--line); color: var(--dim);
+  border-radius: 9px; padding: 6px 8px; font-size: 12px; }
+.modebar button.on { color: #031018; background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.search { margin: 0 12px 6px; width: calc(100% - 24px); }
+.badge { background: rgba(34,197,94,.18); color: #86efac; border: 1px solid rgba(34,197,94,.4);
+  border-radius: 999px; padding: 1px 7px; font-size: 10px; margin-left: 6px; }
