@@ -1,0 +1,8 @@
+[18:23:12] [Render thread/INFO]: Setting user: StrictUser
+[18:23:13] [Render thread/INFO]: Backend library: LWJGL version 3.3.3-snapshot
+[18:23:25] [Render thread/INFO]: [STDOUT]: STRICT_READY tick=80
+[18:23:25] [Render thread/INFO]: [STDOUT]: STRICT_VALID OK
+[18:23:25] [Render thread/INFO]: [STDOUT]: STRICT_EMPTY OK
+[18:23:25] [Render thread/INFO]: [STDOUT]: STRICT_INVALID_THROWN
+[18:23:25] [Render thread/INFO]: [STDOUT]: STRICT_TYPED_THROWN
+[18:23:25] [Render thread/INFO]: [STDOUT]: STRICT_DONE

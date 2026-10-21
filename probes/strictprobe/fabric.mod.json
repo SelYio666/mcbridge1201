@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "strictprobe",
+  "version": "1.0.0",
+  "name": "Strict bridge probe",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["probe.StrictProbe"]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "fabric-api": "*"
+  }
+}

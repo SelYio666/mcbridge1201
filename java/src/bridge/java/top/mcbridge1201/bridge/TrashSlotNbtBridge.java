@@ -8,6 +8,8 @@ import java.lang.reflect.Field;
 import net.minecraft.class_1799;
 import net.minecraft.class_2378;
 import net.minecraft.class_2487;
+import net.minecraft.class_2519;
+import net.minecraft.class_2520;
 import net.minecraft.class_2509;
 import net.minecraft.class_2520;
 import net.minecraft.class_2540;
@@ -75,6 +77,15 @@ public final class TrashSlotNbtBridge {
     public static class_1799 load(class_2487 tag) {
         if (tag == null || tag.method_10541().isEmpty()) {
             return class_1799.field_8037;
+        }
+        // The vanilla codec silently coerces string numbers to their defaults (count -> 1);
+        // reject the wrong NBT type instead of losing data.
+        for (String key : new String[]{"count", "Slot"}) {
+            class_2520 element = tag.method_10580(key);
+            if (element instanceof class_2519) {
+                throw new IllegalStateException("[mcbridge1201] ItemStack decode failed: '"
+                        + key + "' is a string, expected a number");
+            }
         }
         DataResult<class_1799> result = class_1799.field_24671.parse(ops(), tag);
         if (result.result().isPresent()) {
