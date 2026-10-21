@@ -24,10 +24,12 @@ public final class ItemPredicateFromJson {
             if (result.result().isPresent()) {
                 return (class_2073) result.result().get();
             }
-            System.err.println("[mcbridge1201] ItemPredicate.fromJson: codec rejected " + json + " -> " + result.error().map(Object::toString).orElse("?"));
+            throw new IllegalStateException("[mcbridge1201] ItemPredicate.fromJson rejected input " + json
+                    + " -> " + result.error().map(Object::toString).orElse("?"));
+        } catch (IllegalStateException e) {
+            throw e;
         } catch (Throwable t) {
-            System.err.println("[mcbridge1201] registry-aware fromJson failed: " + t);
+            throw new IllegalStateException("[mcbridge1201] registry-aware ItemPredicate.fromJson failed for " + json, t);
         }
-        return ItemPredicateAny.any();
     }
 }

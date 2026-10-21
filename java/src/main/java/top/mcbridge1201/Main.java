@@ -168,8 +168,22 @@ public final class Main {
             System.exit(2);
         }
         var rules = new top.mcbridge1201.rules.RuleSet();
+        String target = null;
         for (String rp : rulePaths) {
-            var part = top.mcbridge1201.rules.RuleSet.load(Path.of(rp));
+            top.mcbridge1201.rules.RuleSet part;
+            try {
+                part = top.mcbridge1201.rules.RuleSet.load(Path.of(rp));
+            } catch (IOException e) {
+                System.err.println("invalid rule file " + rp + ": " + e.getMessage());
+                System.exit(2);
+                return;
+            }
+            if (target == null) {
+                target = part.target;
+            } else if (!target.equals(part.target)) {
+                System.err.println("rule target mismatch: " + rp + " is " + part.target + ", expected " + target);
+                System.exit(2);
+            }
             if (rules.version == null) rules.version = part.version;
             if (rules.target == null) rules.target = part.target;
             rules.fieldRedirects.addAll(part.fieldRedirects);
@@ -193,13 +207,66 @@ public final class Main {
                 IndexBuilder.apiJar(Path.of(lib), idx);
             }
         }
+        String requestedTarget = one(f, "target", null);
+        if (requestedTarget != null && !requestedTarget.equals(target)) {
+            System.err.println("requested --target " + requestedTarget + " but rules target " + target);
+            System.exit(2);
+        }
+        System.out.printf("validated %d rule file(s): schema=%s target=%s%n",
+                rulePaths.size(), rules.version, target);
         Map<String, byte[]> bridgeClasses = loadBridgeClasses(f.getOrDefault("bridge-dir", List.of()));
         var res = top.mcbridge1201.rules.JarPatcher.patch(in, out, rules, idx, bridgeClasses);
         System.out.printf("patched %s -> %s (classes changed=%d)%n", in.getFileName(), out.getFileName(), res.classes());
         res.applied().forEach((k, v) -> System.out.printf("  rule %s applied %d time(s)%n", k, v));
+        List<String> required = f.getOrDefault("require-hit", List.of());
+        if (!required.isEmpty()) {
+            List<String> missing = new ArrayList<>();
+            for (String id : required) {
+                if (res.applied().getOrDefault(id, 0) == 0) {
+                    missing.add(id);
+                }
+            }
+            if (!missing.isEmpty()) {
+                if (alreadyPatched(in)) {
+                    System.err.println("required rule(s) not matched: " + missing);
+                    System.err.println("input already contains mcbridge1201 bridge classes; it looks patched. "
+                            + "Pass a freshly converted jar instead of a patched one.");
+                    System.exit(4);
+                }
+                System.err.println("required rule(s) did not match: " + missing);
+                System.err.println("refusing to report success; check the input jar and rule set.");
+                System.exit(3);
+            }
+            System.out.printf("required hits satisfied: %s%n", required);
+        }
         System.out.printf("  bridges embedded: %s%n", res.bridges());
         System.out.printf("  javac bridges: %s%n", res.externalBridges());
         System.out.printf("  sha256 %s%n", ArtifactScanner.sha256(out));
+    }
+
+    /** True when the jar already carries our bridge classes at top level or in a nested jar. */
+    private static boolean alreadyPatched(Path jar) throws IOException {
+        try (ZipFile zf = new ZipFile(jar.toFile())) {
+            boolean topLevel = zf.stream().map(java.util.zip.ZipEntry::getName)
+                    .anyMatch(n -> n.startsWith("top/mcbridge1201/bridge/") && n.endsWith(".class"));
+            if (topLevel) {
+                return true;
+            }
+            for (var e : java.util.Collections.list(zf.entries())) {
+                if (e.getName().startsWith("META-INF/jars/") && e.getName().endsWith(".jar")) {
+                    try (var in = zf.getInputStream(e);
+                         var nested = new java.util.zip.ZipInputStream(in)) {
+                        for (var ne = nested.getNextEntry(); ne != null; ne = nested.getNextEntry()) {
+                            if (ne.getName().startsWith("top/mcbridge1201/bridge/")
+                                    && ne.getName().endsWith(".class")) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     /** Load javac output ({@code <dir>/top/.../Foo.class}) keyed by internal class name. */

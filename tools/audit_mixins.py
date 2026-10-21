@@ -23,16 +23,19 @@ MIXIN_ANNOTATION = b"Lorg/spongepowered/asm/mixin/Mixin;"
 
 
 def load_configs(zf):
+    """Return (configs, errors); a broken config is a failure, not a skip."""
     configs = []
+    errors = []
     for name in zf.namelist():
         if name.endswith(CONFIG_SUFFIXES) and "/" not in name:
             try:
                 data = json.loads(zf.read(name).decode("utf-8"))
-            except Exception as exc:  # noqa: BLE001 - report and continue
+            except Exception as exc:  # noqa: BLE001 - collected and counted as a problem
                 print(f"CONFIG_ERROR {name}: {exc}")
+                errors.append(name)
                 continue
             configs.append((name, data))
-    return configs
+    return configs, errors
 
 
 def resolve_class(zf, package, rel):
@@ -45,10 +48,10 @@ def resolve_class(zf, package, rel):
 
 def audit(jar, allow_inert):
     zf = zipfile.ZipFile(jar)
-    configs = load_configs(zf)
+    configs, config_errors = load_configs(zf)
     listed = {}
     packages = set()
-    problems = 0
+    problems = len(config_errors)
     for name, data in configs:
         package = data.get("package", "").replace(".", "/")
         if package:
@@ -76,7 +79,8 @@ def audit(jar, allow_inert):
         if not allow_inert:
             problems += 1
         print(f"INERT {path} (mixin in mixin package, not listed in any config)")
-    print(f"jar={jar} configs={len(configs)} listed={len(listed)} inert={len(inert)} problems={problems}")
+    print(f"jar={jar} configs={len(configs)} config_errors={len(config_errors)} "
+          f"listed={len(listed)} inert={len(inert)} problems={problems}")
     return problems
 
 

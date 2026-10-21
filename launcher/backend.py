@@ -80,8 +80,18 @@ def _callback(progress):
     return {"setStatus": set_status, "setMax": set_max, "setProgress": set_progress}
 
 
-def installed(loader: str, mc: str, root: Path) -> str | None:
-    """Return the version id if this loader/mc pair already has a version folder."""
+def _profile_game_version(path: Path) -> str | None:
+    try:
+        import json as _json
+
+        data = _json.loads(path.read_text(encoding="utf-8"))
+        return data.get("inheritsFrom") or data.get("id")
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def installed(loader: str, mc: str, root: Path, loader_version: str | None = None) -> str | None:
+    """Return the version id if this loader **for this game version** is already installed."""
     root = Path(root)
     if loader == "forge":
         cands = sorted((root / "versions").glob(f"{mc}-forge-*"))
@@ -90,8 +100,14 @@ def installed(loader: str, mc: str, root: Path) -> str | None:
     else:
         return None
     for d in cands:
-        if (d / f"{d.name}.json").exists():
-            return d.name
+        meta = d / f"{d.name}.json"
+        if not meta.exists():
+            continue
+        if _profile_game_version(meta) != mc:
+            continue
+        if loader_version and loader_version not in d.name:
+            continue
+        return d.name
     return None
 
 
@@ -99,7 +115,7 @@ def install(loader: str, mc: str, root: Path, version: str | None, java: str, pr
     if not AVAILABLE:
         raise RuntimeError("minecraft-launcher-lib not installed (pip install minecraft-launcher-lib)")
     root = Path(root)
-    existing = installed(loader, mc, root)
+    existing = installed(loader, mc, root, version)
     if existing:
         return existing
     cb = _callback(progress)

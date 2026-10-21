@@ -9,6 +9,7 @@ import sys
 import threading
 import time
 import webbrowser
+from urllib.parse import unquote
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -48,12 +49,34 @@ def save_config(cfg):
     CONFIG.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
 
 
-MC_ID = re.compile(r"^(?:\d+\.\d+(?:\.\d+)?(?:[-_].*)?|fabric-loader-.+|neoforge-.+|forge-.+)$")
+MC_ID = re.compile(
+    r"^(?:"
+    r"\d+\.\d+(?:\.\d+)?(?:-(?:pre|rc)\d+)?"
+    r"|\d{2}w\d{2}[a-z]"
+    r"|[ab]\d+\.\d+(?:\.\d+)?[a-z]?"
+    r"|inf-\d+|rd-\d+|c\d+\.\d+.*"
+    r"|fabric-loader-.+|neoforge-.+|forge-.+|\d+\.\d+(?:\.\d+)?-forge-.+"
+    r")$"
+)
+_MANIFEST_IDS = None
+
+
+def manifest_ids() -> set[str]:
+    """Best-effort cache of official version ids; empty when offline."""
+    global _MANIFEST_IDS
+    if _MANIFEST_IDS is not None:
+        return _MANIFEST_IDS
+    try:
+        versions, _latest = version_manifest()
+        _MANIFEST_IDS = {v["id"] for v in versions}
+    except Exception:  # noqa: BLE001 - offline is fine, regex still applies
+        _MANIFEST_IDS = set()
+    return _MANIFEST_IDS
 
 
 def is_mc_version(name: str) -> bool:
-    """Keep real game versions and loader profiles; hide user instances/modpacks."""
-    return bool(MC_ID.match(name))
+    """Keep real game versions (release/snapshot/old) and loader profiles; hide modpack instances."""
+    return name in manifest_ids() or bool(MC_ID.match(name))
 
 
 def installed_versions(root: Path):
@@ -121,12 +144,23 @@ class Handler(BaseHTTPRequestHandler):
         path = self.path.split("?")[0]
         if path == "/api/config":
             cfg = load_config()
-            cfg["java"] = find_java()
+            try:
+                cfg["java"] = find_java()
+                cfg["java_error"] = None
+            except Exception as exc:  # noqa: BLE001 - report, do not drop the connection
+                cfg["java"] = None
+                cfg["java_error"] = str(exc)
             return self._send(200, cfg)
         if path == "/api/status":
             cfg = load_config()
+            try:
+                java = find_java()
+                java_error = None
+            except Exception as exc:  # noqa: BLE001
+                java = None
+                java_error = str(exc)
             return self._send(200, {"root": cfg["root"], "versions": installed_versions(Path(cfg["root"])),
-                                    "java": find_java()})
+                                    "java": java, "java_error": java_error})
         if path == "/api/versions":
             try:
                 versions, latest = version_manifest()
@@ -138,7 +172,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/launches":
             return self._send(200, LAUNCHES[-20:])
         if path.startswith("/log/"):
-            log_path = Path(path[len("/log/"):])
+            log_path = Path(unquote(path[len("/log/"):]))
             offset = 0
             if "offset=" in self.path:
                 offset = int(self.path.split("offset=")[1].split("&")[0])

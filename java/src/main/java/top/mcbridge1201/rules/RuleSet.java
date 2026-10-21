@@ -231,11 +231,24 @@ public final class RuleSet {
     public String version;
     public String target;
 
+    /** Schema versions this build understands. */
+    public static final java.util.Set<String> SUPPORTED_SCHEMAS = java.util.Set.of("0.1-draft");
+
     public static RuleSet load(Path json) throws IOException {
         JsonObject o = new Gson().fromJson(Files.readString(json, StandardCharsets.UTF_8), JsonObject.class);
         RuleSet rs = new RuleSet();
         rs.version = o.has("schemaVersion") ? o.get("schemaVersion").getAsString() : null;
         rs.target = o.has("target") ? o.get("target").getAsString() : null;
+        if (rs.version == null || rs.version.isBlank()) {
+            throw new IOException("rule file " + json + " has no schemaVersion");
+        }
+        if (!SUPPORTED_SCHEMAS.contains(rs.version)) {
+            throw new IOException("unsupported schemaVersion '" + rs.version + "' in " + json
+                    + " (supported: " + SUPPORTED_SCHEMAS + ")");
+        }
+        if (rs.target == null || rs.target.isBlank()) {
+            throw new IOException("rule file " + json + " has no target");
+        }
         if (o.has("fieldRedirects")) {
             for (var el : o.getAsJsonArray("fieldRedirects")) {
                 rs.fieldRedirects.add(new Gson().fromJson(el, FieldRedirect.class));

@@ -107,16 +107,49 @@ def sha256(path):
     return h.hexdigest()
 
 
-def build_bridges(out_dir, netty, java_home):
+def _first_glob(pattern: str, what: str) -> Path:
+    import glob
+
+    matches = sorted(glob.glob(pattern))
+    if not matches:
+        sys.exit(f"missing {what}: no file matched {pattern}")
+    return Path(matches[0])
+
+
+def build_bridges(out_dir, netty, java_home, stub, processed_mods, loader, dfu):
+    """Compile bridges with the same dependency set the bridge sources actually use."""
     out_dir.mkdir(parents=True, exist_ok=True)
+    processed = Path(processed_mods)
+    if not processed.is_dir():
+        sys.exit(f"processed mods dir not found: {processed}")
+    modules = {}
+    for prefix, what in (("fabric-networking-api-v1-", "fabric networking module"),
+                         ("fabric-item-api-v1-", "fabric item module"),
+                         ("fabric-api-base-", "fabric api base module")):
+        found = sorted(processed.glob(prefix + "*.jar"))
+        if not found:
+            sys.exit(f"missing {what} ({prefix}*.jar) under {processed}")
+        modules[prefix] = found[0]
     cmd = [
         sys.executable, str(ROOT / "tools" / "build_bridges.py"),
-        "--stub", str(ROOT / "work" / "cb" / "data" / "jars" / "client-1.21.1-intermediary.jar"),
+        "--stub", str(stub),
         "--lib", str(ROOT / "work" / "lib" / "gson-2.11.0.jar"),
-        "--lib", str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "com" / "mojang" / "datafixerupper" / "8.0.16" / "datafixerupper-8.0.16.jar"),
-        "--lib", str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / ".fabric" / "processedMods" / "fabric-networking-api-v1-4.2.2+60c3209b6a-cc18a5110f61c2c0.jar"),
+        "--lib", str(dfu),
+        "--lib", str(modules["fabric-networking-api-v1-"]),
+        "--lib", str(modules["fabric-item-api-v1-"]),
+        "--lib", str(modules["fabric-api-base-"]),
+        "--lib", str(_first_glob(
+            str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "io" / "netty"
+                / "netty-transport" / "*" / "netty-transport-*.jar"), "netty transport jar")),
+        "--lib", str(_first_glob(
+            str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "it" / "unimi"
+                / "dsi" / "fastutil" / "*" / "fastutil-*.jar"), "fastutil jar")),
+        "--lib", str(_first_glob(
+            str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "com" / "mojang"
+                / "brigadier" / "*" / "brigadier-*.jar"), "brigadier jar")),
         "--lib", netty[0],
         "--lib", netty[1],
+        "--lib", str(loader),
         "--lib", str(ROOT / "work" / "corpus" / "deps" / "balm-fabric-1.21.1-21.0.66.jar"),
         "--out", str(out_dir),
     ]
@@ -134,6 +167,10 @@ def main():
     ap.add_argument("--loader", default=str(ROOT / "work" / "target" / "fabric-loader-0.19.5.jar"))
     ap.add_argument("--netty", action="append", default=None,
                     help="netty-buffer / netty-common jars (repeatable)")
+    ap.add_argument("--processed-mods",
+                    default=str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / ".fabric" / "processedMods"),
+                    help="directory holding the installed Fabric API module jars")
+    ap.add_argument("--dfu", default=None, help="datafixerupper jar (default: newest under the server libraries)")
     ap.add_argument("--java-home", default=os.environ.get("JAVA_HOME"))
     ap.add_argument("--skip-bridges", action="store_true",
                     help="reuse the existing bridge classes instead of recompiling them")
@@ -162,8 +199,13 @@ def main():
         str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "io" / "netty" / "netty-common" / "4.1.97.Final" / "netty-common-4.1.97.Final.jar"),
     ]
 
+    dfu = Path(args.dfu) if args.dfu else _first_glob(
+        str(ROOT / "work" / "instances" / "fabric-1.21.1-server" / "libraries" / "com" / "mojang"
+            / "datafixerupper" / "*" / "datafixerupper-*.jar"), "datafixerupper jar")
+
     if not args.skip_bridges:
-        build_bridges(Path(args.bridges), netty, java_home)
+        build_bridges(Path(args.bridges), netty, java_home, Path(args.stub),
+                      args.processed_mods, Path(args.loader), dfu)
 
     nbt_jar = tmp / "nbt.jar"
     patch(input_jar, nbt_jar,

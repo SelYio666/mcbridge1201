@@ -36,11 +36,14 @@ FallingTree / ShulkerBoxTooltip 的核心功能有实测证据，FerriteCore 只
 
 ## 工具链
 
-- `mcbridge1201 convert|patch`：CenturyBridge 分段转换 + 规则修补（field/method/body/superclass/
-  constructor/rename/mixin 等），桥类 javac 后内嵌，同 bridge-dir 对齐。
+- `mcbridge1201 patch`：规则修补（field/method/body/superclass/constructor/rename/mixin 等），
+  桥类 javac 后内嵌，同 bridge-dir 对齐。基础转换由外部 CenturyBridge 完成，`patch` 的输入必须是
+  转换后的 jar（没有 `convert` 子命令）。
+- `patch` 校验：规则 `schemaVersion` 白名单、多规则包 `target` 必须一致（`--target` 可再核对）、
+  `--require-hit <rule-id>` 要求关键规则至少命中一次；未命中退出 3，疑似已修补的输入退出 4。
 - `tools/build_bridges.py`：编译桥 + shim，需要 gson/dfu/fabric-api/netty/brigadier/fastutil 等 library。
 - `tools/check_bridge_consistency.py`：校验多补丁 jar 内嵌桥版本一致。
-- `tools/audit_mixins.py`：抓“配置列了但类缺失”与“@Mixin 类未被任何配置引用”的惰性 mixin。
+- `tools/audit_mixins.py`：抓“配置列了但类缺失”与“@Mixin 类未被任何配置引用”的惰性 mixin；配置 JSON 解析失败现在计入 problems 并以非零退出（不再跳过）。
 - `tools/verify_evidence.py` / `tools/check_hashes.py` / `tools/hash_evidence.py`：证据与哈希门禁。
 - `tools/rebuild_ironchests_client.py`、`tools/build_clumps_companion.py` 等：多阶段/伴随模组构建。
 - `launcher/`：本地 GUI 启动器（网页界面），从官方源/BMCLAPI 下载原版与 Fabric，离线启动。

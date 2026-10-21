@@ -215,7 +215,7 @@ async function play(versionId) {
 
 function pollLog() {
   if (!state.logPath) return;
-  api(`/log/${encodeURI(state.logPath)}?offset=${state.logOffset}`).then(r => {
+  api(`/log/${encodeURIComponent(state.logPath)}?offset=${state.logOffset}`).then(r => {
     state.logOffset = r.offset;
     if (r.text) {
       const box = $("console");

@@ -184,3 +184,10 @@ RESULT: OK
 - 客户端 jar（25.6 MB）通常几秒内完成；
 - 库文件 70 个，随 jar 一起很快；
 - 资源是多小文件，耗时主要在这里，但 24 并发下约 2 分钟。
+
+## 校验工具与退出码
+
+- `mcbridge1201 patch --require-hit <rule-id>`：关键规则零命中时退出 3；输入看起来已经修补时退出 4；
+  规则 schema/target 不合法时退出 2。
+- `python tools/audit_mixins.py --jar <jar>`：mixin 配置损坏计入 problems，非零退出。
+- `python launcher/mclaunch.py verify <version> <root>`：安装完整性，0 完整 / 3 不完整。

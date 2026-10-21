@@ -57,27 +57,41 @@ public final class TrashSlotNbtBridge {
         return local;
     }
 
-    /** ItemStack.writeNbt: encode into the supplied compound and return it. */
+    /** ItemStack.writeNbt: encode into the supplied compound and return it (fails loudly). */
     public static class_2487 save(class_1799 stack, class_2487 target) {
         DataResult<class_2520> result = class_1799.field_24671.encodeStart(ops(), stack);
         class_2520 encoded = result.result().orElse(null);
-        if (encoded instanceof class_2487 compound) {
-            for (String key : compound.method_10541()) {
-                target.method_10566(key, compound.method_10580(key));
-            }
+        if (!(encoded instanceof class_2487 compound)) {
+            throw new IllegalStateException("[mcbridge1201] ItemStack encode failed: "
+                    + result.error().map(Object::toString).orElse("no value"));
+        }
+        for (String key : compound.method_10541()) {
+            target.method_10566(key, compound.method_10580(key));
         }
         return target;
     }
 
-    /** ItemStack.fromNbt: parse from NBT, falling back to ItemStack.EMPTY. */
+    /** ItemStack.fromNbt: parse from NBT; empty tag is legal empty, parse failure throws. */
     public static class_1799 load(class_2487 tag) {
-        return class_1799.field_24671.parse(ops(), tag).result().orElse(class_1799.field_8037);
+        if (tag == null || tag.method_10541().isEmpty()) {
+            return class_1799.field_8037;
+        }
+        DataResult<class_1799> result = class_1799.field_24671.parse(ops(), tag);
+        if (result.result().isPresent()) {
+            return result.result().get();
+        }
+        throw new IllegalStateException("[mcbridge1201] ItemStack decode failed: "
+                + result.error().map(Object::toString).orElse("?"));
     }
 
-    /** FriendlyByteBuf.writeItemStack: write the registry-aware ItemStack NBT. */
+    /** FriendlyByteBuf.writeItemStack: write the registry-aware ItemStack NBT (fails loudly). */
     public static class_2540 writeItem(class_2540 buf, class_1799 stack) {
-        class_2520 encoded = class_1799.field_24671.encodeStart(ops(), stack).result()
-                .orElse(new class_2487());
+        DataResult<class_2520> result = class_1799.field_24671.encodeStart(ops(), stack);
+        class_2520 encoded = result.result().orElse(null);
+        if (encoded == null) {
+            throw new IllegalStateException("[mcbridge1201] ItemStack network encode failed: "
+                    + result.error().map(Object::toString).orElse("?"));
+        }
         buf.method_10794(encoded);
         return buf;
     }
