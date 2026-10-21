@@ -1,6 +1,7 @@
 # 分发与发布
 
-最后更新：2026-10-19。本文回答两件事：**GitHub 上能发布什么**，以及**别人拿到后怎么复现**。
+最后更新：2026-10-21。本文回答三件事：**GitHub 上能发布什么**、**别人拿到后怎么复现**、
+以及**怎么发给不用 GitHub 的人**（便携包）。
 
 ## 1. 能发布什么
 
@@ -36,9 +37,62 @@ git push -u origin master
 
 - 源码压缩包（GitHub 自动生成）；
 - 可选的 CLI 构建产物（`java/build/install/mcbridge1201/`，本项目自己的代码）；
+- 可选的便携启动器包（见第 2.5 节，不含任何游戏/模组 jar）；
 - `runs/SHA256SUMS.txt`（生成：`python tools/hash_evidence.py`；校验：`python tools/check_hashes.py`）。
 
 **不要**上传任何 `.jar` 游戏/模组/转换件。
+
+## 2.5 发给不用 GitHub 的人：便携包
+
+许可证允许：本仓库是 MIT，便携包里**只有本项目的代码 + 官方嵌入式 Python 运行时 +
+可选的 `minecraft-launcher-lib`（BSD-2）及其纯 Python 依赖**，不含任何 Minecraft 或模组 jar。
+对方第一次启动时仍然联网从 Mojang 下载（国内默认走 BMCLAPI 镜像），所以**玩家人不需要梯子**，
+只是“拿到这个 zip”这一步需要一条不依赖 GitHub 的渠道。
+
+构建（无参数即可，会自动下载约 11 MB 的 embeddable Python 到 `work/portable-cache/`）：
+
+```powershell
+python tools/build_portable.py --label 0.3.5
+# -> dist/mcbridge-launcher-0.3.5.zip  （约 12 MB，免安装）
+```
+
+包内结构：
+
+```text
+mcbridge-launcher-0.3.5/
+  run.bat                 ← 双击即用（内置 Python）
+  bootstrap.py
+  launcher/               ← 启动器源码
+  docs/guide.md           ← 使用说明
+  python/                 ← CPython 3.12 embeddable + site-packages（mll/requests/...）
+  LICENSE
+  THIRD-PARTY-NOTICES.md
+  THIRD-PARTY-LICENSES/   ← 各组件许可证原文（构建时自动收集）
+```
+
+分享渠道（按对方情况选）：
+
+| 渠道 | 适合 | 注意 |
+|---|---|---|
+| 百度网盘 / 123 云盘 / 夸克 | 国内大多数人 | 上传 zip 后把分享链接发出去即可；zip 自带说明 |
+| 蓝奏云 | 小文件、免登录下载 | 单文件限制，本包约 12 MB 可用 |
+| QQ 群文件 / 群共享 | 小圈子 | 最省事，但更新版本要重发 |
+| GitHub Release 资产 | 能访问 GitHub 的人 | 就是本仓库 release 里附加的 zip |
+| 第三方 GitHub 加速镜像（ghproxy 等） | 临时救急 | 稳定性与隐私不可控，不建议作为唯一入口 |
+
+**别做的事**：不要把 `work/`、游戏 jar、模组 jar、整合包一起打进分享包；不要把
+`launcher/config.json`（含个人路径）发出去——构建脚本已经排除了它。
+
+包内 `README-PORTABLE.txt` 写了给小白看的三句话上手说明；更完整的教程在 `docs/guide.md`。
+
+打完包可以这样自检（离线部分：内置 Python、依赖、打包后的 `verify`、页面与接口）：
+
+```powershell
+python tools/test_portable.py --root <已安装的游戏目录> --version <已安装版本>
+# RESULT: OK 才算打包可用；没有 dist 包时会 SKIP（退出码 2）
+```
+
+`dist/` 已被 `.gitignore` 忽略，**构建产物不提交到仓库**，只作为 release 资产或网盘文件分发。
 
 ## 3. 别人怎么用（注意：不是“原始 jar 一步到位”）
 

@@ -674,6 +674,8 @@ FILES = [
     "docs/support-matrix.md",
     "docs/remaining-work.md",
     "docs/guide.md",
+    "tools/build_portable.py",
+    "tools/test_portable.py",
     "docs/STATUS.md",
 ]
 

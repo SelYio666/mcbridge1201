@@ -14,3 +14,5 @@ __pycache__/
 *.part
 launcher/config.json
 runs/**/*.jar
+
+dist/

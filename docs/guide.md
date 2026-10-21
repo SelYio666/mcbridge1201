@@ -338,6 +338,30 @@ PCL 开了版本隔离，读的是 `versions/<id>/mods`；关掉隔离用全局 
 
 ---
 
+## 9. 把启动器发给别人（免 GitHub 便携包）
+
+如果你要把启动器分享给不用 GitHub 的朋友，可以打一个**免安装便携包**（约 12 MB）：
+
+```powershell
+python tools/build_portable.py --label 0.3.5
+# -> dist/mcbridge-launcher-0.3.5.zip
+```
+
+包里只有本项目代码 + 官方嵌入式 Python 3.12 + 可选的 `minecraft-launcher-lib`，
+**不含任何 Minecraft / 模组 jar**；对方解压后双击 `run.bat` 就能用，不用装 Python。
+
+- 对方**第一次启动仍需联网**下载游戏（国内自动走 BMCLAPI 镜像），但不需要为“拿包”翻墙；
+- 分享渠道：网盘（百度 / 123 / 夸克 / 蓝奏）、QQ 群文件、GitHub Release 资产；
+  第三方 GitHub 加速镜像只当救急，别作为唯一入口；
+- 不要把 `work/`、游戏 jar、模组 jar、你自己的 `launcher/config.json` 放进分享包
+  （构建脚本已排除 config.json）；
+- 许可证：本项目 MIT；内置 Python（PSF）与 minecraft-launcher-lib（BSD-2）的许可证原文
+  会随包附在 `THIRD-PARTY-LICENSES/` 下。
+
+细节与渠道对比见 [distribution.md](distribution.md) §2.5。
+
+---
+
 ## 附录：命令速查
 
 ```text
@@ -347,6 +371,8 @@ python launcher\server.py
 python launcher\mclaunch.py install <mc> <root> [vanilla|fabric|forge|neoforge]
 python launcher\mclaunch.py launch <version_id> <root> <username>
 python launcher\mclaunch.py verify <version_id> <root>
+python tools\build_portable.py --label <版本>   # 便携包（内置 Python，免安装）
+python tools\test_portable.py --root <root> [--version <vid>]   # 便携包自检
 python tools\test_launcher_e2e.py --root <root> [--version <vid>] [--require "<marker>"]
 
 # 转换/分析

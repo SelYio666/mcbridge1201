@@ -30,7 +30,7 @@ jobs:
             launcher/mclaunch.py launcher/backend.py launcher/server.py \
             tools/verify_evidence.py tools/check_hashes.py tools/hash_evidence.py \
             tools/audit_mixins.py tools/test_review_fixes.py tools/test_launcher_e2e.py \
-            tools/build_bridges.py tools/rebuild_ironchests_client.py
+            tools/build_bridges.py tools/rebuild_ironchests_client.py tools/build_portable.py
 
       - name: JavaScript syntax
         uses: actions/setup-node@v4
