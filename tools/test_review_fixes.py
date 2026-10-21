@@ -251,6 +251,11 @@ def test_launcher() -> None:
         rejected = exc.code == 400
     check("launcher rejects path traversal in delete", rejected)
 
+    # the in-app help must serve the same usage guide that ships in docs/
+    status, body = get("/guide")
+    check("launcher serves the usage guide", status == 200
+          and "使用说明" in body.decode("utf-8", "replace"))
+
     # folder helpers: other launchers must be able to find mods/versions without guessing
     from pathlib import Path as _Path
 

@@ -322,6 +322,7 @@ async function syncProfiles() {
 }
 
 $("openRoot").onclick = () => openDir("root");
+$("help").onclick = () => window.open("/guide", "_blank");
 $("openMods").onclick = () => openDir("mods");
 $("openSaves").onclick = () => openDir("saves");
 $("modOpen").onclick = () => openDir("mods");

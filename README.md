@@ -2,6 +2,8 @@
 
 [![ci](https://github.com/SelYio666/mcbridge1201/actions/workflows/ci.yml/badge.svg)](https://github.com/SelYio666/mcbridge1201/actions/workflows/ci.yml)
 
+> 新手先读：**[使用说明与教程](docs/guide.md)**（启动器 10 分钟上手、PCL 共用、模组迁移教程、FAQ）。
+
 Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来源固定为 **1.20.1**，首个精确目标是 **Fabric 1.21.1**，同时抽样分析 Forge 1.20.1。
 
 本仓库当前交付 P0 的事实与证据，以及 P1 的第一段运行时结果：环境锁定、上游引擎锁定、10 份真实样本、**自研静态损伤分析器**、**body-preserving 重映射器**、CenturyBridge 真实转换产物，和第一次真实启动。它不宣称任何模组“已兼容”。

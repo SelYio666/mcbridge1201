@@ -330,6 +330,11 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(200, TASK.snapshot())
         if path == "/api/launches":
             return self._send(200, LAUNCHES[-20:])
+        if path == "/guide":
+            guide = HERE.parent / "docs" / "guide.md"
+            if not guide.exists():
+                return self._send(404, b"guide not found", "text/plain; charset=utf-8")
+            return self._send(200, guide.read_bytes(), "text/plain; charset=utf-8")
         if path.startswith("/log/"):
             log_path = Path(unquote(path[len("/log/"):]))
             offset = 0
