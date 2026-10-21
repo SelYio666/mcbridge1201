@@ -48,3 +48,15 @@ python launcher/mclaunch.py verify 1.21.1 <root>
 - 基础版本转换由外部 CenturyBridge 完成，本项目只有 `patch`；`patch` 输入必须是转换后的 jar。
 - CenturyBridge 锁定的提交仍需本地 no-op `MixinCheck` 补丁才能编译，这道上游 mixin 检查没有实现。
 - ISSUE-01（桥失败显式抛错）只做了编译级验证，游戏内失败传播仍需一次真实存档/同步回归。
+
+## CI
+
+`.github/workflows/ci.yml` 在 GitHub Actions 上跑：
+
+- Java 21 + Gradle 9.8.1（无 wrapper，用 `gradle/actions/setup-gradle`）；
+- `gradle -p java test installDist`；
+- Python 语法编译（启动器 + 工具链脚本）；
+- `node --check launcher/web/app.js`。
+
+它**不**跑 `verify_evidence`/哈希门禁：这些依赖被 `.gitignore` 排除的本地产物（转换件、样例 jar），
+CI 没有这些中间件。门禁仍在本机执行。

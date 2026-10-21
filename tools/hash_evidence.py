@@ -509,6 +509,7 @@ FILES = [
     "docs/build.md",
     "tools/test_review_fixes.py",
     "tools/test_launcher_e2e.py",
+    ".github/workflows/ci.yml",
     "runs/p114-launcher-e2e/README.md",
     "runs/p114-launcher-e2e/launch.log",
     "runs/p115-neoforge-attempt/README.md",

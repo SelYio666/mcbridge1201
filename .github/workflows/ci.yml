@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.8.1"
+
+      - name: Java tests + CLI distribution
+        run: gradle -p java --no-daemon test installDist
+
+      - name: Python syntax
+        run: |
+          python -m py_compile \
+            launcher/mclaunch.py launcher/backend.py launcher/server.py \
+            tools/verify_evidence.py tools/check_hashes.py tools/hash_evidence.py \
+            tools/audit_mixins.py tools/test_review_fixes.py tools/test_launcher_e2e.py \
+            tools/build_bridges.py tools/rebuild_ironchests_client.py
+
+      - name: JavaScript syntax
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: node --check launcher/web/app.js
