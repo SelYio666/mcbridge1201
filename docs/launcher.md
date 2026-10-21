@@ -16,7 +16,7 @@ python launcher/server.py
 - **离线用户名**：仅单机 / 局域网，UUID 由 `OfflinePlayer:<name>` 生成；
 - **内存**：默认 `2G`。
 
-然后填版本号（如 `1.21.1`）、选加载器、点“下载 / 安装”，装完在左侧双击版本即可启动。
+然后填版本号（如 `1.21.1`；勾选“含快照/远古”可看到全部 900+ 版本）、选加载器、点“下载 / 安装”，装完在左侧双击版本即可启动。
 
 ## 已实现
 
@@ -59,3 +59,7 @@ python launcher/mclaunch.py launch fabric-loader-0.19.5-1.21.1 "D:\mc" Player
 - 本机 `.minecraft/assets` 本身缺对象（字体等），启动器可修复，但需要完整跑一次原版安装。
 - Forge/NeoForge：安装器调用已写好，启动参数仍需按加载器版本适配；当前只验证到 Fabric。
 - GUI 是本地网页，不是独立 exe；要打包成单文件 exe 需另加 PyInstaller 一类工具（未做）。
+
+## 版本资源与后续扩展
+
+版本清单来自 Mojang 官方 manifest，接口当前返回全部 920 个版本（release / snapshot / old_beta / old_alpha），GUI 用“含快照/远古”开关切换。后续接入 `minecraft-launcher-lib`（BSD-2）后，Fabric/Forge/NeoForge/Quilt 与 Java 运行时都可以统一处理，调研见 [launcher-research.md](launcher-research.md)。

@@ -103,7 +103,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/versions":
             try:
                 versions, latest = version_manifest()
-                return self._send(200, {"latest": latest, "versions": versions[:120]})
+                return self._send(200, {"latest": latest, "versions": versions})
             except Exception as exc:  # noqa: BLE001
                 return self._send(500, {"error": str(exc)})
         if path == "/api/task":

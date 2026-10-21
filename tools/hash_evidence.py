@@ -517,6 +517,7 @@ FILES = [
     "docs/media/README.md",
     "docs/media/mcbridge1201-promo.mp4",
     "docs/launcher.md",
+    "docs/launcher-research.md",
     "launcher/mclaunch.py",
     "launcher/server.py",
     "launcher/web/index.html",

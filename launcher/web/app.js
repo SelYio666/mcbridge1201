@@ -60,23 +60,23 @@ async function refresh() {
 async function loadManifest() {
   try {
     const data = await api("/api/versions");
-    const dl = $("mcvers");
-    dl.innerHTML = "";
-    for (const v of data.versions) {
-      if (v.type !== "release") continue;
-      const o = document.createElement("option");
-      o.value = v.id;
-      dl.appendChild(o);
-    }
-    if (!dl.children.length) {
-      for (const v of data.versions) {
-        const o = document.createElement("option");
-        o.value = v.id;
-        dl.appendChild(o);
-      }
-    }
+    state.manifest = data.versions || [];
+    renderManifest();
   } catch (e) {
     console.warn("manifest", e);
+  }
+}
+
+function renderManifest() {
+  const dl = $("mcvers");
+  dl.innerHTML = "";
+  const all = $("allsnap") && $("allsnap").checked;
+  for (const v of (state.manifest || [])) {
+    if (!all && v.type !== "release") continue;
+    const o = document.createElement("option");
+    o.value = v.id;
+    o.label = v.type;
+    dl.appendChild(o);
   }
 }
 
@@ -148,6 +148,7 @@ $("refresh").onclick = refresh;
 $("save").onclick = saveCfg;
 $("install").onclick = install;
 $("play").onclick = () => play();
+$("allsnap").onchange = renderManifest;
 $("openRoot").onclick = async () => {
   const cfg = await api("/api/config");
   window.open("file:///" + cfg.root.replace(/\\/g, "/"));
