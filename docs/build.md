@@ -60,3 +60,12 @@ python launcher/mclaunch.py verify 1.21.1 <root>
 
 它**不**跑 `verify_evidence`/哈希门禁：这些依赖被 `.gitignore` 排除的本地产物（转换件、样例 jar），
 CI 没有这些中间件。门禁仍在本机执行。
+
+触发方式：本机通过 GitHub API 推送时**不会**自动触发 Actions，需要手动：
+
+```text
+gh api --method POST repos/SelYio666/mcbridge1201/actions/workflows/ci.yml/dispatches -f ref=master
+gh run watch
+```
+
+实测 manual dispatch 成功（run 39614386108，Java 测试 + 语法检查均通过）。README 顶部有状态徽章。
