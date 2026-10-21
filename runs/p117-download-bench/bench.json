@@ -1,0 +1,247 @@
+{
+  "versions": [
+    "1.20.1",
+    "1.21.1"
+  ],
+  "assets_sample": 150,
+  "results": [
+    {
+      "label": "cold",
+      "mc": "1.20.1",
+      "phases": [
+        {
+          "phase": "client_jar",
+          "seconds": 68.224,
+          "files": 1,
+          "bytes": 31892070,
+          "mb_per_s": 0.446,
+          "downloads": 1,
+          "failures": 1,
+          "mirrors": 0,
+          "retries": 1,
+          "sources": [
+            "piston-data.mojang.com"
+          ]
+        },
+        {
+          "phase": "libraries",
+          "seconds": 113.61,
+          "files": 64,
+          "bytes": 60876077,
+          "mb_per_s": 0.511,
+          "downloads": 64,
+          "failures": 4,
+          "mirrors": 0,
+          "retries": 5,
+          "sources": [
+            "libraries.minecraft.net"
+          ]
+        },
+        {
+          "phase": "assets_sample",
+          "seconds": 101.21,
+          "files": 150,
+          "bytes": 89335351,
+          "mb_per_s": 0.842,
+          "downloads": 150,
+          "failures": 5,
+          "mirrors": 0,
+          "retries": 6,
+          "sources": [
+            "resources.download.minecraft.net"
+          ]
+        },
+        {
+          "phase": "fabric_install",
+          "seconds": 36.031,
+          "files": 8,
+          "bytes": 4481142,
+          "mb_per_s": 0.119,
+          "downloads": 8,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": [
+            "maven.fabricmc.net"
+          ]
+        }
+      ],
+      "fabric_version": "fabric-loader-0.19.5-1.20.1"
+    },
+    {
+      "label": "hot",
+      "mc": "1.20.1",
+      "phases": [
+        {
+          "phase": "client_jar",
+          "seconds": 0.022,
+          "files": 1,
+          "bytes": 0,
+          "mb_per_s": 0.0,
+          "downloads": 0,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": []
+        },
+        {
+          "phase": "libraries",
+          "seconds": 0.222,
+          "files": 64,
+          "bytes": 0,
+          "mb_per_s": 0.0,
+          "downloads": 0,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": []
+        },
+        {
+          "phase": "assets_sample",
+          "seconds": 0.08,
+          "files": 150,
+          "bytes": 0,
+          "mb_per_s": 0.0,
+          "downloads": 0,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": []
+        },
+        {
+          "phase": "fabric_install",
+          "seconds": 13.383,
+          "files": 8,
+          "bytes": 0,
+          "mb_per_s": 0.0,
+          "downloads": 0,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": []
+        }
+      ],
+      "fabric_version": "fabric-loader-0.19.5-1.20.1"
+    },
+    {
+      "label": "cold",
+      "mc": "1.21.1",
+      "phases": [
+        {
+          "phase": "client_jar",
+          "seconds": 8.588,
+          "files": 1,
+          "bytes": 26836906,
+          "mb_per_s": 2.98,
+          "downloads": 1,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": [
+            "piston-data.mojang.com"
+          ]
+        },
+        {
+          "phase": "libraries",
+          "seconds": 211.557,
+          "files": 70,
+          "bytes": 66739500,
+          "mb_per_s": 0.301,
+          "downloads": 70,
+          "failures": 6,
+          "mirrors": 0,
+          "retries": 7,
+          "sources": [
+            "libraries.minecraft.net"
+          ]
+        },
+        {
+          "phase": "assets_sample",
+          "seconds": 135.325,
+          "files": 150,
+          "bytes": 88937132,
+          "mb_per_s": 0.627,
+          "downloads": 150,
+          "failures": 33,
+          "mirrors": 0,
+          "retries": 38,
+          "sources": [
+            "resources.download.minecraft.net"
+          ]
+        },
+        {
+          "phase": "fabric_install",
+          "seconds": 40.762,
+          "files": 8,
+          "bytes": 4565502,
+          "mb_per_s": 0.107,
+          "downloads": 8,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": [
+            "maven.fabricmc.net"
+          ]
+        }
+      ],
+      "fabric_version": "fabric-loader-0.19.5-1.21.1"
+    },
+    {
+      "label": "hot",
+      "mc": "1.21.1",
+      "phases": [
+        {
+          "phase": "client_jar",
+          "seconds": 0.022,
+          "files": 1,
+          "bytes": 0,
+          "mb_per_s": 0.0,
+          "downloads": 0,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": []
+        },
+        {
+          "phase": "libraries",
+          "seconds": 0.246,
+          "files": 70,
+          "bytes": 0,
+          "mb_per_s": 0.0,
+          "downloads": 0,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": []
+        },
+        {
+          "phase": "assets_sample",
+          "seconds": 0.073,
+          "files": 150,
+          "bytes": 0,
+          "mb_per_s": 0.0,
+          "downloads": 0,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": []
+        },
+        {
+          "phase": "fabric_install",
+          "seconds": 13.048,
+          "files": 8,
+          "bytes": 0,
+          "mb_per_s": 0.0,
+          "downloads": 0,
+          "failures": 0,
+          "mirrors": 0,
+          "retries": 0,
+          "sources": []
+        }
+      ],
+      "fabric_version": "fabric-loader-0.19.5-1.21.1"
+    }
+  ],
+  "root_bytes": 187571167,
+  "root_cleaned": true
+}

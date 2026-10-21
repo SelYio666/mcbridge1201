@@ -63,21 +63,27 @@ def sha1(path: Path) -> str:
 
 
 def fetch(urls: list[str], dest: Path) -> Path:
-    if dest.exists() and dest.stat().st_size > 1_000_000:
+    if dest.exists() and dest.stat().st_size > 1_000_000 and zipfile.is_zipfile(dest):
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
+    if dest.exists():
+        dest.unlink()  # a partial download must never be treated as a cache hit
     last = None
     for url in urls:
+        tmp = dest.with_suffix(dest.suffix + ".part")
         try:
             print("downloading", url)
             req = urllib.request.Request(url, headers={"User-Agent": "mcbridge-build"})
-            with urllib.request.urlopen(req, timeout=120) as r, dest.open("wb") as f:
+            with urllib.request.urlopen(req, timeout=120) as r, tmp.open("wb") as f:
                 shutil.copyfileobj(r, f, 1 << 20)
+            if not zipfile.is_zipfile(tmp):
+                raise RuntimeError("downloaded file is not a zip")
+            tmp.replace(dest)
             print("  ->", dest, dest.stat().st_size, "bytes")
             return dest
         except Exception as exc:  # noqa: BLE001
             last = exc
-            dest.unlink(missing_ok=True)
+            tmp.unlink(missing_ok=True)
             print("  failed:", exc)
     raise RuntimeError(f"python embed download failed: {last}")
 

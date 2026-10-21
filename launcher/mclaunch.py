@@ -21,7 +21,7 @@ import urllib.request
 import uuid
 import zipfile
 from collections import deque
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, as_completed, wait
 from pathlib import Path
 
 UA = {"User-Agent": "mcbridge-launcher/0.1 (offline, local)"}
@@ -96,11 +96,22 @@ _SIDECAR_CACHE: dict[str, tuple[float, str]] = {}
 METADATA_TTL = 900  # 15 minutes, per the download review: listings rarely change that fast
 
 
-def http_json(url: str, retries: int = 2, timeout: int = 45, max_age: int = METADATA_TTL):
-    """Fetch JSON metadata, preferring the official host and then verified mirrors.
+def _fetch_json(candidate: str, timeout: int) -> bytes:
+    req = urllib.request.Request(candidate, headers=UA)
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read()
 
-    Successful responses are cached in-process for `max_age` seconds (pass 0 to bypass);
-    the raw bytes are re-parsed per call so callers may freely mutate the returned dict.
+
+def http_json(url: str, retries: int = 1, timeout: int = 20, max_age: int = METADATA_TTL,
+              hedge_delay: float = 3.0):
+    """Fetch JSON metadata with a hedged request over the verified candidates.
+
+    The 2026-10-21 benchmark (runs/p117) showed a flaky meta host burning 61.9 s
+    before the mirror was tried at all, and a plain short timeout then failed when
+    both hosts stalled. So: start the official request, and if it has not answered
+    after `hedge_delay` seconds, start the mirror too; the first valid JSON wins.
+    Successful responses are cached in-process for `max_age` seconds (0 = bypass);
+    raw bytes are re-parsed per call so callers may mutate the returned dict.
     """
     if max_age > 0:
         cached = _JSON_CACHE.get(url)
@@ -109,21 +120,62 @@ def http_json(url: str, retries: int = 2, timeout: int = 45, max_age: int = META
                 return json.loads(cached[1])
             except Exception:  # noqa: BLE001 - never serve a broken cache entry
                 _JSON_CACHE.pop(url, None)
-    last = None
-    for candidate in mirror_urls(url):
+
+    candidates = mirror_urls(url)
+    last: Exception | None = None
+
+    def store(raw: bytes):
+        if max_age > 0:
+            _JSON_CACHE[url] = (time.time(), raw)
+
+    if len(candidates) == 1:
         for attempt in range(max(1, retries)):
             try:
-                req = urllib.request.Request(candidate, headers=UA)
-                with urllib.request.urlopen(req, timeout=timeout) as r:
-                    raw = r.read()
+                raw = _fetch_json(candidates[0], timeout)
                 data = json.loads(raw)
-                if max_age > 0:
-                    _JSON_CACHE[url] = (time.time(), raw)
+                store(raw)
                 return data
-            except Exception as exc:  # noqa: BLE001 - metadata host is flaky
+            except Exception as exc:  # noqa: BLE001
                 last = exc
                 time.sleep(1.0 + attempt)
-    raise RuntimeError(f"GET {url} failed: {last}")
+        raise RuntimeError(f"GET {url} failed: {last}")
+
+    pool = ThreadPoolExecutor(max_workers=len(candidates))
+    pending: set = set()
+    started = 0
+    last = None
+
+    def start_next() -> None:
+        nonlocal started
+        pending.add(pool.submit(_fetch_json, candidates[started], timeout))
+        started += 1
+
+    try:
+        start_next()
+        deadline = time.time() + hedge_delay
+        while pending or started < len(candidates):
+            if not pending:
+                start_next()
+                deadline = time.time() + hedge_delay
+                continue
+            wait_for = 0.5
+            if started < len(candidates):
+                wait_for = max(0.05, min(0.5, deadline - time.time()))
+            done, pending = wait(pending, timeout=wait_for, return_when=FIRST_COMPLETED)
+            for fut in done:
+                try:
+                    raw = fut.result()
+                    data = json.loads(raw)
+                    store(raw)
+                    return data
+                except Exception as exc:  # noqa: BLE001
+                    last = exc
+            if time.time() >= deadline and started < len(candidates):
+                start_next()
+                deadline = float("inf")
+        raise RuntimeError(f"GET {url} failed: {last}")
+    finally:
+        pool.shutdown(wait=False, cancel_futures=True)
 
 
 def sha1_of(path: Path) -> str:
@@ -159,13 +211,17 @@ def mirror_urls(url: str) -> list[str]:
     return [url] + mirrors
 
 
-DOWNLOAD_EVENTS: deque = deque(maxlen=200)
+DOWNLOAD_EVENTS: deque = deque(maxlen=400)
 _DOWNLOAD_LOCK = threading.Lock()
+_DOWNLOAD_SEQ = 0
 
 
 def _record_download(**event) -> None:
+    global _DOWNLOAD_SEQ
     event["time"] = time.strftime("%Y-%m-%d %H:%M:%S")
     with _DOWNLOAD_LOCK:
+        _DOWNLOAD_SEQ += 1
+        event["seq"] = _DOWNLOAD_SEQ
         DOWNLOAD_EVENTS.append(event)
 
 
@@ -236,7 +292,7 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3,
     raise RuntimeError(f"download {url} failed: {last}")
 
 
-def sha1_sidecar(url: str, timeout: int = 20) -> str | None:
+def sha1_sidecar(url: str, timeout: int = 6) -> str | None:
     """Fetch a maven artifact's `.sha1` sidecar, if the repository publishes one."""
     cached = _SIDECAR_CACHE.get(url)
     if cached and time.time() - cached[0] < METADATA_TTL:
@@ -261,8 +317,41 @@ def sha1_sidecar(url: str, timeout: int = 20) -> str | None:
 
 def download_maven(url: str, dest: Path, retries: int = 3,
                    progress: Progress | None = None) -> str:
-    """Download a maven artifact and verify it against the repository's sha1 sidecar."""
-    return download(url, dest, sha1_sidecar(url), retries=retries, progress=progress)
+    """Download a maven artifact and verify it against the repository's sha1 sidecar.
+
+    The digest is remembered in a `<jar>.sha1` file next to the artifact, so a cached
+    install does not re-fetch every sidecar over the network (the review's hot-path
+    latency: 8 fabric libraries used to mean 8 extra maven requests).
+    """
+    dest = Path(dest)
+    sidecar = dest.with_suffix(dest.suffix + ".sha1")
+    local = dest.with_suffix(dest.suffix + ".local.sha1")
+    digest = None
+    for candidate in (sidecar, local):
+        if digest is not None or not candidate.exists():
+            continue
+        try:
+            parts = candidate.read_text(encoding="ascii", errors="ignore").strip().split()
+            if parts and len(parts[0]) == 40 and all(c in "0123456789abcdefABCDEF" for c in parts[0]):
+                digest = parts[0].lower()
+        except OSError:
+            digest = None
+    if digest is None:
+        digest = sha1_sidecar(url)
+        if digest:
+            try:
+                sidecar.write_text(digest + "\n", encoding="ascii")
+            except OSError:
+                pass
+    final = download(url, dest, digest, retries=retries, progress=progress)
+    if digest is None and dest.exists():
+        # no repository sidecar available: remember our own digest so the next run can
+        # stay offline (this is an integrity check, not proof of upstream authenticity)
+        try:
+            local.write_text(sha1_of(dest) + "\n", encoding="ascii")
+        except OSError:
+            pass
+    return final
 
 
 def eval_rules(rules, features=None) -> bool:

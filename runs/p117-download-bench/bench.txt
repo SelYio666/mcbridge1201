@@ -1,0 +1,4 @@
+1.20.1 cold client_jar=68.224s/31892070B/0.446MBps/fail1 libraries=113.61s/60876077B/0.511MBps/fail4 assets_sample=101.21s/89335351B/0.842MBps/fail5 fabric_install=36.031s/4481142B/0.119MBps/fail0
+1.20.1 hot client_jar=0.022s/0B/0.0MBps/fail0 libraries=0.222s/0B/0.0MBps/fail0 assets_sample=0.08s/0B/0.0MBps/fail0 fabric_install=13.383s/0B/0.0MBps/fail0
+1.21.1 cold client_jar=8.588s/26836906B/2.98MBps/fail0 libraries=211.557s/66739500B/0.301MBps/fail6 assets_sample=135.325s/88937132B/0.627MBps/fail33 fabric_install=40.762s/4565502B/0.107MBps/fail0
+1.21.1 hot client_jar=0.022s/0B/0.0MBps/fail0 libraries=0.246s/0B/0.0MBps/fail0 assets_sample=0.073s/0B/0.0MBps/fail0 fabric_install=13.048s/0B/0.0MBps/fail0

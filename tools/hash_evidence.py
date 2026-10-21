@@ -554,6 +554,9 @@ FILES = [
     "runs/p116-neoforge-launch/verify.txt",
     "runs/p116-neoforge-launch/installer.log",
     "runs/p116-neoforge-launch/neoforge-mainmenu.png",
+    "runs/p117-download-bench/README.md",
+    "runs/p117-download-bench/bench.json",
+    "runs/p117-download-bench/bench.txt",
     "tools/make_promo_video.py",
     "java/src/shulkerpreview/java/sbtpreview/PreviewTooltipDataMixin.java",
     "java/src/shulkerpreview/resources/fabric.mod.json",
@@ -677,6 +680,7 @@ FILES = [
     "docs/download-sources.md",
     "tools/build_portable.py",
     "tools/test_portable.py",
+    "tools/bench_download.py",
     "docs/STATUS.md",
 ]
 

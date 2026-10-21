@@ -517,8 +517,24 @@ def test_download_policy() -> None:
             raise urllib.error.URLError("tls timeout")
         return FakeResp(b'{"ok": 1}')
 
-    data = with_fake(fake_meta, lambda: mclaunch.http_json(manifest_url, retries=1, max_age=0))
+    data = with_fake(fake_meta, lambda: mclaunch.http_json(manifest_url, retries=1, max_age=0,
+                                                           hedge_delay=0.1))
     check("DOWNLOAD http_json falls back to the mirror", data == {"ok": 1}, str(data))
+
+    # a slow official host must not block t= mirror: the request is hedged
+    def fake_hedge(req, timeout=None):
+        if "piston-meta.mojang.com" in url_of(req):
+            time.sleep(0.6)
+            return FakeResp(b'{"slow": 1}')
+        return FakeResp(b'{"fast": 1}')
+
+    hedge_start = time.time()
+    hedged = with_fake(fake_hedge, lambda: mclaunch.http_json(
+        manifest_url, max_age=0, hedge_delay=0.1))
+    hedged_elapsed = time.time() - hedge_start
+    check("DOWNLOAD hedges a slow metadata host with the mirror",
+          hedged == {"fast": 1} and hedged_elapsed < 0.5,
+          f"{hedged_elapsed:.2f}s {hedged}")
 
     # metadata cache: the second call must not touch the network; max_age=0 bypasses it
     cache_calls = {"n": 0}
@@ -623,6 +639,20 @@ def test_download_policy() -> None:
     p2.add_bytes(1000)
     check("DOWNLOAD Progress computes a transfer speed",
           p2.snapshot()["speed"] > 0, str(p2.snapshot()["speed"]))
+
+    # maven hot path: a local sidecar file must avoid network entirely
+    cached_jar = workdir / "cached.jar"
+    cached_jar.write_bytes(b"cached")
+    cached_jar.with_suffix(".jar.sha1").write_text(
+        hashlib.sha1(b"cached").hexdigest() + "\n", encoding="ascii")
+
+    def no_net(req, timeout=None):
+        raise AssertionError("network used for a cached maven artifact")
+
+    with_fake(no_net, lambda: mclaunch.download_maven(
+        "https://maven.fabricmc.net/unit/cached.jar", cached_jar))
+    check("DOWNLOAD maven hot path uses the local sidecar",
+          cached_jar.read_bytes() == b"cached")
 
 
 def main() -> int:

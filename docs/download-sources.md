@@ -53,9 +53,14 @@
 - 结束/失败都会清理 `.part`；
 - 返回**实际提供文件的 URL**。
 
-`http_json(url)` 同样走镜像列表：官方元数据失败会尝试 BMCL 元数据镜像（版本清单、Fabric meta）。
+`http_json(url)` 同样走镜像列表，并且是**对冲请求**：官方先发，3 秒没回就并行请求镜像，
+谁先返回合法 JSON 用谁（`runs/p117` 实测：单路官方曾卡 61.9 秒，调短超时又遇到双源同时读超时）。
 成功的元数据在进程内缓存 15 分钟（`METADATA_TTL`），避免重复安装/刷新时反复拉列表；
 `max_age=0` 可强制绕过缓存。
+
+`download_maven()` 会把 maven `.sha1` 记到 `<jar>.sha1`；仓库不提供/取不到时，退化为
+`<jar>.local.sha1`（本地计算，只保证完整性，不宣称上游真实性）。这样 hot 安装不再为每个
+Fabric 库重新请求一次 maven 侧车。
 
 ### 2.3 完整性校验
 
@@ -106,11 +111,29 @@ GET /api/downloads?limit=50
 | `bmclapi2.../neoforge/versions` | 404 |
 | `piston-meta.mojang.com` 版本清单（经 `http_json`） | 成功，920 个版本 |
 
+## 3.5 冷/热对照与连接池取舍（runs/p117）
+
+有界基准（客户端 jar + 全部允许库 + 150 个资源样本 + Fabric，冷/热各一遍，下载完删除 root）：
+
+| 阶段 | 1.20.1 cold | 1.21.1 cold | hot |
+|---|---:|---:|---:|
+| 客户端 | 68.2 s / 0.45 MB/s | 8.6 s / 2.98 MB/s | ≈0 s |
+| libraries | 113.6 s / 0.51 MB/s | 211.6 s / 0.30 MB/s | ≈0.2 s |
+| 150 assets | 101.2 s / 0.84 MB/s | 135.3 s / 0.63 MB/s | ≈0.1 s |
+| Fabric（8 库） | 36.0 s | 40.8 s | 13.1 s（仅元数据/侧车） |
+
+结论：冷路径是**带宽/单源限速**瓶颈（单流 0.45–2.98 MB/s，24 线程资源聚合 0.63–0.84 MB/s），
+连接复用不会把它变成几 MB/s；真正拖时间的是坏源等待与元数据/侧车，已用对冲请求 + TTL +
+侧车本地缓存解决。因此**本仓库不引入 httpx 连接池**；未来若尝试，必须先做配对测试并保留回退。
+
+完整数据与边界：`runs/p117-download-bench/bench.json`、同目录 `README.md`。
+
 ## 4. 门禁与复现
 
-离线回归（不联网，mock `urlopen`）已并入统一门禁，覆盖 12 项：
-镜像顺序、Fabric API 不镜像、元数据镜像、`http_json` 回退、元数据缓存命中与 `max_age=0` 绕过、
-404 不重试、瞬时错误重试、校验失败回退、侧车 SHA-1 与缓存、来源记录、`/api/downloads`。
+离线回归（不联网，mock `urlopen`）已并入统一门禁，覆盖 17 项：
+镜像顺序、Fabric API 不镜像、元数据镜像与对冲、`max_age=0` 绕过缓存、404 不重试、
+瞬时错误重试、校验失败回退、侧车 SHA-1/缓存/本地摘要、来源记录、字节/速度/来源上报、
+`/api/task`、`/api/downloads`。
 
 ```text
 python tools/test_review_fixes.py      # DOWNLOAD 组
