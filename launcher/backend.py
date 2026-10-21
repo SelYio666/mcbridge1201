@@ -60,6 +60,45 @@ def pick_java(mc: str) -> str | None:
     return None
 
 
+def _retrying_get(url, **kwargs):
+    """requests.get with retries; Mojang endpoints drop TLS connections intermittently here."""
+    import time
+
+    import requests as _requests
+
+    kwargs.setdefault("timeout", 25)
+    last = None
+    for attempt in range(5):
+        try:
+            return _requests.get(url, **kwargs)
+        except Exception as exc:  # noqa: BLE001
+            last = exc
+            time.sleep(1.5 * (attempt + 1))
+    raise last
+
+
+def _install_network_shims() -> None:
+    """Patch the library modules to use the retrying getter (module-local, not global)."""
+    import requests as _requests
+
+    class _RequestsShim:
+        def get(self, *args, **kwargs):
+            return _retrying_get(*args, **kwargs)
+
+        def __getattr__(self, name):
+            return getattr(_requests, name)
+
+    try:
+        from minecraft_launcher_lib import _helper as helper
+        from minecraft_launcher_lib import runtime as rt
+
+        shim = _RequestsShim()
+        rt.requests = shim
+        helper.requests = shim
+    except Exception:  # noqa: BLE001 - library missing; callers will surface it
+        pass
+
+
 def offline_uuid(name: str) -> str:
     return str(uuid.UUID(bytes=hashlib.md5(("OfflinePlayer:" + name).encode()).digest(), version=3))
 
@@ -78,6 +117,47 @@ def _callback(progress):
         progress.set(done=int(n))
 
     return {"setStatus": set_status, "setMax": set_max, "setProgress": set_progress}
+
+
+def _pack_dependencies(path: Path) -> dict:
+    import json
+    import zipfile
+
+    with zipfile.ZipFile(path) as z:
+        index = json.loads(z.read("modrinth.index.json"))
+    return index.get("dependencies", {})
+
+
+def install_mrpack(path: Path, root: Path, progress=None) -> dict:
+    """Install a Modrinth .mrpack: dependencies through our verified installers, then files."""
+    if not AVAILABLE:
+        raise RuntimeError("minecraft-launcher-lib not installed")
+    from minecraft_launcher_lib import mrpack as mll_mrpack
+
+    import mclaunch
+
+    root = Path(root)
+    info = mll_mrpack.get_mrpack_information(str(path))
+    deps = _pack_dependencies(path)
+    mc = deps.get("minecraft") or info.get("minecraftVersion")
+    if mc:
+        progress and progress.set(message=f"mrpack {path.name}: vanilla {mc}")
+        mclaunch.install_vanilla_launcher_profile(mc, root)
+    if deps.get("fabric-loader"):
+        progress and progress.set(message=f"mrpack {path.name}: fabric {deps['fabric-loader']}")
+        mclaunch.install_fabric(mc, root, progress, deps["fabric-loader"])
+    if deps.get("forge"):
+        progress and progress.set(message=f"mrpack {path.name}: forge {deps['forge']}")
+        install("forge", mc, root, deps["forge"], mclaunch.find_java(), progress)
+    if deps.get("neoforge"):
+        progress and progress.set(message=f"mrpack {path.name}: neoforge {deps['neoforge']}")
+        install("neoforge", mc, root, deps["neoforge"], mclaunch.find_java(), progress)
+
+    progress and progress.set(message=f"mrpack {path.name}: files/overrides")
+    _install_network_shims()
+    mll_mrpack.install_mrpack(str(path), str(root), callback=_callback(progress),
+                              mrpack_install_options={"skipDependenciesInstall": True})
+    return {"name": info.get("name"), "version": info.get("versionId"), "minecraft": mc}
 
 
 def jvm_runtimes() -> list[str]:
@@ -106,6 +186,7 @@ def install_jvm(root: Path, jvm_id: str, progress=None) -> str:
 
     from minecraft_launcher_lib import runtime as mll_runtime
 
+    _install_network_shims()
     last = None
     for attempt in range(3):
         try:

@@ -214,3 +214,17 @@ RESULT: OK
 第二次尝试成功。
 
 注意：这是给“本机没有 Java”的用户兜底的方案；如果系统已有合适 JDK，仍优先用系统/官方启动器运行时。
+
+## Modrinth 整合包（.mrpack）
+
+“高级设置 → 整合包”填 `.mrpack` 路径，点“安装整合包”即可；接口：
+
+- `POST /api/install-mrpack {"path":"<本地 .mrpack>"}`。
+
+实现策略：**依赖由本项目自己装**（原版走我们的镜像下载器、Fabric/Forge/NeoForge 走已验证路径），
+然后调用 `minecraft-launcher-lib` 的 `install_mrpack(..., skipDependenciesInstall=True)` 只装
+`files` 与 `overrides`。这样绕开了库内置 Fabric installer 对 `java` 参数的要求（本机 PATH 无 java 会
+报 WinError 2）。
+
+实测：自建最小包（`minecraft 1.21.1` + `fabric-loader 0.19.5`，无 files，overrides 放一个测试文件）
+安装成功，输出 `done: mcbridge test pack 1.0.0`，`config/mcbridge-test.txt` 内容正确。

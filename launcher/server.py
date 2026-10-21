@@ -238,6 +238,31 @@ class Handler(BaseHTTPRequestHandler):
             cfg.update({k: body[k] for k in ("root", "username", "mem") if k in body})
             save_config(cfg)
             return self._send(200, cfg)
+        if path == "/api/install-mrpack":
+            cfg = load_config()
+            pack = str(body.get("path", "")).strip()
+            if not pack:
+                return self._send(400, {"error": "path required"})
+            pack_path = Path(pack)
+            if not pack_path.exists() or pack_path.suffix.lower() != ".mrpack":
+                return self._send(400, {"error": "not a .mrpack file"})
+            if TASK.snapshot()["phase"] in ("start", "download"):
+                return self._send(409, {"error": "a task is running"})
+
+            def run_mrpack():
+                with TASK_LOCK:
+                    TASK.__init__()
+                try:
+                    import backend
+                    TASK.set(phase="download", message=f"mrpack {pack_path.name}")
+                    info = backend.install_mrpack(pack_path, Path(cfg["root"]), TASK)
+                    TASK.set(phase="done", message=f"{info['name']} {info['version']}")
+                except Exception as exc:  # noqa: BLE001
+                    TASK.set(phase="error", error=str(exc))
+
+            threading.Thread(target=run_mrpack, daemon=True).start()
+            return self._send(200, {"started": True})
+
         if path == "/api/install-jvm":
             cfg = load_config()
             jvm_id = str(body.get("id", "")).strip()

@@ -260,6 +260,7 @@ $("play").onclick = () => play();
 $("allsnap").onchange = () => { renderManifest(false); renderVersions(); };
 $("loader").onchange = loadLoaderVersions;
 $("jvmInstall").onclick = installJvm;
+$("mrpackInstall").onclick = installMrpack;
 $("mcver").onchange = loadLoaderVersions;
 $("pickRelease").onclick = () => { if (state.latest.release) { $("mcver").value = state.latest.release; } };
 $("pickSnapshot").onclick = () => {
