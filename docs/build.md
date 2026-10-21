@@ -37,7 +37,7 @@ python tools/build_bridges.py --stub work/cb/data/jars/client-1.21.1-intermediar
 ## 回归
 
 ```text
-python tools/test_review_fixes.py     # 外部问题汇总 13 项检查
+python tools/test_review_fixes.py     # 外部问题汇总 16 项检查
 python tools/verify_evidence.py       # 证据/测试/哈希
 python tools/check_hashes.py          # 哈希清单
 python launcher/mclaunch.py verify 1.21.1 <root>

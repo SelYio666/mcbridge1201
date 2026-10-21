@@ -202,6 +202,29 @@ def test_launcher() -> None:
         with urllib.request.urlopen(f"http://127.0.0.1:{port}{path}", timeout=5) as r:
             return r.status, r.read()
 
+    # launcher API surface added after the review: pack scanning and runtime listing
+    packs = lib / "packs"
+    packs.mkdir(exist_ok=True)
+    with zipfile.ZipFile(packs / "probe.mrpack", "w") as z:
+        z.writestr("modrinth.index.json", json.dumps({
+            "formatVersion": 1, "game": "minecraft", "versionId": "1.0.0",
+            "name": "probe pack", "files": [],
+            "dependencies": {"minecraft": "1.21.1", "fabric-loader": "0.19.5"}}))
+    status, body = get("/api/mrpacks")
+    packs_data = json.loads(body)
+    names = [p.get("name") for p in packs_data.get("packs", [])]
+    check("launcher /api/mrpacks lists packs", status == 200 and "probe pack" in names, str(names))
+
+    status, body = get("/api/jvm")
+    jvm_data = json.loads(body)
+    check("launcher /api/jvm returns json", status == 200 and "available" in jvm_data,
+          str(jvm_data)[:80])
+
+    status, body = get("/api/loader-versions?loader=fabric&mc=1.21.1")
+    lv = json.loads(body)
+    ok = status == 200 and ("versions" in lv) and (bool(lv.get("versions")) or bool(lv.get("error")))
+    check("launcher /api/loader-versions responds", ok, str(lv.get("error", ""))[:80])
+
     enc = "/log/" + urllib.parse.quote(str(log).replace("\\", "/"))
     status, body = get(enc)
     check("ISSUE-05 encoded log path readable", status == 200 and b"hello log" in body, f"status={status}")
