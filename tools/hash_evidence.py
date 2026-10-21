@@ -515,6 +515,7 @@ FILES = [
     "runs/p115-neoforge-attempt/README.md",
     "runs/p115-neoforge-attempt/neoforge-launch.log",
     "runs/p115-neoforge-attempt/neoforge-target-test.log",
+    "runs/p115-neoforge-attempt/neoforge-basejar-test.log",
     "tools/build_strict_probe.py",
     "probes/strictprobe/src/probe/StrictProbe.java",
     "probes/strictprobe/fabric.mod.json",

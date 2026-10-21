@@ -24,10 +24,22 @@ java.lang.RuntimeException: java.util.NoSuchElementException: No value present
   at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(...)
 ```
 
-Trying `neoforgeclient` instead gives `Missing launch handler: neoforgeclient`. So the
-`ILaunchHandlerService` from `fancymodloader loader-4.0.45.jar` is not being discovered by
-ModLauncher in this classpath/module-path layout. Logs: `neoforge-launch.log`,
-`neoforge-target-test.log`.
+Trying `neoforgeclient` instead gives `Missing launch handler: neoforgeclient`. The real cause is
+inside NeoForge's early display, not the launch target:
+
+```text
+Caused by: java.util.NoSuchElementException: No value present
+  at java.base/java.util.Optional.orElseThrow(Optional.java:377)
+  at fml_earlydisplay@4.0.45/net.neoforged.fml.earlydisplay.DisplayWindow.updateModuleReads(DisplayWindow.java:603)
+  at fml_loader@4.0.45/.../ImmediateWindowHandler.acceptGameLayer
+  ... CommonLaunchHandler.launchService
+```
+
+`updateModuleReads` cannot find the expected module in the game layer. Replacing the copied
+`neoforge-21.1.264.jar` entry with the inherited `1.21.1.jar` does not help
+(`neoforge-basejar-test.log`), so the issue is in how the game layer/module names are built from our
+classpath + `-p` module path, not the jar name alone. Logs: `neoforge-launch.log`,
+`neoforge-target-test.log`, `neoforge-basejar-test.log`.
 
 ## Honest status
 
