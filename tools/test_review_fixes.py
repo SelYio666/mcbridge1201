@@ -224,6 +224,20 @@ def test_launcher() -> None:
     names = [p.get("name") for p in packs_data.get("packs", [])]
     check("launcher /api/mrpacks lists packs", status == 200 and "probe pack" in names, str(names))
 
+    mods_dir = lib / "mods"
+    mods_dir.mkdir(exist_ok=True)
+    (mods_dir / "probe.jar").write_text("x", encoding="utf-8")
+    (mods_dir / "probe2.jar.disabled").write_text("x", encoding="utf-8")
+    status, body = get("/api/mods")
+    mods_data = json.loads(body)
+    names = {m["name"]: m["enabled"] for m in mods_data.get("mods", [])}
+    check("launcher lists mods", status == 200 and names.get("probe.jar") is True
+          and names.get("probe2.jar.disabled") is False, str(names))
+    status, body = post("/api/toggle-mod", {"name": "probe2.jar.disabled"})
+    status2, body2 = get("/api/mods")
+    env = {m["name"]: m["enabled"] for m in json.loads(body2).get("mods", [])}
+    check("launcher toggles a mod", status == 200 and env.get("probe2.jar") is True, str(env))
+
     del_dir = lib / "versions" / "fabric-delete-probe-1.21.1"
     del_dir.mkdir(parents=True, exist_ok=True)
     (del_dir / "fabric-delete-probe-1.21.1.json").write_text("{}", encoding="utf-8")

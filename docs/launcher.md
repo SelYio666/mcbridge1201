@@ -256,3 +256,12 @@ python tools/test_launcher_e2e.py --root work/launcher-e2e --mc 1.21.1
 实测：`--no-install` 用 `work/launcher-fresh2` 通过；从零安装一次约 36 分钟（约 915 MB，网络慢），
 `verify` 后 `RESULT: OK`；首次运行暴露了“先开日志文件后建 logs 目录”的脚本 bug，已修复并复跑启动阶段通过。
 证据见 `runs/p114-launcher-e2e/`。
+
+## 模组启用 / 禁用
+
+“高级设置 → 模组”列出 `<root>/mods` 下的 `.jar` 与 `.jar.disabled`，可一键切换（重命名）：
+
+- `GET /api/mods`：`[{name, size, enabled}]`
+- `POST /api/toggle-mod {"name":"xxx.jar"}`：`.jar` ↔ `.jar.disabled`
+
+只操作 `mods/` 目录内的文件（路径穿越 400）；回归套件覆盖“列表”和“切换”两项。

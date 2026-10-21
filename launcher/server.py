@@ -198,6 +198,18 @@ class Handler(BaseHTTPRequestHandler):
                     packs.append(entry)
             return self._send(200, {"dirs": [str(d) for d in roots], "packs": packs})
 
+        if path == "/api/mods":
+            cfg = load_config()
+            mods_dir = Path(cfg["root"]) / "mods"
+            mods = []
+            if mods_dir.is_dir():
+                for f in sorted(mods_dir.iterdir()):
+                    if not f.is_file() or f.suffix.lower() not in (".jar", ".disabled"):
+                        continue
+                    mods.append({"name": f.name, "size": f.stat().st_size,
+                                 "enabled": f.suffix.lower() == ".jar"})
+            return self._send(200, {"dir": str(mods_dir), "mods": mods})
+
         if path == "/api/jvm":
             cfg = load_config()
             import backend
@@ -338,6 +350,28 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(409, {"error": "a task is running"})
             threading.Thread(target=run_install, args=(mc, loader, version), daemon=True).start()
             return self._send(200, {"started": True})
+        if path == "/api/toggle-mod":
+            cfg = load_config()
+            name = str(body.get("name", "")).strip()
+            if not name:
+                return self._send(400, {"error": "name required"})
+            mods_dir = (Path(cfg["root"]) / "mods").resolve()
+            src = (mods_dir / name).resolve()
+            try:
+                src.relative_to(mods_dir)
+            except Exception:  # noqa: BLE001
+                return self._send(400, {"error": "invalid name"})
+            if not src.is_file() or src.suffix.lower() not in (".jar", ".disabled"):
+                return self._send(404, {"error": "not a mod jar"})
+            if src.suffix.lower() == ".jar":
+                dst = src.with_name(src.name + ".disabled")
+            else:
+                dst = src.with_name(src.name[: -len(".disabled")])
+            if dst.exists():
+                return self._send(409, {"error": "target already exists"})
+            src.rename(dst)
+            return self._send(200, {"name": dst.name, "enabled": dst.suffix.lower() == ".jar"})
+
         if path == "/api/delete-version":
             cfg = load_config()
             vid = str(body.get("id", "")).strip()
