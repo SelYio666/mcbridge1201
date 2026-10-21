@@ -102,7 +102,7 @@ def mirror_urls(url: str) -> list[str]:
     return mirrors + [url]
 
 
-def download(url: str, dest: Path, sha1: str | None = None, retries: int = 1) -> None:
+def download(url: str, dest: Path, sha1: str | None = None, retries: int = 4) -> None:
     if dest.exists() and (sha1 is None or sha1_of(dest) == sha1):
         return
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -122,7 +122,7 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 1) ->
             except Exception as exc:  # noqa: BLE001
                 last = exc
                 tmp.unlink(missing_ok=True)
-                time.sleep(1.0 * (attempt + 1))
+                time.sleep(2.0 * (attempt + 1))
     raise RuntimeError(f"download {url} failed: {last}")
 
 
@@ -262,6 +262,7 @@ def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> st
             for f in as_completed(futs):
                 f.result()
                 progress and progress.inc()
+    ensure_natives(mc, root)
     ensure_profile(mc, root)
     return mc
 
@@ -406,6 +407,94 @@ def install_neoforge(mc: str, root: Path, progress: Progress | None = None, vers
             return found[-1].name
         raise RuntimeError(f"neoforge installer failed rc={rc}")
     return vid if (vdir / f"{vid}.json").exists() else sorted((root / "versions").glob("neoforge-*"))[-1].name
+
+
+
+def verify_install(version_id: str, root: Path) -> dict:
+    """Check an installed version: json, client jar, libraries, natives, assets."""
+    root = Path(root)
+    vdir = root / "versions" / version_id
+    report = {"version": version_id, "root": str(root), "ok": True, "items": {}}
+
+    meta_path = vdir / f"{version_id}.json"
+    report["items"]["version_json"] = meta_path.exists()
+    if not meta_path.exists():
+        report["ok"] = False
+        return report
+    data = json.loads(meta_path.read_text(encoding="utf-8"))
+    base_id = data.get("inheritsFrom") or version_id
+    base_dir = root / "versions" / base_id
+    base_data = data if base_id == version_id else json.loads(
+        (base_dir / f"{base_id}.json").read_text(encoding="utf-8"))
+
+    jar = base_dir / f"{base_id}.jar"
+    report["items"]["client_jar"] = {
+        "ok": jar.exists(),
+        "path": str(jar),
+        "size": jar.stat().st_size if jar.exists() else 0,
+    }
+    if not jar.exists():
+        report["ok"] = False
+
+    libs = []
+    lib_missing = []
+    all_libs = list(data.get("libraries", []))
+    if base_id != version_id:
+        all_libs += list(base_data.get("libraries", []))
+    for lib in all_libs:
+        if not allowed_win(lib):
+            continue
+        art = lib.get("downloads", {}).get("artifact")
+        if not art:
+            continue
+        libs.append(art["path"])
+        if not (root / "libraries" / art["path"]).exists():
+            lib_missing.append(art["path"])
+    report["items"]["libraries"] = {"total": len(libs), "missing": len(lib_missing),
+                                    "missing_sample": lib_missing[:5]}
+    if lib_missing:
+        report["ok"] = False
+
+    natives_dir = base_dir / "natives"
+    dlls = sorted(p.name for p in natives_dir.glob("*.dll")) if natives_dir.exists() else []
+    report["items"]["natives"] = {"dir": str(natives_dir), "dll": len(dlls), "sample": dlls[:4]}
+
+    idx = base_data.get("assetIndex") or {}
+    idx_path = root / "assets" / "indexes" / f"{idx.get('id', 'legacy')}.json"
+    report["items"]["asset_index"] = {"ok": idx_path.exists(), "path": str(idx_path)}
+    if idx_path.exists():
+        index = json.loads(idx_path.read_text(encoding="utf-8"))
+        total = 0
+        missing = 0
+        for _name, obj in index.get("objects", {}).items():
+            total += 1
+            dest = root / "assets" / "objects" / obj["hash"][:2] / obj["hash"]
+            if not dest.exists():
+                missing += 1
+        report["items"]["assets"] = {"total": total, "missing": missing}
+        if missing:
+            report["ok"] = False
+    else:
+        report["ok"] = False
+    return report
+
+
+def print_report(report: dict) -> None:
+    print(f"version: {report['version']}")
+    print(f"root:    {report['root']}")
+    items = report["items"]
+    print(f"  version json : {'ok' if items.get('version_json') else 'MISSING'}")
+    jar = items.get("client_jar", {})
+    print(f"  client jar   : {'ok' if jar.get('ok') else 'MISSING'} ({jar.get('size', 0)} bytes)")
+    lib = items.get("libraries", {})
+    print(f"  libraries    : {lib.get('total', 0) - lib.get('missing', 0)}/{lib.get('total', 0)} present")
+    if lib.get("missing_sample"):
+        print(f"    missing e.g.: {', '.join(lib['missing_sample'])}")
+    nat = items.get("natives", {})
+    print(f"  natives      : {nat.get('dll', 0)} dll {nat.get('sample', [])}")
+    assets = items.get("assets", {})
+    print(f"  assets       : {assets.get('total', 0) - assets.get('missing', 0)}/{assets.get('total', 0)} present")
+    print("RESULT:", "OK" if report["ok"] else "INCOMPLETE")
 
 
 def find_java() -> str:
@@ -616,6 +705,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("usage: mclaunch.py install <mc> <root> [fabric|vanilla|forge|neoforge]")
         print("       mclaunch.py launch <version_id> <root> <username>")
+        print("       mclaunch.py verify <version_id> <root>")
         sys.exit(1)
     cmd = sys.argv[1]
     if cmd == "install":
@@ -634,6 +724,10 @@ if __name__ == "__main__":
         else:
             raise SystemExit("unknown loader")
         print(p.snapshot())
+    elif cmd == "verify":
+        rep = verify_install(sys.argv[2], Path(sys.argv[3]))
+        print_report(rep)
+        sys.exit(0 if rep["ok"] else 3)
     elif cmd == "launch":
         proc, log = launch(sys.argv[2], Path(sys.argv[3]), sys.argv[4])
         print("pid", proc.pid, "log", log)

@@ -125,3 +125,54 @@ python launcher/mclaunch.py launch fabric-loader-0.19.5-1.21.1 "D:\mc" Player
 
 启动器也**不会读取、复制或上传**你的 `mods/`、`saves/`、整合包目录；它只写
 `versions/`、`libraries/`、`assets/` 和 `launcher_profiles.json`。仓库里同样不含任何模组 jar。
+
+## 怎么验证“真的下载到了版本”
+
+不用信界面，直接看文件 + 用内置校验命令。
+
+### 方法一：命令行（推荐）
+
+```text
+python launcher/mclaunch.py install 1.21.1 <一个空目录> vanilla
+python launcher/mclaunch.py verify  1.21.1 <同一个目录>
+```
+
+`verify` 会逐项报告，缺什么一目了然：
+
+```text
+version: 1.21.1
+root:    ...
+  version json : ok
+  client jar   : ok (26836906 bytes)
+  libraries    : 70/70 present
+  natives      : 9 dll ['OpenAL.dll', 'freetype.dll', 'glfw.dll', 'jemalloc.dll']
+  assets       : 3911/3911 present
+RESULT: OK
+```
+
+- `RESULT: OK` = 版本 JSON、客户端 jar、库、natives、资源对象全部齐了；
+- `INCOMPLETE` = 有缺失（会显示缺的库名/资源数量），通常是网络没下完，重跑 `install` 会续传补齐；
+- 退出码：`0` 完整，`3` 不完整，方便脚本判断。
+
+### 方法二：看目录
+
+| 路径 | 应看到什么 |
+|---|---|
+| `versions/1.21.1/1.21.1.json` | 版本描述 |
+| `versions/1.21.1/1.21.1.jar` | 客户端 jar，约 26.8 MB |
+| `versions/1.21.1/natives/*.dll` | 8~9 个原生库 |
+| `libraries/` | ~70 个 jar（按包路径分目录） |
+| `assets/indexes/<id>.json` | 资源索引 |
+| `assets/objects/ab/<hash>` | 每两个十六进制一个目录，文件按 sha1 命名 |
+
+`assets/objects` 的文件名就是 **sha1**，所以“有没有下对”可以直接用哈希判断。
+
+### 已知网络情况
+
+本机直连 `resources.download.minecraft.net` 会超时，下载器会自动切 BMCLAPI 镜像；镜像速度约
+1 个对象/秒，3911 个对象需要较长时间。实测记录：
+
+- 空目录跑到一半：`client jar ok / libraries 70/70 / natives 8 dll / assets 129/3911` → `INCOMPLETE`（网络没下完）；
+- 对已有目录补齐后：`assets 3911/3911` → `RESULT: OK`，随后 Fabric 1.21.1 正常启动（`Setting user`、`Backend library`）。
+
+说明下载链路是通的；`INCOMPLETE` 只表示资源没下完，重跑 `install` 会续传。
