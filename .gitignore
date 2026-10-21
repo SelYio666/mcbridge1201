@@ -13,3 +13,4 @@ __pycache__/
 # 临时
 *.part
 launcher/config.json
+runs/**/*.jar

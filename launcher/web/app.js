@@ -1,4 +1,4 @@
-let state = { cfg: null, versions: [], filter: "all", selected: null, logOffset: 0, logPath: null, manifest: [] };
+let state = { cfg: null, versions: [], filter: "all", selected: null, logOffset: 0, logPath: null, manifest: [], latest: {} };
 let oneClickTimer = null;
 
 const $ = (id) => document.getElementById(id);
@@ -62,23 +62,49 @@ async function loadManifest() {
   try {
     const data = await api("/api/versions");
     state.manifest = data.versions || [];
-    renderManifest();
+    state.latest = data.latest || {};
+    renderManifest(true);
   } catch (e) {
     console.warn("manifest", e);
   }
 }
 
-function renderManifest() {
-  const dl = $("mcvers");
-  dl.innerHTML = "";
+const TYPE_LABEL = { release: "正式版", snapshot: "快照", old_beta: "远古 Beta", old_alpha: "远古 Alpha" };
+
+function renderManifest(initial) {
+  const sel = $("mcver");
+  if (!sel) return;
+  const prev = sel.value;
   const all = $("allsnap") && $("allsnap").checked;
-  for (const v of (state.manifest || [])) {
-    if (!all && v.type !== "release") continue;
-    const o = document.createElement("option");
-    o.value = v.id;
-    o.label = v.type;
-    dl.appendChild(o);
-  }
+  sel.innerHTML = "";
+
+  const addGroup = (label, items) => {
+    if (!items.length) return;
+    const g = document.createElement("optgroup");
+    g.label = label;
+    for (const v of items) {
+      const o = document.createElement("option");
+      o.value = v.id;
+      o.textContent = v.id + (v.type === "release" ? "" : `（${TYPE_LABEL[v.type] || v.type}）`);
+      g.appendChild(o);
+    }
+    sel.appendChild(g);
+  };
+
+  const versions = state.manifest || [];
+  const latest = state.latest || {};
+  const releaseList = versions.filter(v => v.type === "release");
+  const snapshotList = versions.filter(v => v.type === "snapshot");
+  const oldList = versions.filter(v => v.type !== "release" && v.type !== "snapshot");
+
+  addGroup("正式版", releaseList);
+  if (all) addGroup("快照", snapshotList);
+  if (all) addGroup("远古版本", oldList);
+
+  const fallback = latest.release || (releaseList[0] && releaseList[0].id) || "";
+  sel.value = initial || !prev ? fallback : prev;
+  if (!sel.value) sel.value = fallback;
+  if ($("vercount")) $("vercount").textContent = `共 ${state.manifest.length} 个版本可选（当前列出 ${sel.options.length} 个）`;
 }
 
 function setButton(busy, text) {
@@ -187,7 +213,14 @@ $("refresh").onclick = refresh;
 $("save").onclick = saveCfg;
 $("install").onclick = oneClick;
 $("play").onclick = () => play();
-$("allsnap").onchange = renderManifest;
+$("allsnap").onchange = () => renderManifest(false);
+$("pickRelease").onclick = () => { if (state.latest.release) { $("mcver").value = state.latest.release; } };
+$("pickSnapshot").onclick = () => {
+  if (!state.latest.snapshot) return;
+  $("allsnap").checked = true;
+  renderManifest(false);
+  $("mcver").value = state.latest.snapshot;
+};
 $("openRoot").onclick = async () => {
   const cfg = await api("/api/config");
   window.open("file:///" + cfg.root.replace(/\\/g, "/"));

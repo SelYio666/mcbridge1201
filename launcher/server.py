@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -47,6 +48,14 @@ def save_config(cfg):
     CONFIG.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
 
 
+MC_ID = re.compile(r"^(?:\d+\.\d+(?:\.\d+)?(?:[-_].*)?|fabric-loader-.+|neoforge-.+|forge-.+)$")
+
+
+def is_mc_version(name: str) -> bool:
+    """Keep real game versions and loader profiles; hide user instances/modpacks."""
+    return bool(MC_ID.match(name))
+
+
 def installed_versions(root: Path):
     out = []
     vroot = Path(root) / "versions"
@@ -54,6 +63,8 @@ def installed_versions(root: Path):
         return out
     for d in sorted(vroot.iterdir(), key=lambda p: p.name.lower()):
         if not (d / f"{d.name}.json").exists():
+            continue
+        if not is_mc_version(d.name):
             continue
         try:
             data = json.loads((d / f"{d.name}.json").read_text(encoding="utf-8"))

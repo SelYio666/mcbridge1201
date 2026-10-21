@@ -40,8 +40,7 @@
 
     <section class="card hero">
       <div class="row">
-        <input id="mcver" list="mcvers" placeholder="版本号，例如 1.21.1">
-        <datalist id="mcvers"></datalist>
+        <select id="mcver" class="verpick"></select>
         <select id="loader">
           <option value="fabric">Fabric（推荐）</option>
           <option value="vanilla">原版</option>
@@ -49,6 +48,12 @@
           <option value="neoforge">NeoForge</option>
         </select>
         <button id="install" class="primary big">安装并启动</button>
+      </div>
+      <div class="row quick">
+        <button class="chip" id="pickRelease">最新正式版</button>
+        <button class="chip" id="pickSnapshot">最新快照</button>
+        <label class="chk"><input type="checkbox" id="allsnap" checked> 含快照/远古</label>
+        <span class="hint" id="vercount"></span>
       </div>
       <div class="hint">没装过会先自动下载安装，装完自动进游戏；已安装则直接启动。</div>
       <div class="progress"><div id="bar"></div></div>
@@ -61,7 +66,7 @@
           <input id="username" placeholder="Player">
           <label>内存</label>
           <input id="mem" class="narrow" placeholder="2G">
-          <label class="chk"><input type="checkbox" id="allsnap"> 含快照/远古</label>
+          <label class="chk"><input type="checkbox" id="allsnap" checked> 含快照/远古</label>
         </div>
         <div class="row">
           <label>游戏目录</label>

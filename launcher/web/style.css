@@ -88,3 +88,9 @@ input.narrow { width: 90px; min-width: 90px; }
 .adv { margin-top: 10px; }
 .adv summary { color: var(--dim); cursor: pointer; font-size: 12px; }
 .adv .row { margin-top: 8px; }
+
+.verpick { min-width: 260px; max-width: 360px; }
+.chip { background: var(--panel2); border: 1px solid var(--line); color: var(--text);
+  border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 500; }
+.chip:hover { border-color: #3b6b8f; }
+.quick { gap: 8px; }

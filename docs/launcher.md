@@ -116,3 +116,12 @@ python launcher/mclaunch.py launch fabric-loader-0.19.5-1.21.1 "D:\mc" Player
 ## 一键流程做了什么
 
 `安装并启动` = 安装（原版 / Fabric / Forge / NeoForge 按选择）→ 轮询任务 → 成功后自动调用启动，日志同时显示在界面下方的控制台里。失败会保留错误信息，不会静默。
+
+## 只认真正的游戏版本
+
+启动器只列出**符合 Minecraft 版本名或加载器命名规则**的版本（`1.21.1`、`1.20.1-forge-47.4.16`、
+`fabric-loader-0.19.5-1.21.1` 等）。像 PCL 的整合包实例（例如 `One Prime Piece 1.7.6`、
+`Bloodbathen-1.20.1`）不会被当成 MC 版本列出来。
+
+启动器也**不会读取、复制或上传**你的 `mods/`、`saves/`、整合包目录；它只写
+`versions/`、`libraries/`、`assets/` 和 `launcher_profiles.json`。仓库里同样不含任何模组 jar。
