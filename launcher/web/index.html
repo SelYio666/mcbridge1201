@@ -32,7 +32,9 @@
       </div>
       <div class="buttons">
         <button class="ghost" id="refresh">刷新列表</button>
-        <button class="ghost" id="openRoot">打开目录</button>
+        <button class="ghost" id="openRoot" title="游戏根目录（libraries / assets / mods / saves 都在这里）">打开游戏目录</button>
+        <button class="ghost" id="openMods" title="全局模组目录：其他启动器不开版本隔离时也读这里">打开 mods</button>
+        <button class="ghost" id="openSaves" title="存档目录">打开存档</button>
       </div>
     </header>
 
@@ -85,6 +87,12 @@
           <select id="modPick" class="verpick"></select>
           <button class="ghost" id="modToggle">启用 / 禁用</button>
           <button class="ghost" id="modRefresh">刷新</button>
+          <button class="ghost" id="modOpen">打开模组目录</button>
+        </div>
+        <div class="row">
+          <label>兼容</label>
+          <button class="ghost" id="syncProfiles" title="给每个已安装版本补 launcher_profiles.json 条目">让其他启动器识别</button>
+          <span class="hint" id="compatHint">PCL/HMCL 直接把「游戏目录」指到本目录即可；版本隔离时模组放 versions/&lt;版本&gt;/mods</span>
         </div>
         <div class="row">
           <label>Java 运行时</label>

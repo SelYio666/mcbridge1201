@@ -47,11 +47,15 @@ function renderVersions() {
     const type = v.inherits ? kind(v.id) : (v.type === "release" ? "正式版" : (TYPE_LABEL[v.type] || v.type));
     el.innerHTML = `<div class="id">${v.id}${inst.has(v.id) ? ' <span class="badge">已安装</span>' : ""}</div>
       <div class="meta">${type}${v.inherits ? " · 基于 " + v.inherits : ""}
-        ${inst.has(v.id) ? '<a class="del" data-id="' + v.id + '">删除</a>' : ""}</div>`;
+        ${inst.has(v.id) ? '<a class="del" data-id="' + v.id + '">删除</a> <a class="del" data-dir="' + v.id + '">目录</a>' : ""}</div>`;
     el.onclick = (e) => {
       if (e.target.classList && e.target.classList.contains("del")) {
         e.stopPropagation();
-        deleteVersion(e.target.dataset.id);
+        if (e.target.dataset.dir) {
+          openDir("version", e.target.dataset.dir);
+        } else {
+          deleteVersion(e.target.dataset.id);
+        }
         return;
       }
       state.selected = v.id;
@@ -292,10 +296,36 @@ $("pickSnapshot").onclick = () => {
   renderManifest(false);
   $("mcver").value = state.latest.snapshot;
 };
-$("openRoot").onclick = async () => {
-  const cfg = await api("/api/config");
-  window.open("file:///" + cfg.root.replace(/\\/g, "/"));
-};
+async function openDir(target, version) {
+  try {
+    const r = await api("/api/open-dir", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ target, version: version || "" })
+    });
+    $("taskmsg").textContent = "已打开 " + r.opened;
+  } catch (e) {
+    alert("打开目录失败: " + e.message);
+  }
+}
+
+async function syncProfiles() {
+  try {
+    const r = await api("/api/sync-profiles", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: "{}"
+    });
+    $("taskmsg").textContent = r.count
+      ? `已写入 ${r.count} 个 launcher_profiles 条目：${r.added.join(", ")}`
+      : "所有已安装版本都已有 profile 条目";
+  } catch (e) {
+    alert("写入 profile 失败: " + e.message);
+  }
+}
+
+$("openRoot").onclick = () => openDir("root");
+$("openMods").onclick = () => openDir("mods");
+$("openSaves").onclick = () => openDir("saves");
+$("modOpen").onclick = () => openDir("mods");
+$("syncProfiles").onclick = syncProfiles;
 
 refresh();
 loadManifest();

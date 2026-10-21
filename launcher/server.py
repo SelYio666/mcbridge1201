@@ -100,6 +100,65 @@ def installed_versions(root: Path):
     return out
 
 
+DIR_TARGETS = ("root", "mods", "versions", "version", "logs", "saves", "assets", "screenshots")
+
+
+def dir_target(root, target: str, version_id: str = ""):
+    """Resolve one of the fixed folders inside the game root (never an arbitrary path)."""
+    root = Path(root).resolve()
+    target = str(target or "").strip().lower()
+    if target not in DIR_TARGETS:
+        raise ValueError(f"unknown directory target {target!r}")
+    if target == "version":
+        vid = str(version_id or "").strip()
+        if not vid or vid in (".", "..") or "/" in vid or "\\" in vid or ":" in vid:
+            raise ValueError("invalid version id")
+        path = root / "versions" / vid
+    elif target == "root":
+        path = root
+    else:
+        path = root / target
+    resolved = path.resolve()
+    if resolved != root and root not in resolved.parents:
+        raise ValueError("path escapes the game root")
+    return path
+
+
+def open_in_explorer(path) -> None:
+    """Open a folder in the OS file manager (Windows: explorer)."""
+    path = Path(path)
+    if os.name == "nt":
+        os.startfile(str(path))  # noqa: S606 - local launcher opening a fixed folder
+    else:
+        import subprocess
+
+        subprocess.Popen(["xdg-open", str(path)])
+
+
+def sync_profiles(root) -> list[str]:
+    """Give every installed version a launcher_profiles.json entry.
+
+    PCL/HMCL scan versions/ directly and do not need this, but the official launcher
+    only lists profiles, and modpack launchers read profile metadata.
+    """
+    root = Path(root)
+    path = root / "launcher_profiles.json"
+    data = {}
+    if path.exists():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001 - a broken profile file is replaced below
+            data = {}
+    known = {p.get("lastVersionId") for p in (data.get("profiles") or {}).values()
+             if isinstance(p, dict)}
+    added = []
+    for version in installed_versions(root):
+        if version["id"] not in known:
+            mclaunch.ensure_profile(version["id"], root)
+            added.append(version["id"])
+    return added
+
+
 def run_install(mc, loader, version):
     with TASK_LOCK:
         TASK.__init__()
@@ -198,6 +257,18 @@ class Handler(BaseHTTPRequestHandler):
                     packs.append(entry)
             return self._send(200, {"dirs": [str(d) for d in roots], "packs": packs})
 
+        if path == "/api/dirs":
+            cfg = load_config()
+            qs = parse_qs(urlparse(self.path).query)
+            vid = (qs.get("version", [""])[0] or "").strip()
+            root = Path(cfg["root"])
+            try:
+                dirs = {name: str(dir_target(root, name, vid)) for name in DIR_TARGETS}
+            except ValueError as exc:
+                return self._send(400, {"error": str(exc)})
+            return self._send(200, {"root": str(root), "dirs": dirs,
+                                    "exists": {name: Path(p).is_dir() for name, p in dirs.items()}})
+
         if path == "/api/mods":
             cfg = load_config()
             mods_dir = Path(cfg["root"]) / "mods"
@@ -290,6 +361,35 @@ class Handler(BaseHTTPRequestHandler):
             cfg.update({k: body[k] for k in ("root", "username", "mem") if k in body})
             save_config(cfg)
             return self._send(200, cfg)
+        if path == "/api/open-dir":
+            cfg = load_config()
+            target = str(body.get("target", "")).strip()
+            vid = str(body.get("version", "")).strip()
+            try:
+                folder = dir_target(Path(cfg["root"]), target, vid)
+            except ValueError as exc:
+                return self._send(400, {"error": str(exc)})
+            try:
+                if target in ("mods", "saves", "logs", "screenshots"):
+                    folder.mkdir(parents=True, exist_ok=True)
+            except OSError as exc:
+                return self._send(500, {"error": str(exc), "path": str(folder)})
+            if not folder.is_dir():
+                return self._send(404, {"error": "folder does not exist", "path": str(folder)})
+            try:
+                open_in_explorer(folder)
+            except Exception as exc:  # noqa: BLE001
+                return self._send(500, {"error": str(exc), "path": str(folder)})
+            return self._send(200, {"opened": str(folder)})
+
+        if path == "/api/sync-profiles":
+            cfg = load_config()
+            try:
+                added = sync_profiles(Path(cfg["root"]))
+            except Exception as exc:  # noqa: BLE001
+                return self._send(500, {"error": str(exc)})
+            return self._send(200, {"added": added, "count": len(added)})
+
         if path == "/api/install-mrpack":
             cfg = load_config()
             pack = str(body.get("path", "")).strip()

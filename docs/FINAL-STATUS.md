@@ -26,6 +26,7 @@
 | Java 运行时安装（OpenJDK 21.0.7）+ 启动优先使用 | docs/launcher.md |
 | Modrinth mrpack：扫描/安装/overrides/自动启动 | docs/launcher.md |
 | 删除版本（路径穿越防护）、模组启停 | docs/launcher.md |
+| 与其他启动器共用：目录按钮（root/mods/存档/版本）、`/api/dirs`、`/api/open-dir`、profile 同步 | docs/launcher.md |
 | 标准目录 + launcher_profiles，PCL 可直接复用 | docs/launcher.md |
 
 ### NeoForge 启动修复（2026-10-21，p115 → p116）
@@ -43,7 +44,7 @@ binarypatcher）因 Java 网络超时从未跑成，FML 游戏层里没有 `neof
 ### 工程与门禁
 
 - 单测 23/23；`verify_evidence` passed；哈希 668 项；桥一致性 0；mixin 审计 0；
-- 外部问题汇总 20 项回归 + 8 项 NeoForge 安装回归（`tools/test_review_fixes.py`）接入统一门禁；
+- 外部问题汇总 20 项回归 + 8 项 NeoForge 安装回归 + 6 项目录/兼容回归（`tools/test_review_fixes.py`，34/34）接入统一门禁；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
 - GitHub Actions CI（手动 dispatch 触发，run 39614386108 通过）。
 

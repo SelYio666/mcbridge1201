@@ -251,6 +251,50 @@ def test_launcher() -> None:
         rejected = exc.code == 400
     check("launcher rejects path traversal in delete", rejected)
 
+    # folder helpers: other launchers must be able to find mods/versions without guessing
+    from pathlib import Path as _Path
+
+    mods = server.dir_target(_Path(lib), "mods")
+    check("launcher dir_target resolves mods", str(mods).replace("\\", "/").endswith("/mods"))
+    rejected = 0
+    for bad_target, bad_vid in (("../", ""), ("C:/Windows", ""), ("version", ".."),
+                                ("version", "../x")):
+        try:
+            server.dir_target(_Path(lib), bad_target, bad_vid)
+        except ValueError:
+            rejected += 1
+    check("launcher dir_target rejects escapes", rejected == 4, str(rejected))
+
+    status, body = get("/api/dirs?version=neoforge-21.1.172")
+    dirs = json.loads(body)
+    check("launcher /api/dirs lists game folders", status == 200
+          and dirs.get("dirs", {}).get("mods", "").replace("\\", "/").endswith("/mods")
+          and dirs.get("dirs", {}).get("version", "").replace("\\", "/").endswith(
+              "neoforge-21.1.172"), str(dirs.get("dirs"))[:120])
+
+    opened = []
+    orig_open = server.open_in_explorer
+    server.open_in_explorer = opened.append
+    try:
+        status, _body = post("/api/open-dir", {"target": "mods"})
+        check("launcher opens the mods folder", status == 200 and opened
+              and str(opened[-1]).replace("\\", "/").endswith("/mods"),
+              str(opened[-1]) if opened else "no open")
+        try:
+            post("/api/open-dir", {"target": "../"})
+            rejected_open = False
+        except urllib.error.HTTPError as exc:
+            rejected_open = exc.code == 400
+        check("launcher rejects unknown open-dir target", rejected_open)
+    finally:
+        server.open_in_explorer = orig_open
+
+    status, _body = post("/api/sync-profiles", {})
+    profiles = json.loads((lib / "launcher_profiles.json").read_text(encoding="utf-8"))
+    last_ids = {p.get("lastVersionId") for p in profiles.get("profiles", {}).values()}
+    check("launcher sync-profiles writes launcher_profiles entries", status == 200
+          and "neoforge-21.1.172" in last_ids and "1.21.1" in last_ids, str(sorted(last_ids)))
+
     try:
         status, body = get("/api/jvm", timeout=60)
         jvm_data = json.loads(body)

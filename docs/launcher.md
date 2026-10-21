@@ -126,8 +126,25 @@ python tools/test_launcher_e2e.py --root <root> --version neoforge-21.1.264 --re
 
 - PCL / HMCL 这类启动器直接扫描 `versions/`，能看到并启动这些版本；
 - 官方启动器依赖 `launcher_profiles.json`，我们的安装器现在会自动写入一条
-  `lastVersionId=<id>`、`gameDir=<root>` 的 profile；
+  `lastVersionId=<id>`、`gameDir=<root>` 的 profile；老版本漏写的可以点界面里的
+  **“让其他启动器识别”**（`POST /api/sync-profiles`）一次性补齐；
 - 也可以把本启动器的“游戏目录”指向已有的 `.minecraft`，两边共用同一套版本和资源。
+
+### 换启动器的具体步骤（PCL / HMCL / 官方）
+
+1. 本启动器界面右上角 **打开游戏目录**，或直接看“游戏目录”输入框里的绝对路径；
+2. PCL：`设置 → 游戏 → 游戏目录 → 添加`，选这个目录；HMCL 同理（添加游戏目录）；
+   官方启动器：同目录启动即可（先点“让其他启动器识别”补 profile）；
+3. 想共用模组时，注意**版本隔离**：
+
+   | 隔离设置 | 模组实际读取位置 | 怎么和本启动器共用 |
+   |---|---|---|
+   | 关闭（全局 / 不隔离） | `<root>/mods` | ✅ 直接共用，和本启动器一致 |
+   | 开启（按版本隔离） | `<root>/versions/<id>/mods` | 把 jar 复制进版本自己的 `mods` |
+
+   本启动器的 **打开 mods** 按钮会落到全局 `<root>/mods`（不存在会自动创建）；版本列表里每个
+   已安装版本的 **目录** 链接可以打开 `versions/<id>/`，方便把模组放进隔离目录。
+4. 存档统一在 `<root>/saves`（不被版本隔离影响），界面里有 **打开存档**。
 
 注意两点：
 
@@ -135,6 +152,16 @@ python tools/test_launcher_e2e.py --root <root> --version neoforge-21.1.264 --re
    可能看起来“清空”——保持同名即可；这不是文件损坏。
 2. **隔离方式不同**。本启动器把 `mods/`、`saves/` 放在 `<root>` 下共享；PCL 默认版本隔离时用
    `versions/<id>/mods`，切换后可能“看不到模组”，改隔离设置或把模组放到对应目录即可。
+
+### 目录接口（给脚本或别的启动器用）
+
+```text
+GET  /api/dirs[?version=<id>]        # root / mods / versions / version / logs / saves / assets
+POST /api/open-dir {"target":"mods"|"root"|"version"|"saves"|"logs","version":"<id>"}
+POST /api/sync-profiles              # 给每个已安装版本补 launcher_profiles.json
+```
+
+`open-dir` 只接受白名单目标，路径必须落在游戏目录内（拒绝 `../`、绝对路径等）。
 
 ## 一键流程做了什么
 
@@ -146,8 +173,9 @@ python tools/test_launcher_e2e.py --root <root> --version neoforge-21.1.264 --re
 `fabric-loader-0.19.5-1.21.1` 等）。像 PCL 的整合包实例（例如 `One Prime Piece 1.7.6`、
 `Bloodbathen-1.20.1`）不会被当成 MC 版本列出来。
 
-启动器也**不会读取、复制或上传**你的 `mods/`、`saves/`、整合包目录；它只写
-`versions/`、`libraries/`、`assets/` 和 `launcher_profiles.json`。仓库里同样不含任何模组 jar。
+启动器也**不会复制或上传**你的 `mods/`、`saves/`、整合包目录；它只写
+`versions/`、`libraries/`、`assets/` 和 `launcher_profiles.json`，并只读 `mods/` 的文件名来做启停。
+仓库里同样不含任何模组 jar。
 
 ## 怎么验证“真的下载到了版本”
 
