@@ -45,7 +45,7 @@ python launcher/server.py
 | Fabric 安装（官方 meta，最新稳定 loader） | ✅ 实测 |
 | 离线启动（原版 / Fabric），单机与局域网 | ✅ 实测（`runs/p112-launcher/`） |
 | 网页 GUI：版本列表、筛选、安装进度、控制台、启动 | ✅ 实测 |
-| BMCLAPI 镜像兜底（资源 CDN 被墙时） | ✅ 实测（官方 CDN 超时时自动切镜像） |
+| BMCLAPI 镜像兜底（逐路径验证：资源 / 库 / 元数据 / Fabric Loader；Fabric API 不替换） | ✅ 实测（官方失败自动切镜像，见 [download-sources.md](download-sources.md)） |
 | Forge 1.20.1 安装 + 启动 | ✅ 已接入 `minecraft-launcher-lib`（BSD-2）并实测到达主菜单 |
 | NeoForge 1.21.1 安装 + 启动 | ✅ 实测空 NeoForge 21.1.264 到主菜单（`runs/p116-neoforge-launch/`） |
 | 正版登录 / 皮肤 / 多人认证 | ❌ 不做，仅离线 |
@@ -231,6 +231,11 @@ RESULT: OK
 
 对比：如果优先走 BMCLAPI 镜像，实测只有约 **0.6 个对象/秒**（逐个新建 TLS 连接、服务端限速），
 3911 个资源要一个多小时。所以下载器改成**官方优先、镜像兜底**：官方失败/超时才切镜像。
+
+镜像从 2026-10-21 起改为**逐路径验证**（不整域名替换）：资源、libraries、Mojang 元数据、
+Fabric meta、Fabric Loader 有镜像；Fabric API / intermediary 在 BMCL 是 404，因此不替换、
+只重试。每次下载的真实来源和失败原因记在 `DOWNLOAD_EVENTS`，可用 `GET /api/downloads` 查看；
+策略与实测见 [download-sources.md](download-sources.md)。
 
 - 客户端 jar（25.6 MB）通常几秒内完成；
 - 库文件 70 个，随 jar 一起很快；

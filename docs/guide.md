@@ -303,8 +303,11 @@ gh api --method POST repos/SelYio666/mcbridge1201/actions/workflows/ci.yml/dispa
 NeoForge 21.1 不能用 Java 25。
 
 **Q2：下载卡住 / SSL EOF。**
-Mojang CDN 与 maven 偶尔不可达；启动器对资源与库有 BMCLAPI 镜像兜底。Python 侧用 urllib 而不是
-requests（本机 requests 会 SSL EOF）。重试通常能继续（已下载文件会跳过）。
+Mojang CDN 与 maven 偶尔不可达；启动器对资源、库、Mojang 元数据、Fabric meta 和
+**Fabric Loader** 有**逐路径验证**的 BMCL 镜像兜底（Fabric API / intermediary 在 BMCL 是 404，
+所以不替换，只重试）。每个地址最多重试 3 次，404 会立刻换源；下载记录可用
+`GET /api/downloads` 查看真实来源和失败原因。详见 [download-sources.md](download-sources.md)。
+Python 侧用 urllib 而不是 requests（本机 requests 会 SSL EOF）。重试通常能继续（已下载文件会跳过）。
 
 **Q3：NeoForge 启动报 `DisplayWindow.updateModuleReads` / `No value present`。**
 安装不完整：没跑完官方安装器的处理器。重新安装，确认 `libraries/net/neoforged/neoforge/<ver>/`

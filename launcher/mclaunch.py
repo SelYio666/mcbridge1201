@@ -20,6 +20,7 @@ import urllib.error
 import urllib.request
 import uuid
 import zipfile
+from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -64,16 +65,38 @@ class Progress:
                     "message": self.message, "error": self.error}
 
 
-def http_json(url: str, retries: int = 3):
+_JSON_CACHE: dict[str, tuple[float, bytes]] = {}
+_SIDECAR_CACHE: dict[str, tuple[float, str]] = {}
+METADATA_TTL = 900  # 15 minutes, per the download review: listings rarely change that fast
+
+
+def http_json(url: str, retries: int = 2, timeout: int = 45, max_age: int = METADATA_TTL):
+    """Fetch JSON metadata, preferring the official host and then verified mirrors.
+
+    Successful responses are cached in-process for `max_age` seconds (pass 0 to bypass);
+    the raw bytes are re-parsed per call so callers may freely mutate the returned dict.
+    """
+    if max_age > 0:
+        cached = _JSON_CACHE.get(url)
+        if cached and time.time() - cached[0] < max_age:
+            try:
+                return json.loads(cached[1])
+            except Exception:  # noqa: BLE001 - never serve a broken cache entry
+                _JSON_CACHE.pop(url, None)
     last = None
-    for attempt in range(retries):
-        try:
-            req = urllib.request.Request(url, headers=UA)
-            with urllib.request.urlopen(req, timeout=60) as r:
-                return json.loads(r.read())
-        except Exception as exc:  # noqa: BLE001
-            last = exc
-            time.sleep(1.5 * (attempt + 1))
+    for candidate in mirror_urls(url):
+        for attempt in range(max(1, retries)):
+            try:
+                req = urllib.request.Request(candidate, headers=UA)
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    raw = r.read()
+                data = json.loads(raw)
+                if max_age > 0:
+                    _JSON_CACHE[url] = (time.time(), raw)
+                return data
+            except Exception as exc:  # noqa: BLE001 - metadata host is flaky
+                last = exc
+                time.sleep(1.0 + attempt)
     raise RuntimeError(f"GET {url} failed: {last}")
 
 
@@ -85,45 +108,118 @@ def sha1_of(path: Path) -> str:
     return h.hexdigest()
 
 
-MIRRORS = [
-    ("https://resources.download.minecraft.net/", "https://bmclapi2.bangbang93.com/assets/"),
-    ("http://resources.download.minecraft.net/", "https://bmclapi2.bangbang93.com/assets/"),
-    ("https://libraries.minecraft.net/", "https://bmclapi2.bangbang93.com/maven/"),
-    ("https://piston-data.mojang.com/", "https://bmclapi2.bangbang93.com/"),
+MIRRORS: list[tuple[str, list[str]]] = [
+    ("https://resources.download.minecraft.net/", ["https://bmclapi2.bangbang93.com/assets/"]),
+    ("https://libraries.minecraft.net/", ["https://bmclapi2.bangbang93.com/maven/"]),
+    ("https://piston-data.mojang.com/", ["https://bmclapi2.bangbang93.com/"]),
+    ("https://piston-meta.mojang.com/", ["https://bmclapi2.bangbang93.com/"]),
+    ("https://launchermeta.mojang.com/", ["https://bmclapi2.bangbang93.com/"]),
+    ("https://meta.fabricmc.net/v2/", ["https://bmclapi2.bangbang93.com/fabric-meta/v2/"]),
+    # Verified 2026-10-21: the BMCL maven proxy serves fabric-loader jars (HTTP 200, full file),
+    # while fabric-api and intermediary return 404 there. The mapping is therefore path-scoped:
+    # do not blanket-replace maven.fabricmc.net (that would turn working URLs into 404s).
+    ("https://maven.fabricmc.net/net/fabricmc/fabric-loader/",
+     ["https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-loader/"]),
 ]
 
 
 def mirror_urls(url: str) -> list[str]:
-    """Official URL first; fall back to the BMCLAPI mirror when it fails."""
+    """Official URL first, then only the mirrors verified for that exact path prefix."""
     mirrors = []
-    for official, mirror in MIRRORS:
+    for official, candidates in MIRRORS:
         if url.startswith(official):
-            mirrors.append(mirror + url[len(official):])
+            for prefix in candidates:
+                mirrors.append(prefix + url[len(official):])
     return [url] + mirrors
 
 
-def download(url: str, dest: Path, sha1: str | None = None, retries: int = 4) -> None:
+DOWNLOAD_EVENTS: deque = deque(maxlen=200)
+_DOWNLOAD_LOCK = threading.Lock()
+
+
+def _record_download(**event) -> None:
+    event["time"] = time.strftime("%Y-%m-%d %H:%M:%S")
+    with _DOWNLOAD_LOCK:
+        DOWNLOAD_EVENTS.append(event)
+
+
+def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3) -> str:
+    """Download a file, trying verified mirrors; returns the URL that actually served it.
+
+    Retries are per candidate and only for transient problems (timeout, TLS, 5xx).
+    HTTP 403/404/410 mean "not on this source" and move on immediately; a checksum
+    mismatch is retried on the same source before moving on. The final URL and the
+    failure reason of every attempt are recorded in DOWNLOAD_EVENTS so the launcher
+    can show where a file really came from.
+    """
+    dest = Path(dest)
     if dest.exists() and (sha1 is None or sha1_of(dest) == sha1):
-        return
+        return url
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
     last = None
     for candidate in mirror_urls(url):
-        for attempt in range(retries):
+        is_mirror = candidate != url
+        for attempt in range(1, max(1, retries) + 1):
             try:
                 req = urllib.request.Request(candidate, headers=UA)
-                with urllib.request.urlopen(req, timeout=30) as r, tmp.open("wb") as f:
-                    shutil.copyfileobj(r, f, 1 << 20)
+                with urllib.request.urlopen(req, timeout=60) as r:
+                    final_url = getattr(r, "geturl", lambda: candidate)()
+                    with tmp.open("wb") as f:
+                        shutil.copyfileobj(r, f, 1 << 20)
+                size = tmp.stat().st_size
                 if sha1 and sha1_of(tmp) != sha1:
                     tmp.unlink(missing_ok=True)
                     raise RuntimeError("sha1 mismatch")
                 tmp.replace(dest)
-                return
-            except Exception as exc:  # noqa: BLE001
-                last = exc
+                _record_download(file=dest.name, url=candidate, final=final_url,
+                                 mirror=is_mirror, redirected=final_url != candidate,
+                                 bytes=size, attempts=attempt, error=None)
+                return final_url
+            except urllib.error.HTTPError as exc:  # noqa: PERF203 - per-source policy
                 tmp.unlink(missing_ok=True)
-                time.sleep(2.0 * (attempt + 1))
+                last = exc
+                _record_download(file=dest.name, url=candidate, mirror=is_mirror,
+                                 bytes=0, attempts=attempt, error=f"http {exc.code}")
+                if exc.code in (403, 404, 410):
+                    break
+                time.sleep(1.5 * attempt)
+            except Exception as exc:  # noqa: BLE001 - timeout/TLS/sha1/disk
+                tmp.unlink(missing_ok=True)
+                last = exc
+                _record_download(file=dest.name, url=candidate, mirror=is_mirror,
+                                 bytes=0, attempts=attempt, error=str(exc)[:160])
+                time.sleep(1.5 * attempt)
+    tmp.unlink(missing_ok=True)
     raise RuntimeError(f"download {url} failed: {last}")
+
+
+def sha1_sidecar(url: str, timeout: int = 20) -> str | None:
+    """Fetch a maven artifact's `.sha1` sidecar, if the repository publishes one."""
+    cached = _SIDECAR_CACHE.get(url)
+    if cached and time.time() - cached[0] < METADATA_TTL:
+        return cached[1]
+    candidates = [url + ".sha1"]
+    if url.startswith("https://maven.fabricmc.net/"):
+        candidates.append(
+            "https://bmclapi2.bangbang93.com/maven/" + url[len("https://maven.fabricmc.net/"):] + ".sha1")
+    for candidate in candidates:
+        try:
+            req = urllib.request.Request(candidate, headers=UA)
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                text = r.read().decode("ascii", "ignore").strip().split()
+            if text and len(text[0]) == 40 and all(c in "0123456789abcdefABCDEF" for c in text[0]):
+                digest = text[0].lower()
+                _SIDECAR_CACHE[url] = (time.time(), digest)
+                return digest
+        except Exception:  # noqa: BLE001 - sidecar is best-effort
+            continue
+    return None
+
+
+def download_maven(url: str, dest: Path, retries: int = 3) -> str:
+    """Download a maven artifact and verify it against the repository's sha1 sidecar."""
+    return download(url, dest, sha1_sidecar(url), retries=retries)
 
 
 def eval_rules(rules, features=None) -> bool:
@@ -297,7 +393,7 @@ def install_fabric(mc: str, root: Path, progress: Progress | None = None,
         rel = f"{group.replace('.', '/')}/{artifact}/{ver}/{artifact}-{ver}" + (
             f"-{classifier}" if classifier else "") + ".jar"
         base = (lib.get("url") or "https://maven.fabricmc.net/").rstrip("/") + "/"
-        download(base + rel, root / "libraries" / rel)
+        download_maven(base + rel, root / "libraries" / rel)
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         futs = [pool.submit(get_lib, lib) for lib in libs]
@@ -443,7 +539,7 @@ def install_forge(mc: str, root: Path, progress: Progress | None = None, version
     progress and progress.set(phase="download", message=f"forge installer {forge_ver}")
     installer = root / "installers" / f"forge-{forge_ver}-installer.jar"
     url = f"https://maven.minecraftforge.net/net/minecraftforge/forge/{forge_ver}/forge-{forge_ver}-installer.jar"
-    download(url, installer)
+    download_maven(url, installer)
     prepare_installer_libraries(installer, root, progress)
     progress and progress.set(message="running forge installer")
     rc = _run_installer(installer, root, root / "installers" / f"forge-{forge_ver}.log")
@@ -476,7 +572,7 @@ def install_neoforge(mc: str, root: Path, progress: Progress | None = None, vers
     progress and progress.set(phase="download", message=f"neoforge installer {version}")
     installer = root / "installers" / f"neoforge-{version}-installer.jar"
     url = f"{NEOFORGE_MAVEN}net/neoforged/neoforge/{version}/neoforge-{version}-installer.jar"
-    download(url, installer)
+    download_maven(url, installer)
     prepare_installer_libraries(installer, root, progress)
     progress and progress.set(message="running neoforge installer")
     log_path = root / "installers" / f"neoforge-{version}.log"

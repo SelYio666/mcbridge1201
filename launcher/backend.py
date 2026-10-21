@@ -262,7 +262,7 @@ def install_neoforge_direct(mc: str, root: Path, version: str | None = None,
         return vid
     progress and progress.set(message=f"neoforge installer {ver}")
     installer = root / "installers" / f"neoforge-{ver}-installer.jar"
-    mclaunch.download(f"{NEOFORGE_MAVEN}/{ver}/neoforge-{ver}-installer.jar", installer)
+    mclaunch.download_maven(f"{NEOFORGE_MAVEN}/{ver}/neoforge-{ver}-installer.jar", installer)
     mclaunch.prepare_installer_libraries(installer, root, progress)
     java = java or mclaunch.find_java()
     progress and progress.set(message="running neoforge installer")

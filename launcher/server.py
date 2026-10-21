@@ -330,6 +330,13 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(200, TASK.snapshot())
         if path == "/api/launches":
             return self._send(200, LAUNCHES[-20:])
+        if path == "/api/downloads":
+            qs = parse_qs(urlparse(self.path).query)
+            try:
+                limit = min(int(qs.get("limit", ["50"])[0] or 50), 200)
+            except ValueError:
+                limit = 50
+            return self._send(200, {"events": list(mclaunch.DOWNLOAD_EVENTS)[-limit:]})
         if path == "/guide":
             guide = HERE.parent / "docs" / "guide.md"
             if not guide.exists():

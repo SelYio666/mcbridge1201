@@ -17,6 +17,29 @@ from datetime import datetime, timezone
 
 UA = "mcbridge1201-p0/0.1 (+local research; contact: local)"
 
+# Same verified, path-scoped mirror policy as launcher/mclaunch.py: only prefixes we have
+# actually tested are rewritten. fabric-api / intermediary have no BMCL mirror (404), so
+# they keep the official URL (and rely on retries).
+MIRRORS: list[tuple[str, list[str]]] = [
+    ("https://resources.download.minecraft.net/", ["https://bmclapi2.bangbang93.com/assets/"]),
+    ("https://libraries.minecraft.net/", ["https://bmclapi2.bangbang93.com/maven/"]),
+    ("https://piston-data.mojang.com/", ["https://bmclapi2.bangbang93.com/"]),
+    ("https://piston-meta.mojang.com/", ["https://bmclapi2.bangbang93.com/"]),
+    ("https://launchermeta.mojang.com/", ["https://bmclapi2.bangbang93.com/"]),
+    ("https://meta.fabricmc.net/v2/", ["https://bmclapi2.bangbang93.com/fabric-meta/v2/"]),
+    ("https://maven.fabricmc.net/net/fabricmc/fabric-loader/",
+     ["https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-loader/"]),
+]
+
+
+def mirror_urls(url: str) -> list[str]:
+    mirrors = []
+    for official, candidates in MIRRORS:
+        if url.startswith(official):
+            for prefix in candidates:
+                mirrors.append(prefix + url[len(official):])
+    return [url] + mirrors
+
 
 class FetchError(RuntimeError):
     pass
@@ -26,26 +49,35 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
 
 
-def http_get(url: str, timeout: int = 60, retries: int = 3, headers: dict | None = None) -> bytes:
+def http_get(url: str, timeout: int = 60, retries: int = 3, headers: dict | None = None,
+             want_source: bool = False):
+    """GET with per-candidate retries and verified mirror fallback.
+
+    Returns bytes, or (bytes, final_url) when want_source is true.
+    """
     last = None
-    for attempt in range(1, retries + 1):
-        req = urllib.request.Request(url, headers={"User-Agent": UA, **(headers or {})})
-        try:
-            with urllib.request.urlopen(req, timeout=timeout) as r:
-                return r.read()
-        except urllib.error.HTTPError as e:
-            body = b""
+    for candidate in mirror_urls(url):
+        for attempt in range(1, retries + 1):
+            req = urllib.request.Request(candidate, headers={"User-Agent": UA, **(headers or {})})
             try:
-                body = e.read()[:400]
-            except Exception:
-                pass
-            last = FetchError(f"HTTP {e.code} for {url}: {body!r}")
-            # 4xx other than 429 will not improve on retry
-            if e.code not in (408, 429) and 400 <= e.code < 500:
-                raise last
-        except Exception as e:  # URLError, timeout, reset
-            last = FetchError(f"{type(e).__name__} for {url}: {e}")
-        time.sleep(min(2 ** attempt * 0.5, 8))
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    data = r.read()
+                return (data, candidate) if want_source else data
+            except urllib.error.HTTPError as e:
+                body = b""
+                try:
+                    body = e.read()[:400]
+                except Exception:
+                    pass
+                last = FetchError(f"HTTP {e.code} for {candidate}: {body!r}")
+                # 4xx other than 408/429 will not improve on retry or on another mirror
+                if e.code in (403, 404, 410):
+                    break
+                if e.code not in (408, 429) and 400 <= e.code < 500:
+                    raise last
+            except Exception as e:  # URLError, timeout, reset
+                last = FetchError(f"{type(e).__name__} for {candidate}: {e}")
+            time.sleep(min(2 ** attempt * 0.5, 8))
     raise last  # type: ignore[misc]
 
 
@@ -78,7 +110,7 @@ def download(url: str, dest: str, expected_sha256: str | None = None,
             }
         raise FetchError(f"cached file hash mismatch for {dest}: {digest} != {expected_sha256}")
 
-    data = http_get(url, timeout=timeout, retries=retries)
+    data, source = http_get(url, timeout=timeout, retries=retries, want_source=True)
     tmp = dest + ".part"
     with open(tmp, "wb") as f:
         f.write(data)
@@ -89,6 +121,7 @@ def download(url: str, dest: str, expected_sha256: str | None = None,
     os.replace(tmp, dest)
     return {
         "url": url,
+        "sourceUrl": source,
         "path": dest,
         "size": os.path.getsize(dest),
         "sha256": digest,

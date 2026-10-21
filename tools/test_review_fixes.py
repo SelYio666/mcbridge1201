@@ -277,6 +277,11 @@ def test_launcher() -> None:
           and dirs.get("dirs", {}).get("version", "").replace("\\", "/").endswith(
               "neoforge-21.1.172"), str(dirs.get("dirs"))[:120])
 
+    status, body = get("/api/downloads")
+    downloads = json.loads(body)
+    check("launcher /api/downloads exposes the source log", status == 200
+          and isinstance(downloads.get("events"), list))
+
     opened = []
     orig_open = server.open_in_explorer
     server.open_in_explorer = opened.append
@@ -437,11 +442,172 @@ def test_neoforge_install() -> None:
           str(rep["items"]["loader_artifacts"]))
 
 
+def test_download_policy() -> None:
+    """Offline checks for the download-source policy (mirrors, retries, checksums)."""
+    sys.path.insert(0, str(ROOT / "launcher"))
+    try:
+        import mclaunch
+    except Exception as exc:  # noqa: BLE001
+        check("DOWNLOAD import mclaunch", False, str(exc))
+        return
+    import hashlib
+    import shutil
+    import urllib.error
+
+    mclaunch._JSON_CACHE.clear()
+    mclaunch._SIDECAR_CACHE.clear()
+
+    workdir = WORK / "download-policy"
+    if workdir.exists():
+        shutil.rmtree(workdir)
+    workdir.mkdir(parents=True)
+
+    loader_url = ("https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.19.5/"
+                  "fabric-loader-0.19.5.jar")
+    api_url = ("https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/"
+               "0.102.0+1.21.1/fabric-api-0.102.0+1.21.1.jar")
+    manifest_url = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
+    check("DOWNLOAD fabric-loader has the verified BMCL maven fallback",
+          any(u.startswith("https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-loader/")
+              for u in mclaunch.mirror_urls(loader_url)))
+    check("DOWNLOAD fabric-api stays official (no verified mirror)",
+          len(mclaunch.mirror_urls(api_url)) == 1, str(mclaunch.mirror_urls(api_url)))
+    check("DOWNLOAD metadata uses the BMCL meta mirror",
+          any(u.startswith("https://bmclapi2.bangbang93.com/mc/game/")
+              for u in mclaunch.mirror_urls(manifest_url)))
+
+    class FakeResp:
+        def __init__(self, data: bytes):
+            self._data = data
+            self._pos = 0
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self, n=-1):
+            if n is None or n < 0:
+                n = len(self._data) - self._pos
+            chunk = self._data[self._pos:self._pos + n]
+            self._pos += len(chunk)
+            return chunk
+
+    orig = mclaunch.urllib.request.urlopen
+
+    def with_fake(fake, fn):
+        mclaunch.urllib.request.urlopen = fake
+        try:
+            return fn()
+        finally:
+            mclaunch.urllib.request.urlopen = orig
+
+    def url_of(req):
+        return req.full_url if hasattr(req, "full_url") else str(req)
+
+    # metadata: official fails, BMCL mirror returns JSON
+    def fake_meta(req, timeout=None):
+        if "piston-meta.mojang.com" in url_of(req):
+            raise urllib.error.URLError("tls timeout")
+        return FakeResp(b'{"ok": 1}')
+
+    data = with_fake(fake_meta, lambda: mclaunch.http_json(manifest_url, retries=1, max_age=0))
+    check("DOWNLOAD http_json falls back to the mirror", data == {"ok": 1}, str(data))
+
+    # metadata cache: the second call must not touch the network; max_age=0 bypasses it
+    cache_calls = {"n": 0}
+
+    def fake_cached(req, timeout=None):
+        cache_calls["n"] += 1
+        return FakeResp(b'{"cached": true}')
+
+    cache_url = "https://meta.fabricmc.net/v2/unit-cache-test"
+    first = with_fake(fake_cached, lambda: mclaunch.http_json(cache_url, retries=1))
+    second = with_fake(fake_cached, lambda: mclaunch.http_json(cache_url, retries=1))
+    check("DOWNLOAD caches metadata for the TTL",
+          cache_calls["n"] == 1 and first == second == {"cached": True}, str(cache_calls["n"]))
+    with_fake(fake_cached, lambda: mclaunch.http_json(cache_url, retries=1, max_age=0))
+    check("DOWNLOAD max_age=0 bypasses the metadata cache", cache_calls["n"] == 2,
+          str(cache_calls["n"]))
+
+    # 404 is not retried: the mirror is tried immediately
+    dest = workdir / "asset.bin"
+    calls: list[str] = []
+
+    def fake_404(req, timeout=None):
+        u = url_of(req)
+        calls.append(u)
+        if "resources.download.minecraft.net" in u:
+            raise urllib.error.HTTPError(u, 404, "Not Found", {}, None)
+        return FakeResp(b"payload")
+
+    payload_sha1 = hashlib.sha1(b"payload").hexdigest()
+    final = with_fake(fake_404, lambda: mclaunch.download(
+        "https://resources.download.minecraft.net/ab/" + "a" * 40, dest,
+        sha1=payload_sha1, retries=3))
+    check("DOWNLOAD 404 skips to the mirror without retries",
+          "bmclapi2.bangbang93.com" in final and dest.read_bytes() == b"payload"
+          and len(calls) == 2 and not dest.with_suffix(".bin.part").exists(), str(calls))
+
+    # transient errors are retried on the same source
+    dest2 = workdir / "retry.bin"
+    attempts = {"n": 0}
+
+    def fake_flaky(req, timeout=None):
+        if "libraries.minecraft.net" in url_of(req):
+            attempts["n"] += 1
+            if attempts["n"] < 3:
+                raise urllib.error.URLError("timeout")
+        return FakeResp(b"x")
+
+    with_fake(fake_flaky, lambda: mclaunch.download(
+        "https://libraries.minecraft.net/x/y.jar", dest2, retries=3))
+    check("DOWNLOAD retries transient failures", attempts["n"] == 3 and dest2.exists(),
+          str(attempts["n"]))
+
+    # checksum mismatch retries, then uses the mirror
+    dest3 = workdir / "hash.bin"
+    good = b"good"
+
+    def fake_hash(req, timeout=None):
+        if "resources.download.minecraft.net" in url_of(req):
+            return FakeResp(b"bad")
+        return FakeResp(good)
+
+    final3 = with_fake(fake_hash, lambda: mclaunch.download(
+        "https://resources.download.minecraft.net/cd/" + "b" * 40, dest3,
+        sha1=hashlib.sha1(good).hexdigest(), retries=2))
+    check("DOWNLOAD verifies hashes and falls back", dest3.read_bytes() == good
+          and "bmclapi2.bangbang93.com" in final3, dest3.read_bytes()[:8].hex())
+
+    # maven sidecar helper (cached after the first successful lookup)
+    mclaunch._SIDECAR_CACHE.clear()
+    side_calls = {"n": 0}
+
+    def fake_sidecar(req, timeout=None):
+        side_calls["n"] += 1
+        return FakeResp(b"A" * 40 + b"\n")
+
+    sidecar_url = ("https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.19.5/"
+                   "fabric-loader-0.19.5.jar")
+    digest = with_fake(fake_sidecar, lambda: mclaunch.sha1_sidecar(sidecar_url))
+    again = with_fake(fake_sidecar, lambda: mclaunch.sha1_sidecar(sidecar_url))
+    check("DOWNLOAD reads and caches maven sha1 sidecars",
+          digest == again == "a" * 40 and side_calls["n"] == 1,
+          f"{digest} calls={side_calls['n']}")
+
+    check("DOWNLOAD records the source it actually used",
+          any(e.get("mirror") for e in mclaunch.DOWNLOAD_EVENTS),
+          str(len(mclaunch.DOWNLOAD_EVENTS)))
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
     test_launcher()
     test_neoforge_install()
+    test_download_policy()
     failed = [name for name, ok, _ in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed"
           + (f", skipped: {', '.join(SKIPPED)}" if SKIPPED else ""))
