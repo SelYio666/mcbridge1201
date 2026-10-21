@@ -282,6 +282,11 @@ def test_launcher() -> None:
     check("launcher /api/downloads exposes the source log", status == 200
           and isinstance(downloads.get("events"), list))
 
+    status, body = get("/api/task")
+    task = json.loads(body)
+    check("launcher /api/task exposes byte progress and speed", status == 200
+          and "bytes_done" in task and "speed" in task and "source" in task, str(task)[:120])
+
     opened = []
     orig_open = server.open_in_explorer
     server.open_in_explorer = opened.append
@@ -600,6 +605,24 @@ def test_download_policy() -> None:
     check("DOWNLOAD records the source it actually used",
           any(e.get("mirror") for e in mclaunch.DOWNLOAD_EVENTS),
           str(len(mclaunch.DOWNLOAD_EVENTS)))
+
+    # byte progress + source go through Progress (the GUI shows them)
+    prog = mclaunch.Progress()
+    dest4 = workdir / "progress.bin"
+    with_fake(lambda req, timeout=None: FakeResp(b"abcdef"),
+              lambda: mclaunch.download(
+                  "https://libraries.minecraft.net/progress.jar", dest4,
+                  sha1=hashlib.sha1(b"abcdef").hexdigest(), progress=prog))
+    snap = prog.snapshot()
+    check("DOWNLOAD reports bytes and source through Progress",
+          snap["bytes_done"] == 6 and snap["source"].startswith("https://")
+          and isinstance(snap["speed"], (int, float)), str(snap)[:160])
+
+    p2 = mclaunch.Progress()
+    p2._last_t = time.time() - 1.0
+    p2.add_bytes(1000)
+    check("DOWNLOAD Progress computes a transfer speed",
+          p2.snapshot()["speed"] > 0, str(p2.snapshot()["speed"]))
 
 
 def main() -> int:

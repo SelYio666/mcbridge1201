@@ -29,6 +29,7 @@
 | 与其他启动器共用：目录按钮（root/mods/存档/版本）、`/api/dirs`、`/api/open-dir`、profile 同步 | docs/launcher.md |
 | 免 GitHub 便携包：内置 Python 3.12 + 第三方许可证，双击 `run.bat` | docs/distribution.md §2.5、`tools/build_portable.py` |
 | 下载源策略：逐路径镜像 + 有限重试 + 侧车 SHA-1 + 来源记录（`/api/downloads`） | docs/download-sources.md |
+| 下载进度：字节 / 速度 / 当前来源（`/api/task`），前端显示且不编造剩余时间 | docs/launcher.md |
 | 标准目录 + launcher_profiles，PCL 可直接复用 | docs/launcher.md |
 
 ### NeoForge 启动修复（2026-10-21，p115 → p116）
@@ -46,7 +47,7 @@ binarypatcher）因 Java 网络超时从未跑成，FML 游戏层里没有 `neof
 ### 工程与门禁
 
 - 单测 23/23；`verify_evidence` passed；哈希 672 项；桥一致性 0；mixin 审计 0；
-- 外部问题汇总 20 项回归 + 8 项 NeoForge 安装回归 + 7 项目录/兼容/说明回归 + 12 项下载源回归（`tools/test_review_fixes.py`，47/47）接入统一门禁；
+- 外部问题汇总 20 项回归 + 8 项 NeoForge 安装回归 + 7 项目录/兼容/说明回归 + 15 项下载源/进度回归（`tools/test_review_fixes.py`，50/50）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
 - GitHub Actions CI（手动 dispatch 触发，run 39614386108 通过）。

@@ -80,6 +80,9 @@
 `url` 是发起请求的候选地址，`final` 是跟随重定向后的真实地址（例如 BMCL 的客户端请求
 会跳到 `piston-data.mojang.com`，`redirected=true`），`mirror` 表示是否用了镜像候选。
 
+安装任务的 `/api/task` 还会带 `bytes_done`、`bytes_total`、`speed`（字节/秒，指数平滑）
+和当前 `source`；界面显示“文件数 + 已下载字节 + 速度 + 来源”，没有可靠总大小时不编造剩余时间。
+
 启动器额外提供：
 
 ```text

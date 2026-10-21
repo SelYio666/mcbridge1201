@@ -40,9 +40,15 @@ class Progress:
         self.done = 0
         self.message = ""
         self.error = None
+        self.bytes_done = 0
+        self.bytes_total = 0
+        self.speed = 0.0
+        self.source = ""
+        self._last_t = time.time()
+        self._last_b = 0
         self.lock = threading.Lock()
 
-    def set(self, phase=None, message=None, total=None, done=None, error=None):
+    def set(self, phase=None, message=None, total=None, done=None, error=None, source=None):
         with self.lock:
             if phase is not None:
                 self.phase = phase
@@ -54,15 +60,35 @@ class Progress:
                 self.done = done
             if error is not None:
                 self.error = error
+            if source is not None:
+                self.source = source
 
     def inc(self):
         with self.lock:
             self.done += 1
 
+    def add_bytes(self, n: int, total: int | None = None, source: str | None = None) -> None:
+        """Account streamed bytes and a smoothed transfer speed (bytes/s)."""
+        with self.lock:
+            self.bytes_done += n
+            if total:
+                self.bytes_total = total
+            if source:
+                self.source = source
+            now = time.time()
+            dt = now - self._last_t
+            if dt >= 0.5:
+                instant = (self.bytes_done - self._last_b) / dt
+                self.speed = instant if self.speed <= 0 else self.speed * 0.6 + instant * 0.4
+                self._last_t = now
+                self._last_b = self.bytes_done
+
     def snapshot(self):
         with self.lock:
             return {"phase": self.phase, "total": self.total, "done": self.done,
-                    "message": self.message, "error": self.error}
+                    "message": self.message, "error": self.error,
+                    "bytes_done": self.bytes_done, "bytes_total": self.bytes_total,
+                    "speed": round(self.speed, 1), "source": self.source}
 
 
 _JSON_CACHE: dict[str, tuple[float, bytes]] = {}
@@ -143,14 +169,16 @@ def _record_download(**event) -> None:
         DOWNLOAD_EVENTS.append(event)
 
 
-def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3) -> str:
+def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3,
+             progress: Progress | None = None) -> str:
     """Download a file, trying verified mirrors; returns the URL that actually served it.
 
     Retries are per candidate and only for transient problems (timeout, TLS, 5xx).
     HTTP 403/404/410 mean "not on this source" and move on immediately; a checksum
     mismatch is retried on the same source before moving on. The final URL and the
     failure reason of every attempt are recorded in DOWNLOAD_EVENTS so the launcher
-    can show where a file really came from.
+    can show where a file really came from. When a Progress is given, streamed bytes
+    and the current source are reported to it (no fake remaining-time estimates).
     """
     dest = Path(dest)
     if dest.exists() and (sha1 is None or sha1_of(dest) == sha1):
@@ -162,11 +190,25 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3) ->
         is_mirror = candidate != url
         for attempt in range(1, max(1, retries) + 1):
             try:
+                progress and progress.set(source=candidate)
                 req = urllib.request.Request(candidate, headers=UA)
                 with urllib.request.urlopen(req, timeout=60) as r:
                     final_url = getattr(r, "geturl", lambda: candidate)()
+                    headers = getattr(r, "headers", None)
+                    total = None
+                    if headers:
+                        try:
+                            total = int(headers.get("Content-Length") or 0) or None
+                        except (TypeError, ValueError):
+                            total = None
                     with tmp.open("wb") as f:
-                        shutil.copyfileobj(r, f, 1 << 20)
+                        while True:
+                            chunk = r.read(1 << 20)
+                            if not chunk:
+                                break
+                            f.write(chunk)
+                            progress and progress.add_bytes(len(chunk), total=total,
+                                                            source=final_url or candidate)
                 size = tmp.stat().st_size
                 if sha1 and sha1_of(tmp) != sha1:
                     tmp.unlink(missing_ok=True)
@@ -217,9 +259,10 @@ def sha1_sidecar(url: str, timeout: int = 20) -> str | None:
     return None
 
 
-def download_maven(url: str, dest: Path, retries: int = 3) -> str:
+def download_maven(url: str, dest: Path, retries: int = 3,
+                   progress: Progress | None = None) -> str:
     """Download a maven artifact and verify it against the repository's sha1 sidecar."""
-    return download(url, dest, sha1_sidecar(url), retries=retries)
+    return download(url, dest, sha1_sidecar(url), retries=retries, progress=progress)
 
 
 def eval_rules(rules, features=None) -> bool:
@@ -304,7 +347,7 @@ def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> st
     jar = meta.get("downloads", {}).get("client")
     if jar:
         progress and progress.set(message="client jar")
-        download(jar["url"], vdir / f"{mc}.jar", jar.get("sha1"))
+        download(jar["url"], vdir / f"{mc}.jar", jar.get("sha1"), progress=progress)
 
     # libraries + natives
     libs = [lib for lib in meta.get("libraries", []) if allowed_win(lib)]
@@ -315,13 +358,14 @@ def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> st
         dl = lib.get("downloads", {})
         art = dl.get("artifact")
         if art:
-            download(art["url"], root / "libraries" / art["path"], art.get("sha1"))
+            download(art["url"], root / "libraries" / art["path"], art.get("sha1"),
+                     progress=progress)
         native_key = (lib.get("natives") or {}).get("windows")
         if native_key:
             cls = dl.get("classifiers", {}).get(native_key.replace("${arch}", "64"))
             if cls:
                 jar_path = root / "libraries" / cls["path"]
-                download(cls["url"], jar_path, cls.get("sha1"))
+                download(cls["url"], jar_path, cls.get("sha1"), progress=progress)
                 with zipfile.ZipFile(jar_path) as z:
                     for name in z.namelist():
                         if name.endswith((".dll", ".so", ".dylib")):
@@ -340,7 +384,7 @@ def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> st
     idx = meta.get("assetIndex")
     if idx:
         idx_path = root / "assets" / "indexes" / f"{idx['id']}.json"
-        download(idx["url"], idx_path, idx.get("sha1"))
+        download(idx["url"], idx_path, idx.get("sha1"), progress=progress)
         index = json.loads(idx_path.read_text(encoding="utf-8"))
         objects = list(index.get("objects", {}).items())
         progress and progress.set(total=len(objects), done=0, message="assets")
@@ -349,9 +393,10 @@ def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> st
         def get_obj(item):
             name, obj = item
             dest = root / "assets" / "objects" / obj["hash"][:2] / obj["hash"]
-            if dest.exists() and dest.stat().st_size == obj.get("size", -1):
-                return
-            download(f"{ASSET_BASE}/{obj['hash'][:2]}/{obj['hash']}", dest, obj["hash"])
+            # always go through download(): it re-verifies the SHA-1, so a truncated file
+            # with the expected size cannot be trusted just because it exists
+            download(f"{ASSET_BASE}/{obj['hash'][:2]}/{obj['hash']}", dest, obj["hash"],
+                     progress=progress)
 
         with ThreadPoolExecutor(max_workers=24) as pool:
             futs = [pool.submit(get_obj, it) for it in objects]
@@ -393,7 +438,7 @@ def install_fabric(mc: str, root: Path, progress: Progress | None = None,
         rel = f"{group.replace('.', '/')}/{artifact}/{ver}/{artifact}-{ver}" + (
             f"-{classifier}" if classifier else "") + ".jar"
         base = (lib.get("url") or "https://maven.fabricmc.net/").rstrip("/") + "/"
-        download_maven(base + rel, root / "libraries" / rel)
+        download_maven(base + rel, root / "libraries" / rel, progress=progress)
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         futs = [pool.submit(get_lib, lib) for lib in libs]
@@ -480,7 +525,7 @@ def prepare_installer_libraries(installer: Path, root: Path, progress: Progress 
     for i, (rel, (url, digest)) in enumerate(sorted(wanted.items()), 1):
         dest = root / "libraries" / rel
         if not (dest.exists() and digest and sha1_of(dest) == digest):
-            download(url, dest, digest)
+            download(url, dest, digest, progress=progress)
             downloaded += 1
         progress and progress.set(done=i)
     return downloaded
@@ -539,7 +584,7 @@ def install_forge(mc: str, root: Path, progress: Progress | None = None, version
     progress and progress.set(phase="download", message=f"forge installer {forge_ver}")
     installer = root / "installers" / f"forge-{forge_ver}-installer.jar"
     url = f"https://maven.minecraftforge.net/net/minecraftforge/forge/{forge_ver}/forge-{forge_ver}-installer.jar"
-    download_maven(url, installer)
+    download_maven(url, installer, progress=progress)
     prepare_installer_libraries(installer, root, progress)
     progress and progress.set(message="running forge installer")
     rc = _run_installer(installer, root, root / "installers" / f"forge-{forge_ver}.log")
@@ -572,7 +617,7 @@ def install_neoforge(mc: str, root: Path, progress: Progress | None = None, vers
     progress and progress.set(phase="download", message=f"neoforge installer {version}")
     installer = root / "installers" / f"neoforge-{version}-installer.jar"
     url = f"{NEOFORGE_MAVEN}net/neoforged/neoforge/{version}/neoforge-{version}-installer.jar"
-    download_maven(url, installer)
+    download_maven(url, installer, progress=progress)
     prepare_installer_libraries(installer, root, progress)
     progress and progress.set(message="running neoforge installer")
     log_path = root / "installers" / f"neoforge-{version}.log"
@@ -716,7 +761,8 @@ def ensure_version_libraries(version_id: str, root: Path, progress: Progress | N
     for lib in libs:
         art = lib.get("downloads", {}).get("artifact")
         if art:
-            download(art["url"], root / "libraries" / art["path"], art.get("sha1"))
+            download(art["url"], root / "libraries" / art["path"], art.get("sha1"),
+                     progress=progress)
             done += 1
             continue
         name = lib.get("name", "")
@@ -726,7 +772,8 @@ def ensure_version_libraries(version_id: str, root: Path, progress: Progress | N
             classifier = parts[3] if len(parts) > 3 else None
             rel = f"{group.replace('.', '/')}/{artifact}/{ver}/{artifact}-{ver}" + (
                 f"-{classifier}" if classifier else "") + ".jar"
-            download(lib["url"].rstrip("/") + "/" + rel, root / "libraries" / rel)
+            download(lib["url"].rstrip("/") + "/" + rel, root / "libraries" / rel,
+                     progress=progress)
             done += 1
     return done
 

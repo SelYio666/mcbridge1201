@@ -212,12 +212,33 @@ async function oneClick() {
   }, 1500);
 }
 
+function fmtBytes(n) {
+  if (!n) return "0 B";
+  const units = ["B", "KB", "MB", "GB"];
+  let value = n;
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit += 1;
+  }
+  return `${value >= 100 ? value.toFixed(0) : value.toFixed(1)} ${units[unit]}`;
+}
+
+function hostOf(url) {
+  try { return new URL(url).host; } catch { return url || ""; }
+}
+
 function pollTask() {
   api("/api/task").then(t => {
     const pct = t.total ? Math.round(100 * t.done / t.total) : (t.phase === "done" ? 100 : 0);
     $("bar").style.width = pct + "%";
+    const files = t.total ? `(${t.done}/${t.total})` : "";
+    const transfer = [t.bytes_done ? fmtBytes(t.bytes_done) : "",
+                      t.speed ? `${fmtBytes(t.speed)}/s` : ""].filter(Boolean).join(" · ");
+    const source = t.source ? ` ← ${hostOf(t.source)}` : "";
     $("taskmsg").textContent = t.error ? "错误: " + t.error
-      : `${t.phase} · ${t.message} ${t.total ? `(${t.done}/${t.total})` : ""}`;
+      : `${t.phase} · ${t.message} ${files}${transfer ? " · " + transfer : ""}${source}`;
+    $("taskmsg").title = t.source || "";
   }).catch(() => {});
 }
 
