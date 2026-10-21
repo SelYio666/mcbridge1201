@@ -114,11 +114,20 @@ def run_install(mc, loader, version):
             vid = install_fabric(mc, root, TASK, version)
         elif loader in ("forge", "neoforge"):
             import backend
-            if not backend.AVAILABLE:
-                raise RuntimeError("Forge/NeoForge 需要 minecraft-launcher-lib：pip install minecraft-launcher-lib")
             install_vanilla_launcher_profile(mc, root)
             java = backend.pick_java(mc) or find_java()
-            vid = backend.install(loader, mc, root, version, java, TASK)
+            if loader == "neoforge":
+                try:
+                    vid = backend.install_neoforge_direct(mc, root, version, java, TASK)
+                except Exception as exc:  # noqa: BLE001
+                    if not backend.AVAILABLE:
+                        raise
+                    TASK.set(message=f"neoforge direct failed ({exc}); trying library")
+                    vid = backend.install(loader, mc, root, version, java, TASK)
+            else:
+                if not backend.AVAILABLE:
+                    raise RuntimeError("Forge 需要 minecraft-launcher-lib：pip install minecraft-launcher-lib")
+                vid = backend.install(loader, mc, root, version, java, TASK)
         else:
             raise RuntimeError("unknown loader " + loader)
         TASK.set(phase="done", message=vid)

@@ -504,6 +504,54 @@ def print_report(report: dict) -> None:
     print("RESULT:", "OK" if report["ok"] else "INCOMPLETE")
 
 
+
+def ensure_version_jar(version_id: str, root: Path) -> None:
+    """Forge/NeoForge inherit the vanilla jar but the library expects <id>.jar; copy it."""
+    root = Path(root)
+    vdir = root / "versions" / version_id
+    path = vdir / f"{version_id}.json"
+    if not path.exists():
+        return
+    target = vdir / f"{version_id}.jar"
+    if target.exists():
+        return
+    data = json.loads(path.read_text(encoding="utf-8"))
+    base = data.get("inheritsFrom")
+    if not base:
+        return
+    source = root / "versions" / base / f"{base}.jar"
+    if source.exists():
+        shutil.copy2(source, target)
+
+
+def ensure_version_libraries(version_id: str, root: Path, progress: Progress | None = None) -> int:
+    """Download every library the version profile references (Forge/NeoForge profiles need this)."""
+    root = Path(root)
+    vdir = root / "versions" / version_id
+    path = vdir / f"{version_id}.json"
+    if not path.exists():
+        return 0
+    data = json.loads(path.read_text(encoding="utf-8"))
+    libs = [lib for lib in data.get("libraries", []) if allowed_win(lib)]
+    done = 0
+    for lib in libs:
+        art = lib.get("downloads", {}).get("artifact")
+        if art:
+            download(art["url"], root / "libraries" / art["path"], art.get("sha1"))
+            done += 1
+            continue
+        name = lib.get("name", "")
+        parts = name.split(":")
+        if len(parts) >= 3 and lib.get("url"):
+            group, artifact, ver = parts[0], parts[1], parts[2]
+            classifier = parts[3] if len(parts) > 3 else None
+            rel = f"{group.replace('.', '/')}/{artifact}/{ver}/{artifact}-{ver}" + (
+                f"-{classifier}" if classifier else "") + ".jar"
+            download(lib["url"].rstrip("/") + "/" + rel, root / "libraries" / rel)
+            done += 1
+    return done
+
+
 def find_runtime_java(root: Path) -> str | None:
     """A Java runtime installed under <root>/runtime by the launcher, if any."""
     matches = sorted((Path(root) / "runtime").glob("**/bin/java.exe"))
@@ -604,6 +652,8 @@ def build_command(version_id: str, root: Path, username: str, max_mem="2G",
     try:
         import backend
         if backend.AVAILABLE and ("-forge-" in version_id or version_id.startswith("neoforge")):
+            ensure_version_jar(version_id, root)
+            ensure_version_libraries(version_id, root)
             cmd = backend.command(version_id, root, username) or []
             if cmd:
                 cmd = [cmd[0], f"-Xmx{max_mem}"] + cmd[1:]

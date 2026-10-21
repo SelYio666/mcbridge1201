@@ -47,7 +47,8 @@ def pick_java(mc: str) -> str | None:
     if parts and parts[0] == 1:
         if parts[1] <= 16:
             order = ["jre-legacy", "java-runtime-beta", "java-runtime-delta", "java-runtime-epsilon"]
-        elif parts[1] <= 20 and not (parts[1] == 20 and len(parts) > 2 and parts[2] >= 5):
+        elif parts[1] <= 21 and not (parts[1] == 21 and len(parts) > 2 and parts[2] >= 6):
+            # 1.20.5 - 1.21.5: Java 21 (delta); NeoForge 21.1 rejects Java 25
             order = ["java-runtime-delta", "java-runtime-gamma", "java-runtime-beta", "java-runtime-epsilon"]
         else:
             order = ["java-runtime-epsilon", "java-runtime-delta", "java-runtime-gamma"]
@@ -215,6 +216,66 @@ def loader_versions(loader: str, mc: str) -> list[str]:
         raise
 
 
+NEOFORGE_MAVEN = "https://maven.neoforged.net/releases/net/neoforged/neoforge"
+
+
+def _urllib_json(url: str):
+    import json
+    import urllib.request
+
+    req = urllib.request.Request(url, headers={"User-Agent": "mcbridge-launcher/0.1"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.loads(r.read())
+
+
+def neoforge_versions(mc: str) -> list[str]:
+    prefix = ".".join(mc.split(".")[1:]) + "."
+    data = _urllib_json(NEOFORGE_MAVEN + "/../neoforge") if False else _urllib_json(
+        "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge")
+    return [v for v in data.get("versions", []) if v.startswith(prefix)]
+
+
+def _version_key(v: str):
+    return [int(x) if x.isdigit() else x for x in v.replace("-", ".").split(".")]
+
+
+def install_neoforge_direct(mc: str, root: Path, version: str | None = None,
+                            java: str | None = None, progress=None) -> str:
+    """Install NeoForge through its official installer using urllib (requests is blocked here)."""
+    import subprocess
+
+    import mclaunch
+
+    root = Path(root)
+    versions = neoforge_versions(mc)
+    if version:
+        if version not in versions:
+            raise RuntimeError(f"neoforge {version} is not available for {mc}")
+        ver = version
+    elif versions:
+        ver = sorted(versions, key=_version_key)[-1]
+    else:
+        raise RuntimeError(f"no neoforge build for {mc}")
+    vid = f"neoforge-{ver}"
+    if (root / "versions" / vid / f"{vid}.json").exists():
+        return vid
+    progress and progress.set(message=f"neoforge installer {ver}")
+    installer = root / "installers" / f"neoforge-{ver}-installer.jar"
+    mclaunch.download(f"{NEOFORGE_MAVEN}/{ver}/neoforge-{ver}-installer.jar", installer)
+    java = java or mclaunch.find_java()
+    progress and progress.set(message="running neoforge installer")
+    proc = subprocess.run([java, "-jar", str(installer), "--installClient", str(root)],
+                          cwd=str(root), capture_output=True, text=True)
+    if proc.returncode != 0:
+        raise RuntimeError("neoforge installer failed: " + (proc.stdout or proc.stderr)[-400:])
+    if (root / "versions" / vid / f"{vid}.json").exists():
+        return vid
+    found = sorted(p.name for p in (root / "versions").glob("neoforge-*"))
+    if not found:
+        raise RuntimeError("neoforge installer produced no version profile")
+    return found[-1]
+
+
 def _profile_game_version(path: Path) -> str | None:
     try:
         import json as _json
@@ -286,10 +347,20 @@ def command(version_id: str, root: Path, username: str, java: str | None = None)
         "launcherVersion": "0.1",
     }
     if not java:
+        import json as _json
         import re
 
-        m = re.search(r"(\d+\.\d+(?:\.\d+)?)", version_id)
-        java = pick_java(m.group(1)) if m else None
+        mc = None
+        meta = Path(root) / "versions" / version_id / f"{version_id}.json"
+        if meta.exists():
+            try:
+                mc = _json.loads(meta.read_text(encoding="utf-8")).get("inheritsFrom")
+            except Exception:  # noqa: BLE001
+                mc = None
+        if not mc:
+            m = re.search(r"(\d+\.\d+(?:\.\d+)?)", version_id)
+            mc = m.group(1) if m else None
+        java = pick_java(mc) if mc else None
     if java:
         options["executablePath"] = java
     return mll_command.get_minecraft_command(version_id, str(root), options)  # type: ignore[arg-type]
