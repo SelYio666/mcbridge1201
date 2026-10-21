@@ -22,6 +22,6 @@
 ## 尚未完成（如实记录）
 
 - ISSUE-01 只做了编译级验证，游戏内失败传播与物品保留没有回归。
-- ISSUE-04 的“空工作目录完整构建”没有另起干净机验证，只在现有工作集上通过。
+- ISSUE-04 的“干净目录”已验证（复制 java/ 到空目录 + `gradle --offline test installDist` 成功），但没在无缓存的干净机器上验证。
 - 报告提到的 Gradle Wrapper 缺失、CenturyBridge 的 no-op `MixinCheck` 仍未处理。
 - 已固化为 `tools/test_review_fixes.py`（13 项检查），但这轮仍未覆盖 ISSUE-01 的游戏内行为。

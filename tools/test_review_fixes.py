@@ -29,6 +29,7 @@ WORK = ROOT / "work" / "tmp" / "review-fixes"
 WORK.mkdir(parents=True, exist_ok=True)
 
 RESULTS: list[tuple[str, bool, str]] = []
+SKIPPED: list[str] = []
 
 
 def check(name: str, ok: bool, detail: str = "") -> None:
@@ -43,6 +44,35 @@ def cli_path() -> Path | None:
     else:
         p = base / "mcbridge1201"
     return p if p.exists() else None
+
+
+def ensure_java_home() -> bool:
+    """Find a JDK so the patch CLI can run without the caller exporting JAVA_HOME."""
+    env = os.environ.get("JAVA_HOME")
+    if env and (Path(env) / "bin" / ("java.exe" if os.name == "nt" else "java")).exists():
+        return True
+    candidates = [
+        ROOT.parent / ".toolchain" / "jdk",
+        ROOT / ".toolchain" / "jdk",
+        Path(r"C:\Program Files\Java"),
+        Path(r"C:\Program Files\Eclipse Adoptium"),
+    ]
+    for c in candidates:
+        if c.name in ("Java", "Eclipse Adoptium") and c.is_dir():
+            found = sorted(c.glob("jdk*/bin/java.exe"))
+            if found:
+                os.environ["JAVA_HOME"] = str(found[-1].parent.parent)
+                return True
+        elif (c / "bin" / "java.exe").exists():
+            os.environ["JAVA_HOME"] = str(c)
+            return True
+    import shutil
+
+    java = shutil.which("java")
+    if java:
+        os.environ["JAVA_HOME"] = str(Path(java).parent.parent)
+        return True
+    return False
 
 
 def run(cmd: list[str]) -> tuple[int, str]:
@@ -70,7 +100,12 @@ def test_issue03() -> None:
 def test_issue02() -> None:
     cli = cli_path()
     if cli is None:
-        check("ISSUE-02 patch validation", False, "CLI not built (run gradle installDist)")
+        print("SKIP ISSUE-02 (CLI not built; run gradle installDist)")
+        SKIPPED.append("ISSUE-02")
+        return
+    if not ensure_java_home():
+        print("SKIP ISSUE-02 (no JDK found; set JAVA_HOME)")
+        SKIPPED.append("ISSUE-02")
         return
     fresh = ROOT / "work/cb/out/popular/entityculling/entityculling-fabric-1.11.3-mc1.20.1+1.21.1.jar"
     patched = ROOT / "work/cb/out/popular/entityculling/entityculling-nested-patched.jar"
@@ -188,8 +223,11 @@ def main() -> int:
     test_issue02()
     test_launcher()
     failed = [name for name, ok, _ in RESULTS if not ok]
-    print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed")
-    return 1 if failed else 0
+    print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed"
+          + (f", skipped: {', '.join(SKIPPED)}" if SKIPPED else ""))
+    if failed:
+        return 1
+    return 2 if SKIPPED else 0
 
 
 if __name__ == "__main__":

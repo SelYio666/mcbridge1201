@@ -46,6 +46,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 
 ## 复现
 
+构建前提与干净目录复现见 [docs/build.md](docs/build.md)。
+
 所有 Python 脚本只依赖标准库（本机 PowerShell/git 的 schannel TLS 不可用，Python 的 OpenSSL 可用）。
 
 ```powershell
