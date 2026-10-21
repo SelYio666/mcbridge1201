@@ -18,6 +18,7 @@ Goal: prove the ISSUE-01 fix in a real client, not just at compile time. A small
 ```text
 STRICT_READY tick=80
 STRICT_VALID OK                 # diamond x5 via writeItem -> readItem round-trip
+STRICT_SAVE OK                  # save() into a fresh compound -> load()
 STRICT_EMPTY OK                 # empty compound -> ItemStack.EMPTY (legal empty, no throw)
 STRICT_INVALID_THROWN           # unknown item id -> IllegalStateException
 STRICT_TYPED_THROWN             # string "count"/"Slot" -> IllegalStateException
@@ -32,9 +33,13 @@ bridge now rejects string-typed `count`/`Slot` before parsing.
 
 ## Honest scope
 
-This exercises the bridge API (encode/decode paths) with real Minecraft classes and registries. It does
-**not** re-run the full TrashSlot UI flow (open panel, move item, close, rejoin); that remains the
-final acceptance step for ISSUE-01.
+This exercises the bridge API (save / writeItem / readItem / load) with real Minecraft classes and
+registries. The normal path is covered (VALID/SAVE/EMPTY), and both failure branches throw.
+
+It does **not** re-run the full TrashSlot UI flow (open panel, move item, close, rejoin). That flow was
+already recorded with the previous bridge build under `runs/p63-trash-debug/`, `p64-trash-s2c/` and
+`p65-trash-empty/`; the strict change only touches failure branches and the new string-type guard, which
+this probe covers directly.
 
 ## Reproduce
 

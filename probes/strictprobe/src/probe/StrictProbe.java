@@ -36,6 +36,17 @@ public final class StrictProbe implements ClientModInitializer {
                 System.out.println("STRICT_VALID_THREW " + t);
             }
             try {
+                var item = class_7923.field_41178.method_10223(class_2960.method_60655("minecraft", "diamond"));
+                var stack = new class_1799(item, 5);
+                var tag = new class_2487();
+                TrashSlotNbtBridge.save(stack, tag);
+                var loaded = TrashSlotNbtBridge.load(tag);
+                boolean ok = loaded.method_7947() == 5 && loaded.method_7909() == item;
+                System.out.println("STRICT_SAVE " + (ok ? "OK" : "FAIL count=" + loaded.method_7947()));
+            } catch (Throwable t) {
+                System.out.println("STRICT_SAVE_THREW " + t);
+            }
+            try {
                 var empty = new class_2487();
                 var s = TrashSlotNbtBridge.load(empty);
                 System.out.println("STRICT_EMPTY " + (s.method_7960() ? "OK" : "FAIL"));
