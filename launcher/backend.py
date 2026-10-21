@@ -80,6 +80,17 @@ def _callback(progress):
     return {"setStatus": set_status, "setMax": set_max, "setProgress": set_progress}
 
 
+def loader_versions(loader: str, mc: str) -> list[str]:
+    """Available loader versions for one game version (newest first where the source allows)."""
+    if not AVAILABLE:
+        return []
+    try:
+        obj = mll_mod_loader.get_mod_loader(loader)
+        return list(obj.get_loader_versions(mc, False))
+    except Exception:  # noqa: BLE001 - network failures are reported by the endpoint
+        raise
+
+
 def _profile_game_version(path: Path) -> str | None:
     try:
         import json as _json

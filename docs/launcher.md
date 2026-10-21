@@ -15,7 +15,8 @@ launcher\run.bat
 
 1. 填版本号（例如 `1.21.1`）；
 2. 加载器保持默认 `Fabric（推荐）`（也可选原版 / Forge / NeoForge）；
-3. 点 **“安装并启动”**。
+3. 点 **“安装并启动”**（可选：在“加载器版本”下拉里指定 Fabric/Forge/NeoForge 版本，
+   默认是“最新”）。
 
 没装过的版本会先自动下载安装，装完**自动进游戏**；已安装的直接启动。用户名、内存、游戏目录
 都收在“高级设置”里，首次运行会自动探测已有的 `.minecraft`。
@@ -191,3 +192,11 @@ RESULT: OK
   规则 schema/target 不合法时退出 2。
 - `python tools/audit_mixins.py --jar <jar>`：mixin 配置损坏计入 problems，非零退出。
 - `python launcher/mclaunch.py verify <version> <root>`：安装完整性，0 完整 / 3 不完整。
+
+## 加载器版本选择
+
+- 接口：`GET /api/loader-versions?loader=fabric|forge|neoforge&mc=<游戏版本>`；
+- Fabric 走官方 meta（实测 1.21.1 返回 255 个 loader 版本），Forge/NeoForge 走
+  `minecraft-launcher-lib` 的 `mod_loader`（实测 1.20.1 Forge 返回 137 个）；
+- 安装请求可带 `loader_version`，不传则用最新稳定版；实测指定 Fabric `0.20.1` 安装出
+  `fabric-loader-0.20.1-1.21.1` 配置。

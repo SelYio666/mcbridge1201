@@ -267,10 +267,17 @@ def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> st
     return mc
 
 
-def install_fabric(mc: str, root: Path, progress: Progress | None = None) -> str:
+def install_fabric(mc: str, root: Path, progress: Progress | None = None,
+                   loader_version: str | None = None) -> str:
     root = Path(root)
     loaders = http_json(f"{FABRIC_META}/versions/loader/{mc}")
-    loader = next((x for x in loaders if x.get("loader", {}).get("stable")), loaders[0])
+    if loader_version:
+        match = [x for x in loaders if x.get("loader", {}).get("version") == loader_version]
+        if not match:
+            raise RuntimeError(f"fabric loader {loader_version} is not available for {mc}")
+        loader = match[0]
+    else:
+        loader = next((x for x in loaders if x.get("loader", {}).get("stable")), loaders[0])
     loader_ver = loader["loader"]["version"]
     vid = f"fabric-loader-{loader_ver}-{mc}"
     progress and progress.set(phase="download", message=f"fabric {vid}")

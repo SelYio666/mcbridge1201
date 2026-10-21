@@ -9,10 +9,11 @@ import sys
 import threading
 import time
 import webbrowser
-from urllib.parse import unquote
+from urllib.parse import parse_qs, unquote, urlparse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+import mclaunch
 from mclaunch import (Progress, find_java, install_fabric, install_forge, install_neoforge,
                       install_vanilla, install_vanilla_launcher_profile, launch, version_manifest)
 
@@ -109,7 +110,7 @@ def run_install(mc, loader, version):
             vid = install_vanilla(mc, root, TASK)
         elif loader == "fabric":
             install_vanilla_launcher_profile(mc, root)
-            vid = install_fabric(mc, root, TASK)
+            vid = install_fabric(mc, root, TASK, version)
         elif loader in ("forge", "neoforge"):
             import backend
             if not backend.AVAILABLE:
@@ -161,6 +162,25 @@ class Handler(BaseHTTPRequestHandler):
                 java_error = str(exc)
             return self._send(200, {"root": cfg["root"], "versions": installed_versions(Path(cfg["root"])),
                                     "java": java, "java_error": java_error})
+        if path == "/api/loader-versions":
+            qs = parse_qs(urlparse(self.path).query)
+            loader = (qs.get("loader", ["fabric"])[0] or "fabric").lower()
+            mc = qs.get("mc", [""])[0]
+            if not mc:
+                return self._send(400, {"error": "mc required"})
+            try:
+                if loader == "fabric":
+                    data = mclaunch.http_json(f"{mclaunch.FABRIC_META}/versions/loader/{mc}")
+                    versions = [x["loader"]["version"] for x in data]
+                elif loader in ("forge", "neoforge"):
+                    import backend
+                    versions = backend.loader_versions(loader, mc)
+                else:
+                    return self._send(400, {"error": "unsupported loader "})
+                return self._send(200, {"loader": loader, "mc": mc, "versions": versions})
+            except Exception as exc:  # noqa: BLE001
+                return self._send(200, {"loader": loader, "mc": mc, "versions": [], "error": str(exc)})
+
         if path == "/api/versions":
             try:
                 versions, latest = version_manifest()
@@ -205,7 +225,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/install":
             mc = str(body.get("mc", "")).strip()
             loader = str(body.get("loader", "vanilla"))
-            version = body.get("version")
+            version = body.get("loader_version") or body.get("version")
             if not mc:
                 return self._send(400, {"error": "mc required"})
             if TASK.snapshot()["phase"] in ("start", "download"):

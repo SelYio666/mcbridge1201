@@ -158,7 +158,8 @@ async function oneClick() {
   try {
     await api("/api/install", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mc, loader: $("loader").value })
+      body: JSON.stringify({ mc, loader: $("loader").value,
+        loader_version: $("loaderVer") && $("loaderVer").value ? $("loaderVer").value : null })
     });
   } catch (e) {
     alert("安装失败: " + e.message);
@@ -257,6 +258,8 @@ $("save").onclick = saveCfg;
 $("install").onclick = oneClick;
 $("play").onclick = () => play();
 $("allsnap").onchange = () => { renderManifest(false); renderVersions(); };
+$("loader").onchange = loadLoaderVersions;
+$("mcver").onchange = loadLoaderVersions;
 $("pickRelease").onclick = () => { if (state.latest.release) { $("mcver").value = state.latest.release; } };
 $("pickSnapshot").onclick = () => {
   if (!state.latest.snapshot) return;
