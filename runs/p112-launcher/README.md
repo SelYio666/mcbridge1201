@@ -36,3 +36,17 @@ offline. No game files are bundled.
 - Full asset download did not finish here (3911 objects, slow link). The two missing font objects were
   fetched manually from the mirror to confirm the menu renders.
 - GUI is a local web page, not a packaged exe.
+
+
+## Forge (later in the same run)
+
+`launcher/backend.py` now delegates Forge/NeoForge to `minecraft-launcher-lib` (BSD-2). Verified with
+the existing `1.20.1-forge-47.4.16` profile:
+
+- log: `Launching target 'forgeclient' with arguments [--version, 1.20.1-forge-47.4.16]`,
+  `Setting user: ForgePlayer`, `Backend library: LWJGL version 3.3.1 build 7`, version checker running;
+- screenshot: `launcher-forge-menu.png` — title `Minecraft* Forge 1.20.1`, accessibility screen.
+- Java selection: 1.20.1 uses the `java-runtime-delta` (17) runtime; 1.21.1 uses `java-runtime-epsilon` (21).
+
+Fabric keeps using our own command builder (`Loading Minecraft 1.21.1 with Fabric Loader 0.19.5`), because
+the library's generic command did not include the vanilla jar for the inherited Fabric profile.

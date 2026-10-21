@@ -466,6 +466,16 @@ def offline_uuid(name: str) -> str:
 
 def build_command(version_id: str, root: Path, username: str, max_mem="2G",
                   extra_jvm=None, extra_game=None) -> tuple[list[str], Path, Path]:
+    try:
+        import backend
+        if backend.AVAILABLE and ("-forge-" in version_id or version_id.startswith("neoforge")):
+            cmd = backend.command(version_id, root, username) or []
+            if cmd:
+                cmd = [cmd[0], f"-Xmx{max_mem}"] + cmd[1:]
+                log = root / "logs" / f"launch-{time.strftime('%Y%m%d-%H%M%S')}.log"
+                return cmd, log, root
+    except Exception:
+        pass
     root = Path(root)
     data = load_version(version_id, root)
     libs = [lib for lib in data.get("libraries", []) if allowed_win(lib)]

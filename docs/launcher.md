@@ -28,7 +28,8 @@ python launcher/server.py
 | 离线启动（原版 / Fabric），单机与局域网 | ✅ 实测（`runs/p112-launcher/`） |
 | 网页 GUI：版本列表、筛选、安装进度、控制台、启动 | ✅ 实测 |
 | BMCLAPI 镜像兜底（资源 CDN 被墙时） | ✅ 实测（官方 CDN 超时时自动切镜像） |
-| Forge / NeoForge 安装（官方 installer） | ⚠️ 代码已实现，**启动未打通**（模块路径 / legacyClassPath 参数） |
+| Forge 1.20.1 安装 + 启动 | ✅ 已接入 `minecraft-launcher-lib`（BSD-2）并实测到达主菜单 |
+| NeoForge 安装 + 启动 | ⚠️ 安装走库的 `mod_loader`，尚未实测 |
 | 正版登录 / 皮肤 / 多人认证 | ❌ 不做，仅离线 |
 
 ## 设计约束
@@ -57,9 +58,15 @@ python launcher/mclaunch.py launch fabric-loader-0.19.5-1.21.1 "D:\mc" Player
 
 - 资源 CDN 在部分网络下不可达，镜像优先可绕过，但全量 assets 下载仍受带宽限制（本机实测下载 3911 个对象时很慢）。
 - 本机 `.minecraft/assets` 本身缺对象（字体等），启动器可修复，但需要完整跑一次原版安装。
-- Forge/NeoForge：安装器调用已写好，启动参数仍需按加载器版本适配；当前只验证到 Fabric。
+- Forge/NeoForge 依赖 `minecraft-launcher-lib`（`pip install minecraft-launcher-lib`，BSD-2）；Forge 已验证，NeoForge 未验证。
+- Fabric / 原版使用本项目自己的命令拼装（镜像下载 + 已验证的启动参数），不依赖该库。
 - GUI 是本地网页，不是独立 exe；要打包成单文件 exe 需另加 PyInstaller 一类工具（未做）。
 
 ## 版本资源与后续扩展
 
 版本清单来自 Mojang 官方 manifest，接口当前返回全部 920 个版本（release / snapshot / old_beta / old_alpha），GUI 用“含快照/远古”开关切换。后续接入 `minecraft-launcher-lib`（BSD-2）后，Fabric/Forge/NeoForge/Quilt 与 Java 运行时都可以统一处理，调研见 [launcher-research.md](launcher-research.md)。
+
+## 加载器后端分工
+
+- 原版 / Fabric：本项目 `mclaunch.py`（自有镜像下载器 + 已验证启动参数）；
+- Forge / NeoForge：`launcher/backend.py` 调用 `minecraft-launcher-lib`，由库处理 installer、`-DlegacyClassPath`、模块路径与 Java 版本；Java 按版本自动选（1.20.4 及以下用 17，1.20.5+ 用 21）。
