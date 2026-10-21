@@ -24,4 +24,4 @@
 - ISSUE-01 只做了编译级验证，游戏内失败传播与物品保留没有回归。
 - ISSUE-04 的“空工作目录完整构建”没有另起干净机验证，只在现有工作集上通过。
 - 报告提到的 Gradle Wrapper 缺失、CenturyBridge 的 no-op `MixinCheck` 仍未处理。
-- 没有把上述检查固化成仓库内的一键回归脚本（目前是本轮临时脚本）。
+- 已固化为 `tools/test_review_fixes.py`（13 项检查），但这轮仍未覆盖 ISSUE-01 的游戏内行为。
