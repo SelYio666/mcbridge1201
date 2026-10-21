@@ -164,6 +164,37 @@ def find_version(version_id: str):
     raise RuntimeError(f"unknown version {version_id}")
 
 
+
+def ensure_profile(version_id: str, root: Path, name: str | None = None) -> None:
+    """Write a launcher_profiles.json entry so other launchers list this version."""
+    import json as _json
+    import time as _time
+
+    root = Path(root)
+    path = root / "launcher_profiles.json"
+    data = {}
+    if path.exists():
+        try:
+            data = _json.loads(path.read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001
+            data = {}
+    profiles = data.setdefault("profiles", {})
+    if version_id not in profiles:
+        now = _time.strftime("%Y-%m-%dT%H:%M:%S.000Z", _time.gmtime())
+        profiles[version_id] = {
+            "name": name or version_id,
+            "type": "custom",
+            "created": now,
+            "lastUsed": now,
+            "icon": "Furnace",
+            "lastVersionId": version_id,
+            "gameDir": str(root),
+        }
+        data.setdefault("settings", {})
+        data.setdefault("version", 3)
+        path.write_text(_json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
 def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> str:
     root = Path(root)
     v = find_version(mc)
@@ -231,6 +262,7 @@ def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> st
             for f in as_completed(futs):
                 f.result()
                 progress and progress.inc()
+    ensure_profile(mc, root)
     return mc
 
 
@@ -264,6 +296,7 @@ def install_fabric(mc: str, root: Path, progress: Progress | None = None) -> str
         for f in as_completed(futs):
             f.result()
             progress and progress.inc()
+    ensure_profile(vid, root)
     return vid
 
 

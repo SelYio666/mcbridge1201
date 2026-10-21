@@ -70,3 +70,28 @@ python launcher/mclaunch.py launch fabric-loader-0.19.5-1.21.1 "D:\mc" Player
 
 - 原版 / Fabric：本项目 `mclaunch.py`（自有镜像下载器 + 已验证启动参数）；
 - Forge / NeoForge：`launcher/backend.py` 调用 `minecraft-launcher-lib`，由库处理 installer、`-DlegacyClassPath`、模块路径与 Java 版本；Java 按版本自动选（1.20.4 及以下用 17，1.20.5+ 用 21）。
+
+## 兼容性与“换启动器”
+
+安装出来的就是标准 `.minecraft` 结构：
+
+```text
+<root>/versions/<id>/<id>.json      # 版本描述（原版还带 <id>.jar）
+<root>/libraries/                   # 共享库
+<root>/assets/                      # 共享资源
+<root>/launcher_profiles.json       # 安装后自动补一条 profile
+```
+
+因此**不是只能在本启动器里启动**：
+
+- PCL / HMCL 这类启动器直接扫描 `versions/`，能看到并启动这些版本；
+- 官方启动器依赖 `launcher_profiles.json`，我们的安装器现在会自动写入一条
+  `lastVersionId=<id>`、`gameDir=<root>` 的 profile；
+- 也可以把本启动器的“游戏目录”指向已有的 `.minecraft`，两边共用同一套版本和资源。
+
+注意两点：
+
+1. **离线 UUID 由用户名生成**。换启动器/换用户名后 UUID 会变，单人存档里的玩家数据（背包、坐标）
+   可能看起来“清空”——保持同名即可；这不是文件损坏。
+2. **隔离方式不同**。本启动器把 `mods/`、`saves/` 放在 `<root>` 下共享；PCL 默认版本隔离时用
+   `versions/<id>/mods`，切换后可能“看不到模组”，改隔离设置或把模组放到对应目录即可。
