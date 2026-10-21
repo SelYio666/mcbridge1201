@@ -94,12 +94,12 @@ MIRRORS = [
 
 
 def mirror_urls(url: str) -> list[str]:
-    """Prefer the BMCLAPI mirror for the hosts that are slow/blocked locally."""
+    """Official URL first; fall back to the BMCLAPI mirror when it fails."""
     mirrors = []
     for official, mirror in MIRRORS:
         if url.startswith(official):
             mirrors.append(mirror + url[len(official):])
-    return mirrors + [url]
+    return [url] + mirrors
 
 
 def download(url: str, dest: Path, sha1: str | None = None, retries: int = 4) -> None:
@@ -257,7 +257,7 @@ def install_vanilla(mc: str, root: Path, progress: Progress | None = None) -> st
                 return
             download(f"{ASSET_BASE}/{obj['hash'][:2]}/{obj['hash']}", dest, obj["hash"])
 
-        with ThreadPoolExecutor(max_workers=12) as pool:
+        with ThreadPoolExecutor(max_workers=24) as pool:
             futs = [pool.submit(get_obj, it) for it in objects]
             for f in as_completed(futs):
                 f.result()
