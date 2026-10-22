@@ -103,10 +103,17 @@ public class BatchingBuffers {
         if (total != lastLoggedDraws && now - lastLogTime > 2000) {
             lastLogTime = now;
             lastLoggedDraws = total;
+            int fps = -1;
+            try {
+                fps = net.minecraft.class_310.method_1551().method_47599();
+            } catch (Throwable ignored) {
+                // not on the client thread / client not ready
+            }
             System.out.println("[mcbridge-port] batched-draws total=" + total
                     + " hud=" + HUD_BATCH.draws
                     + " itemModel=" + ITEM_MODEL_BATCH.draws
-                    + " itemOverlay=" + ITEM_OVERLAY_BATCH.draws);
+                    + " itemOverlay=" + ITEM_OVERLAY_BATCH.draws
+                    + " fps=" + fps);
         }
     }
 

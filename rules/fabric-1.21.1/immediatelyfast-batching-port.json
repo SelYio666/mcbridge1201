@@ -44,6 +44,14 @@
       "capability": "mixin-config-add",
       "risk": "this 1.21.1-only Redirect wraps InGameHud.render in BatchingBuffers.runBatched; not present in the converted config",
       "evidence": "runs/p134-immediatelyfast-port-boot"
+    },
+    {
+      "id": "immediatelyfast/bench-sampler-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "core.MixinMinecraftClientBench",
+      "capability": "benchmark-instrumentation",
+      "risk": "prints FPS every 2s from the main loop; kept outside the hud_batching package so the A/B off-run still samples",
+      "evidence": "runs/p148-bench-on / runs/p148-bench-off"
     }
   ],
   "mixinClassReplacements": [
@@ -92,6 +100,8 @@
       "alsoEmbed": [
         "net/raphimc/immediatelyfast/feature/batching/BatchingRenderLayers",
         "net/raphimc/immediatelyfast/feature/batching/BlendFuncDepthFuncState",
+        "net/raphimc/immediatelyfast/feature/core/BenchHooks",
+        "net/raphimc/immediatelyfast/injection/mixins/core/MixinMinecraftClientBench",
         "net/raphimc/immediatelyfast/injection/mixins/hud_batching/MixinGameRendererHud"
       ],
       "capability": "mixin-class-replacement",

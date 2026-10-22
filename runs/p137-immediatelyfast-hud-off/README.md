@@ -12,7 +12,8 @@
 | `[mcbridge-port] batched-draws ... hud=` | ✅ hud=1501 → 4052 | ❌ 无任何标记 |
 
 关闭后 HUD 仍由 vanilla 路径渲染（能正常进世界/显示），但移植代码的 HUD 批处理入口没有被调用。
-这证明 p134 的 `hud=` 计数是 HUD batching 真正启用时才产生的。
+这证明 p134 的 `hud=` 计数是 HUD batching 真正启用时才产生的。注：p148 加入的基准采样器会单独打
+`fps=` 行，不属于 HUD/物品批处理标记。
 
 ## 证据
 
