@@ -586,6 +586,11 @@ def test_immediatelyfast_port() -> None:
              and draw_src.count("this.releaseOwned(") <= 1)
     check("IFPORT draw path does not double-close the builder allocator", guard,
           f"releaseOwned calls={draw_src.count('this.releaseOwned(')}")
+    iris_ok = ("IrisCompat.IRIS_LOADED" in draw_src
+               and "iris compat active" in draw_src
+               and "skipExtension" in draw_src)
+    check("IFPORT keeps the Iris compatibility branch wired", iris_ok,
+          "BatchableBufferSource must call IrisCompat and log the branch")
 
 
 def test_download_policy() -> None:

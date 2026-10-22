@@ -12,8 +12,8 @@
   "gates": {
     "gradle_test_install_dist": "success",
     "java_junit_tests": 25,
-    "review_fixes": "69/69",
-    "hashes": "782/782",
+    "review_fixes": "70/70",
+    "hashes": "786/786",
     "verify_evidence": "passed",
     "ci_run": "39743576915",
     "ci_conclusion": "success",
@@ -25,7 +25,7 @@
     "Fabric 1.21.1 full cold install (3911/3911 assets, 933.6 MB, 0 failures) + singleplayer world (runs/p118)",
     "NeoForge 21.1.264 install + main menu (runs/p116)",
     "EntityCulling mixin port works in-world (runs/p119) + on/off A/B (runs/p121)",
-    "ImmediatelyFast 1.21.1 batching port: singleplayer (p134) + dedicated-server multiplayer (p141), hud/itemModel/itemOverlay > 0, A/B zero (p137), 95s soak (p140)",
+    "ImmediatelyFast 1.21.1 batching port: singleplayer (p134) + dedicated-server multiplayer (p141) + Iris 1.8.1 branch (p142), hud/itemModel/itemOverlay > 0, A/B zero (p137), 95s soak (p140)",
     "NeoForge 21.1.264 + AppleSkin / Farmer's Delight / Jade in-world (runs/p127/p128/p130)",
     "Forge 1.20.1-47.4.28 + AppleSkin / Farmer's Delight in-world (runs/p129/p131)",
     "Fabric dedicated server + launcher client join via quickPlayMultiplayer (runs/p132)",
@@ -36,7 +36,7 @@
     "Portable launcher package (embedded Python) built and tested (v0.4.4 asset)"
   ],
   "not_verified": [
-    "Sodium / Iris: untouched; ImmediatelyFast has no Iris compat or per-lighting item variants",
+    "Sodium: no conversion test; Iris shader packs: not tested (only Iris 1.8.1 no-shader pipeline)",
     "Frame-rate/performance gains: not measured",
     "Full mirror-mode install: bounded scope only (client + libs + 120 assets)",
     "Dedicated multiplayer server: Fabric verified (runs/p132, p75/p76); NeoForge/Forge not tested",

@@ -39,6 +39,11 @@ import net.minecraft.class_9801;
 public class BatchableBufferSource extends class_4597.class_4598 implements AutoCloseable {
 
     private static final class_9799 FALLBACK_BUFFER = new class_9799(0);
+    /**
+     * Iris 1.8 keeps a ThreadLocal "skipExtension" in ImmediateState; the converted mod's
+     * IrisCompat predates it, so read it directly (null when Iris is absent/older).
+     */
+    private static final ThreadLocal<Boolean> IRIS_SKIP_EXTENSION = loadIrisSkipExtension();
     private static final Method DRAW_LAYER;
     private static final Field BUILDER_ALLOCATOR;
     private static final Field CURRENT_ALLOCATOR;
@@ -57,14 +62,47 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private static ThreadLocal<Boolean> loadIrisSkipExtension() {
+        try {
+            Class<?> immediateState = Class.forName("net.irisshaders.iris.vertices.ImmediateState");
+            java.lang.reflect.Field field = immediateState.getDeclaredField("skipExtension");
+            field.setAccessible(true);
+            return (ThreadLocal<Boolean>) field.get(null);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    private static void setIrisSkipExtension(boolean value) {
+        if (IRIS_SKIP_EXTENSION != null) {
+            IRIS_SKIP_EXTENSION.set(value);
+        }
+    }
+
+    private static boolean irisCompatLogged;
+
+    private static void logIrisCompatOnce() {
+        if (!irisCompatLogged) {
+            irisCompatLogged = true;
+            System.out.println("[mcbridge-port] iris compat active (skipExtension="
+                    + (IRIS_SKIP_EXTENSION != null) + ")");
+        }
+    }
+
     /** debug/evidence counter: how many buffers actually went through the batched draw path */
     public static long batchedDraws;
     /** per-source counter for evidence (HUD vs item-model vs item-overlay) */
     public long draws;
 
     protected final Map<class_1921, ReferenceSet<class_287>> pendingBuffers =
-            new Reference2ObjectLinkedOpenHashMap<>();
-    protected final Set<class_1921> activeLayers = new ReferenceLinkedOpenHashSet<>();
+            net.raphimc.immediatelyfast.compat.IrisCompat.IRIS_LOADED
+                    ? new it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap<>()
+                    : new Reference2ObjectLinkedOpenHashMap<>();
+    protected final Set<class_1921> activeLayers =
+            net.raphimc.immediatelyfast.compat.IrisCompat.IRIS_LOADED
+                    ? new it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet<>()
+                    : new ReferenceLinkedOpenHashSet<>();
     protected boolean drawFallbackLayersFirst = false;
     private final Map<class_287, class_9799> ownedAllocators = new IdentityHashMap<>();
 
@@ -84,6 +122,11 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
 
     @Override
     public class_4588 getBuffer(class_1921 layer) {
+        if (net.raphimc.immediatelyfast.compat.IrisCompat.IRIS_LOADED) {
+            logIrisCompatOnce();
+            setIrisSkipExtension(
+                    !net.raphimc.immediatelyfast.compat.IrisCompat.isRenderingLevel.getAsBoolean());
+        }
         class_287 bufferBuilder;
         boolean hasBufferForRenderLayer = layer.method_43332() && this.pendingBuffers.containsKey(layer);
         if (!layer.method_43332()) {
@@ -97,6 +140,9 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
         } else {
             bufferBuilder = this.newBuffer(layer);
             this.field_52158 = layer;
+        }
+        if (net.raphimc.immediatelyfast.compat.IrisCompat.IRIS_LOADED) {
+            setIrisSkipExtension(false);
         }
         if (hasBufferForRenderLayer) {
             if (this.activeLayers.contains(layer)) {
@@ -181,6 +227,10 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
     }
 
     public void drawDirect(class_1921 layer) {
+        if (net.raphimc.immediatelyfast.compat.IrisCompat.IRIS_LOADED
+                && !net.raphimc.immediatelyfast.compat.IrisCompat.isRenderingLevel.getAsBoolean()) {
+            net.raphimc.immediatelyfast.compat.IrisCompat.renderWithExtendedVertexFormat.accept(false);
+        }
         this.activeLayers.remove(layer);
         ReferenceSet<class_287> buffers = this.pendingBuffers.remove(layer);
         if (buffers != null) {
@@ -210,6 +260,10 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
         }
         if (this.field_52158 == layer) {
             this.field_52158 = null;
+        }
+        if (net.raphimc.immediatelyfast.compat.IrisCompat.IRIS_LOADED
+                && !net.raphimc.immediatelyfast.compat.IrisCompat.isRenderingLevel.getAsBoolean()) {
+            net.raphimc.immediatelyfast.compat.IrisCompat.renderWithExtendedVertexFormat.accept(true);
         }
     }
 
@@ -242,3 +296,4 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
         return layer.method_60894() ? 100000000 : 0;
     }
 }
+
