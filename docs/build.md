@@ -61,11 +61,10 @@ python launcher/mclaunch.py verify 1.21.1 <root>
 它**不**跑 `verify_evidence`/哈希门禁：这些依赖被 `.gitignore` 排除的本地产物（转换件、样例 jar），
 CI 没有这些中间件。门禁仍在本机执行。
 
-触发方式：本机通过 GitHub API 推送时**不会**自动触发 Actions，需要手动：
+触发方式：**push 已能正常触发**（实测 run 39794253390 在 push 提交 e4f92b2 上 success）。
+如果暂时没有 run，先看 <https://www.githubstatus.com> 的 Actions 状态——2026-10-22 曾出现
+`degraded_performance`，run 会先排队数分钟。
 
-```text
-gh api --method POST repos/SelYio666/mcbridge1201/actions/workflows/ci.yml/dispatches -f ref=master
-gh run watch
-```
-
-实测 manual dispatch 成功（run 39614386108，Java 测试 + 语法检查均通过）。README 顶部有状态徽章。
+注意：本机用 API 脚本（`work/tmp/push_via_api5.py`）推送时，路径必须用 `git ls-tree -rz`
+（NUL 分隔），否则非 ASCII 文件名会写成带引号的非法路径。已修复；能用 `git push` 时优先用 git。
+README 顶部有状态徽章。
