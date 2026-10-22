@@ -1,0 +1,10 @@
+{
+  "server_ready": true,
+  "client_joined": true,
+  "server_lines": [
+    "[00:03:24] [Server thread/INFO] [minecraft/PlayerList]: NeoGuest[/127.0.0.1:64622] logged in with entity id 6 at (-137.5, 70.0, -119.5)",
+    "[00:03:24] [Server thread/INFO] [minecraft/MinecraftServer]: NeoGuest joined the game",
+    "[00:03:32] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: NeoGuest lost connection: Disconnected",
+    "[00:03:32] [Server thread/INFO] [minecraft/MinecraftServer]: NeoGuest left the game"
+  ]
+}
