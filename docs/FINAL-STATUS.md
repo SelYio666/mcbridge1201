@@ -79,7 +79,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，72/72；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
-- GitHub Actions CI（手动 dispatch 触发）：最新成功 run `39744108215`（提交 `0e70d51`）；**当前 HEAD 未被 CI 覆盖**，push 不会自动触发。
+- GitHub Actions：`ci.yml` 配置了 `push: branches: [master]`，但 API 对当前提交 `0224b26` 返回 **0 个 check-run**，最近只有手动 dispatch 的 run `39744108215`（提交 `0e70d51`，success）→ **push 没有实际触发 CI，当前 HEAD 未被覆盖**（疑似仓库 Actions 未启用，需要仓库 owner 在 Settings 里确认）。
 
 ## 二、未完成（如实）
 
