@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import subprocess
 import sys
 import threading
 import time
@@ -24,6 +25,40 @@ TASK = Progress()
 _JVM_CACHE = {"ts": 0.0, "data": None}
 TASK_LOCK = threading.Lock()
 LAUNCHES = []
+SOURCE_CHECK = {"running": False, "started": None, "result": None, "error": None}
+
+
+def summarize_canary(data: dict) -> dict:
+    """Condense runs/.../canary.json into what the GUI needs (pure, unit-testable)."""
+    def failures(bucket: str) -> list[str]:
+        return [str(r.get("label")) for r in data.get(bucket, []) if not r.get("ok")]
+
+    return {
+        "ok": bool(data.get("ok")),
+        "core_ok": bool(data.get("core_ok", data.get("ok"))),
+        "mirrors_ok": bool(data.get("mirrors_ok", False)),
+        "neoforge_ok": bool(data.get("neoforge_ok", False)),
+        "generated": data.get("generated"),
+        "core_failures": failures("required"),
+        "mirror_failures": failures("mirrors"),
+        "neoforge_failures": failures("neoforge"),
+        "expected_misses": len(data.get("expected_misses", [])),
+    }
+
+
+def run_source_check(root: Path) -> None:
+    """Run the canary tool into <root>/.mcbridge/canary (never touches repo evidence)."""
+    script = HERE.parent / "tools" / "check_download_sources.py"
+    out_dir = Path(root) / ".mcbridge" / "canary"
+    try:
+        proc = subprocess.run([sys.executable, "-B", str(script), "--out", str(out_dir)],
+                              cwd=str(HERE.parent), capture_output=True, text=True, timeout=300)
+        data = json.loads((out_dir / "canary.json").read_text(encoding="utf-8"))
+        summary = summarize_canary(data)
+        summary["exit"] = proc.returncode
+        SOURCE_CHECK.update(running=False, error=None, result=summary)
+    except Exception as exc:  # noqa: BLE001 - surface the error in the GUI
+        SOURCE_CHECK.update(running=False, error=str(exc))
 
 
 def default_root() -> str:
@@ -350,6 +385,13 @@ class Handler(BaseHTTPRequestHandler):
             except ValueError:
                 limit = 50
             return self._send(200, {"events": list(mclaunch.DOWNLOAD_EVENTS)[-limit:]})
+        if path == "/api/source-health":
+            health = [{"host": k, **v} for k, v in sorted(mclaunch.SOURCE_HEALTH.items())]
+            return self._send(200, {"mode": mclaunch.SOURCE_MODE, "health": health,
+                                    "health_path": str(mclaunch.SOURCE_HEALTH_PATH or ""),
+                                    "check": SOURCE_CHECK})
+        if path == "/api/check-sources":
+            return self._send(200, SOURCE_CHECK)
         if path == "/guide":
             guide = HERE.parent / "docs" / "guide.md"
             if not guide.exists():
@@ -389,6 +431,15 @@ class Handler(BaseHTTPRequestHandler):
             save_config(cfg)
             apply_download_config(cfg)
             return self._send(200, cfg)
+        if path == "/api/check-sources":
+            cfg = load_config()
+            if SOURCE_CHECK["running"]:
+                return self._send(409, {"error": "a source check is already running"})
+            SOURCE_CHECK.update(running=True, started=time.strftime("%H:%M:%S"),
+                                result=None, error=None)
+            threading.Thread(target=run_source_check, args=(Path(cfg["root"]),),
+                             daemon=True).start()
+            return self._send(200, {"started": True})
         if path == "/api/open-dir":
             cfg = load_config()
             target = str(body.get("target", "")).strip()

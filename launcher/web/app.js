@@ -100,6 +100,7 @@ async function refresh() {
     $("dot").classList.add("ok");
     $("statusText").textContent = "Java: " + st.java;
     renderVersions();
+    loadSourceStatus();
   } catch (e) {
     $("dot").classList.remove("ok");
     $("statusText").textContent = "连接失败: " + e.message;
@@ -319,6 +320,53 @@ $("pickSnapshot").onclick = () => {
   renderManifest(false);
   $("mcver").value = state.latest.snapshot;
 };
+const SOURCE_MODE_LABEL = { auto: "自动（官方优先）", official: "仅官方", mirror: "镜像优先" };
+
+function canarySummary(res) {
+  if (!res || !res.result) return "";
+  const r = res.result;
+  const bits = [`核心${r.core_ok ? "✓" : "✗"}`,
+                `镜像${r.mirrors_ok ? "✓" : "✗"}`,
+                `NeoForge${r.neoforge_ok ? "✓" : "✗"}`];
+  if (r.core_failures && r.core_failures.length) bits.push("核心失败: " + r.core_failures.join(","));
+  return bits.join(" · ");
+}
+
+async function loadSourceStatus() {
+  try {
+    const s = await api("/api/source-health");
+    const sick = (s.health || []).filter(h => (h.fails || 0) >= 2).length;
+    const check = s.check && s.check.running ? "检查中…" : canarySummary(s.check);
+    $("sourceStatus").textContent =
+      `${SOURCE_MODE_LABEL[s.mode] || s.mode} · 近期异常源 ${sick}${check ? " · " + check : ""}`;
+  } catch { /* status text is best effort */ }
+}
+
+function pollSourceCheck() {
+  api("/api/check-sources").then(s => {
+    if (s.running) {
+      $("sourceStatus").textContent = "检查中…（约 30 秒）";
+      setTimeout(pollSourceCheck, 1500);
+    } else if (s.error) {
+      $("sourceStatus").textContent = "检查失败: " + s.error;
+    } else {
+      loadSourceStatus();
+    }
+  }).catch(() => setTimeout(pollSourceCheck, 2500));
+}
+
+async function checkSources() {
+  try {
+    await api("/api/check-sources", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: "{}"
+    });
+    $("sourceStatus").textContent = "检查中…（约 30 秒）";
+    pollSourceCheck();
+  } catch (e) {
+    alert("检查下载源失败: " + e.message);
+  }
+}
+
 async function openDir(target, version) {
   try {
     const r = await api("/api/open-dir", {
@@ -345,6 +393,7 @@ async function syncProfiles() {
 }
 
 $("openRoot").onclick = () => openDir("root");
+$("checkSources").onclick = checkSources;
 $("help").onclick = () => window.open("/guide", "_blank");
 $("openMods").onclick = () => openDir("mods");
 $("openSaves").onclick = () => openDir("saves");

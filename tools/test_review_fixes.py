@@ -293,6 +293,20 @@ def test_launcher() -> None:
           and cfg2.get("download_source") == "mirror", str(cfg2.get("download_source")))
     post("/api/config", {"download_source": "auto"})
 
+    status, body = get("/api/source-health")
+    health = json.loads(body)
+    check("launcher /api/source-health reports mode and hosts", status == 200
+          and "mode" in health and isinstance(health.get("health"), list), str(health)[:100])
+
+    summary = server.summarize_canary({
+        "ok": True, "core_ok": True, "mirrors_ok": False, "neoforge_ok": False,
+        "required": [{"label": "a", "ok": True}],
+        "mirrors": [{"label": "bmcl x", "ok": False}],
+        "neoforge": [], "expected_misses": [],
+    })
+    check("launcher condenses canary results", summary["core_ok"] is True
+          and summary["mirror_failures"] == ["bmcl x"], str(summary))
+
     opened = []
     orig_open = server.open_in_explorer
     server.open_in_explorer = opened.append

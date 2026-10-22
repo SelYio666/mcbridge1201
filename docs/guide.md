@@ -307,6 +307,8 @@ Mojang CDN 与 maven 偶尔不可达；启动器对资源、库、Mojang 元数�
 **Fabric Loader / intermediary** 有**逐路径验证**的 BMCL 镜像兜底（Fabric API 在 BMCL 是 404，
 所以不替换，只重试）。高级设置里可以把“下载源”切成 **自动 / 仅官方 / 镜像优先**；
 近期失败的主机会被排到最后（`<游戏目录>/.mcbridge/source-health.json`）。
+高级设置里还有 **检查下载源** 按钮：一键探测核心官方/已验证镜像/NeoForge，结果显示在按钮旁，
+原始结果写到 `<游戏目录>/.mcbridge/canary/canary.json`（不会改动仓库证据）。
 每个地址最多重试 3 次，404 会立刻换源；下载记录可用 `GET /api/downloads` 查看真实来源和失败原因。
 详见 [download-sources.md](download-sources.md)。
 Python 侧用 urllib 而不是 requests（本机 requests 会 SSL EOF）。重试通常能继续（已下载文件会跳过）。

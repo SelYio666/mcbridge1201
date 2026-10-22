@@ -1,0 +1,20 @@
+{
+  "started": {
+    "started": true
+  },
+  "state_error": null,
+  "summary": {
+    "core_ok": true,
+    "mirrors_ok": false,
+    "neoforge_ok": false,
+    "core_failures": [],
+    "mirror_failures": [
+      "bmcl manifest"
+    ]
+  },
+  "health_mode": "auto",
+  "health_hosts": 0,
+  "canary_file_written": true,
+  "canary_path": "<root>/.mcbridge/canary/canary.json",
+  "ok": true
+}

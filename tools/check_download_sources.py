@@ -55,8 +55,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--strict", action="store_true",
                     help="also fail when verified mirrors or NeoForge endpoints are unreachable")
+    ap.add_argument("--out", default=str(OUT),
+                    help="directory for canary.json (the GUI points this at <root>/.mcbridge/canary)")
     args = ap.parse_args()
-    OUT.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
     manifest = mclaunch.http_json(mclaunch.MANIFEST_URL, max_age=0)
     v = next(x for x in manifest["versions"] if x["id"] == "1.21.1")
     meta = mclaunch.http_json(v["url"], max_age=0)
@@ -136,7 +139,7 @@ def main() -> int:
     neoforge_ok = all(r["ok"] for r in results["neoforge"])
     results.update(ok=core_ok, mirrors_ok=mirrors_ok, neoforge_ok=neoforge_ok, strict=args.strict)
     ok = core_ok and (not args.strict or (mirrors_ok and neoforge_ok))
-    (OUT / "canary.json").write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
+    (out_dir / "canary.json").write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
     for bucket in ("required", "mirrors", "neoforge", "expected_misses"):
         print(f"== {bucket}")
         for r in results[bucket]:

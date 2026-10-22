@@ -87,6 +87,11 @@
           <span class="hint">镜像只替换验证过的路径；近期失败的源会自动靠后</span>
         </div>
         <div class="row">
+          <label>源健康</label>
+          <button class="ghost" id="checkSources" title="探测核心官方、已验证镜像与 NeoForge（不下载大文件）">检查下载源</button>
+          <span class="hint" id="sourceStatus">未检查</span>
+        </div>
+        <div class="row">
           <label>整合包</label>
           <select id="mrpackPick" class="verpick"></select>
           <input id="mrpackPath" class="grow" placeholder="或粘贴 .mrpack 文件路径">

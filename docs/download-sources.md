@@ -151,6 +151,8 @@ GET /api/downloads?limit=50
 | 全量安装 | 某版本全部 files/assets/libraries + 校验 | 1–2 分钟/版本 | `runs/p118`（1.21.1）、`runs/p122`（1.20.1） |
 
 - canary 默认只让**核心官方**决定退出码；`--strict` 才把镜像/NeoForge 纳入门禁；
+- GUI 的“检查下载源”按钮调用同一个工具，结果写入 `<root>/.mcbridge/canary/canary.json`，
+  不覆盖仓库里的 `runs/p122-source-canary/canary.json`；
 - 2026-10-22 canary：核心 12 项全通、已验证镜像 6 项全通、NeoForge 两项超时（该 host 当前不可用）；
 - 1.20.1 全量冷安装：**111.7 s / 739 MB / 3575 资源对象 / `verify_install` OK**，测完删除；
 - 组合穷举不做；靠“至少一个可达来源 + 校验 + 回退 + 持续健康观察”保证可用性。
