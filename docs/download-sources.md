@@ -36,12 +36,24 @@
 | `launchermeta.mojang.com/` | `bmclapi2.bangbang93.com/` | 同一 BMCL 元数据服务 |
 | `meta.fabricmc.net/v2/` | `bmclapi2.bangbang93.com/fabric-meta/v2/` | 本仓库复测 HTTP 200（403,856 B） |
 | `maven.fabricmc.net/net/fabricmc/fabric-loader/` | `bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-loader/` | 本仓库复测 HTTP 200（1,984,980 B） |
+| `maven.fabricmc.net/net/fabricmc/intermediary/` | `bmclapi2.bangbang93.com/maven/net/fabricmc/intermediary/` | 本仓库 canary 复测 206（2026-10-22） |
 
 **故意不镜像**（复测 404，机械替换只会把可用地址换成 404）：
 
-- `maven.fabricmc.net` 下的 `fabric-api`、`intermediary`；
+- `maven.fabricmc.net` 下的 `fabric-api`（BMCL 404；2026-10-22 再次确认）；
 - `files.minecraftforge.net` 的推广列表（BMCL 对应路径 404）；
 - NeoForge API（暂无验证可用的镜像）。
+
+> 2026-10-22 更正：此前把 intermediary 也列为“BMCL 404”，是测试 URL 写错（用了
+> 1.20.1 的 timestamp 坐标）。正确的 1.21.1 坐标在 BMCL 是可用的，已加入镜像表。
+
+### 2.1.1 下载源模式与健康缓存
+
+- 配置项 `download_source`：`auto`（官方优先，默认）/ `official`（只用官方）/
+  `mirror`（镜像优先，官方兜底）；GUI 高级设置里可切；
+- 最近失败的主机会写入 `<root>/.mcbridge/source-health.json`；`auto` 模式下
+  “连续 2 次非 404 失败、且 10 分钟内”的 host 会被排到最后，成功一次后恢复；
+- 404/403/410 只代表该路径在这个源不存在，**不惩罚 host**；超时/TLS/5xx/摘要失败才计入。
 
 ### 2.2 重试与错误分类
 
@@ -128,15 +140,33 @@ GET /api/downloads?limit=50
 
 完整数据与边界：`runs/p117-download-bench/bench.json`、同目录 `README.md`。
 
+## 3.6 要不要“完整测试所有源”？（runs/p122）
+
+**不需要**。源会随时间波动，穷举“所有文件 × 所有源”既跑不完也证明不了稳定性。采用分层：
+
+| 层 | 覆盖 | 成本 | 证据 |
+|---|---|---|---|
+| 策略单测（mock `urlopen`） | 镜像顺序、重试/404/校验、对冲、缓存、源模式、健康持久化 | 每次提交，秒级 | `test_review_fixes.py` DOWNLOAD 组 23 项 |
+| 可达性 canary | 官方核心 + 已验证镜像 + 已知 404 + NeoForge 独立 | ~30 s，不下载大文件 | `tools/check_download_sources.py` |
+| 全量安装 | 某版本全部 files/assets/libraries + 校验 | 1–2 分钟/版本 | `runs/p118`（1.21.1）、`runs/p122`（1.20.1） |
+
+- canary 默认只让**核心官方**决定退出码；`--strict` 才把镜像/NeoForge 纳入门禁；
+- 2026-10-22 canary：核心 12 项全通、已验证镜像 6 项全通、NeoForge 两项超时（该 host 当前不可用）；
+- 1.20.1 全量冷安装：**111.7 s / 739 MB / 3575 资源对象 / `verify_install` OK**，测完删除；
+- 组合穷举不做；靠“至少一个可达来源 + 校验 + 回退 + 持续健康观察”保证可用性。
+
 ## 4. 门禁与复现
 
-离线回归（不联网，mock `urlopen`）已并入统一门禁，覆盖 17 项：
-镜像顺序、Fabric API 不镜像、元数据镜像与对冲、`max_age=0` 绕过缓存、404 不重试、
-瞬时错误重试、校验失败回退、侧车 SHA-1/缓存/本地摘要、来源记录、字节/速度/来源上报、
-`/api/task`、`/api/downloads`。
+离线回归（不联网，mock `urlopen`）已并入统一门禁，覆盖 **23 项**：
+镜像顺序（含 Fabric Loader / intermediary）、Fabric API 不镜像、元数据镜像与对冲、
+`max_age=0` 绕过缓存、404 不重试、瞬时错误重试、校验失败回退、侧车 SHA-1/缓存/本地摘要、
+来源记录、字节/速度/来源上报、`/api/task`、`/api/downloads`、三种源模式、
+失败 host 排序与健康持久化。
 
 ```text
-python tools/test_review_fixes.py      # DOWNLOAD 组
+python tools/test_review_fixes.py                 # DOWNLOAD 组
+python tools/check_download_sources.py            # 可达性 canary（宽松）
+python tools/check_download_sources.py --strict   # 镜像/NeoForge 也门禁
 ```
 
 真实网络抽检：

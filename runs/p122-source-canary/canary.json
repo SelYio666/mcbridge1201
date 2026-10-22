@@ -1,0 +1,253 @@
+{
+  "generated": "2026-10-22 12:58:54",
+  "required": [
+    {
+      "url": "https://resources.download.minecraft.net/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://resources.download.minecraft.net/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356",
+      "content_length": "1",
+      "content_range": "bytes 0-0/9101",
+      "ms": 208,
+      "ok": true,
+      "label": "asset object"
+    },
+    {
+      "url": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/26836906",
+      "ms": 187,
+      "ok": true,
+      "label": "client jar"
+    },
+    {
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.102.0+1.21.1/fabric-api-0.102.0+1.21.1.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.102.0+1.21.1/fabric-api-0.102.0+1.21.1.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/2286038",
+      "ms": 657,
+      "ok": true,
+      "label": "fabric api jar"
+    },
+    {
+      "url": "https://maven.fabricmc.net/net/fabricmc/intermediary/1.21.1/intermediary-1.21.1.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://maven.fabricmc.net/net/fabricmc/intermediary/1.21.1/intermediary-1.21.1.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/657725",
+      "ms": 656,
+      "ok": true,
+      "label": "fabric intermediary jar"
+    },
+    {
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.19.5/fabric-loader-0.19.5.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.19.5/fabric-loader-0.19.5.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/1984980",
+      "ms": 560,
+      "ok": true,
+      "label": "fabric loader jar"
+    },
+    {
+      "url": "https://meta.fabricmc.net/v2/versions/loader/1.21.1",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://meta.fabricmc.net/v2/versions/loader/1.21.1",
+      "content_length": "1",
+      "content_range": "bytes 0-0/20628",
+      "ms": 767,
+      "ok": true,
+      "label": "fabric loader list"
+    },
+    {
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.10/forge-1.20.1-47.4.10-installer.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.10/forge-1.20.1-47.4.10-installer.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/6078070",
+      "ms": 856,
+      "ok": true,
+      "label": "forge installer"
+    },
+    {
+      "url": "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json",
+      "expect_404": false,
+      "status": 200,
+      "final": "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json",
+      "content_length": null,
+      "content_range": null,
+      "ms": 739,
+      "ok": true,
+      "label": "forge promos"
+    },
+    {
+      "url": "https://libraries.minecraft.net/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://libraries.minecraft.net/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/979212",
+      "ms": 199,
+      "ok": true,
+      "label": "library"
+    },
+    {
+      "url": "https://piston-meta.mojang.com/v1/packages/e61ea955de95de1f99d36616a8b46147e9f6f5d7/17.json",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://piston-meta.mojang.com/v1/packages/e61ea955de95de1f99d36616a8b46147e9f6f5d7/17.json",
+      "content_length": "1",
+      "content_range": "bytes 0-0/449557",
+      "ms": 267,
+      "ok": true,
+      "label": "mojang asset index"
+    },
+    {
+      "url": "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
+      "content_length": "1",
+      "content_range": "bytes 0-0/278138",
+      "ms": 184,
+      "ok": true,
+      "label": "mojang manifest"
+    },
+    {
+      "url": "https://piston-meta.mojang.com/v1/packages/1757c8b1fbfc6b638504e1f6cceb05893f7389d5/1.21.1.json",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://piston-meta.mojang.com/v1/packages/1757c8b1fbfc6b638504e1f6cceb05893f7389d5/1.21.1.json",
+      "content_length": "1",
+      "content_range": "bytes 0-0/38408",
+      "ms": 281,
+      "ok": true,
+      "label": "mojang version json"
+    }
+  ],
+  "mirrors": [
+    {
+      "url": "https://bmclapi2.bangbang93.com/assets/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://bmclapi1.sakura.sld.tw:443/download/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356?name=b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356&s=vBp8gsKRbZTPy8L_1fiFwuWixuo&e=mvj2t33j",
+      "content_length": "1",
+      "content_range": "bytes 0-0/9101",
+      "ms": 572,
+      "ok": true,
+      "label": "bmcl asset"
+    },
+    {
+      "url": "https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader/1.21.1",
+      "expect_404": false,
+      "status": 200,
+      "final": "https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader/1.21.1",
+      "content_length": "403856",
+      "content_range": null,
+      "ms": 148,
+      "ok": true,
+      "label": "bmcl fabric loader list"
+    },
+    {
+      "url": "https://bmclapi2.bangbang93.com/maven/net/fabricmc/intermediary/1.21.1/intermediary-1.21.1.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://mirror.nyist.edu.cn/bmclapi/net/fabricmc/intermediary/1.21.1/intermediary-1.21.1.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/657725",
+      "ms": 303,
+      "ok": true,
+      "label": "bmcl intermediary jar"
+    },
+    {
+      "url": "https://bmclapi2.bangbang93.com/maven/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://mirror.nyist.edu.cn/bmclapi/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/979212",
+      "ms": 315,
+      "ok": true,
+      "label": "bmcl library"
+    },
+    {
+      "url": "https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-loader/0.19.5/fabric-loader-0.19.5.jar",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://mirror.nyist.edu.cn/bmclapi/net/fabricmc/fabric-loader/0.19.5/fabric-loader-0.19.5.jar",
+      "content_length": "1",
+      "content_range": "bytes 0-0/1984980",
+      "ms": 299,
+      "ok": true,
+      "label": "bmcl loader jar"
+    },
+    {
+      "url": "https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json",
+      "expect_404": false,
+      "status": 206,
+      "final": "https://minio.749333.xyz/bmclapi/f0/f09921bbfd54646ce1ddbe92caf6a8dce4502a9a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=NTaie3RL2Vgez0tLCS2X%2F20261022%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261022T045846Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=f61d047e2fb732b840d7a7b4221dc00c51b1eb12acfaf42f950e1a804fc8f66c",
+      "content_length": "1",
+      "content_range": "bytes 0-0/278138",
+      "ms": 1138,
+      "ok": true,
+      "label": "bmcl manifest"
+    }
+  ],
+  "neoforge": [
+    {
+      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.1.264/neoforge-21.1.264-installer.jar",
+      "expect_404": false,
+      "error": "URLError(TimeoutError('timed out'))",
+      "ms": 20002,
+      "ok": false,
+      "label": "neoforge installer"
+    },
+    {
+      "url": "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge",
+      "expect_404": false,
+      "error": "URLError(TimeoutError('timed out'))",
+      "ms": 20002,
+      "ok": false,
+      "label": "neoforge versions"
+    }
+  ],
+  "expected_misses": [
+    {
+      "url": "https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-api/fabric-api/0.102.0+1.21.1/fabric-api-0.102.0+1.21.1.jar",
+      "expect_404": true,
+      "status": 404,
+      "ms": 2015,
+      "ok": true,
+      "label": "bmcl fabric-api"
+    },
+    {
+      "url": "https://bmclapi2.bangbang93.com/forge/promotions_slim.json",
+      "expect_404": true,
+      "status": 404,
+      "ms": 251,
+      "ok": true,
+      "label": "bmcl forge promos"
+    },
+    {
+      "url": "https://bmclapi2.bangbang93.com/neoforge/versions",
+      "expect_404": true,
+      "status": 404,
+      "ms": 251,
+      "ok": true,
+      "label": "bmcl neoforge api"
+    }
+  ],
+  "ok": true,
+  "mirrors_ok": true,
+  "neoforge_ok": false,
+  "strict": false
+}

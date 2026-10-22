@@ -78,6 +78,15 @@
           <button class="ghost" id="save">保存</button>
         </div>
         <div class="row">
+          <label>下载源</label>
+          <select id="downloadSource">
+            <option value="auto">自动（官方优先）</option>
+            <option value="official">仅官方</option>
+            <option value="mirror">镜像优先</option>
+          </select>
+          <span class="hint">镜像只替换验证过的路径；近期失败的源会自动靠后</span>
+        </div>
+        <div class="row">
           <label>整合包</label>
           <select id="mrpackPick" class="verpick"></select>
           <input id="mrpackPath" class="grow" placeholder="或粘贴 .mrpack 文件路径">

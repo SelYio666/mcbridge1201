@@ -287,6 +287,12 @@ def test_launcher() -> None:
     check("launcher /api/task exposes byte progress and speed", status == 200
           and "bytes_done" in task and "speed" in task and "source" in task, str(task)[:120])
 
+    status, _body = post("/api/config", {"download_source": "mirror"})
+    cfg2 = json.loads(get("/api/config")[1])
+    check("launcher config stores download_source", status == 200
+          and cfg2.get("download_source") == "mirror", str(cfg2.get("download_source")))
+    post("/api/config", {"download_source": "auto"})
+
     opened = []
     orig_open = server.open_in_explorer
     server.open_in_explorer = opened.append
@@ -461,6 +467,9 @@ def test_download_policy() -> None:
 
     mclaunch._JSON_CACHE.clear()
     mclaunch._SIDECAR_CACHE.clear()
+    mclaunch.set_source_mode("auto")
+    mclaunch.SOURCE_HEALTH.clear()
+    mclaunch.SOURCE_HEALTH_PATH = None
 
     workdir = WORK / "download-policy"
     if workdir.exists():
@@ -475,6 +484,11 @@ def test_download_policy() -> None:
     check("DOWNLOAD fabric-loader has the verified BMCL maven fallback",
           any(u.startswith("https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-loader/")
               for u in mclaunch.mirror_urls(loader_url)))
+    inter_url = ("https://maven.fabricmc.net/net/fabricmc/intermediary/1.21.1/"
+                 "intermediary-1.21.1.jar")
+    check("DOWNLOAD intermediary has the verified BMCL maven fallback",
+          any(u.startswith("https://bmclapi2.bangbang93.com/maven/net/fabricmc/intermediary/")
+              for u in mclaunch.mirror_urls(inter_url)))
     check("DOWNLOAD fabric-api stays official (no verified mirror)",
           len(mclaunch.mirror_urls(api_url)) == 1, str(mclaunch.mirror_urls(api_url)))
     check("DOWNLOAD metadata uses the BMCL meta mirror",
@@ -553,6 +567,7 @@ def test_download_policy() -> None:
           str(cache_calls["n"]))
 
     # 404 is not retried: the mirror is tried immediately
+    mclaunch.SOURCE_HEALTH.clear()
     dest = workdir / "asset.bin"
     calls: list[str] = []
 
@@ -572,6 +587,7 @@ def test_download_policy() -> None:
           and len(calls) == 2 and not dest.with_suffix(".bin.part").exists(), str(calls))
 
     # transient errors are retried on the same source
+    mclaunch.SOURCE_HEALTH.clear()
     dest2 = workdir / "retry.bin"
     attempts = {"n": 0}
 
@@ -653,6 +669,46 @@ def test_download_policy() -> None:
         "https://maven.fabricmc.net/unit/cached.jar", cached_jar))
     check("DOWNLOAD maven hot path uses the local sidecar",
           cached_jar.read_bytes() == b"cached")
+
+    # source modes + persisted host health
+    backup_mode = mclaunch.SOURCE_MODE
+    backup_health = dict(mclaunch.SOURCE_HEALTH)
+    backup_path = mclaunch.SOURCE_HEALTH_PATH
+    try:
+        mclaunch.SOURCE_HEALTH.clear()
+        mclaunch.set_source_mode("official")
+        check("DOWNLOAD official mode disables mirrors",
+              mclaunch.ordered_candidates(loader_url) == [loader_url],
+              str(mclaunch.ordered_candidates(loader_url)))
+        mclaunch.set_source_mode("mirror")
+        mirror_first = mclaunch.ordered_candidates(loader_url)[0]
+        check("DOWNLOAD mirror mode puts mirrors first",
+              mirror_first.startswith("https://bmclapi2.bangbang93.com/"), mirror_first)
+        mclaunch.set_source_mode("auto")
+        mclaunch.SOURCE_HEALTH.clear()
+        check("DOWNLOAD auto mode starts with the official URL",
+              mclaunch.ordered_candidates(loader_url)[0] == loader_url)
+        mirror_url = mclaunch.mirror_urls(loader_url)[1]
+        mclaunch._record_health(mirror_url, False)
+        mclaunch._record_health(mirror_url, False)
+        ordered = mclaunch.ordered_candidates(loader_url)
+        check("DOWNLOAD a recently failing host is ordered last",
+              ordered[0] == loader_url and ordered[-1] == mirror_url, str(ordered))
+
+        health_file = workdir / "health.json"
+        mclaunch.SOURCE_HEALTH_PATH = health_file
+        mclaunch.SOURCE_HEALTH.clear()
+        mclaunch._record_health(mirror_url, False)
+        mclaunch.SOURCE_HEALTH.clear()
+        loaded = mclaunch.load_source_health(health_file)
+        check("DOWNLOAD persists and reloads host health", loaded >= 1
+              and "bmclapi2.bangbang93.com" in mclaunch.SOURCE_HEALTH,
+              str(mclaunch.SOURCE_HEALTH))
+    finally:
+        mclaunch.SOURCE_HEALTH_PATH = backup_path
+        mclaunch.SOURCE_HEALTH.clear()
+        mclaunch.SOURCE_HEALTH.update(backup_health)
+        mclaunch.set_source_mode(backup_mode)
 
 
 def main() -> int:

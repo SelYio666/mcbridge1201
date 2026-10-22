@@ -1,0 +1,54 @@
+{
+  "mc": "1.20.1",
+  "ok": true,
+  "error": null,
+  "seconds": 111.7,
+  "bytes": 739217987,
+  "files": 3650,
+  "assets": 3575,
+  "progress": {
+    "phase": "download",
+    "total": 3598,
+    "done": 3598,
+    "message": "assets",
+    "error": null,
+    "bytes_done": 735877328,
+    "bytes_total": 16374197,
+    "speed": 5683394.0,
+    "source": "https://resources.download.minecraft.net/57/574ee01c1617c1cd9d2111822637f3da9d5a34f0"
+  },
+  "downloads_retained": 400,
+  "mirrors_retained": 0,
+  "failures_retained": 0,
+  "retries_retained": 0,
+  "verify_ok": true,
+  "verify_items": {
+    "version_json": true,
+    "client_jar": {
+      "ok": true,
+      "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\p122-1.20.1-full\\versions\\1.20.1\\1.20.1.jar",
+      "size": 23028853
+    },
+    "libraries": {
+      "total": 64,
+      "missing": 0,
+      "missing_sample": []
+    },
+    "natives": {
+      "dir": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\p122-1.20.1-full\\versions\\1.20.1\\natives",
+      "dll": 7,
+      "sample": [
+        "OpenAL.dll",
+        "glfw.dll",
+        "jemalloc.dll",
+        "lwjgl.dll"
+      ]
+    },
+    "asset_index": {
+      "ok": true,
+      "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\p122-1.20.1-full\\assets\\indexes\\5.json"
+    }
+  },
+  "root_bytes": 739217987,
+  "root_cleaned": true
+}

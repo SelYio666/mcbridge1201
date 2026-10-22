@@ -45,8 +45,9 @@ python launcher/server.py
 | Fabric 安装（官方 meta，最新稳定 loader） | ✅ 实测 |
 | 离线启动（原版 / Fabric），单机与局域网 | ✅ 实测（`runs/p112-launcher/`） |
 | 网页 GUI：版本列表、筛选、安装进度、控制台、启动 | ✅ 实测 |
-| BMCLAPI 镜像兜底（逐路径验证：资源 / 库 / 元数据 / Fabric Loader；Fabric API 不替换） | ✅ 实测（官方失败自动切镜像，见 [download-sources.md](download-sources.md)） |
+| BMCLAPI 镜像兜底（逐路径验证：资源 / 库 / 元数据 / Fabric Loader / intermediary；Fabric API 不替换） | ✅ 实测（官方失败自动切镜像，见 [download-sources.md](download-sources.md)） |
 | 下载进度：文件数 + 已下载字节 + 实时速度 + 当前来源 | ✅ 实测（`/api/task` 的 `bytes_done` / `speed` / `source`；不显示虚假剩余时间） |
+| 下载源设置：自动（官方优先）/ 仅官方 / 镜像优先；近期失败 host 自动靠后 | ✅ 配置 `download_source`、`<root>/.mcbridge/source-health.json` |
 | Forge 1.20.1 安装 + 启动 | ✅ 已接入 `minecraft-launcher-lib`（BSD-2）并实测到达主菜单 |
 | NeoForge 1.21.1 安装 + 启动 | ✅ 实测空 NeoForge 21.1.264 到主菜单（`runs/p116-neoforge-launch/`） |
 | 正版登录 / 皮肤 / 多人认证 | ❌ 不做，仅离线 |

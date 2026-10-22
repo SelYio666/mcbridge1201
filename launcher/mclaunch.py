@@ -17,6 +17,7 @@ import sys
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 import uuid
 import zipfile
@@ -121,12 +122,17 @@ def http_json(url: str, retries: int = 1, timeout: int = 20, max_age: int = META
             except Exception:  # noqa: BLE001 - never serve a broken cache entry
                 _JSON_CACHE.pop(url, None)
 
-    candidates = mirror_urls(url)
+    candidates = ordered_candidates(url)
     last: Exception | None = None
 
     def store(raw: bytes):
         if max_age > 0:
             _JSON_CACHE[url] = (time.time(), raw)
+
+    def failed_health(exc: Exception, candidate: str) -> None:
+        if isinstance(exc, urllib.error.HTTPError) and exc.code in (403, 404, 410):
+            return
+        _record_health(candidate, False)
 
     if len(candidates) == 1:
         for attempt in range(max(1, retries)):
@@ -134,20 +140,23 @@ def http_json(url: str, retries: int = 1, timeout: int = 20, max_age: int = META
                 raw = _fetch_json(candidates[0], timeout)
                 data = json.loads(raw)
                 store(raw)
+                _record_health(candidates[0], True)
                 return data
             except Exception as exc:  # noqa: BLE001
                 last = exc
+                failed_health(exc, candidates[0])
                 time.sleep(1.0 + attempt)
         raise RuntimeError(f"GET {url} failed: {last}")
 
     pool = ThreadPoolExecutor(max_workers=len(candidates))
-    pending: set = set()
+    pending: dict = {}
     started = 0
     last = None
 
     def start_next() -> None:
         nonlocal started
-        pending.add(pool.submit(_fetch_json, candidates[started], timeout))
+        candidate = candidates[started]
+        pending[pool.submit(_fetch_json, candidate, timeout)] = candidate
         started += 1
 
     try:
@@ -161,15 +170,18 @@ def http_json(url: str, retries: int = 1, timeout: int = 20, max_age: int = META
             wait_for = 0.5
             if started < len(candidates):
                 wait_for = max(0.05, min(0.5, deadline - time.time()))
-            done, pending = wait(pending, timeout=wait_for, return_when=FIRST_COMPLETED)
+            done, _ = wait(set(pending), timeout=wait_for, return_when=FIRST_COMPLETED)
             for fut in done:
+                source = pending.pop(fut)
                 try:
                     raw = fut.result()
                     data = json.loads(raw)
                     store(raw)
+                    _record_health(source, True)
                     return data
                 except Exception as exc:  # noqa: BLE001
                     last = exc
+                    failed_health(exc, source)
             if time.time() >= deadline and started < len(candidates):
                 start_next()
                 deadline = float("inf")
@@ -193,11 +205,15 @@ MIRRORS: list[tuple[str, list[str]]] = [
     ("https://piston-meta.mojang.com/", ["https://bmclapi2.bangbang93.com/"]),
     ("https://launchermeta.mojang.com/", ["https://bmclapi2.bangbang93.com/"]),
     ("https://meta.fabricmc.net/v2/", ["https://bmclapi2.bangbang93.com/fabric-meta/v2/"]),
-    # Verified 2026-10-21: the BMCL maven proxy serves fabric-loader jars (HTTP 200, full file),
-    # while fabric-api and intermediary return 404 there. The mapping is therefore path-scoped:
-    # do not blanket-replace maven.fabricmc.net (that would turn working URLs into 404s).
+    # Verified 2026-10-21: the BMCL maven proxy serves fabric-loader jars (HTTP 200, full file).
+    # fabric-api is still 404 there, so the mapping is path-scoped: do not blanket-replace
+    # maven.fabricmc.net (that would turn working URLs into 404s).
     ("https://maven.fabricmc.net/net/fabricmc/fabric-loader/",
      ["https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-loader/"]),
+    # Verified 2026-10-22 by tools/check_download_sources.py: BMCL's maven proxy serves
+    # intermediary too (206 range). fabric-api is still 404 there, so it stays official.
+    ("https://maven.fabricmc.net/net/fabricmc/intermediary/",
+     ["https://bmclapi2.bangbang93.com/maven/net/fabricmc/intermediary/"]),
 ]
 
 
@@ -209,6 +225,96 @@ def mirror_urls(url: str) -> list[str]:
             for prefix in candidates:
                 mirrors.append(prefix + url[len(official):])
     return [url] + mirrors
+
+
+SOURCE_MODES = ("auto", "official", "mirror")
+SOURCE_MODE = "auto"  # "auto" = official first; "official" = no mirrors; "mirror" = mirrors first
+SOURCE_HEALTH: dict[str, dict] = {}
+SOURCE_HEALTH_PATH: Path | None = None
+_HEALTH_LOCK = threading.Lock()
+HEALTH_TTL = 600  # a host with >=2 recent failures is deprioritised for 10 minutes
+
+
+def set_source_mode(mode: str | None) -> str:
+    global SOURCE_MODE
+    mode = (mode or "auto").strip().lower()
+    SOURCE_MODE = mode if mode in SOURCE_MODES else "auto"
+    return SOURCE_MODE
+
+
+def load_source_health(path: Path) -> int:
+    """Load the persisted host health map (best effort; a broken file is ignored)."""
+    global SOURCE_HEALTH_PATH
+    SOURCE_HEALTH_PATH = Path(path)
+    try:
+        data = json.loads(SOURCE_HEALTH_PATH.read_text(encoding="utf-8"))
+        if isinstance(data, dict):
+            with _HEALTH_LOCK:
+                SOURCE_HEALTH.clear()
+                SOURCE_HEALTH.update({str(k): v for k, v in data.items() if isinstance(v, dict)})
+            return len(SOURCE_HEALTH)
+    except Exception:  # noqa: BLE001 - missing/corrupt cache is fine
+        pass
+    return 0
+
+
+def save_source_health() -> None:
+    if SOURCE_HEALTH_PATH is None:
+        return
+    try:
+        SOURCE_HEALTH_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with _HEALTH_LOCK:
+            snapshot = {k: dict(v) for k, v in SOURCE_HEALTH.items()}
+        SOURCE_HEALTH_PATH.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
+    except OSError:
+        pass
+
+
+def _host(url: str) -> str:
+    return urllib.parse.urlsplit(url).netloc.lower()
+
+
+def _record_health(url: str, ok: bool) -> None:
+    host = _host(url)
+    if not host:
+        return
+    changed = False
+    with _HEALTH_LOCK:
+        entry = SOURCE_HEALTH.setdefault(host, {"fails": 0})
+        if ok:
+            if entry.get("fails", 0) or "last_ok" not in entry:
+                entry["fails"] = 0
+                entry["last_ok"] = time.time()
+                changed = True
+        else:
+            entry["fails"] = int(entry.get("fails", 0)) + 1
+            entry["last_fail"] = time.time()
+            changed = True
+    # persist failures and recoveries, not every successful asset
+    if changed:
+        save_source_health()
+
+
+def _health_rank(url: str) -> int:
+    with _HEALTH_LOCK:
+        entry = SOURCE_HEALTH.get(_host(url))
+        if not entry:
+            return 1  # unknown: keep after known-good, before known-bad
+        if int(entry.get("fails", 0)) >= 2 and time.time() - float(entry.get("last_fail", 0)) < HEALTH_TTL:
+            return 2  # recently failing
+        return 0  # recently healthy
+
+
+def ordered_candidates(url: str) -> list[str]:
+    """Candidate order for the current source mode, with recent-failure hosts last."""
+    candidates = mirror_urls(url)
+    if SOURCE_MODE == "official":
+        return [url]
+    if SOURCE_MODE == "mirror":
+        candidates = candidates[1:] + [url]
+    # stable sort: healthy/unknown keep their mode order, recently failing go last
+    ranked = sorted(enumerate(candidates), key=lambda pair: (_health_rank(pair[1]), pair[0]))
+    return [c for _i, c in ranked]
 
 
 DOWNLOAD_EVENTS: deque = deque(maxlen=400)
@@ -242,7 +348,7 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3,
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
     last = None
-    for candidate in mirror_urls(url):
+    for candidate in ordered_candidates(url):
         is_mirror = candidate != url
         for attempt in range(1, max(1, retries) + 1):
             try:
@@ -270,6 +376,7 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3,
                     tmp.unlink(missing_ok=True)
                     raise RuntimeError("sha1 mismatch")
                 tmp.replace(dest)
+                _record_health(candidate, True)
                 _record_download(file=dest.name, url=candidate, final=final_url,
                                  mirror=is_mirror, redirected=final_url != candidate,
                                  bytes=size, attempts=attempt, error=None)
@@ -277,6 +384,8 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3,
             except urllib.error.HTTPError as exc:  # noqa: PERF203 - per-source policy
                 tmp.unlink(missing_ok=True)
                 last = exc
+                if exc.code not in (403, 404, 410):
+                    _record_health(candidate, False)
                 _record_download(file=dest.name, url=candidate, mirror=is_mirror,
                                  bytes=0, attempts=attempt, error=f"http {exc.code}")
                 if exc.code in (403, 404, 410):
@@ -285,6 +394,7 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3,
             except Exception as exc:  # noqa: BLE001 - timeout/TLS/sha1/disk
                 tmp.unlink(missing_ok=True)
                 last = exc
+                _record_health(candidate, False)
                 _record_download(file=dest.name, url=candidate, mirror=is_mirror,
                                  bytes=0, attempts=attempt, error=str(exc)[:160])
                 time.sleep(1.5 * attempt)

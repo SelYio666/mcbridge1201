@@ -43,12 +43,25 @@ def default_root() -> str:
 
 def load_config():
     if CONFIG.exists():
-        return json.loads(CONFIG.read_text(encoding="utf-8"))
-    return {"root": default_root(), "username": "Player", "mem": "2G"}
+        cfg = json.loads(CONFIG.read_text(encoding="utf-8"))
+        cfg.setdefault("download_source", "auto")
+        return cfg
+    return {"root": default_root(), "username": "Player", "mem": "2G", "download_source": "auto"}
 
 
 def save_config(cfg):
     CONFIG.write_text(json.dumps(cfg, indent=2), encoding="utf-8")
+
+
+def apply_download_config(cfg):
+    """Push the configured source mode + persisted host health into the download core."""
+    mode = mclaunch.set_source_mode(cfg.get("download_source"))
+    try:
+        root = Path(cfg["root"])
+        mclaunch.load_source_health(root / ".mcbridge" / "source-health.json")
+    except Exception:  # noqa: BLE001 - a broken/missing health file must not block startup
+        pass
+    return mode
 
 
 MC_ID = re.compile(
@@ -371,7 +384,10 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/config":
             cfg = load_config()
             cfg.update({k: body[k] for k in ("root", "username", "mem") if k in body})
+            if "download_source" in body:
+                cfg["download_source"] = mclaunch.set_source_mode(body["download_source"])
             save_config(cfg)
+            apply_download_config(cfg)
             return self._send(200, cfg)
         if path == "/api/open-dir":
             cfg = load_config()
@@ -522,8 +538,10 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     port = int(os.environ.get("LAUNCHER_PORT", "8765"))
     cfg = load_config()
+    apply_download_config(cfg)
     print(f"launcher root: {cfg['root']}")
     print(f"launcher UI:   http://127.0.0.1:{port}/")
+    print(f"download src:  {cfg.get('download_source', 'auto')}")
     srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     if os.environ.get("LAUNCHER_OPEN", "1") == "1":
         threading.Thread(target=lambda: (time.sleep(0.6), webbrowser.open(f"http://127.0.0.1:{port}/")),

@@ -94,6 +94,7 @@ async function refresh() {
     if (!$("username").value) $("username").value = cfg.username || "Player";
     if (!$("mem").value) $("mem").value = cfg.mem || "2G";
     if (!$("root").value) $("root").value = cfg.root || "";
+    if ($("downloadSource")) $("downloadSource").value = cfg.download_source || "auto";
     const st = await api("/api/status");
     state.versions = st.versions || [];
     $("dot").classList.add("ok");
@@ -279,7 +280,8 @@ async function saveCfg() {
     body: JSON.stringify({
       root: $("root").value.trim() || state.cfg.root,
       username: $("username").value.trim() || "Player",
-      mem: $("mem").value.trim() || "2G"
+      mem: $("mem").value.trim() || "2G",
+      download_source: $("downloadSource") ? $("downloadSource").value : "auto"
     })
   });
   refresh();

@@ -18,8 +18,8 @@ from datetime import datetime, timezone
 UA = "mcbridge1201-p0/0.1 (+local research; contact: local)"
 
 # Same verified, path-scoped mirror policy as launcher/mclaunch.py: only prefixes we have
-# actually tested are rewritten. fabric-api / intermediary have no BMCL mirror (404), so
-# they keep the official URL (and rely on retries).
+# actually tested are rewritten. fabric-api has no BMCL mirror (404), so it keeps the
+# official URL and relies on retries; intermediary was verified mirrored on 2026-10-22.
 MIRRORS: list[tuple[str, list[str]]] = [
     ("https://resources.download.minecraft.net/", ["https://bmclapi2.bangbang93.com/assets/"]),
     ("https://libraries.minecraft.net/", ["https://bmclapi2.bangbang93.com/maven/"]),
@@ -29,6 +29,8 @@ MIRRORS: list[tuple[str, list[str]]] = [
     ("https://meta.fabricmc.net/v2/", ["https://bmclapi2.bangbang93.com/fabric-meta/v2/"]),
     ("https://maven.fabricmc.net/net/fabricmc/fabric-loader/",
      ["https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-loader/"]),
+    ("https://maven.fabricmc.net/net/fabricmc/intermediary/",
+     ["https://bmclapi2.bangbang93.com/maven/net/fabricmc/intermediary/"]),
 ]
 
 
