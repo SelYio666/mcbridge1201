@@ -103,7 +103,10 @@ public class BatchingBuffers {
         if (total != lastLoggedDraws && now - lastLogTime > 2000) {
             lastLogTime = now;
             lastLoggedDraws = total;
-            System.out.println("[mcbridge-port] batched-draws=" + total);
+            System.out.println("[mcbridge-port] batched-draws total=" + total
+                    + " hud=" + HUD_BATCH.draws
+                    + " itemModel=" + ITEM_MODEL_BATCH.draws
+                    + " itemOverlay=" + ITEM_OVERLAY_BATCH.draws);
         }
     }
 

@@ -128,9 +128,10 @@ def install(version: str, root: Path, workers: int = 16) -> int:
     jobs = []
     for lib in libs:
         art = lib.get("downloads", {}).get("artifact")
-        if art:
-            jobs.append((art["url"], root / "libraries" / art["path"], art.get("sha1")))
         win = (lib.get("natives") or {}).get("windows")
+        is_native = bool(win) or "natives-windows" in lib.get("name", "")
+        if art:
+            jobs.append((art["url"], root / "libraries" / art["path"], art.get("sha1"), is_native))
         if win:
             cl = lib.get("downloads", {}).get("classifiers", {}).get(win)
             if cl:
@@ -139,8 +140,8 @@ def install(version: str, root: Path, workers: int = 16) -> int:
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
         futs = {}
         for job in jobs:
-            url, path, sha1 = job[0], job[1], job[2]
-            futs[pool.submit(download, url, path, sha1)] = (path, bool(job[3] if len(job) > 3 else False))
+            url, path, sha1, is_native = job
+            futs[pool.submit(download, url, path, sha1)] = (path, is_native)
         for i, fut in enumerate(concurrent.futures.as_completed(futs), 1):
             path, is_native = futs[fut]
             if not fut.result():

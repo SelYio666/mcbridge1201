@@ -59,6 +59,8 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
 
     /** debug/evidence counter: how many buffers actually went through the batched draw path */
     public static long batchedDraws;
+    /** per-source counter for evidence (HUD vs item-model vs item-overlay) */
+    public long draws;
 
     protected final Map<class_1921, ReferenceSet<class_287>> pendingBuffers =
             new Reference2ObjectLinkedOpenHashMap<>();
@@ -192,6 +194,7 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
                     }
                     DRAW_LAYER.invoke(this, layer, builder);
                     batchedDraws++;
+                    this.draws++;
                 } catch (ReflectiveOperationException exc) {
                     throw new RuntimeException("batched draw failed for " + layer, exc);
                 } finally {

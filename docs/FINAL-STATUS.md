@@ -28,7 +28,7 @@
 | Forge 1.20.1-47.4.28 + Farmer's Delight 内容模组 + 单人世界 | `runs/p131-forge-content-mod/`（配置生成、无注册错误、`joined`） |
 | NeoForge 21.1.264 + Jade（数据同步/HUD）+ 单人世界 | `runs/p130-neoforge-jade/`（Jade tooltip 可见） |
 | Fabric 1.21.1 专用服务器 + 启动器客户端加入（quickPlayMultiplayer） | `runs/p132-dedicated-join/`（早期 p75/p76 双客户端同步） |
-| ImmediatelyFast 1.21.1 batching 移植：启动进世界 + HUD 批处理计数 + 关闭开关对照 | `runs/p134-immediatelyfast-port-boot/`、`runs/p137-immediatelyfast-hud-off/` |
+| ImmediatelyFast 1.21.1 batching 移植：启动进世界 + universal batching 计数 | `runs/p134-immediatelyfast-port-boot/`（per-batch 计数显示 HUD 专用批次=0，待续） |
 | ImmediatelyFast 移植规则/源码回归（5 类替换 + Identifier 桥 + 无 tombstone） | `rules/fabric-1.21.1/immediatelyfast-batching-port.json`、`tools/test_review_fixes.py` IFPORT 组 |
 | Forge/NeoForge 安装自动补原版 base | `runs/p129`、回归检查（LOADER 组） |
 | Forge/NeoForge 启动命令保留 `extra_game`（quickPlay 等参数） | `runs/p127`、回归检查（NEOFORGE 组） |
@@ -86,7 +86,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 | NeoForge 带第三方模组 / 进世界 | ✅ 已通过：AppleSkin（p127）、Farmer's Delight 内容模组（p128）、Jade 数据同步/HUD（p130）；**未测** NeoForge 专用服务器、复杂多方块模组与新建世界 |
 | Forge 1.20.1 带模组世界 | ✅ 显示类（AppleSkin，p129）+ 内容类（Farmer's Delight，p131）；**未测** Forge 网络同步/专用服务器 |
 | 渲染类模组：Sodium / Iris | ❌ | EntityCulling 已通过（p119）；ImmediatelyFast 已通过 batching 移植（p134/p137）；Sodium/Iris 未触碰 |
-| ImmediatelyFast 的完整度 | ⚠️ 已生效但降级 | HUD/物品批处理生效、A/B 可复现；**未移植** Iris 兼容与 per-lighting 物品变体；私有成员走反射 |
+| ImmediatelyFast 的完整度 | ⚠️ 部分生效 | universal batching 已生效（启动/进世界/计数）；**HUD/物品专用 fast-path 尚未被喂到**（per-batch 计数 0）；Iris 与 per-lighting 物品变体未移植 |
 | Shulker 网格预览 | ⏸ 封存 | 环境侧容器组件问题，需抓包复现 |
 | TrashSlot 完整 UI 流程 | ⏸ | 旧桥版本已跑通（p63–p65）；当前桥只做 bridge 级 + 探针 |
 | mrpack 含 files 的真实包 | ⏸ | 只测过无 files 的最小包 |

@@ -1,12 +1,15 @@
 {
   "joined": true,
   "crash": null,
-  "exit_code": 1,
+  "exit_code": 4294967295,
   "errors": [
-    "[18:04:18] [Download-2/ERROR]: Failed to fetch user properties",
+    "[18:14:49] [Download-2/ERROR]: Failed to fetch user properties",
     "com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401",
     "\tat knot/com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:59) ~[authlib-6.0.54.jar:?]",
-    "Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401"
+    "Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401",
+    "[18:15:13] [Render thread/ERROR]: Unreported exception thrown!",
+    "java.lang.UnsupportedOperationException: CenturyBridge tombstone: net.minecraft.class_4588.method_1344 no longer exists in 1.21.1 (died @1.20.6->1.21)",
+    "java.lang.UnsupportedOperationException: CenturyBridge tombstone: net.minecraft.class_4588.method_1344 no longer exists in 1.21.1 (died @1.20.6->1.21)"
   ],
   "batched_draws_logged": []
 }
