@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>从零开始：用下载源手动安装 Minecraft（1.20.1 / 1.21.1）</title>
+<style>
+  :root { --fg:#1b2430; --dim:#5d6e82; --line:#dbe3ed; --bg:#f7f9fc; --accent:#0b6bcb;
+          --ok:#15803d; --warn:#b45309; --code:#eef3f9; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.72 "Microsoft YaHei","Segoe UI",system-ui,sans-serif; }
+  main { width:1100px; margin:0 auto; padding:44px 56px 64px; }
+  header { border-bottom:3px solid var(--accent); padding-bottom:22px; margin-bottom:26px; }
+  h1 { font-size:34px; margin:0 0 8px; }
+  .sub { color:var(--dim); font-size:16px; }
+  .meta { margin-top:12px; display:flex; gap:20px; flex-wrap:wrap; color:var(--dim); font-size:14px; }
+  .meta b { color:var(--fg); }
+  .step { display:flex; gap:20px; margin:24px 0; }
+  .num { flex:0 0 54px; height:54px; border-radius:50%; background:var(--accent); color:#fff;
+         font-size:25px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .body { flex:1; background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 24px; }
+  .body h2 { font-size:22px; margin:0 0 8px; }
+  .body p { margin:6px 0; }
+  .body ol, .body ul { margin:8px 0 0; padding-left:22px; }
+  .body li { margin:4px 0; }
+  .tag { display:inline-block; font-size:12px; padding:1px 9px; border-radius:999px; margin-left:8px; vertical-align:2px; }
+  .t-ok { background:#dcfce7; color:var(--ok); }
+  .t-opt { background:#e0e7ff; color:#3730a3; }
+  code { background:var(--code); padding:1px 6px; border-radius:4px; font-family:Consolas,"Courier New",monospace; font-size:13.5px; }
+  pre { background:var(--code); border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+        font-family:Consolas,"Courier New",monospace; font-size:13px; white-space:pre-wrap; word-break:break-all; margin:10px 0 0; }
+  .note { background:#fff8e6; border:1px solid #f1d9a7; border-radius:10px; padding:10px 14px; margin:12px 0 0; }
+  .danger { background:#fdecec; border:1px solid #f3bdbd; border-radius:10px; padding:12px 16px; margin:22px 0 0; }
+  table { width:100%; border-collapse:collapse; margin:12px 0 0; font-size:14px; }
+  th,td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#eaf1f9; }
+  footer { margin-top:30px; color:var(--dim); font-size:13px; border-top:1px solid var(--line); padding-top:14px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>从零开始：用下载源手动安装 Minecraft</h1>
+    <div class="sub">1.20.1 / 1.21.1 通用 · 从版本清单一路到能启动 · 不需要 GitHub</div>
+    <div class="meta">
+      <span>难度：<b>进阶</b></span>
+      <span>磁盘：<b>约 1 GB</b></span>
+      <span>耗时：<b>20–40 分钟</b></span>
+      <span>结果：<b>一个可被 PCL 导入的 .minecraft</b></span>
+    </div>
+  </header>
+
+  <div class="note">
+    <b>先说明：</b>普通玩家不用这么折腾——用官方启动器或 HMCL 下载即可。这份教程是给“想自己用源下载”
+    或“启动器坏了要手动救”的人看的。全部文件都来自公开源，下载后按 sha1 校验。
+  </div>
+
+  <div class="step">
+    <div class="num">1</div>
+    <div class="body">
+      <h2>准备目录与工具</h2>
+      <ul>
+        <li>新建目录，例如 <code>D:\MC</code>（后面所有文件都放这里）；</li>
+        <li>需要：浏览器或 <code>curl</code>、Python 3（用来跑下载/校验脚本）、Java（第 6 步再装）；</li>
+        <li>本文用 1.21.1 举例，把命令里的版本号换成 1.20.1 即可。</li>
+      </ul>
+      <pre>mkdir D:\MC
+cd /d D:\MC</pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">2</div>
+    <div class="body">
+      <h2>拿版本清单，找到目标版本</h2>
+      <p>所有版本都从同一份清单开始：</p>
+      <pre>https://piston-meta.mojang.com/mc/game/version_manifest_v2.json</pre>
+      <p>在里面找 <code>"id": "1.21.1"</code>，复制它的 <code>url</code> 字段（这是该版本的 JSON），下载为
+        <code>1.21.1.json</code>。</p>
+      <pre># Windows PowerShell 一行找 URL
+(Invoke-RestMethod https://piston-meta.mojang.com/mc/game/version_manifest_v2.json).versions |
+  Where-Object id -eq '1.21.1' | Select-Object -ExpandProperty url</pre>
+      <p>这个 JSON 里包含：客户端 jar 地址、全部库、资源索引地址、启动主类。</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">3</div>
+    <div class="body">
+      <h2>下载客户端 jar</h2>
+      <p>看版本 JSON 的 <code>downloads.client</code>：<code>url</code> 是下载地址，<code>sha1</code> 用来校验。</p>
+      <pre># 以 1.21.1 为例（地址以 JSON 为准）
+curl -L -o 1.21.1.jar "&lt;downloads.client.url&gt;"
+# 校验
+Get-FileHash .\1.21.1.jar -Algorithm SHA1   # 与 JSON 里 client.sha1 对比</pre>
+      <div class="note">别自己拼 jar 地址——版本 JSON 给的就是权威地址，换版本时也以它为准。</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">4</div>
+    <div class="body">
+      <h2>下载库（libraries）</h2>
+      <p>版本 JSON 的 <code>libraries[]</code> 每项都有 <code>downloads.artifact</code>：
+        <code>path</code>（相对 <code>libraries/</code> 的路径）、<code>url</code>、<code>sha1</code>。</p>
+      <p>把每个 artifact 下载到 <code>libraries\&lt;path&gt;</code>；Windows 还要处理
+        <code>classifiers</code>/<code>natives-windows</code> 的本地库（解压 dll 到
+        <code>versions\1.21.1\natives</code>）。</p>
+      <pre># 伪代码：遍历 version json
+for lib in data["libraries"]:
+    art = lib.get("downloads", {}).get("artifact")
+    if art: download(art["url"], "libraries/" + art["path"], sha1=art["sha1"])</pre>
+      <div class="note">漏库 = 启动时 <code>ClassNotFoundException</code>。按 <code>path</code> 放，不要自己改名。</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">5</div>
+    <div class="body">
+      <h2>下载资源（assets）</h2>
+      <p>版本 JSON 的 <code>assetIndex.url</code> 是资源索引；索引里 <code>objects</code> 的每个
+        <code>hash</code> 对应一个文件：</p>
+      <pre>资源地址：https://resources.download.minecraft.net/&lt;hash前2位&gt;/&lt;hash&gt;
+存放位置：assets\objects\&lt;hash前2位&gt;\&lt;hash&gt;
+资源索引：assets\indexes\&lt;assetIndex.id&gt;.json</pre>
+      <pre># 最小可用脚本
+import json, os, urllib.request, hashlib
+idx = json.load(open("assets_index.json"))
+for name, o in idx["objects"].items():
+    h = o["hash"]; dst = f"assets/objects/{h[:2]}/{h}"
+    if os.path.exists(dst): continue
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    urllib.request.urlretrieve(f"https://resources.download.minecraft.net/{h[:2]}/{h}", dst)</pre>
+      <p>1.21.1 约 3900 个对象、900 MB；慢就换镜像（见第 8 步）。</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">6</div>
+    <div class="body">
+      <h2>装对应版本的 Java</h2>
+      <table>
+        <tr><th>版本</th><th>Java</th></tr>
+        <tr><td>1.16.5 及更早</td><td>8</td></tr>
+        <tr><td>1.18 – 1.20.4（含 1.20.1）</td><td>17</td></tr>
+        <tr><td>1.20.5+（含 1.21.1）</td><td>21</td></tr>
+      </table>
+      <pre>java -version   # 确认大版本号</pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">7</div>
+    <div class="body">
+      <h2>摆好目录，启动</h2>
+      <p>最后的结构应该是：</p>
+      <pre>D:\MC\
+  versions\1.21.1\1.21.1.json
+  versions\1.21.1\1.21.1.jar
+  versions\1.21.1\natives\      （Windows 的 dll）
+  libraries\...
+  assets\indexes\...
+  assets\objects\...</pre>
+      <p>启动需要正确的 classpath、主类（<code>net.minecraft.client.main.Main</code>）、资源索引名、
+        账号参数与 natives 路径——手写很容易错，建议用脚本或启动器启动。</p>
+      <pre># 用本项目的启动器（它读的就是这些源与目录）
+python launcher/mclaunch.py verify 1.21.1 "D:\MC"
+python launcher/mclaunch.py launch 1.21.1 "D:\MC" 你的名字</pre>
+      <p>或者直接把 <code>D:\MC</code> 当游戏目录导入 PCL / HMCL 启动。</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">8</div>
+    <div class="body">
+      <h2>下载慢：换镜像</h2>
+      <p>BMCLAPI 是社区镜像（非官方），路径和官方一一对应，把域名换掉即可：</p>
+      <pre>资源：https://bmclapi2.bangbang93.com/assets/&lt;hash前2位&gt;/&lt;hash&gt;
+Maven：https://bmclapi2.bangbang93.com/maven/&lt;相对路径&gt;</pre>
+      <p>镜像会波动；失败就重试或换回官方。加载器 Maven（Fabric/Forge/NeoForge）和 Mojang CDN 是不同线路，
+        一边慢不代表另一边慢。</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">9</div>
+    <div class="body">
+      <h2>验收与常见错误</h2>
+      <ul>
+        <li><code>mclaunch verify</code> 显示 version json / client jar / libraries / natives / assets 全 ok；</li>
+        <li>能进入主菜单、能新建世界。</li>
+      </ul>
+      <table>
+        <tr><th>现象</th><th>原因</th></tr>
+        <tr><td>ClassNotFoundException</td><td>库没下全 / path 放错</td></tr>
+        <tr><td>UnsupportedClassVersionError</td><td>Java 版本不对（1.21.1 要 21）</td></tr>
+        <tr><td>Missing assets / 无材质</td><td>资源对象没下全，或 index 名对不上</td></tr>
+        <tr><td>启动参数报错</td><td>classpath/主类/assetsIndex 拼错，用启动器更省事</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="danger">
+    <strong>合规提示：</strong>请通过官方渠道购买/登录 Minecraft；本教程只使用公开下载地址，不提供、不托管、
+    不分发游戏文件。请遵守 Minecraft EULA。
+  </div>
+
+  <footer>从零手动安装教程 · 1.20.1 / 1.21.1 · 2026-10-22 · 可单独转发（长图/网页/PDF）</footer>
+</main>
+</body>
+</html>
