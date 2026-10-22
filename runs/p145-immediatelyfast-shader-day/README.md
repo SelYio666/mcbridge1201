@@ -27,7 +27,7 @@ Using shaderpack: ComplementaryReimagined_r5.3.zip
 
 - 先试了最新的 Complementary Reimagined **r5.9.3**：Iris 1.8.1 下 `CustomUniforms` 编译失败，
   Iris 回退到 vanilla 管线（游戏没崩，但 shader 没生效）——这是 pack 与 Iris 版本不匹配，
-  不是 ImmediatelyFast 的问题；换同期的 r5.3 后正常。
+  不是 ImmediatelyFast 的问题；换同期的 r5.3 后正常。r5.9.3 在 Iris 1.8.14 上同样失败（p146）。
 - 未测 Iris 1.8.14 + Sodium 0.8.13 + shader pack 的组合。
 
 ## 证据

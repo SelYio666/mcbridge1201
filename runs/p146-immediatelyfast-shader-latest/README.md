@@ -15,8 +15,8 @@
 ```text
 Using shaderpack: ComplementaryReimagined_r5.3.zip
 [mcbridge-port] iris compat active (skipExtension=true)
-[mcbridge-port] batched-draws total=10979 hud=5917 itemModel=0 itemOverlay=0
-[mcbridge-port] batched-draws total=14883 hud=7776 itemModel=0 itemOverlay=0
+[mcbridge-port] batched-draws total=20149 hud=10245 itemModel=0 itemOverlay=0
+[mcbridge-port] batched-draws total=22220 hud=11168 itemModel=0 itemOverlay=0
 ```
 
 - shader pack 被 Iris 1.8.14 加载并创建管线；
@@ -26,6 +26,6 @@ Using shaderpack: ComplementaryReimagined_r5.3.zip
 
 ## 限制
 
-- 只测了 r5.3 这个与 1.8.1 同期的 pack；r5.9.3 在 Iris 1.8.1 下会编译失败（见 p145），
-  没有在 1.8.14 上重试 r5.9.3；
+- 只测了 r5.3 这个与 1.8.x 兼容的 pack；r5.9.3 在 Iris 1.8.1 **和** 1.8.14 下都在
+  `CustomUniforms` 编译失败（Iris 回退 vanilla，游戏不崩），属于 pack 需要更新的 Iris；
 - 只跑了一遍，无长时 soak。
