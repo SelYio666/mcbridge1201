@@ -10,12 +10,14 @@ import net.minecraft.class_4587;
 import net.minecraft.class_4588;
 import net.minecraft.class_4597;
 import net.minecraft.class_5253;
+import net.raphimc.immediatelyfast.feature.batching.BatchingBuffers;
 import net.raphimc.immediatelyfast.feature.batching.BatchingRenderLayers;
 import net.raphimc.immediatelyfast.feature.batching.BlendFuncDepthFuncState;
 import net.raphimc.immediatelyfast.feature.batching.HudBatchingBufferSource;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +36,8 @@ public abstract class MixinDrawContext {
 
     @Shadow @Final private class_4587 field_44657;
     @Shadow @Final private class_310 field_44656;
-    @Shadow @Final private class_4597.class_4598 field_44658;
+    @Shadow @Final @Mutable private class_4597.class_4598 field_44658;
+    @Unique private class_4597.class_4598 immediatelyFast$previousConsumers;
 
     @ModifyVariable(method = {"method_48196(Lnet/minecraft/class_1921;IIIIII)V"},
                     at = @At("HEAD"), index = 6, argsOnly = true)
@@ -113,6 +116,42 @@ public abstract class MixinDrawContext {
         vc.method_22918(matrix, x2, y1, z).method_22913(u2, v1).method_39415(color);
         vc.method_22918(matrix, x1, y1, z).method_22913(u1, v1).method_39415(color);
         RenderSystem.disableBlend();
+    }
+
+    @Inject(method = {"method_51425(Lnet/minecraft/class_1309;Lnet/minecraft/class_1937;Lnet/minecraft/class_1799;IIII)V"},
+            at = {@At("HEAD")})
+    private void renderItemIntoBufferStart(CallbackInfo ci) {
+        this.immediatelyFast$previousConsumers = this.field_44658;
+        if (BatchingBuffers.ITEM_MODEL_CONSUMER != null) {
+            this.field_44658 = (class_4597.class_4598) BatchingBuffers.ITEM_MODEL_CONSUMER;
+        }
+    }
+
+    @Inject(method = {"method_51425(Lnet/minecraft/class_1309;Lnet/minecraft/class_1937;Lnet/minecraft/class_1799;IIII)V"},
+            at = {@At("RETURN")})
+    private void renderItemIntoBufferEnd(CallbackInfo ci) {
+        if (this.immediatelyFast$previousConsumers != null) {
+            this.field_44658 = this.immediatelyFast$previousConsumers;
+        }
+    }
+
+    @Inject(method = {"method_51432(Lnet/minecraft/class_327;Lnet/minecraft/class_1799;IILjava/lang/String;)V"},
+            at = {@At("HEAD")})
+    private void renderItemOverlayIntoBufferStart(CallbackInfo ci) {
+        BatchingBuffers.beginItemOverlayRendering();
+        this.immediatelyFast$previousConsumers = this.field_44658;
+        if (BatchingBuffers.ITEM_OVERLAY_CONSUMER != null) {
+            this.field_44658 = (class_4597.class_4598) BatchingBuffers.ITEM_OVERLAY_CONSUMER;
+        }
+    }
+
+    @Inject(method = {"method_51432(Lnet/minecraft/class_327;Lnet/minecraft/class_1799;IILjava/lang/String;)V"},
+            at = {@At("RETURN")})
+    private void renderItemOverlayIntoBufferEnd(CallbackInfo ci) {
+        BatchingBuffers.endItemOverlayRendering();
+        if (this.immediatelyFast$previousConsumers != null) {
+            this.field_44658 = this.immediatelyFast$previousConsumers;
+        }
     }
 
     @Inject(method = {"method_51744"}, at = {@At("HEAD")}, cancellable = true)

@@ -39,7 +39,7 @@
 
 | 项 | 状态 |
 |---|---|
-| ImmediatelyFast 渲染批处理 | ✅ 已移植并生效：进世界 + HUD 批处理计数 hud=1501→4052，关闭 hud_batching 后归零（`runs/p134`、`runs/p137`）；**未移植** Iris 与 per-lighting 物品变体（itemModel/itemOverlay=0） |
+| ImmediatelyFast 渲染批处理 | ✅ 已移植并生效：进世界 + HUD/物品模型计数 hud=4796、itemModel=1165，关闭 hud_batching 后归零（`runs/p134`、`runs/p137`）；**未验证** itemOverlay 与 Iris |
 | Sodium / Iris | ❌ 未触碰 |
 | 渲染模组“性能提升”数字 | ❌ 未测（只有 EntityCulling 的 F3 计数，不是帧率基准） |
 | 完整镜像模式全量安装 | ❌ 只做了有界链路（客户端+库+120 资源）；全量镜像太慢已中止（p123） |

@@ -203,7 +203,8 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
                     } catch (IllegalAccessException ignored) {
                         // best effort restore
                     }
-                    this.releaseOwned(builder);
+                    // The vanilla draw path owns/closes the builder's allocator; closing it here
+                    // double-freed the native buffer and caused EXCEPTION_ACCESS_VIOLATION.
                 }
             }
         }

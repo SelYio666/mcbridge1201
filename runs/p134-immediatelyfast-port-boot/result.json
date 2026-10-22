@@ -3,10 +3,11 @@
   "crash": null,
   "exit_code": 1,
   "errors": [
-    "[18:29:30] [Download-2/ERROR]: Failed to fetch user properties",
+    "[18:51:35] [Download-2/ERROR]: Failed to fetch user properties",
     "com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401",
     "\tat knot/com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:59) ~[authlib-6.0.54.jar:?]",
-    "Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401"
+    "Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401",
+    "[18:51:50] [Server thread/ERROR]: Not a string"
   ],
   "batched_draws_logged": []
 }
