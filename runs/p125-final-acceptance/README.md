@@ -10,7 +10,7 @@
 | `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
 | Java JUnit | ✅ 25/25 |
 | `python tools/test_review_fixes.py` | ✅ **70/70** |
-| `python tools/check_hashes.py` | ✅ **794/794**（mismatch 0 / missing 0） |
+| `python tools/check_hashes.py` | ✅ **798/798**（mismatch 0 / missing 0） |
 | `python tools/verify_evidence.py` | ✅ passed（70/70） |
 | GitHub CI（master，dispatch） | ✅ `39743576915` success |
 | Release 资产 | ✅ `v0.4.6` / `mcbridge-launcher-0.4.6.zip` |
@@ -39,7 +39,7 @@
 
 | 项 | 状态 |
 |---|---|
-| ImmediatelyFast 渲染批处理 | ✅ 已移植并生效：单人 + 专用服务器多人（hud=4659、itemModel=2258、itemOverlay=1129），关闭开关归零（`runs/p134`、`runs/p141`、`runs/p137`）；Iris 1.8.1/1.8.14 + shader pack r5.3（`runs/p142`/`p143`/`p145`） |
+| ImmediatelyFast 渲染批处理 | ✅ 已移植并生效：单人 + 专用服务器多人（hud=4659、itemModel=2258、itemOverlay=1129），关闭开关归零（`runs/p134`、`runs/p141`、`runs/p137`）；Iris 1.8.1/1.8.14 + shader pack r5.3（`runs/p142`/`p143`/`p145`/`p146`） |
 | Sodium / Iris | ❌ 未触碰 |
 | 渲染模组“性能提升”数字 | ❌ 未测（只有 EntityCulling 的 F3 计数，不是帧率基准） |
 | 完整镜像模式全量安装 | ❌ 只做了有界链路（客户端+库+120 资源）；全量镜像太慢已中止（p123） |
