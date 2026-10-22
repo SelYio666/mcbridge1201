@@ -20,6 +20,10 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+# The portable package uses CPython's embedded distribution, whose ._pth does not put this
+# script's directory on sys.path; make sibling imports (fetch) work for direct invocations too.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import fetch as _fetch
 import uuid
 import zipfile

@@ -768,6 +768,8 @@ FILES = [
     "runs/p161-neoforge-server/client.log",
     "runs/p161-neoforge-server/result.json",
     "runs/p161-neoforge-server/world.png",
+    "runs/p162-release-v0.5.0/README.md",
+    "runs/p162-release-v0.5.0/release-notes.md",
     "tools/build_immediatelyfast_port.py",
     "runs/p133-immediatelyfast-port/wp1-compile.txt",
     "java/src/test/java/top/mcbridge1201/MixinConfigAdditionTest.java",

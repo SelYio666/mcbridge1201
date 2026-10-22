@@ -605,6 +605,12 @@ def test_immediatelyfast_port() -> None:
               and "renderingItem" in hud_src)
     check("IFPORT keeps the item per-lighting variants wired", lit_ok,
           "HudBatchingBufferSource must wrap item layers per LightingState")
+    mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
+    path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
+    portable_ok = (path_fix in mlaunch_src
+                   and mlaunch_src.index(path_fix) < mlaunch_src.index("import fetch"))
+    check("PORTABLE mclaunch puts its directory on sys.path before importing fetch", portable_ok,
+          "embedded CPython ._pth does not add the script directory")
 
 
 def test_download_policy() -> None:
