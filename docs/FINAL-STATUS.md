@@ -78,7 +78,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 7 项 ImmediatelyFast 移植回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，71/71；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
-- GitHub Actions CI（手动 dispatch 触发，run 39614386108 通过）。
+- GitHub Actions CI（手动 dispatch 触发）：最新成功 run `39744108215`（提交 `0e70d51`）；**当前 HEAD 未被 CI 覆盖**，push 不会自动触发。
 
 ## 二、未完成（如实）
 

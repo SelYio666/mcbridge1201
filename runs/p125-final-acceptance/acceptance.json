@@ -15,8 +15,10 @@
     "review_fixes": "71/71",
     "hashes": "810/810",
     "verify_evidence": "passed",
-    "ci_run": "39743576915",
+    "ci_run": "39744108215",
     "ci_conclusion": "success",
+    "ci_commit": "0e70d51",
+    "ci_covers_current_head": false,
     "release": "v0.4.6",
     "release_asset": "mcbridge-launcher-0.4.6.zip",
     "worktree_clean": true
