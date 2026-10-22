@@ -540,6 +540,40 @@ def test_loader_base_ensure() -> None:
           calls == [("1.20.1", str(lib))] and vid == "1.20.1-forge-47.4.28", f"{calls} {vid}")
 
 
+def test_immediatelyfast_port() -> None:
+    """The ImmediatelyFast port rule must stay bound to real capability/risk/evidence."""
+    rule = ROOT / "rules" / "fabric-1.21.1" / "immediatelyfast-batching-port.json"
+    try:
+        data = json.loads(rule.read_text(encoding="utf-8"))
+    except Exception as exc:  # noqa: BLE001
+        check("IFPORT rule loads", False, repr(exc))
+        return
+    reps = data.get("mixinClassReplacements") or []
+    bound = (len(reps) >= 5
+             and all(r.get("capability") and r.get("risk") and r.get("evidence") for r in reps))
+    check("IFPORT rule binds 5+ replacements to capability/risk/evidence", bound,
+          f"{len(reps)} replacements")
+    ctors = data.get("constructorRedirects") or []
+    bridged = (len(ctors) >= 2
+               and all(c.get("bridgeClass") == "top/mcbridge1201/bridge/IdentifierBridge"
+                       for c in ctors))
+    check("IFPORT rule bridges the Identifier constructors", bridged, f"{len(ctors)} redirects")
+    base = ROOT / "java" / "src" / "compat" / "java" / "net" / "raphimc" / "immediatelyfast"
+    files = [
+        base / "feature" / "core" / "BatchableBufferSource.java",
+        base / "feature" / "batching" / "BatchingBuffers.java",
+        base / "feature" / "batching" / "HudBatchingBufferSource.java",
+        base / "feature" / "batching" / "SimpleImmediate.java",
+        base / "injection" / "mixins" / "core" / "MixinVertexConsumerProvider.java",
+        base / "injection" / "mixins" / "fast_text_lookup" / "MixinTextRenderer_Drawer.java",
+    ]
+    missing = [p.name for p in files if not p.exists()]
+    tomb = [p.name for p in files
+            if p.exists() and "Tombstones_" in p.read_text(encoding="utf-8", errors="replace")]
+    check("IFPORT sources exist and avoid tombstones", not missing and not tomb,
+          f"missing={missing} tomb={tomb}")
+
+
 def test_download_policy() -> None:
     """Offline checks for the download-source policy (mirrors, retries, checksums)."""
     sys.path.insert(0, str(ROOT / "launcher"))
@@ -830,6 +864,7 @@ def main() -> int:
     test_launcher()
     test_neoforge_install()
     test_loader_base_ensure()
+    test_immediatelyfast_port()
     test_download_policy()
     failed = [name for name, ok, _ in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed"

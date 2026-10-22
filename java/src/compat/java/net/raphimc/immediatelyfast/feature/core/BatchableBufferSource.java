@@ -41,6 +41,7 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
     private static final class_9799 FALLBACK_BUFFER = new class_9799(0);
     private static final Method DRAW_LAYER;
     private static final Field BUILDER_ALLOCATOR;
+    private static final Field CURRENT_ALLOCATOR;
 
     static {
         try {
@@ -49,6 +50,8 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
             DRAW_LAYER.setAccessible(true);
             BUILDER_ALLOCATOR = class_287.class.getDeclaredField("field_52071");
             BUILDER_ALLOCATOR.setAccessible(true);
+            CURRENT_ALLOCATOR = class_4597.class_4598.class.getDeclaredField("field_52156");
+            CURRENT_ALLOCATOR.setAccessible(true);
         } catch (ReflectiveOperationException exc) {
             throw new ExceptionInInitializerError(exc);
         }
@@ -180,12 +183,23 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
         ReferenceSet<class_287> buffers = this.pendingBuffers.remove(layer);
         if (buffers != null) {
             for (class_287 builder : buffers) {
+                class_9799 prevAllocator = null;
                 try {
+                    prevAllocator = (class_9799) CURRENT_ALLOCATOR.get(this);
+                    class_9799 builderAllocator = (class_9799) BUILDER_ALLOCATOR.get(builder);
+                    if (builderAllocator != null) {
+                        CURRENT_ALLOCATOR.set(this, builderAllocator);
+                    }
                     DRAW_LAYER.invoke(this, layer, builder);
                     batchedDraws++;
                 } catch (ReflectiveOperationException exc) {
                     throw new RuntimeException("batched draw failed for " + layer, exc);
                 } finally {
+                    try {
+                        CURRENT_ALLOCATOR.set(this, prevAllocator);
+                    } catch (IllegalAccessException ignored) {
+                        // best effort restore
+                    }
                     this.releaseOwned(builder);
                 }
             }

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "0.1-draft",
+  "id": "immediatelyfast-batching-port",
+  "target": "fabric-1.21.1",
+  "source": "ImmediatelyFast-Fabric-1.5.5+1.20.4+1.21.1",
+  "constructorRedirects": [
+    {
+      "id": "identifier.ctor1.to-factory",
+      "owner": "net/minecraft/class_2960",
+      "desc": "(Ljava/lang/String;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/IdentifierBridge",
+      "bridgeMethod": "of",
+      "bridgeDesc": "(Ljava/lang/String;)Lnet/minecraft/class_2960;",
+      "capability": "identifier.construct",
+      "risk": "Identifier(String) was removed in 1.21.1",
+      "evidence": "ImmediatelyFast's GameRenderer shader check calls new Identifier(String); the resource reload failed and the splash never closed (runs/p134-immediatelyfast-port-boot/launch.log)."
+    },
+    {
+      "id": "identifier.ctor2.to-factory",
+      "owner": "net/minecraft/class_2960",
+      "desc": "(Ljava/lang/String;Ljava/lang/String;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/IdentifierBridge",
+      "bridgeMethod": "of",
+      "bridgeDesc": "(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;",
+      "capability": "identifier.construct",
+      "risk": "Identifier(String,String) became private in 1.21.1",
+      "evidence": "same shader check path; both constructors are factories only."
+    }
+  ],
+  "notes": "1.21.1 changed BufferBuilder to ByteBufferBuilder + DrawMode/VertexFormat and MeshData drawing; the batching engine, the Immediate factory mixin and the Identifier(String) calls are ported. HUD batching is kept; item-lighting variants and Iris are not ported yet.",
+  "mixinConfigAdditions": [],
+  "mixinClassReplacements": [
+    {
+      "id": "immediatelyfast/batchable-buffer-source",
+      "targetClass": "net/raphimc/immediatelyfast/feature/core/BatchableBufferSource",
+      "replacementClass": "net/raphimc/immediatelyfast/feature/core/BatchableBufferSource",
+      "alsoEmbed": [],
+      "capability": "mixin-class-replacement",
+      "risk": "BufferBuilder allocation/draw semantics changed in 1.21.1; private Immediate.draw helper accessed via reflection",
+      "evidence": "runs/p133-immediatelyfast-port"
+    },
+    {
+      "id": "immediatelyfast/batching-buffers",
+      "targetClass": "net/raphimc/immediatelyfast/feature/batching/BatchingBuffers",
+      "replacementClass": "net/raphimc/immediatelyfast/feature/batching/BatchingBuffers",
+      "alsoEmbed": [
+        "net/raphimc/immediatelyfast/feature/batching/SimpleImmediate"
+      ],
+      "capability": "mixin-class-replacement",
+      "risk": "DrawContext.consumers is private in 1.21.1; reflection swap; no RenderSystemState save",
+      "evidence": "runs/p133-immediatelyfast-port"
+    },
+    {
+      "id": "immediatelyfast/vertex-consumer-provider-mixin",
+      "targetClass": "net/raphimc/immediatelyfast/injection/mixins/core/MixinVertexConsumerProvider",
+      "replacementClass": "net/raphimc/immediatelyfast/injection/mixins/core/MixinVertexConsumerProvider",
+      "alsoEmbed": [],
+      "capability": "mixin-class-replacement",
+      "risk": "@Overwrite method_22992 changed from (Map, BufferBuilder) to (SequencedMap, ByteBufferBuilder); protected Immediate constructor avoided via SimpleImmediate",
+      "evidence": "runs/p134-immediatelyfast-port-boot"
+    },
+    {
+      "id": "immediatelyfast/text-drawer-mixin",
+      "targetClass": "net/raphimc/immediatelyfast/injection/mixins/fast_text_lookup/MixinTextRenderer_Drawer",
+      "replacementClass": "net/raphimc/immediatelyfast/injection/mixins/fast_text_lookup/MixinTextRenderer_Drawer",
+      "alsoEmbed": [],
+      "capability": "mixin-class-replacement",
+      "risk": "BufferBuilder.method_22893 was removed; field_1556 is private (reflection)",
+      "evidence": "runs/p134-immediatelyfast-port-boot (tombstone crash)"
+    },
+    {
+      "id": "immediatelyfast/hud-batching-buffer-source",
+      "targetClass": "net/raphimc/immediatelyfast/feature/batching/HudBatchingBufferSource",
+      "replacementClass": "net/raphimc/immediatelyfast/feature/batching/HudBatchingBufferSource",
+      "alsoEmbed": [],
+      "capability": "mixin-class-replacement-degraded",
+      "risk": "item lighting variants are not split (LightingState/Iris not ported); HUD batching itself is kept",
+      "evidence": "runs/p133-immediatelyfast-port"
+    }
+  ]
+}

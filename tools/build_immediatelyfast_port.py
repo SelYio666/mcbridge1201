@@ -28,6 +28,13 @@ def main() -> int:
     ap.add_argument("--fastutil",
                     default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "it" / "unimi"
                                / "dsi" / "fastutil" / "8.5.12" / "fastutil-8.5.12.jar"))
+    ap.add_argument("--mixin",
+                    default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "net" / "fabricmc"
+                               / "sponge-mixin" / "0.16.4+mixin.0.8.7"
+                               / "sponge-mixin-0.16.4+mixin.0.8.7.jar"))
+    ap.add_argument("--mod-jar",
+                    default=str(ROOT / "work" / "cb" / "out" / "popular" / "immediatelyfast"
+                               / "ImmediatelyFast-Fabric-1.5.5+1.20.4+1.21.1.jar"))
     ap.add_argument("--out", default=str(ROOT / "work" / "tmp" / "if-port-classes"))
     args = ap.parse_args()
 
@@ -36,7 +43,8 @@ def main() -> int:
     if not javac.exists():
         print(f"javac not found: {javac}", file=sys.stderr)
         return 2
-    for jar in (args.intermediary, args.fastutil):
+    cp_jars = [args.intermediary, args.fastutil, args.mixin, args.mod_jar]
+    for jar in cp_jars:
         if not Path(jar).exists():
             print(f"missing classpath jar: {jar}", file=sys.stderr)
             return 2
@@ -46,7 +54,7 @@ def main() -> int:
         return 2
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    cp = os.pathsep.join([args.intermediary, args.fastutil])
+    cp = os.pathsep.join(cp_jars)
     cmd = [str(javac), "-nowarn", "-proc:none", "-encoding", "UTF-8", "-cp", cp,
            "-d", str(out)] + sources
     print(" ".join(cmd))
