@@ -496,6 +496,50 @@ def test_neoforge_install() -> None:
           str(rep["items"]["loader_artifacts"]))
 
 
+def test_loader_base_ensure() -> None:
+    """install_forge must ensure the vanilla base version before/with the loader profile."""
+    sys.path.insert(0, str(ROOT / "launcher"))
+    try:
+        import mclaunch
+    except Exception as exc:  # noqa: BLE001
+        check("LOADER import mclaunch", False, f"import failed: {exc}")
+        return
+
+    import shutil
+    lib = WORK / "forge-base-unit"
+    if lib.exists():
+        shutil.rmtree(lib)
+    lib.mkdir(parents=True)
+    calls: list[tuple[str, str]] = []
+    saved = (mclaunch.install_vanilla_launcher_profile, mclaunch.http_json,
+             mclaunch.download_maven, mclaunch.prepare_installer_libraries,
+             mclaunch._run_installer)
+    vid = None
+    try:
+        mclaunch.install_vanilla_launcher_profile = lambda mc, root: calls.append((mc, str(root)))
+        mclaunch.http_json = lambda *a, **k: {"promos": {"1.20.1-recommended": "47.4.28"}}
+        mclaunch.download_maven = lambda *a, **k: 0
+        mclaunch.prepare_installer_libraries = lambda *a, **k: 0
+
+        def fake_run(_installer, root, _log):
+            vdir = Path(root) / "versions" / "1.20.1-forge-47.4.28"
+            vdir.mkdir(parents=True, exist_ok=True)
+            (vdir / "1.20.1-forge-47.4.28.json").write_text("{}", encoding="utf-8")
+            return 0
+
+        mclaunch._run_installer = fake_run
+        vid = mclaunch.install_forge("1.20.1", lib)
+    except Exception as exc:  # noqa: BLE001
+        check("LOADER install_forge ensures the vanilla base first", False, repr(exc))
+        return
+    finally:
+        (mclaunch.install_vanilla_launcher_profile, mclaunch.http_json,
+         mclaunch.download_maven, mclaunch.prepare_installer_libraries,
+         mclaunch._run_installer) = saved
+    check("LOADER install_forge ensures the vanilla base first",
+          calls == [("1.20.1", str(lib))] and vid == "1.20.1-forge-47.4.28", f"{calls} {vid}")
+
+
 def test_download_policy() -> None:
     """Offline checks for the download-source policy (mirrors, retries, checksums)."""
     sys.path.insert(0, str(ROOT / "launcher"))
@@ -772,6 +816,7 @@ def main() -> int:
     test_issue02()
     test_launcher()
     test_neoforge_install()
+    test_loader_base_ensure()
     test_download_policy()
     failed = [name for name, ok, _ in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed"

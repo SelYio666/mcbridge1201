@@ -793,6 +793,9 @@ def _run_installer(jar: Path, root: Path, log_path: Path) -> int:
 
 def install_forge(mc: str, root: Path, progress: Progress | None = None, version: str | None = None) -> str:
     root = Path(root)
+    # the Forge profile inheritsFrom the vanilla version; without its json/jar/asset index
+    # build_command() fails with "version 1.20.1 not installed"
+    install_vanilla_launcher_profile(mc, root)
     promos = http_json(FORGE_PROMOS)["promos"]
     version = version or promos.get(f"{mc}-recommended") or promos.get(f"{mc}-latest")
     if not version:
@@ -824,6 +827,8 @@ def _version_key(v: str):
 
 def install_neoforge(mc: str, root: Path, progress: Progress | None = None, version: str | None = None) -> str:
     root = Path(root)
+    # same inheritance requirement as Forge
+    install_vanilla_launcher_profile(mc, root)
     data = http_json(NEOFORGE_VERSIONS)
     all_versions = data.get("versions", [])
     prefix = ".".join(mc.split(".")[1:]) + "."  # 1.21.1 -> "21.1."

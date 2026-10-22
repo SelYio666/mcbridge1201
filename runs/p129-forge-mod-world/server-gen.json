@@ -1,0 +1,10 @@
+{
+  "done": true,
+  "world": true,
+  "exit": 0,
+  "log_tail": [
+    "[15:04:03] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved",
+    "[15:04:03] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved",
+    "[15:04:03] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved"
+  ]
+}

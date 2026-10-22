@@ -49,7 +49,7 @@ python launcher/server.py
 | 下载进度：文件数 + 已下载字节 + 实时速度 + 当前来源 | ✅ 实测（`/api/task` 的 `bytes_done` / `speed` / `source`；不显示虚假剩余时间） |
 | 下载源设置：自动（官方优先）/ 仅官方 / 镜像优先；近期失败 host 自动靠后 | ✅ 配置 `download_source`、`<root>/.mcbridge/source-health.json` |
 | 源健康检查按钮：一键 canary，结果显示核心/镜像/NeoForge，结果写入 `<root>/.mcbridge/canary` | ✅ `/api/source-health`、`/api/check-sources` |
-| Forge 1.20.1 安装 + 启动 | ✅ 已接入 `minecraft-launcher-lib`（BSD-2）并实测到达主菜单 |
+| Forge 1.20.1 安装 + 启动 | ✅ 已接入 `minecraft-launcher-lib`（BSD-2）；**+ AppleSkin 模组进世界**（p129） |
 | NeoForge 1.21.1 安装 + 启动 | ✅ 空 NeoForge 21.1.264 到主菜单（p116）；**+ AppleSkin 模组进世界**（p127） |
 | 正版登录 / 皮肤 / 多人认证 | ❌ 不做，仅离线 |
 

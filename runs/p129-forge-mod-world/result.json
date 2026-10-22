@@ -1,0 +1,15 @@
+{
+  "forge": "1.20.1-forge-47.4.28",
+  "mod": "appleskin-forge-mc1.20.1-2.5.1.jar",
+  "mod_sha1_ok": true,
+  "joined": true,
+  "crash": null,
+  "mod_lines": [
+    "[15:05:32] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file C:\\Users\\27682\\Documents\\�½��ļ���\\mcbridge1201\\work\\launcher-e2e\\config\\appleskin-client.toml is not correct. Correcting"
+  ],
+  "errors": [
+    "[15:05:32] [Worker-Main-2/ERROR] [minecraft/AccountProfileKeyPairManager]: Failed to retrieve profile key pair",
+    "java.io.IOException: Could not retrieve profile key pair"
+  ],
+  "exit_code": 1
+}
