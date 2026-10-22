@@ -16,3 +16,5 @@ launcher/config.json
 runs/**/*.jar
 
 dist/
+
+share/player-guide.zip

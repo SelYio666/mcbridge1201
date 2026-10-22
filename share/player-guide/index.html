@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minecraft 下载源 + 启动器教程（玩家版）</title>
+<style>
+  :root { --fg:#1c2430; --dim:#5b6b7f; --line:#d8e0ea; --bg:#f6f8fb; --accent:#0b6bcb; --ok:#15803d; --warn:#b45309; --code:#f0f4f9; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.7 "Microsoft YaHei","Segoe UI",system-ui,sans-serif; }
+  main { max-width: 920px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 30px; margin: 0 0 6px; }
+  .sub { color: var(--dim); font-size: 14px; margin-bottom: 26px; }
+  h2 { font-size: 21px; margin: 34px 0 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+  h3 { font-size: 17px; margin: 20px 0 8px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0 16px; font-size:14px; }
+  th,td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#eaf1f9; }
+  code,pre { font-family: Consolas,"Courier New",monospace; }
+  code { background:var(--code); padding:1px 5px; border-radius:4px; font-size:13.5px; }
+  pre { background:var(--code); border:1px solid var(--line); border-radius:8px; padding:10px 12px; overflow:auto; font-size:13.5px; white-space:pre-wrap; word-break:break-all; }
+  a { color:var(--accent); text-decoration:none; word-break:break-all; }
+  .note { background:#fff8e6; border:1px solid #f1d9a7; border-radius:8px; padding:10px 14px; margin:12px 0; }
+  .danger { background:#fdecec; border:1px solid #f3bdbd; border-radius:8px; padding:10px 14px; margin:16px 0; }
+  ol,ul { padding-left: 22px; }
+  li { margin: 4px 0; }
+  .tag { display:inline-block; background:#e0f2fe; color:#075985; border-radius:999px; font-size:12px; padding:1px 9px; margin-left:6px; }
+  footer { margin-top:44px; color:var(--dim); font-size:13px; }
+  @media print { body{background:#fff} main{max-width:none;padding:0} h2{page-break-after:avoid} table,pre{page-break-inside:avoid} }
+</style>
+</head>
+<body>
+<main>
+  <h1>Minecraft 下载源 + 启动器教程</h1>
+  <div class="sub">玩家版 · 1.20.1 / 1.21.1 · 不需要 GitHub、不需要改模组 · 2026-10-22</div>
+
+  <div class="note">
+    这一页只讲两件事：<b>从哪下载</b>、<b>怎么用常见启动器装好并启动</b>。不涉及模组转换，也不要求你会写代码。
+  </div>
+
+  <h2>一、下载源（官方）</h2>
+  <table>
+    <tr><th>用途</th><th>地址</th></tr>
+    <tr><td>版本清单</td><td><a href="https://piston-meta.mojang.com/mc/game/version_manifest_v2.json">piston-meta.mojang.com/mc/game/version_manifest_v2.json</a></td></tr>
+    <tr><td>客户端 jar / 版本 JSON</td><td>上面的清单里每个版本带自己的 JSON；jar 在 <code>downloads.client.url</code></td></tr>
+    <tr><td>库文件</td><td><a href="https://libraries.minecraft.net/">libraries.minecraft.net</a>（路径以版本 JSON 里的完整 URL 为准）</td></tr>
+    <tr><td>资源文件</td><td><a href="https://resources.download.minecraft.net/">resources.download.minecraft.net</a>/&lt;hash前2位&gt;/&lt;hash&gt;</td></tr>
+    <tr><td>官方 Java</td><td><a href="https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json">launchermeta.mojang.com/.../java-runtime/all.json</a></td></tr>
+  </table>
+
+  <h3>加载器</h3>
+  <pre>Fabric 版本列表  https://meta.fabricmc.net/v2/versions/loader/&lt;MC版本&gt;
+Forge 推荐版本   https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+Forge 安装器     https://maven.minecraftforge.net/net/minecraftforge/forge/&lt;MC&gt;-&lt;forge&gt;/forge-&lt;MC&gt;-&lt;forge&gt;-installer.jar
+NeoForge 版本    https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge
+NeoForge 安装器  https://maven.neoforged.net/releases/net/neoforged/neoforge/&lt;版本&gt;/neoforge-&lt;版本&gt;-installer.jar</pre>
+
+  <h3>国内镜像（第三方）</h3>
+  <div class="note">BMCLAPI 是社区镜像，<b>不是官方</b>。官方下载慢/失败时用它兜底；速度会波动，多试几次。</div>
+  <pre>资源   https://bmclapi2.bangbang93.com/assets/&lt;hash前2位&gt;/&lt;hash&gt;
+Maven  https://bmclapi2.bangbang93.com/maven/&lt;maven 相对路径&gt;</pre>
+
+  <h2>二、启动器教程</h2>
+
+  <h3>PCL（Plain Craft Launcher 2）</h3>
+  <ol>
+    <li>打开 PCL →「下载」→ 选 <b>1.21.1</b>，同时勾选 <b>Fabric</b>（或 Forge）→ 开始安装；</li>
+    <li>装好后回到主界面，选中该版本 →「启动」；</li>
+    <li>「设置 → 启动设置」里确认 Java：1.21.1 用 <b>Java 21</b>；</li>
+    <li>第一次启动会创建存档目录；进游戏即完成。</li>
+  </ol>
+
+  <h3>HMCL</h3>
+  <ol>
+    <li>「版本列表」→「安装新游戏版本」→ 选 <b>1.21.1</b>，勾选 <b>Fabric</b>；</li>
+    <li>安装完成后双击该版本启动；</li>
+    <li>「设置 → Java 路径」选 Java 21；</li>
+    <li>如果下载慢，可在「设置 → 下载」里切换下载源。</li>
+  </ol>
+
+  <h3>Prism Launcher</h3>
+  <ol>
+    <li>「Add Instance」→ 版本选 <b>1.21.1</b>，Loader 选 <b>Fabric</b> → OK；</li>
+    <li>双击实例启动；</li>
+    <li>「Edit → Settings → Java」确认是 Java 21；</li>
+    <li>需要多个实例时，每个实例有独立目录，互不影响。</li>
+  </ol>
+
+  <h3>官方启动器</h3>
+  <ol>
+    <li>安装 1.21.1，然后运行 <b>Fabric Installer</b> 选择 1.21.1 安装；</li>
+    <li>启动器里会多出一个 Fabric 配置，选它启动；</li>
+    <li>Java 21 可由启动器自动下载（官方运行时）。</li>
+  </ol>
+
+  <h2>三、下载慢或失败怎么办</h2>
+  <ul>
+    <li>先换镜像（上面的 BMCLAPI），或换个时间段；</li>
+    <li>Mojang 的 CDN 与加载器 Maven 是不同线路，一个慢不代表另一个慢；</li>
+    <li>下载后建议校验：官方文件都带 sha1（PowerShell 用 <code>Get-FileHash -Algorithm SHA1</code>）；</li>
+    <li>资源对象没有文件名，按 <code>objects/&lt;hash前2位&gt;/&lt;hash&gt;</code> 存放，路径本身就是校验值。</li>
+  </ul>
+
+  <h2>四、常见问题</h2>
+  <table>
+    <tr><th>现象</th><th>处理</th></tr>
+    <tr><td>启动即崩、提示 Java 版本</td><td>换成 Java 21（1.20.1 用 Java 17）</td></tr>
+    <tr><td>材质/字体缺失</td><td>资源没下全，重新安装或换源</td></tr>
+    <tr><td>多人进不去</td><td>确认服务端与客户端版本、加载器版本一致</td></tr>
+    <tr><td>启动器互相覆盖</td><td>不同启动器用不同游戏目录，或先备份</td></tr>
+  </table>
+
+  <div class="danger">
+    <strong>声明：</strong>本页只整理公开下载地址与启动器操作步骤，不提供、不托管、不分发 Minecraft 游戏文件或模组。
+    请遵守 Minecraft EULA 与各启动器/镜像的服务条款。
+  </div>
+
+  <footer>
+    玩家版资料 · 可单独转发（网页 / PDF / 长图）· 2026-10-22
+  </footer>
+</main>
+</body>
+</html>
