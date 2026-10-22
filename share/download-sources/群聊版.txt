@@ -1,0 +1,29 @@
+【Minecraft 下载源速查】1.20.1 / 1.21.1
+（2026-10-22 实测；只列公开地址，不含游戏文件）
+
+— Mojang 官方 —
+版本清单：https://piston-meta.mojang.com/mc/game/version_manifest_v2.json
+客户端 jar：在上面的版本 JSON 里，downloads.client.url
+库：https://libraries.minecraft.net/ （完整路径以版本 JSON 为准）
+资源：https://resources.download.minecraft.net/<hash前2位>/<hash>
+Java 运行时清单：https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json
+
+— 加载器 —
+Fabric 版本：https://meta.fabricmc.net/v2/versions/loader/<MC版本>
+Forge 推荐：https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+Forge 安装器：https://maven.minecraftforge.net/net/minecraftforge/forge/<MC>-<forge版本>/forge-<MC>-<forge版本>-installer.jar
+NeoForge 版本：https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge
+NeoForge 安装器：https://maven.neoforged.net/releases/net/neoforged/neoforge/<版本>/neoforge-<版本>-installer.jar
+
+— 国内镜像（第三方） —
+资源：https://bmclapi2.bangbang93.com/assets/<hash前2位>/<hash>
+Maven：https://bmclapi2.bangbang93.com/maven/<maven相对路径>
+
+— 实测 —
+可用：版本清单、资源、Fabric meta、Forge promotions、JVM 清单、BMCLAPI
+注意：libraries 部分路径 404（以版本 JSON 的完整 URL 为准）；NeoForge API 会间歇超时
+
+— 校验 —
+官方文件都带 sha1：PowerShell 用 Get-FileHash -Algorithm SHA1；Linux 用 sha1sum
+
+声明：仅整理公开地址，不托管、不分发游戏或模组文件；请遵守 Minecraft EULA。
