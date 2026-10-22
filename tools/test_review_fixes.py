@@ -591,6 +591,13 @@ def test_immediatelyfast_port() -> None:
                and "skipExtension" in draw_src)
     check("IFPORT keeps the Iris compatibility branch wired", iris_ok,
           "BatchableBufferSource must call IrisCompat and log the branch")
+    provider_src = (base / "injection" / "mixins" / "core"
+                    / "MixinVertexConsumerProvider.java").read_text(
+        encoding="utf-8", errors="replace")
+    fallback_ok = ("SimpleImmediate" in provider_src
+                   and "disable_universal_batching" in provider_src)
+    check("IFPORT keeps the universal-batching fallback (SimpleImmediate)", fallback_ok,
+          "MixinVertexConsumerProvider must fall back to SimpleImmediate")
 
 
 def test_download_policy() -> None:

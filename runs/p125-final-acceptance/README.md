@@ -9,9 +9,9 @@
 |---|---|
 | `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
 | Java JUnit | ✅ 25/25 |
-| `python tools/test_review_fixes.py` | ✅ **70/70** |
-| `python tools/check_hashes.py` | ✅ **798/798**（mismatch 0 / missing 0） |
-| `python tools/verify_evidence.py` | ✅ passed（70/70） |
+| `python tools/test_review_fixes.py` | ✅ **71/71** |
+| `python tools/check_hashes.py` | ✅ **802/802**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（71/71） |
 | GitHub CI（master，dispatch） | ✅ `39743576915` success |
 | Release 资产 | ✅ `v0.4.6` / `mcbridge-launcher-0.4.6.zip` |
 | 工作区 | ✅ 干净（`git status` 无改动） |
