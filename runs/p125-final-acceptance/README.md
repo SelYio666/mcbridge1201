@@ -10,7 +10,7 @@
 | `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
 | Java JUnit | ✅ 25/25 |
 | `python tools/test_review_fixes.py` | ✅ **72/72** |
-| `python tools/check_hashes.py` | ✅ **823/823**（mismatch 0 / missing 0） |
+| `python tools/check_hashes.py` | ✅ **840/840**（mismatch 0 / missing 0） |
 | `python tools/verify_evidence.py` | ✅ passed（72/72） |
 | GitHub CI（master，dispatch） | ⚠️ 最新成功 run `39744108215`（提交 `0e70d51`）；当前 HEAD `39cea4a` **未被 CI 覆盖**（CI 只在手动 dispatch 时跑） |
 | Release 资产 | ✅ `v0.4.6` / `mcbridge-launcher-0.4.6.zip` |
