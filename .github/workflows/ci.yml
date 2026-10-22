@@ -31,7 +31,7 @@ jobs:
             tools/verify_evidence.py tools/check_hashes.py tools/hash_evidence.py \
             tools/audit_mixins.py tools/test_review_fixes.py tools/test_launcher_e2e.py \
             tools/build_bridges.py tools/rebuild_ironchests_client.py tools/build_portable.py \
-            tools/bench_download.py
+            tools/bench_download.py tools/bench_segments.py tools/check_download_sources.py
 
       - name: JavaScript syntax
         uses: actions/setup-node@v4

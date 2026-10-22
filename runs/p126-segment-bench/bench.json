@@ -1,0 +1,52 @@
+{
+  "url": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar",
+  "size": 26836906,
+  "segments": 4,
+  "rounds": [
+    {
+      "mode": "single",
+      "round": 0,
+      "seconds": 3.026,
+      "mbps": 8.87,
+      "sha1_ok": true
+    },
+    {
+      "mode": "ranged",
+      "round": 0,
+      "seconds": 2.456,
+      "mbps": 10.92,
+      "sha1_ok": true,
+      "statuses": [
+        206,
+        206,
+        206,
+        206
+      ]
+    },
+    {
+      "mode": "single",
+      "round": 1,
+      "seconds": 3.771,
+      "mbps": 7.12,
+      "sha1_ok": true
+    },
+    {
+      "mode": "ranged",
+      "round": 1,
+      "seconds": 2.548,
+      "mbps": 10.53,
+      "sha1_ok": true,
+      "statuses": [
+        206,
+        206,
+        206,
+        206
+      ]
+    }
+  ],
+  "ok": true,
+  "single_best": 3.026,
+  "ranged_best": 2.456,
+  "speedup": 1.232,
+  "cleaned": true
+}
