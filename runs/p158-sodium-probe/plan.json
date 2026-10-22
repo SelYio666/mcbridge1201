@@ -1,0 +1,665 @@
+{
+  "schemaVersion": "0.1-draft",
+  "generatedAt": "2026-10-22T23:25:05.0270024+08:00",
+  "tool": "mcbridge1201 0.1.0",
+  "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "clientJar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\cb\\data\\jars\\client-1.21.1-intermediary.jar",
+    "clientJarSha256": "2cbf8e4a213228ba3fff9d09704ff31d0ddba64aebaac58fd83838979a81be12",
+    "mappings": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\cb\\data\\mappings\\intermediary-1.21.1.tiny",
+    "mappingsSha256": "75d0b68f55b133c91ff1f8f1089324e9db033f98906519f086807199522cb7ba",
+    "indexClasses": 10919,
+    "indexMembers": 87766,
+    "indexBuildMs": 619,
+    "apiJars": [
+      {
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\target\\fabric-api-0.102.0+1.21.1.jar",
+        "sha256": "fd021e3ea8d043805207f39d43ac4b358629b30f0d9280ffc5a886a433291bd1"
+      },
+      {
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\launcher-e2e\\libraries\\net\\fabricmc\\fabric-loader\\0.19.5\\fabric-loader-0.19.5.jar",
+        "sha256": "93044e4dd46de5d8136701292f05e868da096d2c9fddb4793e4fdbcc63efc695"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "file": "sodium-fabric-0.5.13+mc1.20.1.jar",
+      "sha256": "688c26029ce69f0b1f7cf936866656ca6723228ac46c4aef5b5f793b1e6abd22",
+      "size": 971552,
+      "loader": "fabric",
+      "metadataFiles": [
+        "fabric.mod.json"
+      ],
+      "modId": "sodium",
+      "version": "0.5.13+mc1.20.1",
+      "displayName": "Sodium",
+      "environment": "client",
+      "depends": {
+        "minecraft": "1.20.1",
+        "fabricloader": "\u003e\u003d0.12.0",
+        "fabric-rendering-data-attachment-v1": "\u003e\u003d0.1",
+        "fabric-rendering-fluids-v1": "\u003e\u003d0.1"
+      },
+      "classes": 511,
+      "classFileMajorMax": 61,
+      "nestedJars": 5,
+      "signed": false,
+      "accessWideners": 2,
+      "verdict": "blocked_static",
+      "stage": "ANALYZED",
+      "counts": {
+        "unresolvedDueToHierarchy": 5,
+        "missingClass": 13,
+        "missingMember": 15,
+        "descMismatch": 16,
+        "missingApiClass": 0,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 10,
+        "mixins": 103,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 104,
+        "mixinAtTargets": 29,
+        "mixinAtOrdinals": 4,
+        "mixinInjectionsUnresolved": 2,
+        "missingConfirmedInSource": 0,
+        "externalPackages": 9
+      },
+      "missingClass": [
+        {
+          "owner": "net/minecraft/class_4585",
+          "kind": "class",
+          "refs": 3,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/core/render/immediate/consumer/BufferBuilderMixin",
+            "me/jellysquid/mods/sodium/mixin/core/render/immediate/consumer/OutlineVertexConsumerMixin",
+            "me/jellysquid/mods/sodium/mixin/features/render/immediate/buffer_builder/intrinsics/BufferBuilderMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_4585",
+          "name": "\u003cinit\u003e",
+          "desc": "()V",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/core/render/immediate/consumer/BufferBuilderMixin",
+            "me/jellysquid/mods/sodium/mixin/core/render/immediate/consumer/OutlineVertexConsumerMixin",
+            "me/jellysquid/mods/sodium/mixin/features/render/immediate/buffer_builder/intrinsics/BufferBuilderMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_60",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/KeyedResourceReloadListenerMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_287$class_7433",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_6491;method_24895(Lnet/minecraft/class_243;Lnet/minecraft/class_6491$class_4859;)Lnet/minecraft/class_243",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/features/render/world/sky/BackgroundRendererMixin",
+            "me/jellysquid/mods/sodium/mixin/features/render/world/sky/ClientWorldMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_746;method_24515()Lnet/minecraft/class_2338",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/core/gui/DownloadingTerrainScreenMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_287;field_1565:Lnet/minecraft/class_293",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/core/render/immediate/consumer/BufferBuilderMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_761;field_4055:Ljava/util/Set",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/core/render/world/WorldRendererMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_631$class_3681;method_20183(ILnet/minecraft/class_2818;Lnet/minecraft/class_2818;)Lnet/minecraft/class_2818",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/core/world/map/ClientChunkManagerMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_630$class_628;field_3649:[Lnet/minecraft/class_630$class_593",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/features/render/entity/CuboidMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_4585",
+          "name": "method_22919",
+          "desc": "(Lnet/minecraft/class_4587$class_4665;Lnet/minecraft/class_777;FFFII)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/features/render/immediate/buffer_builder/intrinsics/BufferBuilderMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_4585",
+          "name": "method_22920",
+          "desc": "(Lnet/minecraft/class_4587$class_4665;Lnet/minecraft/class_777;[FFFF[IIZ)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/features/render/immediate/buffer_builder/intrinsics/BufferBuilderMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_7764;field_40539:Lnet/minecraft/class_1011",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/features/textures/mipmaps/SpriteContentsMixin"
+          ]
+        }
+      ],
+      "missingMember": [
+        {
+          "owner": "net/minecraft/class_2586",
+          "name": "getRenderData",
+          "desc": "()Ljava/lang/Object;",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "net/fabricmc/fabric/api/blockview/v2/FabricBlockView [nested]",
+            "net/fabricmc/fabric/mixin/blockview/client/ChunkRendererRegionBuilderMixin [nested]",
+            "me/jellysquid/mods/sodium/client/world/cloned/ClonedChunkSection"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_289",
+          "name": "method_1349",
+          "desc": "()Lnet/minecraft/class_287;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer",
+            "me/jellysquid/mods/sodium/mixin/features/gui/screen/LevelLoadingScreenMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_287",
+          "name": "method_1328",
+          "desc": "(Lnet/minecraft/class_293$class_5596;Lnet/minecraft/class_293;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer",
+            "me/jellysquid/mods/sodium/mixin/features/gui/screen/LevelLoadingScreenMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_3288$class_7680",
+          "name": "open",
+          "desc": "(Ljava/lang/String;)Lnet/minecraft/class_3262;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/client/DefaultClientResourcePackProviderMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_287",
+          "name": "method_1326",
+          "desc": "()Lnet/minecraft/class_287$class_7433;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_290",
+          "name": "field_1578",
+          "desc": "Lnet/minecraft/class_296;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/vertex/VertexFormatDescriptionImpl"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_287",
+          "name": "method_22901",
+          "desc": "(IIII)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/vertex/buffer/SodiumBufferBuilder"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_287",
+          "name": "method_35666",
+          "desc": "()V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/vertex/buffer/SodiumBufferBuilder"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_289",
+          "name": "method_1350",
+          "desc": "()V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/mixin/features/gui/screen/LevelLoadingScreenMixin"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_290",
+          "name": "field_1587",
+          "desc": "Lnet/minecraft/class_296;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/caffeinemc/mods/sodium/api/vertex/attributes/CommonVertexAttribute"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_290",
+          "name": "field_1581",
+          "desc": "Lnet/minecraft/class_296;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/caffeinemc/mods/sodium/api/vertex/attributes/CommonVertexAttribute"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_290",
+          "name": "field_1591",
+          "desc": "Lnet/minecraft/class_296;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/caffeinemc/mods/sodium/api/vertex/attributes/CommonVertexAttribute"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_290",
+          "name": "field_1583",
+          "desc": "Lnet/minecraft/class_296;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/caffeinemc/mods/sodium/api/vertex/attributes/CommonVertexAttribute"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_290",
+          "name": "field_20886",
+          "desc": "Lnet/minecraft/class_296;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/caffeinemc/mods/sodium/api/vertex/attributes/CommonVertexAttribute"
+          ]
+        },
+        {
+          "owner": "net/minecraft/class_290",
+          "name": "field_1579",
+          "desc": "Lnet/minecraft/class_296;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "net/caffeinemc/mods/sodium/api/vertex/attributes/CommonVertexAttribute"
+          ]
+        }
+      ],
+      "descMismatch": [
+        {
+          "owner": "net/minecraft/class_2960",
+          "name": "\u003cinit\u003e",
+          "desc": "(Ljava/lang/String;)V",
+          "kind": "method",
+          "refs": 16,
+          "sources": [
+            "net/fabricmc/fabric/api/client/render/fluid/v1/SimpleFluidRenderHandler [nested]",
+            "net/fabricmc/fabric/api/resource/ResourceReloadListenerKeys [nested]",
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_2960 with desc (Ljava/lang/String;Ljava/lang/String;)V"
+        },
+        {
+          "owner": "net/minecraft/class_1058",
+          "name": "method_4570",
+          "desc": "(D)F",
+          "kind": "method",
+          "refs": 9,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/chunk/compile/pipeline/FluidRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_1058 with desc (F)F"
+        },
+        {
+          "owner": "net/minecraft/class_1058",
+          "name": "method_4580",
+          "desc": "(D)F",
+          "kind": "method",
+          "refs": 8,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/chunk/compile/pipeline/FluidRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_1058 with desc (F)F"
+        },
+        {
+          "owner": "net/minecraft/class_3288",
+          "name": "method_45275",
+          "desc": "(Ljava/lang/String;Lnet/minecraft/class_2561;ZLnet/minecraft/class_3288$class_7680;Lnet/minecraft/class_3264;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/fabricmc/fabric/impl/resource/loader/ModResourcePackCreator [nested]",
+            "net/fabricmc/fabric/impl/resource/loader/ResourceManagerHelperImpl [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_3288 with desc (Lnet/minecraft/class_9224;Lnet/minecraft/class_3288$class_7680;Lnet/minecraft/class_3264;Lnet/minecraft/class_9225;)Lnet/minecraft/class_3288;"
+        },
+        {
+          "owner": "net/minecraft/class_293",
+          "name": "method_1357",
+          "desc": "()Lcom/google/common/collect/ImmutableList;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/vertex/VertexFormatDescriptionImpl"
+          ],
+          "note": "target has same name in net/minecraft/class_293 with desc ()Ljava/util/List;"
+        },
+        {
+          "owner": "net/minecraft/class_2507",
+          "name": "method_30613",
+          "desc": "(Ljava/io/File;)Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/client/GameOptionsMixin [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2507 with desc (Ljava/nio/file/Path;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;"
+        },
+        {
+          "owner": "net/minecraft/class_2499",
+          "name": "add",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/client/GameOptionsMixin [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2483 with desc (ILjava/lang/Object;)V"
+        },
+        {
+          "owner": "net/minecraft/class_2507",
+          "name": "method_30614",
+          "desc": "(Lnet/minecraft/class_2487;Ljava/io/File;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/client/GameOptionsMixin [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2507 with desc (Lnet/minecraft/class_2487;Ljava/nio/file/Path;)V"
+        },
+        {
+          "owner": "net/minecraft/class_437",
+          "name": "method_25420",
+          "desc": "(Lnet/minecraft/class_332;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/gui/SodiumOptionsGUI"
+          ],
+          "note": "target has same name in net/minecraft/class_437 with desc (Lnet/minecraft/class_332;IIF)V"
+        },
+        {
+          "owner": "net/minecraft/class_446",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_437;Lnet/minecraft/class_315;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/gui/SodiumOptionsGUI"
+          ],
+          "note": "target has same name in net/minecraft/class_362 with desc ()V"
+        },
+        {
+          "owner": "net/minecraft/class_4583",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_4588;Lorg/joml/Matrix4f;Lorg/joml/Matrix3f;F)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/SodiumWorldRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_4583 with desc (Lnet/minecraft/class_4588;Lnet/minecraft/class_4587$class_4665;F)V"
+        },
+        {
+          "owner": "net/minecraft/class_291",
+          "name": "method_1352",
+          "desc": "(Lnet/minecraft/class_287$class_7433;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_291 with desc (Lnet/minecraft/class_9801;)V"
+        },
+        {
+          "owner": "net/minecraft/class_1294",
+          "name": "field_5918",
+          "desc": "Lnet/minecraft/class_1291;",
+          "kind": "field",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_1294 with desc Lnet/minecraft/class_6880;"
+        },
+        {
+          "owner": "net/minecraft/class_746",
+          "name": "method_6059",
+          "desc": "(Lnet/minecraft/class_1291;)Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_1309 with desc (Lnet/minecraft/class_6880;)Z"
+        },
+        {
+          "owner": "net/minecraft/class_758$class_7286",
+          "name": "method_42590",
+          "desc": "()Lnet/minecraft/class_1291;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_758$class_7286 with desc ()Lnet/minecraft/class_6880;"
+        },
+        {
+          "owner": "net/minecraft/class_746",
+          "name": "method_6112",
+          "desc": "(Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "me/jellysquid/mods/sodium/client/render/immediate/CloudRenderer"
+          ],
+          "note": "target has same name in net/minecraft/class_1309 with desc (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1293;"
+        }
+      ],
+      "missingApiClass": [],
+      "missingApiMember": [],
+      "wrongLoaderNamespace": [],
+      "unmappedNamespace": [
+        {
+          "owner": "net/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/fabricmc/fabric/mixin/client/rendering/fluid/FluidRendererMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/resource/DataConfiguration;SAFE_MODE:Lnet/minecraft/resource/DataConfiguration",
+          "kind": "class",
+          "refs": 2,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/ServerPropertiesHandlerMixin [nested]",
+            "net/fabricmc/fabric/mixin/resource/loader/client/CreateWorldScreenMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/client/render/block/FluidRenderer;waterOverlaySprite:Lnet/minecraft/client/texture/Sprite",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/client/rendering/fluid/FluidRendererMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/MinecraftServerMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/resource/ResourcePack;open(Lnet/minecraft/resource/ResourceType;Lnet/minecraft/util/Identifier;)Lnet/minecraft/resource/InputSupplier",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/NamespaceResourceManagerMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/resource/SimpleResourceReload;create(Lnet/minecraft/resource/ResourceManager;Ljava/util/List;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/resource/SimpleResourceReload",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/SimpleResourceReloadMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/client/gui/screen/world/CreateWorldScreen;createServerConfig(Lnet/minecraft/resource/ResourcePackManager;Lnet/minecraft/resource/DataConfiguration;)Lnet/minecraft/server/SaveLoading$ServerConfig",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/client/CreateWorldScreenMixin [nested]"
+          ]
+        },
+        {
+          "owner": "net/minecraft/resource/ResourcePackProfile;create(Ljava/lang/String;Lnet/minecraft/text/Text;ZLnet/minecraft/resource/ResourcePackProfile$PackFactory;Lnet/minecraft/resource/ResourceType;Lnet/minecraft/resource/ResourcePackProfile$InsertionPosition;Lnet/minecraft/resource/ResourcePackSource;)Lnet/minecraft/resource/ResourcePackProfile",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/fabricmc/fabric/mixin/resource/loader/client/DefaultClientResourcePackProviderMixin [nested]"
+          ]
+        }
+      ],
+      "externalPackages": [
+        {
+          "owner": "[B",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "[F",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[I",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "[Ljava",
+          "kind": "package",
+          "refs": 3
+        },
+        {
+          "owner": "[Lme",
+          "kind": "package",
+          "refs": 51
+        },
+        {
+          "owner": "[Lnet",
+          "kind": "package",
+          "refs": 19
+        },
+        {
+          "owner": "com",
+          "kind": "package",
+          "refs": 98
+        },
+        {
+          "owner": "it",
+          "kind": "package",
+          "refs": 159
+        },
+        {
+          "owner": "org",
+          "kind": "package",
+          "refs": 372
+        }
+      ],
+      "mixins": {
+        "configs": 8,
+        "classes": 103,
+        "injections": 104,
+        "atTargets": 29,
+        "atOrdinals": 4,
+        "unresolvedTargets": [],
+        "unresolvedInjections": [
+          "META-INF/jars/fabric-block-view-api-v2-1.0.1+1802ada577.jar!/fabric-block-view-api-v2.client.mixins.json:client -\u003e net/minecraft/class_6850.method_39969(Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;I)Lnet/minecraft/class_853; (Inject)",
+          "META-INF/jars/fabric-resource-loader-v0-0.11.11+fb82e9d777.jar!/fabric-resource-loader-v0.client.mixins.json:client -\u003e @At INVOKE net/minecraft/class_3288.method_45275(Ljava/lang/String;Lnet/minecraft/class_2561;ZLnet/minecraft/class_3288$class_7680;Lnet/minecraft/class_3264;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288; (ModifyArg)"
+        ]
+      },
+      "notes": [
+        "static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)"
+      ]
+    }
+  ],
+  "summary": {
+    "artifacts": 1,
+    "blockedStatic": 1,
+    "needsDependency": 0,
+    "cleanStatic": 0
+  }
+}
