@@ -549,10 +549,14 @@ def test_immediatelyfast_port() -> None:
         check("IFPORT rule loads", False, repr(exc))
         return
     reps = data.get("mixinClassReplacements") or []
-    bound = (len(reps) >= 5
+    bound = (len(reps) >= 6
              and all(r.get("capability") and r.get("risk") and r.get("evidence") for r in reps))
-    check("IFPORT rule binds 5+ replacements to capability/risk/evidence", bound,
+    check("IFPORT rule binds 6+ replacements to capability/risk/evidence", bound,
           f"{len(reps)} replacements")
+    additions = data.get("mixinConfigAdditions") or []
+    added = (len(additions) >= 2
+             and all(a.get("capability") and a.get("evidence") for a in additions))
+    check("IFPORT rule re-adds the HUD mixins with evidence", added, f"{len(additions)} additions")
     ctors = data.get("constructorRedirects") or []
     bridged = (len(ctors) >= 2
                and all(c.get("bridgeClass") == "top/mcbridge1201/bridge/IdentifierBridge"
@@ -564,8 +568,12 @@ def test_immediatelyfast_port() -> None:
         base / "feature" / "batching" / "BatchingBuffers.java",
         base / "feature" / "batching" / "HudBatchingBufferSource.java",
         base / "feature" / "batching" / "SimpleImmediate.java",
+        base / "feature" / "batching" / "BatchingRenderLayers.java",
+        base / "feature" / "batching" / "BlendFuncDepthFuncState.java",
         base / "injection" / "mixins" / "core" / "MixinVertexConsumerProvider.java",
         base / "injection" / "mixins" / "fast_text_lookup" / "MixinTextRenderer_Drawer.java",
+        base / "injection" / "mixins" / "hud_batching" / "consumer" / "MixinDrawContext.java",
+        base / "injection" / "mixins" / "hud_batching" / "MixinGameRendererHud.java",
     ]
     missing = [p.name for p in files if not p.exists()]
     tomb = [p.name for p in files

@@ -32,6 +32,9 @@ def main() -> int:
                     default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "net" / "fabricmc"
                                / "sponge-mixin" / "0.16.4+mixin.0.8.7"
                                / "sponge-mixin-0.16.4+mixin.0.8.7.jar"))
+    ap.add_argument("--joml",
+                    default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "org" / "joml"
+                               / "joml" / "1.10.5" / "joml-1.10.5.jar"))
     ap.add_argument("--mod-jar",
                     default=str(ROOT / "work" / "cb" / "out" / "popular" / "immediatelyfast"
                                / "ImmediatelyFast-Fabric-1.5.5+1.20.4+1.21.1.jar"))
@@ -43,7 +46,7 @@ def main() -> int:
     if not javac.exists():
         print(f"javac not found: {javac}", file=sys.stderr)
         return 2
-    cp_jars = [args.intermediary, args.fastutil, args.mixin, args.mod_jar]
+    cp_jars = [args.intermediary, args.fastutil, args.mixin, args.joml, args.mod_jar]
     for jar in cp_jars:
         if not Path(jar).exists():
             print(f"missing classpath jar: {jar}", file=sys.stderr)

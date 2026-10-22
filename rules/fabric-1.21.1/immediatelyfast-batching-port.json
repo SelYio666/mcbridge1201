@@ -28,7 +28,24 @@
     }
   ],
   "notes": "1.21.1 changed BufferBuilder to ByteBufferBuilder + DrawMode/VertexFormat and MeshData drawing; the batching engine, the Immediate factory mixin and the Identifier(String) calls are ported. HUD batching is kept; item-lighting variants and Iris are not ported yet.",
-  "mixinConfigAdditions": [],
+  "mixinConfigAdditions": [
+    {
+      "id": "immediatelyfast/hud-ingame-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "hud_batching.MixinInGameHud",
+      "capability": "mixin-config-readd",
+      "risk": "the converted config lost MixinInGameHud; without it the HUD render is never wrapped and the dedicated HUD batches stay empty",
+      "evidence": "runs/p134-immediatelyfast-port-boot"
+    },
+    {
+      "id": "immediatelyfast/hud-gamerenderer-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "hud_batching.MixinGameRendererHud",
+      "capability": "mixin-config-add",
+      "risk": "this 1.21.1-only Redirect wraps InGameHud.render in BatchingBuffers.runBatched; not present in the converted config",
+      "evidence": "runs/p134-immediatelyfast-port-boot"
+    }
+  ],
   "mixinClassReplacements": [
     {
       "id": "immediatelyfast/batchable-buffer-source",
@@ -67,6 +84,19 @@
       "capability": "mixin-class-replacement",
       "risk": "BufferBuilder.method_22893 was removed; field_1556 is private (reflection)",
       "evidence": "runs/p134-immediatelyfast-port-boot (tombstone crash)"
+    },
+    {
+      "id": "immediatelyfast/draw-context-consumer",
+      "targetClass": "net/raphimc/immediatelyfast/injection/mixins/hud_batching/consumer/MixinDrawContext",
+      "replacementClass": "net/raphimc/immediatelyfast/injection/mixins/hud_batching/consumer/MixinDrawContext",
+      "alsoEmbed": [
+        "net/raphimc/immediatelyfast/feature/batching/BatchingRenderLayers",
+        "net/raphimc/immediatelyfast/feature/batching/BlendFuncDepthFuncState",
+        "net/raphimc/immediatelyfast/injection/mixins/hud_batching/MixinGameRendererHud"
+      ],
+      "capability": "mixin-class-replacement",
+      "risk": "1.20.4 body called the removed class_4588.method_1344 and used FILL_CONSUMER fields; port checks DrawContext's HudBatchingBufferSource and writes custom GUI layers, GlStateManager state read via reflection",
+      "evidence": "runs/p134-immediatelyfast-port-boot"
     },
     {
       "id": "immediatelyfast/hud-batching-buffer-source",
