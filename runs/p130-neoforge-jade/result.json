@@ -1,0 +1,25 @@
+{
+  "mod": "Jade-1.21.1-NeoForge-15.10.6.jar",
+  "sha1_ok": true,
+  "neoforge": "21.1.264",
+  "joined": true,
+  "mod_lines": [
+    "[15:40:52.741] [main/INFO] [loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file \"Jade-1.21.1-NeoForge-15.10.6.jar\" [locator: {mods folder locator at C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\launcher-e2e\\mods}, reader: mod manifest] ",
+    "\t\tJade 15.10.6+neoforge (jade)",
+    "[15:41:02] [Render thread/INFO] [minecraft/ReloadableResourceManager]: Reloading ResourceManager: vanilla, mod_resources, mod/jade, mod/neoforge",
+    "[15:41:04] [Worker-Main-11/INFO] [sn.ja.Jade/]: Start loading plugin from snownee.jade.addon.vanilla.VanillaPlugin",
+    "[15:41:04] [Worker-Main-11/INFO] [sn.ja.Jade/]: Start loading plugin from snownee.jade.addon.universal.UniversalPlugin",
+    "[15:41:04] [Worker-Main-11/INFO] [sn.ja.Jade/]: Start loading plugin from snownee.jade.addon.debug.DebugPlugin",
+    "[15:41:04] [Worker-Main-11/INFO] [sn.ja.Jade/]: Start loading plugin from snownee.jade.addon.core.CorePlugin",
+    "[15:41:04] [Worker-Main-11/INFO] [sn.ja.Jade/]: Start loading plugin from snownee.jade.addon.access.AccessibilityPlugin"
+  ],
+  "errors": [
+    "[15:41:01] [Download-2/ERROR] [minecraft/Minecraft]: Failed to fetch user properties",
+    "com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401",
+    "\tat MC-BOOTSTRAP/authlib@6.0.54/com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:59) ~[authlib-6.0.54.jar%23147!/:?] {}",
+    "Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401",
+    "com.mojang.authlib.exceptions.MinecraftClientException: Failed to read from https://sessionserver.mojang.com/session/minecraft/profile/d08cc8f187f23a1a82ef906d1c2019fd?unsigned=false due to Connect timed out",
+    "Caused by: java.net.SocketTimeoutException: Connect timed out"
+  ],
+  "exit_code": 1
+}
