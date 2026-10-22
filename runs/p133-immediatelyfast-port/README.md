@@ -62,3 +62,15 @@ java.lang.NoSuchMethodError: 'void net.minecraft.class_287.<init>(int)'
 ## 下一步
 
 WP1：写 `BatchableBufferSource` 的 1.21.1 版本并编译；启动到第一个新错误，逐个 WP 推进。
+
+## WP1 进度（2026-10-22）
+
+- 源码：`java/src/compat/java/net/raphimc/immediatelyfast/feature/core/BatchableBufferSource.java`；
+- 编译脚本：`tools/build_immediatelyfast_port.py`（intermediary 1.21.1 jar + fastutil）；
+- 结果：`javac exit: 0`（见 `wp1-compile.txt`）；
+- 与官方的差异（如实）：
+  - 无 Iris 兼容（Iris 本来就未测试）；
+  - 无 `BufferAllocatorPool`：每个 buffer 用独立 `ByteBufferBuilder`，draw 后关闭（batching 行为不变，只是少了分配复用）；
+  - 层排序只保留“半透明最后”，未实现马/狼/村民纹理的特殊顺序（只影响实体 z-fighting 顺序）；
+  - `class_4598.method_60893` 与 `class_287.field_52071` 在 1.21.1 是 private，改用反射访问（官方用 access widener）。
+- 还没做的：`BatchingBuffers` / `HudBatchingBufferSource`（WP2）、HUD mixin（WP3）、规则与启动验证（WP4/WP5）。

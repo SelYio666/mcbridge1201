@@ -557,6 +557,13 @@ def test_download_policy() -> None:
     mclaunch.set_source_mode("auto")
     mclaunch.SOURCE_HEALTH.clear()
     mclaunch.SOURCE_HEALTH_PATH = None
+    # fetch uses a urllib3 pool when available, which would bypass with_fake()'s urlopen patch;
+    # force the urllib path for deterministic offline checks
+    try:
+        mclaunch._fetch._POOL = None
+        mclaunch._fetch.urllib3 = None
+    except Exception:  # noqa: BLE001 - older fetch module without a pool
+        pass
 
     workdir = WORK / "download-policy"
     if workdir.exists():
@@ -583,9 +590,15 @@ def test_download_policy() -> None:
               for u in mclaunch.mirror_urls(manifest_url)))
 
     class FakeResp:
+        status = 200
+        headers = {}
+
         def __init__(self, data: bytes):
             self._data = data
             self._pos = 0
+
+        def close(self):
+            return None
 
         def __enter__(self):
             return self

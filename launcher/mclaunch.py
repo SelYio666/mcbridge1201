@@ -19,6 +19,8 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+
+import fetch as _fetch
 import uuid
 import zipfile
 from collections import deque
@@ -98,9 +100,7 @@ METADATA_TTL = 900  # 15 minutes, per the download review: listings rarely chang
 
 
 def _fetch_json(candidate: str, timeout: int) -> bytes:
-    req = urllib.request.Request(candidate, headers=UA)
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+    return _fetch.get_bytes(candidate, timeout=timeout)
 
 
 def http_json(url: str, retries: int = 1, timeout: int = 20, max_age: int = METADATA_TTL,
@@ -375,26 +375,30 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3,
         for attempt in range(1, max(1, retries) + 1):
             try:
                 progress and progress.set(source=candidate)
-                req = urllib.request.Request(candidate, headers=UA)
-                with urllib.request.urlopen(req, timeout=60) as r:
-                    final_url = getattr(r, "geturl", lambda: candidate)()
-                    headers = getattr(r, "headers", None)
+                resp = _fetch.open_stream(candidate, timeout=60)
+                digest = hashlib.sha1() if sha1 else None
+                try:
+                    final_url = resp.url or candidate
+                    headers = resp.headers or {}
                     total = None
-                    if headers:
-                        try:
-                            total = int(headers.get("Content-Length") or 0) or None
-                        except (TypeError, ValueError):
-                            total = None
+                    try:
+                        total = int(headers.get("Content-Length") or 0) or None
+                    except (TypeError, ValueError):
+                        total = None
                     with tmp.open("wb") as f:
                         while True:
-                            chunk = r.read(1 << 20)
+                            chunk = resp.read(1 << 20)
                             if not chunk:
                                 break
                             f.write(chunk)
+                            if digest is not None:
+                                digest.update(chunk)
                             progress and progress.add_bytes(len(chunk), total=total,
                                                             source=final_url or candidate)
+                finally:
+                    resp.close()
                 size = tmp.stat().st_size
-                if sha1 and sha1_of(tmp) != sha1:
+                if sha1 and (digest.hexdigest() if digest else sha1_of(tmp)) != sha1:
                     tmp.unlink(missing_ok=True)
                     raise RuntimeError("sha1 mismatch")
                 tmp.replace(dest)
