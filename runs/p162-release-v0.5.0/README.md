@@ -33,6 +33,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 - `test_review_fixes` 73/73；`check_hashes` 892/892；`verify_evidence` passed；
 - Java 25/25。
 
+## 发布后复核（下载已发布资产）
+
+- `gh release download v0.5.0 --pattern mcbridge-launcher-0.5.0.zip` 下载回来，
+  SHA-256 仍是 `aa881f0619430374e2631a995d79065403ef69d5785498b249ae47d70c7b7258`；
+- 对**下载后的包**再跑 `test_portable`：deps=True、verify=True（`RESULT: OK`）、
+  `/api/status`/`/guide` 均可用 → **RESULT: OK**。
+
 ## Release
 
 - tag `v0.5.0`；
