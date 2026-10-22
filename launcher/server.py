@@ -55,7 +55,14 @@ def run_source_check(root: Path) -> None:
                               cwd=str(HERE.parent), capture_output=True, text=True, timeout=300)
         data = json.loads((out_dir / "canary.json").read_text(encoding="utf-8"))
         summary = summarize_canary(data)
+        health_file = out_dir / "health.json"
+        applied = 0
+        if health_file.exists():
+            hosts = (json.loads(health_file.read_text(encoding="utf-8")) or {}).get("hosts") or {}
+            mclaunch.merge_source_health(hosts)
+            applied = len(hosts)
         summary["exit"] = proc.returncode
+        summary["health_hosts"] = applied
         SOURCE_CHECK.update(running=False, error=None, result=summary)
     except Exception as exc:  # noqa: BLE001 - surface the error in the GUI
         SOURCE_CHECK.update(running=False, error=str(exc))

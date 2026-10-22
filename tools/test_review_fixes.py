@@ -718,6 +718,19 @@ def test_download_policy() -> None:
         check("DOWNLOAD persists and reloads host health", loaded >= 1
               and "bmclapi2.bangbang93.com" in mclaunch.SOURCE_HEALTH,
               str(mclaunch.SOURCE_HEALTH))
+
+        # canary observations merge into the same cache (failures accumulate, success resets)
+        merge_file = workdir / "health-merge.json"
+        mclaunch.SOURCE_HEALTH_PATH = merge_file
+        mclaunch.SOURCE_HEALTH.clear()
+        merge_host = "bmclapi2.bangbang93.com"
+        mclaunch.merge_source_health({merge_host: {"ok": False}})
+        mclaunch.merge_source_health({merge_host: {"ok": False}})
+        fails = mclaunch.SOURCE_HEALTH[merge_host]["fails"]
+        mclaunch.merge_source_health({merge_host: {"ok": True}})
+        reset = mclaunch.SOURCE_HEALTH[merge_host]["fails"] == 0
+        check("DOWNLOAD canary health merges into the cache",
+              fails == 2 and reset and merge_file.exists(), f"{fails} {reset}")
     finally:
         mclaunch.SOURCE_HEALTH_PATH = backup_path
         mclaunch.SOURCE_HEALTH.clear()

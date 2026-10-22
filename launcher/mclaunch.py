@@ -270,6 +270,28 @@ def save_source_health() -> None:
         pass
 
 
+def merge_source_health(entries: dict) -> None:
+    """Apply external health observations (e.g. a canary run) to the persisted map."""
+    if not isinstance(entries, dict):
+        return
+    changed = False
+    with _HEALTH_LOCK:
+        for host, info in entries.items():
+            if not isinstance(info, dict):
+                continue
+            host = str(host).lower()
+            cur = SOURCE_HEALTH.setdefault(host, {"fails": 0})
+            if info.get("ok"):
+                cur["fails"] = 0
+                cur["last_ok"] = time.time()
+            else:
+                cur["fails"] = int(cur.get("fails", 0)) + 1
+                cur["last_fail"] = time.time()
+            changed = True
+    if changed:
+        save_source_health()
+
+
 def _host(url: str) -> str:
     return urllib.parse.urlsplit(url).netloc.lower()
 

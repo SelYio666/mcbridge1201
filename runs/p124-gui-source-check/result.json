@@ -5,15 +5,14 @@
   "state_error": null,
   "summary": {
     "core_ok": true,
-    "mirrors_ok": false,
+    "mirrors_ok": true,
     "neoforge_ok": false,
     "core_failures": [],
-    "mirror_failures": [
-      "bmcl manifest"
-    ]
+    "mirror_failures": [],
+    "health_hosts": 10
   },
   "health_mode": "auto",
-  "health_hosts": 0,
+  "health_hosts": 10,
   "canary_file_written": true,
   "canary_path": "<root>/.mcbridge/canary/canary.json",
   "ok": true

@@ -20,6 +20,7 @@ import json
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -140,6 +141,17 @@ def main() -> int:
     results.update(ok=core_ok, mirrors_ok=mirrors_ok, neoforge_ok=neoforge_ok, strict=args.strict)
     ok = core_ok and (not args.strict or (mirrors_ok and neoforge_ok))
     (out_dir / "canary.json").write_text(json.dumps(results, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    # host-level health for the launcher's source-health cache (404s are path misses, not health)
+    hosts: dict[str, dict] = {}
+    for bucket in ("required", "mirrors", "neoforge"):
+        for r in results[bucket]:
+            host = (urllib.parse.urlsplit(r.get("url", "")).netloc or "").lower()
+            if not host:
+                continue
+            entry = hosts.setdefault(host, {"ok": True})
+            entry["ok"] = entry["ok"] and bool(r.get("ok"))
+    (out_dir / "health.json").write_text(json.dumps({"hosts": hosts}, indent=2), encoding="utf-8")
     for bucket in ("required", "mirrors", "neoforge", "expected_misses"):
         print(f"== {bucket}")
         for r in results[bucket]:
