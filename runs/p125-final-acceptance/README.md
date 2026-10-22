@@ -10,7 +10,7 @@
 | `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
 | Java JUnit | ✅ 25/25 |
 | `python tools/test_review_fixes.py` | ✅ **69/69** |
-| `python tools/check_hashes.py` | ✅ **777/777**（mismatch 0 / missing 0） |
+| `python tools/check_hashes.py` | ✅ **782/782**（mismatch 0 / missing 0） |
 | `python tools/verify_evidence.py` | ✅ passed（69/69） |
 | GitHub CI（master，dispatch） | ✅ `39743576915` success |
 | Release 资产 | ✅ `v0.4.6` / `mcbridge-launcher-0.4.6.zip` |
@@ -39,7 +39,7 @@
 
 | 项 | 状态 |
 |---|---|
-| ImmediatelyFast 渲染批处理 | ✅ 已移植并生效：进世界 + HUD/物品/overlay 计数 hud=4623、itemModel=1134、itemOverlay=1134，关闭 hud_batching 后归零（`runs/p134`、`runs/p137`、`runs/p139`）；**未移植** Iris |
+| ImmediatelyFast 渲染批处理 | ✅ 已移植并生效：单人 + 专用服务器多人（hud=4659、itemModel=2258、itemOverlay=1129），关闭开关归零（`runs/p134`、`p141`、`p137`）；**未移植** Iris |
 | Sodium / Iris | ❌ 未触碰 |
 | 渲染模组“性能提升”数字 | ❌ 未测（只有 EntityCulling 的 F3 计数，不是帧率基准） |
 | 完整镜像模式全量安装 | ❌ 只做了有界链路（客户端+库+120 资源）；全量镜像太慢已中止（p123） |
