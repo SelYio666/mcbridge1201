@@ -9,9 +9,9 @@
 |---|---|
 | `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
 | Java JUnit | ✅ 25/25 |
-| `python tools/test_review_fixes.py` | ✅ **64/64** |
-| `python tools/check_hashes.py` | ✅ **736/736**（mismatch 0 / missing 0） |
-| `python tools/verify_evidence.py` | ✅ passed（64/64） |
+| `python tools/test_review_fixes.py` | ✅ **67/67** |
+| `python tools/check_hashes.py` | ✅ **765/765**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（67/67） |
 | GitHub CI（master，dispatch） | ✅ `39743576915` success |
 | Release 资产 | ✅ `v0.4.6` / `mcbridge-launcher-0.4.6.zip` |
 | 工作区 | ✅ 干净（`git status` 无改动） |
@@ -39,7 +39,7 @@
 
 | 项 | 状态 |
 |---|---|
-| ImmediatelyFast 渲染批处理 | ❌ 未解决：描述符已能移植，但卡在 `BatchableBufferSource.<clinit>` 的 1.21.1 BufferBuilder API，需重写 batching 引擎（`runs/p120`） |
+| ImmediatelyFast 渲染批处理 | ✅ 已移植并生效：进世界 + HUD 批处理计数 545→2209→4329，关闭 hud_batching 后计数消失（`runs/p134`、`runs/p137`）；**未移植** Iris 与 per-lighting 物品变体 |
 | Sodium / Iris | ❌ 未触碰 |
 | 渲染模组“性能提升”数字 | ❌ 未测（只有 EntityCulling 的 F3 计数，不是帧率基准） |
 | 完整镜像模式全量安装 | ❌ 只做了有界链路（客户端+库+120 资源）；全量镜像太慢已中止（p123） |
@@ -78,4 +78,4 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 - 镜像节点会随时间/地区变化，canary 只是单次采样；
 - 规则文件按 `capability/risk/evidence` 绑定，新增能力必须先有真实 boot/进世界证据；
 - `work/` 与 `dist/` 不入库；仓库不分发游戏/模组/转换后的 jar；
-- ImmediatelyFast 若要做，属于独立大工程（batching 引擎移植 + 性能/画面验证），不应在规则层假装完成。
+- ImmediatelyFast 已完成 batching 引擎移植（HUD/物品批处理生效，A/B 可复现）；Iris、per-lighting 物品变体与帧率基准仍未做。
