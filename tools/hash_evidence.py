@@ -511,8 +511,6 @@ FILES = [
     "share/download-sources/index.html",
     "share/download-sources/sources.md",
     "share/download-sources/README.md",
-    "share/download-sources/群聊版.txt",
-    "share/download-sources/长图.png",
     "share/download-sources/douyin/page1.png",
     "share/download-sources/douyin/page2.png",
     "share/download-sources/douyin/page3.png",
