@@ -8,6 +8,14 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 
 本仓库当前交付 P0 的事实与证据，以及 P1 的第一段运行时结果：环境锁定、上游引擎锁定、10 份真实样本、**自研静态损伤分析器**、**body-preserving 重映射器**、CenturyBridge 真实转换产物，和第一次真实启动。它不宣称任何模组“已兼容”。
 
+## 当前状态（2026-10-22）
+
+- **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康缓存 + GUI 源检查；内嵌 Python 的便携包（v0.4.6）。
+- **已验证进世界**：Fabric 1.21.1（全量安装 + EntityCulling 真生效）；NeoForge 21.1.264（AppleSkin / Farmer's Delight / Jade）；Forge 1.20.1-47.4.28（AppleSkin / Farmer's Delight）。
+- **未通过 / 未验证**：ImmediatelyFast（卡在 1.21.1 batching 引擎）；Sodium/Iris 未触碰；多人**专用**服务器未测；性能数字未测。
+- **门禁**：Java 25/25、`test_review_fixes` 64/64、`check_hashes` 736/736、`verify_evidence` passed、CI 绿。
+- 详情：[总验收快照](runs/p125-final-acceptance/README.md)、[FINAL-STATUS](docs/FINAL-STATUS.md)、[使用说明](docs/guide.md)。
+
 ## 现状（2026-10-18）
 
 | 项目 | 状态 | 证据 |
