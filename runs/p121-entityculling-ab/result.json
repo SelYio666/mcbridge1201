@@ -1,0 +1,14 @@
+[
+  {
+    "label": "culling-on",
+    "skipEntityCulling": false,
+    "joined": true,
+    "mixin_errors": []
+  },
+  {
+    "label": "culling-off",
+    "skipEntityCulling": true,
+    "joined": true,
+    "mixin_errors": []
+  }
+]
