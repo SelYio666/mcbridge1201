@@ -47,6 +47,25 @@
   `FILL_CONSUMER/TEXTURE_CONSUMER/ITEM_*` 真正收到 draw 调用（per-batch 计数 > 0），再重跑 A/B；
 - 之后才把目标里的“HUD/物品批处理功能生效”标为完成。
 
+## HUD fast-path 尝试与阻塞点（2026-10-22 18:19）
+
+- 发现 `immediatelyfast-common.mixins.json` 的 client 列表里**没有** `hud_batching.MixinInGameHud`
+  （转换时被剥掉），所以整个 HUD 渲染没被 begin/end 包住，per-batch 才全是 0；
+- 用 `mixinConfigAdditions` 把它加回来后，`[mcbridge-port] hud batching begin` 出现，
+  说明 HUD 路径确实被调用；
+- 但 1.20.4 的 `MixinDrawContext` 在 1.21.1 上立刻撞 tombstone：
+
+  ```text
+  UnsupportedOperationException: CenturyBridge tombstone:
+    net.minecraft.class_4588.method_1344 no longer exists in 1.21.1
+    at ...MixinDrawContext.drawTexturedQuadIntoBuffer(class_332.java:1407)
+  ```
+
+  该 mixin 还依赖 `BatchingRenderLayers` / `BlendFuncDepthFuncState` / `RenderSystemState`，
+  需要一起移植，不能只改一个描述符；
+- 为避免把规则留成“一启动就崩”，该 `mixinConfigAdditions` 已撤回（回到 universal batching
+  可用的状态），下一轮先移植 `MixinDrawContext` + 相关 render-layer 状态类，再重新启用。
+
 ## 诚实限制
 
 未移植 Iris；未移植 per-lighting 物品变体；私有成员走反射；只有单人 integrated server。
