@@ -1,0 +1,13 @@
+{
+  "server_ready": true,
+  "mod_loaded": true,
+  "client_joined": true,
+  "server_lines": [
+    "[00:43:04] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file C:\\Users\\27682\\Documents\\�½��ļ���\\mcbridge1201\\work\\instances\\forge-1.20.1-server\\config\\farmersdelight-common.toml is not correct. Correcting",
+    "[00:43:04] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key farming.defaultTomatoVineRope was corrected from null to its default, farmersdelight:rope. ",
+    "[00:43:37] [Server thread/INFO] [minecraft/PlayerList]: FDForge[/127.0.0.1:59664] logged in with entity id 175 at (22.5, 68.0, 128.5)",
+    "[00:43:37] [Server thread/INFO] [minecraft/MinecraftServer]: FDForge joined the game",
+    "[00:43:44] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: FDForge lost connection: Disconnected",
+    "[00:43:44] [Server thread/INFO] [minecraft/MinecraftServer]: FDForge left the game"
+  ]
+}
