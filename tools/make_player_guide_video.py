@@ -138,11 +138,11 @@ def scene_mirror(draw, t):
 
 
 def scene_launchers(draw, t):
-    header(draw, "③ 三个启动器，三步搞定", "1.21.1 + Fabric 或 Forge，Java 21")
+    header(draw, "③ 先装好，再导入启动", "PCL 不提供下载；HMCL / Prism 可下载或导入")
     cards = [
-        ("PCL", ["下载 1.21.1 + Fabric", "选中版本 → 启动", "设置里选 Java 21"]),
-        ("HMCL", ["安装新版本 1.21.1", "勾选 Fabric → 完成", "Java 路径选 21"]),
-        ("Prism", ["Add Instance 1.21.1", "Loader 选 Fabric", "Edit → Java 21"]),
+        ("PCL", ["先下载好 1.21.1", "游戏目录指向它", "选中版本 → 启动"]),
+        ("HMCL", ["可下载或导入", "版本列表里选中", "Java 路径选 21"]),
+        ("Prism", ["可下载或导入", "Loader 选 Fabric", "Edit → Java 21"]),
     ]
     cw, ch, gap = 340, 250, 30
     total = len(cards) * cw + (len(cards) - 1) * gap

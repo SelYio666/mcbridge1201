@@ -18,7 +18,8 @@
 - 官方下载源：版本清单、客户端 jar、库、资源、官方 Java；
 - 加载器源：Fabric / Forge / NeoForge；
 - 国内镜像 BMCLAPI + 校验方法（sha1）；
-- PCL / HMCL / Prism / 官方启动器的安装步骤（1.21.1 + Fabric，Java 21）；
+- **先下载 1.21.1（官方启动器/HMCL/Prism），再导入 PCL**（PCL 目前不提供版本下载）；
+- 装 Fabric（可选，Fabric Installer 或本项目命令）与各启动器导入步骤；Java 21；
 - 常见问题与免责声明。
 
 **不包含**模组转换/适配内容——那部分见仓库主文档，玩家一般用不到。

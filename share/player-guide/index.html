@@ -60,37 +60,57 @@ NeoForge 安装器  https://maven.neoforged.net/releases/net/neoforged/neoforge/
   <pre>资源   https://bmclapi2.bangbang93.com/assets/&lt;hash前2位&gt;/&lt;hash&gt;
 Maven  https://bmclapi2.bangbang93.com/maven/&lt;maven 相对路径&gt;</pre>
 
-  <h2>二、启动器教程</h2>
+  <h2>二、先拿到游戏文件，再导入启动器</h2>
+  <div class="note">
+    PCL 目前<b>不提供 Minecraft 版本下载</b>，所以流程是：先用官方启动器（或其它能下载的启动器）下载
+    1.21.1，再把它<b>导入 PCL</b> 启动。HMCL / Prism 一般仍可自行下载，也可以用同样的“导入”方式。
+  </div>
 
-  <h3>PCL（Plain Craft Launcher 2）</h3>
+  <h3>第 1 步：下载 1.21.1（二选一）</h3>
+  <ul>
+    <li><b>官方启动器</b>：安装 → 选 1.21.1 → 播放一次让它下载完整（正版登录）；</li>
+    <li><b>其它能下载的启动器</b>（HMCL、Prism 等）：新建 1.21.1 实例即可。</li>
+  </ul>
+  <p>下载完成后，游戏目录一般在 <code>%APPDATA%\.minecraft</code>（Prism 在
+  <code>%APPDATA%\PrismLauncher\instances\&lt;实例&gt;</code>）。</p>
+
+  <h3>第 2 步：装 Fabric（如果需要模组/Fabric 版本）</h3>
   <ol>
-    <li>打开 PCL →「下载」→ 选 <b>1.21.1</b>，同时勾选 <b>Fabric</b>（或 Forge）→ 开始安装；</li>
-    <li>装好后回到主界面，选中该版本 →「启动」；</li>
-    <li>「设置 → 启动设置」里确认 Java：1.21.1 用 <b>Java 21</b>；</li>
-    <li>第一次启动会创建存档目录；进游戏即完成。</li>
+    <li>下载 Fabric Installer（maven 上的 <code>fabric-installer-*.jar</code>）；</li>
+    <li>用 Java 21 运行：</li>
   </ol>
+  <pre>java -jar fabric-installer-1.0.1.jar client -dir "C:\Users\你\AppData\Roaming\.minecraft" -mcversion 1.21.1 -noprofile</pre>
+  <p>装好后 <code>versions/</code> 里会多出 <code>fabric-loader-&lt;版本&gt;-1.21.1</code>。不做模组可以跳过这一步，直接用原版 1.21.1。</p>
+
+  <h3>第 3 步：导入 PCL 并启动</h3>
+  <ol>
+    <li>打开 PCL →「设置」→「游戏目录」，选择你刚下载的 <code>.minecraft</code> 目录；</li>
+    <li>也可以把整个 <code>.minecraft</code> 文件夹（或其中的版本文件夹）<b>拖进 PCL 窗口</b>；</li>
+    <li>回到主界面，版本列表里应出现 1.21.1 或 Fabric 版本，选中 →「启动」；</li>
+    <li>「设置 → Java」确认选的是 <b>Java 21</b>；</li>
+    <li>账户：正版登录，或在 PCL 里用离线模式。</li>
+  </ol>
+  <div class="note">如果 PCL 没扫描到：把 <code>versions/</code> 下对应的版本文件夹复制到 PCL 当前使用的
+  <code>.minecraft/versions/</code> 里，再刷新列表。</div>
 
   <h3>HMCL</h3>
   <ol>
-    <li>「版本列表」→「安装新游戏版本」→ 选 <b>1.21.1</b>，勾选 <b>Fabric</b>；</li>
-    <li>安装完成后双击该版本启动；</li>
-    <li>「设置 → Java 路径」选 Java 21；</li>
-    <li>如果下载慢，可在「设置 → 下载」里切换下载源。</li>
+    <li>HMCL 能直接下载：新建 1.21.1 + Fabric 实例即可；</li>
+    <li>要复用已有版本：把「游戏目录」指向同一个 <code>.minecraft</code>，版本列表会自动出现；</li>
+    <li>「设置 → Java 路径」选 Java 21。</li>
   </ol>
 
   <h3>Prism Launcher</h3>
   <ol>
-    <li>「Add Instance」→ 版本选 <b>1.21.1</b>，Loader 选 <b>Fabric</b> → OK；</li>
-    <li>双击实例启动；</li>
-    <li>「Edit → Settings → Java」确认是 Java 21；</li>
-    <li>需要多个实例时，每个实例有独立目录，互不影响。</li>
+    <li>可以自行下载：Add Instance → 1.21.1 + Fabric；</li>
+    <li>要复用已有实例：把实例目录放进 Prism 的 <code>instances/</code>，或在 Add Instance 里导入；</li>
+    <li>「Edit → Settings → Java」选 Java 21。</li>
   </ol>
 
   <h3>官方启动器</h3>
   <ol>
-    <li>安装 1.21.1，然后运行 <b>Fabric Installer</b> 选择 1.21.1 安装；</li>
-    <li>启动器里会多出一个 Fabric 配置，选它启动；</li>
-    <li>Java 21 可由启动器自动下载（官方运行时）。</li>
+    <li>直接选 1.21.1 / Fabric 配置启动即可；</li>
+    <li>Java 21 可由启动器自动下载。</li>
   </ol>
 
   <h2>三、下载慢或失败怎么办</h2>

@@ -26,11 +26,15 @@ config/                      # 如转换产生，随实例带走
 
 ## 1. PCL（Plain Craft Launcher 2）
 
-1. 启动 PCL →「版本管理」→ 安装 **1.21.1 + Fabric**；
-2. 选中该版本 →「版本设置」→「Mod 管理」→「添加」→ 选择转换后的 jar（以及桥 jar）；
-   - 也可以直接把文件放进 `<PCL 目录>/versions/<版本>/mods/` 或全局 `mods/`；
-3. 「设置」→「Java」确认是 **21**；
-4. 启动，进游戏后看 `logs/latest.log` 有无 `mcbridge` 相关报错。
+PCL 目前**不提供 Minecraft 版本下载**，需要先准备好版本再导入：
+
+1. 用官方启动器下载 1.21.1（需要 Fabric 时用 Fabric Installer 装），或用 HMCL/Prism 新建实例，
+   也可以直接用本项目：`python launcher/mclaunch.py install 1.21.1 <目录> fabric`；
+2. 打开 PCL →「设置 → 游戏目录」指向那个 `.minecraft`；或把 `.minecraft`（或其中的版本文件夹）
+   **拖进 PCL 窗口**；
+3. 版本列表里选中该版本 →「版本设置」→「Mod 管理」→「添加」→ 选择转换后的 jar（以及桥 jar）；
+4. 「设置 → Java」确认是 **21**；
+5. 启动，进游戏后看 `logs/latest.log` 有无 `mcbridge` 相关报错。
 
 PCL 也认标准 `launcher_profiles.json`：本工具生成的实例目录可以直接被 PCL 打开。
 
