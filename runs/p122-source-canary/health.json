@@ -1,0 +1,34 @@
+{
+  "hosts": {
+    "resources.download.minecraft.net": {
+      "ok": true
+    },
+    "piston-data.mojang.com": {
+      "ok": true
+    },
+    "maven.fabricmc.net": {
+      "ok": true
+    },
+    "meta.fabricmc.net": {
+      "ok": true
+    },
+    "maven.minecraftforge.net": {
+      "ok": true
+    },
+    "files.minecraftforge.net": {
+      "ok": true
+    },
+    "libraries.minecraft.net": {
+      "ok": true
+    },
+    "piston-meta.mojang.com": {
+      "ok": true
+    },
+    "bmclapi2.bangbang93.com": {
+      "ok": true
+    },
+    "maven.neoforged.net": {
+      "ok": false
+    }
+  }
+}

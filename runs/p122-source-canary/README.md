@@ -30,11 +30,12 @@
 
 - 官方核心 12 项全部可达（Mojang manifest/version/asset index、client jar、library、asset
   object、Fabric meta、Fabric Loader/API/intermediary、Forge promos/installer）；
-- 已验证镜像 6 项可达（BMCL asset/library/manifest/fabric meta/Loader/**intermediary**）；
-- **新发现**：BMCL 的 intermediary 镜像实际可用（此前 404 是因为 URL 写错）；
-  Fabric API 在 BMCL 仍是 404（保持不替换）；
-- **NeoForge 两项超时**（API 与 installer，20 s）：这是该 host 的当前健康状态，不是代码结论；
-  canary 默认只让“核心官方”决定退出码，`--strict` 才把镜像/NeoForge 纳入门禁。
+- **完整性 4 项**：官方资源对象下载后 sha1 与索引一致、镜像同一对象 sha1 一致、client jar 与
+  library jar 的 PK 头正确（见 `canary.json` 的 `integrity` 段）；
+- 镜像 6 项：两次连续运行结果不同——第一次 asset/manifest 超时（20 s / 28 s），第二次全部 206；
+  说明镜像可用但会波动，重试即可；
+- **NeoForge 两项两次均超时**（API 与 installer，20 s）：该 host 当前不稳定，不是代码结论；
+  canary 默认只让“核心官方 + 完整性”决定退出码，`--strict` 才把镜像/NeoForge 纳入门禁。
 
 ## 为什么不做“所有文件 × 所有源”
 

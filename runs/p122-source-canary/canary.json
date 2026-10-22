@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-22 12:58:54",
+  "generated": "2026-10-22 16:45:56",
   "required": [
     {
       "url": "https://resources.download.minecraft.net/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356",
@@ -8,7 +8,7 @@
       "final": "https://resources.download.minecraft.net/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356",
       "content_length": "1",
       "content_range": "bytes 0-0/9101",
-      "ms": 208,
+      "ms": 206,
       "ok": true,
       "label": "asset object"
     },
@@ -19,7 +19,7 @@
       "final": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/26836906",
-      "ms": 187,
+      "ms": 248,
       "ok": true,
       "label": "client jar"
     },
@@ -30,7 +30,7 @@
       "final": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.102.0+1.21.1/fabric-api-0.102.0+1.21.1.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/2286038",
-      "ms": 657,
+      "ms": 501,
       "ok": true,
       "label": "fabric api jar"
     },
@@ -41,7 +41,7 @@
       "final": "https://maven.fabricmc.net/net/fabricmc/intermediary/1.21.1/intermediary-1.21.1.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/657725",
-      "ms": 656,
+      "ms": 572,
       "ok": true,
       "label": "fabric intermediary jar"
     },
@@ -52,7 +52,7 @@
       "final": "https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.19.5/fabric-loader-0.19.5.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/1984980",
-      "ms": 560,
+      "ms": 662,
       "ok": true,
       "label": "fabric loader jar"
     },
@@ -63,7 +63,7 @@
       "final": "https://meta.fabricmc.net/v2/versions/loader/1.21.1",
       "content_length": "1",
       "content_range": "bytes 0-0/20628",
-      "ms": 767,
+      "ms": 444,
       "ok": true,
       "label": "fabric loader list"
     },
@@ -74,7 +74,7 @@
       "final": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.10/forge-1.20.1-47.4.10-installer.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/6078070",
-      "ms": 856,
+      "ms": 574,
       "ok": true,
       "label": "forge installer"
     },
@@ -85,7 +85,7 @@
       "final": "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json",
       "content_length": null,
       "content_range": null,
-      "ms": 739,
+      "ms": 733,
       "ok": true,
       "label": "forge promos"
     },
@@ -96,7 +96,7 @@
       "final": "https://libraries.minecraft.net/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/979212",
-      "ms": 199,
+      "ms": 194,
       "ok": true,
       "label": "library"
     },
@@ -107,7 +107,7 @@
       "final": "https://piston-meta.mojang.com/v1/packages/e61ea955de95de1f99d36616a8b46147e9f6f5d7/17.json",
       "content_length": "1",
       "content_range": "bytes 0-0/449557",
-      "ms": 267,
+      "ms": 215,
       "ok": true,
       "label": "mojang asset index"
     },
@@ -118,7 +118,7 @@
       "final": "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
       "content_length": "1",
       "content_range": "bytes 0-0/278138",
-      "ms": 184,
+      "ms": 201,
       "ok": true,
       "label": "mojang manifest"
     },
@@ -129,7 +129,7 @@
       "final": "https://piston-meta.mojang.com/v1/packages/1757c8b1fbfc6b638504e1f6cceb05893f7389d5/1.21.1.json",
       "content_length": "1",
       "content_range": "bytes 0-0/38408",
-      "ms": 281,
+      "ms": 197,
       "ok": true,
       "label": "mojang version json"
     }
@@ -139,10 +139,10 @@
       "url": "https://bmclapi2.bangbang93.com/assets/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356",
       "expect_404": false,
       "status": 206,
-      "final": "https://bmclapi1.sakura.sld.tw:443/download/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356?name=b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356&s=vBp8gsKRbZTPy8L_1fiFwuWixuo&e=mvj2t33j",
+      "final": "https://minio.749333.xyz/bmclapi/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=NTaie3RL2Vgez0tLCS2X%2F20261022%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261022T084603Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=b79b8ca416824d4807877ecc2aebd84fb39ad52a7340f73795510e60f4785802",
       "content_length": "1",
       "content_range": "bytes 0-0/9101",
-      "ms": 572,
+      "ms": 1214,
       "ok": true,
       "label": "bmcl asset"
     },
@@ -153,7 +153,7 @@
       "final": "https://bmclapi2.bangbang93.com/fabric-meta/v2/versions/loader/1.21.1",
       "content_length": "403856",
       "content_range": null,
-      "ms": 148,
+      "ms": 117,
       "ok": true,
       "label": "bmcl fabric loader list"
     },
@@ -164,7 +164,7 @@
       "final": "https://mirror.nyist.edu.cn/bmclapi/net/fabricmc/intermediary/1.21.1/intermediary-1.21.1.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/657725",
-      "ms": 303,
+      "ms": 366,
       "ok": true,
       "label": "bmcl intermediary jar"
     },
@@ -175,7 +175,7 @@
       "final": "https://mirror.nyist.edu.cn/bmclapi/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/979212",
-      "ms": 315,
+      "ms": 346,
       "ok": true,
       "label": "bmcl library"
     },
@@ -186,18 +186,18 @@
       "final": "https://mirror.nyist.edu.cn/bmclapi/net/fabricmc/fabric-loader/0.19.5/fabric-loader-0.19.5.jar",
       "content_length": "1",
       "content_range": "bytes 0-0/1984980",
-      "ms": 299,
+      "ms": 440,
       "ok": true,
       "label": "bmcl loader jar"
     },
     {
       "url": "https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json",
       "expect_404": false,
-      "status": 206,
-      "final": "https://minio.749333.xyz/bmclapi/f0/f09921bbfd54646ce1ddbe92caf6a8dce4502a9a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=NTaie3RL2Vgez0tLCS2X%2F20261022%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261022T045846Z&X-Amz-Expires=60&X-Amz-SignedHeaders=host&X-Amz-Signature=f61d047e2fb732b840d7a7b4221dc00c51b1eb12acfaf42f950e1a804fc8f66c",
-      "content_length": "1",
-      "content_range": "bytes 0-0/278138",
-      "ms": 1138,
+      "status": 200,
+      "final": "https://bmclapi20.sakura.sld.tw:443/download/f09921bbfd54646ce1ddbe92caf6a8dce4502a9a?name=version_manifest_v2.json&s=Cm4nI3V7o0pit0vjkimi1b43V0s&e=mvjax1eu",
+      "content_length": null,
+      "content_range": null,
+      "ms": 519,
       "ok": true,
       "label": "bmcl manifest"
     }
@@ -207,7 +207,7 @@
       "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.1.264/neoforge-21.1.264-installer.jar",
       "expect_404": false,
       "error": "URLError(TimeoutError('timed out'))",
-      "ms": 20002,
+      "ms": 20014,
       "ok": false,
       "label": "neoforge installer"
     },
@@ -215,7 +215,7 @@
       "url": "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge",
       "expect_404": false,
       "error": "URLError(TimeoutError('timed out'))",
-      "ms": 20002,
+      "ms": 20014,
       "ok": false,
       "label": "neoforge versions"
     }
@@ -225,7 +225,7 @@
       "url": "https://bmclapi2.bangbang93.com/maven/net/fabricmc/fabric-api/fabric-api/0.102.0+1.21.1/fabric-api-0.102.0+1.21.1.jar",
       "expect_404": true,
       "status": 404,
-      "ms": 2015,
+      "ms": 233,
       "ok": true,
       "label": "bmcl fabric-api"
     },
@@ -233,7 +233,7 @@
       "url": "https://bmclapi2.bangbang93.com/forge/promotions_slim.json",
       "expect_404": true,
       "status": 404,
-      "ms": 251,
+      "ms": 231,
       "ok": true,
       "label": "bmcl forge promos"
     },
@@ -241,9 +241,41 @@
       "url": "https://bmclapi2.bangbang93.com/neoforge/versions",
       "expect_404": true,
       "status": 404,
-      "ms": 251,
+      "ms": 232,
       "ok": true,
       "label": "bmcl neoforge api"
+    }
+  ],
+  "integrity": [
+    {
+      "label": "official asset sha1",
+      "url": "https://resources.download.minecraft.net/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356",
+      "ms": 309,
+      "ok": true,
+      "status": 200,
+      "sha1": "b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356"
+    },
+    {
+      "label": "mirror asset sha1",
+      "url": "https://bmclapi2.bangbang93.com/assets/b6/b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356",
+      "ms": 753,
+      "ok": true,
+      "status": 200,
+      "sha1": "b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356"
+    },
+    {
+      "label": "client jar magic",
+      "url": "https://piston-data.mojang.com/v1/objects/30c73b1c5da787909b2f73340419fdf13b9def88/client.jar",
+      "ms": 405,
+      "ok": true,
+      "status": 200
+    },
+    {
+      "label": "library jar magic",
+      "url": "https://libraries.minecraft.net/com/github/oshi/oshi-core/6.4.10/oshi-core-6.4.10.jar",
+      "ms": 227,
+      "ok": true,
+      "status": 200
     }
   ],
   "ok": true,

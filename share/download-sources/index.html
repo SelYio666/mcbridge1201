@@ -115,9 +115,10 @@ https://bmclapi2.bangbang93.com/maven/org/ow2/asm/asm/9.7.1/asm-9.7.1.jar</pre>
     <tr><td>meta.fabricmc.net</td><td><span class="badge ok">可用</span></td><td>0.6s</td></tr>
     <tr><td>Forge promotions</td><td><span class="badge ok">可用</span></td><td>0.7s</td></tr>
     <tr><td>launchermeta JVM 清单</td><td><span class="badge ok">可用</span></td><td>0.3s</td></tr>
-    <tr><td>BMCLAPI 资源 / Maven</td><td><span class="badge ok">可用</span></td><td>0.3s / 0.5s</td></tr>
-    <tr><td>libraries.minecraft.net</td><td><span class="badge warn">部分路径 404</span></td><td>以版本 JSON 里的完整 URL 为准，不要自己拼路径</td></tr>
-    <tr><td>maven.neoforged.net API</td><td><span class="badge warn">间歇超时</span></td><td>换 urllib / 重试通常可用；requests 偶发 SSL 断连</td></tr>
+    <tr><td>BMCLAPI Maven</td><td><span class="badge ok">可用</span></td><td>0.3s</td></tr>
+    <tr><td>BMCLAPI 资源 / 清单</td><td><span class="badge warn">波动</span></td><td>连续两次运行：一次超时、一次通过；重试通常可过</td></tr>
+    <tr><td>libraries.minecraft.net</td><td><span class="badge ok">按清单路径可用</span></td><td>用版本 JSON 里的完整路径（实测 206）；自己拼路径可能 404</td></tr>
+    <tr><td>maven.neoforged.net API</td><td><span class="badge warn">间歇超时</span></td><td>本次与上次均超时；换 urllib、重试、稍后再试</td></tr>
   </table>
 
   <h2>五、怎么验证下载没被改</h2>

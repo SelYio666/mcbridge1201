@@ -54,9 +54,10 @@ Maven  https://bmclapi2.bangbang93.com/maven/<maven 相对路径>
 | meta.fabricmc.net | 可用 |
 | Forge promotions | 可用 |
 | launchermeta JVM 清单 | 可用 |
-| BMCLAPI 资源 / Maven | 可用 |
-| libraries.minecraft.net | 部分路径 404，以版本 JSON 完整 URL 为准 |
-| maven.neoforged.net API | 间歇超时（重试/换 urllib） |
+| BMCLAPI Maven | 可用 |
+| BMCLAPI 资源 / 清单 | 波动：连续两次运行一次超时、一次通过 |
+| libraries.minecraft.net | 按版本 JSON 完整路径可用（实测 206）；自拼路径可能 404 |
+| maven.neoforged.net API | 间歇超时（本次复现；重试/换 urllib/稍后） |
 
 ## 校验
 

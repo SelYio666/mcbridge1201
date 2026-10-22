@@ -16,6 +16,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import time
@@ -135,7 +136,39 @@ def main() -> int:
     run_group(neoforge, "neoforge", False)
     run_group(expected_miss, "expected_misses", True)
 
-    core_ok = all(r["ok"] for r in results["required"])
+    # integrity: real payload checks (sha1 for an asset object, PK magic for jars)
+    integrity = []
+
+    def integ(label: str, url: str, expect_hash: str | None = None, magic: bytes | None = None) -> None:
+        t0 = time.time()
+        rec = {"label": label, "url": url, "ms": 0, "ok": False}
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=40) as r:
+                data = r.read() if expect_hash else r.read(1024)
+                rec["status"] = r.status
+            ok = rec["status"] == 200
+            if expect_hash:
+                got = hashlib.sha1(data).hexdigest()
+                ok = ok and got == expect_hash
+                rec["sha1"] = got
+            if magic:
+                ok = ok and data[:2] == magic
+            rec["ok"] = ok
+        except Exception as exc:  # noqa: BLE001
+            rec["error"] = repr(exc)[:100]
+        rec["ms"] = round((time.time() - t0) * 1000)
+        integrity.append(rec)
+
+    integ("official asset sha1", asset_url, expect_hash=first_obj["hash"])
+    mirror_asset = f"https://bmclapi2.bangbang93.com/assets/{first_obj['hash'][:2]}/{first_obj['hash']}"
+    integ("mirror asset sha1", mirror_asset, expect_hash=first_obj["hash"])
+    integ("client jar magic", client["url"], magic=b"PK")
+    integ("library jar magic", lib, magic=b"PK")
+    results["integrity"] = integrity
+    integrity_core = all(r["ok"] for r in integrity[:1] + integrity[2:])
+
+    core_ok = all(r["ok"] for r in results["required"]) and integrity_core
     mirrors_ok = all(r["ok"] for r in results["mirrors"])
     neoforge_ok = all(r["ok"] for r in results["neoforge"])
     results.update(ok=core_ok, mirrors_ok=mirrors_ok, neoforge_ok=neoforge_ok, strict=args.strict)
@@ -152,7 +185,7 @@ def main() -> int:
             entry = hosts.setdefault(host, {"ok": True})
             entry["ok"] = entry["ok"] and bool(r.get("ok"))
     (out_dir / "health.json").write_text(json.dumps({"hosts": hosts}, indent=2), encoding="utf-8")
-    for bucket in ("required", "mirrors", "neoforge", "expected_misses"):
+    for bucket in ("required", "mirrors", "neoforge", "expected_misses", "integrity"):
         print(f"== {bucket}")
         for r in results[bucket]:
             line = f"  {r['label']:28s} {str(r.get('status')):>4} {r['ms']:>6} ms"

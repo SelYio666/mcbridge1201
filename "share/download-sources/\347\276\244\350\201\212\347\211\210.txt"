@@ -20,8 +20,9 @@ NeoForge 安装器：https://maven.neoforged.net/releases/net/neoforged/neoforge
 Maven：https://bmclapi2.bangbang93.com/maven/<maven相对路径>
 
 — 实测 —
-可用：版本清单、资源、Fabric meta、Forge promotions、JVM 清单、BMCLAPI
-注意：libraries 部分路径 404（以版本 JSON 的完整 URL 为准）；NeoForge API 会间歇超时
+可用：版本清单、资源（sha1 校验通过）、Fabric meta、Forge promotions、JVM 清单、libraries
+注意：BMCLAPI 资源和清单会波动（一次超时一次通过）；NeoForge API 多次间歇超时；
+libraries 用版本 JSON 的完整路径，别自己拼
 
 — 校验 —
 官方文件都带 sha1：PowerShell 用 Get-FileHash -Algorithm SHA1；Linux 用 sha1sum
