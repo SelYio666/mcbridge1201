@@ -1,0 +1,13 @@
+{
+  "mod": "appleskin-neoforge-mc1.21-3.0.9.jar",
+  "mod_sha1_ok": true,
+  "neoforge": "21.1.264",
+  "joined": true,
+  "crash": null,
+  "mod_lines": [
+    "[14:34:38.346] [main/INFO] [loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file \"appleskin-neoforge-mc1.21-3.0.9.jar\" [locator: {mods folder locator at C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\launcher-e2e\\mods}, reader: mod manifest] ",
+    "\t\tAppleSkin 3.0.9+mc1.21 (appleskin)",
+    "[14:34:47] [Render thread/INFO] [minecraft/ReloadableResourceManager]: Reloading ResourceManager: vanilla, mod_resources, mod/appleskin, mod/neoforge"
+  ],
+  "exit_code": 1
+}

@@ -1111,6 +1111,8 @@ def build_command(version_id: str, root: Path, username: str, max_mem="2G",
             cmd = backend.command(version_id, root, username) or []
             if cmd:
                 cmd = [cmd[0], f"-Xmx{max_mem}"] + cmd[1:]
+                if extra_game:
+                    cmd += extra_game
                 log = root / "logs" / f"launch-{time.strftime('%Y%m%d-%H%M%S')}.log"
                 return cmd, log, root
     except Exception:

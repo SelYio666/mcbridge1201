@@ -460,6 +460,35 @@ def test_neoforge_install() -> None:
     check("NEOFORGE complete install builds a command", "--username" in cmd
           and "UnitUser" in cmd, str(cmd[:3]))
 
+    # Forge/NeoForge return early through backend.command(); extra game args (quickPlay) must survive
+    qcmd: list[str] = []
+    try:
+        import backend as backend_mod2  # noqa: E402
+        saved_cmd = backend_mod2.command
+        saved_avail2 = backend_mod2.AVAILABLE
+        saved_arts = mclaunch.loader_artifacts
+        saved_jar = mclaunch.ensure_version_jar
+        saved_libs = mclaunch.ensure_version_libraries
+        backend_mod2.AVAILABLE = True
+        backend_mod2.command = lambda _v, _r, _u: ["java", "-cp", "x", "Main"]
+        mclaunch.loader_artifacts = lambda _v, _r: {"probe": True}
+        mclaunch.ensure_version_jar = lambda *a, **k: None
+        mclaunch.ensure_version_libraries = lambda *a, **k: None
+        try:
+            qcmd, _ql, _qr = mclaunch.build_command(
+                vid, lib, "UnitUser", extra_game=["--quickPlaySingleplayer", "W"])
+            kept = qcmd[-2:] == ["--quickPlaySingleplayer", "W"]
+        finally:
+            backend_mod2.command = saved_cmd
+            backend_mod2.AVAILABLE = saved_avail2
+            mclaunch.loader_artifacts = saved_arts
+            mclaunch.ensure_version_jar = saved_jar
+            mclaunch.ensure_version_libraries = saved_libs
+        check("NEOFORGE backend command keeps extra game args (quickPlay)", kept,
+              " ".join(qcmd[-4:]))
+    except Exception as exc:  # noqa: BLE001
+        check("NEOFORGE backend command keeps extra game args (quickPlay)", False, repr(exc))
+
     universal.unlink()
     rep = mclaunch.verify_install(vid, lib)
     check("NEOFORGE verify flags a missing universal jar", rep["ok"] is False
