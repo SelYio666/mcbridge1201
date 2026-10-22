@@ -1,0 +1,60 @@
+{
+  "mc": "1.21.1",
+  "scope": "client + all allowed libraries + 120 assets + Fabric profile",
+  "source_mode": "mirror",
+  "ok": true,
+  "error": null,
+  "seconds": 488.8,
+  "files": 203,
+  "bytes": 167779977,
+  "checked_files": 191,
+  "sha1_missing": 0,
+  "sha1_mismatch": 0,
+  "download_events": 305,
+  "mirror_events": 288,
+  "official_events": 17,
+  "failures": 105,
+  "retries": 122,
+  "final_hosts": {
+    "piston-data.mojang.com": 1,
+    "mirror.nyist.edu.cn": 49,
+    "bmclapi24.sakura.sld.tw:443": 15,
+    "minio.749333.xyz": 35,
+    "bmclapi21.sakura.sld.tw:443": 14,
+    "open-bmcl-api.lunar.cc:443": 3,
+    "bmclapi23.sakura.sld.tw:443": 7,
+    "bmclapi2.bangbang93.com": 105,
+    "bmclapi17.sakura.sld.tw:443": 1,
+    "bmclapi16.sakura.sld.tw:443": 7,
+    "bmclapi20.sakura.sld.tw:443": 16,
+    "5ef49eb972ffef712f7e5234.openbmclapi.933.moe:4000": 4,
+    "bmclapi.hurtmc.com:443": 17,
+    "bmclapi22.sakura.sld.tw:443": 9,
+    "bmcl-3.furapi.com:443": 2,
+    "resources.download.minecraft.net": 9,
+    "bmclapi.zhuqiy.top:443": 2,
+    "bmclapi2.sakura.sld.tw:443": 1,
+    "maven.fabricmc.net": 8
+  },
+  "fabric_version": "fabric-loader-0.19.5-1.21.1",
+  "health": {
+    "bmclapi2.bangbang93.com": {
+      "fails": 2,
+      "last_ok": 1792646605.0381699,
+      "last_fail": 1792646628.9926102
+    },
+    "resources.download.minecraft.net": {
+      "fails": 0,
+      "last_ok": 1792646413.9422166
+    },
+    "meta.fabricmc.net": {
+      "fails": 0,
+      "last_ok": 1792646636.246874
+    },
+    "maven.fabricmc.net": {
+      "fails": 0,
+      "last_ok": 1792646638.0391088
+    }
+  },
+  "root_cleaned": true
+}

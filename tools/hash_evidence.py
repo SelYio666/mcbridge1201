@@ -581,6 +581,8 @@ FILES = [
     "runs/p122-source-canary/canary.json",
     "runs/p122-source-canary/full-1.20.1.json",
     "tools/check_download_sources.py",
+    "runs/p123-mirror-mode-install/README.md",
+    "runs/p123-mirror-mode-install/install.json",
     "rules/fabric-1.21.1/entityculling-mixin-port.json",
     "java/src/compat/java/dev/tr7zw/entityculling/mixin/EntityRendererMixin.java",
     "java/src/test/java/top/mcbridge1201/MixinConfigAdditionTest.java",

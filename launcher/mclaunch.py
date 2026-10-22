@@ -317,7 +317,7 @@ def ordered_candidates(url: str) -> list[str]:
     return [c for _i, c in ranked]
 
 
-DOWNLOAD_EVENTS: deque = deque(maxlen=400)
+DOWNLOAD_EVENTS: deque = deque(maxlen=5000)  # a full vanilla install is ~3,900 assets + libs
 _DOWNLOAD_LOCK = threading.Lock()
 _DOWNLOAD_SEQ = 0
 
