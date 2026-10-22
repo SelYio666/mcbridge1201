@@ -102,7 +102,7 @@ def scene_intro(draw, t):
 
 
 def scene_official(draw, t):
-    header(draw, "① 下载源：官方入口", "全部是公开地址，不经过任何中转")
+    header(draw, "① 下载源：给谁用", "普通玩家用启动器即可；这份清单用于排障/手动/自建")
     rows = [
         ("版本清单", "piston-meta.mojang.com/mc/game/version_manifest_v2.json"),
         ("资源文件", "resources.download.minecraft.net/<first2>/<hash>"),
