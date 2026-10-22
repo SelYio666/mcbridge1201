@@ -1,0 +1,10 @@
+{
+  "server_ready": true,
+  "client_joined": true,
+  "server_lines": [
+    "[23:31:00] [Server thread/INFO] [minecraft/PlayerList]: ForgeGuest[/127.0.0.1:63562] logged in with entity id 244 at (40.5, 67.0, 136.5)",
+    "[23:31:00] [Server thread/INFO] [minecraft/MinecraftServer]: ForgeGuest joined the game",
+    "[23:31:09] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: ForgeGuest lost connection: Disconnected",
+    "[23:31:09] [Server thread/INFO] [minecraft/MinecraftServer]: ForgeGuest left the game"
+  ]
+}
