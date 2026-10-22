@@ -1,0 +1,11 @@
+{
+  "forge": "1.20.1-forge-47.4.28",
+  "mod": "FarmersDelight-1.20.1-1.3.4.jar",
+  "sha1_ok": true,
+  "joined": true,
+  "mod_lines": [
+    "[15:49:17] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file C:\\Users\\27682\\Documents\\�½��ļ���\\mcbridge1201\\work\\launcher-e2e\\config\\farmersdelight-common.toml is not correct. Correcting"
+  ],
+  "registration_errors": [],
+  "exit_code": 1
+}
