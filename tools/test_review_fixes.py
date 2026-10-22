@@ -580,6 +580,12 @@ def test_immediatelyfast_port() -> None:
             if p.exists() and "Tombstones_" in p.read_text(encoding="utf-8", errors="replace")]
     check("IFPORT sources exist and avoid tombstones", not missing and not tomb,
           f"missing={missing} tomb={tomb}")
+    draw_src = (base / "feature" / "core" / "BatchableBufferSource.java").read_text(
+        encoding="utf-8", errors="replace")
+    guard = ("vanilla draw path owns" in draw_src
+             and draw_src.count("this.releaseOwned(") <= 1)
+    check("IFPORT draw path does not double-close the builder allocator", guard,
+          f"releaseOwned calls={draw_src.count('this.releaseOwned(')}")
 
 
 def test_download_policy() -> None:

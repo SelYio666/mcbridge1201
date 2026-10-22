@@ -12,8 +12,8 @@
   "gates": {
     "gradle_test_install_dist": "success",
     "java_junit_tests": 25,
-    "review_fixes": "68/68",
-    "hashes": "773/773",
+    "review_fixes": "69/69",
+    "hashes": "777/777",
     "verify_evidence": "passed",
     "ci_run": "39743576915",
     "ci_conclusion": "success",

@@ -28,7 +28,7 @@
 | Forge 1.20.1-47.4.28 + Farmer's Delight 内容模组 + 单人世界 | `runs/p131-forge-content-mod/`（配置生成、无注册错误、`joined`） |
 | NeoForge 21.1.264 + Jade（数据同步/HUD）+ 单人世界 | `runs/p130-neoforge-jade/`（Jade tooltip 可见） |
 | Fabric 1.21.1 专用服务器 + 启动器客户端加入（quickPlayMultiplayer） | `runs/p132-dedicated-join/`（早期 p75/p76 双客户端同步） |
-| ImmediatelyFast 1.21.1 batching 移植：启动进世界 + HUD/物品/overlay 计数 + 关闭归零 | `runs/p134-immediatelyfast-port-boot/`、`runs/p137-immediatelyfast-hud-off/`、`runs/p139-immediatelyfast-visual/` |
+| ImmediatelyFast 1.21.1 batching 移植：启动进世界 + HUD/物品/overlay 计数 + 关闭归零 | `runs/p134-immediatelyfast-port-boot/`、`runs/p137-immediatelyfast-hud-off/`、`runs/p139-immediatelyfast-visual/`、`runs/p140-immediatelyfast-soak/` |
 | ImmediatelyFast 移植规则/源码回归（5 类替换 + Identifier 桥 + 无 tombstone） | `rules/fabric-1.21.1/immediatelyfast-batching-port.json`、`tools/test_review_fixes.py` IFPORT 组 |
 | Forge/NeoForge 安装自动补原版 base | `runs/p129`、回归检查（LOADER 组） |
 | Forge/NeoForge 启动命令保留 `extra_game`（quickPlay 等参数） | `runs/p127`、回归检查（NEOFORGE 组） |
@@ -73,8 +73,8 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 773 项；桥一致性 0；mixin 审计 0；
-- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 4 项 ImmediatelyFast 移植回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，68/68；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
+- 单测 25/25；`verify_evidence` passed；哈希 777 项；桥一致性 0；mixin 审计 0；
+- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 5 项 ImmediatelyFast 移植回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，69/69；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
 - GitHub Actions CI（手动 dispatch 触发，run 39614386108 通过）。
