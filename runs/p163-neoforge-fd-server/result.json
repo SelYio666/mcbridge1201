@@ -1,0 +1,13 @@
+{
+  "server_ready": true,
+  "mod_loaded": true,
+  "client_joined": true,
+  "server_lines": [
+    "[00:39:10.261] [main/INFO] [loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file \"FarmersDelight-1.21.1-1.3.4.jar\" [locator: {mods folder locator at C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\instances\\neoforge-21.1.264-server\\mods}, reader: mod manifest] ",
+    "\t\tFarmer's Delight 1.3.4 (farmersdelight)",
+    "[00:39:46] [Server thread/INFO] [minecraft/PlayerList]: FDGuest[/127.0.0.1:54238] logged in with entity id 100 at (-144.5, 67.0, -121.5)",
+    "[00:39:46] [Server thread/INFO] [minecraft/MinecraftServer]: FDGuest joined the game",
+    "[00:39:55] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: FDGuest lost connection: Disconnected",
+    "[00:39:55] [Server thread/INFO] [minecraft/MinecraftServer]: FDGuest left the game"
+  ]
+}
