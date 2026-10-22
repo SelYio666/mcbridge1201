@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -27,6 +28,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Applies {@link RuleSet} rewrites to a jar (recursing into nested jars) and embeds the
@@ -96,6 +102,29 @@ public final class JarPatcher {
                 st.external.add(helper);
             }
             st.applied.merge(r.id, 1, Integer::sum);
+        }
+        // Re-enable classes that an earlier conversion stripped from a mixin config.
+        for (RuleSet.MixinConfigAddition a : rules.mixinConfigAdditions) {
+            byte[] cfg = patched.get(a.config);
+            if (cfg == null) {
+                throw new IllegalArgumentException("mixin config not found: " + a.config);
+            }
+            JsonObject root = JsonParser.parseString(new String(cfg, StandardCharsets.UTF_8)).getAsJsonObject();
+            String key = root.has("client") ? "client" : "mixins";
+            JsonArray list = root.has(key) ? root.getAsJsonArray(key) : new JsonArray();
+            boolean present = false;
+            for (JsonElement el : list) {
+                if (el.isJsonPrimitive() && el.getAsString().equals(a.mixinClass)) {
+                    present = true;
+                    break;
+                }
+            }
+            if (!present) {
+                list.add(a.mixinClass);
+            }
+            root.add(key, list);
+            patched.put(a.config, root.toString().getBytes(StandardCharsets.UTF_8));
+            st.applied.merge(a.id, 1, Integer::sum);
         }
         Files.createDirectories(out.toAbsolutePath().getParent());
         writeZip(patched, out);

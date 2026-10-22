@@ -196,6 +196,7 @@ public final class Main {
             rules.signatureAdaptations.addAll(part.signatureAdaptations);
             rules.mixinCallbackAdaptations.addAll(part.mixinCallbackAdaptations);
             rules.mixinClassReplacements.addAll(part.mixinClassReplacements);
+            rules.mixinConfigAdditions.addAll(part.mixinConfigAdditions);
             rules.mixinStrips.addAll(part.mixinStrips);
         }
         TargetIndex idx = null;

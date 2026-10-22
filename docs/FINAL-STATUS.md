@@ -32,6 +32,7 @@
 | 下载进度：字节 / 速度 / 当前来源（`/api/task`），前端显示且不编造剩余时间 | docs/launcher.md |
 | 下载冷/热对照（客户端 + 全部允许库 + assets 样本 + Fabric） | docs/download-sources.md、runs/p117-download-bench/ |
 | 全量冷安装 + 真进世界（原版 1.21.1：3911/3911 assets，115 s，quickPlay 进世界） | runs/p118-full-install-world/ |
+| EntityCulling 1.21.1：剥离的 mixin 移植 + 重新启用，进世界且 F3 culling 计数生效 | runs/p119-entityculling-mixin/ |
 | 标准目录 + launcher_profiles，PCL 可直接复用 | docs/launcher.md |
 
 ### NeoForge 启动修复（2026-10-21，p115 → p116）
@@ -46,9 +47,17 @@ binarypatcher）因 Java 网络超时从未跑成，FML 游戏层里没有 `neof
 `client-*-extra`）齐全为准；同时修掉 `_run_installer` 相对路径 + `cwd` 的真实 bug。
 单测新增 8 项（`tools/test_review_fixes.py` 的 NEOFORGE 组）。
 
+### EntityCulling mixin 移植（2026-10-22，p119）
+
+EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 重写并**重新启用**：
+新增规则 `mixinConfigAdditions`（把类加回 mixin config）+ `mixinClassReplacements`，
+并把 bundled transition 的 `new Identifier(...)` 改走 `IdentifierBridge.of(...)`。
+实测 Fabric 1.21.1 + Fabric API 进世界，F3 中 EntityCulling 计数
+`Rendered Entities: 3 Skipped: 1`，配置 `skipEntityCulling:false`，无 mixin 报错。
+
 ### 工程与门禁
 
-- 单测 23/23；`verify_evidence` passed；哈希 682 项；桥一致性 0；mixin 审计 0；
+- 单测 25/25；`verify_evidence` passed；哈希 690 项；桥一致性 0；mixin 审计 0；
 - 外部问题汇总 20 项回归 + 8 项 NeoForge 安装回归 + 7 项目录/兼容/说明回归 + 17 项下载源/进度回归（`tools/test_review_fixes.py`，52/52）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
@@ -59,7 +68,7 @@ binarypatcher）因 Java 网络超时从未跑成，FML 游戏层里没有 `neof
 | 项 | 状态 | 说明 |
 |---|---|---|
 | NeoForge 带第三方模组 / 进世界 | ⏳ | 空 NeoForge 21.1.264 已到主菜单（p116）；未测装 NeoForge 模组与进世界 |
-| 渲染类模组（Sodium/Iris/EntityCulling/ImmediatelyFast） | ❌ | 需要 mixin 重写能力；目前只能剥离 load-bearing mixin，不算通过 |
+| 渲染类模组：ImmediatelyFast / Sodium / Iris | ❌ | EntityCulling 已通过（p119）；ImmediatelyFast 的 `@Overwrite method_22992` 需要 `BufferAllocator→ByteBufferBuilder` 整段重写，尚未解决 |
 | Shulker 网格预览 | ⏸ 封存 | 环境侧容器组件问题，需抓包复现 |
 | TrashSlot 完整 UI 流程 | ⏸ | 旧桥版本已跑通（p63–p65）；当前桥只做 bridge 级 + 探针 |
 | mrpack 含 files 的真实包 | ⏸ | 只测过无 files 的最小包 |

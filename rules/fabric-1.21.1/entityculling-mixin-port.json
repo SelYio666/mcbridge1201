@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "0.1-draft",
+  "id": "entityculling-mixin-port",
+  "target": "fabric-1.21.1",
+  "source": "entityculling-fabric-1.11.3-mc1.20.1",
+  "notes": "The 1.20.5 render-name-tag signature gained a trailing float; the original shadow was stripped as load-bearing. This rule replaces the mixin with the ported class and re-enables it in the config.",
+  "mixinClassReplacements": [
+    {
+      "id": "entityculling/entity-renderer-mixin-port",
+      "targetClass": "dev/tr7zw/entityculling/mixin/EntityRendererMixin",
+      "replacementClass": "dev/tr7zw/entityculling/mixin/EntityRendererMixin",
+      "alsoEmbed": [],
+      "capability": "mixin-class-replacement",
+      "risk": "renderer name-tag API drift (1.20.5+ trailing float delta)",
+      "evidence": "runs/p119-entityculling-mixin"
+    }
+  ],
+  "constructorRedirects": [
+    {
+      "id": "identifier.ctor1.to-factory",
+      "owner": "net/minecraft/class_2960",
+      "desc": "(Ljava/lang/String;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/IdentifierBridge",
+      "bridgeMethod": "of",
+      "bridgeDesc": "(Ljava/lang/String;)Lnet/minecraft/class_2960;",
+      "capability": "identifier.construct",
+      "risk": "Identifier(String) was removed in 1.21.1",
+      "evidence": "EntityCulling's bundled transition-1.0.26 GeneralUtil.getResourceLocation calls new Identifier(String); the client crashed in EntityCullingModBase.clientTick (runs/p119-entityculling-mixin/launch.log)."
+    },
+    {
+      "id": "identifier.ctor2.to-factory",
+      "owner": "net/minecraft/class_2960",
+      "desc": "(Ljava/lang/String;Ljava/lang/String;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/IdentifierBridge",
+      "bridgeMethod": "of",
+      "bridgeDesc": "(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;",
+      "capability": "identifier.construct",
+      "risk": "Identifier(String,String) became private in 1.21.1",
+      "evidence": "The same bundled GeneralUtil also calls new Identifier(namespace, path); both constructors are public factories only."
+    }
+  ],
+  "mixinConfigAdditions": [
+    {
+      "id": "entityculling/entity-renderer-mixin-config",
+      "config": "entityculling.mixins.json",
+      "mixinClass": "EntityRendererMixin",
+      "capability": "mixin-config-readd",
+      "risk": "the config was stripped by an earlier conversion; re-adding a class whose target is missing would crash at startup",
+      "evidence": "runs/p119-entityculling-mixin"
+    }
+  ]
+}

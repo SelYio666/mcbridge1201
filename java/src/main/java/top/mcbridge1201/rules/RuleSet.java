@@ -71,6 +71,7 @@ public final class RuleSet {
     public final List<SignatureAdaptation> signatureAdaptations = new ArrayList<>();
     public final List<MixinCallbackAdaptation> mixinCallbackAdaptations = new ArrayList<>();
     public final List<MixinClassReplacement> mixinClassReplacements = new ArrayList<>();
+    public final List<MixinConfigAddition> mixinConfigAdditions = new ArrayList<>();
     public final List<MixinStrip> mixinStrips = new ArrayList<>();
 
     /**
@@ -131,6 +132,21 @@ public final class RuleSet {
         public String targetClass;
         public String replacementClass;
         public List<String> alsoEmbed = new ArrayList<>();
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
+
+    /**
+     * Re-enables a mixin class in its mixin config after a conversion stripped it.
+     * Needed together with a {@link MixinClassReplacement}: the replacement class is
+     * useless if the config no longer lists it. The class name may be simple
+     * ("EntityRendererMixin") or dotted ("client.foo.Bar"), matching the config style.
+     */
+    public static final class MixinConfigAddition {
+        public String id;
+        public String config;
+        public String mixinClass;
         public String capability;
         public String risk;
         public String evidence;
@@ -297,6 +313,11 @@ public final class RuleSet {
         if (o.has("mixinClassReplacements")) {
             for (var el : o.getAsJsonArray("mixinClassReplacements")) {
                 rs.mixinClassReplacements.add(new Gson().fromJson(el, MixinClassReplacement.class));
+            }
+        }
+        if (o.has("mixinConfigAdditions")) {
+            for (var el : o.getAsJsonArray("mixinConfigAdditions")) {
+                rs.mixinConfigAdditions.add(new Gson().fromJson(el, MixinConfigAddition.class));
             }
         }
         if (o.has("mixinStrips")) {
