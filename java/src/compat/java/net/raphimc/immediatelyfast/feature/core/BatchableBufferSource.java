@@ -234,28 +234,34 @@ public class BatchableBufferSource extends class_4597.class_4598 implements Auto
         this.activeLayers.remove(layer);
         ReferenceSet<class_287> buffers = this.pendingBuffers.remove(layer);
         if (buffers != null) {
-            for (class_287 builder : buffers) {
-                class_9799 prevAllocator = null;
-                try {
-                    prevAllocator = (class_9799) CURRENT_ALLOCATOR.get(this);
-                    class_9799 builderAllocator = (class_9799) BUILDER_ALLOCATOR.get(builder);
-                    if (builderAllocator != null) {
-                        CURRENT_ALLOCATOR.set(this, builderAllocator);
-                    }
-                    DRAW_LAYER.invoke(this, layer, builder);
-                    batchedDraws++;
-                    this.draws++;
-                } catch (ReflectiveOperationException exc) {
-                    throw new RuntimeException("batched draw failed for " + layer, exc);
-                } finally {
+            class_9799 previousAllocator;
+            try {
+                previousAllocator = (class_9799) CURRENT_ALLOCATOR.get(this);
+            } catch (ReflectiveOperationException exc) {
+                throw new RuntimeException("cannot read current allocator", exc);
+            }
+            try {
+                for (class_287 builder : buffers) {
                     try {
-                        CURRENT_ALLOCATOR.set(this, prevAllocator);
-                    } catch (IllegalAccessException ignored) {
-                        // best effort restore
+                        class_9799 builderAllocator = (class_9799) BUILDER_ALLOCATOR.get(builder);
+                        if (builderAllocator != null) {
+                            CURRENT_ALLOCATOR.set(this, builderAllocator);
+                        }
+                        DRAW_LAYER.invoke(this, layer, builder);
+                        batchedDraws++;
+                        this.draws++;
+                    } catch (ReflectiveOperationException exc) {
+                        throw new RuntimeException("batched draw failed for " + layer, exc);
                     }
-                    // The vanilla draw path owns/closes the builder's allocator; closing it here
-                    // double-freed the native buffer and caused EXCEPTION_ACCESS_VIOLATION.
                 }
+            } finally {
+                try {
+                    CURRENT_ALLOCATOR.set(this, previousAllocator);
+                } catch (IllegalAccessException ignored) {
+                    // best effort restore
+                }
+                // The vanilla draw path owns/closes the builder's allocator; closing it here
+                // double-freed the native buffer and caused EXCEPTION_ACCESS_VIOLATION.
             }
         }
         if (this.field_52158 == layer) {
