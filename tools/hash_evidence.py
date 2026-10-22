@@ -585,6 +585,8 @@ FILES = [
     "runs/p123-mirror-mode-install/install.json",
     "runs/p124-gui-source-check/README.md",
     "runs/p124-gui-source-check/result.json",
+    "runs/p125-final-acceptance/README.md",
+    "runs/p125-final-acceptance/acceptance.json",
     "rules/fabric-1.21.1/entityculling-mixin-port.json",
     "java/src/compat/java/dev/tr7zw/entityculling/mixin/EntityRendererMixin.java",
     "java/src/test/java/top/mcbridge1201/MixinConfigAdditionTest.java",
