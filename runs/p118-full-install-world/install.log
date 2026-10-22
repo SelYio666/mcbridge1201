@@ -1,0 +1,10 @@
+phase	seconds	done	total	bytes	speed	source	message
+idle	0.0	0	0	0	0.0		
+download	15.0	149	3911	181736310	16586024.0	https://resources.download.minecraft.net/56/56880bed78b91dddde4a84e10402f957cfc05144	assets
+download	30.0	1330	3911	249730330	2465537.5	https://resources.download.minecraft.net/d7/d732fca96cca70dcf5ceebbd629cb8a02f2ef9eb	assets
+download	45.0	1950	3911	261731576	641024.3	https://resources.download.minecraft.net/a8/a84dafa90faa56556346437e5f27ad047dc584ea	assets
+download	60.0	3005	3911	288774253	878407.1	https://resources.download.minecraft.net/73/73dd49398ce0797cc69a77b3603867e388e5a05a	assets
+download	75.0	3676	3911	336547971	11972747.2	https://resources.download.minecraft.net/4f/4f8c3f9b4f290f63c78bf3bbaad16906a3ccff29	assets
+download	90.0	3703	3911	588086726	17749303.6	https://resources.download.minecraft.net/c4/c497c8c1dada852bafaa9ac17c5c30f37d0befed	assets
+download	105.0	3786	3911	805412209	9908028.7	https://resources.download.minecraft.net/d1/d1c3c66face8215ff2f9635f4d7c168fdea34d88	assets
+download	114.0	3911	3911	919916123	10271748.9	https://resources.download.minecraft.net/5b/5b3ae419f7f7648568f0b5303594078aea12f598	assets

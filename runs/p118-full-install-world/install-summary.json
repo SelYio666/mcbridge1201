@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "error": null,
+  "seconds": 115.0,
+  "bytes": 933579822,
+  "asset_objects": 3888,
+  "files": 3998,
+  "downloads": 400,
+  "mirrors": 0,
+  "failures": 0,
+  "retries": 0,
+  "final_snapshot": {
+    "phase": "download",
+    "total": 3911,
+    "done": 3911,
+    "message": "assets",
+    "error": null,
+    "bytes_done": 919916123,
+    "bytes_total": 17469590,
+    "speed": 10271748.9,
+    "source": "https://resources.download.minecraft.net/5b/5b3ae419f7f7648568f0b5303594078aea12f598"
+  }
+}
