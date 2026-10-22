@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minecraft 下载源速查（1.20.1 / 1.21.1）</title>
+<style>
+  :root {
+    --fg: #1c2430; --dim: #5b6b7f; --line: #d8e0ea; --bg: #f6f8fb;
+    --accent: #0b6bcb; --warn: #b45309; --ok: #15803d; --code: #f0f4f9;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.65 "Microsoft YaHei", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 30px; margin: 0 0 6px; }
+  .sub { color: var(--dim); margin-bottom: 28px; font-size: 14px; }
+  h2 { font-size: 21px; margin: 34px 0 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+  h3 { font-size: 17px; margin: 20px 0 8px; }
+  p { margin: 8px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 14px; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #eaf1f9; font-weight: 700; }
+  code, pre { font-family: Consolas, "Courier New", monospace; }
+  code { background: var(--code); padding: 1px 5px; border-radius: 4px; font-size: 13.5px; }
+  pre { background: var(--code); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 12px; overflow: auto; font-size: 13.5px; white-space: pre-wrap; word-break: break-all; }
+  a { color: var(--accent); text-decoration: none; word-break: break-all; }
+  a:hover { text-decoration: underline; }
+  .badge { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; }
+  .ok { background: #dcfce7; color: var(--ok); }
+  .warn { background: #fef3c7; color: var(--warn); }
+  .note { background: #fff8e6; border: 1px solid #f1d9a7; border-radius: 8px; padding: 10px 14px; }
+  .danger { background: #fdecec; border: 1px solid #f3bdbd; border-radius: 8px; padding: 10px 14px; }
+  footer { margin-top: 46px; color: var(--dim); font-size: 13px; }
+  @media print {
+    body { background: #fff; }
+    main { max-width: none; padding: 0; }
+    h2 { page-break-after: avoid; }
+    table, pre { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Minecraft 下载源速查</h1>
+  <div class="sub">覆盖 1.20.1 / 1.21.1（Fabric · Forge · NeoForge · Java 运行时）· 整理于 2026-10-22 · 公开地址，不含任何游戏文件</div>
+
+  <div class="note">
+    <strong>这页是什么：</strong>把启动器/整合包/服主常用的<b>官方下载入口</b>整理成一张表，方便排查下载失败、
+    核对地址或自建工具。本页不托管、不分发游戏或模组文件，只列公开链接。
+  </div>
+
+  <h2>一、Mojang 官方源</h2>
+  <table>
+    <tr><th>用途</th><th>地址</th><th>说明</th></tr>
+    <tr>
+      <td>版本清单</td>
+      <td><a href="https://piston-meta.mojang.com/mc/game/version_manifest_v2.json">piston-meta.mojang.com/mc/game/version_manifest_v2.json</a></td>
+      <td>所有版本（含快照/远古）的入口；每个版本带自己的 JSON 地址</td>
+    </tr>
+    <tr>
+      <td>版本 JSON / 客户端 jar</td>
+      <td>从清单里该版本的 <code>url</code> 取；jar 在 JSON 的 <code>downloads.client.url</code></td>
+      <td>客户端 jar 约 26 MB，带 sha1</td>
+    </tr>
+    <tr>
+      <td>库（libraries）</td>
+      <td><a href="https://libraries.minecraft.net/">libraries.minecraft.net</a></td>
+      <td>具体路径以版本 JSON 的 <code>libraries[].downloads.artifact.url</code> 为准</td>
+    </tr>
+    <tr>
+      <td>资源（assets）</td>
+      <td><a href="https://resources.download.minecraft.net/">resources.download.minecraft.net</a>/&lt;hash前2位&gt;/&lt;hash&gt;</td>
+      <td>索引在 JSON 的 <code>assetIndex.url</code>；文件按 sha1 命名</td>
+    </tr>
+    <tr>
+      <td>Java 运行时清单</td>
+      <td><a href="https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json">launchermeta.mojang.com/.../java-runtime/all.json</a></td>
+      <td>官方 JRE 组件（jre-legacy / gamma / delta / epsilon 等）</td>
+    </tr>
+  </table>
+
+  <h2>二、加载器官方源</h2>
+  <h3>Fabric</h3>
+  <pre>版本列表        https://meta.fabricmc.net/v2/versions/loader/&lt;MC版本&gt;
+安装 profile    https://meta.fabricmc.net/v2/versions/loader/&lt;MC版本&gt;/&lt;loader版本&gt;/profile/json
+Maven           https://maven.fabricmc.net/</pre>
+
+  <h3>Forge</h3>
+  <pre>推荐/最新版本   https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+安装器          https://maven.minecraftforge.net/net/minecraftforge/forge/&lt;MC&gt;-&lt;forge版本&gt;/forge-&lt;MC&gt;-&lt;forge版本&gt;-installer.jar</pre>
+
+  <h3>NeoForge</h3>
+  <pre>版本列表 API    https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge
+安装器          https://maven.neoforged.net/releases/net/neoforged/neoforge/&lt;版本&gt;/neoforge-&lt;版本&gt;-installer.jar</pre>
+
+  <h2>三、国内镜像（第三方，非官方）</h2>
+  <div class="note">
+    BMCLAPI 是社区镜像，<b>非 Mojang 官方</b>。适合官方 CDN 超时/被墙时兜底；速度、同步及时性不保证，
+    与本项目及 Mojang 均无隶属关系。
+  </div>
+  <pre>资源            https://bmclapi2.bangbang93.com/assets/&lt;hash前2位&gt;/&lt;hash&gt;
+Maven（库/加载器）https://bmclapi2.bangbang93.com/maven/&lt;maven 相对路径&gt;
+
+例：
+https://bmclapi2.bangbang93.com/assets/74/74703134a27a57d2de96860bca55d447759c0edc
+https://bmclapi2.bangbang93.com/maven/org/ow2/asm/asm/9.7.1/asm-9.7.1.jar</pre>
+
+  <h2>四、本次实测状态（2026-10-22）</h2>
+  <table>
+    <tr><th>源</th><th>状态</th><th>备注</th></tr>
+    <tr><td>piston-meta 版本清单</td><td><span class="badge ok">可用</span></td><td>0.2s</td></tr>
+    <tr><td>resources 资源对象</td><td><span class="badge ok">可用</span></td><td>0.3s</td></tr>
+    <tr><td>meta.fabricmc.net</td><td><span class="badge ok">可用</span></td><td>0.6s</td></tr>
+    <tr><td>Forge promotions</td><td><span class="badge ok">可用</span></td><td>0.7s</td></tr>
+    <tr><td>launchermeta JVM 清单</td><td><span class="badge ok">可用</span></td><td>0.3s</td></tr>
+    <tr><td>BMCLAPI 资源 / Maven</td><td><span class="badge ok">可用</span></td><td>0.3s / 0.5s</td></tr>
+    <tr><td>libraries.minecraft.net</td><td><span class="badge warn">部分路径 404</span></td><td>以版本 JSON 里的完整 URL 为准，不要自己拼路径</td></tr>
+    <tr><td>maven.neoforged.net API</td><td><span class="badge warn">间歇超时</span></td><td>换 urllib / 重试通常可用；requests 偶发 SSL 断连</td></tr>
+  </table>
+
+  <h2>五、怎么验证下载没被改</h2>
+  <p>所有官方文件都带 sha1：版本 JSON、库、资源索引里都有。下载后校验：</p>
+  <pre># Windows PowerShell
+Get-FileHash .\1.21.1.jar -Algorithm SHA1
+
+# Linux / macOS
+sha1sum 1.21.1.jar</pre>
+  <p>资源对象没有文件名，直接按 <code>objects/&lt;hash前2位&gt;/&lt;hash&gt;</code> 存放，路径本身就是校验值。</p>
+
+  <h2>六、常见问题</h2>
+  <p><strong>官方 CDN 一直超时？</strong>先用镜像下资源；库和加载器优先官方 Maven，失败再切镜像。</p>
+  <p><strong>Forge/NeoForge 安装器下不动？</strong>它们各自在自己的 Maven（forge 用 maven.minecraftforge.net，
+  neoforge 用 maven.neoforged.net），和 Mojang CDN 不是一个线路。</p>
+  <p><strong>版本号怎么写？</strong>Forge 是 <code>&lt;MC&gt;-&lt;forge&gt;</code>（如 1.20.1-47.4.16）；
+  NeoForge 是纯数字（如 21.1.264，对应 MC 1.21.1）。</p>
+
+  <div class="danger">
+    <strong>声明：</strong>本页仅收集公开下载地址，不提供、不托管、不分发 Minecraft 游戏文件或任何模组 jar。
+    使用请遵守 Minecraft EULA 及各加载器/模组的许可；第三方镜像的服务条款由镜像方负责。
+  </div>
+
+  <footer>
+    整理：mcbridge1201（Minecraft 版本迁移辅助工具箱）· 2026-10-22 ·
+    如地址失效，以官方文档为准。
+  </footer>
+</main>
+</body>
+</html>

@@ -110,7 +110,12 @@ python tools/test_launcher_e2e.py --root <root> --no-install
 gh api --method POST repos/SelYio666/mcbridge1201/actions/workflows/ci.yml/dispatches -f ref=master
 ```
 
-## 四、发布
+## 四、独立分享文档
+
+`share/download-sources/`：不依赖 GitHub 的下载源速查（自包含 HTML + Markdown + 预览图），
+可直接发送文件或部署到任意静态托管，见该目录 README。
+
+## 五、发布
 
 - 仓库：https://github.com/SelYio666/mcbridge1201
 - 最新发布：v0.3.1（启动器：加载器版本 / Java 运行时 / 整合包 / 删除版本）
