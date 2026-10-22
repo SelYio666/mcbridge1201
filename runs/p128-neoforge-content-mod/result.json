@@ -1,0 +1,14 @@
+{
+  "mod": "FarmersDelight-1.21.1-1.3.4.jar",
+  "mod_sha1_ok": true,
+  "neoforge": "21.1.264",
+  "joined": true,
+  "crash": null,
+  "mod_lines": [
+    "[14:46:42.166] [main/INFO] [loading.moddiscovery.ModDiscoverer/SCAN]: Found mod file \"FarmersDelight-1.21.1-1.3.4.jar\" [locator: {mods folder locator at C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\launcher-e2e\\mods}, reader: mod manifest] ",
+    "\t\tFarmer's Delight 1.3.4 (farmersdelight)",
+    "[14:46:53] [Render thread/INFO] [minecraft/ReloadableResourceManager]: Reloading ResourceManager: vanilla, mod_resources, mod/farmersdelight, mod/neoforge"
+  ],
+  "registration_errors": [],
+  "exit_code": 1
+}

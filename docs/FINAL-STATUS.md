@@ -23,6 +23,7 @@
 | Forge 1.20.1 启动到主菜单 | `runs/p112` |
 | NeoForge 1.21.1（21.1.264）安装 + 启动到主菜单 | `runs/p116-neoforge-launch`（见下文根因与修复） |
 | NeoForge 21.1.264 + 第三方模组（AppleSkin）+ 单人世界 | `runs/p127-neoforge-mod-world`（含世界截图、`joined`、模组加载日志） |
+| NeoForge 21.1.264 + 内容模组（Farmer's Delight，方块/物品/标签）+ 单人世界 | `runs/p128-neoforge-content-mod/`（F3 出现 farmersdelight 标签） |
 | Forge/NeoForge 启动命令保留 `extra_game`（quickPlay 等参数） | `runs/p127`、回归检查（NEOFORGE 组） |
 | 加载器版本选择（Fabric 255 / Forge 137 实测；指定 Fabric 0.20.1 安装成功） | `runs/p112`、docs/launcher.md |
 | Java 运行时安装（OpenJDK 21.0.7）+ 启动优先使用 | docs/launcher.md |
@@ -65,7 +66,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 716 项；桥一致性 0；mixin 审计 0；
+- 单测 25/25；`verify_evidence` passed；哈希 720 项；桥一致性 0；mixin 审计 0；
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，63/63；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
@@ -75,7 +76,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 | 项 | 状态 | 说明 |
 |---|---|---|
-| NeoForge 带第三方模组 / 进世界 | ✅ 已通过（AppleSkin 3.0.9，p127）；**未测**复杂模组（注册方块/物品/网络）与新建世界 |
+| NeoForge 带第三方模组 / 进世界 | ✅ 已通过：AppleSkin（p127）+ Farmer's Delight 内容模组（p128）；**未测**网络同步/复杂多方块模组与新建世界 |
 | Forge 1.20.1 带模组世界 | ⏳ 未测（Forge 仅到主菜单） |
 | 渲染类模组：ImmediatelyFast / Sodium / Iris | ❌ | EntityCulling 已通过（p119）；ImmediatelyFast 的 `@Overwrite` 描述符已能移植，但卡在 `BatchableBufferSource.<clinit>` 的 `new BufferBuilder(int)`（1.21.1 改为 ByteBufferBuilder+VertexFormat），需重写 batching 引擎（p120） |
 | Shulker 网格预览 | ⏸ 封存 | 环境侧容器组件问题，需抓包复现 |
