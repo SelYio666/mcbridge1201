@@ -25,20 +25,22 @@
 
 - Fabric Loader 0.19.5 + Fabric API 0.102.0 + 移植后的 ImmediatelyFast，Java 21；
 - `--quickPlaySingleplayer ColdWorld`，`IFUser joined the game`；
-- 测试用最小 playerdata 在快捷栏放了一把钻石剑（DataVersion 3955），真实计数：
+- 测试用最小 playerdata 在快捷栏放了 64 个石头（DataVersion 3955，触发数量 overlay），真实计数：
 
   ```text
   [mcbridge-port] hud batching begin
-  [mcbridge-port] batched-draws total=8251  hud=2661 itemModel=631  itemOverlay=0
-  [mcbridge-port] batched-draws total=9662  hud=3037 itemModel=725  itemOverlay=0
-  [mcbridge-port] batched-draws total=13278 hud=3941 itemModel=951  itemOverlay=0
-  [mcbridge-port] batched-draws total=17012 hud=4796 itemModel=1165 itemOverlay=0
+  [mcbridge-port] batched-draws total=12943 hud=2276 itemModel=547  itemOverlay=547
+  [mcbridge-port] batched-draws total=16938 hud=2968 itemModel=720  itemOverlay=720
+  [mcbridge-port] batched-draws total=21636 hud=3787 itemModel=925  itemOverlay=925
+  [mcbridge-port] batched-draws total=26669 hud=4623 itemModel=1134 itemOverlay=1134
   ```
+
+  `itemOverlay` 与 `itemModel` 同步增长，说明数量 overlay 也走了专用批次。
 
 - A/B（`runs/p137-immediatelyfast-hud-off/`）：`hud_batching=false` 时仍进世界，但**没有任何**
   `[mcbridge-port]` 标记（hud/item 计数都不产生）→ 批处理由该开关控制；
-- 截图 `world.png`：世界内 F3/HUD；测试用 playerdata 没有 Pos，角色落在 (0,0,0)，画面较暗，
-  但已进世界且 HUD 正常。
+- 截图 `world.png`：世界内 F3/HUD；测试用 playerdata 没有 Pos，角色落在 (0,0,0)，画面较暗。
+  正常出生/白天、无合成存档的可视截图见 `runs/p139-immediatelyfast-visual/`（hud=4584）。
 
 ## 修过的真实崩溃
 
@@ -48,7 +50,7 @@
 
 ## 诚实限制
 
-- `itemOverlay=0`：这次只放了无数量/耐久的剑；count/durability overlay 路径未单独验证；
 - Iris 兼容未移植；
 - 私有成员/状态走反射（官方用 access widener）；
-- 只有单人 integrated server，无多人/soak/帧率基准；测试 world 是合成 playerdata，不是正常生存流程。
+- 只有单人 integrated server，无多人/soak/帧率基准；测试 world 是合成 playerdata，不是正常生存流程；
+- p139 是正常出生截图，但该次没放物品（itemModel/itemOverlay=0），物品计数以 p134 为准。
