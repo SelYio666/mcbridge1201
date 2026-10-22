@@ -27,6 +27,7 @@
     "EntityCulling mixin port works in-world (runs/p119) + on/off A/B (runs/p121)",
     "NeoForge 21.1.264 + AppleSkin / Farmer's Delight / Jade in-world (runs/p127/p128/p130)",
     "Forge 1.20.1-47.4.28 + AppleSkin / Farmer's Delight in-world (runs/p129/p131)",
+    "Fabric dedicated server + launcher client join via quickPlayMultiplayer (runs/p132)",
     "Forge/NeoForge installs ensure the vanilla base and keep extra game args (quickPlay)",
     "Path-scoped BMCL mirrors incl. intermediary, 404 fast-fail, retries, SHA-1, source records (runs/p122)",
     "Source modes auto/official/mirror + host health cache + GUI canary writeback (runs/p122/p123/p124)",
@@ -38,7 +39,7 @@
     "Sodium / Iris: untouched",
     "Frame-rate/performance gains: not measured",
     "Full mirror-mode install: bounded scope only (client + libs + 120 assets)",
-    "Dedicated multiplayer server: not tested (singleplayer integrated server covered)",
+    "Dedicated multiplayer server: Fabric verified (runs/p132, p75/p76); NeoForge/Forge not tested",
     "Portable package on other machines/offline: not verified",
     "Real-browser UI click E2E: not done (HTTP endpoints only)",
     "Long soak / crash recovery: not done"
