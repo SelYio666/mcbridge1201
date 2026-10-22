@@ -511,6 +511,7 @@ FILES = [
     "share/download-sources/index.html",
     "share/download-sources/sources.md",
     "share/download-sources/README.md",
+    "share/download-sources/群聊版.txt",
     "share/download-sources/preview.png",
     "docs/build.md",
     "tools/test_review_fixes.py",
