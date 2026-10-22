@@ -125,11 +125,17 @@ public abstract class MixinDrawContext {
         if (BatchingBuffers.ITEM_MODEL_CONSUMER != null) {
             this.field_44658 = (class_4597.class_4598) BatchingBuffers.ITEM_MODEL_CONSUMER;
         }
+        if (BatchingBuffers.ITEM_MODEL_CONSUMER instanceof HudBatchingBufferSource hud) {
+            hud.setRenderingItem(true);
+        }
     }
 
     @Inject(method = {"method_51425(Lnet/minecraft/class_1309;Lnet/minecraft/class_1937;Lnet/minecraft/class_1799;IIII)V"},
             at = {@At("RETURN")})
     private void renderItemIntoBufferEnd(CallbackInfo ci) {
+        if (BatchingBuffers.ITEM_MODEL_CONSUMER instanceof HudBatchingBufferSource hud) {
+            hud.setRenderingItem(false);
+        }
         if (this.immediatelyFast$previousConsumers != null) {
             this.field_44658 = this.immediatelyFast$previousConsumers;
         }
@@ -143,11 +149,17 @@ public abstract class MixinDrawContext {
         if (BatchingBuffers.ITEM_OVERLAY_CONSUMER != null) {
             this.field_44658 = (class_4597.class_4598) BatchingBuffers.ITEM_OVERLAY_CONSUMER;
         }
+        if (BatchingBuffers.ITEM_OVERLAY_CONSUMER instanceof HudBatchingBufferSource hud) {
+            hud.setRenderingItemDecorations(true);
+        }
     }
 
     @Inject(method = {"method_51432(Lnet/minecraft/class_327;Lnet/minecraft/class_1799;IILjava/lang/String;)V"},
             at = {@At("RETURN")})
     private void renderItemOverlayIntoBufferEnd(CallbackInfo ci) {
+        if (BatchingBuffers.ITEM_OVERLAY_CONSUMER instanceof HudBatchingBufferSource hud) {
+            hud.setRenderingItemDecorations(false);
+        }
         BatchingBuffers.endItemOverlayRendering();
         if (this.immediatelyFast$previousConsumers != null) {
             this.field_44658 = this.immediatelyFast$previousConsumers;

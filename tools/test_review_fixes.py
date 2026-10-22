@@ -598,6 +598,13 @@ def test_immediatelyfast_port() -> None:
                    and "disable_universal_batching" in provider_src)
     check("IFPORT keeps the universal-batching fallback (SimpleImmediate)", fallback_ok,
           "MixinVertexConsumerProvider must fall back to SimpleImmediate")
+    hud_src = (base / "feature" / "batching" / "HudBatchingBufferSource.java").read_text(
+        encoding="utf-8", errors="replace")
+    lit_ok = ("LightingState" in hud_src
+              and "WrappedRenderLayer" in hud_src
+              and "renderingItem" in hud_src)
+    check("IFPORT keeps the item per-lighting variants wired", lit_ok,
+          "HudBatchingBufferSource must wrap item layers per LightingState")
 
 
 def test_download_policy() -> None:

@@ -100,6 +100,8 @@
       "alsoEmbed": [
         "net/raphimc/immediatelyfast/feature/batching/BatchingRenderLayers",
         "net/raphimc/immediatelyfast/feature/batching/BlendFuncDepthFuncState",
+        "net/raphimc/immediatelyfast/feature/batching/BatchingBuffers$WrappedRenderLayer",
+        "net/raphimc/immediatelyfast/feature/batching/LightingState",
         "net/raphimc/immediatelyfast/feature/core/BenchHooks",
         "net/raphimc/immediatelyfast/injection/mixins/core/MixinMinecraftClientBench",
         "net/raphimc/immediatelyfast/injection/mixins/hud_batching/MixinGameRendererHud"

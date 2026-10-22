@@ -218,4 +218,24 @@ public class BatchingBuffers {
             throw new RuntimeException("cannot swap DrawContext vertex consumers", exc);
         }
     }
+
+    /** Same shape as upstream: a RenderLayer wrapper that also re-applies lighting state. */
+    public static class WrappedRenderLayer extends class_1921 {
+        public WrappedRenderLayer(class_1921 renderLayer, Runnable additionalStartAction,
+                                  Runnable additionalEndAction) {
+            super("immediatelyfast_lit_" + System.identityHashCode(renderLayer) + "_"
+                            + System.identityHashCode(additionalStartAction),
+                    renderLayer.method_23031(),
+                    renderLayer.method_23033(), renderLayer.method_22722(),
+                    renderLayer.method_23037(), renderLayer.method_60894(),
+                    () -> {
+                        renderLayer.method_23516();
+                        additionalStartAction.run();
+                    },
+                    () -> {
+                        renderLayer.method_23518();
+                        additionalEndAction.run();
+                    });
+        }
+    }
 }
