@@ -12,7 +12,7 @@
 | `python tools/test_review_fixes.py` | ✅ **72/72** |
 | `python tools/check_hashes.py` | ✅ **856/856**（mismatch 0 / missing 0） |
 | `python tools/verify_evidence.py` | ✅ passed（72/72） |
-| GitHub CI（master，push+dispatch） | ⚠️ `ci.yml` 有 push 触发，但 API 对当前提交 `0224b26` 返回 0 个 check-run；最新成功 run `39744108215`（提交 `0e70d51`）→ **当前 HEAD 未被 CI 覆盖**（疑似 Actions 未启用，需要所有者确认） |
+| GitHub CI（master，push+dispatch） | ✅ push 触发已验证；`e9ca30c` 的 run `39796030299`（check-run `build`）success；此前无 run 是 GitHub Actions degraded performance |
 | Release 资产 | ✅ `v0.4.6` / `mcbridge-launcher-0.4.6.zip` |
 | 工作区 | ✅ 干净（`git status` 无改动） |
 

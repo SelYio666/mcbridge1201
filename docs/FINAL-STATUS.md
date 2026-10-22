@@ -79,7 +79,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，72/72；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
-- GitHub Actions：`ci.yml` 配置了 `push: branches: [master]`，但 API 对当前提交 `0224b26` 返回 **0 个 check-run**，最近只有手动 dispatch 的 run `39744108215`（提交 `0e70d51`，success）→ **push 没有实际触发 CI，当前 HEAD 未被覆盖**（疑似仓库 Actions 未启用，需要仓库 owner 在 Settings 里确认）。
+- GitHub Actions：push 触发**已验证可用**（`e9ca30c`，run `39796030299`，check-run `build` success，含 API 推送）；此前“push 无 run”是 GitHub Actions `degraded_performance`（22:18 UTC）导致排队，重推 workflow 文件后索引恢复。若再遇无 run，先看 [githubstatus.com](https://www.githubstatus.com)，再重推 workflow 文件刷新索引。
 
 ## 二、未完成（如实）
 
@@ -111,7 +111,7 @@ launcher\run.bat              # 或 python launcher/server.py
 python launcher/mclaunch.py verify 1.21.1 <root>
 python tools/test_launcher_e2e.py --root <root> --no-install
 
-# CI（API 推送不会自动触发）
+# CI（push 与 API 推送都会触发；如无 run 先看 githubstatus.com，再重推 workflow 文件）
 gh api --method POST repos/SelYio666/mcbridge1201/actions/workflows/ci.yml/dispatches -f ref=master
 ```
 

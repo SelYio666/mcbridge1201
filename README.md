@@ -12,8 +12,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 
 - **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康缓存 + GUI 源检查；内嵌 Python 的便携包（v0.4.6）。
 - **已验证进世界**：Fabric 1.21.1（全量安装 + EntityCulling 真生效）；ImmediatelyFast 1.21.1 batching 移植（HUD/物品/overlay 计数、Iris 1.8.1/1.8.14 + shader pack、专用服务器多人加入；`runs/p134`-`p147`）；NeoForge 21.1.264（AppleSkin / Farmer's Delight / Jade）；Forge 1.20.1-47.4.28（AppleSkin / Farmer's Delight）。
-- **未通过 / 未验证**：Sodium 作为被转换模组未验证；Iris 只验证了 ImmediatelyFast 的兼容分支（没有转换 Iris 本身）；性能**不宣称收益**——HUD 场景差异在噪声内（`runs/p148-bench/`），80 盔甲架实体压力两轮慢 15–20%，反射优化后仍无法复现（`runs/p153-stress/`）；CI 当前 HEAD 未被覆盖（push 未产生 run，疑似仓库 Actions 未启用）。
-- **门禁**：Java 25/25、`test_review_fixes` 71/71、`check_hashes` 810/810、`verify_evidence` passed；CI 最新成功 run `39744108215`（提交 `0e70d51`，当前 HEAD 未被覆盖）。
+- **未通过 / 未验证**：Sodium 作为被转换模组未验证；Iris 只验证了 ImmediatelyFast 的兼容分支（没有转换 Iris 本身）；性能**不宣称收益**——HUD 场景差异在噪声内（`runs/p148-bench/`），80 盔甲架实体压力两轮慢 15–20%，反射优化后仍无法复现（`runs/p153-stress/`）。
+- **门禁**：Java 25/25、`test_review_fixes` 72/72、`check_hashes` 856/856、`verify_evidence` passed；CI push 触发已验证（`e9ca30c`，run `39796030299` success）。
 - 详情：[总验收快照](runs/p125-final-acceptance/README.md)、[FINAL-STATUS](docs/FINAL-STATUS.md)、[使用说明](docs/guide.md)。
 
 ## 现状（2026-10-18）
