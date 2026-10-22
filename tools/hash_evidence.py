@@ -761,6 +761,8 @@ FILES = [
     "runs/p159-forge-server/client.log",
     "runs/p159-forge-server/result.json",
     "runs/p159-forge-server/world.png",
+    "runs/p160-mrpack/README.md",
+    "runs/p160-mrpack/result.json",
     "tools/build_immediatelyfast_port.py",
     "runs/p133-immediatelyfast-port/wp1-compile.txt",
     "java/src/test/java/top/mcbridge1201/MixinConfigAdditionTest.java",

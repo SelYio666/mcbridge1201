@@ -1,0 +1,13 @@
+{
+  "install_result": {
+    "name": "mcbridge mrpack probe",
+    "version": "1.0.0",
+    "minecraft": "1.21.1",
+    "launch": "fabric-loader-0.19.5-1.21.1"
+  },
+  "sha1": "669a75bcbba10bc3fa15f31733587cefb8779064",
+  "file_installed": true,
+  "hash_ok": true,
+  "override_ok": true,
+  "pack": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p160-mrpack\\mrpack-probe.mrpack"
+}

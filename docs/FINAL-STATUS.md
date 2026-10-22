@@ -33,6 +33,7 @@
 | ImmediatelyFast 实体压力（80 盔甲架）交错 on/off：开启 universal batching 慢约 13%（550 vs 636，两轮一致）；不宣称收益 | `runs/p157-stress-interleaved/`（p153–p157） |
 | Sodium 1.20.1 转换可行性（静态分析）：`blocked_static` 13/15/16，需移植渲染内核 | `runs/p158-sodium-probe/` |
 | Forge 1.20.1-47.4.28 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p159-forge-server/` |
+| mrpack 含真实 files（HTTP 下载 + SHA-1 校验 + overrides） | `runs/p160-mrpack/` |
 | ImmediatelyFast 移植规则/源码回归（6 类替换 + 2 条配置补充 + Identifier 桥 + 无 tombstone + 无二次释放 + Iris 分支） | `rules/fabric-1.21.1/immediatelyfast-batching-port.json`、`tools/test_review_fixes.py` IFPORT 组 |
 | Forge/NeoForge 安装自动补原版 base | `runs/p129`、回归检查（LOADER 组） |
 | Forge/NeoForge 启动命令保留 `extra_game`（quickPlay 等参数） | `runs/p127`、回归检查（NEOFORGE 组） |
@@ -77,7 +78,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 883 项；桥一致性 0；mixin 审计 0；
+- 单测 25/25；`verify_evidence` passed；哈希 885 项；桥一致性 0；mixin 审计 0；
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，72/72；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
@@ -93,7 +94,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 | ImmediatelyFast 的完整度 | ✅ HUD+物品+overlay 批处理生效 | 单人/专用服务器（p134/p141）、soak 95s（p140）、关闭开关归零（p137）、Iris 1.8.1/1.8.14（p142/p143）、shader pack r5.3（p145/p146，hud=11146/11168）、关闭 universal batching 的回退路径（p147）、item per-lighting（p149/p150）；私有成员走反射 |
 | Shulker 网格预览 | ⏸ 封存 | 环境侧容器组件问题，需抓包复现 |
 | TrashSlot 完整 UI 流程 | ⏸ | 旧桥版本已跑通（p63–p65）；当前桥只做 bridge 级 + 探针 |
-| mrpack 含 files 的真实包 | ⏸ | 只测过无 files 的最小包 |
+| mrpack 含 files 的真实包 | ✅ | p160：本地 HTTP 下载 + SHA-1/SHA-512 校验 + overrides 落盘通过；包内含 mod jar，不提交（`runs/p160-mrpack/`） |
 | LICENSE | ✅ MIT | 见仓库根目录 `LICENSE`（第三方 CenturyBridge 为 MIT，minecraft-launcher-lib 为 BSD-2 可选依赖） |
 | 干净机器构建 / Gradle Wrapper | ⚠️ | 干净目录已验证；无 wrapper（与“仓库不放 jar”策略冲突） |
 | 平台 | ⚠️ | 启动器仅 Windows 实测 |
