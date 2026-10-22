@@ -15,8 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(class_310.class)
 public abstract class MixinMinecraftClientBench {
 
+    private static final boolean ENABLED = Boolean.getBoolean("mcbridge.bench");
+
     @Inject(method = {"method_1523"}, at = {@At("HEAD")})
     private void immediatelyFast$sampleFps(CallbackInfo ci) {
+        if (!ENABLED) {
+            return;
+        }
         long now = System.currentTimeMillis();
         if (now - BenchHooks.lastFpsLog > 2000) {
             BenchHooks.lastFpsLog = now;

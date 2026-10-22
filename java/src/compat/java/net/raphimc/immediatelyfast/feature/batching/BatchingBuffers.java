@@ -100,7 +100,8 @@ public class BatchingBuffers {
         isHudBatching = ITEM_MODEL_CONSUMER != null || ITEM_OVERLAY_CONSUMER != null;
         long total = net.raphimc.immediatelyfast.feature.core.BatchableBufferSource.batchedDraws;
         long now = System.currentTimeMillis();
-        if (total != lastLoggedDraws && now - lastLogTime > 2000) {
+        if (total != lastLoggedDraws && now - lastLogTime > 2000
+                && Boolean.getBoolean("mcbridge.bench")) {
             lastLogTime = now;
             lastLoggedDraws = total;
             int fps = -1;

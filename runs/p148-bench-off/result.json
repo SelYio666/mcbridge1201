@@ -3,12 +3,12 @@
   "saved_value": true,
   "joined": true,
   "port_markers": [
-    "[20:28:49] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=0",
-    "[20:28:51] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=24",
-    "[20:28:53] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=0",
-    "[20:28:55] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=28",
-    "[20:28:57] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=35",
-    "[20:28:59] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=116"
+    "[21:13:59] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=0",
+    "[21:14:02] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=20",
+    "[21:14:04] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=0",
+    "[21:14:06] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=35",
+    "[21:14:08] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=13",
+    "[21:14:10] [Render thread/INFO]: [STDOUT]: [mcbridge-port] fps=93"
   ],
   "marker_count": 6
 }
