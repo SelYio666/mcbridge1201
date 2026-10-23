@@ -92,12 +92,17 @@
   <div class="step">
     <div class="num">3</div>
     <div class="body">
-      <h2>启动，或导入 PCL</h2>
-      <p>用本项目启动器（读的就是这个目录）：</p>
+      <h2>启动，或一键对接 PCL</h2>
+      <p><b>方式 A：一键装进 PCL</b>（推荐，不用手动找目录）：</p>
+      <pre>python tools/from_source_install.py --version 1.21.1 --pcl
+# 或直接双击：share\pcl-onclick\一键装到PCL.bat</pre>
+      <p>脚本会自动找 PCL 的游戏目录（<code>%APPDATA%\.minecraft</code> 或 PCL 设置里的目录），
+        把版本装进去并写 <code>launcher_profiles.json</code>；打开 PCL 刷新版本列表即可看到 1.21.1。</p>
+      <p><b>方式 B：手动导入</b>：打开 PCL →「设置 → 游戏目录」选 <code>D:\MC</code>（或拖进 PCL 窗口）→ 选中版本 → 启动。</p>
+      <p>用本项目启动器启动（读的就是这个目录）：</p>
       <pre>python launcher/mclaunch.py verify 1.21.1 "D:\MC"
 python launcher/mclaunch.py launch 1.21.1 "D:\MC" 你的名字</pre>
-      <p>或者打开 PCL →「设置 → 游戏目录」选 <code>D:\MC</code>（或把文件夹拖进 PCL 窗口）→ 版本列表选中 1.21.1 → 启动。</p>
-      <div class="note">PCL 只负责启动、不负责下载；下载已经由第 2 步完成。</div>
+      <div class="note">PCL 只负责启动、不负责下载；下载已经由第 2 步完成。Java 记得选 17/21。</div>
     </div>
   </div>
 

@@ -192,13 +192,85 @@ def install(version: str, root: Path, workers: int = 16) -> int:
     return 0 if ok == len(objs) and not failed else 1
 
 
+
+def detect_pcl_root() -> Path | None:
+    """Best-effort PCL game directory: env override, PCL Setup.ini, then %APPDATA%/.minecraft."""
+    env = os.environ.get("MCBRIDGE_PCL_DIR")
+    if env and Path(env).is_dir():
+        return Path(env)
+    cands = []
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        cands.append(Path(appdata) / ".minecraft")
+        for ini in (Path(appdata) / "PCL" / "Setup.ini",
+                    Path(appdata) / "PCL" / "Settings.ini"):
+            if ini.is_file():
+                try:
+                    for line in ini.read_text(encoding="utf-8", errors="replace").splitlines():
+                        for key in ("LaunchFolder=", "GameDir=", "GameFolder="):
+                            if line.startswith(key):
+                                cands.insert(0, Path(line[len(key):].strip()))
+                except Exception:  # noqa: BLE001
+                    pass
+    cands.append(Path.home() / ".minecraft")
+    for c in cands:
+        if c.is_dir():
+            return c
+    return None
+
+
+def write_launcher_profiles(root: Path, version: str) -> Path:
+    """Add a custom profile so launchers that read launcher_profiles.json pick the version up."""
+    import datetime
+
+    path = root / "launcher_profiles.json"
+    data = {}
+    if path.exists():
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001
+            data = {}
+    profiles = data.setdefault("profiles", {})
+    key = f"mcbridge-{version}"
+    profiles[key] = {
+        "name": f"{version} (mcbridge)",
+        "type": "custom",
+        "created": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+        "lastVersionId": version,
+        "gameDir": str(root),
+    }
+    data["selectedProfile"] = key
+    data.setdefault("settings", {"enableSnapshots": False})
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    return path
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--version", default="1.21.1")
     ap.add_argument("--root", default=".minecraft")
     ap.add_argument("--workers", type=int, default=16)
+    ap.add_argument("--pcl", action="store_true",
+                    help="装进 PCL 游戏目录（自动检测），并写 launcher_profiles.json")
+    ap.add_argument("--pcl-dir", default=None,
+                    help="显式指定 PCL 游戏目录（包含 versions/ 的那个 .minecraft）")
     args = ap.parse_args()
-    return install(args.version, Path(args.root), args.workers)
+
+    pcl_mode = args.pcl or bool(args.pcl_dir)
+    root = Path(args.pcl_dir) if args.pcl_dir else Path(args.root)
+    if args.pcl and not args.pcl_dir:
+        detected = detect_pcl_root()
+        if detected is None:
+            print("没有找到 PCL 游戏目录，请用 --pcl-dir 指定（里面有 versions/ 的那个 .minecraft）")
+            return 2
+        root = detected
+        print("PCL 游戏目录:", root)
+    rc = install(args.version, root, args.workers)
+    if rc == 0 and pcl_mode:
+        path = write_launcher_profiles(root, args.version)
+        print("已写 launcher_profiles.json:", path)
+        print(f"打开 PCL → 版本列表刷新，应能看到 {args.version} → 选中启动（Java 记得选 17/21）")
+    return rc
 
 
 if __name__ == "__main__":
