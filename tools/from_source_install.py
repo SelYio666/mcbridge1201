@@ -245,15 +245,47 @@ def write_launcher_profiles(root: Path, version: str) -> Path:
     return path
 
 
+
+def interactive() -> int:
+    print("== mcbridge 一键安装到 PCL ==")
+    ver = input("要装的版本 [1.21.1]: ").strip() or "1.21.1"
+    root = detect_pcl_root()
+    if root:
+        print("检测到 PCL 游戏目录:", root)
+    else:
+        raw = input("没有自动找到，请输入 PCL 的游戏目录（包含 versions/ 的 .minecraft）: ").strip()
+        if not raw:
+            print("已取消")
+            return 2
+        root = Path(raw)
+    print(f"将安装 {ver} 到 {root}")
+    if input("继续？[Y/n]: ").strip().lower() in ("n", "no"):
+        print("已取消")
+        return 2
+    rc = install(ver, root, 16)
+    if rc == 0:
+        path = write_launcher_profiles(root, ver)
+        print("已写 launcher_profiles.json:", path)
+        try:
+            os.startfile(str(root))  # type: ignore[attr-defined]
+        except Exception:  # noqa: BLE001
+            pass
+        print("完成：打开 PCL → 刷新版本列表 → 选中", ver, "→ 启动（Java 选 17/21）")
+    return rc
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--version", default="1.21.1")
     ap.add_argument("--root", default=".minecraft")
     ap.add_argument("--workers", type=int, default=16)
+    if len(sys.argv) == 1:
+        return interactive()
     ap.add_argument("--pcl", action="store_true",
                     help="装进 PCL 游戏目录（自动检测），并写 launcher_profiles.json")
     ap.add_argument("--pcl-dir", default=None,
                     help="显式指定 PCL 游戏目录（包含 versions/ 的那个 .minecraft）")
+    ap.add_argument("--open", action="store_true", help="装完后打开游戏目录")
     args = ap.parse_args()
 
     pcl_mode = args.pcl or bool(args.pcl_dir)
@@ -270,6 +302,11 @@ def main() -> int:
         path = write_launcher_profiles(root, args.version)
         print("已写 launcher_profiles.json:", path)
         print(f"打开 PCL → 版本列表刷新，应能看到 {args.version} → 选中启动（Java 记得选 17/21）")
+    if rc == 0 and (args.open or pcl_mode):
+        try:
+            os.startfile(str(root))  # type: ignore[attr-defined]
+        except Exception:  # noqa: BLE001
+            pass
     return rc
 
 

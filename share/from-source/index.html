@@ -93,9 +93,13 @@
     <div class="num">3</div>
     <div class="body">
       <h2>启动，或一键对接 PCL</h2>
-      <p><b>方式 A：一键装进 PCL</b>（推荐，不用手动找目录）：</p>
+      <p><b>方式 A：一键装进 PCL</b>（推荐，不用手动找目录）。</p>
+      <p><b>A0：免 Python 安装器</b>（最省事）：下载 release 里的
+        <code>mcbridge-pcl-setup.zip</code> → 解压 → 双击 <code>mcbridge-pcl-setup.exe</code>，
+        按提示回车即可。</p>
+      <p><b>A1：已有 Python</b>：</p>
       <pre>python tools/from_source_install.py --version 1.21.1 --pcl
-# 或直接双击：share\pcl-onclick\一键装到PCL.bat</pre>
+# 或双击：share\pcl-onclick\一键装到PCL.bat</pre>
       <p>脚本会自动找 PCL 的游戏目录（<code>%APPDATA%\.minecraft</code> 或 PCL 设置里的目录），
         把版本装进去并写 <code>launcher_profiles.json</code>；打开 PCL 刷新版本列表即可看到 1.21.1。</p>
       <p><b>方式 B：手动导入</b>：打开 PCL →「设置 → 游戏目录」选 <code>D:\MC</code>（或拖进 PCL 窗口）→ 选中版本 → 启动。</p>
