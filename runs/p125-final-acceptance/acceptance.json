@@ -13,7 +13,7 @@
     "gradle_test_install_dist": "success",
     "java_junit_tests": 25,
     "review_fixes": "73/73",
-    "hashes": "902/902",
+    "hashes": "905/905",
     "verify_evidence": "passed",
     "ci_run": "39799555425",
     "ci_conclusion": "success",
