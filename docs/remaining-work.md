@@ -39,8 +39,9 @@ claim that these paths work.
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.
 - Sodium conversion probe: `blocked_static` 13/15/16 (`runs/p158`); needs its rendering core
   ported, out of scope.
-- Still open: Shulker grid preview (paused), TrashSlot Shift+Delete/creative/multi-client variants,
-  portable package on a clean/other machine, CI coverage of every commit (push-triggered CI works).
+- Still open: Shulker grid preview (paused), TrashSlot creative/multi-client/empty-cursor
+  variants, portable package on a clean/other machine, CI coverage of every commit
+  (push-triggered CI works).
 
 ## Already verified (dedicated server)
 
@@ -133,10 +134,11 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   companion mixin now supplies `PreviewTooltipData` from the current `getTooltipData()` and an
   NBT-compat bridge restores `contains(key, 9/99)` semantics, but the client-side container
   component still reads back empty, so the grid does not render (`runs/p110-shulker-grid/`).
-- TrashSlot remaining UI variants: `Shift+Delete` (`delete_all`), creative-mode deletion keys,
-  empty-cursor left/right click (that is the undelete path), and multi-client sync. The plain
-  Delete empty path now passes in `runs/p183-trash-key/`; the p85/p86 "key never fires" was the
-  injection missing `KEYEVENTF_EXTENDEDKEY` (KP_DECIMAL 330 instead of DELETE 261), not Balm;
+- TrashSlot remaining UI variants: creative-mode deletion keys, empty-cursor left/right click
+  (that is the undelete path), and multi-client sync. Plain Delete empty (`runs/p183`) and
+  Shift+Delete cross-slot delete_all (`runs/p184`: two 5+3 stacks, `all=true`, 8→0) pass; the
+  p85/p86 "key never fires" was the injection missing `KEYEVENTF_EXTENDEDKEY` (KP_DECIMAL 330
+  instead of DELETE 261), not Balm;
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
   server and client alive; `runs/p73-lithium-play/`), a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), a four-minute dedicated soak reports 20.00 TPS with

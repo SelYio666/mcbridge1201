@@ -141,6 +141,17 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | 失败根因 | ✅ p65/p85/p86 的 Delete 失败是注入漏 `KEYEVENTF_EXTENDEDKEY`（收到 KP_DECIMAL 330），不是 Balm/mod；无产品代码改动 |
 | Release | 仅证据/回归，沿用 `v0.5.4`（无新版本） |
 
+## p184 增量验收（2026-10-23）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **85 项**（本次 **85/85**；新增 1 条 TrashSlot Shift+Delete 回归） |
+| `python tools/check_hashes.py` | ✅ **1048/1048** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| Shift+Delete 跨槽 | ✅ 两叠 5+3 钻石（slot 0/1），Shift+Delete → `DEBUG_DELETE_CONTAINER all=true` → 服务端/客户端 8→0；`after.png` 空 |
+| 第一次尝试 | ⚠️ `give` 5+3 合并成一叠 8，虽 `all=true` 但无法证明跨槽；最终改为 `method_5447` 直接写两个槽位 |
+| Release | 仅证据/回归，沿用 `v0.5.4`（无新版本） |
+
 ## 已知风险
 
 - 镜像节点会随时间/地区变化，canary 只是单次采样；

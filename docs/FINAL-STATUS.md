@@ -45,6 +45,7 @@
 | ImmediatelyFast 端口收尾：官方 1.21.1 jar 没有 `MixinBufferBuilder`/`MixinFontManager`，端口剩余 2 个 inert 是 1.20.4 多版本 jar 的遗留死代码，不是待移植功能 | `runs/p180-inert-closure/`（native `listed=37 inert=0` vs 端口 `listed=37 inert=2`；规则级防误登记回归） |
 | ImmediatelyFast 地图 atlas 生命周期：locked=0 地图第二次上传（地形覆盖初始图案）+ 正常客户端 stop 的 keep-dummy/close/clear；修复退出时向已释放 NativeImage 写入的崩溃 | `runs/p181-map-atlas-lifecycle/`（`map-atlas update count=2`、`clear atlases=1`、exit 0、无 crash；`crash-before-fix-map.txt` 保留修复前崩溃） |
 | TrashSlot 真实 empty-trash Delete UI 键：inventory 悬停 trash → `DEBUG_KEY key=261` → provider → 服务端清空；p65 的 Delete 失败根因是注入漏 `KEYEVENTF_EXTENDEDKEY`（收到 KP_DECIMAL 330） | `runs/p183-trash-key/`（`DEBUG_EMPTY_PROVIDER`、`DEBUG_RUN_RETURN=true`、`SERVER_TRASH empty=true`；`after.png`） |
+| TrashSlot Shift+Delete (`delete_all`)：两叠 5+3 钻石跨槽删除，`DEBUG_DELETE_CONTAINER all=true`，服务端/客户端 8→0 | `runs/p184-trash-delete-all/`（`shift_seen`/`delete_seen`/`server_zero`/`client_zero` 全 true；`after.png`） |
 | Forge 1.20.1-47.4.28 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p159-forge-server/` |
 | mrpack 含真实 files（HTTP 下载 + SHA-1 校验 + overrides） | `runs/p160-mrpack/` |
 | NeoForge 21.1.264 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p161-neoforge-server/` |
@@ -94,8 +95,8 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 1035 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165/p181）；mixin 审计 inert=2（`listed=37`；p175 恢复 map mixin、p177 补多地图/展示框、p178 启用 VertexBuffer；剩余两个是官方 1.21.1 已删除的 1.20.4 遗留类，见 `runs/p180-inert-closure/`）；
-- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归 + 1 项死 mixin 防误登记回归 + 1 项 atlas closed 守卫回归 + 1 项 TrashSlot UI empty 键回归（`tools/test_review_fixes.py`，共 84 项；本次 **84/84**，`/api/jvm` 本次未 skip；偶发网络超时会 skip，`verify_evidence` 接受）接入统一门禁；
+- 单测 25/25；`verify_evidence` passed；哈希 1048 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165/p181）；mixin 审计 inert=2（`listed=37`；p175 恢复 map mixin、p177 补多地图/展示框、p178 启用 VertexBuffer；剩余两个是官方 1.21.1 已删除的 1.20.4 遗留类，见 `runs/p180-inert-closure/`）；
+- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归 + 1 项死 mixin 防误登记回归 + 1 项 atlas closed 守卫回归 + 1 项 TrashSlot UI empty 键回归 + 1 项 TrashSlot Shift+Delete 回归（`tools/test_review_fixes.py`，共 85 项；本次 **85/85**）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
 - GitHub Actions：push 触发**已验证可用**（`e9ca30c` run `39796030299`；`742d133` run `39799555425`，check-run `build` success，含 API 推送）；此前“push 无 run”是 GitHub Actions `degraded_performance`（22:18 UTC）导致排队，重推 workflow 文件后索引恢复。若再遇无 run，先看 [githubstatus.com](https://www.githubstatus.com)，再重推 workflow 文件刷新索引。
@@ -109,7 +110,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 | 渲染类模组：Sodium | ❌ blocked_static | 1.20.1 的 Sodium 0.5.13 静态探针：missingClass=13、missingMember=15、descMismatch=16（`runs/p158-sodium-probe/`）；需要移植其渲染内核，本轮不做；Iris 兼容分支已在 p142/p143 跑通 |
 | ImmediatelyFast 的完整度 | ✅ HUD+物品+overlay 批处理生效；地图 atlas 已恢复并覆盖动态更新/正常退出；VertexBuffer 动态上传 fast path 已启用 | 单人/专用服务器（p134/p141）、soak 95s（p140）、关闭开关归零（p137）、Iris 1.8.1/1.8.14（p142/p143）、shader pack r5.3（p145/p146，hud=11146/11168）、关闭 universal batching 的回退路径（p147）、item per-lighting（p149/p150）；**地图 atlas：p175/p177/p181（动态更新 + 退出清理 + 崩溃修复）**；**VertexBuffer：p178**；私有成员走反射 |
 | Shulker 网格预览 | ⏸ 封存 | 环境侧容器组件问题，需抓包复现 |
-| TrashSlot 完整 UI 流程 | ✅ empty-trash Delete 键 | p183：inventory 悬停 trash，Delete → provider → 服务端清空；p63–p65 的移入/取回/clientbound/provider empty 仍有效 |
+| TrashSlot 完整 UI 流程 | ✅ empty-trash Delete + Shift+Delete | p183：inventory 悬停 trash，Delete → provider → 服务端清空；p184：两叠 5+3 跨槽 Shift+Delete，8→0；p63–p65 的移入/取回/clientbound/provider empty 仍有效 |
 | mrpack 含 files 的真实包 | ✅ | p160：本地 HTTP 下载 + SHA-1/SHA-512 校验 + overrides 落盘通过；包内含 mod jar，不提交（`runs/p160-mrpack/`） |
 | LICENSE | ✅ MIT | 见仓库根目录 `LICENSE`（第三方 CenturyBridge 为 MIT，minecraft-launcher-lib 为 BSD-2 可选依赖） |
 | 干净机器构建 / Gradle Wrapper | ⚠️ | 干净目录已验证；无 wrapper（与“仓库不放 jar”策略冲突） |

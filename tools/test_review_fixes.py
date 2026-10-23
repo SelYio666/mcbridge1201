@@ -720,6 +720,12 @@ def test_immediatelyfast_port() -> None:
                and "extended = 0x0001" in p183_run and "DEBUG_KEY key=261" in p183_run)
     check("TRASH the real empty-trash Delete key reaches the provider and server", p183_ok,
           "p183 result flags + extended-key injection")
+    p184_result = json.loads((ROOT / "runs" / "p184-trash-delete-all" / "result.json").read_text(encoding="utf-8"))
+    p184_run = (ROOT / "runs" / "p184-trash-delete-all" / "run.py").read_text(encoding="utf-8", errors="replace")
+    p184_ok = (all(p184_result.get(k) for k in ("shift_seen", "delete_seen", "server_zero", "client_zero"))
+               and "press_shift_delete" in p184_run and "mods=1" in p184_run)
+    check("TRASH Shift+Delete deletes same-item stacks across slots", p184_ok,
+          "p184 result flags + shift-delete injection")
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src
