@@ -714,6 +714,12 @@ def test_immediatelyfast_port() -> None:
                  and "skip-closed" in texture_src)
     check("IFPORT map atlas skips a closed image during world exit", closed_ok,
           "MapAtlasTexture.isClosed + MapTexture updateAtlasTexture guard")
+    p183_result = json.loads((ROOT / "runs" / "p183-trash-key" / "result.json").read_text(encoding="utf-8"))
+    p183_run = (ROOT / "runs" / "p183-trash-key" / "run.py").read_text(encoding="utf-8", errors="replace")
+    p183_ok = (all(p183_result.get(k) for k in ("key_seen", "run_seen", "provider_seen", "server_empty"))
+               and "extended = 0x0001" in p183_run and "DEBUG_KEY key=261" in p183_run)
+    check("TRASH the real empty-trash Delete key reaches the provider and server", p183_ok,
+          "p183 result flags + extended-key injection")
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src

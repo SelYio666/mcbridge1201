@@ -1,0 +1,62 @@
+{
+  "geometry": {
+    "left": "232",
+    "top": "97",
+    "trashX": "152",
+    "trashY": "165",
+    "scale": "2.0",
+    "trash": "5"
+  },
+  "physical": [
+    1104,
+    780
+  ],
+  "key_seen": true,
+  "run_seen": true,
+  "provider_seen": true,
+  "server_empty": true,
+  "client_tail": [
+    "[22:34:53] [Render thread/INFO]: Connecting to 127.0.0.1, 25566",
+    "[22:34:54] [Download-1/ERROR]: Failed to retrieve profile key pair",
+    "com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401",
+    "\tat knot/com.mojang.authlib.minecraft.client.MinecraftClient.readInputStream(MinecraftClient.java:100) ~[authlib-6.0.54.jar:?]",
+    "\tat knot/com.mojang.authlib.minecraft.client.MinecraftClient.post(MinecraftClient.java:65) ~[authlib-6.0.54.jar:?]",
+    "\tat knot/com.mojang.authlib.yggdrasil.YggdrasilUserApiService.getKeyPair(YggdrasilUserApiService.java:61) ~[authlib-6.0.54.jar:?]",
+    "\tat knot/net.minecraft.class_7434.method_43605(class_7434.java:129) ~[client-intermediary.jar:?]",
+    "\tat knot/net.minecraft.class_7434.method_44291(class_7434.java:77) ~[client-intermediary.jar:?]",
+    "\tat java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]",
+    "\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]",
+    "\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]",
+    "\tat java.base/java.lang.Thread.run(Thread.java:1583) [?:?]",
+    "[22:34:55] [Render thread/INFO]: Loaded 2 advancements",
+    "[22:34:58] [Render thread/INFO]: [STDOUT]: KEY_SEED_CLIENT",
+    "[22:34:59] [Render thread/INFO]: [STDOUT]: KEY_INV_OPEN",
+    "[22:35:00] [Render thread/INFO]: [STDOUT]: KEY_SCREEN left=232 top=97 trashX=152 trashY=165 scale=2.0 trash=5 minecraft:diamond",
+    "[22:35:03] [Render thread/INFO]: [STDOUT]: DEBUG_KEY key=261 scan=339 mods=0 screen=net.minecraft.class_490@5436f78b",
+    "[22:35:03] [Render thread/INFO]: [STDOUT]: DEBUG_RUN key=261 scan=339 mods=0 type=KEYSYM screen=net.minecraft.class_490@5436f78b",
+    "[22:35:03] [Render thread/INFO]: [STDOUT]: DEBUG_EMPTY_PROVIDER trash=5 minecraft:diamond",
+    "[22:35:03] [Render thread/INFO]: [STDOUT]: DEBUG_RUN_RETURN=true"
+  ],
+  "server_tail": [
+    "[22:34:29] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!",
+    "[22:34:29] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.",
+    "[22:34:29] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.",
+    "[22:34:29] [Server thread/WARN]: To change this, set \"online-mode\" to \"true\" in the server.properties file.",
+    "[22:34:29] [Server thread/INFO]: Preparing level \"world\"",
+    "[22:34:30] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld",
+    "[22:34:30] [Worker-Main-4/INFO]: Preparing spawn area: 0%",
+    "[22:34:30] [Server thread/INFO]: Time elapsed: 482 ms",
+    "[22:34:30] [Server thread/INFO]: Done (1.296s)! For help, type \"help\"",
+    "[22:34:31] [Server thread/INFO]: [STDOUT]: TRASHSLOT_ALL_CODEC_OK",
+    "[22:34:55] [Server thread/INFO]: TrashKey[/127.0.0.1:58456] logged in with entity id 9 at (19.5, 65.0, 72.5)",
+    "[22:34:55] [Server thread/INFO]: TrashKey joined the game",
+    "[22:34:57] [Server thread/INFO]: [STDOUT]: KEY_SEED_SERVER",
+    "[22:34:57] [Server thread/INFO]: [STDOUT]: SERVER_TRASH empty=false count=5",
+    "[22:34:59] [Server thread/INFO]: [STDOUT]: SERVER_TRASH empty=false count=5",
+    "[22:35:01] [Server thread/INFO]: [STDOUT]: SERVER_TRASH empty=false count=5",
+    "[22:35:03] [Server thread/INFO]: [STDOUT]: SERVER_TRASH empty=false count=5",
+    "[22:35:04] [Server thread/WARN]: UUID of added entity already exists: class_1694['Minecart with Chest'/104, l='ServerLevel[world]', x=-35.50, y=-35.94, z=111.50]",
+    "[22:35:05] [Server thread/INFO]: [STDOUT]: SERVER_TRASH empty=true count=0",
+    "[22:35:07] [Server thread/INFO]: [STDOUT]: SERVER_TRASH empty=true count=0"
+  ]
+}

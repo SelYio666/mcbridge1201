@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "trashkey",
+  "version": "1.0.0",
+  "name": "Trash empty-key probe",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["probe.TrashKeyServerProbe"],
+    "client": ["probe.TrashKeyClientProbe"]
+  },
+  "mixins": ["trashkey.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "trashslot": "*"
+  }
+}

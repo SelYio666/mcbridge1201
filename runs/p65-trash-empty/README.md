@@ -37,7 +37,12 @@ Client and server trash both empty; no `NoSuchMethodError`; no server crash.
 ## Scope
 
 This verifies the provider-level empty action and its serverbound/clientbound round trip. The real
-keyboard/UI action that invokes `emptyTrashSlot` is still not tested.
+keyboard/UI action that invokes `emptyTrashSlot` is now also verified in
+`runs/p183-trash-key/`: a real Delete key (extended scan code) over the trash slot reaches
+`ScreenKeyEvent.Press.Post`, calls the provider, and the server reads `empty=true count=0`. The
+earlier p85/p86 "Delete does nothing" was an input-injection bug: `keybd_event` without
+`KEYEVENTF_EXTENDEDKEY` delivered KP_DECIMAL (GLFW 330), not DELETE (261), so the key binding never
+matched. Shift+Delete/creative/multi-client variants are still untested.
 
 ## Evidence
 

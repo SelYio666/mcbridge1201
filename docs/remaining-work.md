@@ -39,8 +39,8 @@ claim that these paths work.
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.
 - Sodium conversion probe: `blocked_static` 13/15/16 (`runs/p158`); needs its rendering core
   ported, out of scope.
-- Still open: Shulker grid preview (paused), TrashSlot full UI input, portable package on a
-  clean/other machine, CI coverage of every commit (push-triggered CI works).
+- Still open: Shulker grid preview (paused), TrashSlot Shift+Delete/creative/multi-client variants,
+  portable package on a clean/other machine, CI coverage of every commit (push-triggered CI works).
 
 ## Already verified (dedicated server)
 
@@ -70,7 +70,10 @@ click path also **returns** the stack to the cursor and clears both client/serve
 P61's "return failed" was a screenshot misread: the returned stack was on the cursor over the
 trash icon. Clientbound `MessageTrashSlotContent` also arrives (`S2C_CLIENT trash=3`,
 `runs/p64-trash-s2c/`), and the provider-level empty action clears both sides via the new reply
-bridge (`runs/p65-trash-empty/`). Still **not verified**:
+bridge (`runs/p65-trash-empty/`). `runs/p183-trash-key/` now passes the **real GUI empty key**:
+inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMAL 330) reaches
+`ScreenKeyEvent.Press.Post`, `DEBUG_EMPTY_PROVIDER` fires, and the server reports
+`SERVER_TRASH empty=true count=0`. Still **not verified** for TrashSlot:
 
 - legacy Fabric networking bridge (`runs/p89-legacy-networking/`, `runs/p90-fallingtree-join/`):
   AppleSkin init/SyncHandler, the HUD food path and the status-effect tooltip path
@@ -130,12 +133,10 @@ bridge (`runs/p65-trash-empty/`). Still **not verified**:
   companion mixin now supplies `PreviewTooltipData` from the current `getTooltipData()` and an
   NBT-compat bridge restores `contains(key, 9/99)` semantics, but the client-side container
   component still reads back empty, so the grid does not render (`runs/p110-shulker-grid/`).
-- the real UI key/action that invokes empty-trash: the geometry is now known (rect
-  `(227,207)-(258,231)`, scale 3, physical `(1176,873)`), but `Delete`, `Ctrl/Shift/Alt+Delete` all
-  leave the trash at 5 (`runs/p86-empty-hover/`). A registered
-  `ScreenKeyEvent.Press.Post` listener never fired while the ESC injection in P83 did close the
-  chest, so the synthetic key reaches GLFW but not Balm's screen-key event dispatch. The action
-  itself passes at provider level (`runs/p65-trash-empty/`);
+- TrashSlot remaining UI variants: `Shift+Delete` (`delete_all`), creative-mode deletion keys,
+  empty-cursor left/right click (that is the undelete path), and multi-client sync. The plain
+  Delete empty path now passes in `runs/p183-trash-key/`; the p85/p86 "key never fires" was the
+  injection missing `KEYEVENTF_EXTENDEDKEY` (KP_DECIMAL 330 instead of DELETE 261), not Balm;
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
   server and client alive; `runs/p73-lithium-play/`), a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), a four-minute dedicated soak reports 20.00 TPS with

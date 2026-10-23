@@ -85,6 +85,15 @@
     "release": "v0.5.4",
     "release_asset": "mcbridge-launcher-0.5.4.zip"
   },
+  "p183": {
+    "date": "2026-10-23",
+    "review_fixes": "84/84 executed passed (no skip this run)",
+    "hashes": "1035/1035",
+    "verify_evidence": "passed",
+    "trash_empty_key": "inventory hovered over trash; real Delete (GLFW 261, extended scan) -> DEBUG_EMPTY_PROVIDER -> SERVER_TRASH empty=true count=0; after.png",
+    "root_cause": "p65/p85/p86 Delete attempts injected KP_DECIMAL (330) because keybd_event lacked KEYEVENTF_EXTENDEDKEY; the mod key binding was correct",
+    "release": "v0.5.4 (evidence-only, no new release)"
+  },
   "verified": [
     "Fabric 1.21.1 full cold install (3911/3911 assets, 933.6 MB, 0 failures) + singleplayer world (runs/p118)",
     "NeoForge 21.1.264 install + main menu (runs/p116)",
@@ -95,6 +104,7 @@
     "ImmediatelyFast MixinVertexBuffer enabled: 1.21.1 method_60829 plus 43442/43443 redirected, 80-armor-stand stress with off/off and on/on controls, no GL/mixin errors and no visual regression beyond the control (runs/p178)",
     "ImmediatelyFast port closure: the official 1.21.1 jar has no MixinBufferBuilder/MixinFontManager; the port's two inert classes are 1.20.4 leftovers, and a rule-level regression prevents re-registering them (runs/p180)",
     "ImmediatelyFast map atlas lifecycle: live second upload after player movement, normal client-stop cleanup (keep-dummy/close/clear), and a real closed-NativeImage crash fixed with a closed guard (runs/p181)",
+    "TrashSlot real empty-trash Delete UI key: inventory hover -> provider -> server empty; the p65/p85/p86 failures were input injection (missing KEYEVENTF_EXTENDEDKEY, KP_DECIMAL 330) (runs/p183)",
     "NeoForge 21.1.264 + AppleSkin / Farmer's Delight / Jade in-world (runs/p127/p128/p130)",
     "Forge 1.20.1-47.4.28 + AppleSkin / Farmer's Delight in-world (runs/p129/p131)",
     "Fabric dedicated server + launcher client join via quickPlayMultiplayer (runs/p132)",
