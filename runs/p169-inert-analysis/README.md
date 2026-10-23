@@ -28,8 +28,8 @@ class_291.method_43442 / method_43443 存在
 ```
 
 它可以 apply，但逻辑是把 `glBufferData` 换成 `GL15C.glBufferSubData` 以“快速上传”（受
-`fast_buffer_upload` 配置控制）。这属于**没有视觉/压力验证的 GL 路径改动**；为了不让 v0.5.0 的
-渲染稳定性冒险，本鱼故意保持 inert，等有专门的顶点上传压测再开。
+`fast_buffer_upload` 配置控制）。p170 做了 on/off 静态截图 A/B（差 0.018%），但没有顶点上传压力/
+多场景验证，因此**仍保持 inert**，等有专门的顶点上传压测再开。
 
 ## 4) `map_atlas_generation/MixinMapRenderer` — 依赖 1.20.4 纹理 API
 

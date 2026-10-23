@@ -1,0 +1,4 @@
+screenshot -> C:\Users\27682\Documents\新建文件夹\mcbridge1201\runs\p170-vertex-on\world.png (870, 519)
+{"joined": true, "crash": null, "exit_code": 1, "errors": 5}
+errors: ['[19:47:32] [Download-2/ERROR]: Failed to fetch user properties', 'com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401', '\tat knot/com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:59) ~[authlib-6.0.54.jar:?]', 'Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401']
+RESULT: OK

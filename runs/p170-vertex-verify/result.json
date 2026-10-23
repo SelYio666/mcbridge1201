@@ -1,0 +1,9 @@
+{
+  "shots": {
+    "on": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p170-vertex-on\\world.png",
+    "off": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p170-vertex-off\\world.png"
+  },
+  "pixels": 451530,
+  "changed": 80,
+  "diff_fraction": 0.00017717538148074325
+}
