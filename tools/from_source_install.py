@@ -57,6 +57,32 @@ def sha1_file(path: Path) -> str:
     return h.hexdigest()
 
 
+
+_MANIFEST_CACHE: dict = {}
+
+
+def manifest() -> dict:
+    if "data" not in _MANIFEST_CACHE:
+        _MANIFEST_CACHE["data"] = get_json(MANIFEST)
+    return _MANIFEST_CACHE["data"]
+
+
+def all_versions(kind: str = "release", contains: str | None = None,
+                 limit: int | None = None) -> list[dict]:
+    vs = [v for v in manifest()["versions"] if kind in ("all", "any") or v["type"] == kind]
+    if contains:
+        vs = [v for v in vs if contains.lower() in v["id"].lower()]
+    return vs[:limit] if limit else vs
+
+
+def print_versions(kind: str = "release", contains: str | None = None,
+                   limit: int = 30) -> list[dict]:
+    vs = all_versions(kind, contains, limit)
+    for i, v in enumerate(vs, 1):
+        print(f"{i:3d}. {v['id']:<20} {v['type']:<12} {v['releaseTime'][:10]}")
+    return vs
+
+
 def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3) -> bool:
     """Download url to dest with mirror fallback and sha1 check. Returns True if final file is valid."""
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -104,12 +130,22 @@ def allowed(lib: dict) -> bool:
 def install(version: str, root: Path, workers: int = 16) -> int:
     root.mkdir(parents=True, exist_ok=True)
     print(f"[1/5] manifest ...")
-    manifest = get_json(MANIFEST)
-    entry = next((v for v in manifest["versions"] if v["id"] == version), None)
+    if version in ("latest", "latest-release"):
+        version = manifest()["latest"]["release"]
+    elif version == "latest-snapshot":
+        version = manifest()["latest"]["snapshot"]
+    entry = next((v for v in manifest()["versions"] if v["id"] == version), None)
     if not entry:
         print("version not found:", version)
+        sug = [v["id"] for v in manifest()["versions"] if version.lower() in v["id"].lower()][:8]
+        if sug:
+            print("maybe:", ", ".join(sug))
+        print("use --list to see available versions (release/snapshot/old)")
         return 2
     data = get_json(entry["url"])
+    if "assetIndex" not in data or "downloads" not in data:
+        print("该版本使用旧版资源结构（约 1.6 以前），本工具暂不支持；请用启动器安装。")
+        return 4
     vid = data["id"]
     vdir = root / "versions" / vid
     (vdir).mkdir(parents=True, exist_ok=True)
@@ -281,7 +317,7 @@ def write_launcher_profiles(root: Path, version: str) -> Path:
     profiles[key] = {
         "name": f"{version} (mcbridge)",
         "type": "custom",
-        "created": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z"),
+        "created": datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%dT%H:%M:%S.000Z"),
         "lastVersionId": version,
         "gameDir": str(root),
     }
@@ -294,7 +330,19 @@ def write_launcher_profiles(root: Path, version: str) -> Path:
 
 def interactive() -> int:
     print("== mcbridge 一键安装到 PCL ==")
-    ver = input("要装的版本 [1.21.1]: ").strip() or "1.21.1"
+    print("\n最近 15 个正式版：")
+    recent = print_versions("release", limit=15)
+    default_ver = manifest()["latest"]["release"]
+    raw = input(f"\n要装的版本 [{default_ver}]（序号 / 版本 ID / list 查看全部）: ").strip()
+    if raw.lower() == "list":
+        print("\n全部版本（前 80 条，含快照/远古）：")
+        allv = print_versions("all", limit=80)
+        raw = input("\n输入版本 ID（或序号）: ").strip()
+        if raw.isdigit() and 1 <= int(raw) <= len(allv):
+            raw = allv[int(raw) - 1]["id"]
+    elif raw.isdigit() and 1 <= int(raw) <= len(recent):
+        raw = recent[int(raw) - 1]["id"]
+    ver = raw or default_ver
     root = detect_pcl_root()
     if root:
         print("检测到 PCL 游戏目录:", root)
@@ -325,6 +373,11 @@ def main() -> int:
     ap.add_argument("--version", default="1.21.1")
     ap.add_argument("--root", default=".minecraft")
     ap.add_argument("--workers", type=int, default=16)
+    ap.add_argument("--list", action="store_true", help="列出可选版本后退出")
+    ap.add_argument("--version-type", default="release",
+                    choices=["release", "snapshot", "old_beta", "old_alpha", "all"],
+                    help="--list 的筛选类型")
+    ap.add_argument("--contains", default=None, help="--list 的版本 ID 过滤")
     if len(sys.argv) == 1:
         return interactive()
     ap.add_argument("--pcl", action="store_true",
@@ -335,6 +388,9 @@ def main() -> int:
                     help="PCL2 的 exe 或安装目录；会读取 PCL/Setup.ini 的 LaunchFolderSelect")
     ap.add_argument("--open", action="store_true", help="装完后打开游戏目录")
     args = ap.parse_args()
+    if args.list:
+        print_versions(args.version_type, args.contains, 200)
+        return 0
 
     pcl_mode = args.pcl or bool(args.pcl_dir) or bool(args.pcl2)
     if args.pcl2:

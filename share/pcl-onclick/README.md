@@ -56,3 +56,20 @@ python tools/make_pcl_onclick_video.py
 - PCL2 **2.13.1.1**（便携版，2026-08 构建）：安装 1.20.4 后版本列表出现该版本，
   截图见 `runs/p137-pcl2-onclick/pcl2-1.20.4.png`；
 - 打包后的 `mcbridge-pcl-setup.exe` 也实测通过（`--pcl2` 指定 PCL2 目录，rc=0）。
+
+## 选择版本（含快照/远古）
+
+```text
+python tools/from_source_install.py --list                    # 正式版（默认）
+python tools/from_source_install.py --list --version-type all # 全部，含快照/远古
+python tools/from_source_install.py --list --contains 1.20    # 按 ID 过滤
+
+python tools/from_source_install.py --version 1.20.1 --pcl
+python tools/from_source_install.py --version latest --pcl    # 最新正式版
+python tools/from_source_install.py --version latest-snapshot --pcl
+```
+
+双击 exe 的交互模式会先打印最近 15 个正式版，可直接输入序号、版本 ID，或输入 `list` 看全部。
+
+范围说明：清单里带 `assetIndex` 的版本都能装（含快照；实测 b1.7.3 安装后 verify OK）。
+远古版本（约 1.6 以前）通常要 Java 8、启动参数也不同，装好后建议用 PCL 启动。
