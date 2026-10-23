@@ -1,0 +1,10 @@
+﻿date: 2026-10-23
+scene: ColdWorldVertex (80 static armor stands, camera locked every tick, time 6000, no clouds/weather)
+off_jar: ImmediatelyFast-port-off.jar sha256 f0f7fa8e47c3b36791598a0dc2336954ca74e3b177fd66ef24fc953fe833a7a8
+on_jar: ImmediatelyFast-ported.jar sha256 fdde23e16ba5790c1d22f75cc8f5df49c8060320d727f00c64f27660ca0e3e2d (byte-identical to the A/B on jar fdde23e1...)
+mixin: fast_buffer_upload.MixinVertexBuffer (method_43442/43443/60829)
+audit: listed=37 inert=2 problems=2 (known: MixinBufferBuilder, MixinFontManager)
+audit_allow_inert: problems=0
+bridge_consistency: problems=0 canonical=19
+ab: off/off control 0.002142 ratio, on/on 0.002077, off/on 0.0000874; fast markers off=0/0, on=60/79, max subdata=76000
+verdict: no GL/mixin errors, no new visual regression; fast path enabled (no performance claim)

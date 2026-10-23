@@ -577,6 +577,7 @@ def test_immediatelyfast_port() -> None:
         base / "injection" / "mixins" / "map_atlas_generation" / "MixinMapRenderer.java",
         base / "injection" / "mixins" / "map_atlas_generation" / "MixinMapRenderer_MapTexture.java",
         base / "feature" / "map_atlas_generation" / "MapAtlasTexture.java",
+        base / "injection" / "mixins" / "fast_buffer_upload" / "MixinVertexBuffer.java",
     ]
     missing = [p.name for p in files if not p.exists()]
     tomb = [p.name for p in files
@@ -667,6 +668,37 @@ def test_immediatelyfast_port() -> None:
                 and (ROOT / "tools" / "widen_stub.py").exists())
     check("IFPORT build widens the package-private MapTexture stub", widen_ok,
           "javac needs class_330$class_331 public in the compile-only stub")
+    vertex_src = (base / "injection" / "mixins" / "fast_buffer_upload"
+                  / "MixinVertexBuffer.java").read_text(encoding="utf-8", errors="replace")
+    vertex_code = code_only(vertex_src)
+    vertex_config = any("MixinVertexBuffer" in (a.get("mixinClass") or "") for a in additions)
+    vertex_rep = any("MixinVertexBuffer" in (r.get("targetClass") or "") for r in reps)
+    vertex_ok = (
+        vertex_config and vertex_rep
+        and "method_60829" in vertex_code
+        and "method_43443" in vertex_code
+        and "usage == 35044" in vertex_code
+        and "GL15C.glBufferSubData" in vertex_code
+        and "fast-buffer-upload subdata" in vertex_code
+    )
+    check("IFPORT re-registers MixinVertexBuffer with the 1.21.1 60829 entry point", vertex_ok,
+          f"config={vertex_config} replacement={vertex_rep}")
+    try:
+        evidence = json.loads((ROOT / "runs" / "p178-vertex-upload" / "result.json").read_text(
+            encoding="utf-8"))
+        diffs = evidence["pixel_diff"]
+        evidence_ok = (
+            evidence.get("passed") is True
+            and evidence["phases"]["on1"]["fast_upload_markers"] > 0
+            and evidence["phases"]["off1"]["fast_upload_markers"] == 0
+            and diffs["off1_on1"]["changed_ratio"] <= diffs["off_off2_control"]["changed_ratio"]
+        )
+        detail = (f"off/on={diffs['off1_on1']['changed_ratio']:.6f} "
+                  f"control={diffs['off_off2_control']['changed_ratio']:.6f}")
+    except Exception as exc:  # noqa: BLE001 - missing/invalid evidence is a failure
+        evidence_ok = False
+        detail = repr(exc)
+    check("IFPORT vertex A/B evidence stays within the off/off control", evidence_ok, detail)
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src

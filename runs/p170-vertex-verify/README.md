@@ -1,5 +1,10 @@
 # p170 — MixinVertexBuffer 截图 A/B（结论：证据不足，暂不启用）
 
+> **p178 已取代本轮的“证据不足”结论**：80 盔甲架压力 + off/off、on/on 对照 + 76k 次
+> `glBufferSubData` 后，VertexBuffer 已启用（`runs/p178-vertex-upload/`）。本文件保留静态
+> A/B 记录。p178 还发现“SetWindowPos(topmost) + 屏幕抓取”仍会偶发抓到浏览器，已改成
+> 按 PID 匹配窗口 + `PrintWindow(PW_RENDERFULLCONTENT)`。
+
 日期：2026-10-23。目标：在决定是否重新登记 `fast_buffer_upload.MixinVertexBuffer` 之前，先做
 “fast_buffer_upload on/off 截图对比”，看 GL 上传路径有没有明显画面破坏。
 

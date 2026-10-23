@@ -1,0 +1,120 @@
+{
+  "scene": "ColdWorldVertex (80 static armor stands, camera locked every tick, time 6000, no clouds/weather)",
+  "off_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\.build\\ImmediatelyFast-port-off.jar",
+  "on_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\.build\\ImmediatelyFast-vertex-on.jar",
+  "phases": {
+    "off1": {
+      "joined": true,
+      "join_only": true,
+      "map_marker": false,
+      "required_maps": [],
+      "required_maps_ok": true,
+      "map_world_rendered": true,
+      "markers": [],
+      "errors": [],
+      "crash": null,
+      "exit_code": 1,
+      "world": "ColdWorldVertex",
+      "username": "IFMapUser",
+      "screenshot": "world.png",
+      "state_screenshots": [],
+      "fast_upload_markers": 0,
+      "fast_upload_max": 0,
+      "bad_lines": [],
+      "runner_rc": 0
+    },
+    "off2": {
+      "joined": true,
+      "join_only": true,
+      "map_marker": false,
+      "required_maps": [],
+      "required_maps_ok": true,
+      "map_world_rendered": true,
+      "markers": [],
+      "errors": [],
+      "crash": null,
+      "exit_code": 1,
+      "world": "ColdWorldVertex",
+      "username": "IFMapUser",
+      "screenshot": "world.png",
+      "state_screenshots": [],
+      "fast_upload_markers": 0,
+      "fast_upload_max": 0,
+      "bad_lines": [],
+      "runner_rc": 0
+    },
+    "on1": {
+      "joined": true,
+      "join_only": true,
+      "map_marker": false,
+      "required_maps": [],
+      "required_maps_ok": true,
+      "map_world_rendered": true,
+      "markers": [],
+      "errors": [],
+      "crash": null,
+      "exit_code": 1,
+      "world": "ColdWorldVertex",
+      "username": "IFMapUser",
+      "screenshot": "world.png",
+      "state_screenshots": [],
+      "fast_upload_markers": 60,
+      "fast_upload_max": 57000,
+      "bad_lines": [],
+      "runner_rc": 0
+    },
+    "on2": {
+      "joined": true,
+      "join_only": true,
+      "map_marker": false,
+      "required_maps": [],
+      "required_maps_ok": true,
+      "map_world_rendered": true,
+      "markers": [],
+      "errors": [],
+      "crash": null,
+      "exit_code": 1,
+      "world": "ColdWorldVertex",
+      "username": "IFMapUser",
+      "screenshot": "world.png",
+      "state_screenshots": [],
+      "fast_upload_markers": 79,
+      "fast_upload_max": 76000,
+      "bad_lines": [],
+      "runner_rc": 0
+    }
+  },
+  "pixel_diff": {
+    "off_off2_control": {
+      "size": [
+        1296,
+        759
+      ],
+      "changed_pixels": 2107,
+      "changed_ratio": 0.002141991574358724,
+      "mean_abs": 0.0749954591540743,
+      "max_channel": 178
+    },
+    "on_on2_stability": {
+      "size": [
+        1296,
+        759
+      ],
+      "changed_pixels": 2043,
+      "changed_ratio": 0.00207692870736349,
+      "mean_abs": 0.07467014481909812,
+      "max_channel": 243
+    },
+    "off1_on1": {
+      "size": [
+        1296,
+        759
+      ],
+      "changed_pixels": 86,
+      "changed_ratio": 8.742822752484588e-05,
+      "mean_abs": 0.003041689032027196,
+      "max_channel": 108
+    }
+  },
+  "passed": true
+}

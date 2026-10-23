@@ -1,0 +1,16 @@
+{
+  "joined": true,
+  "join_only": true,
+  "map_marker": false,
+  "required_maps": [],
+  "required_maps_ok": true,
+  "map_world_rendered": true,
+  "markers": [],
+  "errors": [],
+  "crash": null,
+  "exit_code": 1,
+  "world": "ColdWorldVertex",
+  "username": "IFMapUser",
+  "screenshot": "world.png",
+  "state_screenshots": []
+}

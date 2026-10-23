@@ -90,6 +90,23 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 原因见 `runs/p169-inert-analysis/`）。地图只验证了单人第一人称手持地图，物品展示框/多地图/动态更新
 未测。
 
+## p178 增量验收（2026-10-23）
+
+| 门禁 | 结果 |
+|---|---|
+| `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
+| Java JUnit | ✅ 25/25 |
+| `python tools/test_review_fixes.py` | ✅ **81/81**（新增 2 条 VertexBuffer 规则/证据回归） |
+| `python tools/check_hashes.py` | ✅ **1000/1000**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（81/81） |
+| ImmediatelyFast mixin 审计 | `listed=37 inert=2`；仅剩 `MixinBufferBuilder`、`MixinFontManager`（`runs/p178-vertex-upload/audit.log`） |
+| VertexBuffer 动态上传 fast path | ✅ 80 盔甲架压力、off/off + on/on 对照；on 侧 60/79 条 fast 标记、最高 76k 次 `glBufferSubData`；off/on 像素差 0.0087%（低于 off/off 对照 0.214%）；无 GL/mixin 错误 |
+| 地图 atlas 边界 | ✅ p177：两张地图 tile 0/1 + 物品展示框同屏渲染 |
+| Release 资产 | ✅ `v0.5.3` / `mcbridge-launcher-0.5.3.zip` |
+
+不宣称性能收益：p178 只证明 fast path 执行且无视觉/GL 回归，没有帧率基准；只测了一台 NVIDIA
+机器和一个合成压力场景。
+
 ## 已知风险
 
 - 镜像节点会随时间/地区变化，canary 只是单次采样；

@@ -92,6 +92,14 @@
       "capability": "mixin-config-readd",
       "risk": "1.21.1 removed class_4588.method_1344; the replacement ends the draw slice at method_60803 and no longer needs the unstripped MapTexture entry or the lenni Reflect dummy",
       "evidence": "runs/p175-map-atlas"
+    },
+    {
+      "id": "immediatelyfast/vertex-buffer-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "fast_buffer_upload.MixinVertexBuffer",
+      "capability": "mixin-config-readd",
+      "risk": "converted config dropped VertexBuffer; 1.21.1 targets method_43442/43443/60829 exist and the dynamic upload fast path was stress-tested with 80 armor stands + off/off and on/on controls (no GL errors, no new visual regression)",
+      "evidence": "runs/p178-vertex-upload"
     }
   ],
   "mixinClassReplacements": [
@@ -178,6 +186,15 @@
       "capability": "mixin-class-replacement",
       "risk": "1.21.1 removed class_4588.method_1344 (slice end is method_60803) and the upstream dummy uses the nested lenni Reflect jar; the replacement creates a never-registered 1x1 NativeImageBackedTexture, captures the ctor map id after super() (HEAD is before-super and rejects instance handlers), redirects the texture creation/registration and the four UVs, and cancels upload/close for atlas-backed maps",
       "evidence": "runs/p175-map-atlas"
+    },
+    {
+      "id": "immediatelyfast/vertex-buffer-mixin",
+      "targetClass": "net/raphimc/immediatelyfast/injection/mixins/fast_buffer_upload/MixinVertexBuffer",
+      "replacementClass": "net/raphimc/immediatelyfast/injection/mixins/fast_buffer_upload/MixinVertexBuffer",
+      "alsoEmbed": [],
+      "capability": "mixin-class-replacement",
+      "risk": "1.21.1 added method_60829 for indexed uploads; the replacement redirects all three entry points, keeps static (35044) buffers on glBufferData, reuses larger dynamic buffers via glBufferSubData, and logs fast sub-data uploads. Stress A/B (80 armor stands, 60-79 fast markers, up to 76k sub-data uploads) shows 0.0087% screenshot difference and no GL/mixin errors",
+      "evidence": "runs/p178-vertex-upload"
     }
   ]
 }

@@ -46,6 +46,10 @@ def main() -> int:
     ap.add_argument("--slf4j",
                     default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "org" / "slf4j"
                                / "slf4j-api" / "2.0.9" / "slf4j-api-2.0.9.jar"))
+    ap.add_argument("--lwjgl",
+                    default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "org" / "lwjgl"
+                               / "lwjgl-opengl" / "3.3.3" / "lwjgl-opengl-3.3.3.jar"),
+                    help="GL15C for the vertex-buffer fast upload mixin")
     ap.add_argument("--mod-jar",
                     default=str(ROOT / "work" / "cb" / "out" / "popular" / "immediatelyfast"
                                / "ImmediatelyFast-Fabric-1.5.5+1.20.4+1.21.1.jar"))
@@ -65,7 +69,8 @@ def main() -> int:
     if rc != 0:
         print("could not widen the compile stub", file=sys.stderr)
         return rc
-    cp_jars = [args.widened, args.fastutil, args.mixin, args.joml, args.slf4j, args.mod_jar]
+    cp_jars = [args.widened, args.fastutil, args.mixin, args.joml, args.slf4j,
+               args.lwjgl, args.mod_jar]
     for jar in cp_jars:
         if not Path(jar).exists():
             print(f"missing classpath jar: {jar}", file=sys.stderr)

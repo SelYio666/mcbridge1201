@@ -58,6 +58,8 @@ def main() -> int:
     ap.add_argument("--run-dir", default=str(RUN), help="directory for logs/result/screenshot")
     ap.add_argument("--require-map", action="append", type=int, default=[],
                     help="wait for map-atlas bind markers of this map id (repeatable)")
+    ap.add_argument("--join-only", action="store_true",
+                    help="capture after join + settle without requiring map-atlas markers")
     ap.add_argument("--keep", action="store_true")
     args = ap.parse_args()
 
@@ -100,14 +102,13 @@ def main() -> int:
             for at in (30, 60, 120):
                 name = f"state-{at}.png"
                 if elapsed >= at and name not in state_shots:
-                    _grab_window(str(out_dir / name))
+                    _grab_window(str(out_dir / name), proc.pid)
                     state_shots.append(name)
             if proc.poll() is not None:
                 break
-            if joined and map_marker and required_ok:
+            if joined and (map_marker or args.join_only) and required_ok:
                 time.sleep(args.settle)
-                _grab_window(str(out_dir / "world.png"))
-                shot_done = True
+                shot_done = bool(_grab_window(str(out_dir / "world.png"), proc.pid))
                 break
             time.sleep(1)
     finally:
@@ -133,9 +134,11 @@ def main() -> int:
     crash_lines = [line for line in text.splitlines()
                    if "Mixin apply for mod immediatelyfast failed" in line
                    or "java.lang.ClassCastException" in line]
-    ok = bool(joined and map_marker and required_ok and shot_done and not errors and not crash_lines)
+    ok = bool(joined and (map_marker or args.join_only) and required_ok and shot_done
+              and not errors and not crash_lines)
     result = {
         "joined": joined,
+        "join_only": args.join_only,
         "map_marker": map_marker,
         "required_maps": required,
         "required_maps_ok": required_ok,

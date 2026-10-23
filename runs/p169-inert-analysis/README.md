@@ -22,6 +22,11 @@ mixin 明确 `@Inject(method="method_27541")`，1.21.1 索引里没有该方法�
 
 ## 3) `fast_buffer_upload/MixinVertexBuffer` — 目标在，但会改 GL 上传路径
 
+> **2026-10-23 p178 已启用**：1.21.1 的 `method_43442` / `method_43443` / 新增
+> `method_60829` 都已接上；80 盔甲架压力场景、off/off 与 on/on 对照，on 侧最高 76k 次
+> `glBufferSubData`、无 GL/mixin 错误，off/on 截图差 0.0087%（低于 off/off 对照 0.214%）。
+> 见 `runs/p178-vertex-upload/`。下面保留当时“未压测前保持 inert”的分析。
+
 ```text
 RenderSystem.glBufferData(int, ByteBuffer, int) 存在
 class_291.method_43442 / method_43443 存在
@@ -61,10 +66,12 @@ p172 实际尝试过：`MapAtlasTexture` 端口写好了（Identifier 工厂/Nat
 ## 结论
 
 - 已救活 3 个（p166–p168），inert 7 → 4；
-- p175 救活 `MixinMapRenderer` + `MixinMapRenderer_MapTexture`，当前 inert **3**（`listed=36`）：
-  `MixinBufferBuilder`、`MixinVertexBuffer`、`MixinFontManager`；
-- 剩余 3 个保持 inert，并在文档写明原因；不为了“审计数字好看”而假绿；
-- 下一步优先级：`MixinVertexBuffer`（需顶点上传压测）> 其余两个。
+- p175 救活 `MixinMapRenderer` + `MixinMapRenderer_MapTexture`，当前 inert **2**（`listed=37`）：
+  `MixinBufferBuilder`、`MixinFontManager`；
+- p178 在压力/对照证据下启用 `MixinVertexBuffer`（inert 3 → 2）；
+- 剩余 2 个保持 inert，并在文档写明原因；不为了“审计数字好看”而假绿；
+- 下一步优先级：`MixinBufferBuilder` 的 `field_1555`/`ByteBufferBuilder` 语义，以及
+  `MixinFontManager` 的 1.21.1 字体管理入口（两者都需要实际移植，不是只加 config）。
 
 ## 证据
 

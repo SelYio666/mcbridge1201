@@ -8,13 +8,18 @@ claim that these paths work.
 - ImmediatelyFast 1.21.1 batching port is **verified** (HUD/items/overlay, per-lighting, Iris
   1.8.1/1.8.14 + shader pack r5.3, dedicated-server multiplayer, 95s soak, A/B checks,
   SimpleImmediate fallback): see `runs/p134`-`p150`.
-- The port jar still has **3 inert mixins**; ChatHud, MinecraftClient, BufferRenderer were
-  re-registered in `runs/p166`-`p168`, and the two map mixins are now live (`runs/p175`). The
-  remaining three are deliberately inert and documented in `runs/p169-inert-analysis/`:
+- The port jar still has **2 inert mixins**; ChatHud, MinecraftClient, BufferRenderer were
+  re-registered in `runs/p166`-`p168`, the two map mixins are live (`runs/p175`), and
+  `MixinVertexBuffer` was enabled in `runs/p178`. The remaining two are deliberately inert and
+  documented in `runs/p169-inert-analysis/`:
   - `MixinBufferBuilder`: shadows `field_1555`, gone from the 1.21.1 BufferBuilder;
-  - `MixinFontManager`: injects `method_27541`, absent from the 1.21.1 index;
-  - `MixinVertexBuffer`: targets exist, but swaps `glBufferData` for `glBufferSubData`; needs a
-    vertex-upload stress/visual test before enabling.
+  - `MixinFontManager`: injects `method_27541`, absent from the 1.21.1 index.
+- Dynamic vertex-buffer fast upload is **enabled** (`runs/p178-vertex-upload/`): the 1.21.1 mixin
+  redirects `method_43442`, `method_43443` and the new `method_60829`, keeps static (35044)
+  buffers on `glBufferData`, and reuses larger dynamic buffers with `glBufferSubData`. An
+  80-armor-stand scene (camera locked, 60/79 fast markers, up to 76k sub-data uploads) shows no
+  GL/mixin errors and an off/on screenshot difference of 0.0087%, below the off/off control
+  (0.214%). No performance gain is claimed; only one GPU and one synthetic scene were tested.
 - Map atlas generation is **restored** (`runs/p175-map-atlas/`): `MixinMapRenderer` reads
   `class_9209.comp_2315()`, `MixinMapRenderer_MapTexture` uses the 1.21.1 `method_60803` slice and
   a 1x1 never-registered dummy instead of the lenni allocate, and `MapAtlasTexture` is embedded.
@@ -22,8 +27,7 @@ claim that these paths work.
   rendered the map, logged `map-atlas bind … immediatelyfast:map_atlas/0`, and produced no
   ClassCastException/crash. `runs/p177-map-atlas-edge/` extends this to two maps (tile 0/1,
   packed 0 and 256) and an item frame with map 2, rendered in the same screenshot. Live map
-  updates, atlas overflow and the world-exit cleanup path are still untested.
-- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
+  updates, atlas overflow and the world-exit cleanup path are still untested.- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
   (`runs/p159`, `p161`, `p163`, `p164`); real mrpack with files+overrides verified (`p160`).
 - Performance: no reproducible gain; 80-armor-stand interleaved runs are ~13% slower with
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.
