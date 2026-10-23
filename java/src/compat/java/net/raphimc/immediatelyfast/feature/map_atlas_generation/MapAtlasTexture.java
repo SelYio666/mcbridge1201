@@ -21,6 +21,7 @@ public class MapAtlasTexture implements AutoCloseable {
     private final class_2960 identifier;
     private final class_1043 texture;
     private int mapCount;
+    private boolean closed;
 
     public MapAtlasTexture(int id) {
         this.id = id;
@@ -55,8 +56,22 @@ public class MapAtlasTexture implements AutoCloseable {
         return this.texture;
     }
 
+    /**
+     * A map texture can still be referenced by a HeldItemRenderer frame that was already queued
+     * when the world exit clears the atlas. {@code updateAtlasTexture} must not write into the
+     * closed NativeImage (1.21.1 throws "Image is not allocated").
+     */
+    public boolean isClosed() {
+        return this.closed;
+    }
+
     @Override
     public void close() {
+        if (this.closed) {
+            return;
+        }
+        this.closed = true;
+        System.out.println("[mcbridge-port] map-atlas close id=" + this.id);
         this.texture.close();
         this.textureManager().method_4615(this.identifier);
     }

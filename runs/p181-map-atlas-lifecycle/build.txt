@@ -1,0 +1,10 @@
+﻿date: 2026-10-23
+world: ColdWorldMapUpdate
+jar_sha256: 7141abdc30496fbfb97fcc028be24f73a9fbdc2c484aca1aed650cc4484784f1
+map: map_1.dat locked=0, held map 1; datapack teleports the player 8 blocks south/back
+update log: map-atlas update count=1..2 (second atlas upload)
+normal exit: client probe calls class_310.method_1592 (main-loop stop), log Stopping! -> keep-dummy -> close id=0 -> clear atlases=1
+fixed: MapAtlasTexture.closed/isClosed guard; mid-frame disconnect after close would throw Image is not allocated (crash-before-fix-map.txt)
+mid-frame-disconnect HUD NPE (crash-midframe-hud.txt) is a probe artifact; the normal stop does not trigger it
+audit: listed=37 inert=2 (p180 dead leftovers); bridge problems=0
+final: exit_code=0, crash=null, errors=[]

@@ -55,6 +55,8 @@ public abstract class MixinMapRenderer_MapTexture {
     @Unique
     private static class_1043 immediatelyFast$dummyTexture;
     @Unique
+    private static long immediatelyFast$atlasUpdates;
+    @Unique
     private int immediatelyFast$mapId;
     @Unique
     private int immediatelyFast$atlasX;
@@ -123,6 +125,13 @@ public abstract class MixinMapRenderer_MapTexture {
     private void updateAtlasTexture(CallbackInfo ci) {
         if (this.immediatelyFast$atlasTexture != null) {
             ci.cancel();
+            if (this.immediatelyFast$atlasTexture.isClosed()) {
+                // The world is exiting and the atlas was already closed; a map frame queued just
+                // before the disconnect may still be rendered once. Do not write into the freed
+                // NativeImage (1.21.1: "Image is not allocated").
+                System.out.println("[mcbridge-port] map-atlas skip-closed map=" + this.immediatelyFast$mapId);
+                return;
+            }
             class_1043 atlasTexture = this.immediatelyFast$atlasTexture.getTexture();
             class_1011 atlasImage = atlasTexture.method_4525();
             if (atlasImage == null) {
@@ -138,6 +147,11 @@ public abstract class MixinMapRenderer_MapTexture {
             atlasTexture.method_23207();
             atlasImage.method_4312(0, this.immediatelyFast$atlasX, this.immediatelyFast$atlasY,
                     this.immediatelyFast$atlasX, this.immediatelyFast$atlasY, 128, 128, false, false);
+            immediatelyFast$atlasUpdates++;
+            if (immediatelyFast$atlasUpdates <= 3 || immediatelyFast$atlasUpdates % 1000 == 0) {
+                System.out.println("[mcbridge-port] map-atlas update count="
+                        + immediatelyFast$atlasUpdates + " map=" + this.immediatelyFast$mapId);
+            }
         }
     }
 
@@ -171,6 +185,7 @@ public abstract class MixinMapRenderer_MapTexture {
     @Inject(method = "close", at = @At("HEAD"), cancellable = true)
     private void dontCloseDummyTexture(CallbackInfo ci) {
         if (this.immediatelyFast$atlasTexture != null) {
+            System.out.println("[mcbridge-port] map-atlas keep-dummy map=" + this.immediatelyFast$mapId);
             ci.cancel();
         }
     }

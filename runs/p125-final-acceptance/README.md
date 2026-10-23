@@ -118,6 +118,18 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | 端口 mixin 审计 | `listed=37 inert=2 problems=0`；两个 inert 在官方 jar 中不存在（1.20.4 遗留死代码） |
 | Release | 无新 release；v0.5.3 仍是当前发布（p180 只有文档/证据/回归） |
 
+## p181 增量验收（2026-10-23）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **83 项**（本次 **82/82** + `/api/jvm` 网络超时 skip；新增 1 条 atlas closed 守卫回归） |
+| `python tools/check_hashes.py` | ✅ **1022/1022** |
+| `python tools/verify_evidence.py` | ✅ passed（接受 `/api/jvm` skip） |
+| 地图动态更新 | ✅ `locked=0` held map，数据包移动玩家；`map-atlas update count=2`，截图显示地形覆盖初始图案 |
+| 正常退出清理 | ✅ client stop → `Stopping!` → `keep-dummy` → `close id=0` → `clear atlases=1`；exit 0、crash=null |
+| 退出崩溃修复 | ✅ 修复前 `Image is not allocated`（`crash-before-fix-map.txt`）；`MapAtlasTexture.isClosed` 守卫后不再崩 |
+| Release 资产 | ✅ `v0.5.4` / `mcbridge-launcher-0.5.4.zip` |
+
 ## 已知风险
 
 - 镜像节点会随时间/地区变化，canary 只是单次采样；

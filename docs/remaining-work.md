@@ -29,8 +29,11 @@ claim that these paths work.
   A real singleplayer run holding `filled_map` (map id 1, `components:{"minecraft:map_id":1}`)
   rendered the map, logged `map-atlas bind … immediatelyfast:map_atlas/0`, and produced no
   ClassCastException/crash. `runs/p177-map-atlas-edge/` extends this to two maps (tile 0/1,
-  packed 0 and 256) and an item frame with map 2, rendered in the same screenshot. Live map
-  updates, atlas overflow and the world-exit cleanup path are still untested.- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
+  packed 0 and 256) and an item frame with map 2, rendered in the same screenshot.
+  `runs/p181-map-atlas-lifecycle/` adds a `locked=0` held map that gets a second atlas upload
+  (terrain replaces the pattern) and a normal client stop (`keep-dummy -> close -> clear
+  atlases=1`, exit 0), and fixes a real crash where a queued map frame wrote into the closed
+  NativeImage after the atlas was released. Atlas overflow (1024 maps) is still untested.- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
   (`runs/p159`, `p161`, `p163`, `p164`); real mrpack with files+overrides verified (`p160`).
 - Performance: no reproducible gain; 80-armor-stand interleaved runs are ~13% slower with
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.

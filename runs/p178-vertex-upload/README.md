@@ -81,9 +81,10 @@ python runs/p178-vertex-upload/run_ab.py
 
 - `.build/ImmediatelyFast-port-off.jar`：主规则**去掉**两条
   `immediatelyfast/vertex-buffer-*` 记录后的补丁 jar（p178 前状态，sha256 `f0f7fa8e…`）；
-- `.build/ImmediatelyFast-vertex-on.jar`：含 VertexBuffer mixin 的 jar；它与当前主规则产出的
-  `.build/ImmediatelyFast-ported.jar` **字节一致**（sha256 `fdde23e1…`），本轮 A/B 用前者跑，
-  最终产物用后者。
+- `.build/ImmediatelyFast-vertex-on.jar`：含 VertexBuffer mixin 的 jar；p178 当时的 A/B 用它跑
+  （sha256 `fdde23e1…`）。p181 之后主规则产物加了 map 生命周期证据标记和 closed 守卫，当前
+  `ImmediatelyFast-ported.jar` 是 `7141abdc…`，但 `fast_buffer_upload` 逻辑未变，p178 的 A/B
+  结论仍适用。
 
 补丁命令与 p175 README 相同；把 off 规则 JSON 的 `mixinConfigAdditions` /
 `mixinClassReplacements` 中 `immediatelyfast/vertex-buffer-config` 和

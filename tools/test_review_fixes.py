@@ -708,6 +708,12 @@ def test_immediatelyfast_port() -> None:
     )
     check("IFPORT leaves the upstream-removed BufferBuilder/FontManager mixins inert",
           dead_ok, str([e for e in registered if "Mixin" in e]))
+    closed_ok = ("isClosed()" in atlas_src
+                 and "boolean closed" in atlas_src
+                 and "atlasTexture.isClosed()" in texture_src
+                 and "skip-closed" in texture_src)
+    check("IFPORT map atlas skips a closed image during world exit", closed_ok,
+          "MapAtlasTexture.isClosed + MapTexture updateAtlasTexture guard")
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src

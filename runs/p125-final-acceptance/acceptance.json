@@ -73,6 +73,18 @@
     "regression": "the main rule must not register the two upstream-removed mixins",
     "release": "none (v0.5.3 remains current)"
   },
+  "p181": {
+    "date": "2026-10-23",
+    "jar_sha256": "7141abdc30496fbfb97fcc028be24f73a9fbdc2c484aca1aed650cc4484784f1",
+    "review_fixes": "83 checks total; 82/82 executed passed, /api/jvm skipped on network timeout",
+    "hashes": "1022/1022",
+    "verify_evidence": "passed",
+    "map_update": "locked=0 held map, datapack teleports the player; map-atlas update count=1..2; screenshot shows terrain replacing the initial pattern",
+    "map_exit": "normal client stop: Stopping! -> keep-dummy -> close id=0 -> clear atlases=1; exit 0, crash=null",
+    "map_exit_crash_fixed": "closed NativeImage write after atlas release (Image is not allocated) fixed with MapAtlasTexture.isClosed + updateAtlasTexture skip-closed guard; crash-before-fix-map.txt retained",
+    "release": "v0.5.4",
+    "release_asset": "mcbridge-launcher-0.5.4.zip"
+  },
   "verified": [
     "Fabric 1.21.1 full cold install (3911/3911 assets, 933.6 MB, 0 failures) + singleplayer world (runs/p118)",
     "NeoForge 21.1.264 install + main menu (runs/p116)",
@@ -82,6 +94,7 @@
     "ImmediatelyFast map atlas edge: two maps at tiles 0/1 plus an item-frame map in the same screenshot (runs/p177)",
     "ImmediatelyFast MixinVertexBuffer enabled: 1.21.1 method_60829 plus 43442/43443 redirected, 80-armor-stand stress with off/off and on/on controls, no GL/mixin errors and no visual regression beyond the control (runs/p178)",
     "ImmediatelyFast port closure: the official 1.21.1 jar has no MixinBufferBuilder/MixinFontManager; the port's two inert classes are 1.20.4 leftovers, and a rule-level regression prevents re-registering them (runs/p180)",
+    "ImmediatelyFast map atlas lifecycle: live second upload after player movement, normal client-stop cleanup (keep-dummy/close/clear), and a real closed-NativeImage crash fixed with a closed guard (runs/p181)",
     "NeoForge 21.1.264 + AppleSkin / Farmer's Delight / Jade in-world (runs/p127/p128/p130)",
     "Forge 1.20.1-47.4.28 + AppleSkin / Farmer's Delight in-world (runs/p129/p131)",
     "Fabric dedicated server + launcher client join via quickPlayMultiplayer (runs/p132)",

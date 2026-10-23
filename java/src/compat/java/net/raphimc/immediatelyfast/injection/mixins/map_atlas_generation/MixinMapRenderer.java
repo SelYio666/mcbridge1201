@@ -35,11 +35,13 @@ public abstract class MixinMapRenderer implements IMapRenderer {
 
     @Inject(method = "method_1771", at = @At("RETURN"))
     private void clearMapAtlasTextures(CallbackInfo ci) {
+        int atlases = this.immediatelyFast$mapAtlasTextures.size();
         for (MapAtlasTexture texture : this.immediatelyFast$mapAtlasTextures.values()) {
             texture.close();
         }
         this.immediatelyFast$mapAtlasTextures.clear();
         this.immediatelyFast$mapIdToAtlasMapping.clear();
+        System.out.println("[mcbridge-port] map-atlas clear atlases=" + atlases);
     }
 
     @Inject(method = "method_32601", at = @At("HEAD"))

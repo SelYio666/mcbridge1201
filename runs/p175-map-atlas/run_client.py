@@ -39,6 +39,8 @@ BAD_MARKERS = [
     "java.lang.NoSuchMethodError",
     "Game crashed",
     "Uncaught exception in thread",
+    "Unreported exception thrown!",
+    "Image is not allocated",
 ]
 
 
@@ -60,6 +62,10 @@ def main() -> int:
                     help="wait for map-atlas bind markers of this map id (repeatable)")
     ap.add_argument("--join-only", action="store_true",
                     help="capture after join + settle without requiring map-atlas markers")
+    ap.add_argument("--require-log", action="append", default=[],
+                    help="wait for this log substring before the screenshot (repeatable)")
+    ap.add_argument("--exit-log", default="",
+                    help="after the screenshot, wait for this log substring (normal world exit)")
     ap.add_argument("--keep", action="store_true")
     args = ap.parse_args()
 
@@ -84,6 +90,8 @@ def main() -> int:
     started = time.time()
     shot_done = False
     required_ok = not required
+    logs_ok = not args.require_log
+    exit_seen = False
     state_shots: list[str] = []
     try:
         while time.time() < deadline:
@@ -96,6 +104,7 @@ def main() -> int:
             required_ok = all(
                 any(f"map-atlas bind map=map/{mid} " in line for line in marker_lines)
                 for mid in required) if required else True
+            logs_ok = all(marker in text for marker in args.require_log)
             errors = [line for line in text.splitlines()
                       if any(marker in line for marker in BAD_MARKERS)]
             elapsed = int(time.time() - started)
@@ -106,9 +115,19 @@ def main() -> int:
                     state_shots.append(name)
             if proc.poll() is not None:
                 break
-            if joined and (map_marker or args.join_only) and required_ok:
+            if joined and (map_marker or args.join_only) and required_ok and logs_ok:
                 time.sleep(args.settle)
                 shot_done = bool(_grab_window(str(out_dir / "world.png"), proc.pid))
+                if args.exit_log:
+                    exit_deadline = time.time() + 90
+                    while time.time() < exit_deadline:
+                        if args.exit_log in read_text(log):
+                            exit_seen = True
+                            break
+                        if proc.poll() is not None:
+                            break
+                        time.sleep(0.5)
+                    time.sleep(2)
                 break
             time.sleep(1)
     finally:
@@ -133,12 +152,20 @@ def main() -> int:
     # A Mixin apply error appears only in the rendered stack trace; scan the whole text too.
     crash_lines = [line for line in text.splitlines()
                    if "Mixin apply for mod immediatelyfast failed" in line
-                   or "java.lang.ClassCastException" in line]
-    ok = bool(joined and (map_marker or args.join_only) and required_ok and shot_done
+                   or "java.lang.ClassCastException" in line
+                   or "Image is not allocated" in line
+                   or "Unreported exception thrown!" in line]
+    ok = bool(joined and (map_marker or args.join_only) and required_ok and logs_ok and shot_done
+              and (exit_seen if args.exit_log else True)
+              and not crash
               and not errors and not crash_lines)
     result = {
         "joined": joined,
         "join_only": args.join_only,
+        "required_logs": args.require_log,
+        "logs_ok": logs_ok,
+        "exit_log": args.exit_log,
+        "exit_seen": exit_seen,
         "map_marker": map_marker,
         "required_maps": required,
         "required_maps_ok": required_ok,

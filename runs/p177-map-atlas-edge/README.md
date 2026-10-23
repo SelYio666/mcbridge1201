@@ -62,8 +62,9 @@ python runs/p177-map-atlas-edge/run_client.py --timeout 180
 
 ## 仍未验证
 
-- 地图**动态更新**（服务端改 colors 后客户端刷新）和地图标记；
+> p181 已补**动态更新**与**正常退出清理**（`runs/p181-map-atlas-lifecycle/`）；剩余未测项如下。
+
 - atlas 满 1024 张后的换 atlas；
-- 世界正常退出时的 `method_1771` atlas 清理 / `MapTexture.close` 取消路径（运行器截图后
-  terminate）；本轮只覆盖“多 tile + 展示框”；
+- 世界正常退出时的 `method_1771` atlas 清理 / `MapTexture.close` 取消路径（p181 已覆盖正常
+  client stop，但 ESC→Save and Quit 的鼠标路径未测）；
 - 多个展示框/旋转角度/不同面朝向未测。

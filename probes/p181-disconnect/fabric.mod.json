@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "p181disconnect",
+  "version": "1.0.0",
+  "name": "p181 disconnect probe",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["p181probe.DisconnectProbe"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "1.21.1"
+  }
+}

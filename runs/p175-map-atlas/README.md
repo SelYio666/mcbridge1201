@@ -119,8 +119,8 @@ Pos 用 p139 同一个出生点）；`run_client.py` 用 `--quickPlaySingleplaye
 ## 诚实的限制
 
 - p175 只验证了**单人 integrated server + 第一人称手持一张地图**；p177 已补两张地图
-  （atlas tile 0/1）与物品展示框同屏渲染（`runs/p177-map-atlas-edge/`）；仍未验证地图动态
-  更新/标记、atlas 满 1024 张后的换 atlas；
+  （atlas tile 0/1）与物品展示框同屏渲染（`runs/p177-map-atlas-edge/`）；p181 已补动态更新
+  与正常退出清理（`runs/p181-map-atlas-lifecycle/`）；atlas 满 1024 张后的换 atlas 仍未测；
 - 运行器截图后直接 terminate，因此 `method_1771` 的 atlas 清理/`MapTexture.close` 取消路径
   没有被世界正常退出流程覆盖（mixin 已 apply，但没有退出时日志）；
 - 地图内容是我们写入的固定图案，只证明渲染/纹理路径，不证明地图数据同步的完整玩法；
