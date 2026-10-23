@@ -107,6 +107,17 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 不宣称性能收益：p178 只证明 fast path 执行且无视觉/GL 回归，没有帧率基准；只测了一台 NVIDIA
 机器和一个合成压力场景。
 
+## p180 增量验收（2026-10-23）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ **82/82**（新增 1 条“不得误登记死 mixin”回归） |
+| `python tools/check_hashes.py` | ✅ **1005/1005** |
+| `python tools/verify_evidence.py` | ✅ passed（82/82） |
+| 官方 1.21.1 mixin 审计 | `listed=37 inert=0 problems=0`（`runs/p180-inert-closure/audit-native.log`） |
+| 端口 mixin 审计 | `listed=37 inert=2 problems=0`；两个 inert 在官方 jar 中不存在（1.20.4 遗留死代码） |
+| Release | 无新 release；v0.5.3 仍是当前发布（p180 只有文档/证据/回归） |
+
 ## 已知风险
 
 - 镜像节点会随时间/地区变化，canary 只是单次采样；

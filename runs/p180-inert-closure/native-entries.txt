@@ -1,0 +1,4 @@
+﻿net/raphimc/immediatelyfast/injection/mixins/fast_buffer_upload/MixinVertexBuffer.class
+net/raphimc/immediatelyfast/injection/mixins/fast_text_lookup/MixinTextRenderer_Drawer.class
+net/raphimc/immediatelyfast/injection/mixins/map_atlas_generation/MixinMapRenderer.class
+net/raphimc/immediatelyfast/injection/mixins/map_atlas_generation/MixinMapRenderer_MapTexture.class

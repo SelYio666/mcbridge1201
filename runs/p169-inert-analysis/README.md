@@ -69,9 +69,11 @@ p172 实际尝试过：`MapAtlasTexture` 端口写好了（Identifier 工厂/Nat
 - p175 救活 `MixinMapRenderer` + `MixinMapRenderer_MapTexture`，当前 inert **2**（`listed=37`）：
   `MixinBufferBuilder`、`MixinFontManager`；
 - p178 在压力/对照证据下启用 `MixinVertexBuffer`（inert 3 → 2）；
-- 剩余 2 个保持 inert，并在文档写明原因；不为了“审计数字好看”而假绿；
-- 下一步优先级：`MixinBufferBuilder` 的 `field_1555`/`ByteBufferBuilder` 语义，以及
-  `MixinFontManager` 的 1.21.1 字体管理入口（两者都需要实际移植，不是只加 config）。
+- p180 用官方 1.21.1 jar 对照确认：剩余 2 个类在官方 jar 里**根本不存在**（native
+  `listed=37 inert=0`），是 1.20.4 多版本 jar 的遗留死代码，不是待移植功能；保持 inert 是
+  正确状态，不为了“审计 0”去删 class 或登记死 mixin；
+- 下一步不再是这两个类，而是其它开放项（地图 atlas 动态更新/退出清理、Shulker 网格预览、
+  TrashSlot UI 输入等）。
 
 ## 证据
 

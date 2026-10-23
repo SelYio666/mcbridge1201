@@ -42,6 +42,7 @@
 | ImmediatelyFast 地图 atlas 恢复：两个 map mixin 按 1.21.1 重写，单人世界真实手持 filled_map 渲染（atlas 绑定 + UV 重定向） | `runs/p175-map-atlas/`（`world.png`、`map-atlas bind … immediatelyfast:map_atlas/0`、无 crash；p172 的失败点保留） |
 | ImmediatelyFast 地图 atlas 边界：两张地图分别落到 tile 0/1（packed 0 / 256），并与物品展示框地图同屏渲染 | `runs/p177-map-atlas-edge/`（`world.png`、两条 bind 日志、无 ClassCastException/crash） |
 | ImmediatelyFast `MixinVertexBuffer` 动态上传 fast path：80 盔甲架压力，off/off、on/on 对照；60/79 条 fast 标记、最高 76k 次 `glBufferSubData`；off/on 像素差 0.0087% | `runs/p178-vertex-upload/`（`on1/world.png`、`off1/world.png`、`compare-*.png`、`result.json`、无 GL/mixin 错误） |
+| ImmediatelyFast 端口收尾：官方 1.21.1 jar 没有 `MixinBufferBuilder`/`MixinFontManager`，端口剩余 2 个 inert 是 1.20.4 多版本 jar 的遗留死代码，不是待移植功能 | `runs/p180-inert-closure/`（native `listed=37 inert=0` vs 端口 `listed=37 inert=2`；规则级防误登记回归） |
 | Forge 1.20.1-47.4.28 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p159-forge-server/` |
 | mrpack 含真实 files（HTTP 下载 + SHA-1 校验 + overrides） | `runs/p160-mrpack/` |
 | NeoForge 21.1.264 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p161-neoforge-server/` |
@@ -91,8 +92,8 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 1000 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165/p178）；mixin 审计 inert=2（`listed=37`；p175 恢复 map mixin、p177 补多地图/展示框、p178 启用 VertexBuffer，剩余 `MixinBufferBuilder`、`MixinFontManager`，原因见 `runs/p169-inert-analysis/`）；
-- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归（`tools/test_review_fixes.py`，81/81；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
+- 单测 25/25；`verify_evidence` passed；哈希 1005 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165/p178）；mixin 审计 inert=2（`listed=37`；p175 恢复 map mixin、p177 补多地图/展示框、p178 启用 VertexBuffer；剩余 `MixinBufferBuilder`/`MixinFontManager` 是官方 1.21.1 已删除的 1.20.4 遗留类，见 `runs/p180-inert-closure/`）；
+- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归 + 1 项死 mixin 防误登记回归（`tools/test_review_fixes.py`，82/82；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
 - GitHub Actions：push 触发**已验证可用**（`e9ca30c` run `39796030299`；`742d133` run `39799555425`，check-run `build` success，含 API 推送）；此前“push 无 run”是 GitHub Actions `degraded_performance`（22:18 UTC）导致排队，重推 workflow 文件后索引恢复。若再遇无 run，先看 [githubstatus.com](https://www.githubstatus.com)，再重推 workflow 文件刷新索引。

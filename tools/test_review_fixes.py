@@ -699,6 +699,15 @@ def test_immediatelyfast_port() -> None:
         evidence_ok = False
         detail = repr(exc)
     check("IFPORT vertex A/B evidence stays within the off/off control", evidence_ok, detail)
+    registered = ([a.get("mixinClass") or "" for a in additions]
+                  + [r.get("targetClass") or "" for r in reps])
+    dead_ok = not any(
+        name in entry
+        for entry in registered
+        for name in ("MixinBufferBuilder", "MixinFontManager")
+    )
+    check("IFPORT leaves the upstream-removed BufferBuilder/FontManager mixins inert",
+          dead_ok, str([e for e in registered if "Mixin" in e]))
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src

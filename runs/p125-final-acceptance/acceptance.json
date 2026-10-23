@@ -63,6 +63,16 @@
     "release": "v0.5.3",
     "release_asset": "mcbridge-launcher-0.5.3.zip"
   },
+  "p180": {
+    "date": "2026-10-23",
+    "review_fixes": "82/82",
+    "hashes": "1005/1005",
+    "verify_evidence": "passed",
+    "native_audit": "listed=37 inert=0 problems=0",
+    "port_audit": "listed=37 inert=2 problems=0; MixinBufferBuilder/MixinFontManager are absent from the official 1.21.1 jar (1.20.4 leftovers)",
+    "regression": "the main rule must not register the two upstream-removed mixins",
+    "release": "none (v0.5.3 remains current)"
+  },
   "verified": [
     "Fabric 1.21.1 full cold install (3911/3911 assets, 933.6 MB, 0 failures) + singleplayer world (runs/p118)",
     "NeoForge 21.1.264 install + main menu (runs/p116)",
@@ -71,6 +81,7 @@
     "ImmediatelyFast map atlas restored: both map mixins re-registered on 1.21.1, MapAtlasTexture embedded, held filled_map rendered through immediatelyfast:map_atlas/0 with no ClassCastException/crash (runs/p175)",
     "ImmediatelyFast map atlas edge: two maps at tiles 0/1 plus an item-frame map in the same screenshot (runs/p177)",
     "ImmediatelyFast MixinVertexBuffer enabled: 1.21.1 method_60829 plus 43442/43443 redirected, 80-armor-stand stress with off/off and on/on controls, no GL/mixin errors and no visual regression beyond the control (runs/p178)",
+    "ImmediatelyFast port closure: the official 1.21.1 jar has no MixinBufferBuilder/MixinFontManager; the port's two inert classes are 1.20.4 leftovers, and a rule-level regression prevents re-registering them (runs/p180)",
     "NeoForge 21.1.264 + AppleSkin / Farmer's Delight / Jade in-world (runs/p127/p128/p130)",
     "Forge 1.20.1-47.4.28 + AppleSkin / Farmer's Delight in-world (runs/p129/p131)",
     "Fabric dedicated server + launcher client join via quickPlayMultiplayer (runs/p132)",

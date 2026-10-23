@@ -8,12 +8,15 @@ claim that these paths work.
 - ImmediatelyFast 1.21.1 batching port is **verified** (HUD/items/overlay, per-lighting, Iris
   1.8.1/1.8.14 + shader pack r5.3, dedicated-server multiplayer, 95s soak, A/B checks,
   SimpleImmediate fallback): see `runs/p134`-`p150`.
-- The port jar still has **2 inert mixins**; ChatHud, MinecraftClient, BufferRenderer were
-  re-registered in `runs/p166`-`p168`, the two map mixins are live (`runs/p175`), and
-  `MixinVertexBuffer` was enabled in `runs/p178`. The remaining two are deliberately inert and
-  documented in `runs/p169-inert-analysis/`:
-  - `MixinBufferBuilder`: shadows `field_1555`, gone from the 1.21.1 BufferBuilder;
-  - `MixinFontManager`: injects `method_27541`, absent from the 1.21.1 index.
+- The port jar still reports **2 inert classes**, but they are **1.20.4-only leftovers**, not pending
+  features. The official 1.21.1 jar has no `core/MixinBufferBuilder` or
+  `fast_text_lookup/MixinFontManager` class at all (native audit `listed=37 inert=0`); their
+  1.21.1 targets are gone (`field_1555`, `field_24256`/`method_27541`/`method_27542`). They stay
+  inert rather than being registered as fake passes; see `runs/p180-inert-closure/` and
+  `runs/p169-inert-analysis/`.
+- The previously re-registered ChatHud/MinecraftClient/BufferRenderer, map atlas and VertexBuffer
+  mixins are active; the port's HUD batching uses the verified 1.20.4 architecture, not the
+  native 1.21.1 layered-drawer set.
 - Dynamic vertex-buffer fast upload is **enabled** (`runs/p178-vertex-upload/`): the 1.21.1 mixin
   redirects `method_43442`, `method_43443` and the new `method_60829`, keeps static (35044)
   buffers on `glBufferData`, and reuses larger dynamic buffers with `glBufferSubData`. An
