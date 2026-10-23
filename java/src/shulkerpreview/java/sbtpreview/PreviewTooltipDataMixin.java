@@ -11,12 +11,14 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
+import mcbridgepreview.ComponentPreviewProvider;
 
 import net.minecraft.class_1799;
 import net.minecraft.class_2487;
 import net.minecraft.class_2499;
 import net.minecraft.class_310;
 import net.minecraft.class_5632;
+import net.minecraft.class_9288;
 import top.mcbridge1201.bridge.ShulkerBoxNbtBridge;
 
 /**
@@ -94,29 +96,24 @@ public class PreviewTooltipDataMixin {
         PreviewContext context = mc.field_1724 == null
                 ? PreviewContext.of(stack)
                 : PreviewContext.of(stack, mc.field_1724);
-        boolean show = provider.shouldDisplay(context);
-        int size = provider.getInventory(context).size();
-        int nonAir = 0;
-        for (var entry : provider.getInventory(context)) {
-            if (!entry.method_7960()) {
-                nonAir++;
-            }
-        }
-        boolean showNoOwner = provider.shouldDisplay(PreviewContext.of(stack));
-        System.out.println("SBT_PREVIEW provider=" + provider.getClass().getSimpleName()
-                + " show=" + show + " showNoOwner=" + showNoOwner + " inv=" + size
-                + " nonAir=" + nonAir + " stack=" + stack.method_7909());
-        if (!show) {
-            return;
-        }
-        if (size == 0) {
-            return;
-        }
         PreviewContext drawContext = mc.field_1724 == null
                 ? PreviewContext.of(stack)
                 : PreviewContext.of(stack, mc.field_1724);
-        System.out.println("SBT_SNAP_SHOW " + provider.shouldDisplay(drawContext)
-                + " inv=" + provider.getInventory(drawContext).size());
-        cir.setReturnValue(Optional.of(new PreviewTooltipData(provider, drawContext)));
+        ComponentPreviewProvider wrapper = new ComponentPreviewProvider(provider,
+                component instanceof class_9288 c ? c : null);
+        boolean wrapShow = wrapper.shouldDisplay(drawContext);
+        var wrapInventory = wrapper.getInventory(drawContext);
+        int wrapNonAir = 0;
+        for (var entry : wrapInventory) {
+            if (!entry.method_7960()) {
+                wrapNonAir++;
+            }
+        }
+        System.out.println("SBT_WRAP show=" + wrapShow + " inv=" + wrapInventory.size()
+                + " nonAir=" + wrapNonAir + " stack=" + stack.method_7909());
+        if (!wrapShow) {
+            return;
+        }
+        cir.setReturnValue(Optional.of(new PreviewTooltipData(wrapper, drawContext)));
     }
 }

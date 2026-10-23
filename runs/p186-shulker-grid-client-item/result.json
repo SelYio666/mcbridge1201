@@ -1,0 +1,62 @@
+{
+  "screen": {
+    "left": "222",
+    "top": "112",
+    "scale": "2.0"
+  },
+  "slot": {
+    "index": "45",
+    "x": "9",
+    "y": "112",
+    "count": "1",
+    "map": "{minecraft:container=>net.minecraft.class_9288@c760dfe3}"
+  },
+  "physical": [
+    798,
+    704
+  ],
+  "sbt_seen": true,
+  "container": true,
+  "wrap_line": "[00:40:33] [Render thread/INFO]: [STDOUT]: SBT_WRAP show=true inv=27 nonAir=1 stack=minecraft:shulker_box",
+  "iter_line": "[00:40:33] [Render thread/INFO]: [STDOUT]: SBT_ITER raw1=1 raw2=1 head=minecraft:diamondx5 empty=false stream1=1 stream2=1",
+  "client_tail": [
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_TOP live={minecraft:container=>net.minecraft.class_9288@c760dfe3} cached={minecraft:container=>net.minecraft.class_9288@c760dfe3}",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_COMPONENT net.minecraft.class_9288@c760dfe3 item=minecraft:shulker_box count=1 items=list:0",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_MAP {!minecraft:container}",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_INV {minecraft:container=>net.minecraft.class_9288@c760dfe3} same=false",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_ITER raw1=1 raw2=1 head=minecraft:diamondx5 empty=false stream1=1 stream2=1",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_WRAP show=true inv=27 nonAir=1 stack=minecraft:shulker_box",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_TOP live={minecraft:container=>net.minecraft.class_9288@c760dfe3} cached={minecraft:container=>net.minecraft.class_9288@c760dfe3}",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_COMPONENT net.minecraft.class_9288@c760dfe3 item=minecraft:shulker_box count=1 items=list:0",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_MAP {!minecraft:container}",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_INV {minecraft:container=>net.minecraft.class_9288@c760dfe3} same=false",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_ITER raw1=1 raw2=1 head=minecraft:diamondx5 empty=false stream1=1 stream2=1",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_WRAP show=true inv=27 nonAir=1 stack=minecraft:shulker_box",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_TOP live={minecraft:container=>net.minecraft.class_9288@c760dfe3} cached={minecraft:container=>net.minecraft.class_9288@c760dfe3}",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_COMPONENT net.minecraft.class_9288@c760dfe3 item=minecraft:shulker_box count=1 items=list:0",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_MAP {!minecraft:container}",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_INV {minecraft:container=>net.minecraft.class_9288@c760dfe3} same=false",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_ITER raw1=1 raw2=1 head=minecraft:diamondx5 empty=false stream1=1 stream2=1",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_WRAP show=true inv=27 nonAir=1 stack=minecraft:shulker_box",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_TOP live={minecraft:container=>net.minecraft.class_9288@c760dfe3} cached={minecraft:container=>net.minecraft.class_9288@c760dfe3}",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_COMPONENT net.minecraft.class_9288@c760dfe3 item=minecraft:shulker_box count=1 items=list:0",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_MAP {!minecraft:container}",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_INV {minecraft:container=>net.minecraft.class_9288@c760dfe3} same=false",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_ITER raw1=1 raw2=1 head=minecraft:diamondx5 empty=false stream1=1 stream2=1",
+    "[00:40:36] [Render thread/INFO]: [STDOUT]: SBT_WRAP show=true inv=27 nonAir=1 stack=minecraft:shulker_box"
+  ],
+  "server_tail": [
+    "[00:40:05] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!",
+    "[00:40:05] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.",
+    "[00:40:05] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.",
+    "[00:40:05] [Server thread/WARN]: To change this, set \"online-mode\" to \"true\" in the server.properties file.",
+    "[00:40:05] [Server thread/INFO]: Preparing level \"world\"",
+    "[00:40:05] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld",
+    "[00:40:06] [Worker-Main-1/INFO]: Preparing spawn area: 0%",
+    "[00:40:06] [Server thread/INFO]: Time elapsed: 435 ms",
+    "[00:40:06] [Server thread/INFO]: Done (1.205s)! For help, type \"help\"",
+    "[00:40:06] [Server thread/INFO]: [STDOUT]: TRASHSLOT_ALL_CODEC_OK",
+    "[00:40:29] [Server thread/INFO]: GridUser[/127.0.0.1:50868] logged in with entity id 9 at (10.5, 68.0, 72.5)",
+    "[00:40:29] [Server thread/INFO]: GridUser joined the game"
+  ]
+}

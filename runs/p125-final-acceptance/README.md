@@ -163,6 +163,17 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | focus/origin | ✅ 先 `focus_window` 再 `ClientToScreen`，避免 `ShowWindow` 后原点漂移；中性左键吃掉激活点击 |
 | Release | 仅证据/回归，沿用 `v0.5.4`（无新版本） |
 
+## p186 增量验收（2026-10-24）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **87 项**（本次 **87/87**；新增 1 条 Shulker grid wrapper/t2/t4 回归） |
+| `python tools/check_hashes.py` | ✅ **1072/1072** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| Shulker grid 部分恢复 | ✅ client-side component + wrapper：`SBT_WRAP show=true inv=27 nonAir=1`；tooltip 出现预览框与 `Diamond ×5`（`grid.png`） |
+| 仍未解决 | ⚠️ 网格 slot 内 item icon 未画；真实 server `/item replace` 栈仍 `!minecraft:container` |
+| Release | 仅部分证据/回归，沿用 `v0.5.4`（无新版本） |
+
 ## 已知风险
 
 - 镜像节点会随时间/地区变化，canary 只是单次采样；

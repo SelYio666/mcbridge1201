@@ -95,6 +95,17 @@ rule are in place and apply correctly; the blocker is a client-side container-co
 between the server stack and the stack the tooltip path sees. Recording it here avoids claiming a
 visual win that did not happen; this line is parked until a packet-level comparison is done.
 
+## p186 follow-up (partial)
+
+`runs/p186-shulker-grid-client-item/` re-opened this with a **client-side** shulker box carrying a
+real `ContainerComponent`: `SBT_ITER raw1=1 head=minecraft:diamondx5` proves the component is not
+empty. A companion `ComponentPreviewProvider` wrapper (reads the component directly) plus t2/t4
+bridges (`ItemStack.getNbt` `method_7969` → `legacyNbt`, `setNbt` → no-op) let the grid renderer
+reach the tooltip: `SBT_WRAP show=true inv=27 nonAir=1` and the `grid.png` preview frame with
+`Diamond ×5`. Still open: the item icons inside the grid slots are not drawn, and a **real server
+item** (the `/item replace` stack) still shows `!minecraft:container` on the client. So the render
+path is partially restored, but the original server-sync blocker is not fixed.
+
 ## Evidence
 
 `grid-window.png` (hover without grid), `server.log` (join/give), and the SBT debug lines in the

@@ -39,9 +39,9 @@ claim that these paths work.
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.
 - Sodium conversion probe: `blocked_static` 13/15/16 (`runs/p158`); needs its rendering core
   ported, out of scope.
-- Still open: Shulker grid preview (paused), TrashSlot creative/multi-client variants,
-  portable package on a clean/other machine, CI coverage of every commit (push-triggered CI
-  works).
+- Still open: Shulker grid item icons + real server-item sync, TrashSlot creative/multi-client
+  variants, portable package on a clean/other machine, CI coverage of every commit
+  (push-triggered CI works).
 
 ## Already verified (dedicated server)
 
@@ -131,9 +131,13 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   shims are bridged, and a real GUI hover now shows the item-summary tooltip (`Diamond x5`,
   `runs/p100-shulker-hover/`). The full grid preview is unavailable because the conversion
   stripped the `ItemStackMixin` / `ShulkerBoxBlockMixin` entries (dead 1.21.1 targets). A
-  companion mixin now supplies `PreviewTooltipData` from the current `getTooltipData()` and an
-  NBT-compat bridge restores `contains(key, 9/99)` semantics, but the client-side container
-  component still reads back empty, so the grid does not render (`runs/p110-shulker-grid/`).
+  companion mixin supplies `PreviewTooltipData` from the current `getTooltipData()` and an
+  NBT-compat bridge restores `contains(key, 9/99)` semantics. `runs/p186-shulker-grid-client-item/`
+  now proves the component is **not** empty (client-side item: `SBT_ITER raw1=1`), a
+  `ComponentPreviewProvider` wrapper supplies the 27-slot inventory, and t2/t4 (`getNbt`/`setNbt`)
+  bridges let the grid renderer reach the tooltip: the preview frame and `Diamond ×5` appear in
+  `grid.png`. Still missing: the item icons inside the grid slots, and a real server item (the
+  `/item replace` stack still shows `!minecraft:container` on the client).
 - TrashSlot remaining UI variants: creative-mode deletion keys and multi-client sync. Plain
   Delete empty (`runs/p183`), Shift+Delete cross-slot delete_all (`runs/p184`: 5+3, all=true,
   8→0), and empty-cursor right-click undelete (`runs/p185`: 1 to cursor, 4 left in trash) pass;

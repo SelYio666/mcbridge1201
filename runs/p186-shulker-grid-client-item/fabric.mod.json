@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "gridprobe",
+  "version": "1.0.0",
+  "name": "Shulker grid client-item probe",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["probe.GridProbe"]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "shulkerboxtooltip": "*"
+  }
+}

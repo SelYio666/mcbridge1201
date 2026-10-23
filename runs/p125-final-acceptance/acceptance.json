@@ -112,6 +112,16 @@
     "focus_origin": "focus_window first then ClientToScreen; neutral left click consumes activation; earlier stale origin gave 368,323 vs 392,270",
     "release": "v0.5.4 (evidence-only, no new release)"
   },
+  "p186": {
+    "date": "2026-10-24",
+    "review_fixes": "87/87",
+    "hashes": "1072/1072",
+    "verify_evidence": "passed",
+    "shulker_grid": "client-side ContainerComponent; ComponentPreviewProvider wrapper -> SBT_WRAP show=true inv=27 nonAir=1; tooltip preview frame + Diamond x5 in grid.png",
+    "shulker_fixes": "t2 getNbt (method_7969) -> legacyNbt; t4 setNbt (method_7980) -> no-op; Shulker jar repatched; wrapper outside mixin package",
+    "remaining": "grid slot item icons not drawn; real server /item replace stack still shows !minecraft:container",
+    "release": "v0.5.4 (partial evidence, no new release)"
+  },
   "verified": [
     "Fabric 1.21.1 full cold install (3911/3911 assets, 933.6 MB, 0 failures) + singleplayer world (runs/p118)",
     "NeoForge 21.1.264 install + main menu (runs/p116)",
@@ -125,6 +135,7 @@
     "TrashSlot real empty-trash Delete UI key: inventory hover -> provider -> server empty; the p65/p85/p86 failures were input injection (missing KEYEVENTF_EXTENDEDKEY, KP_DECIMAL 330) (runs/p183)",
     "TrashSlot Shift+Delete delete_all: two 5+3 diamond stacks across slots, all=true, server/client 8->0 (runs/p184)",
     "TrashSlot empty-cursor right-click undelete: 1 to cursor, 4 left in trash, server 4; focus-first origin fixes (runs/p185)",
+    "ShulkerBoxTooltip grid preview partial: client-side ContainerComponent + wrapper + t2/t4 bridges render the preview frame and Diamond x5; item icons and real server item still open (runs/p186)",
     "NeoForge 21.1.264 + AppleSkin / Farmer's Delight / Jade in-world (runs/p127/p128/p130)",
     "Forge 1.20.1-47.4.28 + AppleSkin / Farmer's Delight in-world (runs/p129/p131)",
     "Fabric dedicated server + launcher client join via quickPlayMultiplayer (runs/p132)",

@@ -65,6 +65,10 @@ public final class ShulkerBoxNbtBridge {
         return legacyBlockEntityTag(stack, "BlockEntityTag");
     }
 
+    /** 1.21.1 has no ItemStack.setNbt(NbtCompound); the preview renderer only snapshots it. */
+    public static void setLegacyNbt(class_1799 stack, class_2487 tag) {
+    }
+
     /** 1.20.1 EnderChestInventory.writeNbt() -> Slot/id/Count list (1.21.1 needs RegistryOps). */
     public static class_2499 writeEnderChest(class_1730 inventory) {
         class_2499 items = new class_2499();

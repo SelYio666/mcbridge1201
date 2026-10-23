@@ -17,6 +17,32 @@
       "evidence": "Expansion report: BlockEntityPreviewProvider.getInventory hit 'CenturyBridge tombstone: class_1799.method_7941 no longer exists in 1.21.1' (runs/p88-mod-expansion/EXPANSION-REPORT.md). The preview needs the Items list; the bridge rebuilds it from CONTAINER."
     },
     {
+      "id": "shulker.legacy.get-nbt",
+      "sourceOwner": "centurybridge/gen/Tombstones_shulkerboxtooltip_fabric_4_0_4_1_20_1",
+      "sourceName": "t2",
+      "sourceDesc": "(Lnet/minecraft/class_1799;)Lnet/minecraft/class_2487;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/ShulkerBoxNbtBridge",
+      "bridgeMethod": "legacyNbt",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;)Lnet/minecraft/class_2487;",
+      "capability": "shulker.legacy.get-nbt",
+      "risk": "medium",
+      "evidence": "PreviewTooltipComponent.drawItemsWithTooltipPosition calls the 1.20.4 ItemStack.getNbt (t2/method_7969); 1.21.1 has only components. p186 reached the grid renderer, then hit this tombstone."
+    },
+    {
+      "id": "shulker.legacy.set-nbt",
+      "sourceOwner": "centurybridge/gen/Tombstones_shulkerboxtooltip_fabric_4_0_4_1_20_1",
+      "sourceName": "t4",
+      "sourceDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2487;)V",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/ShulkerBoxNbtBridge",
+      "bridgeMethod": "setLegacyNbt",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2487;)V",
+      "capability": "shulker.legacy.set-nbt",
+      "risk": "low",
+      "evidence": "The same renderer snapshots/restores the legacy NBT (t4/method_7980); 1.21.1 has no setNbt. The bridge is a no-op because the grid reads the stack components."
+    },
+    {
       "id": "shulker.legacy.from-nbt",
       "sourceOwner": "centurybridge/gen/Tombstones_shulkerboxtooltip_fabric_4_0_4_1_20_1",
       "sourceName": "t1",

@@ -732,6 +732,16 @@ def test_immediatelyfast_port() -> None:
                and "focus_window" in p185_run and "right_click" in p185_run)
     check("TRASH empty-cursor right-click takes one item and leaves four", p185_ok,
           "p185 result flags + focus-first origin + right-click injection")
+    p186_result = json.loads((ROOT / "runs" / "p186-shulker-grid-client-item" / "result.json").read_text(encoding="utf-8"))
+    p186_wrapper = (ROOT / "java" / "src" / "shulkerpreview" / "java" / "mcbridgepreview"
+                    / "ComponentPreviewProvider.java").read_text(encoding="utf-8", errors="replace")
+    shulker_rule = (ROOT / "rules" / "fabric-1.21.1" / "shulker-nbt.json").read_text(encoding="utf-8", errors="replace")
+    p186_ok = (p186_result.get("sbt_seen") and p186_result.get("container")
+               and "method_59714" in p186_wrapper
+               and "shulker.legacy.get-nbt" in shulker_rule
+               and "shulker.legacy.set-nbt" in shulker_rule)
+    check("SBT grid preview reaches the tooltip with component wrapper and t2/t4 bridges", p186_ok,
+          "p186 SBT_WRAP show=true nonAir=1 + wrapper/rule sources")
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src
