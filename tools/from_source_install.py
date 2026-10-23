@@ -239,7 +239,7 @@ def write_launcher_profiles(root: Path, version: str) -> Path:
         "lastVersionId": version,
         "gameDir": str(root),
     }
-    data["selectedProfile"] = key
+    data.setdefault("selectedProfile", key)
     data.setdefault("settings", {"enableSnapshots": False})
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     return path
