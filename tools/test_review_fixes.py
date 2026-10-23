@@ -726,6 +726,12 @@ def test_immediatelyfast_port() -> None:
                and "press_shift_delete" in p184_run and "mods=1" in p184_run)
     check("TRASH Shift+Delete deletes same-item stacks across slots", p184_ok,
           "p184 result flags + shift-delete injection")
+    p185_result = json.loads((ROOT / "runs" / "p185-trash-undelete-right" / "result.json").read_text(encoding="utf-8"))
+    p185_run = (ROOT / "runs" / "p185-trash-undelete-right" / "run.py").read_text(encoding="utf-8", errors="replace")
+    p185_ok = (all(p185_result.get(k) for k in ("right_seen", "carried_one", "client_trash_4", "server_trash_4"))
+               and "focus_window" in p185_run and "right_click" in p185_run)
+    check("TRASH empty-cursor right-click takes one item and leaves four", p185_ok,
+          "p185 result flags + focus-first origin + right-click injection")
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src

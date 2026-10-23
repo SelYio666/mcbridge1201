@@ -39,8 +39,8 @@ SERVER_DIAMONDS count=0
 
 ## 未验证 / 限制
 
-- 只测 inventory、两个同物品槽、一个客户端；创造模式删除键、多客户端同步、空 cursor 右/左键
-  undelete 仍未测；
+- 只测 inventory、两个同物品槽、一个客户端；创造模式删除键、多客户端同步仍未测；空 cursor
+  右键 undelete 已由 `runs/p185-trash-undelete-right/` 覆盖（取 1 留 4；左键全取见 p63）；
 - 测试临时改 dedicated server 的端口/mods；本轮已恢复 `server-port=25565`、原版 trashslot jar，
   客户端恢复为 ImmediatelyFast + Fabric API + p181 probe；
 - 不涉及性能。

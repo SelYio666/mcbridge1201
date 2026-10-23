@@ -103,6 +103,15 @@
     "first_attempt": "give 5+3 merged into one stack of 8; all=true but no cross-slot proof; final run writes two slots directly",
     "release": "v0.5.4 (evidence-only, no new release)"
   },
+  "p185": {
+    "date": "2026-10-23",
+    "review_fixes": "86/86",
+    "hashes": "1061/1061",
+    "verify_evidence": "passed",
+    "trash_right_click": "trash 5; empty-cursor right-click -> DEBUG_PROVIDER_UNDELETE right=true -> cursor 1, trash 4, server 4; after.png",
+    "focus_origin": "focus_window first then ClientToScreen; neutral left click consumes activation; earlier stale origin gave 368,323 vs 392,270",
+    "release": "v0.5.4 (evidence-only, no new release)"
+  },
   "verified": [
     "Fabric 1.21.1 full cold install (3911/3911 assets, 933.6 MB, 0 failures) + singleplayer world (runs/p118)",
     "NeoForge 21.1.264 install + main menu (runs/p116)",
@@ -115,6 +124,7 @@
     "ImmediatelyFast map atlas lifecycle: live second upload after player movement, normal client-stop cleanup (keep-dummy/close/clear), and a real closed-NativeImage crash fixed with a closed guard (runs/p181)",
     "TrashSlot real empty-trash Delete UI key: inventory hover -> provider -> server empty; the p65/p85/p86 failures were input injection (missing KEYEVENTF_EXTENDEDKEY, KP_DECIMAL 330) (runs/p183)",
     "TrashSlot Shift+Delete delete_all: two 5+3 diamond stacks across slots, all=true, server/client 8->0 (runs/p184)",
+    "TrashSlot empty-cursor right-click undelete: 1 to cursor, 4 left in trash, server 4; focus-first origin fixes (runs/p185)",
     "NeoForge 21.1.264 + AppleSkin / Farmer's Delight / Jade in-world (runs/p127/p128/p130)",
     "Forge 1.20.1-47.4.28 + AppleSkin / Farmer's Delight in-world (runs/p129/p131)",
     "Fabric dedicated server + launcher client join via quickPlayMultiplayer (runs/p132)",

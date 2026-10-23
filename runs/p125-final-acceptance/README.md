@@ -152,6 +152,17 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | 第一次尝试 | ⚠️ `give` 5+3 合并成一叠 8，虽 `all=true` 但无法证明跨槽；最终改为 `method_5447` 直接写两个槽位 |
 | Release | 仅证据/回归，沿用 `v0.5.4`（无新版本） |
 
+## p185 增量验收（2026-10-23）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **86 项**（本次 **86/86**；新增 1 条 TrashSlot right-click undelete 回归） |
+| `python tools/check_hashes.py` | ✅ **1061/1061** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| 空 cursor 右键 undelete | ✅ trash 5 → 右键 → cursor 1、trash 4、服务端 4；`DEBUG_CLICK button=1 hovering=true`、`DEBUG_PROVIDER_UNDELETE right=true` |
+| focus/origin | ✅ 先 `focus_window` 再 `ClientToScreen`，避免 `ShowWindow` 后原点漂移；中性左键吃掉激活点击 |
+| Release | 仅证据/回归，沿用 `v0.5.4`（无新版本） |
+
 ## 已知风险
 
 - 镜像节点会随时间/地区变化，canary 只是单次采样；

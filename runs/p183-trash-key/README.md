@@ -46,7 +46,8 @@ DEBUG_RUN ... DEBUG_EMPTY_PROVIDER ... DEBUG_RUN_RETURN=true
 
 - 只测 inventory 一个界面、一个 5-diamond trash、一个客户端；
 - Shift+Delete（delete_all）已由 `runs/p184-trash-delete-all/` 覆盖：两叠 5+3 钻石跨槽删除，
-  `all=true`，服务端 8→0；空 cursor 左/右键（undelete 路径）、创造模式删除键仍未测；
+  `all=true`，服务端 8→0；空 cursor 右键 undelete 已由 `runs/p185-trash-undelete-right/` 覆盖
+  （取 1 留 4；左键全取见 p63）；创造模式删除键仍未测；
 - 未测多客户端同步/重进（TrashSlot 登录会重置 trash，p65 已记录）；
 - 测试会临时改 dedicated server 的端口和 mods（25566 + patched trashslot + trashkey）；本轮已恢复
   服务端 `server-port=25565` 和原版 `trashslot-15.1.5+1.21.1.jar`，客户端 mods 恢复为
