@@ -52,6 +52,14 @@
       "capability": "benchmark-instrumentation",
       "risk": "prints FPS every 2s from the main loop; kept outside the hud_batching package so the A/B off-run still samples",
       "evidence": "runs/p148-bench-on / runs/p148-bench-off"
+    },
+    {
+      "id": "immediatelyfast/chat-hud-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "hud_batching.MixinChatHud",
+      "capability": "mixin-config-readd",
+      "risk": "converted config dropped ChatHud; 1.21.1 method_1805 added a boolean arg and begin/end nests inside InGameHud batching",
+      "evidence": "runs/p166-chat-hud"
     }
   ],
   "mixinClassReplacements": [

@@ -32,6 +32,7 @@
 | ImmediatelyFast HUD batching on/off 帧率对照（实测无正收益，见报告） | `runs/p148-bench/` |
 | ImmediatelyFast 实体压力（80 盔甲架）交错 on/off：开启 universal batching 慢约 13%（550 vs 636，两轮一致）；不宣称收益 | `runs/p157-stress-interleaved/`（p153–p157） |
 | Sodium 1.20.1 转换可行性（静态分析）：`blocked_static` 13/15/16，需移植渲染内核 | `runs/p158-sodium-probe/` |
+| ImmediatelyFast 端口 mixin 审计：inert 7 → 6（重登记 ChatHud） | `runs/p165-mixin-audit/`、`runs/p166-chat-hud/` |
 | Forge 1.20.1-47.4.28 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p159-forge-server/` |
 | mrpack 含真实 files（HTTP 下载 + SHA-1 校验 + overrides） | `runs/p160-mrpack/` |
 | NeoForge 21.1.264 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p161-neoforge-server/` |
@@ -81,7 +82,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 905 项；桥一致性 0（ImmediatelyFast 端口 jar，p165）；mixin 审计 inert=7（端口 jar 仍有未登记的 ChatHud/FontManager/BufferBuilder 等，见 `runs/p165-mixin-audit/`）；
+- 单测 25/25；`verify_evidence` passed；哈希 910 项；桥一致性 0（ImmediatelyFast 端口 jar，p165）；mixin 审计 inert=6（p166 重登记 ChatHud 后；BufferBuilder/FontManager/MapRenderer 等仍未生效）；
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，73/73；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
