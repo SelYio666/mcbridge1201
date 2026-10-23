@@ -1,0 +1,12 @@
+﻿date: 2026-10-23
+source_jar: ImmediatelyFast-Fabric-1.5.5+1.20.4+1.21.1.jar
+source_jar_sha256: 7856deea92509e99077377c32449da9fdb75ae70f24fe703b7e511ba8ff6446d
+build: python tools/build_immediatelyfast_port.py --out .build/if-port-classes (javac exit 0)
+patched_jar_sha256: f0f7fa8e47c3b36791598a0dc2336954ca74e3b177fd66ef24fc953fe833a7a8
+patched_classes: MixinMapRenderer, MixinMapRenderer_MapTexture, MapAtlasTexture (replacement/embedded)
+audit: listed=36 inert=3 problems=3 (known: MixinBufferBuilder, MixinVertexBuffer, MixinFontManager)
+audit_allow_inert: problems=0
+bridge_consistency: problems=0 canonical=18
+mixin_config_map_entries:
+  map_atlas_generation.MixinMapRenderer_MapTexture
+  map_atlas_generation.MixinMapRenderer

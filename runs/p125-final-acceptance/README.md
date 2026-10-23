@@ -73,6 +73,23 @@ python tools/build_portable.py --label 0.4.4
 python tools/test_portable.py --root <测试目录> --version 1.21.1
 ```
 
+## p175 增量验收（2026-10-23）
+
+| 门禁 | 结果 |
+|---|---|
+| `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
+| Java JUnit | ✅ 25/25 |
+| `python tools/test_review_fixes.py` | ✅ **79/79**（新增 6 条地图 atlas 规则/源码回归） |
+| `python tools/check_hashes.py` | ✅ **962/962**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（79/79） |
+| ImmediatelyFast mixin 审计 | `listed=36 inert=3`；两个 map mixin 不再 inert（`runs/p175-map-atlas/audit.log`） |
+| 地图 atlas 真实渲染 | ✅ 单人 `ColdWorldMap` 手持 `filled_map`；`map-atlas bind … immediatelyfast:map_atlas/0`；无 ClassCastException/无 crash（`runs/p175-map-atlas/`） |
+| Release 资产 | ✅ `v0.5.2` / `mcbridge-launcher-0.5.2.zip` |
+
+剩余 3 个 inert 仍是 `MixinBufferBuilder`、`MixinVertexBuffer`、`MixinFontManager`（与地图无关，
+原因见 `runs/p169-inert-analysis/`）。地图只验证了单人第一人称手持地图，物品展示框/多地图/动态更新
+未测。
+
 ## 已知风险
 
 - 镜像节点会随时间/地区变化，canary 只是单次采样；

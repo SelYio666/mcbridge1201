@@ -33,6 +33,12 @@ class_291.method_43442 / method_43443 存在
 
 ## 4) `map_atlas_generation/MixinMapRenderer` — 依赖 1.20.4 纹理 API
 
+> **2026-10-23 p175 已修复**：`MapAtlasTexture` 已按 1.21.1 的 Identifier 工厂/NativeImage/
+> TextureManager 编译并 embed；`MixinMapRenderer` 按 `method_32601(class_9209, class_22)` 重写，
+> `MixinMapRenderer_MapTexture` 也按 1.21.1（`method_60803` 代替已删除的 `method_1344`、去掉
+> lenni `Objects.allocate`）重写。单人世界实际手持 filled_map 渲染通过，见 `runs/p175-map-atlas/`。
+> 本节以下内容是 p169 当时的状态，保留作历史记录。
+
 `MapAtlasTexture` 引用 `class_1043`/`class_1044` 等 1.20.4 纹理类（1.21.1 纹理 API 已变）。
 mixin 的注入在“地图渲染”时才真正执行：启动阶段不会触发，所以重登记会**假绿**——启动过、
 一用地图就炸。必须先把 `MapAtlasTexture` 移植到 1.21.1 的纹理接口，本轮不做。
@@ -50,12 +56,15 @@ p172 实际尝试过：`MapAtlasTexture` 端口写好了（Identifier 工厂/Nat
 
 处理：用规则的 `mixinStrips` 显式移除 `MixinMapRenderer_MapTexture`（记录 reason），
 地图回退 vanilla，直到 `MapAtlasTexture` 移植完成。证据：`runs/p171-map-strip/`。
+**p175 已删除该 strip 并重新登记两个 map mixin，真实渲染通过**（`runs/p175-map-atlas/`）。
 
 ## 结论
 
 - 已救活 3 个（p166–p168），inert 7 → 4；
-- 剩余 4 个保持 inert，并在文档写明原因；不为了“审计数字好看”而假绿；
-- 下一步优先级：`MixinVertexBuffer`（需顶点上传压测）> `MapAtlasTexture` 移植（工作量较大）。
+- p175 救活 `MixinMapRenderer` + `MixinMapRenderer_MapTexture`，当前 inert **3**（`listed=36`）：
+  `MixinBufferBuilder`、`MixinVertexBuffer`、`MixinFontManager`；
+- 剩余 3 个保持 inert，并在文档写明原因；不为了“审计数字好看”而假绿；
+- 下一步优先级：`MixinVertexBuffer`（需顶点上传压测）> 其余两个。
 
 ## 证据
 

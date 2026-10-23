@@ -4,18 +4,18 @@
 
 > 新手先读：**[使用说明与教程](docs/guide.md)**（启动器 10 分钟上手、PCL 共用、模组迁移教程、FAQ）。
 
-> 最新发布：**[v0.5.1](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.1)**（便携包 + ImmediatelyFast 端口补丁/证据 + 专用服务器/mrpack）。
+> 最新发布：**[v0.5.2](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.2)**（ImmediatelyFast 地图 atlas 恢复 + 真实渲染证据 + 便携包）。
 
 Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来源固定为 **1.20.1**，首个精确目标是 **Fabric 1.21.1**，同时抽样分析 Forge 1.20.1。
 
 本仓库当前交付 P0 的事实与证据，以及 P1 的第一段运行时结果：环境锁定、上游引擎锁定、10 份真实样本、**自研静态损伤分析器**、**body-preserving 重映射器**、CenturyBridge 真实转换产物，和进世界/功能级证据。**只对 `runs/` 里有日志与截图支撑的模组声称通过**（如 EntityCulling、ImmediatelyFast 的移植），其余不宣称兼容。
 
-## 当前状态（2026-10-22）
+## 当前状态（2026-10-23）
 
-- **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康缓存 + GUI 源检查；内嵌 Python 的便携包（v0.5.1）。
-- **已验证进世界**：Fabric 1.21.1（全量安装 + EntityCulling 真生效）；ImmediatelyFast 1.21.1 batching 移植（HUD/物品/overlay 计数、Iris 1.8.1/1.8.14 + shader pack、专用服务器多人加入；`runs/p134`-`p150`）；NeoForge 21.1.264（AppleSkin / Farmer's Delight / Jade + **专用服务器客户端加入**，`runs/p161-neoforge-server/`；**带 Farmer's Delight 的服务端/客户端同模组加入**，`runs/p163-neoforge-fd-server/`）；Forge 1.20.1-47.4.28（AppleSkin / Farmer's Delight + **专用服务器客户端加入**，`runs/p159-forge-server/`；**带 Farmer's Delight 的同模组加入**，`runs/p164-forge-fd-server/`）；mrpack 真实 files 导入通过（`runs/p160-mrpack/`）。
-- **未通过 / 未验证**：Sodium 1.20.1 转换探针为 `blocked_static`（missingClass=13、missingMember=15、descMismatch=16，`runs/p158-sodium-probe/`），需移植其渲染内核，本轮不做；Iris 只验证了 ImmediatelyFast 的兼容分支（没有转换 Iris 本身）；ImmediatelyFast 端口 jar 仍有 **4 个 inert mixin**（BufferBuilder/VertexBuffer/FontManager/MapRenderer；ChatHud/MinecraftClient/BufferRenderer 已在 p166–p168 重登记；原因见 `runs/p169-inert-analysis/`；VertexBuffer 静态 A/B 见 `runs/p170-vertex-verify/`，证据不足未启用），另有 **MapTexture 被显式 strip**（p171；p172 证实 MixinMapRenderer 因 `method_32601` int→`class_9209` 无法 apply，`MapAtlasTexture` 端口已写但未 embed，地图 atlas 暂时关闭）；性能**不宣称收益**——HUD 场景差异在噪声内（`runs/p148-bench/`），80 盔甲架实体压力交错两轮慢约 13%（`runs/p157-stress-interleaved/`）。
-- **门禁**：Java 25/25、`test_review_fixes` 73/73、`check_hashes` 946/946、`verify_evidence` passed；CI push 触发已验证（最近 `build` success，见 Actions）。
+- **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康缓存 + GUI 源检查；内嵌 Python 的便携包（v0.5.2）。
+- **已验证进世界**：Fabric 1.21.1（全量安装 + EntityCulling 真生效）；ImmediatelyFast 1.21.1 batching 移植（HUD/物品/overlay 计数、Iris 1.8.1/1.8.14 + shader pack、专用服务器多人加入；`runs/p134`-`p150`）；**ImmediatelyFast 地图 atlas 恢复：单人真实手持 filled_map 渲染，绑定 `immediatelyfast:map_atlas/0`、无 ClassCastException/无崩溃**（`runs/p175-map-atlas/`）；NeoForge 21.1.264（AppleSkin / Farmer's Delight / Jade + **专用服务器客户端加入**，`runs/p161-neoforge-server/`；**带 Farmer's Delight 的服务端/客户端同模组加入**，`runs/p163-neoforge-fd-server/`）；Forge 1.20.1-47.4.28（AppleSkin / Farmer's Delight + **专用服务器客户端加入**，`runs/p159-forge-server/`；**带 Farmer's Delight 的同模组加入**，`runs/p164-forge-fd-server/`）；mrpack 真实 files 导入通过（`runs/p160-mrpack/`）。
+- **未通过 / 未验证**：Sodium 1.20.1 转换探针为 `blocked_static`（missingClass=13、missingMember=15、descMismatch=16，`runs/p158-sodium-probe/`），需移植其渲染内核，本轮不做；Iris 只验证了 ImmediatelyFast 的兼容分支（没有转换 Iris 本身）；ImmediatelyFast 端口 jar 仍有 **3 个 inert mixin**（BufferBuilder/VertexBuffer/FontManager；ChatHud/MinecraftClient/BufferRenderer 已在 p166–p168 重登记，两个 map mixin 已在 p175 恢复；原因见 `runs/p169-inert-analysis/`；VertexBuffer 静态 A/B 见 `runs/p170-vertex-verify/`，证据不足未启用）；地图 atlas 只验证了单人第一人称手持地图（物品展示框/多地图/动态更新未测）；性能**不宣称收益**——HUD 场景差异在噪声内（`runs/p148-bench/`），80 盔甲架实体压力交错两轮慢约 13%（`runs/p157-stress-interleaved/`）。
+- **门禁**：Java 25/25、`test_review_fixes` 79/79、`check_hashes` 962/962、`verify_evidence` passed；CI push 触发已验证（最近 `build` success，见 Actions）。
 - 详情：[总验收快照](runs/p125-final-acceptance/README.md)、[FINAL-STATUS](docs/FINAL-STATUS.md)、[使用说明](docs/guide.md)。
 
 ## 现状（2026-10-18）

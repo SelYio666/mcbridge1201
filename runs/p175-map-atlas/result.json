@@ -1,0 +1,18 @@
+{
+  "joined": true,
+  "map_marker": true,
+  "map_world_rendered": true,
+  "markers": [
+    "[20:53:58] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas create id=0",
+    "[20:53:58] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas assign map=1 packed=0",
+    "[20:53:58] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas texture map=1 packed=0 atlas=0",
+    "[20:53:58] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas bind map=map/1 texture=immediatelyfast:map_atlas/0"
+  ],
+  "errors": [],
+  "crash": null,
+  "exit_code": 1,
+  "world": "ColdWorldMap",
+  "username": "IFMapUser",
+  "screenshot": "world.png",
+  "state_screenshots": []
+}

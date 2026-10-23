@@ -8,14 +8,20 @@ claim that these paths work.
 - ImmediatelyFast 1.21.1 batching port is **verified** (HUD/items/overlay, per-lighting, Iris
   1.8.1/1.8.14 + shader pack r5.3, dedicated-server multiplayer, 95s soak, A/B checks,
   SimpleImmediate fallback): see `runs/p134`-`p150`.
-- The port jar still has **4 inert mixins**; three more were re-registered (ChatHud,
-  MinecraftClient, BufferRenderer, `runs/p166`-`p168`). The remaining four are deliberately
-  inert and documented in `runs/p169-inert-analysis/`:
+- The port jar still has **3 inert mixins**; ChatHud, MinecraftClient, BufferRenderer were
+  re-registered in `runs/p166`-`p168`, and the two map mixins are now live (`runs/p175`). The
+  remaining three are deliberately inert and documented in `runs/p169-inert-analysis/`:
   - `MixinBufferBuilder`: shadows `field_1555`, gone from the 1.21.1 BufferBuilder;
   - `MixinFontManager`: injects `method_27541`, absent from the 1.21.1 index;
   - `MixinVertexBuffer`: targets exist, but swaps `glBufferData` for `glBufferSubData`; needs a
-    vertex-upload stress/visual test before enabling;
-  - `MixinMapRenderer`: needs `MapAtlasTexture` ported to the 1.21.1 texture API first.
+    vertex-upload stress/visual test before enabling.
+- Map atlas generation is **restored** (`runs/p175-map-atlas/`): `MixinMapRenderer` reads
+  `class_9209.comp_2315()`, `MixinMapRenderer_MapTexture` uses the 1.21.1 `method_60803` slice and
+  a 1x1 never-registered dummy instead of the lenni allocate, and `MapAtlasTexture` is embedded.
+  A real singleplayer run holding `filled_map` (map id 1, `components:{"minecraft:map_id":1}`)
+  rendered the map, logged `map-atlas bind … immediatelyfast:map_atlas/0`, and produced no
+  ClassCastException/crash. Only one held map in an integrated server was tested; item frames,
+  multiple maps and live map updates are untested.
 - Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
   (`runs/p159`, `p161`, `p163`, `p164`); real mrpack with files+overrides verified (`p160`).
 - Performance: no reproducible gain; 80-armor-stand interleaved runs are ~13% slower with

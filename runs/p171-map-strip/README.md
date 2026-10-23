@@ -1,5 +1,8 @@
 # p171 — 摘掉半启用的 MixinMapRenderer_MapTexture（避免地图渲染 ClassCastException）
 
+> **已被 p175 取代**：2026-10-23 已在 `runs/p175-map-atlas/` 恢复两个 map mixin 并完成真实
+> 地图渲染；本文件保留为当时的止血记录。
+
 日期：2026-10-23。查 p165 剩余 inert 时发现一个**潜在运行时崩溃**，这轮先止血。
 
 ## 问题

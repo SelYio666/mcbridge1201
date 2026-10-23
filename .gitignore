@@ -18,3 +18,6 @@ runs/**/*.jar
 dist/
 
 share/player-guide.zip
+
+# 编译期 stub / 端口构建缓存（不是交付物）
+.build/

@@ -574,6 +574,9 @@ def test_immediatelyfast_port() -> None:
         base / "injection" / "mixins" / "fast_text_lookup" / "MixinTextRenderer_Drawer.java",
         base / "injection" / "mixins" / "hud_batching" / "consumer" / "MixinDrawContext.java",
         base / "injection" / "mixins" / "hud_batching" / "MixinGameRendererHud.java",
+        base / "injection" / "mixins" / "map_atlas_generation" / "MixinMapRenderer.java",
+        base / "injection" / "mixins" / "map_atlas_generation" / "MixinMapRenderer_MapTexture.java",
+        base / "feature" / "map_atlas_generation" / "MapAtlasTexture.java",
     ]
     missing = [p.name for p in files if not p.exists()]
     tomb = [p.name for p in files
@@ -605,6 +608,65 @@ def test_immediatelyfast_port() -> None:
               and "renderingItem" in hud_src)
     check("IFPORT keeps the item per-lighting variants wired", lit_ok,
           "HudBatchingBufferSource must wrap item layers per LightingState")
+    strips = data.get("mixinStrips") or []
+    map_strips = [c for s in strips for c in (s.get("classes") or []) if "MapRenderer" in c]
+    check("IFPORT no longer strips the map atlas mixins", not map_strips, str(map_strips))
+    addition_names = {a.get("mixinClass") for a in additions}
+    map_configs = {"map_atlas_generation.MixinMapRenderer",
+                   "map_atlas_generation.MixinMapRenderer_MapTexture"}
+    check("IFPORT re-registers both map atlas mixins", map_configs <= addition_names,
+          str(sorted(addition_names)))
+    by_target = {r.get("targetClass"): r for r in reps}
+    renderer_rep = by_target.get(
+        "net/raphimc/immediatelyfast/injection/mixins/map_atlas_generation/MixinMapRenderer", {})
+    texture_rep = by_target.get(
+        "net/raphimc/immediatelyfast/injection/mixins/map_atlas_generation/MixinMapRenderer_MapTexture", {})
+    atlas_helper = "net/raphimc/immediatelyfast/feature/map_atlas_generation/MapAtlasTexture"
+    map_reps = (bool(renderer_rep and texture_rep)
+                and (renderer_rep.get("alsoEmbed") or []) == [atlas_helper])
+    check("IFPORT replaces both map mixins and embeds MapAtlasTexture", map_reps,
+          f"renderer={bool(renderer_rep)} texture={bool(texture_rep)}")
+    renderer_src = (base / "injection" / "mixins" / "map_atlas_generation"
+                    / "MixinMapRenderer.java").read_text(encoding="utf-8", errors="replace")
+    texture_src = (base / "injection" / "mixins" / "map_atlas_generation"
+                   / "MixinMapRenderer_MapTexture.java").read_text(encoding="utf-8", errors="replace")
+    import re
+
+    def code_only(text: str) -> str:
+        text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+        return re.sub(r"//[^\n]*", "", text)
+
+    renderer_code = code_only(renderer_src)
+    texture_code = code_only(texture_src)
+    map_source_ok = (
+        "class_9209" in renderer_code
+        and "mapId.comp_2315()" in renderer_code
+        and "net.lenni0451" not in texture_code
+        and "Objects.allocate" not in texture_code
+        and "method_1344" not in texture_code
+        and "method_60803" in texture_code
+        # package-private target constructor stores a field before super(); the capture uses an
+        # after-super injection so Mixin accepts the instance handler
+        and "Ljava/lang/Object;<init>()V" in texture_code
+        and "shift = At.Shift.AFTER" in texture_code
+        and "immediatelyFast$dummyTexture" in texture_code
+    )
+    check("IFPORT map sources use the 1.21.1 signatures and drop lenni allocate", map_source_ok,
+          "MixinMapRenderer.class_9209 / MapTexture method_60803 + after-super capture")
+    atlas_src = (base / "feature" / "map_atlas_generation" / "MapAtlasTexture.java").read_text(
+        encoding="utf-8", errors="replace")
+    atlas_ok = ("class_2960.method_60655" in atlas_src
+                and "method_4616" in atlas_src
+                and "method_4615" in atlas_src)
+    check("IFPORT embeds the 1.21.1 MapAtlasTexture factories", atlas_ok,
+          "MapAtlasTexture must use the Identifier factory and register/unregister")
+    build_src = (ROOT / "tools" / "build_immediatelyfast_port.py").read_text(
+        encoding="utf-8", errors="replace")
+    widen_ok = ("widen_stub" in build_src
+                and "net/minecraft/class_330$class_331" in build_src
+                and (ROOT / "tools" / "widen_stub.py").exists())
+    check("IFPORT build widens the package-private MapTexture stub", widen_ok,
+          "javac needs class_330$class_331 public in the compile-only stub")
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src

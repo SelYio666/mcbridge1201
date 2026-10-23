@@ -18,6 +18,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "java" / "src" / "compat" / "java" / "net" / "raphimc" / "immediatelyfast"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import widen_stub  # noqa: E402
 
 
 def main() -> int:
@@ -25,6 +27,12 @@ def main() -> int:
     ap.add_argument("--intermediary",
                     default=str(ROOT / "work" / "cb" / "data" / "jars"
                                / "client-1.21.1-intermediary.jar"))
+    ap.add_argument("--widened",
+                    default=str(ROOT / ".build" / "client-1.21.1-intermediary-widened.jar"),
+                    help="compile-only copy of --intermediary with the map texture class public")
+    ap.add_argument("--widen-class", action="append",
+                    default=["net/minecraft/class_330$class_331"],
+                    help="class to make public in the compile stub (repeatable)")
     ap.add_argument("--fastutil",
                     default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "it" / "unimi"
                                / "dsi" / "fastutil" / "8.5.12" / "fastutil-8.5.12.jar"))
@@ -35,6 +43,9 @@ def main() -> int:
     ap.add_argument("--joml",
                     default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "org" / "joml"
                                / "joml" / "1.10.5" / "joml-1.10.5.jar"))
+    ap.add_argument("--slf4j",
+                    default=str(ROOT / "work" / "launcher-e2e" / "libraries" / "org" / "slf4j"
+                               / "slf4j-api" / "2.0.9" / "slf4j-api-2.0.9.jar"))
     ap.add_argument("--mod-jar",
                     default=str(ROOT / "work" / "cb" / "out" / "popular" / "immediatelyfast"
                                / "ImmediatelyFast-Fabric-1.5.5+1.20.4+1.21.1.jar"))
@@ -46,7 +57,15 @@ def main() -> int:
     if not javac.exists():
         print(f"javac not found: {javac}", file=sys.stderr)
         return 2
-    cp_jars = [args.intermediary, args.fastutil, args.mixin, args.joml, args.mod_jar]
+    if not Path(args.intermediary).exists():
+        print(f"missing classpath jar: {args.intermediary}", file=sys.stderr)
+        return 2
+    Path(args.widened).parent.mkdir(parents=True, exist_ok=True)
+    rc = widen_stub.widen_jar(args.intermediary, args.widened, args.widen_class)
+    if rc != 0:
+        print("could not widen the compile stub", file=sys.stderr)
+        return rc
+    cp_jars = [args.widened, args.fastutil, args.mixin, args.joml, args.slf4j, args.mod_jar]
     for jar in cp_jars:
         if not Path(jar).exists():
             print(f"missing classpath jar: {jar}", file=sys.stderr)

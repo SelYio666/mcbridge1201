@@ -3,16 +3,6 @@
   "id": "immediatelyfast-batching-port",
   "target": "fabric-1.21.1",
   "source": "ImmediatelyFast-Fabric-1.5.5+1.20.4+1.21.1",
-  "mixinStrips": [
-    {
-      "id": "immediatelyfast/strip-map-atlas-texture",
-      "config": "immediatelyfast-common.mixins.json",
-      "classes": [
-        "map_atlas_generation.MixinMapRenderer_MapTexture"
-      ],
-      "reason": "MixinMapRenderer cannot apply on 1.21.1 (method_32601 changed its int id to class_9209), so MapTexture would cast MapRenderer to an unimplemented IMapRenderer and throw ClassCastException when a map renders. Strip it until MixinMapRenderer is repointed (runs/p172-map-atlas)."
-    }
-  ],
   "constructorRedirects": [
     {
       "id": "identifier.ctor1.to-factory",
@@ -86,6 +76,22 @@
       "capability": "mixin-config-readd",
       "risk": "flushes HUD batches when a raw draw happens; targets class_286.method_43437/43438 exist in 1.21.1 and BatchingBuffer.IS_DRAWING is present",
       "evidence": "runs/p168-buffer-renderer"
+    },
+    {
+      "id": "immediatelyfast/map-renderer-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "map_atlas_generation.MixinMapRenderer",
+      "capability": "mixin-config-readd",
+      "risk": "converted config dropped MapRenderer; 1.21.1 method_32601 takes class_9209 (MapId) instead of int, so the raw converted mixin fails to apply. The replacement reads mapId.comp_2315() and keeps method_1771 (clear)",
+      "evidence": "runs/p175-map-atlas"
+    },
+    {
+      "id": "immediatelyfast/map-texture-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "map_atlas_generation.MixinMapRenderer_MapTexture",
+      "capability": "mixin-config-readd",
+      "risk": "1.21.1 removed class_4588.method_1344; the replacement ends the draw slice at method_60803 and no longer needs the unstripped MapTexture entry or the lenni Reflect dummy",
+      "evidence": "runs/p175-map-atlas"
     }
   ],
   "mixinClassReplacements": [
@@ -152,6 +158,26 @@
       "capability": "mixin-class-replacement-degraded",
       "risk": "item lighting variants are not split (LightingState/Iris not ported); HUD batching itself is kept",
       "evidence": "runs/p133-immediatelyfast-port"
+    },
+    {
+      "id": "immediatelyfast/map-renderer-mixin",
+      "targetClass": "net/raphimc/immediatelyfast/injection/mixins/map_atlas_generation/MixinMapRenderer",
+      "replacementClass": "net/raphimc/immediatelyfast/injection/mixins/map_atlas_generation/MixinMapRenderer",
+      "alsoEmbed": [
+        "net/raphimc/immediatelyfast/feature/map_atlas_generation/MapAtlasTexture"
+      ],
+      "capability": "mixin-class-replacement",
+      "risk": "1.21.1 method_32601 takes class_9209; the original int signature is rejected at apply. The replacement reads mapId.comp_2315(), keeps the clear hook and embeds the 1.21.1 MapAtlasTexture (Identifier factory + NativeImage + TextureManager register/unregister)",
+      "evidence": "runs/p175-map-atlas"
+    },
+    {
+      "id": "immediatelyfast/map-texture-mixin",
+      "targetClass": "net/raphimc/immediatelyfast/injection/mixins/map_atlas_generation/MixinMapRenderer_MapTexture",
+      "replacementClass": "net/raphimc/immediatelyfast/injection/mixins/map_atlas_generation/MixinMapRenderer_MapTexture",
+      "alsoEmbed": [],
+      "capability": "mixin-class-replacement",
+      "risk": "1.21.1 removed class_4588.method_1344 (slice end is method_60803) and the upstream dummy uses the nested lenni Reflect jar; the replacement creates a never-registered 1x1 NativeImageBackedTexture, captures the ctor map id after super() (HEAD is before-super and rejects instance handlers), redirects the texture creation/registration and the four UVs, and cancels upload/close for atlas-backed maps",
+      "evidence": "runs/p175-map-atlas"
     }
   ]
 }

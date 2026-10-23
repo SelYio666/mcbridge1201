@@ -1,5 +1,8 @@
 # p172 — 尝试恢复地图 atlas：MapAtlasTexture 移植 + MixinMapRenderer 重登记（失败，已回滚）
 
+> **已由 p175 修复**：`MixinMapRenderer` 按 `class_9209` 重写、`MapTexture` 按 1.21.1 重写并
+> 真实渲染通过，见 `runs/p175-map-atlas/`。本文件保留失败点和回滚记录。
+
 日期：2026-10-23。p171 把半启用的 `MixinMapRenderer_MapTexture` strip 掉后，地图 atlas 整体关闭。
 本轮尝试真正修好它，结果是**失败**，但失败点很有价值。
 
