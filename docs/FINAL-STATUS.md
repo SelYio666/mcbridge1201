@@ -1,6 +1,7 @@
-# mcbridge1201 最终状态（2026-10-21）
+# mcbridge1201 最终状态（2026-10-23）
 
 > 定位：**Minecraft 版本迁移与运行辅助工具箱**。迁移与验证归本工具，日常启动交给 PCL。
+> 最新发布：[v0.5.1](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.1)（ImmediatelyFast 端口补丁/证据 + 便携包）。
 
 ## 一、已验证（有日志/截图/哈希）
 
