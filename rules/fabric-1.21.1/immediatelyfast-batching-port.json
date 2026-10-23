@@ -10,7 +10,7 @@
       "classes": [
         "map_atlas_generation.MixinMapRenderer_MapTexture"
       ],
-      "reason": "This mixin is active but casts MapRenderer to IMapRenderer; the other half (MixinMapRenderer) is inert, so rendering a map would throw ClassCastException. Strip it until MapAtlasTexture is ported to the 1.21.1 texture API (runs/p171-map-strip)."
+      "reason": "MixinMapRenderer cannot apply on 1.21.1 (method_32601 changed its int id to class_9209), so MapTexture would cast MapRenderer to an unimplemented IMapRenderer and throw ClassCastException when a map renders. Strip it until MixinMapRenderer is repointed (runs/p172-map-atlas)."
     }
   ],
   "constructorRedirects": [

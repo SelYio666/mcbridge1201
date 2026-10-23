@@ -37,6 +37,11 @@ class_291.method_43442 / method_43443 存在
 mixin 的注入在“地图渲染”时才真正执行：启动阶段不会触发，所以重登记会**假绿**——启动过、
 一用地图就炸。必须先把 `MapAtlasTexture` 移植到 1.21.1 的纹理接口，本轮不做。
 
+p172 实际尝试过：`MapAtlasTexture` 端口写好了（Identifier 工厂/NativeImage/TextureManager 都在），
+但 `MixinMapRenderer` 在 1.21.1 **无法 apply**：`method_32601` 的第一个参数从 `int` 变成
+`class_9209`，注入描述符不匹配（InvalidInjectionException）。所以需要重写这个 mixin 的注入，
+而不只是登记。
+
 ## 5) 追加：`MixinMapRenderer_MapTexture` 是半启用的（p171 已 strip）
 
 审计只列出了 `MixinMapRenderer` inert，但 config 里 **`MixinMapRenderer_MapTexture` 是启用的**。
