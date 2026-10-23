@@ -53,8 +53,8 @@ python tools/from_source_install.py --pcl-dir "D:\你的\.minecraft"
 
 ## 宣传/教学视频
 
-`promo.mp4`（52 秒，1280×720，纯代码生成）由 `tools/make_pcl_onclick_video.py` 渲染：
-下载 → 解压 → 双击 → 自动检测 → 下载校验 → PCL2 列表出现新版本。
+`promo.mp4`（56 秒，1280×720，纯代码生成）由 `tools/make_pcl_onclick_video.py` 渲染：
+为什么需要 → **快捷面板（选版本/自动检测/进度）** → 下载校验流程 → PCL2 列表出现新版本 → Java 版本提示。
 
 ```text
 python tools/make_pcl_onclick_video.py
