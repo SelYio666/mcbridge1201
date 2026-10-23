@@ -14,6 +14,18 @@
 它做的事：从公开下载源取清单 → 客户端 jar → 全部库 + Windows natives → 资源索引 + 资源对象，
 逐文件 sha1 校验，失败自动换 BMCLAPI 镜像；完成后写 `launcher_profiles.json`（不抢占已有选中配置）。
 
+## PCL2 便携版（自带 .minecraft）
+
+如果 PCL2 是便携版（目录里有 `PCL\Setup.ini` 和 `.minecraft`），直接指给它：
+
+```text
+python tools/from_source_install.py --version 1.21.1 --pcl2 "D:\...\你的PCL2目录"
+```
+
+脚本会读 `PCL/Setup.ini` 的 `LaunchFolderSelect` 找到真实游戏目录；桌面有 PCL 快捷方式时，
+`--pcl` 也会自动沿快捷方式定位。实测 PCL2 版本列表能直接看到新装的 1.20.4
+（见 `runs/p137-pcl2-onclick/`）。
+
 ## 方式 B：已有 Python 3
 
 双击 `一键装到PCL.bat`（可带版本号：`一键装到PCL.bat 1.20.1`），或命令行：

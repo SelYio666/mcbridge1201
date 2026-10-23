@@ -193,11 +193,57 @@ def install(version: str, root: Path, workers: int = 16) -> int:
 
 
 
+
+def pcl2_game_dir(target: str | Path) -> Path | None:
+    """Resolve PCL2's game directory from its exe/folder via PCL/Setup.ini LaunchFolderSelect."""
+    p = Path(target)
+    exe_dir = p.parent if p.suffix.lower() == ".exe" else p
+    ini = exe_dir / "PCL" / "Setup.ini"
+    if ini.is_file():
+        for line in ini.read_text(encoding="utf-8", errors="replace").splitlines():
+            if line.startswith("LaunchFolderSelect:"):
+                val = line.split(":", 1)[1].strip()
+                if val.startswith("$"):
+                    rel = val[1:].strip("\\/")
+                    return exe_dir / rel if rel else exe_dir
+                return Path(val)
+    portable = exe_dir / ".minecraft"
+    return portable if portable.is_dir() else None
+
+
+def pcl2_from_desktop() -> Path | None:
+    """Best effort: resolve a PCL shortcut on the desktop and read its game directory."""
+    if os.name != "nt":
+        return None
+    desktop = Path(os.environ.get("USERPROFILE", "")) / "Desktop"
+    if not desktop.is_dir():
+        return None
+    for lnk in desktop.glob("*.lnk"):
+        name = lnk.name.lower()
+        if "pcl" not in name and "plain craft" not in name:
+            continue
+        try:
+            out = subprocess.run(
+                ["powershell", "-NoProfile", "-Command",
+                 "(New-Object -ComObject WScript.Shell).CreateShortcut('" + str(lnk) + "').TargetPath"],
+                capture_output=True, text=True, timeout=15).stdout.strip()
+        except Exception:  # noqa: BLE001
+            continue
+        if out and Path(out).exists():
+            g = pcl2_game_dir(out)
+            if g:
+                return g
+    return None
+
+
 def detect_pcl_root() -> Path | None:
     """Best-effort PCL game directory: env override, PCL Setup.ini, then %APPDATA%/.minecraft."""
     env = os.environ.get("MCBRIDGE_PCL_DIR")
     if env and Path(env).is_dir():
         return Path(env)
+    via_shortcut = pcl2_from_desktop()
+    if via_shortcut and via_shortcut.is_dir():
+        return via_shortcut
     cands = []
     appdata = os.environ.get("APPDATA")
     if appdata:
@@ -285,11 +331,21 @@ def main() -> int:
                     help="装进 PCL 游戏目录（自动检测），并写 launcher_profiles.json")
     ap.add_argument("--pcl-dir", default=None,
                     help="显式指定 PCL 游戏目录（包含 versions/ 的那个 .minecraft）")
+    ap.add_argument("--pcl2", default=None,
+                    help="PCL2 的 exe 或安装目录；会读取 PCL/Setup.ini 的 LaunchFolderSelect")
     ap.add_argument("--open", action="store_true", help="装完后打开游戏目录")
     args = ap.parse_args()
 
-    pcl_mode = args.pcl or bool(args.pcl_dir)
-    root = Path(args.pcl_dir) if args.pcl_dir else Path(args.root)
+    pcl_mode = args.pcl or bool(args.pcl_dir) or bool(args.pcl2)
+    if args.pcl2:
+        resolved = pcl2_game_dir(args.pcl2)
+        if resolved is None:
+            print("无法从 PCL2 配置定位游戏目录，请改用 --pcl-dir 直接指定")
+            return 2
+        root = resolved
+        print("PCL2 游戏目录:", root)
+    else:
+        root = Path(args.pcl_dir) if args.pcl_dir else Path(args.root)
     if args.pcl and not args.pcl_dir:
         detected = detect_pcl_root()
         if detected is None:

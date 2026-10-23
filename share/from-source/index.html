@@ -99,6 +99,8 @@
         按提示回车即可。</p>
       <p><b>A1：已有 Python</b>：</p>
       <pre>python tools/from_source_install.py --version 1.21.1 --pcl
+# PCL2 便携版（自带 .minecraft）：指向它的启动器目录
+python tools/from_source_install.py --version 1.21.1 --pcl2 "D:\...\PCL2目录"
 # 或双击：share\pcl-onclick\一键装到PCL.bat</pre>
       <p>脚本会自动找 PCL 的游戏目录（<code>%APPDATA%\.minecraft</code> 或 PCL 设置里的目录），
         把版本装进去并写 <code>launcher_profiles.json</code>；打开 PCL 刷新版本列表即可看到 1.21.1。</p>

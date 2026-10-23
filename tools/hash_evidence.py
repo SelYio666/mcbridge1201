@@ -525,6 +525,8 @@ FILES = [
     "runs/p115-neoforge-attempt/neoforge-launch.log",
     "runs/p115-neoforge-attempt/neoforge-target-test.log",
     "runs/p115-neoforge-attempt/neoforge-basejar-test.log",
+    "runs/p137-pcl2-onclick/README.md",
+    "runs/p137-pcl2-onclick/pcl2-1.20.4.png",
     "tools/build_strict_probe.py",
     "probes/strictprobe/src/probe/StrictProbe.java",
     "probes/strictprobe/fabric.mod.json",
