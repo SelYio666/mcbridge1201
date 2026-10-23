@@ -68,6 +68,14 @@
       "capability": "mixin-config-readd",
       "risk": "calls ImmediatelyFast.lateInit() and onWorldJoin(); targets <init> and method_1481 still exist in 1.21.1",
       "evidence": "runs/p167-minecraft-client"
+    },
+    {
+      "id": "immediatelyfast/buffer-renderer-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "hud_batching.compat.MixinBufferRenderer",
+      "capability": "mixin-config-readd",
+      "risk": "flushes HUD batches when a raw draw happens; targets class_286.method_43437/43438 exist in 1.21.1 and BatchingBuffer.IS_DRAWING is present",
+      "evidence": "runs/p168-buffer-renderer"
     }
   ],
   "mixinClassReplacements": [
