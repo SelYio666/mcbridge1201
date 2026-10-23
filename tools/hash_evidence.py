@@ -817,6 +817,8 @@ FILES = [
     "runs/p172-map-atlas/README.md",
     "runs/p172-map-atlas/launch.log",
     "runs/p172-map-atlas/result.json",
+    "runs/p174-release-v0.5.1/README.md",
+    "runs/p174-release-v0.5.1/release-notes.md",
     "runs/p173-restore/README.md",
     "runs/p173-restore/launch.log",
     "runs/p173-restore/result.json",

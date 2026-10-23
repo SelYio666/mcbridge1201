@@ -10,10 +10,10 @@
 | `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
 | Java JUnit | ✅ 25/25 |
 | `python tools/test_review_fixes.py` | ✅ **73/73** |
-| `python tools/check_hashes.py` | ✅ **944/944**（mismatch 0 / missing 0） |
+| `python tools/check_hashes.py` | ✅ **946/946**（mismatch 0 / missing 0） |
 | `python tools/verify_evidence.py` | ✅ passed（73/73） |
 | GitHub CI（master，push+dispatch） | ✅ push 触发已验证（多次 `build` success，最新见 Actions）；此前无 run 是 GitHub Actions degraded performance |
-| Release 资产 | ✅ `v0.5.0` / `mcbridge-launcher-0.5.0.zip` |
+| Release 资产 | ✅ `v0.5.1` / `mcbridge-launcher-0.5.1.zip` |
 | 工作区 | ✅ 干净（`git status` 无改动） |
 
 环境：Windows + JDK 21（`.toolchain/jdk`）、Gradle 9.8.1（`.toolchain/gradle`）、

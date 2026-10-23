@@ -88,7 +88,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 944 项；桥一致性 0（ImmediatelyFast 端口 jar，p165）；mixin 审计 inert=5（MapTexture 显式 strip：MixinMapRenderer 在 1.21.1 因 `method_32601(int→class_9209)` 无法 apply（p172），MapAtlasTexture 端口已写但未 embed；其余 4 个见 `runs/p169-inert-analysis/`）；
+- 单测 25/25；`verify_evidence` passed；哈希 946 项；桥一致性 0（ImmediatelyFast 端口 jar，p165）；mixin 审计 inert=5（MapTexture 显式 strip：MixinMapRenderer 在 1.21.1 因 `method_32601(int→class_9209)` 无法 apply（p172），MapAtlasTexture 端口已写但未 embed；其余 4 个见 `runs/p169-inert-analysis/`）；
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，73/73；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
