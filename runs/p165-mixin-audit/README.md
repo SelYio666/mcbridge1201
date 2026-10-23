@@ -37,8 +37,9 @@ checked 1 jar(s); problems = 0                               (bridge 一致性�
 
 ## 后续
 
-- p166 已把 `hud_batching.MixinChatHud` 重新登记进 config，审计 inert 从 7 降到 6
-  （`runs/p166-chat-hud/`）；其余 6 个仍未处理；
+- p166 已把 `hud_batching.MixinChatHud` 重新登记，审计 inert 从 7 降到 6
+  （`runs/p166-chat-hud/`）；p167 又把 `core.MixinMinecraftClient` 登记回来，inert 6 → 5
+  （`runs/p167-minecraft-client/`）；其余 5 个仍未处理；
 - 若要补这些功能，需要逐个按 1.21.1 移植（有的会撞 tombstone/描述符），不能只往 config 里加名字；
 - 本次不硬加，避免把 v0.5.0 已稳定的 HUD 路径搞崩。
 

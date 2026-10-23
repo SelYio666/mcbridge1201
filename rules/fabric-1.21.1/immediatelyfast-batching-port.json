@@ -60,6 +60,14 @@
       "capability": "mixin-config-readd",
       "risk": "converted config dropped ChatHud; 1.21.1 method_1805 added a boolean arg and begin/end nests inside InGameHud batching",
       "evidence": "runs/p166-chat-hud"
+    },
+    {
+      "id": "immediatelyfast/minecraft-client-config",
+      "config": "immediatelyfast-common.mixins.json",
+      "mixinClass": "core.MixinMinecraftClient",
+      "capability": "mixin-config-readd",
+      "risk": "calls ImmediatelyFast.lateInit() and onWorldJoin(); targets <init> and method_1481 still exist in 1.21.1",
+      "evidence": "runs/p167-minecraft-client"
     }
   ],
   "mixinClassReplacements": [
