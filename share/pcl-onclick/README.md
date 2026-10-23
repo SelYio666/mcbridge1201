@@ -2,6 +2,15 @@
 
 两种形态，任选其一。
 
+## 方式 A0：图形面板（最直观）
+
+1. Release 里下载 `mcbridge-pcl-panel.zip`；
+2. 解压后双击 `mcbridge-pcl-panel.exe`；
+3. 面板会自动列出正式版/快照、自动检测 PCL 目录；选版本 →「安装到 PCL」→ 看进度条；
+4. 装完自动打开游戏目录（可关），PCL 刷新版本列表即可。
+
+面板和命令行用的是同一套下载/校验逻辑（同一个 exe 也保留着命令行版）。
+
 ## 方式 A：免 Python（推荐）
 
 1. 打开 <https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.5> 下载

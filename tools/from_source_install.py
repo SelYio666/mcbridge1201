@@ -13,10 +13,12 @@ is left behind, and every asset is skipped when already present with the right s
 from __future__ import annotations
 
 import argparse
+import base64
 import concurrent.futures
 import hashlib
 import json
 import os
+import subprocess
 import sys
 import time
 import urllib.error
@@ -127,9 +129,17 @@ def allowed(lib: dict) -> bool:
     return ok
 
 
-def install(version: str, root: Path, workers: int = 16) -> int:
+def install(version: str, root: Path, workers: int = 16, progress=None) -> int:
     root.mkdir(parents=True, exist_ok=True)
+    def tick(phase: str, done: int = 0, total: int = 0, msg: str = "") -> None:
+        if progress:
+            try:
+                progress(phase, done, total, msg)
+            except Exception:  # noqa: BLE001
+                pass
+
     print(f"[1/5] manifest ...")
+    tick("manifest", msg="读取版本清单")
     if version in ("latest", "latest-release"):
         version = manifest()["latest"]["release"]
     elif version == "latest-snapshot":
@@ -152,12 +162,14 @@ def install(version: str, root: Path, workers: int = 16) -> int:
     (vdir / f"{vid}.json").write_text(json.dumps(data, indent=2), encoding="utf-8")
 
     print(f"[2/5] client jar ({version}) ...")
+    tick("client", msg=f"下载客户端 {version}")
     client = data["downloads"]["client"]
     if not download(client["url"], vdir / f"{vid}.jar", client.get("sha1")):
         print("client jar failed")
         return 3
 
     print("[3/5] libraries (+ natives) ...")
+    tick("libraries", msg="下载库与 natives")
     natives_dir = vdir / "natives"
     natives_dir.mkdir(parents=True, exist_ok=True)
     libs = [l for l in data.get("libraries", []) if allowed(l)]
@@ -194,10 +206,12 @@ def install(version: str, root: Path, workers: int = 16) -> int:
                     print("  native extract failed:", path.name, exc)
             if i % 20 == 0 or i == len(jobs):
                 print(f"  {i}/{len(jobs)} libraries")
+                tick("libraries", i, len(jobs))
     if failed:
         print(f"libraries failed: {failed}")
 
     print("[4/5] asset index ...")
+    tick("assets", 0, 0, "下载资源索引")
     idx_meta = data["assetIndex"]
     idx_path = root / "assets" / "indexes" / f"{idx_meta['id']}.json"
     if not download(idx_meta["url"], idx_path, idx_meta.get("sha1")):
@@ -219,8 +233,10 @@ def install(version: str, root: Path, workers: int = 16) -> int:
         for i, fut in enumerate(concurrent.futures.as_completed(futs), 1):
             if fut.result():
                 ok += 1
-            if i % 500 == 0 or i == len(futs):
+            if i % 200 == 0 or i == len(futs):
                 print(f"  {i}/{len(futs)} assets ok={ok}")
+                tick("assets", i, len(futs), f"{ok} 个已通过校验")
+    tick("done", len(objs), len(objs), "下载完成")
     print(f"done: {vdir}")
     print(f"assets ok {ok}/{len(objs)}; launch/verify with:")
     print(f'  python launcher/mclaunch.py verify {vid} "{root}"')
@@ -259,10 +275,15 @@ def pcl2_from_desktop() -> Path | None:
         if "pcl" not in name and "plain craft" not in name:
             continue
         try:
-            out = subprocess.run(
-                ["powershell", "-NoProfile", "-Command",
-                 "(New-Object -ComObject WScript.Shell).CreateShortcut('" + str(lnk) + "').TargetPath"],
-                capture_output=True, text=True, timeout=15).stdout.strip()
+            ps = ("$p=(New-Object -ComObject WScript.Shell).CreateShortcut('" + str(lnk)
+                  + "').TargetPath; [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($p))")
+            raw = subprocess.run(["powershell", "-NoProfile", "-Command", ps],
+                                 capture_output=True, text=True, encoding="ascii",
+                                 errors="ignore", timeout=20).stdout.strip()
+            try:
+                out = base64.b64decode(raw).decode("utf-8", "replace").strip()
+            except Exception:  # noqa: BLE001
+                out = ""
         except Exception:  # noqa: BLE001
             continue
         if out and Path(out).exists():
