@@ -20,8 +20,9 @@ claim that these paths work.
   a 1x1 never-registered dummy instead of the lenni allocate, and `MapAtlasTexture` is embedded.
   A real singleplayer run holding `filled_map` (map id 1, `components:{"minecraft:map_id":1}`)
   rendered the map, logged `map-atlas bind … immediatelyfast:map_atlas/0`, and produced no
-  ClassCastException/crash. Only one held map in an integrated server was tested; item frames,
-  multiple maps and live map updates are untested.
+  ClassCastException/crash. `runs/p177-map-atlas-edge/` extends this to two maps (tile 0/1,
+  packed 0 and 256) and an item frame with map 2, rendered in the same screenshot. Live map
+  updates, atlas overflow and the world-exit cleanup path are still untested.
 - Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
   (`runs/p159`, `p161`, `p163`, `p164`); real mrpack with files+overrides verified (`p160`).
 - Performance: no reproducible gain; 80-armor-stand interleaved runs are ~13% slower with

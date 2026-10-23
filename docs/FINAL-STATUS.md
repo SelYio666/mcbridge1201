@@ -40,6 +40,7 @@
 | MixinVertexBuffer 静态截图 A/B（差 0.018%，证据不足，未启用） | `runs/p170-vertex-verify/` |
 | 半启用的 MapTexture mixin 显式 strip（避免地图渲染 ClassCastException） | `runs/p171-map-strip/` |
 | ImmediatelyFast 地图 atlas 恢复：两个 map mixin 按 1.21.1 重写，单人世界真实手持 filled_map 渲染（atlas 绑定 + UV 重定向） | `runs/p175-map-atlas/`（`world.png`、`map-atlas bind … immediatelyfast:map_atlas/0`、无 crash；p172 的失败点保留） |
+| ImmediatelyFast 地图 atlas 边界：两张地图分别落到 tile 0/1（packed 0 / 256），并与物品展示框地图同屏渲染 | `runs/p177-map-atlas-edge/`（`world.png`、两条 bind 日志、无 ClassCastException/crash） |
 | Forge 1.20.1-47.4.28 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p159-forge-server/` |
 | mrpack 含真实 files（HTTP 下载 + SHA-1 校验 + overrides） | `runs/p160-mrpack/` |
 | NeoForge 21.1.264 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p161-neoforge-server/` |
@@ -89,7 +90,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 962 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165）；mixin 审计 inert=3（`listed=36`；p175 已恢复 MixinMapRenderer + MapTexture，剩余 `MixinBufferBuilder`、`MixinFontManager`、`MixinVertexBuffer`，原因见 `runs/p169-inert-analysis/`）；
+- 单测 25/25；`verify_evidence` passed；哈希 970 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165）；mixin 审计 inert=3（`listed=36`；p175 已恢复 MixinMapRenderer + MapTexture，p177 补了多地图/展示框，剩余 `MixinBufferBuilder`、`MixinFontManager`、`MixinVertexBuffer`，原因见 `runs/p169-inert-analysis/`）；
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归（`tools/test_review_fixes.py`，79/79；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
@@ -102,7 +103,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 | NeoForge 带第三方模组 / 进世界 | ✅ 已通过：AppleSkin（p127）、Farmer's Delight 内容模组（p128）、Jade 数据同步/HUD（p130）；**专用服务器 + 客户端 join 已通过**（p161，端口 25567；安装时曾因 maven.neoforged.net 超时失败，复用本地 client libraries 后成功）；**带 Farmer's Delight 的专用服务器 + 同模组客户端加入**（p163，端口 25568） |
 | Forge 1.20.1 带模组世界 | ✅ 显示类（AppleSkin，p129）+ 内容类（Farmer's Delight，p131）；**专用服务器 + 客户端 join 已通过**（p159：端口 25566）；**带 Farmer's Delight 的专用服务器 + 同模组客户端加入**（p164：端口 25569） |
 | 渲染类模组：Sodium | ❌ blocked_static | 1.20.1 的 Sodium 0.5.13 静态探针：missingClass=13、missingMember=15、descMismatch=16（`runs/p158-sodium-probe/`）；需要移植其渲染内核，本轮不做；Iris 兼容分支已在 p142/p143 跑通 |
-| ImmediatelyFast 的完整度 | ✅ HUD+物品+overlay 批处理生效；地图 atlas 已恢复 | 单人/专用服务器（p134/p141）、soak 95s（p140）、关闭开关归零（p137）、Iris 1.8.1/1.8.14（p142/p143）、shader pack r5.3（p145/p146，hud=11146/11168）、关闭 universal batching 的回退路径（p147）、item per-lighting（p149/p150）；**地图 atlas：p175 真实手持地图渲染通过（atlas id 绑定/UV 重定向/无崩溃）**；私有成员走反射 |
+| ImmediatelyFast 的完整度 | ✅ HUD+物品+overlay 批处理生效；地图 atlas 已恢复 | 单人/专用服务器（p134/p141）、soak 95s（p140）、关闭开关归零（p137）、Iris 1.8.1/1.8.14（p142/p143）、shader pack r5.3（p145/p146，hud=11146/11168）、关闭 universal batching 的回退路径（p147）、item per-lighting（p149/p150）；**地图 atlas：p175 真实手持地图渲染通过；p177 两张地图 tile 0/1 + 物品展示框同屏渲染**；私有成员走反射 |
 | Shulker 网格预览 | ⏸ 封存 | 环境侧容器组件问题，需抓包复现 |
 | TrashSlot 完整 UI 流程 | ⏸ | 旧桥版本已跑通（p63–p65）；当前桥只做 bridge 级 + 探针 |
 | mrpack 含 files 的真实包 | ✅ | p160：本地 HTTP 下载 + SHA-1/SHA-512 校验 + overrides 落盘通过；包内含 mod jar，不提交（`runs/p160-mrpack/`） |

@@ -1,0 +1,8 @@
+﻿date: 2026-10-23
+world: ColdWorldMapEdge
+jar_sha256: f0f7fa8e47c3b36791598a0dc2336954ca74e3b177fd66ef24fc953fe833a7a8
+jar: same ImmediatelyFast-ported.jar as p175 (no production code changes)
+maps: 1 -> packed=0 (tile 0,0), 2 -> packed=256 (tile 128,0)
+mixin_config: both map mixins registered; audit unchanged from p175 (listed=36 inert=3)
+result: required_maps_ok=true, errors=[], crash=null
+screenshot: world.png (held map + item frame map)

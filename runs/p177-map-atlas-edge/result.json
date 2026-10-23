@@ -1,0 +1,26 @@
+{
+  "joined": true,
+  "map_marker": true,
+  "required_maps": [
+    1,
+    2
+  ],
+  "required_maps_ok": true,
+  "map_world_rendered": true,
+  "markers": [
+    "[21:02:09] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas create id=0",
+    "[21:02:09] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas assign map=1 packed=0",
+    "[21:02:09] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas texture map=1 packed=0 atlas=0",
+    "[21:02:09] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas bind map=map/1 texture=immediatelyfast:map_atlas/0",
+    "[21:02:09] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas assign map=2 packed=256",
+    "[21:02:09] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas texture map=2 packed=256 atlas=0",
+    "[21:02:09] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas bind map=map/2 texture=immediatelyfast:map_atlas/0"
+  ],
+  "errors": [],
+  "crash": null,
+  "exit_code": 1,
+  "world": "ColdWorldMapEdge",
+  "username": "IFMapUser",
+  "screenshot": "world.png",
+  "state_screenshots": []
+}
