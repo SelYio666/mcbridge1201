@@ -3,6 +3,28 @@
 This file records what is intentionally not verified in the current environment. It is not a
 claim that these paths work.
 
+## Update 2026-10-23 (current state)
+
+- ImmediatelyFast 1.21.1 batching port is **verified** (HUD/items/overlay, per-lighting, Iris
+  1.8.1/1.8.14 + shader pack r5.3, dedicated-server multiplayer, 95s soak, A/B checks,
+  SimpleImmediate fallback): see `runs/p134`-`p150`.
+- The port jar still has **4 inert mixins**; three more were re-registered (ChatHud,
+  MinecraftClient, BufferRenderer, `runs/p166`-`p168`). The remaining four are deliberately
+  inert and documented in `runs/p169-inert-analysis/`:
+  - `MixinBufferBuilder`: shadows `field_1555`, gone from the 1.21.1 BufferBuilder;
+  - `MixinFontManager`: injects `method_27541`, absent from the 1.21.1 index;
+  - `MixinVertexBuffer`: targets exist, but swaps `glBufferData` for `glBufferSubData`; needs a
+    vertex-upload stress/visual test before enabling;
+  - `MixinMapRenderer`: needs `MapAtlasTexture` ported to the 1.21.1 texture API first.
+- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
+  (`runs/p159`, `p161`, `p163`, `p164`); real mrpack with files+overrides verified (`p160`).
+- Performance: no reproducible gain; 80-armor-stand interleaved runs are ~13% slower with
+  universal batching (`runs/p148`, `p157`). Do not claim a speedup.
+- Sodium conversion probe: `blocked_static` 13/15/16 (`runs/p158`); needs its rendering core
+  ported, out of scope.
+- Still open: Shulker grid preview (paused), TrashSlot full UI input, portable package on a
+  clean/other machine, CI coverage of every commit (push-triggered CI works).
+
 ## Already verified (dedicated server)
 
 | area | evidence |
