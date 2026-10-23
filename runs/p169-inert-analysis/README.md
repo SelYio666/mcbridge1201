@@ -37,6 +37,15 @@ class_291.method_43442 / method_43443 存在
 mixin 的注入在“地图渲染”时才真正执行：启动阶段不会触发，所以重登记会**假绿**——启动过、
 一用地图就炸。必须先把 `MapAtlasTexture` 移植到 1.21.1 的纹理接口，本轮不做。
 
+## 5) 追加：`MixinMapRenderer_MapTexture` 是半启用的（p171 已 strip）
+
+审计只列出了 `MixinMapRenderer` inert，但 config 里 **`MixinMapRenderer_MapTexture` 是启用的**。
+它构造时 `((IMapRenderer) field_2047).immediatelyFast$getAtlasMapping(id)`，而 `IMapRenderer` 的实现
+来自 inert 的 `MixinMapRenderer` → 一旦渲染地图会 `ClassCastException`。
+
+处理：用规则的 `mixinStrips` 显式移除 `MixinMapRenderer_MapTexture`（记录 reason），
+地图回退 vanilla，直到 `MapAtlasTexture` 移植完成。证据：`runs/p171-map-strip/`。
+
 ## 结论
 
 - 已救活 3 个（p166–p168），inert 7 → 4；

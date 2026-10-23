@@ -3,6 +3,16 @@
   "id": "immediatelyfast-batching-port",
   "target": "fabric-1.21.1",
   "source": "ImmediatelyFast-Fabric-1.5.5+1.20.4+1.21.1",
+  "mixinStrips": [
+    {
+      "id": "immediatelyfast/strip-map-atlas-texture",
+      "config": "immediatelyfast-common.mixins.json",
+      "classes": [
+        "map_atlas_generation.MixinMapRenderer_MapTexture"
+      ],
+      "reason": "This mixin is active but casts MapRenderer to IMapRenderer; the other half (MixinMapRenderer) is inert, so rendering a map would throw ClassCastException. Strip it until MapAtlasTexture is ported to the 1.21.1 texture API (runs/p171-map-strip)."
+    }
+  ],
   "constructorRedirects": [
     {
       "id": "identifier.ctor1.to-factory",

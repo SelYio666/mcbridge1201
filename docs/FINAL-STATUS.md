@@ -37,6 +37,7 @@
 | ImmediatelyFast 端口 mixin 审计：inert 5 → 4（重登记 MixinBufferRenderer） | `runs/p168-buffer-renderer/` |
 | 剩余 4 个 inert 的阻塞原因（目标缺失/GL 路径/纹理 API） | `runs/p169-inert-analysis/` |
 | MixinVertexBuffer 静态截图 A/B（差 0.018%，证据不足，未启用） | `runs/p170-vertex-verify/` |
+| 半启用的 MapTexture mixin 显式 strip（避免地图渲染 ClassCastException） | `runs/p171-map-strip/` |
 | Forge 1.20.1-47.4.28 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p159-forge-server/` |
 | mrpack 含真实 files（HTTP 下载 + SHA-1 校验 + overrides） | `runs/p160-mrpack/` |
 | NeoForge 21.1.264 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p161-neoforge-server/` |
@@ -86,7 +87,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 931 项；桥一致性 0（ImmediatelyFast 端口 jar，p165）；mixin 审计 inert=4（剩余 BufferBuilder/FontManager/VertexBuffer/MapRenderer 的原因见 `runs/p169-inert-analysis/`；VertexBuffer 的静态截图 A/B 见 `runs/p170-vertex-verify/`，因证据不足未启用）；
+- 单测 25/25；`verify_evidence` passed；哈希 936 项；桥一致性 0（ImmediatelyFast 端口 jar，p165）；mixin 审计 inert=5（其中 `MixinMapRenderer_MapTexture` 是 p171 显式 strip：它强转 IMapRenderer 而另一半 MixinMapRenderer 未登记，会在地图渲染时 ClassCastException；其余 4 个原因见 `runs/p169-inert-analysis/`；VertexBuffer 静态 A/B 见 `runs/p170-vertex-verify/`，证据不足未启用）；
 - 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归（`tools/test_review_fixes.py`，73/73；`/api/jvm` 依赖网络，偶发超时会跳过）接入统一门禁；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
