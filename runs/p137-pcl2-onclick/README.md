@@ -30,3 +30,21 @@ python tools/from_source_install.py --version 1.20.4 --pcl2 "D:\我的世界\.mi
 
 - 版本列表截图为 PCL2 窗口裁剪，已去掉桌面内容；
 - 本次只验证“安装后 PCL2 能列出该版本”，未做“从 PCL2 启动进游戏”（那需要真实 GPU 窗口与账号）。
+
+## 打包 exe 复测
+
+用 PyInstaller onedir 构建的 `mcbridge-pcl-setup.exe` 再跑一次同样的命令：
+
+```text
+mcbridge-pcl-setup.exe --version 1.20.4 --pcl2 "D:\我的世界\.minecraft\涟漪专用启动器"
+```
+
+输出 `done ... / assets ok 3788/3788 / 已写 launcher_profiles.json`，退出码 0；
+PCL2 版本列表仍显示 1.20.4。
+
+## 关于“最新版 PCL”
+
+- 本机安装的 PCL2 文件版本为 **2.13.1.1**（2026-08-07）；官方最新为 **2.99.0.0**（2026-10-20）；
+- 官方二进制只通过爱发电发布，当前网络到 `afdian.com:443` 不通，无法下载 2.99；
+- 社区版 PCL2-CE 需要 .NET 9，且非官方构建，按用户要求**未使用**；
+- 因此本证据基于 2.13.1.1；拿到 2.99 的 exe 后可复跑同一命令。

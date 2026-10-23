@@ -41,3 +41,18 @@ python tools/from_source_install.py --pcl-dir "D:\你的\.minecraft"
 - 需要约 1 GB 磁盘；
 - 若 PCL 用了自定义游戏目录，按提示手动输入（或加 `--pcl-dir`）；
 - 平台只提供工具与公开地址，不托管、不分发游戏文件；请遵守 Minecraft EULA。
+
+## 宣传/教学视频
+
+`promo.mp4`（52 秒，1280×720，纯代码生成）由 `tools/make_pcl_onclick_video.py` 渲染：
+下载 → 解压 → 双击 → 自动检测 → 下载校验 → PCL2 列表出现新版本。
+
+```text
+python tools/make_pcl_onclick_video.py
+```
+
+## 已验证的启动器版本
+
+- PCL2 **2.13.1.1**（便携版，2026-08 构建）：安装 1.20.4 后版本列表出现该版本，
+  截图见 `runs/p137-pcl2-onclick/pcl2-1.20.4.png`；
+- 打包后的 `mcbridge-pcl-setup.exe` 也实测通过（`--pcl2` 指定 PCL2 目录，rc=0）。
