@@ -159,8 +159,8 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 ## v0.5.5 涓€閿畨瑁呭埌 PCL 澧為噺楠屾敹锛?026-10-24锛?
 | 闂ㄧ | 缁撴灉 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?鍏?**88 椤?*锛堟湰娆?**88/88**锛涙柊澧?1 鏉?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**1085/1085** |
+| `python tools/test_review_fixes.py` | 鉁?鍏?**89 椤?*锛堟湰娆?**89/89**锛涙柊澧?1 鏉?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛?|
+| `python tools/check_hashes.py` | 鉁?**1098/1098** |
 | `python tools/verify_evidence.py` | 鉁?passed |
 | 鍥惧舰闈㈡澘 | 鉁?`mcbridge-pcl-panel.zip`锛圧elease v0.5.5锛夛細鐗堟湰涓嬫媺/鎼滅储銆乺elease/snapshot/old_* / all銆佽繘搴︽潯/鏃ュ織銆丳CL2 鐩綍鑷姩妫€娴?|
 | 鍏?Python 瀹夎鍣?| 鉁?`mcbridge-pcl-setup.zip`锛汸CL2 2.13.1.1 渚挎惡鐗堝疄娴?1.20.4 鐗堟湰鍒楄〃鍑虹幇锛坄runs/p137-pcl2-onclick/`锛?|
@@ -171,3 +171,17 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 
 - 闀滃儚鑺傜偣浼氶殢鏃堕棿/鍦板尯鍙樺寲锛宑anary 鍙槸鍗曟閲囨牱锛?- 瑙勫垯鏂囦欢鎸?`capability/risk/evidence` 缁戝畾锛屾柊澧炶兘鍔涘繀椤诲厛鏈夌湡瀹?boot/杩涗笘鐣岃瘉鎹紱
 - `work/` 涓?`dist/` 涓嶅叆搴擄紱浠撳簱涓嶅垎鍙戞父鎴?妯＄粍/杞崲鍚庣殑 jar锛?- ImmediatelyFast 宸插畬鎴?batching 寮曟搸绉绘锛圚UD/鐗╁搧鎵瑰鐞嗙敓鏁堬紝A/B 鍙鐜帮級锛汭ris銆乸er-lighting 鐗╁搧鍙樹綋涓庡抚鐜囧熀鍑嗕粛鏈仛銆?
+
+## p187 Shulker 网格 icon + 服务端物品 增量验收（2026-10-24，本段为正常 UTF-8；上文历史段落保持原样）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **89 项**（本次 **89/89**；新增 1 条 SBT grid icon + server-box 回归） |
+| `python tools/check_hashes.py` | ✅ **1098/1098** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| 网格 icon | ✅ `GRID_DRAWITEMS ... items=1 first=minecraft:diamondx5`、`GRID_DRAWITEM stack=minecraft:diamond count=5`；`grid.png` 槽内 diamond 图标 ×5 正常绘制 |
+| 服务端物品 | ✅ `/item replace ... container.3` 同步的 shulker：`GRID_SERVERBOX slot=3 nonAir=1`，HUD 源 `source=server`，同一条管线渲染 |
+| 根因 | set-as-get（`method_57379(type,null)`=set，首次读即清空 CONTAINER，p110 起服务端物品坏掉）→ 改为 `getComponents().get`；转换剥掉了 mod 的 ItemStackMixin → companion 1.1.0 重新注入 getTooltipData + 注册 component-first provider；harness 写 `preview.alwaysOn=true` |
+| Release | 沿用 `v0.5.5`（主工具 v0.5.4；p187 无新 release） |
+| CI | run `40109967951` success（head `31a0494`） |
+| 隐患 | 未验证：FULL 预览类型、多物品网格、预览键交互、真实鼠标 hover（harness 改用 HudRenderCallback 驱动同一条管线，OS 光标注入不可靠） |

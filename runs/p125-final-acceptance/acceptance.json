@@ -173,6 +173,18 @@
     "python tools/check_download_sources.py [--strict]",
     "python tools/build_portable.py --label 0.4.4",
     "python tools/test_portable.py --root <dir> --version 1.21.1"
-  ]
+  ],
+  "p187": {
+    "date": "2026-10-24",
+    "review_fixes": "89/89",
+    "hashes": "1098/1098",
+    "verify_evidence": "passed",
+    "root_causes": "component reads used ItemStack.set (method_57379(type,null)) and cleared CONTAINER on first read (server-synced box broken since p110); the conversion stripped the mod's ItemStackMixin so nothing supplied PreviewTooltipData",
+    "shulker_grid": "grid draws the diamond icon with its count; companion 1.1.0 injects getTooltipData + registers a component-first provider over the mod's one for all 17 shulker items; harness writes preview.alwaysOn=true",
+    "shulker_fixes": "ShulkerBoxNbtBridge + AppleSkinFoodBridge + companion reads -> getComponents().get (method_57353().method_57829); fixed bridge classes re-injected into shulker-patched(2)/appleskin jars",
+    "server_item": "/item replace entity GridUser container.3 with minecraft:shulker_box[minecraft:container=[{slot:0,item:{id:\"minecraft:diamond\",count:5}}]] syncs and renders: GRID_SERVERBOX slot=3 nonAir=1, GRID_DRAWITEMS first=minecraft:diamondx5",
+    "remaining": "HUD-driven tooltip render (real mouse hover is unreliable to inject); FULL preview type, multi-item grids, preview-keybind interaction untested",
+    "ci": "run 40109967951 success (commit 31a0494)",
+    "release": "no new release (main tool still v0.5.4)"
+  }
 }
-
