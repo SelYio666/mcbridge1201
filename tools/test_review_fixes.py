@@ -758,6 +758,17 @@ def test_immediatelyfast_port() -> None:
                and "method_57353().method_57829" in p187_bridge)
     check("SBT grid draws item icons and serves the server-synced box (set-as-get fixed)", p187_ok,
           "p187 drawitems/drawitem/serverbox markers + component reads via getComponents().get")
+    p188_result = json.loads((ROOT / "runs" / "p188-atlas-overflow" / "result.json").read_text(encoding="utf-8"))
+    p188_log = (ROOT / "runs" / "p188-atlas-overflow" / "client.log").read_text(encoding="utf-8", errors="replace")
+    p188_ok = (p188_result.get("joined") and p188_result.get("exit_seen")
+               and not p188_result.get("errors") and not p188_result.get("crash")
+               and p188_log.count("map-atlas create id=1") == 1
+               and "map-atlas assign map=1025 packed=65536" in p188_log
+               and "map-atlas bind map=map/1025 texture=immediatelyfast:map_atlas/1" in p188_log
+               and "atlas1-pixel-check mismatches=0" in p188_log
+               and "map-atlas clear atlases=2" in p188_log)
+    check("map atlas overflow creates the second atlas, encodes tiles and cleans up both", p188_ok,
+          "p188 create id=1 exactly once, packed 65536, bind map_atlas/1, pixel-check 0, clear atlases=2")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")

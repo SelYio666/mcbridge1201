@@ -159,8 +159,8 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 ## v0.5.5 涓€閿畨瑁呭埌 PCL 澧為噺楠屾敹锛?026-10-24锛?
 | 闂ㄧ | 缁撴灉 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?鍏?**89 椤?*锛堟湰娆?**89/89**锛涙柊澧?1 鏉?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**1098/1098** |
+| `python tools/test_review_fixes.py` | 鉁?鍏?**88 椤?*锛堟湰娆?**88/88**锛涙柊澧?1 鏉?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛?|
+| `python tools/check_hashes.py` | 鉁?**1085/1085** |
 | `python tools/verify_evidence.py` | 鉁?passed |
 | 鍥惧舰闈㈡澘 | 鉁?`mcbridge-pcl-panel.zip`锛圧elease v0.5.5锛夛細鐗堟湰涓嬫媺/鎼滅储銆乺elease/snapshot/old_* / all銆佽繘搴︽潯/鏃ュ織銆丳CL2 鐩綍鑷姩妫€娴?|
 | 鍏?Python 瀹夎鍣?| 鉁?`mcbridge-pcl-setup.zip`锛汸CL2 2.13.1.1 渚挎惡鐗堝疄娴?1.20.4 鐗堟湰鍒楄〃鍑虹幇锛坄runs/p137-pcl2-onclick/`锛?|
@@ -185,3 +185,16 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | Release | 沿用 `v0.5.5`（主工具 v0.5.4；p187 无新 release） |
 | CI | run `40109967951` success（head `31a0494`） |
 | 隐患 | 未验证：FULL 预览类型、多物品网格、预览键交互、真实鼠标 hover（harness 改用 HudRenderCallback 驱动同一条管线，OS 光标注入不可靠） |
+
+## p188 map atlas 1024 溢出 增量验收（2026-10-25，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **90 项**（本次 **90/90**；新增 1 条 map atlas overflow 回归） |
+| `python tools/check_hashes.py` | ✅ **1110/1110** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| 溢出 | ✅ 1024 张填满 atlas 0 后：`map-atlas create id=1`（恰好一次）、`assign map=1025 packed=65536`（atlas 1 tile 0）、`bind map=map/1025 texture=immediatelyfast:map_atlas/1` |
+| 上传证明 | ✅ `atlas1-pixel-check mismatches=0`（4 采样点读回 atlas 1 NativeImage 与 MapState 颜色一致；update marker 节流故用像素） |
+| 退出清理 | ✅ `map-atlas clear atlases=2`、exit 0、errors=[]、crash=null |
+| Release | 沿用 `v0.5.5`（主工具 v0.5.4；p188 无新 release，实现零改动） |
+| 隐患 | 第三个 atlas（2048+ 张）、跨 atlas 同屏视觉、真实服务端 1024+ 张地图端到端未测 |

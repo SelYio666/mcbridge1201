@@ -49,6 +49,7 @@
 | TrashSlot 绌?cursor 鍙抽敭 undelete锛歵rash 5 鈫?鍙抽敭 鈫?cursor 1銆乼rash 4銆佹湇鍔＄ 4锛汢alm 灞忓箷浜嬩欢纭疄鍒嗗彂鍙抽敭 | `runs/p185-trash-undelete-right/`锛坄DEBUG_CLICK button=1 hovering=true`銆乣DEBUG_PROVIDER_UNDELETE right=true`銆乣RIGHT_STATE carried=1 trash=4`锛沗after.png`锛?|
 | ShulkerBoxTooltip 缃戞牸棰勮锛堥儴鍒嗘仮澶嶏級锛歝lient-side ContainerComponent + wrapper 璇诲彇 component + grid renderer 鐨?t2/t4 妗ワ紱tooltip 鍑虹幇棰勮妗嗕笌 `Diamond 脳5`锛屼絾缃戞牸 item icon 浠嶇己銆佺湡瀹?server item 浠嶇┖ | `runs/p186-shulker-grid-client-item/`锛坄SBT_WRAP show=true inv=27 nonAir=1`锛沗grid.png`锛?|
 | ShulkerBoxTooltip 网格 item icon + 服务端物品恢复 | ✅ | p187：两个根因修复——桥接/companion 把 `method_57379(type,null)`（=set）当读用、首次读即清空服务端栈的 container（p110 起服务端物品坏掉）；转换剥掉 mod 的 ItemStackMixin 导致无人提供 PreviewTooltipData。companion 1.1.0 注入 getTooltipData + 注册 component-first provider（17 个 shulker 物品）；harness 写 `preview.alwaysOn=true`。实测 `GRID_DRAWITEMS ... first=minecraft:diamondx5`、`GRID_DRAWITEM stack=minecraft:diamond count=5`、`GRID_SERVERBOX slot=3 nonAir=1`（`/item replace` 真实服务端 shulker，HUD 源 source=server），截图槽内 diamond ×5 图标正常绘制；未验证：FULL 预览类型、多物品网格、预览键交互、真实鼠标 hover | `runs/p187-grid-draw-probe/`（`grid.png`、`result.json`、`client.log`、README） |
+| 地图 atlas 1024 溢出（第二个 atlas） | ✅ | p188 纯验证轮（实现零改动）：探针用 map 1 的真实 MapState 连续分配 1026 个 map id，`map-atlas create id=1` 恰好一次（1024 满后溢出）、编码正确（`assign map=1025 packed=65536`=atlas 1 tile 0、`mapping1024=7967`=atlas 0 最后一格）、`bind map=map/1025 texture=immediatelyfast:map_atlas/1`；HUD 内 `MapRenderer.draw` 触发真实上传后 `atlas1-pixel-check mismatches=0`（4 采样点读回 atlas 1 NativeImage 与 MapState 颜色一致；update marker 有节流故用像素）；`map-atlas clear atlases=2` 正常退出；未测：第三个 atlas（2048+）、跨 atlas 同屏视觉、真实服务端 1024+ 张地图端到端 | `runs/p188-atlas-overflow/`（`result.json`、`client.log`、README） |
 | 涓€閿畨瑁呭埌 PCL 鍥惧舰闈㈡澘/鐗堟湰閫夋嫨 | 鉁?v0.5.5锛歚mcbridge-pcl-panel.zip` + `mcbridge-pcl-setup.zip`锛涚増鏈笅鎷?鎼滅储/杩涘害/PCL2 鑷姩妫€娴嬶紱`from_source_install` 鏀寔 release/snapshot/old_* / all / latest-snapshot锛汸CL2 2.13.1.1 瀹炴祴 | `share/pcl-onclick/`銆乣runs/p137-pcl2-onclick/` |
 | Forge 1.20.1-47.4.28 涓撶敤鏈嶅姟鍣?+ 瀹㈡埛绔?quickPlayMultiplayer 鍔犲叆 | `runs/p159-forge-server/` |
 | mrpack 鍚湡瀹?files锛圚TTP 涓嬭浇 + SHA-1 鏍￠獙 + overrides锛?| `runs/p160-mrpack/` |
@@ -100,7 +101,7 @@ EntityCulling 琚墺绂荤殑 `EntityRendererMixin` 宸叉寜 1.21.1 鐨?6 �
 ### 宸ョ▼涓庨棬绂?
 
 - 鍗曟祴 25/25锛沗verify_evidence` passed锛涘搱甯?1083 椤癸紙浠?`runs/SHA256SUMS.txt` 瀹為檯琛屾暟涓哄噯锛夛紱妗ヤ竴鑷存€?0锛圛mmediatelyFast 绔彛 jar锛宲165/p181锛夛紱mixin 瀹¤ inert=2锛坄listed=37`锛沺175 鎭㈠ map mixin銆乸177 琛ュ鍦板浘/灞曠ず妗嗐€乸178 鍚敤 VertexBuffer锛涘墿浣欎袱涓槸瀹樻柟 1.21.1 宸插垹闄ょ殑 1.20.4 閬楃暀绫伙紝瑙?`runs/p180-inert-closure/`锛夛紱
-- 澶栭儴闂姹囨€?20 椤瑰洖褰?+ 9 椤?NeoForge 瀹夎/鍚姩鍥炲綊 + 10 椤圭洰褰?鍏煎/璇存槑鍥炲綊 + 1 椤瑰姞杞藉櫒瀹夎鍥炲綊 + 8 椤?ImmediatelyFast 绉绘鍥炲綊 + 1 椤逛究鎼哄寘鍥炲綊 + 24 椤逛笅杞芥簮/杩涘害鍥炲綊 + 6 椤瑰湴鍥?atlas 鍥炲綊 + 2 椤?VertexBuffer 鍥炲綊 + 1 椤规 mixin 闃茶鐧昏鍥炲綊 + 1 椤?atlas closed 瀹堝崼鍥炲綊 + 1 椤?TrashSlot UI empty 閿洖褰?+ 1 椤?TrashSlot Shift+Delete 鍥炲綊 + 1 椤?TrashSlot right-click undelete 鍥炲綊 + 1 椤?Shulker 缃戞牸 wrapper/t2/t4 鍥炲綊 + 1 椤?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛坄tools/test_review_fixes.py`锛屽叡 89 椤癸紱鏈 **89/89**锛夋帴鍏ョ粺涓€闂ㄧ锛?（新增项 = p187 SBT 网格 icon + 服务端物品回归）
+- 澶栭儴闂姹囨€?20 椤瑰洖褰?+ 9 椤?NeoForge 瀹夎/鍚姩鍥炲綊 + 10 椤圭洰褰?鍏煎/璇存槑鍥炲綊 + 1 椤瑰姞杞藉櫒瀹夎鍥炲綊 + 8 椤?ImmediatelyFast 绉绘鍥炲綊 + 1 椤逛究鎼哄寘鍥炲綊 + 24 椤逛笅杞芥簮/杩涘害鍥炲綊 + 6 椤瑰湴鍥?atlas 鍥炲綊 + 2 椤?VertexBuffer 鍥炲綊 + 1 椤规 mixin 闃茶鐧昏鍥炲綊 + 1 椤?atlas closed 瀹堝崼鍥炲綊 + 1 椤?TrashSlot UI empty 閿洖褰?+ 1 椤?TrashSlot Shift+Delete 鍥炲綊 + 1 椤?TrashSlot right-click undelete 鍥炲綊 + 1 椤?Shulker 缃戞牸 wrapper/t2/t4 鍥炲綊 + 1 椤?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛坄tools/test_review_fixes.py`锛屽叡 90 椤癸紱鏈 **90/90**锛夋帴鍏ョ粺涓€闂ㄧ锛?（新增项 = p187 SBT 网格 icon + 服务端物品回归）
 - 浣跨敤璇存槑涓庢暀绋?`docs/guide.md`锛堝惎鍔ㄥ櫒銆丳CL 鍏辩敤銆佽縼绉绘暀绋嬨€丗AQ锛夛紝鐣岄潰銆屼娇鐢ㄨ鏄庛€嶆寜閽洿鎺ユ墦寮€锛?
 - 鍚姩鍣ㄧ鍒扮鑴氭湰锛堝畨瑁呪啋鍚姩鈫掍富鑿滃崟锛屾敮鎸?`--version` / `--require` / `--screenshot`锛夛紱
 - GitHub Actions锛歱ush 瑙﹀彂**宸查獙璇佸彲鐢?*锛坄e9ca30c` run `39796030299`锛沗742d133` run `39799555425`锛宑heck-run `build` success锛屽惈 API 鎺ㄩ€侊級锛涙鍓嶁€減ush 鏃?run鈥濇槸 GitHub Actions `degraded_performance`锛?2:18 UTC锛夊鑷存帓闃燂紝閲嶆帹 workflow 鏂囦欢鍚庣储寮曟仮澶嶃€傝嫢鍐嶉亣鏃?run锛屽厛鐪?[githubstatus.com](https://www.githubstatus.com)锛屽啀閲嶆帹 workflow 鏂囦欢鍒锋柊绱㈠紩銆?
@@ -173,3 +174,22 @@ HUD 源切到 `source=server`），截图网格槽内 diamond 图标 ×5 正常�
 AppleSkin 的 `AppleSkinFoodBridge` 同样的 set-as-get 问题一并修复。
 未覆盖：FULL 预览类型、多物品网格、真实鼠标 hover 路径（harness 用 HudRenderCallback
 驱动同一条管线，OS 光标注入不可靠）、预览键交互。
+
+## 七、2026-10-25 更新（p188：地图 atlas 1024 溢出验证）
+
+p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证据
+`runs/p188-atlas-overflow/`，实现零改动）：
+
+- 探针用 map 1 的真实 MapState 连续 `MapRenderer.method_1769` 分配 1026 个 map id：
+  前 1024 张填满 atlas 0，id 1025/1026 溢出；`map-atlas create id=1` 恰好出现一次；
+- packed 编码正确：`mapping1024=7967`（atlas 0 最后一格 31<<8|31）、`mapping1025=65536`
+  （atlas 1 tile 0）、`mapping1026=65792`（tile 0,1）；
+- `MapRenderer.draw`（HUD 内直调）触发 atlas 1 的真实上传，`atlas1-pixel-check mismatches=0`
+  （4 个采样点读回 NativeImage 与 MapState 颜色一致；update marker 有节流所以用像素证明）；
+- 正常退出：`map-atlas clear atlases=2`，exit 0，无 crash/errors；
+- 门禁：90/90、hashes 1110/1110、verify_evidence passed；沿用 v0.5.5 release。
+- 未测：第三个 atlas（2048+ 张）、跨 atlas 同屏视觉、真实服务端 1024+ 张地图端到端。
+
+测试侧记录：integrated server 的 mcfunction 不接受 `item replace ... filled_map[map_id=N]`
+组件语法（dedicated server 可过），渲染验证因此改为客户端内 `MapRenderer.draw` 直调；
+`NativeImage` 像素读取是 `method_4315(x,y)`（int），`method_4311` 返回 byte。

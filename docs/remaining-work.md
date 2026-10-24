@@ -33,7 +33,11 @@ claim that these paths work.
   `runs/p181-map-atlas-lifecycle/` adds a `locked=0` held map that gets a second atlas upload
   (terrain replaces the pattern) and a normal client stop (`keep-dummy -> close -> clear
   atlases=1`, exit 0), and fixes a real crash where a queued map frame wrote into the closed
-  NativeImage after the atlas was released. Atlas overflow (1024 maps) is still untested.- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
+  NativeImage after the atlas was released. Atlas overflow was verified in `runs/p188-atlas-overflow/` (2026-10-25): 1026 map ids were
+  assigned through the public update path, atlas 1 was created exactly once at id 1025
+  (packed 65536), the tile encoding is correct, a real `MapRenderer.draw` uploaded the map
+  into atlas 1 (pixel-level check, 0 mismatches), and the normal exit cleared atlases=2.
+  A third atlas (2048+ maps) and cross-atlas on-screen visuals are still untested.- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
   (`runs/p159`, `p161`, `p163`, `p164`); real mrpack with files+overrides verified (`p160`).
 - Performance: no reproducible gain; 80-armor-stand interleaved runs are ~13% slower with
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.
