@@ -1,149 +1,151 @@
-# mcbridge1201 最终状态（2026-10-23）
+﻿# mcbridge1201 鏈€缁堢姸鎬侊紙2026-10-23锛?
 
-> 定位：**Minecraft 版本迁移与运行辅助工具箱**。迁移与验证归本工具，日常启动交给 PCL。
-> 最新发布：[v0.5.4](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.4)（地图 atlas 生命周期/退出崩溃修复 + VertexBuffer fast path + 便携包）。
+> 瀹氫綅锛?*Minecraft 鐗堟湰杩佺Щ涓庤繍琛岃緟鍔╁伐鍏风**銆傝縼绉讳笌楠岃瘉褰掓湰宸ュ叿锛屾棩甯稿惎鍔ㄤ氦缁?PCL銆?
+> 鏈€鏂板彂甯冿細[v0.5.5](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.5)锛堜竴閿畨瑁呭埌 PCL锛氬浘褰㈤潰鏉?鍏ㄧ増鏈€夋嫨锛涗富宸ュ叿 v0.5.4锛夈€?
 
-## 一、已验证（有日志/截图/哈希）
+## 涓€銆佸凡楠岃瘉锛堟湁鏃ュ織/鎴浘/鍝堝笇锛?
 
-### 转换与兼容引擎
+### 杞崲涓庡吋瀹瑰紩鎿?
 
-| 能力 | 证据 |
+| 鑳藉姏 | 璇佹嵁 |
 |---|---|
-| CenturyBridge 分段转换 + 规则修补（field/method/body/superclass/ctor/rename/mixin/签名） | `docs/baseline.md`、`rules/fabric-1.21.1/` |
-| 三样本功能级：Lithium / IronChests / TrashSlot | `runs/p14`、`p27`、`p41`、`p43`、`p78`–`p80` |
-| 6 个扩展样本：AppleSkin / Mod Menu / Clumps / FallingTree / ShulkerBoxTooltip / FerriteCore（仅启动） | `docs/mod-expansion.md`、`runs/p88`–`p109` |
-| 热门模组抽样（VeinMiner 启动；EntityCulling 进服但剥离 load-bearing mixin；ImmediatelyFast 崩溃） | `runs/p111` |
-| TrashSlot 严格桥：save/writeItem/readItem/load + 两条失败分支（运行期） | `runs/p113-trashslot-strict` |
+| CenturyBridge 鍒嗘杞崲 + 瑙勫垯淇ˉ锛坒ield/method/body/superclass/ctor/rename/mixin/绛惧悕锛?| `docs/baseline.md`銆乣rules/fabric-1.21.1/` |
+| 涓夋牱鏈姛鑳界骇锛歀ithium / IronChests / TrashSlot | `runs/p14`銆乣p27`銆乣p41`銆乣p43`銆乣p78`鈥揱p80` |
+| 6 涓墿灞曟牱鏈細AppleSkin / Mod Menu / Clumps / FallingTree / ShulkerBoxTooltip / FerriteCore锛堜粎鍚姩锛?| `docs/mod-expansion.md`銆乣runs/p88`鈥揱p109` |
+| 鐑棬妯＄粍鎶芥牱锛圴einMiner 鍚姩锛汦ntityCulling 杩涙湇浣嗗墺绂?load-bearing mixin锛汭mmediatelyFast 宕╂簝锛?| `runs/p111` |
+| TrashSlot 涓ユ牸妗ワ細save/writeItem/readItem/load + 涓ゆ潯澶辫触鍒嗘敮锛堣繍琛屾湡锛?| `runs/p113-trashslot-strict` |
 
-### 启动器
+### 鍚姩鍣?
 
-| 能力 | 证据 |
+| 鑳藉姏 | 璇佹嵁 |
 |---|---|
-| 全量 920 版本浏览/搜索、快照/远古可选 | `launcher/web`、`runs/p112` |
-| 一键安装并启动；原版 + Fabric 实测 | `runs/p112`、`runs/p114` |
-| Forge 1.20.1 启动到主菜单 | `runs/p112` |
-| NeoForge 1.21.1（21.1.264）安装 + 启动到主菜单 | `runs/p116-neoforge-launch`（见下文根因与修复） |
-| NeoForge 21.1.264 + 第三方模组（AppleSkin）+ 单人世界 | `runs/p127-neoforge-mod-world`（含世界截图、`joined`、模组加载日志） |
-| NeoForge 21.1.264 + 内容模组（Farmer's Delight，方块/物品/标签）+ 单人世界 | `runs/p128-neoforge-content-mod/`（F3 出现 farmersdelight 标签） |
-| Forge 1.20.1-47.4.28 + AppleSkin 模组 + 单人世界 | `runs/p129-forge-mod-world/`（quickPlay、`joined`、AppleSkin 配置生成） |
-| Forge 1.20.1-47.4.28 + Farmer's Delight 内容模组 + 单人世界 | `runs/p131-forge-content-mod/`（配置生成、无注册错误、`joined`） |
-| NeoForge 21.1.264 + Jade（数据同步/HUD）+ 单人世界 | `runs/p130-neoforge-jade/`（Jade tooltip 可见） |
-| Fabric 1.21.1 专用服务器 + 启动器客户端加入（quickPlayMultiplayer） | `runs/p132-dedicated-join/`（早期 p75/p76 双客户端同步） |
-| ImmediatelyFast 1.21.1 batching 移植：单人 + 多人 + soak + Iris（含 shader pack），HUD/物品/overlay 计数 + 关闭归零 | `runs/p134`、`runs/p137`、`runs/p139`、`runs/p140`、`runs/p141`、`runs/p142`、`runs/p143`、`runs/p145`、`runs/p146` |
-| ImmediatelyFast HUD batching on/off 帧率对照（实测无正收益，见报告） | `runs/p148-bench/` |
-| ImmediatelyFast 实体压力（80 盔甲架）交错 on/off：开启 universal batching 慢约 13%（550 vs 636，两轮一致）；不宣称收益 | `runs/p157-stress-interleaved/`（p153–p157） |
-| Sodium 1.20.1 转换可行性（静态分析）：`blocked_static` 13/15/16，需移植渲染内核 | `runs/p158-sodium-probe/` |
-| ImmediatelyFast 端口 mixin 审计：inert 7 → 6（重登记 ChatHud） | `runs/p165-mixin-audit/`、`runs/p166-chat-hud/` |
-| ImmediatelyFast 端口 mixin 审计：inert 6 → 5（重登记 MixinMinecraftClient） | `runs/p167-minecraft-client/` |
-| ImmediatelyFast 端口 mixin 审计：inert 5 → 4（重登记 MixinBufferRenderer） | `runs/p168-buffer-renderer/` |
-| 剩余 inert 的阻塞原因（目标缺失/GL 路径）；p175 后剩 3 个 | `runs/p169-inert-analysis/` |
-| MixinVertexBuffer 静态截图 A/B（差 0.018%，证据不足，未启用） | `runs/p170-vertex-verify/` |
-| 半启用的 MapTexture mixin 显式 strip（避免地图渲染 ClassCastException） | `runs/p171-map-strip/` |
-| ImmediatelyFast 地图 atlas 恢复：两个 map mixin 按 1.21.1 重写，单人世界真实手持 filled_map 渲染（atlas 绑定 + UV 重定向） | `runs/p175-map-atlas/`（`world.png`、`map-atlas bind … immediatelyfast:map_atlas/0`、无 crash；p172 的失败点保留） |
-| ImmediatelyFast 地图 atlas 边界：两张地图分别落到 tile 0/1（packed 0 / 256），并与物品展示框地图同屏渲染 | `runs/p177-map-atlas-edge/`（`world.png`、两条 bind 日志、无 ClassCastException/crash） |
-| ImmediatelyFast `MixinVertexBuffer` 动态上传 fast path：80 盔甲架压力，off/off、on/on 对照；60/79 条 fast 标记、最高 76k 次 `glBufferSubData`；off/on 像素差 0.0087% | `runs/p178-vertex-upload/`（`on1/world.png`、`off1/world.png`、`compare-*.png`、`result.json`、无 GL/mixin 错误） |
-| ImmediatelyFast 端口收尾：官方 1.21.1 jar 没有 `MixinBufferBuilder`/`MixinFontManager`，端口剩余 2 个 inert 是 1.20.4 多版本 jar 的遗留死代码，不是待移植功能 | `runs/p180-inert-closure/`（native `listed=37 inert=0` vs 端口 `listed=37 inert=2`；规则级防误登记回归） |
-| ImmediatelyFast 地图 atlas 生命周期：locked=0 地图第二次上传（地形覆盖初始图案）+ 正常客户端 stop 的 keep-dummy/close/clear；修复退出时向已释放 NativeImage 写入的崩溃 | `runs/p181-map-atlas-lifecycle/`（`map-atlas update count=2`、`clear atlases=1`、exit 0、无 crash；`crash-before-fix-map.txt` 保留修复前崩溃） |
-| TrashSlot 真实 empty-trash Delete UI 键：inventory 悬停 trash → `DEBUG_KEY key=261` → provider → 服务端清空；p65 的 Delete 失败根因是注入漏 `KEYEVENTF_EXTENDEDKEY`（收到 KP_DECIMAL 330） | `runs/p183-trash-key/`（`DEBUG_EMPTY_PROVIDER`、`DEBUG_RUN_RETURN=true`、`SERVER_TRASH empty=true`；`after.png`） |
-| TrashSlot Shift+Delete (`delete_all`)：两叠 5+3 钻石跨槽删除，`DEBUG_DELETE_CONTAINER all=true`，服务端/客户端 8→0 | `runs/p184-trash-delete-all/`（`shift_seen`/`delete_seen`/`server_zero`/`client_zero` 全 true；`after.png`） |
-| TrashSlot 空 cursor 右键 undelete：trash 5 → 右键 → cursor 1、trash 4、服务端 4；Balm 屏幕事件确实分发右键 | `runs/p185-trash-undelete-right/`（`DEBUG_CLICK button=1 hovering=true`、`DEBUG_PROVIDER_UNDELETE right=true`、`RIGHT_STATE carried=1 trash=4`；`after.png`） |
-| ShulkerBoxTooltip 网格预览（部分恢复）：client-side ContainerComponent + wrapper 读取 component + grid renderer 的 t2/t4 桥；tooltip 出现预览框与 `Diamond ×5`，但网格 item icon 仍缺、真实 server item 仍空 | `runs/p186-shulker-grid-client-item/`（`SBT_WRAP show=true inv=27 nonAir=1`；`grid.png`） |
-| Forge 1.20.1-47.4.28 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p159-forge-server/` |
-| mrpack 含真实 files（HTTP 下载 + SHA-1 校验 + overrides） | `runs/p160-mrpack/` |
-| NeoForge 21.1.264 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p161-neoforge-server/` |
-| NeoForge 专用服务器 + Farmer's Delight 1.3.4（服务端/客户端同模组加入） | `runs/p163-neoforge-fd-server/` |
-| Forge 专用服务器 + Farmer's Delight 1.3.4（服务端/客户端同模组加入） | `runs/p164-forge-fd-server/` |
-| ImmediatelyFast 移植规则/源码回归（6 类替换 + 2 条配置补充 + Identifier 桥 + 无 tombstone + 无二次释放 + Iris 分支） | `rules/fabric-1.21.1/immediatelyfast-batching-port.json`、`tools/test_review_fixes.py` IFPORT 组 |
-| Forge/NeoForge 安装自动补原版 base | `runs/p129`、回归检查（LOADER 组） |
-| Forge/NeoForge 启动命令保留 `extra_game`（quickPlay 等参数） | `runs/p127`、回归检查（NEOFORGE 组） |
-| 加载器版本选择（Fabric 255 / Forge 137 实测；指定 Fabric 0.20.1 安装成功） | `runs/p112`、docs/launcher.md |
-| Java 运行时安装（OpenJDK 21.0.7）+ 启动优先使用 | docs/launcher.md |
-| Modrinth mrpack：扫描/安装/overrides/自动启动 | docs/launcher.md |
-| 删除版本（路径穿越防护）、模组启停 | docs/launcher.md |
-| 与其他启动器共用：目录按钮（root/mods/存档/版本）、`/api/dirs`、`/api/open-dir`、profile 同步 | docs/launcher.md |
-| 免 GitHub 便携包：内置 Python 3.12 + 第三方许可证，双击 `run.bat` | docs/distribution.md §2.5、`tools/build_portable.py` |
-| 下载源策略：逐路径镜像 + 有限重试 + 侧车 SHA-1 + 来源记录（`/api/downloads`） | docs/download-sources.md |
-| 下载进度：字节 / 速度 / 当前来源（`/api/task`），前端显示且不编造剩余时间 | docs/launcher.md |
-| 下载源设置（自动/仅官方/镜像优先）+ 失败 host 排序 + 分层测试（canary / 1.20.1 全量） | docs/download-sources.md、runs/p122-source-canary/ |
-| mirror 模式真实有界验证：288/305 走镜像、191/191 SHA-1 匹配、镜像慢且有失败重试 | runs/p123-mirror-mode-install/ |
-| 分段下载评估：客户端 jar 4 段仅 1.23×，决定不实现（runs/p126） | runs/p126-segment-bench/ |
-| 总验收快照：全套门禁重跑 + 已验证/未验证边界（可交接） | runs/p125-final-acceptance/ |
-| GUI 源健康检查：`/api/source-health`、`/api/check-sources`（canary 输出到游戏目录并回写健康缓存） | docs/launcher.md、runs/p124-gui-source-check/ |
-| 下载冷/热对照（客户端 + 全部允许库 + assets 样本 + Fabric） | docs/download-sources.md、runs/p117-download-bench/ |
-| 全量冷安装 + 真进世界（原版 1.21.1：3911/3911 assets，115 s，quickPlay 进世界） | runs/p118-full-install-world/ |
-| EntityCulling 1.21.1：剥离的 mixin 移植 + 重新启用，进世界且 F3 culling 计数生效 | runs/p119-entityculling-mixin/ |
-| EntityCulling 开关 A/B：关闭跳过时无 Culling 计数，开启时 Skipped 1（独立复现） | runs/p121-entityculling-ab/ |
-| 标准目录 + launcher_profiles，PCL 可直接复用 | docs/launcher.md |
+| 鍏ㄩ噺 920 鐗堟湰娴忚/鎼滅储銆佸揩鐓?杩滃彜鍙€?| `launcher/web`銆乣runs/p112` |
+| 涓€閿畨瑁呭苟鍚姩锛涘師鐗?+ Fabric 瀹炴祴 | `runs/p112`銆乣runs/p114` |
+| Forge 1.20.1 鍚姩鍒颁富鑿滃崟 | `runs/p112` |
+| NeoForge 1.21.1锛?1.1.264锛夊畨瑁?+ 鍚姩鍒颁富鑿滃崟 | `runs/p116-neoforge-launch`锛堣涓嬫枃鏍瑰洜涓庝慨澶嶏級 |
+| NeoForge 21.1.264 + 绗笁鏂规ā缁勶紙AppleSkin锛? 鍗曚汉涓栫晫 | `runs/p127-neoforge-mod-world`锛堝惈涓栫晫鎴浘銆乣joined`銆佹ā缁勫姞杞芥棩蹇楋級 |
+| NeoForge 21.1.264 + 鍐呭妯＄粍锛團armer's Delight锛屾柟鍧?鐗╁搧/鏍囩锛? 鍗曚汉涓栫晫 | `runs/p128-neoforge-content-mod/`锛團3 鍑虹幇 farmersdelight 鏍囩锛?|
+| Forge 1.20.1-47.4.28 + AppleSkin 妯＄粍 + 鍗曚汉涓栫晫 | `runs/p129-forge-mod-world/`锛坬uickPlay銆乣joined`銆丄ppleSkin 閰嶇疆鐢熸垚锛?|
+| Forge 1.20.1-47.4.28 + Farmer's Delight 鍐呭妯＄粍 + 鍗曚汉涓栫晫 | `runs/p131-forge-content-mod/`锛堥厤缃敓鎴愩€佹棤娉ㄥ唽閿欒銆乣joined`锛?|
+| NeoForge 21.1.264 + Jade锛堟暟鎹悓姝?HUD锛? 鍗曚汉涓栫晫 | `runs/p130-neoforge-jade/`锛圝ade tooltip 鍙锛?|
+| Fabric 1.21.1 涓撶敤鏈嶅姟鍣?+ 鍚姩鍣ㄥ鎴风鍔犲叆锛坬uickPlayMultiplayer锛?| `runs/p132-dedicated-join/`锛堟棭鏈?p75/p76 鍙屽鎴风鍚屾锛?|
+| ImmediatelyFast 1.21.1 batching 绉绘锛氬崟浜?+ 澶氫汉 + soak + Iris锛堝惈 shader pack锛夛紝HUD/鐗╁搧/overlay 璁℃暟 + 鍏抽棴褰掗浂 | `runs/p134`銆乣runs/p137`銆乣runs/p139`銆乣runs/p140`銆乣runs/p141`銆乣runs/p142`銆乣runs/p143`銆乣runs/p145`銆乣runs/p146` |
+| ImmediatelyFast HUD batching on/off 甯х巼瀵圭収锛堝疄娴嬫棤姝ｆ敹鐩婏紝瑙佹姤鍛婏級 | `runs/p148-bench/` |
+| ImmediatelyFast 瀹炰綋鍘嬪姏锛?0 鐩旂敳鏋讹級浜ら敊 on/off锛氬紑鍚?universal batching 鎱㈢害 13%锛?50 vs 636锛屼袱杞竴鑷达級锛涗笉瀹ｇО鏀剁泭 | `runs/p157-stress-interleaved/`锛坧153鈥損157锛?|
+| Sodium 1.20.1 杞崲鍙鎬э紙闈欐€佸垎鏋愶級锛歚blocked_static` 13/15/16锛岄渶绉绘娓叉煋鍐呮牳 | `runs/p158-sodium-probe/` |
+| ImmediatelyFast 绔彛 mixin 瀹¤锛歩nert 7 鈫?6锛堥噸鐧昏 ChatHud锛?| `runs/p165-mixin-audit/`銆乣runs/p166-chat-hud/` |
+| ImmediatelyFast 绔彛 mixin 瀹¤锛歩nert 6 鈫?5锛堥噸鐧昏 MixinMinecraftClient锛?| `runs/p167-minecraft-client/` |
+| ImmediatelyFast 绔彛 mixin 瀹¤锛歩nert 5 鈫?4锛堥噸鐧昏 MixinBufferRenderer锛?| `runs/p168-buffer-renderer/` |
+| 鍓╀綑 inert 鐨勯樆濉炲師鍥狅紙鐩爣缂哄け/GL 璺緞锛夛紱p175 鍚庡墿 3 涓?| `runs/p169-inert-analysis/` |
+| MixinVertexBuffer 闈欐€佹埅鍥?A/B锛堝樊 0.018%锛岃瘉鎹笉瓒筹紝鏈惎鐢級 | `runs/p170-vertex-verify/` |
+| 鍗婂惎鐢ㄧ殑 MapTexture mixin 鏄惧紡 strip锛堥伩鍏嶅湴鍥炬覆鏌?ClassCastException锛?| `runs/p171-map-strip/` |
+| ImmediatelyFast 鍦板浘 atlas 鎭㈠锛氫袱涓?map mixin 鎸?1.21.1 閲嶅啓锛屽崟浜轰笘鐣岀湡瀹炴墜鎸?filled_map 娓叉煋锛坅tlas 缁戝畾 + UV 閲嶅畾鍚戯級 | `runs/p175-map-atlas/`锛坄world.png`銆乣map-atlas bind 鈥?immediatelyfast:map_atlas/0`銆佹棤 crash锛沺172 鐨勫け璐ョ偣淇濈暀锛?|
+| ImmediatelyFast 鍦板浘 atlas 杈圭晫锛氫袱寮犲湴鍥惧垎鍒惤鍒?tile 0/1锛坧acked 0 / 256锛夛紝骞朵笌鐗╁搧灞曠ず妗嗗湴鍥惧悓灞忔覆鏌?| `runs/p177-map-atlas-edge/`锛坄world.png`銆佷袱鏉?bind 鏃ュ織銆佹棤 ClassCastException/crash锛?|
+| ImmediatelyFast `MixinVertexBuffer` 鍔ㄦ€佷笂浼?fast path锛?0 鐩旂敳鏋跺帇鍔涳紝off/off銆乷n/on 瀵圭収锛?0/79 鏉?fast 鏍囪銆佹渶楂?76k 娆?`glBufferSubData`锛沷ff/on 鍍忕礌宸?0.0087% | `runs/p178-vertex-upload/`锛坄on1/world.png`銆乣off1/world.png`銆乣compare-*.png`銆乣result.json`銆佹棤 GL/mixin 閿欒锛?|
+| ImmediatelyFast 绔彛鏀跺熬锛氬畼鏂?1.21.1 jar 娌℃湁 `MixinBufferBuilder`/`MixinFontManager`锛岀鍙ｅ墿浣?2 涓?inert 鏄?1.20.4 澶氱増鏈?jar 鐨勯仐鐣欐浠ｇ爜锛屼笉鏄緟绉绘鍔熻兘 | `runs/p180-inert-closure/`锛坣ative `listed=37 inert=0` vs 绔彛 `listed=37 inert=2`锛涜鍒欑骇闃茶鐧昏鍥炲綊锛?|
+| ImmediatelyFast 鍦板浘 atlas 鐢熷懡鍛ㄦ湡锛歭ocked=0 鍦板浘绗簩娆′笂浼狅紙鍦板舰瑕嗙洊鍒濆鍥炬锛? 姝ｅ父瀹㈡埛绔?stop 鐨?keep-dummy/close/clear锛涗慨澶嶉€€鍑烘椂鍚戝凡閲婃斁 NativeImage 鍐欏叆鐨勫穿婧?| `runs/p181-map-atlas-lifecycle/`锛坄map-atlas update count=2`銆乣clear atlases=1`銆乪xit 0銆佹棤 crash锛沗crash-before-fix-map.txt` 淇濈暀淇鍓嶅穿婧冿級 |
+| TrashSlot 鐪熷疄 empty-trash Delete UI 閿細inventory 鎮仠 trash 鈫?`DEBUG_KEY key=261` 鈫?provider 鈫?鏈嶅姟绔竻绌猴紱p65 鐨?Delete 澶辫触鏍瑰洜鏄敞鍏ユ紡 `KEYEVENTF_EXTENDEDKEY`锛堟敹鍒?KP_DECIMAL 330锛?| `runs/p183-trash-key/`锛坄DEBUG_EMPTY_PROVIDER`銆乣DEBUG_RUN_RETURN=true`銆乣SERVER_TRASH empty=true`锛沗after.png`锛?|
+| TrashSlot Shift+Delete (`delete_all`)锛氫袱鍙?5+3 閽荤煶璺ㄦЫ鍒犻櫎锛宍DEBUG_DELETE_CONTAINER all=true`锛屾湇鍔＄/瀹㈡埛绔?8鈫? | `runs/p184-trash-delete-all/`锛坄shift_seen`/`delete_seen`/`server_zero`/`client_zero` 鍏?true锛沗after.png`锛?|
+| TrashSlot 绌?cursor 鍙抽敭 undelete锛歵rash 5 鈫?鍙抽敭 鈫?cursor 1銆乼rash 4銆佹湇鍔＄ 4锛汢alm 灞忓箷浜嬩欢纭疄鍒嗗彂鍙抽敭 | `runs/p185-trash-undelete-right/`锛坄DEBUG_CLICK button=1 hovering=true`銆乣DEBUG_PROVIDER_UNDELETE right=true`銆乣RIGHT_STATE carried=1 trash=4`锛沗after.png`锛?|
+| ShulkerBoxTooltip 缃戞牸棰勮锛堥儴鍒嗘仮澶嶏級锛歝lient-side ContainerComponent + wrapper 璇诲彇 component + grid renderer 鐨?t2/t4 妗ワ紱tooltip 鍑虹幇棰勮妗嗕笌 `Diamond 脳5`锛屼絾缃戞牸 item icon 浠嶇己銆佺湡瀹?server item 浠嶇┖ | `runs/p186-shulker-grid-client-item/`锛坄SBT_WRAP show=true inv=27 nonAir=1`锛沗grid.png`锛?|
+| 涓€閿畨瑁呭埌 PCL 鍥惧舰闈㈡澘/鐗堟湰閫夋嫨 | 鉁?v0.5.5锛歚mcbridge-pcl-panel.zip` + `mcbridge-pcl-setup.zip`锛涚増鏈笅鎷?鎼滅储/杩涘害/PCL2 鑷姩妫€娴嬶紱`from_source_install` 鏀寔 release/snapshot/old_* / all / latest-snapshot锛汸CL2 2.13.1.1 瀹炴祴 | `share/pcl-onclick/`銆乣runs/p137-pcl2-onclick/` |
+| Forge 1.20.1-47.4.28 涓撶敤鏈嶅姟鍣?+ 瀹㈡埛绔?quickPlayMultiplayer 鍔犲叆 | `runs/p159-forge-server/` |
+| mrpack 鍚湡瀹?files锛圚TTP 涓嬭浇 + SHA-1 鏍￠獙 + overrides锛?| `runs/p160-mrpack/` |
+| NeoForge 21.1.264 涓撶敤鏈嶅姟鍣?+ 瀹㈡埛绔?quickPlayMultiplayer 鍔犲叆 | `runs/p161-neoforge-server/` |
+| NeoForge 涓撶敤鏈嶅姟鍣?+ Farmer's Delight 1.3.4锛堟湇鍔＄/瀹㈡埛绔悓妯＄粍鍔犲叆锛?| `runs/p163-neoforge-fd-server/` |
+| Forge 涓撶敤鏈嶅姟鍣?+ Farmer's Delight 1.3.4锛堟湇鍔＄/瀹㈡埛绔悓妯＄粍鍔犲叆锛?| `runs/p164-forge-fd-server/` |
+| ImmediatelyFast 绉绘瑙勫垯/婧愮爜鍥炲綊锛? 绫绘浛鎹?+ 2 鏉￠厤缃ˉ鍏?+ Identifier 妗?+ 鏃?tombstone + 鏃犱簩娆￠噴鏀?+ Iris 鍒嗘敮锛?| `rules/fabric-1.21.1/immediatelyfast-batching-port.json`銆乣tools/test_review_fixes.py` IFPORT 缁?|
+| Forge/NeoForge 瀹夎鑷姩琛ュ師鐗?base | `runs/p129`銆佸洖褰掓鏌ワ紙LOADER 缁勶級 |
+| Forge/NeoForge 鍚姩鍛戒护淇濈暀 `extra_game`锛坬uickPlay 绛夊弬鏁帮級 | `runs/p127`銆佸洖褰掓鏌ワ紙NEOFORGE 缁勶級 |
+| 鍔犺浇鍣ㄧ増鏈€夋嫨锛團abric 255 / Forge 137 瀹炴祴锛涙寚瀹?Fabric 0.20.1 瀹夎鎴愬姛锛?| `runs/p112`銆乨ocs/launcher.md |
+| Java 杩愯鏃跺畨瑁咃紙OpenJDK 21.0.7锛? 鍚姩浼樺厛浣跨敤 | docs/launcher.md |
+| Modrinth mrpack锛氭壂鎻?瀹夎/overrides/鑷姩鍚姩 | docs/launcher.md |
+| 鍒犻櫎鐗堟湰锛堣矾寰勭┛瓒婇槻鎶わ級銆佹ā缁勫惎鍋?| docs/launcher.md |
+| 涓庡叾浠栧惎鍔ㄥ櫒鍏辩敤锛氱洰褰曟寜閽紙root/mods/瀛樻。/鐗堟湰锛夈€乣/api/dirs`銆乣/api/open-dir`銆乸rofile 鍚屾 | docs/launcher.md |
+| 鍏?GitHub 渚挎惡鍖咃細鍐呯疆 Python 3.12 + 绗笁鏂硅鍙瘉锛屽弻鍑?`run.bat` | docs/distribution.md 搂2.5銆乣tools/build_portable.py` |
+| 涓嬭浇婧愮瓥鐣ワ細閫愯矾寰勯暅鍍?+ 鏈夐檺閲嶈瘯 + 渚ц溅 SHA-1 + 鏉ユ簮璁板綍锛坄/api/downloads`锛?| docs/download-sources.md |
+| 涓嬭浇杩涘害锛氬瓧鑺?/ 閫熷害 / 褰撳墠鏉ユ簮锛坄/api/task`锛夛紝鍓嶇鏄剧ず涓斾笉缂栭€犲墿浣欐椂闂?| docs/launcher.md |
+| 涓嬭浇婧愯缃紙鑷姩/浠呭畼鏂?闀滃儚浼樺厛锛? 澶辫触 host 鎺掑簭 + 鍒嗗眰娴嬭瘯锛坈anary / 1.20.1 鍏ㄩ噺锛?| docs/download-sources.md銆乺uns/p122-source-canary/ |
+| mirror 妯″紡鐪熷疄鏈夌晫楠岃瘉锛?88/305 璧伴暅鍍忋€?91/191 SHA-1 鍖归厤銆侀暅鍍忔參涓旀湁澶辫触閲嶈瘯 | runs/p123-mirror-mode-install/ |
+| 鍒嗘涓嬭浇璇勪及锛氬鎴风 jar 4 娈典粎 1.23脳锛屽喅瀹氫笉瀹炵幇锛坮uns/p126锛?| runs/p126-segment-bench/ |
+| 鎬婚獙鏀跺揩鐓э細鍏ㄥ闂ㄧ閲嶈窇 + 宸查獙璇?鏈獙璇佽竟鐣岋紙鍙氦鎺ワ級 | runs/p125-final-acceptance/ |
+| GUI 婧愬仴搴锋鏌ワ細`/api/source-health`銆乣/api/check-sources`锛坈anary 杈撳嚭鍒版父鎴忕洰褰曞苟鍥炲啓鍋ュ悍缂撳瓨锛?| docs/launcher.md銆乺uns/p124-gui-source-check/ |
+| 涓嬭浇鍐?鐑鐓э紙瀹㈡埛绔?+ 鍏ㄩ儴鍏佽搴?+ assets 鏍锋湰 + Fabric锛?| docs/download-sources.md銆乺uns/p117-download-bench/ |
+| 鍏ㄩ噺鍐峰畨瑁?+ 鐪熻繘涓栫晫锛堝師鐗?1.21.1锛?911/3911 assets锛?15 s锛宷uickPlay 杩涗笘鐣岋級 | runs/p118-full-install-world/ |
+| EntityCulling 1.21.1锛氬墺绂荤殑 mixin 绉绘 + 閲嶆柊鍚敤锛岃繘涓栫晫涓?F3 culling 璁℃暟鐢熸晥 | runs/p119-entityculling-mixin/ |
+| EntityCulling 寮€鍏?A/B锛氬叧闂烦杩囨椂鏃?Culling 璁℃暟锛屽紑鍚椂 Skipped 1锛堢嫭绔嬪鐜帮級 | runs/p121-entityculling-ab/ |
+| 鏍囧噯鐩綍 + launcher_profiles锛孭CL 鍙洿鎺ュ鐢?| docs/launcher.md |
 
-### NeoForge 启动修复（2026-10-21，p115 → p116）
+### NeoForge 鍚姩淇锛?026-10-21锛宲115 鈫?p116锛?
 
-p115 的猜测（classpath / `-p` 模块路径）被证伪：启动命令与官方 `version.json` 完全一致。
-真实根因是**安装不完整**——官方安装器的客户端处理器（jarsplitter → AutoRenamingTool →
-binarypatcher）因 Java 网络超时从未跑成，FML 游戏层里没有 `neoforge` 模块，
-`DisplayWindow.updateModuleReads` 就在 `layer.findModule("neoforge").orElseThrow()` 处崩溃。
+p115 鐨勭寽娴嬶紙classpath / `-p` 妯″潡璺緞锛夎璇佷吉锛氬惎鍔ㄥ懡浠や笌瀹樻柟 `version.json` 瀹屽叏涓€鑷淬€?
+鐪熷疄鏍瑰洜鏄?*瀹夎涓嶅畬鏁?*鈥斺€斿畼鏂瑰畨瑁呭櫒鐨勫鎴风澶勭悊鍣紙jarsplitter 鈫?AutoRenamingTool 鈫?
+binarypatcher锛夊洜 Java 缃戠粶瓒呮椂浠庢湭璺戞垚锛孎ML 娓告垙灞傞噷娌℃湁 `neoforge` 妯″潡锛?
+`DisplayWindow.updateModuleReads` 灏卞湪 `layer.findModule("neoforge").orElseThrow()` 澶勫穿婧冦€?
 
-修复：启动器先用 Python 下载器预置安装器所需库（SHA1 校验，可镜像），再让官方处理器离线执行；
-安装/校验以四件游戏文件（`neoforge-client`、`neoforge-universal`、`client-*-srg`、
-`client-*-extra`）齐全为准；同时修掉 `_run_installer` 相对路径 + `cwd` 的真实 bug。
-单测新增 8 项（`tools/test_review_fixes.py` 的 NEOFORGE 组）。
+淇锛氬惎鍔ㄥ櫒鍏堢敤 Python 涓嬭浇鍣ㄩ缃畨瑁呭櫒鎵€闇€搴擄紙SHA1 鏍￠獙锛屽彲闀滃儚锛夛紝鍐嶈瀹樻柟澶勭悊鍣ㄧ绾挎墽琛岋紱
+瀹夎/鏍￠獙浠ュ洓浠舵父鎴忔枃浠讹紙`neoforge-client`銆乣neoforge-universal`銆乣client-*-srg`銆?
+`client-*-extra`锛夐綈鍏ㄤ负鍑嗭紱鍚屾椂淇帀 `_run_installer` 鐩稿璺緞 + `cwd` 鐨勭湡瀹?bug銆?
+鍗曟祴鏂板 8 椤癸紙`tools/test_review_fixes.py` 鐨?NEOFORGE 缁勶級銆?
 
-### EntityCulling mixin 移植（2026-10-22，p119）
+### EntityCulling mixin 绉绘锛?026-10-22锛宲119锛?
 
-EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 重写并**重新启用**：
-新增规则 `mixinConfigAdditions`（把类加回 mixin config）+ `mixinClassReplacements`，
-并把 bundled transition 的 `new Identifier(...)` 改走 `IdentifierBridge.of(...)`。
-实测 Fabric 1.21.1 + Fabric API 进世界，F3 中 EntityCulling 计数
-`Rendered Entities: 3 Skipped: 1`，配置 `skipEntityCulling:false`，无 mixin 报错。
+EntityCulling 琚墺绂荤殑 `EntityRendererMixin` 宸叉寜 1.21.1 鐨?6 鍙?shadow 閲嶅啓骞?*閲嶆柊鍚敤**锛?
+鏂板瑙勫垯 `mixinConfigAdditions`锛堟妸绫诲姞鍥?mixin config锛? `mixinClassReplacements`锛?
+骞舵妸 bundled transition 鐨?`new Identifier(...)` 鏀硅蛋 `IdentifierBridge.of(...)`銆?
+瀹炴祴 Fabric 1.21.1 + Fabric API 杩涗笘鐣岋紝F3 涓?EntityCulling 璁℃暟
+`Rendered Entities: 3 Skipped: 1`锛岄厤缃?`skipEntityCulling:false`锛屾棤 mixin 鎶ラ敊銆?
 
-### 工程与门禁
+### 宸ョ▼涓庨棬绂?
 
-- 单测 25/25；`verify_evidence` passed；哈希 1072 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165/p181）；mixin 审计 inert=2（`listed=37`；p175 恢复 map mixin、p177 补多地图/展示框、p178 启用 VertexBuffer；剩余两个是官方 1.21.1 已删除的 1.20.4 遗留类，见 `runs/p180-inert-closure/`）；
-- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归 + 1 项死 mixin 防误登记回归 + 1 项 atlas closed 守卫回归 + 1 项 TrashSlot UI empty 键回归 + 1 项 TrashSlot Shift+Delete 回归 + 1 项 TrashSlot right-click undelete 回归 + 1 项 Shulker 网格 wrapper/t2/t4 回归（`tools/test_review_fixes.py`，共 87 项；本次 **87/87**）接入统一门禁；
-- 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
-- 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
-- GitHub Actions：push 触发**已验证可用**（`e9ca30c` run `39796030299`；`742d133` run `39799555425`，check-run `build` success，含 API 推送）；此前“push 无 run”是 GitHub Actions `degraded_performance`（22:18 UTC）导致排队，重推 workflow 文件后索引恢复。若再遇无 run，先看 [githubstatus.com](https://www.githubstatus.com)，再重推 workflow 文件刷新索引。
+- 鍗曟祴 25/25锛沗verify_evidence` passed锛涘搱甯?1083 椤癸紙浠?`runs/SHA256SUMS.txt` 瀹為檯琛屾暟涓哄噯锛夛紱妗ヤ竴鑷存€?0锛圛mmediatelyFast 绔彛 jar锛宲165/p181锛夛紱mixin 瀹¤ inert=2锛坄listed=37`锛沺175 鎭㈠ map mixin銆乸177 琛ュ鍦板浘/灞曠ず妗嗐€乸178 鍚敤 VertexBuffer锛涘墿浣欎袱涓槸瀹樻柟 1.21.1 宸插垹闄ょ殑 1.20.4 閬楃暀绫伙紝瑙?`runs/p180-inert-closure/`锛夛紱
+- 澶栭儴闂姹囨€?20 椤瑰洖褰?+ 9 椤?NeoForge 瀹夎/鍚姩鍥炲綊 + 10 椤圭洰褰?鍏煎/璇存槑鍥炲綊 + 1 椤瑰姞杞藉櫒瀹夎鍥炲綊 + 8 椤?ImmediatelyFast 绉绘鍥炲綊 + 1 椤逛究鎼哄寘鍥炲綊 + 24 椤逛笅杞芥簮/杩涘害鍥炲綊 + 6 椤瑰湴鍥?atlas 鍥炲綊 + 2 椤?VertexBuffer 鍥炲綊 + 1 椤规 mixin 闃茶鐧昏鍥炲綊 + 1 椤?atlas closed 瀹堝崼鍥炲綊 + 1 椤?TrashSlot UI empty 閿洖褰?+ 1 椤?TrashSlot Shift+Delete 鍥炲綊 + 1 椤?TrashSlot right-click undelete 鍥炲綊 + 1 椤?Shulker 缃戞牸 wrapper/t2/t4 鍥炲綊 + 1 椤?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛坄tools/test_review_fixes.py`锛屽叡 88 椤癸紱鏈 **88/88**锛夋帴鍏ョ粺涓€闂ㄧ锛?
+- 浣跨敤璇存槑涓庢暀绋?`docs/guide.md`锛堝惎鍔ㄥ櫒銆丳CL 鍏辩敤銆佽縼绉绘暀绋嬨€丗AQ锛夛紝鐣岄潰銆屼娇鐢ㄨ鏄庛€嶆寜閽洿鎺ユ墦寮€锛?
+- 鍚姩鍣ㄧ鍒扮鑴氭湰锛堝畨瑁呪啋鍚姩鈫掍富鑿滃崟锛屾敮鎸?`--version` / `--require` / `--screenshot`锛夛紱
+- GitHub Actions锛歱ush 瑙﹀彂**宸查獙璇佸彲鐢?*锛坄e9ca30c` run `39796030299`锛沗742d133` run `39799555425`锛宑heck-run `build` success锛屽惈 API 鎺ㄩ€侊級锛涙鍓嶁€減ush 鏃?run鈥濇槸 GitHub Actions `degraded_performance`锛?2:18 UTC锛夊鑷存帓闃燂紝閲嶆帹 workflow 鏂囦欢鍚庣储寮曟仮澶嶃€傝嫢鍐嶉亣鏃?run锛屽厛鐪?[githubstatus.com](https://www.githubstatus.com)锛屽啀閲嶆帹 workflow 鏂囦欢鍒锋柊绱㈠紩銆?
 
-## 二、未完成（如实）
+## 浜屻€佹湭瀹屾垚锛堝瀹烇級
 
-| 项 | 状态 | 说明 |
+| 椤?| 鐘舵€?| 璇存槑 |
 |---|---|---|
-| NeoForge 带第三方模组 / 进世界 | ✅ 已通过：AppleSkin（p127）、Farmer's Delight 内容模组（p128）、Jade 数据同步/HUD（p130）；**专用服务器 + 客户端 join 已通过**（p161，端口 25567；安装时曾因 maven.neoforged.net 超时失败，复用本地 client libraries 后成功）；**带 Farmer's Delight 的专用服务器 + 同模组客户端加入**（p163，端口 25568） |
-| Forge 1.20.1 带模组世界 | ✅ 显示类（AppleSkin，p129）+ 内容类（Farmer's Delight，p131）；**专用服务器 + 客户端 join 已通过**（p159：端口 25566）；**带 Farmer's Delight 的专用服务器 + 同模组客户端加入**（p164：端口 25569） |
-| 渲染类模组：Sodium | ❌ blocked_static | 1.20.1 的 Sodium 0.5.13 静态探针：missingClass=13、missingMember=15、descMismatch=16（`runs/p158-sodium-probe/`）；需要移植其渲染内核，本轮不做；Iris 兼容分支已在 p142/p143 跑通 |
-| ImmediatelyFast 的完整度 | ✅ HUD+物品+overlay 批处理生效；地图 atlas 已恢复并覆盖动态更新/正常退出；VertexBuffer 动态上传 fast path 已启用 | 单人/专用服务器（p134/p141）、soak 95s（p140）、关闭开关归零（p137）、Iris 1.8.1/1.8.14（p142/p143）、shader pack r5.3（p145/p146，hud=11146/11168）、关闭 universal batching 的回退路径（p147）、item per-lighting（p149/p150）；**地图 atlas：p175/p177/p181（动态更新 + 退出清理 + 崩溃修复）**；**VertexBuffer：p178**；私有成员走反射 |
-| Shulker 网格预览 | 🟡 部分恢复 | p186：client-side component + wrapper + t2/t4 桥，预览框和 `Diamond ×5` 出现；网格 item icon 仍缺，真实 server item 仍空 |
-| TrashSlot 完整 UI 流程 | ✅ empty Delete + Shift+Delete + right-click undelete | p183：Delete 清空；p184：两叠 5+3 跨槽 Shift+Delete；p185：空 cursor 右键取 1 留 4；p63–p65 的移入/取回/clientbound/provider empty 仍有效 |
-| mrpack 含 files 的真实包 | ✅ | p160：本地 HTTP 下载 + SHA-1/SHA-512 校验 + overrides 落盘通过；包内含 mod jar，不提交（`runs/p160-mrpack/`） |
-| LICENSE | ✅ MIT | 见仓库根目录 `LICENSE`（第三方 CenturyBridge 为 MIT，minecraft-launcher-lib 为 BSD-2 可选依赖） |
-| 干净机器构建 / Gradle Wrapper | ⚠️ | 干净目录已验证；无 wrapper（与“仓库不放 jar”策略冲突） |
-| 平台 | ⚠️ | 启动器仅 Windows 实测 |
+| NeoForge 甯︾涓夋柟妯＄粍 / 杩涗笘鐣?| 鉁?宸查€氳繃锛欰ppleSkin锛坧127锛夈€丗armer's Delight 鍐呭妯＄粍锛坧128锛夈€丣ade 鏁版嵁鍚屾/HUD锛坧130锛夛紱**涓撶敤鏈嶅姟鍣?+ 瀹㈡埛绔?join 宸查€氳繃**锛坧161锛岀鍙?25567锛涘畨瑁呮椂鏇惧洜 maven.neoforged.net 瓒呮椂澶辫触锛屽鐢ㄦ湰鍦?client libraries 鍚庢垚鍔燂級锛?*甯?Farmer's Delight 鐨勪笓鐢ㄦ湇鍔″櫒 + 鍚屾ā缁勫鎴风鍔犲叆**锛坧163锛岀鍙?25568锛?|
+| Forge 1.20.1 甯︽ā缁勪笘鐣?| 鉁?鏄剧ず绫伙紙AppleSkin锛宲129锛? 鍐呭绫伙紙Farmer's Delight锛宲131锛夛紱**涓撶敤鏈嶅姟鍣?+ 瀹㈡埛绔?join 宸查€氳繃**锛坧159锛氱鍙?25566锛夛紱**甯?Farmer's Delight 鐨勪笓鐢ㄦ湇鍔″櫒 + 鍚屾ā缁勫鎴风鍔犲叆**锛坧164锛氱鍙?25569锛?|
+| 娓叉煋绫绘ā缁勶細Sodium | 鉂?blocked_static | 1.20.1 鐨?Sodium 0.5.13 闈欐€佹帰閽堬細missingClass=13銆乵issingMember=15銆乨escMismatch=16锛坄runs/p158-sodium-probe/`锛夛紱闇€瑕佺Щ妞嶅叾娓叉煋鍐呮牳锛屾湰杞笉鍋氾紱Iris 鍏煎鍒嗘敮宸插湪 p142/p143 璺戦€?|
+| ImmediatelyFast 鐨勫畬鏁村害 | 鉁?HUD+鐗╁搧+overlay 鎵瑰鐞嗙敓鏁堬紱鍦板浘 atlas 宸叉仮澶嶅苟瑕嗙洊鍔ㄦ€佹洿鏂?姝ｅ父閫€鍑猴紱VertexBuffer 鍔ㄦ€佷笂浼?fast path 宸插惎鐢?| 鍗曚汉/涓撶敤鏈嶅姟鍣紙p134/p141锛夈€乻oak 95s锛坧140锛夈€佸叧闂紑鍏冲綊闆讹紙p137锛夈€両ris 1.8.1/1.8.14锛坧142/p143锛夈€乻hader pack r5.3锛坧145/p146锛宧ud=11146/11168锛夈€佸叧闂?universal batching 鐨勫洖閫€璺緞锛坧147锛夈€乮tem per-lighting锛坧149/p150锛夛紱**鍦板浘 atlas锛歱175/p177/p181锛堝姩鎬佹洿鏂?+ 閫€鍑烘竻鐞?+ 宕╂簝淇锛?*锛?*VertexBuffer锛歱178**锛涚鏈夋垚鍛樿蛋鍙嶅皠 |
+| Shulker 缃戞牸棰勮 | 馃煛 閮ㄥ垎鎭㈠ | p186锛歝lient-side component + wrapper + t2/t4 妗ワ紝棰勮妗嗗拰 `Diamond 脳5` 鍑虹幇锛涚綉鏍?item icon 浠嶇己锛岀湡瀹?server item 浠嶇┖ |
+| TrashSlot 瀹屾暣 UI 娴佺▼ | 鉁?empty Delete + Shift+Delete + right-click undelete | p183锛欴elete 娓呯┖锛沺184锛氫袱鍙?5+3 璺ㄦЫ Shift+Delete锛沺185锛氱┖ cursor 鍙抽敭鍙?1 鐣?4锛沺63鈥損65 鐨勭Щ鍏?鍙栧洖/clientbound/provider empty 浠嶆湁鏁?|
+| mrpack 鍚?files 鐨勭湡瀹炲寘 | 鉁?| p160锛氭湰鍦?HTTP 涓嬭浇 + SHA-1/SHA-512 鏍￠獙 + overrides 钀界洏閫氳繃锛涘寘鍐呭惈 mod jar锛屼笉鎻愪氦锛坄runs/p160-mrpack/`锛?|
+| LICENSE | 鉁?MIT | 瑙佷粨搴撴牴鐩綍 `LICENSE`锛堢涓夋柟 CenturyBridge 涓?MIT锛宮inecraft-launcher-lib 涓?BSD-2 鍙€変緷璧栵級 |
+| 骞插噣鏈哄櫒鏋勫缓 / Gradle Wrapper | 鈿狅笍 | 骞插噣鐩綍宸查獙璇侊紱鏃?wrapper锛堜笌鈥滀粨搴撲笉鏀?jar鈥濈瓥鐣ュ啿绐侊級 |
+| 骞冲彴 | 鈿狅笍 | 鍚姩鍣ㄤ粎 Windows 瀹炴祴 |
 
-## 三、复现命令
+## 涓夈€佸鐜板懡浠?
 
-先看 **[使用说明与教程](guide.md)**（安装、PCL 共用、迁移教程、FAQ）。
+鍏堢湅 **[浣跨敤璇存槑涓庢暀绋媇(guide.md)**锛堝畨瑁呫€丳CL 鍏辩敤銆佽縼绉绘暀绋嬨€丗AQ锛夈€?
 
 ```text
-# 工具链
+# 宸ュ叿閾?
 cd java && gradle test installDist
 python tools/test_review_fixes.py
 python tools/verify_evidence.py
 
-# 启动器
-launcher\run.bat              # 或 python launcher/server.py
+# 鍚姩鍣?
+launcher\run.bat              # 鎴?python launcher/server.py
 python launcher/mclaunch.py verify 1.21.1 <root>
 python tools/test_launcher_e2e.py --root <root> --no-install
 
-# CI（push 与 API 推送都会触发；如无 run 先看 githubstatus.com，再重推 workflow 文件）
+# CI锛坧ush 涓?API 鎺ㄩ€侀兘浼氳Е鍙戯紱濡傛棤 run 鍏堢湅 githubstatus.com锛屽啀閲嶆帹 workflow 鏂囦欢锛?
 gh api --method POST repos/SelYio666/mcbridge1201/actions/workflows/ci.yml/dispatches -f ref=master
 ```
 
-## 四、独立分享文档
+## 鍥涖€佺嫭绔嬪垎浜枃妗?
 
-`share/download-sources/`：不依赖 GitHub 的下载源速查（自包含 HTML + Markdown + 预览图），
-可直接发送文件或部署到任意静态托管，见该目录 README。
+`share/download-sources/`锛氫笉渚濊禆 GitHub 鐨勪笅杞芥簮閫熸煡锛堣嚜鍖呭惈 HTML + Markdown + 棰勮鍥撅級锛?
+鍙洿鎺ュ彂閫佹枃浠舵垨閮ㄧ讲鍒颁换鎰忛潤鎬佹墭绠★紝瑙佽鐩綍 README銆?
 
-## 五、发布
+## 浜斻€佸彂甯?
 
-- 仓库：https://github.com/SelYio666/mcbridge1201
-- 最新发布：v0.5.4（地图 atlas 生命周期/退出崩溃修复 + VertexBuffer fast path + 便携包）
-- 证据索引：`runs/SHA256SUMS.txt`、`docs/STATUS.md`、`docs/review-fixes-2026-10-21.md`
+- 浠撳簱锛歨ttps://github.com/SelYio666/mcbridge1201
+- 鏈€鏂板彂甯冿細v0.5.5锛堜竴閿畨瑁呭埌 PCL锛氬浘褰㈤潰鏉?鍏ㄧ増鏈€夋嫨锛涗富宸ュ叿 v0.5.4锛?
+- 璇佹嵁绱㈠紩锛歚runs/SHA256SUMS.txt`銆乣docs/STATUS.md`銆乣docs/review-fixes-2026-10-21.md`
+

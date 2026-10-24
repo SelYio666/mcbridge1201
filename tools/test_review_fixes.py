@@ -742,6 +742,20 @@ def test_immediatelyfast_port() -> None:
                and "shulker.legacy.set-nbt" in shulker_rule)
     check("SBT grid preview reaches the tooltip with component wrapper and t2/t4 bridges", p186_ok,
           "p186 SBT_WRAP show=true nonAir=1 + wrapper/rule sources")
+    import subprocess
+    pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
+    pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")
+    pcl_install = (ROOT / "tools" / "from_source_install.py").read_text(encoding="utf-8", errors="replace")
+    pcl_help = subprocess.run([sys.executable, str(ROOT / "tools" / "from_source_install.py"), "--help"],
+                              capture_output=True, text=True, timeout=60)
+    pcl_ok = ("mcbridge-pcl-panel.exe" in pcl_readme and "mcbridge-pcl-setup.exe" in pcl_readme
+              and "ttk.Combobox" in pcl_panel and "ttk.Progressbar" in pcl_panel
+              and "detect_pcl_root" in pcl_panel
+              and "--version-type" in pcl_install and "latest-snapshot" in pcl_install
+              and pcl_help.returncode == 0
+              and "--version-type" in pcl_help.stdout and "--list" in pcl_help.stdout)
+    check("PCL one-click panel/version picker contract", pcl_ok,
+          f"help rc={pcl_help.returncode}")
     mlaunch_src = (ROOT / "launcher" / "mclaunch.py").read_text(encoding="utf-8", errors="replace")
     path_fix = "sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))"
     portable_ok = (path_fix in mlaunch_src

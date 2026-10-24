@@ -1,4 +1,4 @@
-{
+﻿{
   "date": "2026-10-22",
   "commit": "00183a0",
   "repo": "https://github.com/SelYio666/mcbridge1201",
@@ -122,6 +122,16 @@
     "remaining": "grid slot item icons not drawn; real server /item replace stack still shows !minecraft:container",
     "release": "v0.5.4 (partial evidence, no new release)"
   },
+  "one_click_v055": {
+    "date": "2026-10-24",
+    "review_fixes": "88/88",
+    "hashes": "1085/1085",
+    "verify_evidence": "passed",
+    "release": "v0.5.5",
+    "assets": "mcbridge-pcl-panel.zip (12361982 bytes, sha256 40cfc0ea...), mcbridge-pcl-setup.zip (9163152 bytes, sha256 ade34ecc...)",
+    "panel": "version dropdown/search, release/snapshot/old_* filters, progress/log, PCL2 auto-detect",
+    "installer": "from_source_install --list --version-type all / --version latest-snapshot; PCL2 2.13.1.1 portable real test (runs/p137-pcl2-onclick)"
+  },
   "verified": [
     "Fabric 1.21.1 full cold install (3911/3911 assets, 933.6 MB, 0 failures) + singleplayer world (runs/p118)",
     "NeoForge 21.1.264 install + main menu (runs/p116)",
@@ -143,7 +153,8 @@
     "Path-scoped BMCL mirrors incl. intermediary, 404 fast-fail, retries, SHA-1, source records (runs/p122)",
     "Source modes auto/official/mirror + host health cache + GUI canary writeback (runs/p122/p123/p124)",
     "1.20.1 full cold install 111.7 s / 739 MB / verify OK, root deleted (runs/p122/full-1.20.1.json)",
-    "Portable launcher package (embedded Python) built and tested (v0.4.4 asset)"
+    "Portable launcher package (embedded Python) built and tested (v0.4.4 asset)",
+    "PCL one-click v0.5.5: Tkinter panel + Python-free setup assets, full version picker, PCL2 2.13.1.1 real test (share/pcl-onclick, runs/p137-pcl2-onclick)"
   ],
   "not_verified": [
     "Sodium: no conversion test; Iris shader packs: not tested (only Iris 1.8.1 no-shader pipeline)",
@@ -164,3 +175,4 @@
     "python tools/test_portable.py --root <dir> --version 1.21.1"
   ]
 }
+
