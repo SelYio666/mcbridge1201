@@ -11,109 +11,67 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewContext;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
 import com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData;
-import mcbridgepreview.ComponentPreviewProvider;
 
+import mcbridgepreview.ComponentPreviewProvider;
+import mcbridgepreview.SnapshotStore;
 import net.minecraft.class_1799;
-import net.minecraft.class_2487;
-import net.minecraft.class_2499;
 import net.minecraft.class_310;
 import net.minecraft.class_5632;
 import net.minecraft.class_9288;
-import top.mcbridge1201.bridge.ShulkerBoxNbtBridge;
+import net.minecraft.class_9334;
 
 /**
- * Replacement wiring for the mixin the conversion had to drop: 1.21.1 no longer has the old
- * getTooltipData signature, so this companion supplies the mod's PreviewTooltipData from the current
- * no-argument ItemStack.getTooltipData(). The mod's still-active HandledScreen mixin then renders the
- * grid.
+ * Supplies the mod's PreviewTooltipData from ItemStack.getTooltipData. The conversion stripped the
+ * mod's own ItemStackMixin entries (dead 1.21.1 targets), so with the vanilla method nothing ever
+ * produces a preview component (p187: getTooltipData returned Optional.empty on every frame). The
+ * companion builds the data itself: the component-first provider (registered into the mod's
+ * registry by CompanionInit, wrapped again here so it also works when registration failed) reads
+ * the CONTAINER component of the tooltip-time snapshot, falling back to the mod's provider legacy
+ * path. No other mixin writes this method, so there is no injection-order race.
  */
 @Mixin(class_1799.class)
 public class PreviewTooltipDataMixin {
-    /** Snapshot taken at the start of getTooltip, before the tooltip path strips the container. */
-    private static final java.util.Map<class_1799, class_1799> SNAPSHOTS =
-            java.util.Collections.synchronizedMap(new java.util.WeakHashMap<>());
-
     @Inject(method = "method_7950", at = @At("HEAD"))
     private void sbtpreview$snapshot(net.minecraft.class_1792.class_9635 context,
                                      net.minecraft.class_1657 player, net.minecraft.class_1836 type,
                                      org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable<
                                              java.util.List<net.minecraft.class_2561>> cir) {
-        SNAPSHOTS.put((class_1799) (Object) this, ((class_1799) (Object) this).method_7972());
+        class_1799 live = (class_1799) (Object) this;
+        SnapshotStore.put(live, live.method_7972());
     }
+
     @Inject(method = "method_32347", at = @At("HEAD"), cancellable = true)
-    private void sbtpreview$inject(CallbackInfoReturnable<Optional<class_5632>> cir) {
+    private void sbtpreview$data(CallbackInfoReturnable<Optional<class_5632>> cir) {
         class_1799 live = (class_1799) (Object) this;
         if (live.method_7960()) {
             return;
         }
-        class_1799 cached = SNAPSHOTS.get(live);
-        class_1799 stack = cached != null ? cached : live;
-        System.out.println("SBT_TOP live=" + live.method_57380()
-                + " cached=" + (cached == null ? "null" : cached.method_57380()));
-        PreviewProvider provider = PreviewProviderRegistry.getInstance().get(stack);
-        Object component = stack.method_57379(net.minecraft.class_9334.field_49622, null);
-        class_2487 tag = ShulkerBoxNbtBridge.legacyBlockEntityTag(stack, "BlockEntityTag");
-        String items = "null-tag";
-        if (tag != null) {
-            Object list = tag.method_10580("Items");
-            items = list instanceof class_2499 nl ? "list:" + nl.size() : String.valueOf(list);
-        }
-        System.out.println("SBT_COMPONENT " + component + " item=" + stack.method_7909()
-                + " count=" + stack.method_7947() + " items=" + items);
-        System.out.println("SBT_MAP " + stack.method_57380());
-        var player = net.minecraft.class_310.method_1551().field_1724;
-        if (player != null) {
-            var held = player.method_31548().method_5438(player.method_31548().field_7545);
-            System.out.println("SBT_INV " + (held == null ? "null" : held.method_57380())
-                    + " same=" + (held == stack));
-        }
-        if (component instanceof net.minecraft.class_9288 c) {
-            int iter = 0;
-            for (var s : c.method_59714()) {
-                if (!s.method_7960()) {
-                    iter++;
-                }
-            }
-            long raw1 = c.method_57489().count();
-            long raw2 = c.method_59712().count();
-            var first = c.method_59714().iterator();
-            String head = "none";
-            while (first.hasNext()) {
-                var st = first.next();
-                head = st.method_7909() + "x" + st.method_7947() + " empty=" + st.method_7960();
-                break;
-            }
-            long stream1 = c.method_57489().filter(s -> !s.method_7960()).count();
-            long stream2 = c.method_59712().filter(s -> !s.method_7960()).count();
-            System.out.println("SBT_ITER raw1=" + raw1 + " raw2=" + raw2 + " head=" + head
-                    + " stream1=" + stream1 + " stream2=" + stream2);
-        }
-        if (provider == null) {
-            System.out.println("SBT_PREVIEW_NOPROVIDER " + stack.method_7909());
+        PreviewProvider registryProvider = PreviewProviderRegistry.getInstance().get(live);
+        if (registryProvider == null) {
             return;
         }
-        class_310 mc = class_310.method_1551();
-        PreviewContext context = mc.field_1724 == null
-                ? PreviewContext.of(stack)
-                : PreviewContext.of(stack, mc.field_1724);
-        PreviewContext drawContext = mc.field_1724 == null
-                ? PreviewContext.of(stack)
-                : PreviewContext.of(stack, mc.field_1724);
-        ComponentPreviewProvider wrapper = new ComponentPreviewProvider(provider,
-                component instanceof class_9288 c ? c : null);
-        boolean wrapShow = wrapper.shouldDisplay(drawContext);
-        var wrapInventory = wrapper.getInventory(drawContext);
-        int wrapNonAir = 0;
-        for (var entry : wrapInventory) {
-            if (!entry.method_7960()) {
-                wrapNonAir++;
-            }
-        }
-        System.out.println("SBT_WRAP show=" + wrapShow + " inv=" + wrapInventory.size()
-                + " nonAir=" + wrapNonAir + " stack=" + stack.method_7909());
-        if (!wrapShow) {
+        class_1799 snapshot = SnapshotStore.get(live);
+        class_1799 stack = snapshot != null ? snapshot : live;
+        // method_57379(type, value) is ItemStack.set and would clear the component; read through
+        // getComponents() (method_57353) instead.
+        Object component = stack.method_57353().method_57829(class_9334.field_49622);
+        if (!(component instanceof class_9288)) {
+            // No modern container on this stack: leave the vanilla empty data alone; the mod's
+            // own provider path (registered in the registry) serves the legacy-tag stacks.
             return;
         }
-        cir.setReturnValue(Optional.of(new PreviewTooltipData(wrapper, drawContext)));
+        ComponentPreviewProvider provider = new ComponentPreviewProvider(registryProvider);
+        PreviewContext context = playerContext(live);
+        if (!provider.shouldDisplay(context)) {
+            return;
+        }
+        cir.setReturnValue(Optional.of(new PreviewTooltipData(provider, context)));
+    }
+
+    private static PreviewContext playerContext(class_1799 stack) {
+        class_310 client = class_310.method_1551();
+        return client.field_1724 == null
+                ? PreviewContext.of(stack)
+                : PreviewContext.of(stack, client.field_1724);
     }
 }

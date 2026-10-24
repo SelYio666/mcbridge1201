@@ -27,8 +27,10 @@ public final class ShulkerBoxNbtBridge {
         if (!"BlockEntityTag".equals(key)) {
             return null;
         }
-        class_9288 container = stack.method_57379(class_9334.field_49622, null);
-        if (container == null) {
+        // method_57379(type, value) is ItemStack.set and would clear the component; read through
+        // getComponents() (method_57353) instead.
+        Object component = stack.method_57353().method_57829(class_9334.field_49622);
+        if (!(component instanceof class_9288 container)) {
             return null;
         }
         class_2487 tag = new class_2487();

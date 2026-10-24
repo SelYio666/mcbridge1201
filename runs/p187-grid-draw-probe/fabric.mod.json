@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "gridprobe",
+  "version": "1.1.0",
+  "name": "Shulker grid draw probe",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["probe.GridProbe"]
+  },
+  "mixins": [
+    "sbtprobe.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "shulkerboxtooltip": "*",
+    "fabric-rendering-v1": "*",
+    "fabric-lifecycle-events-v1": "*"
+  }
+}

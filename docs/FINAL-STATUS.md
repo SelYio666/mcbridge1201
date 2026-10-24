@@ -149,3 +149,26 @@ gh api --method POST repos/SelYio666/mcbridge1201/actions/workflows/ci.yml/dispa
 - 鏈€鏂板彂甯冿細v0.5.5锛堜竴閿畨瑁呭埌 PCL锛氬浘褰㈤潰鏉?鍏ㄧ増鏈€夋嫨锛涗富宸ュ叿 v0.5.4锛?
 - 璇佹嵁绱㈠紩锛歚runs/SHA256SUMS.txt`銆乣docs/STATUS.md`銆乣docs/review-fixes-2026-10-21.md`
 
+
+## 六、2026-10-24 更新（p187：Shulker 网格 icon + 服务端物品恢复）
+
+p187 修复两个真实根因并恢复 ShulkerBoxTooltip 网格预览（证据 `runs/p187-grid-draw-probe/`）：
+
+1. **组件读损坏**：桥接/companion 里所有组件"读"都写成 `ItemStack.method_57379(type, null)`——
+   该方法是 `set(type, value)`，传 null 等于清空 CONTAINER 组件。服务端同步来的 shulker
+   第一次被读取就被清空，这就是 p110/p186 "真实服务端 item 仍是 !minecraft:container" 的根因。
+   现统一改为 `method_57353().method_57829(type)`（getComponents().get）。
+2. **无 PreviewTooltipData**：转换把 mod 的 ItemStackMixin 全部剥掉（1.20.4 目标已死），
+   vanilla `getTooltipData()` 永远 empty，p186 的"框"只是 vanilla 加高的 tooltip 背景。
+   companion 1.1.0 现在注入 getTooltipData、注册 component-first provider（17 个 shulker 物品）、
+   `CompanionInit` 首个 client tick 注册（registry 解锁 + 优先级覆盖）。
+3. mod 默认 `preview.alwaysOn=false`（按住预览键才显示），harness 写
+   `config/shulkerboxtooltip.json5` 强制开启。
+
+实测（`result.json`/`client.log`/`grid.png`）：`GRID_DRAWITEMS ... items=1
+first=minecraft:diamondx5`、`GRID_DRAWITEM stack=minecraft:diamond count=5`、
+`GRID_SERVERBOX slot=3 nonAir=1`（服务端 `/item replace` 放入的真实 shulker，
+HUD 源切到 `source=server`），截图网格槽内 diamond 图标 ×5 正常绘制。
+AppleSkin 的 `AppleSkinFoodBridge` 同样的 set-as-get 问题一并修复。
+未覆盖：FULL 预览类型、多物品网格、真实鼠标 hover 路径（harness 用 HudRenderCallback
+驱动同一条管线，OS 光标注入不可靠）、预览键交互。

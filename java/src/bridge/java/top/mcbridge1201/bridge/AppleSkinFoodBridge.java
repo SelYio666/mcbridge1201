@@ -24,7 +24,9 @@ public final class AppleSkinFoodBridge {
     }
 
     public static class_4174 foodComponent(class_1792 item) {
-        return new class_1799(item).method_57379(class_9334.field_50075, null);
+        // method_57379(type, value) is ItemStack.set; read the default component map instead.
+        Object component = new class_1799(item).method_57353().method_57829(class_9334.field_50075);
+        return component instanceof class_4174 food ? food : null;
     }
 
     public static boolean alwaysEdible(class_4174 food) {

@@ -1,14 +1,18 @@
 {
   "schemaVersion": 1,
   "id": "sbtpreview",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "Shulker preview tooltip fix",
   "environment": "client",
+  "entrypoints": {
+    "client": ["mcbridgepreview.CompanionInit"]
+  },
   "mixins": [
     "sbtpreview.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.0",
-    "shulkerboxtooltip": "*"
+    "shulkerboxtooltip": "*",
+    "fabric-lifecycle-events-v1": "*"
   }
 }

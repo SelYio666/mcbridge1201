@@ -79,8 +79,9 @@ def ensure_java_home() -> bool:
 def run(cmd: list[str]) -> tuple[int, str]:
     import subprocess
 
-    p = subprocess.run(cmd, capture_output=True, text=True)
-    return p.returncode, (p.stdout + p.stderr)
+    # The Java CLI writes diagnostics in the console codepage (GBK on this box); decode leniently.
+    p = subprocess.run(cmd, capture_output=True, text=True, errors="replace")
+    return p.returncode, ((p.stdout or "") + (p.stderr or ""))
 
 
 # ---------------------------------------------------------------- ISSUE-03
@@ -742,6 +743,21 @@ def test_immediatelyfast_port() -> None:
                and "shulker.legacy.set-nbt" in shulker_rule)
     check("SBT grid preview reaches the tooltip with component wrapper and t2/t4 bridges", p186_ok,
           "p186 SBT_WRAP show=true nonAir=1 + wrapper/rule sources")
+    p187_result = json.loads((ROOT / "runs" / "p187-grid-draw-probe" / "result.json").read_text(encoding="utf-8"))
+    p187_markers = p187_result.get("grid_markers", {})
+    p187_provider = (ROOT / "java" / "src" / "shulkerpreview" / "java" / "mcbridgepreview"
+                     / "ComponentPreviewProvider.java").read_text(encoding="utf-8", errors="replace")
+    p187_bridge = (ROOT / "java" / "src" / "bridge" / "java" / "top" / "mcbridge1201" / "bridge"
+                   / "ShulkerBoxNbtBridge.java").read_text(encoding="utf-8", errors="replace")
+    p187_ok = (p187_markers.get("drawitems", 0) > 0
+               and p187_markers.get("drawitem", 0) > 0
+               and p187_markers.get("serverbox", 0) > 0
+               and "diamondx5" in p187_result.get("drawitems_line", "")
+               and "method_57353().method_57829" in p187_provider
+               and "method_57379(class_9334" not in p187_bridge
+               and "method_57353().method_57829" in p187_bridge)
+    check("SBT grid draws item icons and serves the server-synced box (set-as-get fixed)", p187_ok,
+          "p187 drawitems/drawitem/serverbox markers + component reads via getComponents().get")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")

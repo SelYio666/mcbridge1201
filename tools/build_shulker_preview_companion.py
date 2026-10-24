@@ -34,6 +34,22 @@ def find_mixin_jar():
     return jars[-1]
 
 
+def find_loader_jar():
+    base = ROOT / "work" / "launcher-e2e" / "libraries" / "net" / "fabricmc" / "fabric-loader"
+    jars = sorted(base.rglob("fabric-loader-*.jar"))
+    if not jars:
+        raise SystemExit("fabric-loader jar not found")
+    return jars[-1]
+
+
+def find_library(name):
+    base = ROOT / "work" / "launcher-e2e" / "libraries"
+    jars = sorted(base.rglob(f"{name}*.jar"))
+    if not jars:
+        raise SystemExit(f"{name} jar not found")
+    return jars[-1]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--shulker", required=True)
@@ -48,7 +64,11 @@ def main():
     if out_dir.exists():
         shutil.rmtree(out_dir)
     out_dir.mkdir(parents=True)
-    cp = ";".join([args.stub, args.shulker, str(find_mixin_jar())])
+    cp = ";".join([args.stub, args.shulker, str(find_mixin_jar()), str(find_loader_jar()),
+                   str(find_library("datafixerupper")), str(find_library("fastutil"))])
+    processed = ROOT / "work" / "launcher-e2e" / ".fabric" / "processedMods"
+    if processed.is_dir():
+        cp += ";" + ";".join(str(p) for p in sorted(processed.glob("*.jar")))
     javac = Path(java_home) / "bin" / "javac.exe"
     sources = sorted(str(p) for p in (SRC / "java").rglob("*.java"))
     run([javac, "--release", "17", "-nowarn", "-proc:none", "-encoding", "UTF-8", "-cp", cp,

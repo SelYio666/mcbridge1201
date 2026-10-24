@@ -39,9 +39,19 @@ claim that these paths work.
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.
 - Sodium conversion probe: `blocked_static` 13/15/16 (`runs/p158`); needs its rendering core
   ported, out of scope.
-- Still open: Shulker grid item icons + real server-item sync, TrashSlot creative/multi-client
-  variants, portable package on a clean/other machine, CI coverage of every commit
-  (push-triggered CI works).
+- Shulker grid item icons and real server-item sync are now restored (`runs/p187-grid-draw-probe/`,
+  2026-10-24): two real bugs fixed. (1) Every component "read" in the bridges/companion used
+  `ItemStack.method_57379(type, null)`, which is `set(type, value)` and **cleared** the CONTAINER
+  component on first read - that is what made the server-synced box look like `!minecraft:container`
+  since p110; all reads now go through `getComponents().get(type)`. (2) The conversion stripped the
+  mod's ItemStackMixin entries, so nothing ever supplied `PreviewTooltipData`; the companion now
+  injects `getTooltipData` and registers a component-first provider over the mod's one for all 17
+  shulker items. With `preview.alwaysOn=true` (the stock mod wants the preview key held), the grid
+  draws the diamond icon with its count and the server-synced box renders the same way
+  (`GRID_DRAWITEMS ... first=minecraft:diamondx5`, `GRID_SERVERBOX slot=3 nonAir=1`).
+  Still open: FULL preview type (3x9), multi-item grids, the real mouse-hover path (the harness
+  drives the same pipeline through HudRenderCallback because OS cursor injection is unreliable),
+  the preview-keybind interaction, and TrashSlot creative/multi-client variants.
 
 ## Already verified (dedicated server)
 
