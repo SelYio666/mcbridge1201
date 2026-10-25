@@ -219,5 +219,15 @@
     "evidence": "A right-click 5->4 then Delete ->empty; B server trash diamondx3 constant, B client UI constant (reply goes to the sender only)",
     "remaining": "B-side active ops, third client, rejoin persistence",
     "release": "no new release (main tool still v0.5.4)"
+  },
+  "p191_p192": {
+    "date": "2026-10-25",
+    "review_fixes": "94/94",
+    "hashes": "1175/1175",
+    "verify_evidence": "passed",
+    "creative_tab": "class_484 wrapper slots map identity to the server InventoryMenu; SERVER_DELETE slot=18 cleared inv18; creative list slots are upstream-ignored (no server delete); creative right-click undelete not applicable (no trash canvas, upstream stub)",
+    "multi_active": "three clients; B's real GLFW-callback right-click (4->3) and Delete (->empty) touched only B; C server+client constant; A rejoin reset its trash to empty (upstream PlayerLoginEvent, p65)",
+    "test_method": "OS input unreliable on this machine (in-game mouse pinned at window centre): probes aim by writing Mouse raw fields and synthesize keys/mouse at the GLFW callback boundary (same code path as real input)",
+    "release": "no new release (main tool still v0.5.4)"
   }
 }

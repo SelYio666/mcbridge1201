@@ -1,0 +1,75 @@
+{
+  "a_states_tail": [
+    "user=GridUser trash=minecraft:diamondx5",
+    "user=GridUser trash=minecraft:diamondx5",
+    "user=GridUser trash=empty",
+    "user=GridUser trash=empty",
+    "user=GridUser trash=empty",
+    "user=GridUser trash=empty"
+  ],
+  "b_states_tail": [
+    "user=TrashB trash=empty",
+    "user=TrashB trash=empty",
+    "user=TrashB trash=empty",
+    "user=TrashB trash=empty",
+    "user=TrashB trash=empty",
+    "user=TrashB trash=empty",
+    "user=TrashB trash=empty",
+    "user=TrashB trash=empty"
+  ],
+  "c_states_tail": [
+    "user=TrashC trash=minecraft:diamondx3",
+    "user=TrashC trash=minecraft:diamondx3",
+    "user=TrashC trash=minecraft:diamondx3",
+    "user=TrashC trash=minecraft:diamondx3"
+  ],
+  "a_had_five": true,
+  "a_rejoined": true,
+  "a_reset_after_rejoin": true,
+  "b_took_one": true,
+  "b_emptied": true,
+  "c_constant": true,
+  "c_client_untouched": true,
+  "server_tail": [
+    "[19:42:18] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=TrashC trash=minecraft:diamondx3",
+    "[19:42:19] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=minecraft:diamondx7",
+    "[19:42:20] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=GridUser trash=empty",
+    "[19:42:20] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=TrashB trash=empty",
+    "[19:42:20] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=TrashC trash=minecraft:diamondx3",
+    "[19:42:21] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=minecraft:diamondx7",
+    "[19:42:22] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=GridUser trash=empty",
+    "[19:42:22] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=TrashB trash=empty",
+    "[19:42:22] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=TrashC trash=minecraft:diamondx3",
+    "[19:42:23] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=minecraft:diamondx7",
+    "[19:42:24] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=GridUser trash=empty",
+    "[19:42:24] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=TrashB trash=empty",
+    "[19:42:24] [Server thread/INFO]: [STDOUT]: ACTIVE_SERVER user=TrashC trash=minecraft:diamondx3",
+    "[19:42:25] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=minecraft:diamondx7"
+  ],
+  "b_client_tail": [
+    "[19:42:10] [Render thread/INFO]: [STDOUT]: P192_WAIT online=2",
+    "[19:42:12] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=empty",
+    "[19:42:12] [Render thread/INFO]: [STDOUT]: P192_WAIT online=2",
+    "[19:42:14] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=empty",
+    "[19:42:14] [Render thread/INFO]: [STDOUT]: P192_WAIT online=2",
+    "[19:42:16] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=empty",
+    "[19:42:16] [Render thread/INFO]: [STDOUT]: P192_WAIT online=2",
+    "[19:42:17] [Render thread/INFO]: [System] [CHAT] GridUser joined the game",
+    "[19:42:18] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=empty",
+    "[19:42:20] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=empty",
+    "[19:42:22] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=empty",
+    "[19:42:24] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=empty"
+  ],
+  "c_client_tail": [
+    "[19:42:08] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4",
+    "[19:42:10] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4",
+    "[19:42:12] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4",
+    "[19:42:14] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4",
+    "[19:42:16] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4",
+    "[19:42:17] [Render thread/INFO]: [System] [CHAT] GridUser joined the game",
+    "[19:42:18] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4",
+    "[19:42:20] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4",
+    "[19:42:22] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4",
+    "[19:42:24] [Render thread/INFO]: [STDOUT]: P192_TRASH screen=class_490 trash=minecraft:diamondx4"
+  ]
+}

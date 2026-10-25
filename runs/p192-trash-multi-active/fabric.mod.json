@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "p192multi",
+  "version": "1.0.0",
+  "name": "p192 multi-client active probe",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["probe.ActiveServerProbe"],
+    "client": ["probe.ActiveClientProbe"]
+  },
+  "mixins": ["p192.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "trashslot": "*"
+  }
+}

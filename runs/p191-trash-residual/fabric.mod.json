@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "trashresidual",
+  "version": "1.0.0",
+  "name": "TrashSlot residual probe",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["probe.ResidualServerProbe"],
+    "client": ["probe.ResidualClientProbe"]
+  },
+  "mixins": ["p191residual.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "trashslot": "*"
+  }
+}

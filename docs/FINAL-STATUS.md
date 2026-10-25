@@ -52,6 +52,7 @@
 | 地图 atlas 1024 溢出（第二个 atlas） | ✅ | p188 纯验证轮（实现零改动）：探针用 map 1 的真实 MapState 连续分配 1026 个 map id，`map-atlas create id=1` 恰好一次（1024 满后溢出）、编码正确（`assign map=1025 packed=65536`=atlas 1 tile 0、`mapping1024=7967`=atlas 0 最后一格）、`bind map=map/1025 texture=immediatelyfast:map_atlas/1`；HUD 内 `MapRenderer.draw` 触发真实上传后 `atlas1-pixel-check mismatches=0`（4 采样点读回 atlas 1 NativeImage 与 MapState 颜色一致；update marker 有节流故用像素）；`map-atlas clear atlases=2` 正常退出；未测：第三个 atlas（2048+）、跨 atlas 同屏视觉、真实服务端 1024+ 张地图端到端 | `runs/p188-atlas-overflow/`（`result.json`、`client.log`、README） |
 | TrashSlot creative 删除键 | ✅ | p189：**真缺陷修复**——1.21.1 creative 界面（class_481）hoveredSlot 恒 null 且 SlotWrapper 已删除，1.20.x 的 creative 分支永不可达（DEBUG_HOVERED hovered=null 实证）；companion `trashcreativefix` 重写分支（hotbar menu 45..53 → 服务端 InventoryMenu 36..44，`callIsHovering` 定位，无画布时直接发 MessageDeleteFromSlot）。实测 Shift+Delete 连锁删 hotbar 0+1（SERVER_DELETE slot=36 all=true，menu=class_1723 menuSize=46）、普通 Delete、删除后 trash 清空（slot=-1）；未测：creative inventory tab 27 格、右键 undelete | `runs/p189-trash-creative/`（`after-delete-all.png`、`result.json`、`java/src/trashcreative/`） |
 | TrashSlot 多客户端独立 trash | ✅ | p190：双客户端（GridUser/TrashB，online-mode=false dedicated）+ 服务端 probe 分别 seed 5/3 钻；A 右键取 1（服务端 5→4）+ Delete 清空（→empty），B 的服务端 trash 全程 diamondx3、B 的客户端 UI 全程不变（reply 语义只回发送者）；未测：B 主动操作、三客户端、重进保持 | `runs/p190-trash-multi/`（`result.json`、`client-a/b.log`、`after.png`） |
+| TrashSlot creative inventory tab + 三客户端残余 | ✅ | p191/p192：inventory tab 的 36 格走 class_484 wrapper（field_7874 恒 0，列表位置=服务端 InventoryMenu 逐槽一致），companion 泛化 identity 映射——实测主背包格 Delete（SERVER_DELETE slot=18、inv18=empty）+ creative 列表格不可删（上游语义，无 SERVER_DELETE）+ 右键 undelete 不适用（creative 屏无 trash 画布，上游 undeleteLast 空实现）；三客户端 B 主动 4→3（右键取 1）→empty（Delete）只影响 B，C 服务端/客户端全程不变，A 重进后 trash 变 empty（上游 PlayerLoginEvent 重置，非 bug） | `runs/p191-trash-residual/`、`runs/p192-trash-multi-active/`（result.json、截图、双端日志） |
 | 涓€閿畨瑁呭埌 PCL 鍥惧舰闈㈡澘/鐗堟湰閫夋嫨 | 鉁?v0.5.5锛歚mcbridge-pcl-panel.zip` + `mcbridge-pcl-setup.zip`锛涚増鏈笅鎷?鎼滅储/杩涘害/PCL2 鑷姩妫€娴嬶紱`from_source_install` 鏀寔 release/snapshot/old_* / all / latest-snapshot锛汸CL2 2.13.1.1 瀹炴祴 | `share/pcl-onclick/`銆乣runs/p137-pcl2-onclick/` |
 | Forge 1.20.1-47.4.28 涓撶敤鏈嶅姟鍣?+ 瀹㈡埛绔?quickPlayMultiplayer 鍔犲叆 | `runs/p159-forge-server/` |
 | mrpack 鍚湡瀹?files锛圚TTP 涓嬭浇 + SHA-1 鏍￠獙 + overrides锛?| `runs/p160-mrpack/` |
@@ -207,3 +208,16 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
   B 的服务端 trash 与客户端 UI 全程不变——`reply` 只回发送者（p64 语义的多人侧确认）；
 - 门禁：test_review_fixes **92/92**、check_hashes **1143/1143**、verify_evidence passed；
   测试环境已恢复（server 25565 + 原版 trashslot；client ImmediatelyFast + Fabric API + p181 probe）。
+
+## 九、2026-10-25 更新（p191/p192：TrashSlot creative/多客户端残余闭环）
+
+- **p191**：摸清 1.21.1 creative 菜单两种槽型（item tab 纯 Slot hotbar 45..53；inventory tab
+  class_484 wrapper，field_7874 无用但列表位置=服务端 InventoryMenu 逐槽一致），companion
+  映射泛化。实测主背包格 Delete（slot=18）✓、creative 列表格 Delete 无效（上游语义）✓、
+  creative 右键 undelete 不适用（无 trash 画布 + 上游空实现）✓；
+- **p192**：三客户端（A/B/C）+ B 主动（右键取 1 → Delete 清空，全程真实 GLFW 回调路径）
+  → B 4→3→empty、C 服务端/客户端不变、A 重进后 trash=empty（上游登录重置设计）；
+- OS 输入在本机完全不可靠（游戏内鼠标恒停窗口中心、键盘焦点间歇丢失），p191 确立最终
+  测试形态：探针写 Mouse raw 字段瞄准 + 在 GLFW 回调边界合成按键（与真实输入同代码路径）；
+- 门禁：test_review_fixes **94/94**、check_hashes **1175/1175**、verify_evidence passed；
+  测试环境已恢复。TrashSlot 的已验收范围至此覆盖：p63–p65、p183–p185、p189–p192。

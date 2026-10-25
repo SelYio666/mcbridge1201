@@ -1,0 +1,50 @@
+{
+  "inventory_tab_line": "i=18 class=class_484 container=class_1661 slotIndex=0 x=9 y=72 item=minecraft:diamondx7",
+  "canvas_line": "trashComponent=null",
+  "server_deletes": [
+    "slot=18 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "slot=-1 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air"
+  ],
+  "server_states_tail": [
+    "trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "trash=empty hot0=minecraft:diamondx5 inv18=empty"
+  ],
+  "main_inv_deleted": true,
+  "list_ignored": true,
+  "client_tail": [
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=40 class=class_482 container=class_1277 slotIndex=40 x=81 y=90 item=minecraft:jungle_woodx1",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=41 class=class_482 container=class_1277 slotIndex=41 x=99 y=90 item=minecraft:stripped_jungle_logx1",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=42 class=class_482 container=class_1277 slotIndex=42 x=117 y=90 item=minecraft:stripped_jungle_woodx1",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=43 class=class_482 container=class_1277 slotIndex=43 x=135 y=90 item=minecraft:jungle_planksx1",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=44 class=class_482 container=class_1277 slotIndex=44 x=153 y=90 item=minecraft:jungle_stairsx1",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=45 class=class_1735 container=class_1661 slotIndex=45 x=9 y=112 item=minecraft:diamondx5",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=46 class=class_1735 container=class_1661 slotIndex=46 x=27 y=112 item=empty",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=47 class=class_1735 container=class_1661 slotIndex=47 x=45 y=112 item=empty",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=48 class=class_1735 container=class_1661 slotIndex=48 x=63 y=112 item=empty",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=49 class=class_1735 container=class_1661 slotIndex=49 x=81 y=112 item=empty",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=50 class=class_1735 container=class_1661 slotIndex=50 x=99 y=112 item=empty",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=51 class=class_1735 container=class_1661 slotIndex=51 x=117 y=112 item=empty",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=52 class=class_1735 container=class_1661 slotIndex=52 x=135 y=112 item=empty",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_SLOT i=53 class=class_1735 container=class_1661 slotIndex=53 x=153 y=112 item=empty",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_GEOM left=222 top=112 scale=2.0",
+    "[15:04:37] [Render thread/INFO]: [STDOUT]: RES_MOUSE gx=239.0 gy=138.0"
+  ],
+  "server_tail": [
+    "[15:04:22] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=minecraft:diamondx7",
+    "[15:04:24] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=minecraft:diamondx7",
+    "[15:04:24] [Server thread/INFO]: Replaced a slot on GridUser with [Diamond]",
+    "[15:04:24] [Server thread/INFO]: Replaced a slot on GridUser with [Diamond]",
+    "[15:04:26] [Server thread/INFO]: [STDOUT]: SERVER_DELETE slot=18 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "[15:04:26] [Server thread/INFO]: [STDOUT]: SERVER_DELETE slot=-1 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "[15:04:26] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "[15:04:28] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "[15:04:30] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "[15:04:32] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "[15:04:34] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=empty",
+    "[15:04:36] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 inv18=empty"
+  ]
+}

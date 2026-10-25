@@ -210,3 +210,15 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | p190 多客户端 | ✅ A：5→4（右键取 1）→empty（Delete）；B 服务端 trash 全程 diamondx3、客户端 UI 不变（reply 只回发送者） |
 | Release | 沿用 `v0.5.5`（主工具 v0.5.4；无新 release） |
 | 隐患 | creative inventory tab 27 格、creative 右键 undelete、B 主动操作、三客户端、重进保持未测 |
+
+## p191/p192 TrashSlot creative/多客户端残余 增量验收（2026-10-25，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **94 项**（本次 **94/94**；新增 p191 creative tab + p192 三客户端两条回归） |
+| `python tools/check_hashes.py` | ✅ **1175/1175** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| p191 | ✅ inventory tab 主背包格删除（SERVER_DELETE slot=18，class_484 identity 映射）；creative 列表格上游不删；右键 undelete 不适用（无画布） |
+| p192 | ✅ B 主动 4→3→empty 只影响 B；C 服务端/客户端不变；A 重进 trash=empty（上游登录重置） |
+| Release | 沿用 `v0.5.5`（主工具 v0.5.4；无新 release） |
+| 隐患 | 双端同时操作、四客户端未测 |

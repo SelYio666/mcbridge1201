@@ -155,11 +155,17 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
 - TrashSlot creative deletion keys and multi-client isolation are now verified (`runs/p189`,
   `runs/p190`, 2026-10-25). p189 also fixed a real defect: the 1.21.1 creative screen keeps
   hoveredSlot null and has no SlotWrapper, so the converted creative branch could never run; the
-  `trashcreativefix` companion re-implements it (hotbar 45..53 -> InventoryMenu 36..44). Plain
-  Delete empty (`runs/p183`), Shift+Delete cross-slot delete_all (`runs/p184`), right-click
-  undelete (`runs/p185`) and the creative variants all pass. Still untested: the creative
-  inventory tab's 27 slots, creative right-click undelete, a third client, trash persistence
-  across rejoin (upstream resets on login);
+  `trashcreativefix` companion re-implements it (hotbar 45..53 -> InventoryMenu 36..44,
+  generalized in p191 to the class_484 wrapper whose list position IS the InventoryMenu index).
+  Plain Delete empty (`runs/p183`), Shift+Delete cross-slot delete_all (`runs/p184`), right-click
+  undelete (`runs/p185`), the creative variants (`runs/p189`: hotbar + delete_all chain;
+  `runs/p191`: inventory tab main slots SERVER_DELETE slot=18, creative list slots are
+  upstream-ignored, creative right-click undelete is not applicable - no trash canvas on the
+  creative screen and the upstream undeleteLast is a stub) and the multi-client cases
+  (`runs/p190`: A drains, B untouched; `runs/p192`: three clients, B actively drains its own
+  trash, C constant, A's rejoin resets its trash to empty by upstream PlayerLoginEvent design)
+  all pass. Still untested: concurrent same-tick trash operations from two clients, four+
+  clients;
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
   server and client alive; `runs/p73-lithium-play/`), a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), a four-minute dedicated soak reports 20.00 TPS with

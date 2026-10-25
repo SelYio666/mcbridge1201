@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "probe.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MessageDeleteAccessorMixin",
+    "MessageDeleteDebugMixin"
+  ],
+  "client": [
+    "CreativeTabInvoker",
+    "MouseAccessor",
+    "CreativeDeleteDebugMixin",
+    "TrashKeyDebugMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

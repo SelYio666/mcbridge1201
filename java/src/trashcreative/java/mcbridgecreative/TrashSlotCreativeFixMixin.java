@@ -98,13 +98,35 @@ public class TrashSlotCreativeFixMixin {
             if (!accessor.callIsHovering(slot, mouseX, mouseY)) {
                 continue;
             }
-            // Hotbar slots sit at menu indices 45..53 in the creative menu; the delete message
-            // resolves against the server-side InventoryMenu where the hotbar is 36..44.
-            int menuIndex = slot.field_7874;
-            if (menuIndex < 45 || menuIndex > 53) {
+            // Two player-inventory slot shapes share the creative menu (p191 dump):
+            // - on item tabs the hotbar is plain Slot (class_1735) at list positions 45..53 and
+            //   the server InventoryMenu slot is position - 9 (45 -> 36, p189 evidence);
+            // - on the inventory tab the whole player inventory renders through the screen's own
+            //   wrapper (class_484, the 1.21.1 SlotWrapper) whose field_7874 is useless (always
+            //   0) but whose LIST POSITION is slot-for-slot the server InventoryMenu index
+            //   (main 9..35, hotbar 36..44 - p191 evidence).
+            int menuPos = -1;
+            for (int pos = 0; pos < player.field_7512.field_7761.size(); pos++) {
+                if (player.field_7512.field_7761.get(pos) == slot) {
+                    menuPos = pos;
+                    break;
+                }
+            }
+            if (menuPos < 0) {
                 continue;
             }
-            int slotNumber = menuIndex - 9;
+            int slotNumber;
+            if (slot.getClass().getName().equals("net.minecraft.class_1735")) {
+                if (menuPos < 45 || menuPos > 53) {
+                    continue;
+                }
+                slotNumber = menuPos - 9;
+            } else {
+                if (menuPos < 9 || menuPos > 44) {
+                    continue;
+                }
+                slotNumber = menuPos;
+            }
             DeletionProvider creativeProvider = TrashSlotConfig.getCreativeDeletionProvider();
             if (trashSlot != null) {
                 creativeProvider.deleteContainerItem(player.field_7512, slotNumber,

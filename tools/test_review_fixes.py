@@ -791,6 +791,26 @@ def test_immediatelyfast_port() -> None:
                and a_states and "trash=empty" in a_states[-1])
     check("TRASH multi-client: per-player isolation with A draining and B untouched", p190_ok,
           "p190 A 5->4->empty while B server/client stay constant")
+    p191_result = json.loads((ROOT / "runs" / "p191-trash-residual" / "result.json").read_text(encoding="utf-8"))
+    p191_server = (ROOT / "runs" / "p191-trash-residual" / "server.log").read_text(encoding="utf-8", errors="replace")
+    p191_client = (ROOT / "runs" / "p191-trash-residual" / "client.log").read_text(encoding="utf-8", errors="replace")
+    p191_companion = (ROOT / "java" / "src" / "trashcreative" / "java" / "mcbridgecreative"
+                      / "TrashSlotCreativeFixMixin.java").read_text(encoding="utf-8", errors="replace")
+    p191_ok = (p191_result.get("main_inv_deleted") and p191_result.get("list_ignored")
+               and any(d.startswith("slot=18 ") for d in p191_result.get("server_deletes", []))
+               and "class_484" in p191_companion
+               and "RES_CANVAS trashComponent=null" in p191_client)
+    check("TRASH creative inventory tab: main slots delete, list slots are upstream-ignored", p191_ok,
+          "p191 SERVER_DELETE slot=18 + list no-op + companion class_484 identity mapping")
+    p192_result = json.loads((ROOT / "runs" / "p192-trash-multi-active" / "result.json").read_text(encoding="utf-8"))
+    p192_server = (ROOT / "runs" / "p192-trash-multi-active" / "server.log").read_text(encoding="utf-8", errors="replace")
+    p192_ok = (p192_result.get("b_took_one") and p192_result.get("b_emptied")
+               and p192_result.get("c_constant") and p192_result.get("c_client_untouched")
+               and p192_result.get("a_had_five") and p192_result.get("a_rejoined")
+               and p192_result.get("a_reset_after_rejoin")
+               and p192_server.count("ACTIVE_SEED") == 1)
+    check("TRASH three clients: B drains its own trash, C untouched, A rejoin resets (upstream)", p192_ok,
+          "p192 B 4->3->empty, C constant, A rejoin trash=empty after diamondx5")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")
