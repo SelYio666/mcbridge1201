@@ -1,0 +1,70 @@
+{
+  "geometry": {
+    "left": "222",
+    "top": "112",
+    "i": "45",
+    "class": "class_1735",
+    "container": "class_1661",
+    "slotIndex": "45",
+    "x": "9",
+    "y": "112",
+    "item": "minecraft:diamondx5",
+    "trash": "0"
+  },
+  "physical": [
+    798,
+    704
+  ],
+  "creative_delete_seen": 2,
+  "delete_all_seen": true,
+  "server_deletes": [
+    "slot=36 all=true menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "slot=-1 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "slot=36 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "slot=-1 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air"
+  ],
+  "server_states_tail": [
+    "trash=empty hot0=empty hot1=empty",
+    "trash=empty hot0=empty hot1=empty",
+    "trash=empty hot0=minecraft:diamondx5 hot1=empty",
+    "trash=empty hot0=empty hot1=empty",
+    "trash=empty hot0=empty hot1=empty",
+    "trash=empty hot0=empty hot1=empty"
+  ],
+  "client_tail": [
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=34 class=class_482 container=class_1277 slotIndex=34 x=135 y=72 item=minecraft:birch_fence_gatex1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=35 class=class_482 container=class_1277 slotIndex=35 x=153 y=72 item=minecraft:birch_doorx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=36 class=class_482 container=class_1277 slotIndex=36 x=9 y=90 item=minecraft:birch_trapdoorx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=37 class=class_482 container=class_1277 slotIndex=37 x=27 y=90 item=minecraft:birch_pressure_platex1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=38 class=class_482 container=class_1277 slotIndex=38 x=45 y=90 item=minecraft:birch_buttonx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=39 class=class_482 container=class_1277 slotIndex=39 x=63 y=90 item=minecraft:jungle_logx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=40 class=class_482 container=class_1277 slotIndex=40 x=81 y=90 item=minecraft:jungle_woodx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=41 class=class_482 container=class_1277 slotIndex=41 x=99 y=90 item=minecraft:stripped_jungle_logx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=42 class=class_482 container=class_1277 slotIndex=42 x=117 y=90 item=minecraft:stripped_jungle_woodx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=43 class=class_482 container=class_1277 slotIndex=43 x=135 y=90 item=minecraft:jungle_planksx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=44 class=class_482 container=class_1277 slotIndex=44 x=153 y=90 item=minecraft:jungle_stairsx1 trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=45 class=class_1735 container=class_1661 slotIndex=45 x=9 y=112 item=empty trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=46 class=class_1735 container=class_1661 slotIndex=46 x=27 y=112 item=empty trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=47 class=class_1735 container=class_1661 slotIndex=47 x=45 y=112 item=empty trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=48 class=class_1735 container=class_1661 slotIndex=48 x=63 y=112 item=empty trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=49 class=class_1735 container=class_1661 slotIndex=49 x=81 y=112 item=empty trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=50 class=class_1735 container=class_1661 slotIndex=50 x=99 y=112 item=empty trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=51 class=class_1735 container=class_1661 slotIndex=51 x=117 y=112 item=empty trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=52 class=class_1735 container=class_1661 slotIndex=52 x=135 y=112 item=empty trash=0 minecraft:air",
+    "[02:29:43] [Render thread/INFO]: [STDOUT]: CRE_SLOT left=222 top=112 i=53 class=class_1735 container=class_1661 slotIndex=53 x=153 y=112 item=empty trash=0 minecraft:air"
+  ],
+  "server_tail": [
+    "[02:29:30] [Server thread/INFO]: [STDOUT]: SERVER_DELETE slot=36 all=true menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "[02:29:30] [Server thread/INFO]: [STDOUT]: SERVER_DELETE slot=-1 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "[02:29:31] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=empty hot1=empty",
+    "[02:29:33] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=empty hot1=empty",
+    "[02:29:35] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=empty hot1=empty",
+    "[02:29:36] [Server thread/INFO]: Replaced a slot on GridUser with [Diamond]",
+    "[02:29:37] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=minecraft:diamondx5 hot1=empty",
+    "[02:29:38] [Server thread/INFO]: [STDOUT]: SERVER_DELETE slot=36 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "[02:29:38] [Server thread/INFO]: [STDOUT]: SERVER_DELETE slot=-1 all=false menu=class_1723 menuSize=46 carried=0 minecraft:air",
+    "[02:29:39] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=empty hot1=empty",
+    "[02:29:41] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=empty hot1=empty",
+    "[02:29:43] [Server thread/INFO]: [STDOUT]: SERVER_STATE trash=empty hot0=empty hot1=empty"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "trashcreativefix",
+  "version": "1.0.0",
+  "name": "TrashSlot creative delete fix (1.21.1)",
+  "environment": "client",
+  "mixins": [
+    "trashcreative.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "trashslot": "*"
+  }
+}

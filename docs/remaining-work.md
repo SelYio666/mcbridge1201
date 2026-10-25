@@ -152,11 +152,14 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   bridges let the grid renderer reach the tooltip: the preview frame and `Diamond ×5` appear in
   `grid.png`. Still missing: the item icons inside the grid slots, and a real server item (the
   `/item replace` stack still shows `!minecraft:container` on the client).
-- TrashSlot remaining UI variants: creative-mode deletion keys and multi-client sync. Plain
-  Delete empty (`runs/p183`), Shift+Delete cross-slot delete_all (`runs/p184`: 5+3, all=true,
-  8→0), and empty-cursor right-click undelete (`runs/p185`: 1 to cursor, 4 left in trash) pass;
-  the p85/p86 "key never fires" was the injection missing `KEYEVENTF_EXTENDEDKEY` (KP_DECIMAL
-  330 instead of DELETE 261), not Balm;
+- TrashSlot creative deletion keys and multi-client isolation are now verified (`runs/p189`,
+  `runs/p190`, 2026-10-25). p189 also fixed a real defect: the 1.21.1 creative screen keeps
+  hoveredSlot null and has no SlotWrapper, so the converted creative branch could never run; the
+  `trashcreativefix` companion re-implements it (hotbar 45..53 -> InventoryMenu 36..44). Plain
+  Delete empty (`runs/p183`), Shift+Delete cross-slot delete_all (`runs/p184`), right-click
+  undelete (`runs/p185`) and the creative variants all pass. Still untested: the creative
+  inventory tab's 27 slots, creative right-click undelete, a third client, trash persistence
+  across rejoin (upstream resets on login);
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
   server and client alive; `runs/p73-lithium-play/`), a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), a four-minute dedicated soak reports 20.00 TPS with

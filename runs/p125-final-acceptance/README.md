@@ -198,3 +198,15 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | 退出清理 | ✅ `map-atlas clear atlases=2`、exit 0、errors=[]、crash=null |
 | Release | 沿用 `v0.5.5`（主工具 v0.5.4；p188 无新 release，实现零改动） |
 | 隐患 | 第三个 atlas（2048+ 张）、跨 atlas 同屏视觉、真实服务端 1024+ 张地图端到端未测 |
+
+## p189/p190 TrashSlot creative 删除 + 多客户端 增量验收（2026-10-25，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **92 项**（本次 **92/92**；新增 p189 creative 删除 + p190 多客户端两条回归） |
+| `python tools/check_hashes.py` | ✅ **1143/1143** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| p189 creative | ✅ 真缺陷修复：1.21.1 creative 界面 hoveredSlot 恒 null + SlotWrapper 消失使原分支永不可达；companion 重写后 Shift+Delete 连锁（slot=36 all=true，InventoryMenu 46 槽）+ Delete + 清 trash 全通过 |
+| p190 多客户端 | ✅ A：5→4（右键取 1）→empty（Delete）；B 服务端 trash 全程 diamondx3、客户端 UI 不变（reply 只回发送者） |
+| Release | 沿用 `v0.5.5`（主工具 v0.5.4；无新 release） |
+| 隐患 | creative inventory tab 27 格、creative 右键 undelete、B 主动操作、三客户端、重进保持未测 |

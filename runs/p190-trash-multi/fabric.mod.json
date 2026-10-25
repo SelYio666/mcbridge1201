@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "trashmulti",
+  "version": "1.0.0",
+  "name": "Trash multi-client probe",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["probe.MultiTrashServerProbe"],
+    "client": ["probe.MultiTrashClientProbe"]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "trashslot": "*"
+  }
+}

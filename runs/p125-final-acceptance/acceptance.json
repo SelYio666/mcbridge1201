@@ -198,5 +198,26 @@
     "implementation_changes": "none (pure verification round)",
     "remaining": "third atlas (2048+), cross-atlas on-screen visuals, real server 1024+ maps end-to-end",
     "release": "no new release (main tool still v0.5.4)"
+  },
+  "p189": {
+    "date": "2026-10-25",
+    "review_fixes": "91/91 at commit time",
+    "hashes": "1126/1126 at commit time",
+    "verify_evidence": "passed",
+    "defect": "1.21.1 creative screen keeps hoveredSlot null and removed SlotWrapper, so the converted creative delete branch never runs (DEBUG_HOVERED hovered=null with creativeFlag=true)",
+    "fix": "companion trashcreativefix re-implements the branch: hotbar menu 45..53 -> server InventoryMenu 36..44, callIsHovering positioning, MessageDeleteFromSlot direct send without the trash canvas",
+    "evidence": "Shift+Delete chain cleared hotbar 0+1 (SERVER_DELETE slot=36 all=true menu=class_1723 menuSize=46), plain Delete, trash emptied per delete (slot=-1), after-delete-all.png",
+    "remaining": "creative inventory tab 27 slots, creative right-click undelete",
+    "release": "no new release (main tool still v0.5.4)"
+  },
+  "p190": {
+    "date": "2026-10-25",
+    "review_fixes": "92/92",
+    "hashes": "1143/1143",
+    "verify_evidence": "passed",
+    "setup": "two real clients (GridUser/TrashB) on one dedicated server, online-mode=false; server probe seeded 5 diamonds (A) and 3 (B); client probes seeded both local UIs to 5",
+    "evidence": "A right-click 5->4 then Delete ->empty; B server trash diamondx3 constant, B client UI constant (reply goes to the sender only)",
+    "remaining": "B-side active ops, third client, rejoin persistence",
+    "release": "no new release (main tool still v0.5.4)"
   }
 }

@@ -769,6 +769,28 @@ def test_immediatelyfast_port() -> None:
                and "map-atlas clear atlases=2" in p188_log)
     check("map atlas overflow creates the second atlas, encodes tiles and cleans up both", p188_ok,
           "p188 create id=1 exactly once, packed 65536, bind map_atlas/1, pixel-check 0, clear atlases=2")
+    p189_result = json.loads((ROOT / "runs" / "p189-trash-creative" / "result.json").read_text(encoding="utf-8"))
+    p189_server = (ROOT / "runs" / "p189-trash-creative" / "server.log").read_text(encoding="utf-8", errors="replace")
+    p189_fix = (ROOT / "java" / "src" / "trashcreative" / "java" / "mcbridgecreative"
+                / "TrashSlotCreativeFixMixin.java").read_text(encoding="utf-8", errors="replace")
+    p189_ok = (p189_result.get("creative_delete_seen", 0) >= 2
+               and p189_result.get("delete_all_seen")
+               and any(d.startswith("slot=36 all=true") for d in p189_result.get("server_deletes", []))
+               and p189_server.count("menu=class_1723") >= 4
+               and "class_481" in p189_fix and "callIsHovering" in p189_fix)
+    check("TRASH creative delete keys work via the 1.21.1 companion (hover null upstream)", p189_ok,
+          "p189 creative delete + delete_all on the InventoryMenu + companion source")
+    p190_result = json.loads((ROOT / "runs" / "p190-trash-multi" / "result.json").read_text(encoding="utf-8"))
+    p190_server = (ROOT / "runs" / "p190-trash-multi" / "server.log").read_text(encoding="utf-8", errors="replace")
+    a_states = p190_result.get("a_server_states", [])
+    p190_ok = (p190_result.get("a_took_one") and p190_result.get("a_emptied")
+               and p190_result.get("b_server_constant_diamondx3")
+               and p190_result.get("b_client_constant_diamondx3")
+               and p190_server.count("MULTI_SEED") == 1
+               and any("trash=minecraft:diamondx4" in s for s in a_states)
+               and a_states and "trash=empty" in a_states[-1])
+    check("TRASH multi-client: per-player isolation with A draining and B untouched", p190_ok,
+          "p190 A 5->4->empty while B server/client stay constant")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")
