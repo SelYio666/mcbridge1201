@@ -222,3 +222,10 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | p192 | ✅ B 主动 4→3→empty 只影响 B；C 服务端/客户端不变；A 重进 trash=empty（上游登录重置） |
 | Release | 沿用 `v0.5.5`（主工具 v0.5.4；无新 release） |
 | 隐患 | 双端同时操作、四客户端未测 |
+
+## v0.5.6 release 增量（2026-10-25，正常 UTF-8）
+
+- tag `v0.5.6`（target `44b5528`），5 资产：主工具便携包 0.5.6（`tools/test_portable.py` OK）、
+  shulkerpreview/trashcreativefix companion jar、PCL 面板/setup（沿用 v0.5.5 字节一致）；
+- 服务端 sha256 与本地记录全部一致（见 acceptance.json `release_v056`）；
+- 一键 PCL 仍为 v0.5.5 资产（未变更）。

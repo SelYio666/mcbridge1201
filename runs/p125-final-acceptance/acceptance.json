@@ -229,5 +229,39 @@
     "multi_active": "three clients; B's real GLFW-callback right-click (4->3) and Delete (->empty) touched only B; C server+client constant; A rejoin reset its trash to empty (upstream PlayerLoginEvent, p65)",
     "test_method": "OS input unreliable on this machine (in-game mouse pinned at window centre): probes aim by writing Mouse raw fields and synthesize keys/mouse at the GLFW callback boundary (same code path as real input)",
     "release": "no new release (main tool still v0.5.4)"
+  },
+  "release_v056": {
+    "date": "2026-10-25",
+    "tag": "v0.5.6",
+    "target": "44b55281ea69a22e6c2bfd6ad551066148d1316b",
+    "assets": [
+      [
+        "mcbridge-launcher-0.5.6.zip",
+        11960113,
+        "f711002772fac8ddd0686e44f0ee6178ed6cb1c8f35685aa6834103b78f0ec7a"
+      ],
+      [
+        "mcbridge-companion-shulkerpreview-1.1.0.jar",
+        7195,
+        "7d754e5f89a56ef8028a0e40ae407e15ddefcd6578fc5f9ed4060d05c989d490"
+      ],
+      [
+        "mcbridge-companion-trashcreativefix-1.0.0.jar",
+        3923,
+        "f4b796621cefa1032c4cfe8d8784722c3b3b9724607ad89a687d6e482129a9d0"
+      ],
+      [
+        "mcbridge-pcl-panel.zip",
+        12361982,
+        "40cfc0eae864f3b854900194050bce92bad45e07fc2b91ead604f597fded2d62 (reused from v0.5.5)"
+      ],
+      [
+        "mcbridge-pcl-setup.zip",
+        9163152,
+        "ade34eccf019260faeac1d06cf0b25752b847088b9039839cf753565ce868ba8 (reused from v0.5.5)"
+      ]
+    ],
+    "portable_test": "tools/test_portable.py RESULT: OK (deps/verify/server api)",
+    "notes": "fixes p187-p192, no performance claims"
   }
 }

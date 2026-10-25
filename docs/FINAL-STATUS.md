@@ -1,7 +1,7 @@
 ﻿# mcbridge1201 鏈€缁堢姸鎬侊紙2026-10-23锛?
 
 > 瀹氫綅锛?*Minecraft 鐗堟湰杩佺Щ涓庤繍琛岃緟鍔╁伐鍏风**銆傝縼绉讳笌楠岃瘉褰掓湰宸ュ叿锛屾棩甯稿惎鍔ㄤ氦缁?PCL銆?
-> 鏈€鏂板彂甯冿細[v0.5.5](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.5)锛堜竴閿畨瑁呭埌 PCL锛氬浘褰㈤潰鏉?鍏ㄧ増鏈€夋嫨锛涗富宸ュ叿 v0.5.4锛夈€?
+> 鏈€鏂板彂甯冿細[v0.5.6](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.6)锛堜竴閿畨瑁呭埌 PCL锛氬浘褰㈤潰鏉?鍏ㄧ増鏈€夋嫨锛涗富宸ュ叿 v0.5.4锛夈€?
 
 ## 涓€銆佸凡楠岃瘉锛堟湁鏃ュ織/鎴浘/鍝堝笇锛?
 
@@ -221,3 +221,16 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
   测试形态：探针写 Mouse raw 字段瞄准 + 在 GLFW 回调边界合成按键（与真实输入同代码路径）；
 - 门禁：test_review_fixes **94/94**、check_hashes **1175/1175**、verify_evidence passed；
   测试环境已恢复。TrashSlot 的已验收范围至此覆盖：p63–p65、p183–p185、p189–p192。
+
+## 十、v0.5.6 发布（2026-10-25）
+
+- 主工具便携包 `mcbridge-launcher-0.5.6.zip`（11,960,113 bytes，
+  sha256 `f7110027…ec7a`，`tools/test_portable.py` 通过）；
+- 新增 companion 资产：`mcbridge-companion-shulkerpreview-1.1.0.jar`
+  （sha256 `7d754e5f…d490`，装了转换后 ShulkerBoxTooltip 的客户端需要）、
+  `mcbridge-companion-trashcreativefix-1.0.0.jar`（sha256 `f4b79662…a9d0`，
+  装了转换后 TrashSlot 的客户端需要）；
+- 一键 PCL 资产沿用 v0.5.5（`mcbridge-pcl-panel.zip` 40cfc0ea…、`mcbridge-pcl-setup.zip`
+  ade34ecc…，字节一致重新上传）；
+- release notes 覆盖 p187–p192 的修复与边界（无性能声明）；tag `v0.5.6`，
+  5 个资产的服务端 sha256 与本地一致。
