@@ -277,7 +277,7 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | 门禁 | 结果 |
 |---|---|
 | `python tools/test_review_fixes.py` | ✅ 共 **99 项**（本次 **99/99**；新增 1 条 p197 重绑定回归） |
-| `python tools/check_hashes.py` | ✅ **1250/1250** |
+| `python tools/check_hashes.py` | ✅ **1252/1252** |
 | `python tools/verify_evidence.py` | ✅ passed |
 | p197 | ✅ `controls.previewKey=J(74)`/`fullPreviewKey=K(75)`、`alwaysOn=false`；mod 状态机 `NO_PREVIEW→COMPACT→FULL→COMPACT→NO_PREVIEW`；27 格 `GRID_DRAWITEMS items=27`；`result.json` 7/7 true |
 | 更正 | p196 “mod 忽略 config previewKey” 为误判（字段写在 `preview` 分类）；bytecode 显示读取 `controls.previewKey/fullPreviewKey` |

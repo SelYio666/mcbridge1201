@@ -81,6 +81,17 @@ P197_POLLS [32, 47, 49, ..., 74, 75, ..., 340, 341, 345]
 - 单个客户端 + 专用服务端；无多人并发。
 - 无新 release（无 mod 代码改动，只更正配置用法与证据）。
 
+## 视频（代码生成）
+
+`p197-update.mp4`（1280×720、30 fps、30.0 s、H.264）：由 `make_video.py` 用 Pillow 逐帧绘制、ffmpeg 编码；内容全部取自本目录的真实产物（`result.json` 的 7 条断言、`client.log` 的 `P197_TYPE` 转移与 `P197_CONFIG`、两张真实截图），不是手剪的。
+
+```text
+python runs/p197-preview-key/make_video.py                 # -> p197-update.mp4
+python runs/p197-preview-key/make_video.py --stills 5 19   # 只渲几帧看排版
+```
+
+分镜：标题 → p196 误判（错分类 + F 交换副手）→ javap 证据链 → 正确 config + 运行时回读 → 四态状态机 → 真实 FULL/COMPACT 截图交叉淡化 → 7/7 与门禁/CI。
+
 ## 复现
 
 ```text
@@ -90,4 +101,4 @@ python runs/p197-preview-key/run.py --timeout 300
 
 ## 证据
 
-`runs/p197-preview-key/`：`result.json`、`client.log`、`server.log`、`server.properties.before`、`after-full.png`、`after-compact.png`、`build.py`、`run.py`、`fabric.mod.json`、`resources/p197.mixins.json`、`src/probe/ShulkerResidualProbe.java`、`src/probe/mixin/`（`InputPollMixin`、`PreviewStateProbeMixin`、`PreviewDrawProbeMixin`、`DrawTooltipProbeMixin`、`ModTooltipDataProbeMixin`、`MouseAccessor`、`CreativeTabInvoker`）。
+`runs/p197-preview-key/`：`result.json`、`client.log`、`server.log`、`server.properties.before`、`after-full.png`、`after-compact.png`、`p197-update.mp4`、`build.py`、`run.py`、`make_video.py`、`fabric.mod.json`、`resources/p197.mixins.json`、`src/probe/ShulkerResidualProbe.java`、`src/probe/mixin/`（`InputPollMixin`、`PreviewStateProbeMixin`、`PreviewDrawProbeMixin`、`DrawTooltipProbeMixin`、`ModTooltipDataProbeMixin`、`MouseAccessor`、`CreativeTabInvoker`）。

@@ -1240,6 +1240,8 @@ FILES = [
     "runs/p197-preview-key/README.md",
     "runs/p197-preview-key/build.py",
     "runs/p197-preview-key/run.py",
+    "runs/p197-preview-key/make_video.py",
+    "runs/p197-preview-key/p197-update.mp4",
     "runs/p197-preview-key/fabric.mod.json",
     "runs/p197-preview-key/resources/p197.mixins.json",
     "runs/p197-preview-key/src/probe/ShulkerResidualProbe.java",

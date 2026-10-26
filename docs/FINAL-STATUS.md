@@ -262,5 +262,5 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
 - **p197**：`javap` 证明 `ShulkerBoxTooltipClient.isKeyPressed` 用 `config.controls.<key>.get().getCode()` + `InputConstants.isKeyDown`（默认 previewKey=340、fullPreviewKey=342）；p196 的“config 被忽略”是字段写错分类导致的误判；
 - 配置 `controls.previewKey=key.keyboard.j(74)`、`controls.fullPreviewKey=key.keyboard.k(75)`、`alwaysOn=false`；J/K 无原版绑定，避免 F 交换副手把悬停物品换走；
 - 单屏生存背包 + 服务端 27 种物品 shulker box，mod 状态机 `NO_PREVIEW → COMPACT(J) → FULL(J+K) → COMPACT(松 K) → NO_PREVIEW(松 J)`，`GRID_DRAWITEMS items=27`；`result.json` 7/7 true；证据 `runs/p197-preview-key/`；
-- 门禁：test_review_fixes **99/99**、check_hashes **1250/1250**、verify_evidence passed；无新 release（无 mod 改动，v0.5.6）；
+- 门禁：test_review_fixes **99/99**、check_hashes **1252/1252**、verify_evidence passed；无新 release（无 mod 改动，v0.5.6）；
 - 边界：键状态仍在 `InputConstants.isKeyDown` 轮询边界注入，未做 OS 级物理按键；27 格不同 NBT/附魔未测。
