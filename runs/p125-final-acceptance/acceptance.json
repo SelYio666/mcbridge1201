@@ -154,8 +154,9 @@
     "Source modes auto/official/mirror + host health cache + GUI canary writeback (runs/p122/p123/p124)",
     "1.20.1 full cold install 111.7 s / 739 MB / verify OK, root deleted (runs/p122/full-1.20.1.json)",
     "Portable launcher package (embedded Python) built and tested (v0.4.4 asset)",
-    "PCL one-click v0.5.5: Tkinter panel + Python-free setup assets, full version picker, PCL2 2.13.1.1 real test (share/pcl-onclick, runs/p137-pcl2-onclick)"
+    "PCL one-click v0.5.5: Tkinter panel + Python-free setup assets, full version picker, PCL2 2.13.1.1 real test (share/pcl-onclick, runs/p137-pcl2-onclick)",
     "p193 Shulker grid residuals: multi-item 3 diamond + 2 emerald, FULL, real tooltip path, server box 2 diamond + 4 emerald (runs/p193-shulker-grid-residual)",
+    "p194 map atlas third: 2050 ids, atlas 2 packed 131072/131328, cross-atlas 1/1025/2049 frame, pixel 0/0, clear atlases=3 (runs/p194-atlas-third)"
   ],
   "not_verified": [
     "Sodium: no conversion test; Iris shader packs: not tested (only Iris 1.8.1 no-shader pipeline)",
@@ -165,7 +166,8 @@
     "Portable package on other machines/offline: not verified",
     "Real-browser UI click E2E: not done (HTTP endpoints only)",
     "Long soak / crash recovery: not done",
-    "p193: GLFW-callback-level hover only (OS cursor not), 27-slot full grid, preview key rebinding"
+    "p193: GLFW-callback-level hover only (OS cursor not), 27-slot full grid, preview key rebinding",
+    "p194: real server 1024+ maps end-to-end, visually arranged side-by-side, 3x4096^2 NativeImage ~192MB"
   ],
   "reproduce": [
     "gradle -p java test installDist",
@@ -240,6 +242,17 @@
     "shulker_grid_residual": "client 3 diamond + 2 emerald; FULL; real tooltip path; server box 2 diamond + 4 emerald",
     "evidence": "runs/p193-shulker-grid-residual/ (result.json 4/4 true; client.log; server.log; after-full/after-server/after-compact.png)",
     "remaining": "GLFW-callback-level input (not OS cursor); FULL requires alwaysOn + preview key 342; dedicated /item replace container.10 only; 27-slot full grid untested",
+    "release": "no new release (v0.5.6)"
+  },
+  "p194": {
+    "date": "2026-10-26",
+    "review_fixes": "96/96",
+    "hashes": "1206/1206",
+    "verify_evidence": "passed",
+    "third_atlas": "2050 map ids; create id=2 once; assign map=2049 packed=131072, map=2050 packed=131328; bind map_atlas/2",
+    "cross_atlas": "map 1/1025/2049 drawn in one HUD frame through MapRenderer.draw; atlas1/atlas2 pixel checks 0",
+    "exit": "map-atlas clear atlases=3; errors=[]; crash=null (exit_code 1 is the client process, runner exit 0)",
+    "remaining": "real server 1024+ maps end-to-end; visually arranged side-by-side not captured (HUD quads at origin); 3x4096^2 NativeImage ~192MB",
     "release": "no new release (v0.5.6)"
   },
   "release_v056": {

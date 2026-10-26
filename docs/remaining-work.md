@@ -37,7 +37,7 @@ claim that these paths work.
   assigned through the public update path, atlas 1 was created exactly once at id 1025
   (packed 65536), the tile encoding is correct, a real `MapRenderer.draw` uploaded the map
   into atlas 1 (pixel-level check, 0 mismatches), and the normal exit cleared atlases=2.
-  A third atlas (2048+ maps) and cross-atlas on-screen visuals are still untested.- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
+  A third atlas (2048+ maps) and cross-atlas on-screen binds/pixels are now covered by `runs/p194-atlas-third/` (2050 ids, atlas 2 packed 131072/131328, map 1/1025/2049 in one HUD frame, pixel 0/0, clear atlases=3); visually arranged side-by-side and real server 1024+ maps remain open.- Dedicated servers: Forge and NeoForge **vanilla and with Farmer's Delight** verified
   (`runs/p159`, `p161`, `p163`, `p164`); real mrpack with files+overrides verified (`p160`).
 - Performance: no reproducible gain; 80-armor-stand interleaved runs are ~13% slower with
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.

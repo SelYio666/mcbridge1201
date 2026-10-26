@@ -826,6 +826,21 @@ def test_immediatelyfast_port() -> None:
                and "minecraft:emerald" in p193_server and "count: 4" in p193_server)
     check("SBT grid residuals: multi-item, FULL, real mouse hover and server box", p193_ok,
           "p193 4/4 flags + client/server markers")
+    p194_result = json.loads((ROOT / "runs" / "p194-atlas-third" / "result.json").read_text(encoding="utf-8"))
+    p194_log = (ROOT / "runs" / "p194-atlas-third" / "client.log").read_text(encoding="utf-8", errors="replace")
+    p194_ok = (p194_result.get("joined") and p194_result.get("logs_ok")
+               and p194_result.get("exit_seen") and p194_result.get("required_maps_ok")
+               and p194_result.get("map_world_rendered")
+               and not p194_result.get("errors") and not p194_result.get("crash")
+               and p194_log.count("map-atlas create id=2") == 1
+               and "map-atlas assign map=2049 packed=131072" in p194_log
+               and "map-atlas assign map=2050 packed=131328" in p194_log
+               and "map-atlas bind map=map/2049 texture=immediatelyfast:map_atlas/2" in p194_log
+               and "atlas1-pixel-check mismatches=0" in p194_log
+               and "atlas2-pixel-check mismatches=0" in p194_log
+               and "map-atlas clear atlases=3" in p194_log)
+    check("map atlas third: 2048+ maps, atlas 2, cross-atlas frame, cleanup", p194_ok,
+          "p194 create id=2 once, packed 131072/131328, bind /2, pixel 0/0, clear atlases=3")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")

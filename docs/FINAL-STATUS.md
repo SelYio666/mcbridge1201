@@ -103,8 +103,8 @@ EntityCulling 琚墺绂荤殑 `EntityRendererMixin` 宸叉寜 1.21.1 鐨?6 �
 
 ### 宸ョ▼涓庨棬绂?
 
-- 鍗曟祴 25/25锛沗verify_evidence` passed锛涘搱甯?1194 椤癸紙浠?`runs/SHA256SUMS.txt` 瀹為檯琛屾暟涓哄噯锛夛紱妗ヤ竴鑷存€?0锛圛mmediatelyFast 绔彛 jar锛宲165/p181锛夛紱mixin 瀹¤ inert=2锛坄listed=37`锛沺175 鎭㈠ map mixin銆乸177 琛ュ鍦板浘/灞曠ず妗嗐€乸178 鍚敤 VertexBuffer锛涘墿浣欎袱涓槸瀹樻柟 1.21.1 宸插垹闄ょ殑 1.20.4 閬楃暀绫伙紝瑙?`runs/p180-inert-closure/`锛夛紱
-- 澶栭儴闂姹囨€?20 椤瑰洖褰?+ 9 椤?NeoForge 瀹夎/鍚姩鍥炲綊 + 10 椤圭洰褰?鍏煎/璇存槑鍥炲綊 + 1 椤瑰姞杞藉櫒瀹夎鍥炲綊 + 8 椤?ImmediatelyFast 绉绘鍥炲綊 + 1 椤逛究鎼哄寘鍥炲綊 + 24 椤逛笅杞芥簮/杩涘害鍥炲綊 + 6 椤瑰湴鍥?atlas 鍥炲綊 + 2 椤?VertexBuffer 鍥炲綊 + 1 椤规 mixin 闃茶鐧昏鍥炲綊 + 1 椤?atlas closed 瀹堝崼鍥炲綊 + 1 椤?TrashSlot UI empty 閿洖褰?+ 1 椤?TrashSlot Shift+Delete 鍥炲綊 + 1 椤?TrashSlot right-click undelete 鍥炲綊 + 1 椤?Shulker 缃戞牸 wrapper/t2/t4 鍥炲綊 + 1 椤?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛坄tools/test_review_fixes.py`锛屽叡 95 椤癸紱鏈 **95/95**锛夋帴鍏ョ粺涓€闂ㄧ锛?（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归、p193 Shulker grid 残余）
+- 鍗曟祴 25/25锛沗verify_evidence` passed锛涘搱甯?1206 椤癸紙浠?`runs/SHA256SUMS.txt` 瀹為檯琛屾暟涓哄噯锛夛紱妗ヤ竴鑷存€?0锛圛mmediatelyFast 绔彛 jar锛宲165/p181锛夛紱mixin 瀹¤ inert=2锛坄listed=37`锛沺175 鎭㈠ map mixin銆乸177 琛ュ鍦板浘/灞曠ず妗嗐€乸178 鍚敤 VertexBuffer锛涘墿浣欎袱涓槸瀹樻柟 1.21.1 宸插垹闄ょ殑 1.20.4 閬楃暀绫伙紝瑙?`runs/p180-inert-closure/`锛夛紱
+- 澶栭儴闂姹囨€?20 椤瑰洖褰?+ 9 椤?NeoForge 瀹夎/鍚姩鍥炲綊 + 10 椤圭洰褰?鍏煎/璇存槑鍥炲綊 + 1 椤瑰姞杞藉櫒瀹夎鍥炲綊 + 8 椤?ImmediatelyFast 绉绘鍥炲綊 + 1 椤逛究鎼哄寘鍥炲綊 + 24 椤逛笅杞芥簮/杩涘害鍥炲綊 + 6 椤瑰湴鍥?atlas 鍥炲綊 + 2 椤?VertexBuffer 鍥炲綊 + 1 椤规 mixin 闃茶鐧昏鍥炲綊 + 1 椤?atlas closed 瀹堝崼鍥炲綊 + 1 椤?TrashSlot UI empty 閿洖褰?+ 1 椤?TrashSlot Shift+Delete 鍥炲綊 + 1 椤?TrashSlot right-click undelete 鍥炲綊 + 1 椤?Shulker 缃戞牸 wrapper/t2/t4 鍥炲綊 + 1 椤?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛坄tools/test_review_fixes.py`锛屽叡 96 椤癸紱鏈 **96/96**锛夋帴鍏ョ粺涓€闂ㄧ锛?（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归、p193 Shulker grid 残余、p194 第三 atlas/跨 atlas）
 - 浣跨敤璇存槑涓庢暀绋?`docs/guide.md`锛堝惎鍔ㄥ櫒銆丳CL 鍏辩敤銆佽縼绉绘暀绋嬨€丗AQ锛夛紝鐣岄潰銆屼娇鐢ㄨ鏄庛€嶆寜閽洿鎺ユ墦寮€锛?
 - 鍚姩鍣ㄧ鍒扮鑴氭湰锛堝畨瑁呪啋鍚姩鈫掍富鑿滃崟锛屾敮鎸?`--version` / `--require` / `--screenshot`锛夛紱
 - GitHub Actions锛歱ush 瑙﹀彂**宸查獙璇佸彲鐢?*锛坄e9ca30c` run `39796030299`锛沗742d133` run `39799555425`锛宑heck-run `build` success锛屽惈 API 鎺ㄩ€侊級锛涙鍓嶁€減ush 鏃?run鈥濇槸 GitHub Actions `degraded_performance`锛?2:18 UTC锛夊鑷存帓闃燂紝閲嶆帹 workflow 鏂囦欢鍚庣储寮曟仮澶嶃€傝嫢鍐嶉亣鏃?run锛屽厛鐪?[githubstatus.com](https://www.githubstatus.com)锛屽啀閲嶆帹 workflow 鏂囦欢鍒锋柊绱㈠紩銆?
@@ -240,3 +240,9 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
 - **p193**：多物品网格（3 钻 + 2 绿宝石）+ FULL 预览 + 真实 tooltip 路径（pre-FULL `DRAWTOOLTIP data=PreviewTooltipData`，p191 的 GLFW 回调级输入）+ 服务端 box（2 钻 + 4 绿宝石，`/item replace container.10`）；`result.json` 4/4 true；`runs/p193-shulker-grid-residual/`（`after-full/after-server/after-compact.png`）；
 - 门禁：test_review_fixes **95/95**、check_hashes **1194/1194**、verify_evidence passed；无新 release（v0.5.6，p193 无 mod 改动）；
 - 边界：输入是 GLFW 回调级（非 OS 光标）、FULL 依赖 `preview.alwaysOn` + 预览键 342、27 格全满未测。
+## 十一、2026-10-26 更新（p194：第三个 atlas + 跨 atlas 同帧）
+
+- **p194**：2050 个 map id（1..2050，复用 map 1 的真实 MapState）：1..1024 → atlas 0，1025..2048 → atlas 1，2049/2050 → atlas 2；`map-atlas create id=2` 恰好一次；`assign map=2049 packed=131072`、`map=2050 packed=131328`；`bind map=map/2049 ... map_atlas/2`；
+- HUD 同一帧调用 `MapRenderer.method_1773` 画 map 1/1025/2049（atlas 0/1/2），atlas1/atlas2 的 NativeImage 像素检查均为 0 mismatch；正常退出 `map-atlas clear atlases=3`；`errors=[]`、`crash=null`（`exit_code 1` 是客户端进程，runner exit 0）；证据 `runs/p194-atlas-third/`；
+- 门禁：test_review_fixes **96/96**、check_hashes **1206/1206**、verify_evidence passed；无新 release（v0.5.6）；
+- 边界：真实服务端 1024+ 张地图端到端未测；HUD 四边形在原点，三 atlas 并排视觉未截；p188 的第三 atlas/跨 atlas 边界关闭，真实服务端 1024+ 仍开放。

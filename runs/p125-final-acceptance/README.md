@@ -240,3 +240,13 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | p193 | ✅ client 多物品 3 钻 + 2 绿宝石、FULL、真实 tooltip 路径、server box 2 钻 + 4 绿宝石；`result.json` 4/4 true |
 | Release | 沿用 `v0.5.6`（p193 无 mod 改动、无新 release） |
 | 隐患 | GLFW 回调级输入（非 OS 光标）、FULL 依赖 alwaysOn+预览键、27 格全满未测 |
+## p194 第三 atlas / 跨 atlas 同帧 增量验收（2026-10-26，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **96 项**（本次 **96/96**；新增 1 条 p194 第三 atlas/跨 atlas 回归） |
+| `python tools/check_hashes.py` | ✅ **1206/1206** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| p194 | ✅ 2050 map ids：`create id=2` 一次、`assign map=2049 packed=131072`/`2050=131328`、`bind map_atlas/2`；HUD 同帧 map 1/1025/2049；atlas1/2 像素 0；退出 `clear atlases=3` |
+| Release | 沿用 `v0.5.6`（p194 无 mod 改动、无新 release） |
+| 隐患 | 真实服务端 1024+ 张地图端到端、三 atlas 并排视觉（HUD 原点）、3×4096² ≈192 MB 压力未测 |

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "p194probe.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+    "DrawContextConsumersAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
