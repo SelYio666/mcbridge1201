@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-26",
+  "portable": {
+    "ok": true,
+    "zip": "dist/mcbridge-launcher-0.5.6.zip",
+    "zip_bytes": 11960113,
+    "root": "work/tmp/p195-portable",
+    "version": "1.21.1",
+    "result": "OK",
+    "log": "portable-test.log",
+    "checks": ["deps", "server /api/status", "server /guide"]
+  },
+  "panel_smoke": {
+    "ok": true,
+    "source": "tools/pcl_panel.py",
+    "versions": 103,
+    "version_type": "release",
+    "pcl2_auto_detect": false,
+    "pcl_dir_default": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "screenshot": "panel-smoke.png",
+    "log": "panel-out.log",
+    "stderr": "panel-err.log"
+  },
+  "panel_asset": {
+    "name": "mcbridge-pcl-panel.zip",
+    "downloaded_bytes": 3361813,
+    "expected_bytes": 12361982,
+    "complete": false,
+    "note": "gh release download hung; partial file only"
+  },
+  "pcl2_present": false,
+  "pcl2_expected_path": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe",
+  "pcl2_note": "the p137 real-PCL2 baseline path is not present on this machine",
+  "boundaries": [
+    "PCL2 not installed on this machine: full panel install/progress/PCL2 version-list E2E not run",
+    "panel asset download partial (3,361,813 / 12,361,982 bytes): the source panel was used for the UI smoke",
+    "clean/offline other machine not available: portable test used a fresh root on this machine, not a separate host",
+    "no new release: v0.5.6 remains current"
+  ]
+}

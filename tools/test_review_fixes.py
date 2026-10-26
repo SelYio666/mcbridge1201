@@ -841,6 +841,17 @@ def test_immediatelyfast_port() -> None:
                and "map-atlas clear atlases=3" in p194_log)
     check("map atlas third: 2048+ maps, atlas 2, cross-atlas frame, cleanup", p194_ok,
           "p194 create id=2 once, packed 131072/131328, bind /2, pixel 0/0, clear atlases=3")
+    p195 = json.loads((ROOT / "runs" / "p195-delivery-validation" / "result.json").read_text(encoding="utf-8"))
+    p195_portable = (ROOT / "runs" / "p195-delivery-validation" / "portable-test.log").read_text(encoding="utf-8", errors="replace")
+    p195_ok = (p195.get("portable", {}).get("ok") and "RESULT: OK" in p195_portable
+               and p195.get("panel_smoke", {}).get("ok")
+               and (ROOT / "runs" / "p195-delivery-validation" / "panel-smoke.png").exists()
+               and p195.get("panel_smoke", {}).get("versions", 0) >= 100
+               and p195.get("panel_smoke", {}).get("pcl2_auto_detect") is False
+               and p195.get("pcl2_present") is False
+               and p195.get("panel_asset", {}).get("complete") is False)
+    check("p195 delivery: v0.5.6 portable fresh root OK + panel smoke (PCL2 absent)", p195_ok,
+          "p195 portable RESULT OK + panel 103 versions + PCL2/asset boundaries")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")

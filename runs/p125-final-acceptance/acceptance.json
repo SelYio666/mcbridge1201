@@ -167,7 +167,8 @@
     "Real-browser UI click E2E: not done (HTTP endpoints only)",
     "Long soak / crash recovery: not done",
     "p193: GLFW-callback-level hover only (OS cursor not), 27-slot full grid, preview key rebinding",
-    "p194: real server 1024+ maps end-to-end, visually arranged side-by-side, 3x4096^2 NativeImage ~192MB"
+    "p194: real server 1024+ maps end-to-end, visually arranged side-by-side, 3x4096^2 NativeImage ~192MB",
+    "p195: full PCL2 install E2E, clean/offline other machine, complete panel asset download (3.3/12.36 MB partial)"
   ],
   "reproduce": [
     "gradle -p java test installDist",
@@ -253,6 +254,17 @@
     "cross_atlas": "map 1/1025/2049 drawn in one HUD frame through MapRenderer.draw; atlas1/atlas2 pixel checks 0",
     "exit": "map-atlas clear atlases=3; errors=[]; crash=null (exit_code 1 is the client process, runner exit 0)",
     "remaining": "real server 1024+ maps end-to-end; visually arranged side-by-side not captured (HUD quads at origin); 3x4096^2 NativeImage ~192MB",
+    "release": "no new release (v0.5.6)"
+  },
+  "p195": {
+    "date": "2026-10-26",
+    "review_fixes": "97/97",
+    "hashes": "1212/1212",
+    "verify_evidence": "passed",
+    "portable": "dist/mcbridge-launcher-0.5.6.zip on a fresh work/tmp/p195-portable root; deps + /api/status + /guide OK",
+    "panel_smoke": "tools/pcl_panel.py opened; 103 release versions; default .minecraft dir; panel-smoke.png; PCL2 absent",
+    "panel_asset": "mcbridge-pcl-panel.zip partial (3361813/12361982); gh release download hung",
+    "remaining": "full PCL2 install E2E; clean/offline other machine; panel asset re-download",
     "release": "no new release (v0.5.6)"
   },
   "release_v056": {

@@ -1,0 +1,4 @@
+package: dist\mcbridge-launcher-0.5.6.zip 11960113 bytes
+deps: True 
+server /api/status: True  /guide: True
+RESULT: OK

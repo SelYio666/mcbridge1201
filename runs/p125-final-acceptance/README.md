@@ -250,3 +250,15 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | p194 | ✅ 2050 map ids：`create id=2` 一次、`assign map=2049 packed=131072`/`2050=131328`、`bind map_atlas/2`；HUD 同帧 map 1/1025/2049；atlas1/2 像素 0；退出 `clear atlases=3` |
 | Release | 沿用 `v0.5.6`（p194 无 mod 改动、无新 release） |
 | 隐患 | 真实服务端 1024+ 张地图端到端、三 atlas 并排视觉（HUD 原点）、3×4096² ≈192 MB 压力未测 |
+## p195 v0.5.6 交付验证 增量（2026-10-26，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **97 项**（本次 **97/97**；新增 1 条 p195 交付验证回归） |
+| `python tools/check_hashes.py` | ✅ **1212/1212** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| p195 portable | ✅ `dist/mcbridge-launcher-0.5.6.zip` 在全新 `work/tmp/p195-portable` 根目录 `test_portable.py --version 1.21.1`：deps + `/api/status` + `/guide` 全过（RESULT: OK） |
+| p195 panel smoke | ✅ `tools/pcl_panel.py` 打开，103 个正式版、PCL 目录默认值正常（`panel-smoke.png`）；PCL2 本机路径不存在 |
+| panel 资产 | ⚠️ 只下载到 3,361,813/12,361,982 bytes，`gh release download` 挂起已终止 |
+| Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
+| 隐患 | 完整 PCL2 安装点击/进度/PCL2 版本刷新、干净/离线主机、panel 资产重下未验证 |

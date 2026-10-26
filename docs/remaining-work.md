@@ -267,3 +267,5 @@ Therefore:
   NeoForge index and a separate loader target.
 - **Client-only samples** (`appleskin`, `modmenu`): they cannot be meaningfully booted on a
   dedicated server; no new profile is claimed.
+
+- p195 delivery validation (2026-10-26): v0.5.6 portable on a fresh work/tmp/p195-portable root RESULT OK (deps, /api/status, /guide); 	ools/pcl_panel.py UI smoke with 103 release versions (panel-smoke.png). PCL2 is absent on this machine, the panel asset download was partial (3,361,813/12,361,982), and a clean/offline other machine was not available; full panel install E2E and clean-host portable remain open (uns/p195-delivery-validation/).
