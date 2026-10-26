@@ -103,7 +103,7 @@ EntityCulling 琚墺绂荤殑 `EntityRendererMixin` 宸叉寜 1.21.1 鐨?6 �
 
 ### 宸ョ▼涓庨棬绂?
 
-- 鍗曟祴 25/25锛沗verify_evidence` passed锛涘搱甯?1250 椤癸紙浠?`runs/SHA256SUMS.txt` 瀹為檯琛屾暟涓哄噯锛夛紱妗ヤ竴鑷存€?0锛圛mmediatelyFast 绔彛 jar锛宲165/p181锛夛紱mixin 瀹¤ inert=2锛坄listed=37`锛沺175 鎭㈠ map mixin銆乸177 琛ュ鍦板浘/灞曠ず妗嗐€乸178 鍚敤 VertexBuffer锛涘墿浣欎袱涓槸瀹樻柟 1.21.1 宸插垹闄ょ殑 1.20.4 閬楃暀绫伙紝瑙?`runs/p180-inert-closure/`锛夛紱
+- 鍗曟祴 25/25锛沗verify_evidence` passed锛涘搱甯?1254 椤癸紙浠?`runs/SHA256SUMS.txt` 瀹為檯琛屾暟涓哄噯锛夛紱妗ヤ竴鑷存€?0锛圛mmediatelyFast 绔彛 jar锛宲165/p181锛夛紱mixin 瀹¤ inert=2锛坄listed=37`锛沺175 鎭㈠ map mixin銆乸177 琛ュ鍦板浘/灞曠ず妗嗐€乸178 鍚敤 VertexBuffer锛涘墿浣欎袱涓槸瀹樻柟 1.21.1 宸插垹闄ょ殑 1.20.4 閬楃暀绫伙紝瑙?`runs/p180-inert-closure/`锛夛紱
 - 澶栭儴闂姹囨€?20 椤瑰洖褰?+ 9 椤?NeoForge 瀹夎/鍚姩鍥炲綊 + 10 椤圭洰褰?鍏煎/璇存槑鍥炲綊 + 1 椤瑰姞杞藉櫒瀹夎鍥炲綊 + 8 椤?ImmediatelyFast 绉绘鍥炲綊 + 1 椤逛究鎼哄寘鍥炲綊 + 24 椤逛笅杞芥簮/杩涘害鍥炲綊 + 6 椤瑰湴鍥?atlas 鍥炲綊 + 2 椤?VertexBuffer 鍥炲綊 + 1 椤规 mixin 闃茶鐧昏鍥炲綊 + 1 椤?atlas closed 瀹堝崼鍥炲綊 + 1 椤?TrashSlot UI empty 閿洖褰?+ 1 椤?TrashSlot Shift+Delete 鍥炲綊 + 1 椤?TrashSlot right-click undelete 鍥炲綊 + 1 椤?Shulker 缃戞牸 wrapper/t2/t4 鍥炲綊 + 1 椤?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛坄tools/test_review_fixes.py`锛屽叡 99 椤癸紱鏈 **99/99**锛夋帴鍏ョ粺涓€闂ㄧ锛?（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归、p193 Shulker grid 残余、p194 第三 atlas/跨 atlas、p195 交付验证、p196 27 格）
 - 浣跨敤璇存槑涓庢暀绋?`docs/guide.md`锛堝惎鍔ㄥ櫒銆丳CL 鍏辩敤銆佽縼绉绘暀绋嬨€丗AQ锛夛紝鐣岄潰銆屼娇鐢ㄨ鏄庛€嶆寜閽洿鎺ユ墦寮€锛?
 - 鍚姩鍣ㄧ鍒扮鑴氭湰锛堝畨瑁呪啋鍚姩鈫掍富鑿滃崟锛屾敮鎸?`--version` / `--require` / `--screenshot`锛夛紱
@@ -262,5 +262,5 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
 - **p197**：`javap` 证明 `ShulkerBoxTooltipClient.isKeyPressed` 用 `config.controls.<key>.get().getCode()` + `InputConstants.isKeyDown`（默认 previewKey=340、fullPreviewKey=342）；p196 的“config 被忽略”是字段写错分类导致的误判；
 - 配置 `controls.previewKey=key.keyboard.j(74)`、`controls.fullPreviewKey=key.keyboard.k(75)`、`alwaysOn=false`；J/K 无原版绑定，避免 F 交换副手把悬停物品换走；
 - 单屏生存背包 + 服务端 27 种物品 shulker box，mod 状态机 `NO_PREVIEW → COMPACT(J) → FULL(J+K) → COMPACT(松 K) → NO_PREVIEW(松 J)`，`GRID_DRAWITEMS items=27`；`result.json` 7/7 true；证据 `runs/p197-preview-key/`；
-- 门禁：test_review_fixes **99/99**、check_hashes **1252/1252**、verify_evidence passed；无新 release（无 mod 改动，v0.5.6）；
+- 门禁：test_review_fixes **99/99**、check_hashes **1254/1254**、verify_evidence passed；无新 release（无 mod 改动，v0.5.6）；
 - 边界：键状态仍在 `InputConstants.isKeyDown` 轮询边界注入，未做 OS 级物理按键；27 格不同 NBT/附魔未测。

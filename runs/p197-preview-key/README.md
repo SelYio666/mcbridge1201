@@ -83,14 +83,23 @@ P197_POLLS [32, 47, 49, ..., 74, 75, ..., 340, 341, 345]
 
 ## 视频（代码生成）
 
-`p197-update.mp4`（1280×720、30 fps、30.0 s、H.264）：由 `make_video.py` 用 Pillow 逐帧绘制、ffmpeg 编码；内容全部取自本目录的真实产物（`result.json` 的 7 条断言、`client.log` 的 `P197_TYPE` 转移与 `P197_CONFIG`、两张真实截图），不是手剪的。
+两个版本，都是 Pillow 逐帧绘制 + ffmpeg 编码，不是手剪的：
+
+| 文件 | 时长 | 定位 |
+|---|---|---|
+| `p197-update.mp4` | 30.0 s | 给评审看的完整版：javap 证据链、配置回读、四态状态机、真实截图 |
+| `p197-update-simple.mp4` | 24.0 s | 说人话版：抽屉比喻、F 换手坑、J / J+K / 松手三个手势 |
+
+完整版内容取自本目录真实产物（`result.json` 的 7 条断言、`client.log` 的 `P197_TYPE` 与 `P197_CONFIG`、两张真实截图）；简单版只用大字号和示意动画，不堆术语。
 
 ```text
-python runs/p197-preview-key/make_video.py                 # -> p197-update.mp4
-python runs/p197-preview-key/make_video.py --stills 5 19   # 只渲几帧看排版
+python runs/p197-preview-key/make_video.py                  # -> p197-update.mp4
+python runs/p197-preview-key/make_video_simple.py           # -> p197-update-simple.mp4
+python runs/p197-preview-key/make_video_simple.py --stills 2 7 16
 ```
 
-分镜：标题 → p196 误判（错分类 + F 交换副手）→ javap 证据链 → 正确 config + 运行时回读 → 四态状态机 → 真实 FULL/COMPACT 截图交叉淡化 → 7/7 与门禁/CI。
+完整版分镜：标题 → p196 误判（错分类 + F 交换副手）→ javap 证据链 → 正确 config + 运行时回读 → 四态状态机 → 真实 FULL/COMPACT 截图交叉淡化 → 7/7 与门禁/CI。
+简单版分镜：一句话结论 → 抽屉放错 → F 换手坑 → 三个手势（小预览 / 全展开 / 收起）→ 搞定。
 
 ## 复现
 
@@ -101,4 +110,4 @@ python runs/p197-preview-key/run.py --timeout 300
 
 ## 证据
 
-`runs/p197-preview-key/`：`result.json`、`client.log`、`server.log`、`server.properties.before`、`after-full.png`、`after-compact.png`、`p197-update.mp4`、`build.py`、`run.py`、`make_video.py`、`fabric.mod.json`、`resources/p197.mixins.json`、`src/probe/ShulkerResidualProbe.java`、`src/probe/mixin/`（`InputPollMixin`、`PreviewStateProbeMixin`、`PreviewDrawProbeMixin`、`DrawTooltipProbeMixin`、`ModTooltipDataProbeMixin`、`MouseAccessor`、`CreativeTabInvoker`）。
+`runs/p197-preview-key/`：`result.json`、`client.log`、`server.log`、`server.properties.before`、`after-full.png`、`after-compact.png`、`p197-update.mp4`、`p197-update-simple.mp4`、`build.py`、`run.py`、`make_video.py`、`make_video_simple.py`、`fabric.mod.json`、`resources/p197.mixins.json`、`src/probe/ShulkerResidualProbe.java`、`src/probe/mixin/`（`InputPollMixin`、`PreviewStateProbeMixin`、`PreviewDrawProbeMixin`、`DrawTooltipProbeMixin`、`ModTooltipDataProbeMixin`、`MouseAccessor`、`CreativeTabInvoker`）。

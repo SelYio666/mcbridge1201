@@ -283,7 +283,7 @@
   "p197": {
     "date": "2026-10-26",
     "review_fixes": "99/99",
-    "hashes": "1252/1252",
+    "hashes": "1254/1254",
     "verify_evidence": "passed",
     "bytecode": "ShulkerBoxTooltipClient.isKeyPressed -> config.controls.<key>.get().getCode() -> InputConstants.isKeyDown",
     "config": "controls.previewKey=key.keyboard.j(74), controls.fullPreviewKey=key.keyboard.k(75), preview.alwaysOn=false",
