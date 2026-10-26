@@ -262,3 +262,13 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | panel 资产 | ⚠️ 只下载到 3,361,813/12,361,982 bytes，`gh release download` 挂起已终止 |
 | Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
 | 隐患 | 完整 PCL2 安装点击/进度/PCL2 版本刷新、干净/离线主机、panel 资产重下未验证 |
+## p196 Shulker grid 27 格全满 增量（2026-10-26，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **98 项**（本次 **98/98**；新增 1 条 p196 27 格回归） |
+| `python tools/check_hashes.py` | ✅ **1231/1231** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| p196 | ✅ 27 种物品 `GRID_DRAWITEMS items=27`、FULL、server box、真实 hover；`result.json` 4/4 true |
+| Release | 沿用 `v0.5.6`（p196 无 mod 改动、无新 release） |
+| 隐患 | 预览键重绑定未生效（mod 忽略 config `previewKey`，FULL 仍用 342）；27 格不同 NBT/附魔未测 |

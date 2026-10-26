@@ -269,3 +269,5 @@ Therefore:
   dedicated server; no new profile is claimed.
 
 - p195 delivery validation (2026-10-26): v0.5.6 portable on a fresh work/tmp/p195-portable root RESULT OK (deps, /api/status, /guide); 	ools/pcl_panel.py UI smoke with 103 release versions (panel-smoke.png). PCL2 is absent on this machine, the panel asset download was partial (3,361,813/12,361,982), and a clean/offline other machine was not available; full panel install E2E and clean-host portable remain open (uns/p195-delivery-validation/).
+
+- p196 (2026-10-26): 27 distinct items in the shulker box render 27 grid icons (GRID_SETRENDER inv=27, GRID_DRAWITEMS items=27), FULL/server box/real tooltip path all pass (uns/p196-shulker-grid27/). Preview-key rebinding is NOT effective: the mod polls the default 342 and ignores the config previewKey; F(70) yields NO_PREVIEW. A real rebind needs a mod/companion change. 27 distinct NBT/enchant stacks untested.

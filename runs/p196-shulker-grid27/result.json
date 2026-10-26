@@ -1,0 +1,49 @@
+{
+  "client_multi_items2": true,
+  "full_render": true,
+  "server_multi_items2": true,
+  "real_hover_path": true,
+  "drawitems_sample": [
+    "call=1 type=COMPACT items=27 first=minecraft:iron_ingotx3 empty=false",
+    "call=2 type=COMPACT items=27 first=minecraft:iron_ingotx3 empty=false",
+    "call=3 type=COMPACT items=27 first=minecraft:iron_ingotx3 empty=false",
+    "call=200 type=COMPACT items=27 first=minecraft:iron_ingotx3 empty=false",
+    "call=400 type=COMPACT items=27 first=minecraft:iron_ingotx3 empty=false",
+    "call=600 type=COMPACT items=27 first=minecraft:iron_ingotx3 empty=false"
+  ],
+  "drawitem_sample": [
+    "call=1 stack=minecraft:iron_ingot count=3 empty=false x=251 y=174 short=true",
+    "call=2 stack=minecraft:redstone count=3 empty=false x=251 y=174 short=true",
+    "call=3 stack=minecraft:copper_ingot count=3 empty=false x=251 y=174 short=true"
+  ],
+  "client_tail": [
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData",
+    "[21:36:32] [Render thread/INFO]: [STDOUT]: DRAWTOOLTIP lines=3 data=com.misterpemodder.shulkerboxtooltip.impl.tooltip.PreviewTooltipData"
+  ],
+  "server_tail": [
+    "[21:35:41] [Worker-Main-9/INFO]: Preparing spawn area: 0%",
+    "[21:35:41] [Server thread/INFO]: Time elapsed: 519 ms",
+    "[21:35:41] [Server thread/INFO]: Done (1.213s)! For help, type \"help\"",
+    "[21:35:41] [Server thread/INFO]: [STDOUT]: TRASHSLOT_ALL_CODEC_OK",
+    "[21:36:04] [Server thread/INFO]: GridUser[/127.0.0.1:63173] logged in with entity id 13 at (9.5, 68.0, 70.5)",
+    "[21:36:04] [Server thread/INFO]: GridUser joined the game",
+    "[21:36:04] [Server thread/INFO]: GridUser has made the advancement [Diamonds!]",
+    "[21:36:20] [Server thread/INFO]: Set GridUser's game mode to Survival Mode",
+    "[21:36:24] [Server thread/INFO]: Replaced a slot on GridUser with [Shulker Box]",
+    "[21:36:24] [Server thread/INFO]: GridUser has the following entity data: {count: 1, Slot: 10b, components: {\"minecraft:container\": [{item: {count: 2, id: \"minecraft:diamond\"}, slot: 0}, {item: {count: 4, id: \"minecraft:emerald\"}, slot: 1}]}, id: \"minecraft:shulker_box\"}"
+  ]
+}

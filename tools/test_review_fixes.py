@@ -852,6 +852,16 @@ def test_immediatelyfast_port() -> None:
                and p195.get("panel_asset", {}).get("complete") is False)
     check("p195 delivery: v0.5.6 portable fresh root OK + panel smoke (PCL2 absent)", p195_ok,
           "p195 portable RESULT OK + panel 103 versions + PCL2/asset boundaries")
+    p196_result = json.loads((ROOT / "runs" / "p196-shulker-grid27" / "result.json").read_text(encoding="utf-8"))
+    p196_client = (ROOT / "runs" / "p196-shulker-grid27" / "client.log").read_text(encoding="utf-8", errors="replace")
+    p196_ok = (p196_result.get("client_multi_items2") and p196_result.get("full_render")
+               and p196_result.get("server_multi_items2") and p196_result.get("real_hover_path")
+               and "items=27" in p196_client
+               and "type=FULL" in p196_client
+               and "P196_CLIENT_BOX slot=9 27x" in p196_client
+               and "P196_SERVER_AIM" in p196_client)
+    check("p196 shulker grid 27-slot full grid", p196_ok,
+          "p196 items=27 + FULL + server box + real hover")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")

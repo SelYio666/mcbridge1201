@@ -168,7 +168,8 @@
     "Long soak / crash recovery: not done",
     "p193: GLFW-callback-level hover only (OS cursor not), 27-slot full grid, preview key rebinding",
     "p194: real server 1024+ maps end-to-end, visually arranged side-by-side, 3x4096^2 NativeImage ~192MB",
-    "p195: full PCL2 install E2E, clean/offline other machine, complete panel asset download (3.3/12.36 MB partial)"
+    "p195: full PCL2 install E2E, clean/offline other machine, complete panel asset download (3.3/12.36 MB partial)",
+    "p196: preview key rebinding needs a mod/companion change; 27 distinct NBT/enchant stacks untested"
   ],
   "reproduce": [
     "gradle -p java test installDist",
@@ -265,6 +266,16 @@
     "panel_smoke": "tools/pcl_panel.py opened; 103 release versions; default .minecraft dir; panel-smoke.png; PCL2 absent",
     "panel_asset": "mcbridge-pcl-panel.zip partial (3361813/12361982); gh release download hung",
     "remaining": "full PCL2 install E2E; clean/offline other machine; panel asset re-download",
+    "release": "no new release (v0.5.6)"
+  },
+  "p196": {
+    "date": "2026-10-26",
+    "review_fixes": "98/98",
+    "hashes": "1231/1231",
+    "verify_evidence": "passed",
+    "shulker_27": "27 distinct items; GRID_SETRENDER inv=27; GRID_DRAWITEMS items=27; FULL; server box; real hover",
+    "preview_key": "rebinding NOT effective: mod ignores config previewKey, FULL still uses 342; F(70) -> NO_PREVIEW",
+    "remaining": "preview key rebinding needs a mod/companion change; 27 distinct NBT/enchant stacks untested",
     "release": "no new release (v0.5.6)"
   },
   "release_v056": {
