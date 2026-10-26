@@ -862,6 +862,18 @@ def test_immediatelyfast_port() -> None:
                and "P196_SERVER_AIM" in p196_client)
     check("p196 shulker grid 27-slot full grid", p196_ok,
           "p196 items=27 + FULL + server box + real hover")
+    p197_result = json.loads((ROOT / "runs" / "p197-preview-key" / "result.json").read_text(encoding="utf-8"))
+    p197_client = (ROOT / "runs" / "p197-preview-key" / "client.log").read_text(encoding="utf-8", errors="replace")
+    p197_ok = (p197_result.get("config_rebound") and p197_result.get("keys_transitions")
+               and p197_result.get("compact_on_j") and p197_result.get("full_on_jk")
+               and p197_result.get("compact_after_k")
+               and p197_result.get("no_preview_after_release")
+               and p197_result.get("real_hover_path")
+               and "previewCode=74" in p197_client and "fullCode=75" in p197_client
+               and "P197_TYPE FULL" in p197_client
+               and "GRID_DRAWITEMS" in p197_client and "items=27" in p197_client)
+    check("p197 shulker preview keys rebound via config (J/K)", p197_ok,
+          "p197 config 74/75 + COMPACT/FULL/COMPACT/NO_PREVIEW + 27 items")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")

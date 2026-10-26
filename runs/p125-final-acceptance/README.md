@@ -271,4 +271,15 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | `python tools/verify_evidence.py` | ✅ passed |
 | p196 | ✅ 27 种物品 `GRID_DRAWITEMS items=27`、FULL、server box、真实 hover；`result.json` 4/4 true |
 | Release | 沿用 `v0.5.6`（p196 无 mod 改动、无新 release） |
-| 隐患 | 预览键重绑定未生效（mod 忽略 config `previewKey`，FULL 仍用 342）；27 格不同 NBT/附魔未测 |
+| 隐患 | 预览键重绑定当轮未生效（写错 config 分类 + F 触发交换副手）；27 格不同 NBT/附魔未测（重绑定已由 p197 关闭） |
+## p197 Shulker 预览键重绑定 增量（2026-10-26，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **99 项**（本次 **99/99**；新增 1 条 p197 重绑定回归） |
+| `python tools/check_hashes.py` | ✅ **1250/1250** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| p197 | ✅ `controls.previewKey=J(74)`/`fullPreviewKey=K(75)`、`alwaysOn=false`；mod 状态机 `NO_PREVIEW→COMPACT→FULL→COMPACT→NO_PREVIEW`；27 格 `GRID_DRAWITEMS items=27`；`result.json` 7/7 true |
+| 更正 | p196 “mod 忽略 config previewKey” 为误判（字段写在 `preview` 分类）；bytecode 显示读取 `controls.previewKey/fullPreviewKey` |
+| Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
+| 隐患 | 键状态仍在 `isKeyDown` 轮询边界注入（无 OS 级物理按键）；27 格不同 NBT/附魔未测 |

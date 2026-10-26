@@ -1,7 +1,7 @@
 # p196 — Shulker grid 27 格全满（+ 预览键重绑定边界）
 
 日期：2026-10-26
-结论：27 种不同物品的 shulker box 在 FULL 预览下画出 27 个 icon/计数；server box 与真实 tooltip 路径仍然正常。**预览键重绑定未生效**：mod 不读取 config 的 `previewKey`，FULL 仍靠默认 342（右 Shift），见边界。
+结论：27 种不同物品的 shulker box 在 FULL 预览下画出 27 个 icon/计数；server box 与真实 tooltip 路径仍然正常。**预览键重绑定当轮未生效**：配置字段写错分类 + F 触发原版交换副手，FULL 仍靠默认 342（右 Shift）；该结论已在 p197 更正（mod 实际会读 `controls.previewKey/fullPreviewKey`）。
 
 ## 结果
 
@@ -22,11 +22,14 @@
 - real hover：pre-FULL `DRAWTOOLTIP data=PreviewTooltipData`，p191 的 Mouse-raw + GLFW 回调路径；
 - `client.log` / `server.log` / `after-full.png` / `after-server.png` / `after-compact.png`。
 
-## 预览键重绑定（边界）
+## 预览键重绑定（已被 p197 更正）
 
 - 配置写入了 `"previewKey": "key.keyboard.f"`、`alwaysOn=false`；probe 发送 **F(70)** 并把 `InputPollMixin` 改成伪造 70 —— 结果 `GRID_DRAWITEMS` 全空（preview 类型 NO_PREVIEW）。
-- 原因：mod 用 `InputConstants.isKeyDown(window, 342)`（p193 注释已写明）轮询默认右 Shift，**不读 config 的 previewKey**；p196 的 27 格 FULL 因此恢复 mod 默认 342，config 的 F 仅作为“未生效”的记录。
-- 真要做重绑定，需要改 mod/companion 的键绑定读取；本轮不伪造通过。
+- 当轮的解释是“mod 用 `InputConstants.isKeyDown(window, 342)` 轮询硬编码右 Shift、不读 config”，**这个解释是错的**（2026-10-26 p197 用 javap + 运行时配置回读更正）：
+  - 键码来自 `config.controls.previewKey/fullPreviewKey`（默认 340/342）；
+  - p196 把 `previewKey` 写进了 `preview` 分类，Jankson 忽略未知字段，实际生效的是默认值；
+  - 构造在创造模式背包里按 F 还会触发原版 `key.swapOffhand`，把悬停物品换走，tooltip 直接消失。
+  - 正确做法见 `runs/p197-preview-key/`：写 `controls` 分类、换用无原版绑定的键，COMPACT/FULL/COMPACT/NO_PREVIEW 全部可复现。
 
 ## 27 格构造
 
@@ -36,7 +39,7 @@
 
 ## 边界
 
-- 预览键重绑定未生效（mod 忽略 config `previewKey`；FULL 仍用 342）。
+- 预览键重绑定当轮未生效（配置字段分类写错 + F 触发原版交换副手）；**已在 p197 更正并验证**（`runs/p197-preview-key/`）。
 - 27 格只验证 icon/计数与 FULL 网格；未验证 27 格全部不同 NBT/附魔/自定义名称的渲染差异。
 - 无新 release（v0.5.6，p196 无 mod 代码改动）。
 

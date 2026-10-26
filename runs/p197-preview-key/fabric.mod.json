@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "p197shulker",
+  "version": "1.0.0",
+  "name": "p197 preview key rebinding probe",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["probe.ShulkerResidualProbe"]
+  },
+  "mixins": ["p197.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "shulkerboxtooltip": "*",
+    "fabric-lifecycle-events-v1": "*"
+  }
+}
