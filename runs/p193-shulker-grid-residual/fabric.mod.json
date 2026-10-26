@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "p193shulker",
+  "version": "1.0.0",
+  "name": "p193 shulker grid residual probe",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["probe.ShulkerResidualProbe"]
+  },
+  "mixins": ["p193.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "shulkerboxtooltip": "*",
+    "fabric-lifecycle-events-v1": "*"
+  }
+}

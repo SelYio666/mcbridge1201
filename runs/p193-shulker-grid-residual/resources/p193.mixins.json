@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "probe.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
+  "client": [
+    "MouseAccessor",
+    "CreativeTabInvoker",
+    "InputPollMixin",
+    "PreviewDrawProbeMixin",
+    "ModTooltipDataProbeMixin",
+    "DrawTooltipProbeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

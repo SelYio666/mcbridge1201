@@ -811,6 +811,21 @@ def test_immediatelyfast_port() -> None:
                and p192_server.count("ACTIVE_SEED") == 1)
     check("TRASH three clients: B drains its own trash, C untouched, A rejoin resets (upstream)", p192_ok,
           "p192 B 4->3->empty, C constant, A rejoin trash=empty after diamondx5")
+    p193_result = json.loads((ROOT / "runs" / "p193-shulker-grid-residual" / "result.json").read_text(encoding="utf-8"))
+    p193_client = (ROOT / "runs" / "p193-shulker-grid-residual" / "client.log").read_text(encoding="utf-8", errors="replace")
+    p193_server = (ROOT / "runs" / "p193-shulker-grid-residual" / "server.log").read_text(encoding="utf-8", errors="replace")
+    p193_ok = (p193_result.get("client_multi_items2") and p193_result.get("full_render")
+               and p193_result.get("server_multi_items2") and p193_result.get("real_hover_path")
+               and "type=FULL" in p193_client
+               and "first=minecraft:diamondx3" in p193_client
+               and "first=minecraft:emeraldx4" in p193_client
+               and "DRAWTOOLTIP" in p193_client and "PreviewTooltipData" in p193_client
+               and "P193_SERVER_AIM" in p193_client
+               and "P193_BOX_SLOT listPos=10" in p193_client
+               and "Replaced a slot" in p193_server
+               and "minecraft:emerald" in p193_server and "count: 4" in p193_server)
+    check("SBT grid residuals: multi-item, FULL, real mouse hover and server box", p193_ok,
+          "p193 4/4 flags + client/server markers")
     import subprocess
     pcl_readme = (ROOT / "share" / "pcl-onclick" / "README.md").read_text(encoding="utf-8", errors="replace")
     pcl_panel = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8", errors="replace")

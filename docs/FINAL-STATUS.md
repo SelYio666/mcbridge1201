@@ -1,4 +1,4 @@
-﻿# mcbridge1201 鏈€缁堢姸鎬侊紙2026-10-23锛?
+# mcbridge1201 鏈€缁堢姸鎬侊紙2026-10-23锛?
 
 > 瀹氫綅锛?*Minecraft 鐗堟湰杩佺Щ涓庤繍琛岃緟鍔╁伐鍏风**銆傝縼绉讳笌楠岃瘉褰掓湰宸ュ叿锛屾棩甯稿惎鍔ㄤ氦缁?PCL銆?
 > 鏈€鏂板彂甯冿細[v0.5.6](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.6)锛堜竴閿畨瑁呭埌 PCL锛氬浘褰㈤潰鏉?鍏ㄧ増鏈€夋嫨锛涗富宸ュ叿 v0.5.4锛夈€?
@@ -103,8 +103,8 @@ EntityCulling 琚墺绂荤殑 `EntityRendererMixin` 宸叉寜 1.21.1 鐨?6 �
 
 ### 宸ョ▼涓庨棬绂?
 
-- 鍗曟祴 25/25锛沗verify_evidence` passed锛涘搱甯?1083 椤癸紙浠?`runs/SHA256SUMS.txt` 瀹為檯琛屾暟涓哄噯锛夛紱妗ヤ竴鑷存€?0锛圛mmediatelyFast 绔彛 jar锛宲165/p181锛夛紱mixin 瀹¤ inert=2锛坄listed=37`锛沺175 鎭㈠ map mixin銆乸177 琛ュ鍦板浘/灞曠ず妗嗐€乸178 鍚敤 VertexBuffer锛涘墿浣欎袱涓槸瀹樻柟 1.21.1 宸插垹闄ょ殑 1.20.4 閬楃暀绫伙紝瑙?`runs/p180-inert-closure/`锛夛紱
-- 澶栭儴闂姹囨€?20 椤瑰洖褰?+ 9 椤?NeoForge 瀹夎/鍚姩鍥炲綊 + 10 椤圭洰褰?鍏煎/璇存槑鍥炲綊 + 1 椤瑰姞杞藉櫒瀹夎鍥炲綊 + 8 椤?ImmediatelyFast 绉绘鍥炲綊 + 1 椤逛究鎼哄寘鍥炲綊 + 24 椤逛笅杞芥簮/杩涘害鍥炲綊 + 6 椤瑰湴鍥?atlas 鍥炲綊 + 2 椤?VertexBuffer 鍥炲綊 + 1 椤规 mixin 闃茶鐧昏鍥炲綊 + 1 椤?atlas closed 瀹堝崼鍥炲綊 + 1 椤?TrashSlot UI empty 閿洖褰?+ 1 椤?TrashSlot Shift+Delete 鍥炲綊 + 1 椤?TrashSlot right-click undelete 鍥炲綊 + 1 椤?Shulker 缃戞牸 wrapper/t2/t4 鍥炲綊 + 1 椤?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛坄tools/test_review_fixes.py`锛屽叡 92 椤癸紱鏈 **92/92**锛夋帴鍏ョ粺涓€闂ㄧ锛?（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归）
+- 鍗曟祴 25/25锛沗verify_evidence` passed锛涘搱甯?1194 椤癸紙浠?`runs/SHA256SUMS.txt` 瀹為檯琛屾暟涓哄噯锛夛紱妗ヤ竴鑷存€?0锛圛mmediatelyFast 绔彛 jar锛宲165/p181锛夛紱mixin 瀹¤ inert=2锛坄listed=37`锛沺175 鎭㈠ map mixin銆乸177 琛ュ鍦板浘/灞曠ず妗嗐€乸178 鍚敤 VertexBuffer锛涘墿浣欎袱涓槸瀹樻柟 1.21.1 宸插垹闄ょ殑 1.20.4 閬楃暀绫伙紝瑙?`runs/p180-inert-closure/`锛夛紱
+- 澶栭儴闂姹囨€?20 椤瑰洖褰?+ 9 椤?NeoForge 瀹夎/鍚姩鍥炲綊 + 10 椤圭洰褰?鍏煎/璇存槑鍥炲綊 + 1 椤瑰姞杞藉櫒瀹夎鍥炲綊 + 8 椤?ImmediatelyFast 绉绘鍥炲綊 + 1 椤逛究鎼哄寘鍥炲綊 + 24 椤逛笅杞芥簮/杩涘害鍥炲綊 + 6 椤瑰湴鍥?atlas 鍥炲綊 + 2 椤?VertexBuffer 鍥炲綊 + 1 椤规 mixin 闃茶鐧昏鍥炲綊 + 1 椤?atlas closed 瀹堝崼鍥炲綊 + 1 椤?TrashSlot UI empty 閿洖褰?+ 1 椤?TrashSlot Shift+Delete 鍥炲綊 + 1 椤?TrashSlot right-click undelete 鍥炲綊 + 1 椤?Shulker 缃戞牸 wrapper/t2/t4 鍥炲綊 + 1 椤?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛坄tools/test_review_fixes.py`锛屽叡 95 椤癸紱鏈 **95/95**锛夋帴鍏ョ粺涓€闂ㄧ锛?（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归、p193 Shulker grid 残余）
 - 浣跨敤璇存槑涓庢暀绋?`docs/guide.md`锛堝惎鍔ㄥ櫒銆丳CL 鍏辩敤銆佽縼绉绘暀绋嬨€丗AQ锛夛紝鐣岄潰銆屼娇鐢ㄨ鏄庛€嶆寜閽洿鎺ユ墦寮€锛?
 - 鍚姩鍣ㄧ鍒扮鑴氭湰锛堝畨瑁呪啋鍚姩鈫掍富鑿滃崟锛屾敮鎸?`--version` / `--require` / `--screenshot`锛夛紱
 - GitHub Actions锛歱ush 瑙﹀彂**宸查獙璇佸彲鐢?*锛坄e9ca30c` run `39796030299`锛沗742d133` run `39799555425`锛宑heck-run `build` success锛屽惈 API 鎺ㄩ€侊級锛涙鍓嶁€減ush 鏃?run鈥濇槸 GitHub Actions `degraded_performance`锛?2:18 UTC锛夊鑷存帓闃燂紝閲嶆帹 workflow 鏂囦欢鍚庣储寮曟仮澶嶃€傝嫢鍐嶉亣鏃?run锛屽厛鐪?[githubstatus.com](https://www.githubstatus.com)锛屽啀閲嶆帹 workflow 鏂囦欢鍒锋柊绱㈠紩銆?
@@ -234,3 +234,9 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
   ade34ecc…，字节一致重新上传）；
 - release notes 覆盖 p187–p192 的修复与边界（无性能声明）；tag `v0.5.6`，
   5 个资产的服务端 sha256 与本地一致。
+
+## 十、2026-10-26 更新（p193：Shulker grid 多物品/FULL/真实 hover/服务端 box）
+
+- **p193**：多物品网格（3 钻 + 2 绿宝石）+ FULL 预览 + 真实 tooltip 路径（pre-FULL `DRAWTOOLTIP data=PreviewTooltipData`，p191 的 GLFW 回调级输入）+ 服务端 box（2 钻 + 4 绿宝石，`/item replace container.10`）；`result.json` 4/4 true；`runs/p193-shulker-grid-residual/`（`after-full/after-server/after-compact.png`）；
+- 门禁：test_review_fixes **95/95**、check_hashes **1194/1194**、verify_evidence passed；无新 release（v0.5.6，p193 无 mod 改动）；
+- 边界：输入是 GLFW 回调级（非 OS 光标）、FULL 依赖 `preview.alwaysOn` + 预览键 342、27 格全满未测。

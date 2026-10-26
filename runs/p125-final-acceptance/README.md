@@ -1,4 +1,4 @@
-﻿# p125 鈥?鎬婚獙鏀讹紙2026-10-22锛?
+# p125 鈥?鎬婚獙鏀讹紙2026-10-22锛?
 鏈枃浠舵槸涓€娆?*鍙氦鎺ョ殑楠屾敹蹇収**锛氬湪杩欏彴鏈哄櫒涓婃妸浠撳簱鐨勮嚜鍔ㄥ寲闂ㄧ鍏ㄩ儴閲嶈窇浜嗕竴閬嶏紝骞舵妸
 鈥滃凡楠岃瘉 / 鏈獙璇佲€濈殑杈圭晫鍐欐竻妤氥€傜粨璁哄彧瑕嗙洊涓嬮潰鍒楀嚭鐨勮寖鍥达紝涓嶅鎺ㄣ€?
 ## 闂ㄧ缁撴灉锛堟湰娆￠噸璺戯級
@@ -229,3 +229,14 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
   shulkerpreview/trashcreativefix companion jar、PCL 面板/setup（沿用 v0.5.5 字节一致）；
 - 服务端 sha256 与本地记录全部一致（见 acceptance.json `release_v056`）；
 - 一键 PCL 仍为 v0.5.5 资产（未变更）。
+
+## p193 Shulker grid 残余 增量验收（2026-10-26，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **95 项**（本次 **95/95**；新增 1 条 p193 Shulker grid 残余回归） |
+| `python tools/check_hashes.py` | ✅ **1194/1194** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| p193 | ✅ client 多物品 3 钻 + 2 绿宝石、FULL、真实 tooltip 路径、server box 2 钻 + 4 绿宝石；`result.json` 4/4 true |
+| Release | 沿用 `v0.5.6`（p193 无 mod 改动、无新 release） |
+| 隐患 | GLFW 回调级输入（非 OS 光标）、FULL 依赖 alwaysOn+预览键、27 格全满未测 |

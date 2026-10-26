@@ -53,9 +53,12 @@ claim that these paths work.
   shulker items. With `preview.alwaysOn=true` (the stock mod wants the preview key held), the grid
   draws the diamond icon with its count and the server-synced box renders the same way
   (`GRID_DRAWITEMS ... first=minecraft:diamondx5`, `GRID_SERVERBOX slot=3 nonAir=1`).
-  Still open: FULL preview type (3x9), multi-item grids, the real mouse-hover path (the harness
-  drives the same pipeline through HudRenderCallback because OS cursor injection is unreliable),
-  the preview-keybind interaction, and TrashSlot creative/multi-client variants.
+  p193 (2026-10-26) closed the residuals: multi-item (3 diamond + 2 emerald), FULL (3x9), the
+  real tooltip path (pre-FULL `DRAWTOOLTIP data=PreviewTooltipData`; p191's Mouse-raw +
+  GLFW-callback input) and the server box (2 diamond + 4 emerald, `/item replace container.10`):
+  `runs/p193-shulker-grid-residual/` (result.json 4/4 true; after-full/after-server/after-compact.png).
+  Still open: OS-cursor-level hover, 27-slot full grid, preview key rebinding. TrashSlot
+  creative/multi-client was closed by p189/p191/p192 (see their runs).
 
 ## Already verified (dedicated server)
 

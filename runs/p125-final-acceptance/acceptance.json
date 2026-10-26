@@ -1,4 +1,4 @@
-﻿{
+{
   "date": "2026-10-22",
   "commit": "00183a0",
   "repo": "https://github.com/SelYio666/mcbridge1201",
@@ -155,6 +155,7 @@
     "1.20.1 full cold install 111.7 s / 739 MB / verify OK, root deleted (runs/p122/full-1.20.1.json)",
     "Portable launcher package (embedded Python) built and tested (v0.4.4 asset)",
     "PCL one-click v0.5.5: Tkinter panel + Python-free setup assets, full version picker, PCL2 2.13.1.1 real test (share/pcl-onclick, runs/p137-pcl2-onclick)"
+    "p193 Shulker grid residuals: multi-item 3 diamond + 2 emerald, FULL, real tooltip path, server box 2 diamond + 4 emerald (runs/p193-shulker-grid-residual)",
   ],
   "not_verified": [
     "Sodium: no conversion test; Iris shader packs: not tested (only Iris 1.8.1 no-shader pipeline)",
@@ -163,7 +164,8 @@
     "Dedicated multiplayer server: Fabric verified (runs/p132, p75/p76); NeoForge/Forge not tested",
     "Portable package on other machines/offline: not verified",
     "Real-browser UI click E2E: not done (HTTP endpoints only)",
-    "Long soak / crash recovery: not done"
+    "Long soak / crash recovery: not done",
+    "p193: GLFW-callback-level hover only (OS cursor not), 27-slot full grid, preview key rebinding"
   ],
   "reproduce": [
     "gradle -p java test installDist",
@@ -229,6 +231,16 @@
     "multi_active": "three clients; B's real GLFW-callback right-click (4->3) and Delete (->empty) touched only B; C server+client constant; A rejoin reset its trash to empty (upstream PlayerLoginEvent, p65)",
     "test_method": "OS input unreliable on this machine (in-game mouse pinned at window centre): probes aim by writing Mouse raw fields and synthesize keys/mouse at the GLFW callback boundary (same code path as real input)",
     "release": "no new release (main tool still v0.5.4)"
+  },
+  "p193": {
+    "date": "2026-10-26",
+    "review_fixes": "95/95",
+    "hashes": "1194/1194",
+    "verify_evidence": "passed",
+    "shulker_grid_residual": "client 3 diamond + 2 emerald; FULL; real tooltip path; server box 2 diamond + 4 emerald",
+    "evidence": "runs/p193-shulker-grid-residual/ (result.json 4/4 true; client.log; server.log; after-full/after-server/after-compact.png)",
+    "remaining": "GLFW-callback-level input (not OS cursor); FULL requires alwaysOn + preview key 342; dedicated /item replace container.10 only; 27-slot full grid untested",
+    "release": "no new release (v0.5.6)"
   },
   "release_v056": {
     "date": "2026-10-25",
