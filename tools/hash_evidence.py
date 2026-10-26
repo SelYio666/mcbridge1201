@@ -997,6 +997,8 @@ FILES = [
     "runs/p195-delivery-validation/panel-out.log",
     "runs/p195-delivery-validation/panel-err.log",
     "runs/p196-shulker-grid27/README.md",
+    "runs/p196-shulker-grid27/make_video_simple.py",
+    "runs/p196-shulker-grid27/p196-update-simple.mp4",
     "runs/p196-shulker-grid27/build.py",
     "runs/p196-shulker-grid27/run.py",
     "runs/p196-shulker-grid27/fabric.mod.json",

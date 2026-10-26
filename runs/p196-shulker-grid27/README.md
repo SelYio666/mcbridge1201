@@ -3,6 +3,15 @@
 日期：2026-10-26
 结论：27 种不同物品的 shulker box 在 FULL 预览下画出 27 个 icon/计数；server box 与真实 tooltip 路径仍然正常。**预览键重绑定当轮未生效**：配置字段写错分类 + F 触发原版交换副手，FULL 仍靠默认 342（右 Shift）；该结论已在 p197 更正（mod 实际会读 `controls.previewKey/fullPreviewKey`）。
 
+## 简单讲解视频（通俗版，代码生成）
+
+- 文件：`p196-update-simple.mp4`（22 s，1280×720，30 fps）；
+- 生成：`python runs/p196-shulker-grid27/make_video_simple.py`
+  （需要 `.toolchain/ffmpeg/ffmpeg.exe`）；
+- 内容：27 格是什么、为什么是 27、27 个同物品被 `ContainerComponent` 合并的坑、这轮证据，
+  以及“预览键没生效、已在 p197 更正”的诚实边界；
+- 只求好懂，审阅仍以下面的日志/`result.json` 为准。
+
 ## 结果
 
 `result.json`：
