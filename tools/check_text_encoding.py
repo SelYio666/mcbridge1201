@@ -15,6 +15,12 @@ Rules per file (every hit is a finding, exit 1):
                of two or more '?'  (the corruptor wrote one '?' per lost byte)
   double-enc   a run of >= 6 CJK chars whose GBK re-encoding is itself valid
                UTF-8 — the general form of the damage, catches new content
+  control-tab  a TAB inside prose (outside ``` fences). Caused by a writer that
+               interpreted the two characters \t instead of keeping "t": the
+               text loses the letter and a stray TAB appears in the middle of a
+               sentence (found in docs/remaining-work.md, the word "tools")
+  control-cr   a lone CR that is not part of CRLF; same cause with \r, it splits
+               a path in half (found as "(CRuns/p195-delivery-validation/)")
 
 Exemptions: a document that has to quote the damaged bytes on purpose (the p198
 report) would trip the four content rules by design. Those files are listed in
@@ -104,11 +110,23 @@ def findings_for(path: Path) -> list[tuple[str, str]]:
     except UnicodeDecodeError as exc:
         return [("bad-utf8", f"{path}: bad-utf8: {exc}")]
     findings: list[tuple[str, str]] = []
+    in_fence = False
     for lineno, line in enumerate(text.split("\n"), 1):
         where = f"{rel}:{lineno}"
         snippet = line.strip()
         if len(snippet) > 60:
             snippet = snippet[:57] + "..."
+        # control rules: TAB/CR that came from an escaped "\t"/"\r" on re-insert.
+        # A trailing CR is just CRLF line endings (this repo has both), so only a
+        # CR that sits inside the line counts. Inside ``` fences a TAB is
+        # legitimate, so the fence state is tracked.
+        body = line[:-1] if line.endswith("\r") else line
+        if "\r" in body:
+            findings.append(("control-cr", f"{where}: control-cr: {snippet}"))
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+        elif not in_fence and "\t" in line:
+            findings.append(("control-tab", f"{where}: control-tab: {snippet}"))
         if "\ufffd" in line:
             findings.append(("fffd", f"{where}: fffd: {snippet}"))
         for ch in line:

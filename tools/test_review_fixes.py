@@ -16,6 +16,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -951,6 +952,23 @@ def test_text_encoding_guard() -> None:
     check("encoding guard: corrupted sample reports findings", len(lines) >= 1,
           lines[0] if lines else "no findings")
 
+    # the escaped-control-character family: a writer that interprets the two-character
+    # sequences instead of keeping the letters turns "tools/" into TAB+"ools/" and splits
+    # "(runs/" into "(CRuns/". Both were really in docs/remaining-work.md. A TAB inside a
+    # ``` fence stays legal, so the guard must not fire there.
+    ctl = tmp / "control.md"
+    ctl.write_bytes(
+        "- 见 \tools/pcl_panel.py 的用法\r\n"
+        "- 证据 (\runs/p195-delivery-validation/)\r\n"
+        "```\n\tindented code keeps its tab\n```\n".encode("utf-8"))
+    rc, out = run([sys.executable, "-B", str(guard), str(ctl)])
+    check("encoding guard: escaped TAB/CR damage fails", rc == 1,
+          out.strip().splitlines()[-1] if out.strip() else f"rc={rc}")
+    check("encoding guard: names control-tab and control-cr",
+          "control-tab" in out and "control-cr" in out, out[-240:])
+    check("encoding guard: TAB inside a code fence is not a finding",
+          out.count("control-tab") == 1, f"control-tab hits={out.count('control-tab')}")
+
     # an exemption may only ever point at a document that still exists, so a renamed or
     # deleted report cannot leave a stale "allow the damage" entry behind
     spec = importlib.util.spec_from_file_location("check_text_encoding", guard)
@@ -1245,6 +1263,63 @@ def test_download_policy() -> None:
         mclaunch.set_source_mode(backup_mode)
 
 
+def test_map_atlas_layout_evidence() -> None:
+    """p200: the atlas layout evidence must stay self-consistent.
+
+    The numbers in runs/p200-atlas-layout/README.md are the claim (2050 ids, every one at the slot
+    the allocator reported, three 4096^2 images, three maps side by side). This re-derives them
+    from the committed log and the screenshot check, so an edited log, a stale screenshot or a
+    report that drifted from its own evidence fails here.
+    """
+    run = ROOT / "runs" / "p200-atlas-layout"
+    log = run / "client.log"
+    check("p200: client.log present", log.exists(), str(log))
+    if not log.exists():
+        return
+    text = log.read_text(encoding="utf-8", errors="replace")
+
+    m = re.search(r"tile-sweep ids=(\d+) mapping-mismatch=(\d+)"
+                  r".*?pixel-verified=(\d+) pixel-mismatch=(\d+)", text)
+    check("p200: tile-sweep line present", m is not None, "")
+    if m:
+        ids, mapping_bad, verified, pixel_bad = (int(g) for g in m.groups())
+        check("p200: 2050 ids swept", ids == 2050, str(ids))
+        check("p200: every id sits at the expected atlas slot", mapping_bad == 0, str(mapping_bad))
+        check("p200: every id verified by its own content",
+              verified == ids and pixel_bad == 0, f"{verified}/{ids}, mismatch={pixel_bad}")
+
+    images = re.findall(r"atlas(\d) image 4096x4096 last-pixel-ok=true past-end-throws=true"
+                        r" bytes=(\d+)", text)
+    check("p200: three 4096^2 atlas images", [i for i, _ in images] == ["0", "1", "2"], str(images))
+    check("p200: 192 MiB of atlas images",
+          sum(int(b) for _, b in images) == 201326592, str([b for _, b in images]))
+    check("p200: all three atlases cleared on exit",
+          "map-atlas clear atlases=3" in text, "")
+    check("p200: no atlas/GL failure marker",
+          not re.search(r"Image is not allocated|OutOfMemoryError|Uncaught exception", text), "")
+
+    layout = run / "layout-check.json"
+    check("p200: layout-check.json present", layout.exists(), str(layout))
+    if not layout.exists():
+        return
+    data = json.loads(layout.read_text(encoding="utf-8"))
+    check("p200: screenshot check passed", data.get("passed") is True,
+          json.dumps(data.get("problems"), ensure_ascii=False)[:160])
+    blocks = data.get("blocks") or []
+    check("p200: three map blocks on screen", len(blocks) == 3, str(len(blocks)))
+    if len(blocks) != 3:
+        return
+    check("p200: blocks are 128 * guiScale = 256 px",
+          all(b.get("w") == 256 and b.get("h") == 256 for b in blocks),
+          str([(b.get("w"), b.get("h")) for b in blocks]))
+    steps = [blocks[i + 1]["x"] - blocks[i]["x"] for i in range(2)]
+    check("p200: blocks spaced by 136 * guiScale = 272 px", steps == [272, 272], str(steps))
+    offsets = {tuple(o) for o in (data.get("offsets") or [])}
+    check("p200: one window offset for all three blocks", len(offsets) == 1, str(data.get("offsets")))
+    check("p200: three distinct block colours",
+          len({tuple(b["rgb"]) for b in blocks}) == 3, str([b["rgb"] for b in blocks]))
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -1252,6 +1327,7 @@ def main() -> int:
     test_neoforge_install()
     test_loader_base_ensure()
     test_immediatelyfast_port()
+    test_map_atlas_layout_evidence()
     test_text_encoding_guard()
     test_download_policy()
     failed = [name for name, ok, _ in RESULTS if not ok]

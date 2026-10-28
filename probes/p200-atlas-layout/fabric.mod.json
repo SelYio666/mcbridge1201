@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "p200probe",
+  "version": "1.0.0",
+  "name": "p200 atlas layout probe",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["p200probe.AtlasLayoutProbe"]
+  },
+  "mixins": [
+    "p200probe.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "1.21.1",
+    "fabric-lifecycle-events-v1": "*"
+  }
+}

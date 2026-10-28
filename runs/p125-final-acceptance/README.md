@@ -295,3 +295,17 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | 修复性质 | ⚠️ 受损 13385 字符中可逆还原 2599（19.4%），10786（80.6%）为按上下文重写；行级 386 未动 / 12 还原 / 306 重写 |
 | Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
 | 隐患 | 重写段落是语义等价重述而非逐字原文；守卫只扫 `*.md`；p195 的写入路径未追溯 |
+## p200 atlas 逐 id 落点 + 三张并排 增量（2026-10-28，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **124 项**（本次 **124/124**；新增 16 条 atlas 逐 id 落点/并排回归 + 3 条转义控制字符回归） |
+| `python tools/check_hashes.py` | ✅ **1289/1289**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（`text_encoding` 226 个 md 全绿、`review_regressions` 124/124） |
+| 顺手修的第二类损伤 | ✅ `docs/remaining-work.md` 中 `\t`/`\r` 被解释成控制字符的两处已修回；守卫加 `control-tab`/`control-cr`（围栏内 TAB 合法）+ 3 条回归 |
+| 逐 id 校验 | ✅ `mapping-mismatch=0 pixel-verified=2050 pixel-mismatch=0`（不是抽样，也不是 p194 的共用内容校验） |
+| 三张同屏 | ✅ 三块 256×256、间距 272、窗口偏移一致（`runs/p200-atlas-layout/layout-check.json`） |
+| 192 MiB | ✅ 读 `(4095,4095)` 成功、读 `(4096,4096)` 抛异常，证明缓冲 4096²，×4×3 = 201,326,592 字节 |
+| 工作集 | ⚠️ 实测 +460.9 / +548.1 / +486.5 MB（三次），峰值 2192.0–2247.3；**显存未测** |
+| Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
+| 隐患 | 真实专用服务器 1024+ 张地图未做；只用到 2050 格（未压满 3072）；VRAM 未测 |

@@ -1,0 +1,21 @@
+# p200 repeat runs - EXTRACT, not full logs.
+# Full logs stayed in work/tmp (gitignored, ~900 KB each). These are the lines the report cites,
+# copied verbatim by grep so the three-run agreement in memory-runs.json can be checked.
+
+## work/tmp/p200-run2/client.log
+[19:38:07] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas clear atlases=0
+[19:38:14] [Render thread/INFO]: [STDOUT]: [p200-probe] atlas0 image 4096x4096 last-pixel-ok=true past-end-throws=true bytes=67108864 identifier=immediatelyfast:map_atlas/0
+[19:38:14] [Render thread/INFO]: [STDOUT]: [p200-probe] atlas1 image 4096x4096 last-pixel-ok=true past-end-throws=true bytes=67108864 identifier=immediatelyfast:map_atlas/1
+[19:38:14] [Render thread/INFO]: [STDOUT]: [p200-probe] atlas2 image 4096x4096 last-pixel-ok=true past-end-throws=true bytes=67108864 identifier=immediatelyfast:map_atlas/2
+[19:38:15] [Render thread/INFO]: [STDOUT]: [p200-probe] tile-sweep ids=2050 mapping-mismatch=0 pixel-verified=2050 pixel-mismatch=0 layout-ids-solid-verified=3 write-ms=484 verify-ms=1 atlas-size=4096 maps-per-atlas=1024
+[19:38:15] [Render thread/INFO]: [STDOUT]: [p200-probe] layout-drawn guiScale=2.0 scale=2 framebuffer=1280x720 gui=640x360 rects=map1@16,16+256;map1025@288,16+256;map2049@560,16+256 argb=[-16776961, -12920576, -49088]
+[19:38:28] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas clear atlases=3
+
+## work/tmp/p200-run3/client.log
+[19:38:42] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas clear atlases=0
+[19:38:48] [Render thread/INFO]: [STDOUT]: [p200-probe] atlas0 image 4096x4096 last-pixel-ok=true past-end-throws=true bytes=67108864 identifier=immediatelyfast:map_atlas/0
+[19:38:48] [Render thread/INFO]: [STDOUT]: [p200-probe] atlas1 image 4096x4096 last-pixel-ok=true past-end-throws=true bytes=67108864 identifier=immediatelyfast:map_atlas/1
+[19:38:48] [Render thread/INFO]: [STDOUT]: [p200-probe] atlas2 image 4096x4096 last-pixel-ok=true past-end-throws=true bytes=67108864 identifier=immediatelyfast:map_atlas/2
+[19:38:49] [Render thread/INFO]: [STDOUT]: [p200-probe] tile-sweep ids=2050 mapping-mismatch=0 pixel-verified=2050 pixel-mismatch=0 layout-ids-solid-verified=3 write-ms=656 verify-ms=2 atlas-size=4096 maps-per-atlas=1024
+[19:38:49] [Render thread/INFO]: [STDOUT]: [p200-probe] layout-drawn guiScale=2.0 scale=2 framebuffer=1280x720 gui=640x360 rects=map1@16,16+256;map1025@288,16+256;map2049@560,16+256 argb=[-16776961, -12920576, -49088]
+[19:39:02] [Render thread/INFO]: [STDOUT]: [mcbridge-port] map-atlas clear atlases=3

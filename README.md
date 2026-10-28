@@ -15,7 +15,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 - **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康缓存 + GUI 源检查；内嵌 Python 的便携包（v0.5.2）。
 - **已验证进世界**：Fabric 1.21.1（全量安装 + EntityCulling 真生效）；ImmediatelyFast 1.21.1 batching 移植（HUD/物品/overlay 计数、Iris 1.8.1/1.8.14 + shader pack、专用服务器多人加入；`runs/p134`-`p150`）；**ImmediatelyFast 地图 atlas 恢复：p175 单人真实手持 filled_map 渲染；p177 两张地图分别落到 atlas tile 0/1 并与物品展示框地图同屏渲染；p181 动态更新（第二次上传）+ 正常退出清理，并修复退出时向已释放 NativeImage 写入的崩溃；p178 在 80 盔甲架压力下启用 VertexBuffer 动态上传 fast path（on 侧最高 76k 次 glBufferSubData，off/on 截图差 0.0087%，低于 off/off 对照，无 GL/mixin 错误）**（`runs/p175-map-atlas/`、`runs/p177-map-atlas-edge/`、`runs/p181-map-atlas-lifecycle/`、`runs/p178-vertex-upload/`）；NeoForge 21.1.264（AppleSkin / Farmer's Delight / Jade + **专用服务器客户端加入**，`runs/p161-neoforge-server/`；**带 Farmer's Delight 的服务端/客户端同模组加入**，`runs/p163-neoforge-fd-server/`）；Forge 1.20.1-47.4.28（AppleSkin / Farmer's Delight + **专用服务器客户端加入**，`runs/p159-forge-server/`；**带 Farmer's Delight 的同模组加入**，`runs/p164-forge-fd-server/`）；mrpack 真实 files 导入通过（`runs/p160-mrpack/`）。
 - **未通过 / 未验证**：Sodium 1.20.1 转换探针为 `blocked_static`（missingClass=13、missingMember=15、descMismatch=16，`runs/p158-sodium-probe/`），需移植其渲染内核，本轮不做（p199 逐条定性 44 条：6 条为内嵌 Fabric API、7 条纯 id、7 条签名有明确写法、24 条卡在被换掉的即时模式顶点管线，见 [docs/sodium-plan.md](docs/sodium-plan.md)）；Iris 只验证了 ImmediatelyFast 的兼容分支（没有转换 Iris 本身）；ImmediatelyFast 端口 jar 仍有 **2 个 inert**，但它们是官方 1.21.1 已删除的 1.20.4 遗留类（BufferBuilder/FontManager；ChatHud/MinecraftClient/BufferRenderer 已在 p166–p168 重登记，两个 map mixin 在 p175 恢复，VertexBuffer 在 p178 启用；对照见 `runs/p180-inert-closure/`）；地图 atlas 已验证单人手持 + 两张地图（tile 0/1）+ 物品展示框 + p181 动态更新+正常退出清理；atlas 满 1024 张未测；性能**不宣称收益**——HUD 场景差异在噪声内（`runs/p148-bench/`），80 盔甲架实体压力交错两轮慢约 13%（`runs/p157-stress-interleaved/`）。
-- **门禁**：Java 25/25、`test_review_fixes` 共 105 项（本次 **105/105**）、`check_hashes` 1270/1270、`verify_evidence` passed（新增 `text_encoding` 直接项）；CI push 触发已验证（最近 `build` success，见 Actions）。
+- **门禁**：Java 25/25、`test_review_fixes` 共 124 项（本次 **124/124**）、`check_hashes` 1289/1289、`verify_evidence` passed（新增 `text_encoding` 直接项）；CI push 触发已验证（最近 `build` success，见 Actions）。
 - 详情：[总验收快照](runs/p125-final-acceptance/README.md)、[FINAL-STATUS](docs/FINAL-STATUS.md)、[使用说明](docs/guide.md)。
 
 ## 现状（2026-10-18）
@@ -158,3 +158,12 @@ MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecr
 - 豁免机制：引用乱码当例子的 p198 报告放在 `EXEMPT` 表里（带理由），只放行四条内容规则，`bad-utf8`/`fffd` 照查，且每次都打印抑制了几条。
 - 门禁：`test_review_fixes` 105/105、`check_hashes` 1270/1270、`verify_evidence` passed；无新 release（无 mod 改动，v0.5.6）。
 - 边界：重写段落是语义等价重述，不是原作者逐字原文；守卫只扫 `*.md`；p195 的写入路径（哪个工具写坏的）未追溯。
+
+## p200 atlas 逐 id 落点 + 三张并排 增量（2026-10-28，正常 UTF-8）
+
+- 2050 个 map id **逐个**校验，不是抽样：每个 id 把自己的 12 位写进 tile 第 0 行（最亮/最暗调色板色当 1/0），走公共 update+draw 后从**该 id 报告出来的槽位**读回 → `mapping-mismatch=0 pixel-verified=2050 pixel-mismatch=0`。p194 的盲点是 2050 个 id 共用同一个 MapState，槽位错位时"像素等于地图颜色"照样成立。
+- 三张 4096² atlas 首次**同屏并排**：map 1/1025/2049 各持自己的 MapState（共用会让后写的颜色刷掉另外两格——第一版就是三块全灰），GUI `8,8 / 144,8 / 280,8` 画出；截图实测三块 256×256（=128×guiScale 2）、间距 272、窗口偏移 `[8,31]` 三块一致（`layout-check.json`）。
+- 192 MiB 是账不是估：每张图读 `(4095,4095)` 成功、读 `(4096,4096)` 抛异常，证明缓冲恰好 4096²，×4×3 = 201,326,592 字节；进程工作集分配前 1556.0 → 后 2016.9 MB（+460.9），重复三次 +460.9/+548.1/+486.5、峰值 2192.0–2247.3。**显存未测**，不写"约 192 MB 显存"。
+- 门禁：`test_review_fixes` 124/124（新增 16 条，从日志与截图**重算**报告里每个数字）、`check_hashes` 1289/1289、`verify_evidence` passed；无新 release（无 mod 改动，v0.5.6）。
+- 顺手修掉第二类文档损伤：`docs/remaining-work.md` 有两处 `\t`/`\r` 被当成转义写成控制字符（`\tools/…` 变 TAB+`ools/…`、`(runs/…` 变 `(CRuns/…`），已修回原文；守卫加 `control-tab`/`control-cr` 两条规则（围栏内 TAB 不算）+ 3 条回归。
+- 边界：真实专用服务器下发 1024+ 张地图未做；只用到 2050 格（未压满 3072 看第四张 atlas）；VRAM 未测。证据 `runs/p200-atlas-layout/`。

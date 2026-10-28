@@ -1,0 +1,114 @@
+{
+  "sweep": {
+    "ids": 2050,
+    "mapping_mismatch": 0,
+    "pixel_verified": 2050,
+    "pixel_mismatch": 0
+  },
+  "layout": {
+    "gui_scale": 2.0,
+    "scale": 2,
+    "rects": [
+      {
+        "map": 1,
+        "x": 16,
+        "y": 16,
+        "size": 256
+      },
+      {
+        "map": 1025,
+        "x": 288,
+        "y": 16,
+        "size": 256
+      },
+      {
+        "map": 2049,
+        "x": 560,
+        "y": 16,
+        "size": 256
+      }
+    ],
+    "colors": [
+      -16776961,
+      -12920576,
+      -49088
+    ]
+  },
+  "blocks": [
+    {
+      "count": 65536,
+      "x": 24,
+      "y": 47,
+      "w": 256,
+      "h": 256,
+      "map": 1,
+      "expected_x": 16,
+      "expected_y": 16,
+      "expected_size": 256,
+      "rgb": [
+        255,
+        0,
+        0
+      ]
+    },
+    {
+      "count": 65536,
+      "x": 296,
+      "y": 47,
+      "w": 256,
+      "h": 256,
+      "map": 1025,
+      "expected_x": 288,
+      "expected_y": 16,
+      "expected_size": 256,
+      "rgb": [
+        0,
+        217,
+        58
+      ]
+    },
+    {
+      "count": 65536,
+      "x": 568,
+      "y": 47,
+      "w": 256,
+      "h": 256,
+      "map": 2049,
+      "expected_x": 560,
+      "expected_y": 16,
+      "expected_size": 256,
+      "rgb": [
+        64,
+        64,
+        255
+      ]
+    }
+  ],
+  "offsets": [
+    [
+      8,
+      31
+    ],
+    [
+      8,
+      31
+    ],
+    [
+      8,
+      31
+    ]
+  ],
+  "crop": [
+    20,
+    43,
+    828,
+    307
+  ],
+  "image_size": [
+    1296,
+    759
+  ],
+  "tolerance": 10,
+  "problems": [],
+  "passed": true
+}

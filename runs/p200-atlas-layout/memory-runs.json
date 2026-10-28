@@ -1,0 +1,75 @@
+{
+  "what": "client process working set around the three-atlas allocation; sampled every 100 ms",
+  "not_measured": "VRAM. No vendor tooling on this machine; the working set also contains heap, driver and GL upload buffers.",
+  "exact": {
+    "atlas_images": 3,
+    "bytes_per_image": 67108864,
+    "total_bytes": 201326592,
+    "note": "4096x4096x4 proven by reading (4095,4095) successfully and (4096,4096) throwing"
+  },
+  "runs": [
+    {
+      "run": "run1 (committed world.png/result.json)",
+      "samples": 189,
+      "pre_atlas_working_set_mb": 1556.0,
+      "post_atlas_working_set_mb": 2016.9,
+      "atlas_step_delta_mb": 460.9,
+      "peak_working_set_mb": 2247.3,
+      "at_markers": {
+        "[p200-probe] pre-atlas": 1556.0,
+        "[p200-probe] allocated": 2016.9,
+        "[p200-probe] atlas0 image": 2017.0,
+        "[p200-probe] atlas1 image": 2017.0,
+        "[p200-probe] atlas2 image": 2017.0,
+        "[p200-probe] tile-sweep": 2234.8,
+        "[p200-probe] layout-drawn": 2247.3
+      },
+      "note": "working set of the client process; not a VRAM measurement"
+    },
+    {
+      "run": "run2 (work/tmp/p200-run2, not committed)",
+      "samples": 176,
+      "pre_atlas_working_set_mb": 1453.8,
+      "post_atlas_working_set_mb": 2001.9,
+      "atlas_step_delta_mb": 548.1,
+      "peak_working_set_mb": 2206.0,
+      "at_markers": {
+        "[p200-probe] pre-atlas": 1453.8,
+        "[p200-probe] allocated": 2001.9,
+        "[p200-probe] atlas0 image": 2001.9,
+        "[p200-probe] atlas1 image": 2001.9,
+        "[p200-probe] atlas2 image": 2001.9,
+        "[p200-probe] tile-sweep": 2207.0,
+        "[p200-probe] layout-drawn": 2207.3
+      },
+      "note": "working set of the client process; not a VRAM measurement"
+    },
+    {
+      "run": "run3 (work/tmp/p200-run3, not committed)",
+      "samples": 170,
+      "pre_atlas_working_set_mb": 1509.8,
+      "post_atlas_working_set_mb": 1996.3,
+      "atlas_step_delta_mb": 486.5,
+      "peak_working_set_mb": 2192.0,
+      "at_markers": {
+        "[p200-probe] pre-atlas": 1509.8,
+        "[p200-probe] allocated": 1996.3,
+        "[p200-probe] atlas0 image": 1996.3,
+        "[p200-probe] atlas1 image": 1996.3,
+        "[p200-probe] atlas2 image": 1996.3,
+        "[p200-probe] tile-sweep": 2120.0,
+        "[p200-probe] layout-drawn": 2192.1
+      },
+      "note": "working set of the client process; not a VRAM measurement"
+    }
+  ],
+  "delta_mb": {
+    "min": 460.9,
+    "max": 548.1,
+    "median": 486.5
+  },
+  "peak_mb": {
+    "min": 2192.0,
+    "max": 2247.3
+  }
+}

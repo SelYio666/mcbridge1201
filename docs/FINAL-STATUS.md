@@ -103,8 +103,8 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 
 ### 工程与门禁
 
-- 单测 25/25；`verify_evidence` passed；哈希 1270 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165/p181）；mixin 审计 inert=2（`listed=37`；p175 恢复 map mixin、p177 补多地图/展示框、p178 启用 VertexBuffer；剩余两个是官方 1.21.1 已删除的 1.20.4 遗留类，见 `runs/p180-inert-closure/`）；
-- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归 + 1 项死 mixin 防误登记回归 + 1 项 atlas closed 守卫回归 + 1 项 TrashSlot UI empty 键回归 + 1 项 TrashSlot Shift+Delete 回归 + 1 项 TrashSlot right-click undelete 回归 + 1 项 Shulker 网格 wrapper/t2/t4 回归 + 1 项 PCL 一键面板/版本选择回归 + 6 项文档编码守卫回归（`tools/test_review_fixes.py`，共 105 项；本次 **105/105**）接入统一门禁；（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归、p193 Shulker grid 残余、p194 第三 atlas/跨 atlas、p195 交付验证、p196 27 格、p198 文档编码守卫）；`verify_evidence` 另有 `text_encoding` 直接项（`tools/check_text_encoding.py`，跟踪 Markdown 6 条规则，p198）；
+- 单测 25/25；`verify_evidence` passed；哈希 1289 项（以 `runs/SHA256SUMS.txt` 实际行数为准）；桥一致性 0（ImmediatelyFast 端口 jar，p165/p181）；mixin 审计 inert=2（`listed=37`；p175 恢复 map mixin、p177 补多地图/展示框、p178 启用 VertexBuffer；剩余两个是官方 1.21.1 已删除的 1.20.4 遗留类，见 `runs/p180-inert-closure/`）；
+- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归 + 1 项死 mixin 防误登记回归 + 1 项 atlas closed 守卫回归 + 1 项 TrashSlot UI empty 键回归 + 1 项 TrashSlot Shift+Delete 回归 + 1 项 TrashSlot right-click undelete 回归 + 1 项 Shulker 网格 wrapper/t2/t4 回归 + 1 项 PCL 一键面板/版本选择回归 + 6 项文档编码守卫回归 + 3 项转义控制字符回归 + 16 项 atlas 逐 id 落点/并排回归（`tools/test_review_fixes.py`，共 124 项；本次 **124/124**）接入统一门禁；（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归、p193 Shulker grid 残余、p194 第三 atlas/跨 atlas、p195 交付验证、p196 27 格、p198 文档编码守卫、p200 atlas 逐 id 落点）；`verify_evidence` 另有 `text_encoding` 直接项（`tools/check_text_encoding.py`，跟踪 Markdown 8 条规则，p198/p200）；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
 - GitHub Actions：push 触发**已验证可用**（`e9ca30c` run `39796030299`；`742d133` run `39799555425`，check-run `build` success，含 API 推送）；此前“push 无 run”是 GitHub Actions `degraded_performance`（22:18 UTC）导致排队，重推 workflow 文件后索引恢复。若再遇无 run，先看 [githubstatus.com](https://www.githubstatus.com)，再重推 workflow 文件刷新索引。
@@ -264,3 +264,13 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
 - 单屏生存背包 + 服务端 27 种物品 shulker box，mod 状态机 `NO_PREVIEW → COMPACT(J) → FULL(J+K) → COMPACT(松 K) → NO_PREVIEW(松 J)`，`GRID_DRAWITEMS items=27`；`result.json` 7/7 true；证据 `runs/p197-preview-key/`；
 - 门禁：test_review_fixes **99/99**、check_hashes **1254/1254**、verify_evidence passed；无新 release（无 mod 改动，v0.5.6）；
 - 边界：键状态仍在 `InputConstants.isKeyDown` 轮询边界注入，未做 OS 级物理按键；27 格不同 NBT/附魔未测。
+
+## 十五、2026-10-28 更新（p200：三张 atlas 并排 + 逐张 tile 落点）
+
+- **p200**：2050 个 map id 全部**逐个**校验，不是抽样：每个 id 把自身 12 位写进 tile 第 0 行（最亮/最暗调色板色），走公共 update+draw 后从**该 id 报告出来的槽位**读回，`mapping-mismatch=0 pixel-verified=2050 pixel-mismatch=0`；p194 的盲点是 2050 个 id 共用同一个 MapState，槽位错位时"像素等于地图颜色"照样成立；
+- 三张 4096² atlas 首次**同屏并排**：map 1/1025/2049 各持自己的 MapState（共用 state 会让后写的颜色刷掉另外两格），在 GUI `8,8 / 144,8 / 280,8` 画出，截图实测三块 256×256、间距 272、窗口偏移 `[8,31]` 三块一致（`layout-check.json`、`layout-crop.png`）；
+- 内存：三张 NativeImage 201,326,592 字节（4096² 由"读 (4095,4095) 成功、读 (4096,4096) 抛异常"证明，不是假定）；进程工作集分配前 1556.0 → 分配后 2016.9 MB（**+460.9**），重复三次 +460.9/+548.1/+486.5（峰值 2192.0–2247.3）；**显存未测**，报告里不写；
+- 退出 `map-atlas clear atlases=3`，`errors=[]`、`crash=null`；证据 `runs/p200-atlas-layout/`（`memory-runs.json` 三次运行、`repeat-runs.log` 重复运行的关键行摘录、`gate-review-fixes.log`）；
+- 回归：新增 `test_map_atlas_layout_evidence()`（16 条），从提交的日志与截图校验结果**重算** README 里的每个数字，改日志/换截图/报告漂移都会失败；门禁 `124/124`、`check_hashes` **1289/1289**、`verify_evidence` passed、`check_text_encoding` 226 个 md 全绿；
+- **顺手修掉的第二类文档损伤**：`docs/remaining-work.md` 里有两处"转义被解释"——`\tools/pcl_panel.py` 变成 TAB+`ools/…`、`(runs/p195-…)` 变成 `(CRuns/…`（`\t`/`\r` 被写成控制字符），p198 的 6 条规则都看不见。已按上下文修回原文，并给 `tools/check_text_encoding.py` 加 `control-tab`/`control-cr` 两条规则（``` 围栏内的 TAB 合法，不算），配 3 条回归：造 TAB+CR 样本必失败、规则名要出现、围栏内 TAB 不得报；
+- 边界：真实专用服务器下发 1024+ 张地图仍未做；只用到 2050 格（未压满 3072）；VRAM 未测。
