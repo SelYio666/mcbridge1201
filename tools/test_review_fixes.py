@@ -1635,6 +1635,171 @@ def test_trash_concurrent_same_tick() -> None:
               bool(shared), f"ticks={shared} all={sorted(ticks)}")
 
 
+def test_cross_platform_delivery() -> None:
+    """p208: the shipped package in a scrubbed environment, and the platform audit.
+
+    Every number here is recomputed from the evidence files or from the code, so a
+    changed claim without a changed measurement fails.
+    """
+    run = ROOT / "runs" / "p208-cross-platform"
+
+    def load(name: str):
+        path = run / name
+        if not path.exists():
+            check(f"p208: {name} present", False, str(path))
+            return None
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    before = load("behaviour-before.json")
+    after = load("behaviour-after.json")
+    audit_before = load("audit-before.json")
+    audit_after = load("audit.json")
+    shipped = load("clean-host-shipped.json")
+    current = load("clean-host-current.json")
+    if not all((before, after, audit_before, audit_after, shipped, current)):
+        return
+
+    def probe(doc, name):
+        return next((p for p in doc["probes"] if p["name"] == name), {})
+
+    # 1. The failing baseline is kept. Without it "it was broken" is a story.
+    check("p208: the pre-fix probe run really failed",
+          before["passed"] == 2 and before["total"] == 6,
+          f"{before['passed']}/{before['total']}")
+    check("p208: every probe passes after the fix",
+          after["passed"] == 6 and after["total"] == 6,
+          f"{after['passed']}/{after['total']}")
+
+    # 2. Each defect, measured before and after.
+    b = probe(before, "default_root_no_appdata")
+    a = probe(after, "default_root_no_appdata")
+    check("p208: unset APPDATA used to give a relative game root",
+          b.get("actual") == ".minecraft" and not b.get("ok"), str(b.get("actual")))
+    check("p208: the game root is absolute now",
+          bool(a.get("ok")) and Path(a.get("actual", "")).is_absolute(), str(a.get("actual")))
+
+    b = probe(before, "find_java_home_posix")
+    a = probe(after, "find_java_home_posix")
+    check("p208: JAVA_HOME used to be ignored on POSIX",
+          not b.get("ok") and not str(b.get("actual", "")).endswith("bin/java"),
+          str(b.get("actual")))
+    check("p208: JAVA_HOME's bin/java is used now",
+          bool(a.get("ok")) and Path(a.get("actual", "")).name == "java", str(a.get("actual")))
+
+    check("p208: macOS used to be sent to xdg-open",
+          probe(before, "open_folder_darwin").get("actual") == "xdg-open", "")
+    check("p208: macOS gets open now",
+          probe(after, "open_folder_darwin").get("actual") == "open", "")
+    check("p208: the linux and windows openers are unchanged",
+          all(probe(d, "open_folder_linux").get("ok")
+              and probe(d, "open_folder_win32").get("ok")
+              for d in (before, after)), "")
+
+    check("p208: the dead Windows java constant was detected",
+          not probe(before, "java_fallback_unused").get("ok"), "")
+    check("p208: the dead constant is gone",
+          bool(probe(after, "java_fallback_unused").get("ok")), "")
+
+    # 3. The audit: fewer hits, and the leftovers are exactly the known ones.
+    cb, ca = audit_before["counts"], audit_after["counts"]
+    check("p208: the audit found 28 hits with 24 unguarded before",
+          cb["delivery_hits"] == 28 and cb["delivery_hits_bare"] == 24,
+          f"{cb['delivery_hits']}/{cb['delivery_hits_bare']}")
+    check("p208: 22 hits with 4 unguarded after",
+          ca["delivery_hits"] == 22 and ca["delivery_hits_bare"] == 4,
+          f"{ca['delivery_hits']}/{ca['delivery_hits_bare']}")
+    bare = sorted(f"{r['path']}:{h['line']}"
+                  for r in audit_after["static"] if r["kind"] == "delivery"
+                  for h in r["hits"] if not h["handled"])
+    check("p208: the 4 remaining hits are the known Windows-only packaging spots",
+          bare == ["launcher/server.py:75", "tools/build_portable.py:149",
+                   "tools/build_portable.py:150", "tools/test_portable.py:56"], str(bare))
+    check("p208: all delivery modules import under the posix simulation",
+          ca["delivery_modules_ok"] == ca["delivery_modules_imported"] == 4,
+          f"{ca['delivery_modules_ok']}/{ca['delivery_modules_imported']}")
+    check("p208: the audit states that no POSIX kernel was involved",
+          any("POSIX kernel" in c for c in audit_after["caveats"]), "")
+
+    # 4. The scrubbed-environment run: the scrub first, then the package.
+    for label, doc in (("shipped", shipped), ("current sources", current)):
+        failed = [k for k, v in doc["checks"].items() if not v]
+        check(f"p208: clean host ({label}) passes every check",
+              doc["passed"] == doc["total"] == 8 and not failed, str(failed))
+        check(f"p208: clean host ({label}) proves the scrub removed python and java",
+              doc["detail"]["path_lookup"]["python"] is None
+              and doc["detail"]["path_lookup"]["java"] is None, "")
+        prefix = doc["detail"]["interpreter"]["prefix"]
+        check(f"p208: clean host ({label}) ran the bundled interpreter",
+              "p208-clean-host" in prefix and "pkg" in prefix, prefix)
+        check(f"p208: clean host ({label}) shipped no jar",
+              doc["detail"]["package"]["jars"] == [], str(doc["detail"]["package"]["jars"]))
+        check(f"p208: clean host ({label}) starts from run.bat only (portable is Windows-only)",
+              doc["detail"]["package"]["launchers"] == ["run.bat"],
+              str(doc["detail"]["package"]["launchers"]))
+        status = doc["detail"]["status"]
+        check(f"p208: clean host ({label}) reports an empty root and no JVM, not a crash",
+              status["ok"] and status["versions"] == 0 and status["java"] is None
+              and bool(status["java_error"]), json.dumps(status, ensure_ascii=False))
+
+    check("p208: the shipped run used the zip's own sources",
+          shipped["launcher_sources"].startswith("as shipped"), shipped["launcher_sources"])
+    check("p208: the second run overlaid the current sources",
+          current["launcher_sources"].startswith("current worktree over"), current["launcher_sources"])
+    check("p208: the overlay replaced every launcher module in the package",
+          sorted(current["overlaid"]) == ["backend.py", "fetch.py", "mclaunch.py", "server.py"],
+          str(current["overlaid"]))
+    check("p208: the three files this change touched are among them",
+          {"server.py", "mclaunch.py", "backend.py"} <= set(current["overlaid"]), "")
+
+    # 5. The build script refuses to ship a package without its dependencies.
+    log = run / "build-blocked.log"
+    text = log.read_text(encoding="utf-8", errors="replace") if log.exists() else ""
+    check("p208: building without the deps is refused",
+          "refusing to build: minecraft_launcher_lib" in text, text[-160:])
+    check("p208: the refused build does not print done",
+          "done" not in text.splitlines()[-1] if text.strip() else False, "")
+
+    spec = importlib.util.spec_from_file_location("p208_build_portable",
+                                                  ROOT / "tools" / "build_portable.py")
+    build_mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(build_mod)
+    raised = False
+    try:
+        build_mod.require_vendored([], False)
+    except RuntimeError:
+        raised = True
+    check("p208: require_vendored rejects an empty dependency set", raised, "")
+    build_mod.require_vendored([build_mod.REQUIRED_DEP], False)
+    build_mod.require_vendored([], True)
+    check("p208: require_vendored accepts the dep, and the explicit override", True, "")
+
+    # 6. The helpers themselves, on the live modules.
+    sys.path.insert(0, str(ROOT / "launcher"))
+    import mclaunch  # noqa: E402
+    import server  # noqa: E402
+    check("p208: the JVM binary name follows the platform",
+          mclaunch.java_binary("win32") == "java.exe"
+          and mclaunch.java_binary("linux") == "java"
+          and mclaunch.java_binary("darwin") == "java", "")
+
+    real_popen = server.subprocess.Popen
+    real_startfile = getattr(server.os, "startfile", None)
+    try:
+        def boom(*a, **kw):
+            raise FileNotFoundError("xdg-open")
+        server.subprocess.Popen = boom
+        check("p208: a missing opener returns False instead of raising",
+              server.open_in_explorer(ROOT, platform="linux") is False, "")
+        opened = []
+        server.os.startfile = lambda p, *a, **kw: opened.append(p)
+        check("p208: Windows still opens through startfile",
+              server.open_in_explorer(ROOT, platform="win32") is True and bool(opened), "")
+    finally:
+        server.subprocess.Popen = real_popen
+        if real_startfile is not None:
+            server.os.startfile = real_startfile
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -1645,6 +1810,7 @@ def main() -> int:
     test_map_atlas_layout_evidence()
     test_hover_and_heterogeneous_nbt()
     test_trash_concurrent_same_tick()
+    test_cross_platform_delivery()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

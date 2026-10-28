@@ -1358,6 +1358,19 @@ FILES = [
     "runs/p203-trash-concurrent/repeat/round1-result.json",
     "runs/p203-trash-concurrent/gate-review-fixes.log",
     "runs/p203-trash-concurrent/gate-verify.log",
+    "tools/audit_portability.py",
+    "runs/p208-cross-platform/README.md",
+    "runs/p208-cross-platform/probe_behaviour.py",
+    "runs/p208-cross-platform/behaviour-before.json",
+    "runs/p208-cross-platform/behaviour-after.json",
+    "runs/p208-cross-platform/run_clean_host.py",
+    "runs/p208-cross-platform/clean-host-shipped.json",
+    "runs/p208-cross-platform/clean-host-current.json",
+    "runs/p208-cross-platform/audit-before.json",
+    "runs/p208-cross-platform/audit.json",
+    "runs/p208-cross-platform/build-blocked.log",
+    "runs/p208-cross-platform/gate-review-fixes.log",
+    "runs/p208-cross-platform/gate-verify.log",
 ]
 
 

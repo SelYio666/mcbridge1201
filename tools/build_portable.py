@@ -129,6 +129,27 @@ def vendor_deps(site_packages: Path, licenses: Path) -> list[str]:
     return copied
 
 
+REQUIRED_DEP = "minecraft_launcher_lib"
+
+
+def require_vendored(copied: list[str], allow_missing: bool) -> None:
+    """Refuse to ship a package that cannot import its own dependencies.
+
+    vendor_deps() skips what the building interpreter cannot import, so a
+    machine without minecraft-launcher-lib silently produced a zip that starts
+    and then fails on the first download. A build that cannot work is an error,
+    not a warning: --allow-missing-deps exists for a deliberate source-only
+    package.
+    """
+    if allow_missing or REQUIRED_DEP in copied:
+        return
+    raise RuntimeError(
+        f"refusing to build: {REQUIRED_DEP} (and its deps) were not importable by "
+        f"{sys.executable}, so the package would ship without them. Install them "
+        "(pip install minecraft-launcher-lib requests) or pass --allow-missing-deps "
+        "to build a source-only package on purpose.")
+
+
 def write_launchers(stage: Path, label: str) -> None:
     # an explicit bootstrap: the embeddable python's ._pth ignores PYTHONPATH
     (stage / "bootstrap.py").write_text(
@@ -237,7 +258,9 @@ def build(args) -> Path:
         if py_license:
             licenses.mkdir(exist_ok=True)
             shutil.copy2(py_license, licenses / "PYTHON-LICENSE.txt")
-        vendor_deps(py_dir / "Lib" / "site-packages", licenses)
+        copied = vendor_deps(py_dir / "Lib" / "site-packages", licenses)
+        require_vendored(copied, getattr(args, "allow_missing_deps", False))
+        print("vendored dependencies:", len(copied))
 
     write_launchers(stage, label)
 
@@ -258,6 +281,8 @@ def main() -> int:
     ap.add_argument("--label", default="portable", help="suffix for dist/mcbridge-launcher-<label>.zip")
     ap.add_argument("--no-python", action="store_true", help="do not bundle Python (needs system Python)")
     ap.add_argument("--python-zip", default="", help="use a local embeddable python zip")
+    ap.add_argument("--allow-missing-deps", action="store_true",
+                    help="build even if the launcher's dependencies cannot be vendored")
     args = ap.parse_args()
     out = build(args)
     print("done")

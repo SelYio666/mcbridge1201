@@ -37,7 +37,6 @@ FABRIC_META = "https://meta.fabricmc.net/v2"
 FORGE_PROMOS = "https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"
 NEOFORGE_VERSIONS = "https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge"
 ASSET_BASE = "https://resources.download.minecraft.net"
-JAVA_FALLBACK = r"C:\Program Files\Java\jdk-21\bin\java.exe"
 
 
 class Progress:
@@ -1012,38 +1011,74 @@ def ensure_version_libraries(version_id: str, root: Path, progress: Progress | N
     return done
 
 
-def find_runtime_java(root: Path) -> str | None:
+def java_binary(platform: str | None = None) -> str:
+    """The JVM executable name. POSIX calls it `java`, Windows `java.exe`."""
+    platform = platform or sys.platform
+    return "java.exe" if platform.startswith("win") else "java"
+
+
+def local_app_data(platform: str | None = None) -> Path:
+    """Per-user data directory, without assuming the Windows one exists.
+
+    LOCALAPPDATA is authoritative when set (so Windows behaviour is unchanged);
+    otherwise fall back to the platform's own convention instead of the literal
+    ~/AppData/Local, which is empty on POSIX and silently matches nothing.
+    """
+    env = os.environ.get("LOCALAPPDATA")
+    if env:
+        return Path(env)
+    platform = platform or sys.platform
+    if platform.startswith("win"):
+        return Path.home() / "AppData" / "Local"
+    xdg = os.environ.get("XDG_DATA_HOME")
+    return Path(xdg) if xdg else Path.home() / ".local" / "share"
+
+
+def find_runtime_java(root: Path, platform: str | None = None) -> str | None:
     """A Java runtime installed under <root>/runtime by the launcher, if any."""
-    matches = sorted((Path(root) / "runtime").glob("**/bin/java.exe"))
+    matches = sorted((Path(root) / "runtime").glob(f"**/bin/{java_binary(platform)}"))
     return str(matches[0]) if matches else None
 
 
-def find_java() -> str:
+def find_java(platform: str | None = None) -> str:
+    platform = platform or sys.platform
+    exe = java_binary(platform)
+    is_windows = platform.startswith("win")
     env = os.environ.get("MC_JAVA") or os.environ.get("JAVA_HOME")
     if env:
-        p = Path(env) / "bin" / "java.exe"
+        p = Path(env) / "bin" / exe
         if p.exists():
             return str(p)
-        if Path(env).exists() and Path(env).suffix == ".exe":
+        # MC_JAVA may point straight at the binary; check both names so a
+        # POSIX JAVA_HOME is not skipped just because the file lacks ".exe".
+        for alt in ("java", "java.exe"):
+            if (Path(env) / "bin" / alt).exists():
+                return str(Path(env) / "bin" / alt)
+        if Path(env).is_file():
             return str(env)
-    java = shutil.which("java")
+    java = shutil.which(exe) or shutil.which("java")
     if java:
         return java
     candidates = []
-    local = Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local")))
-    for pkg in local.glob("Packages/Microsoft.4297127D64EC6_*/LocalCache/Local/runtime/**/bin/java.exe"):
+    local = local_app_data(platform)
+    arch = "windows-x64" if is_windows else "*"
+    for pkg in local.glob(
+            f"Packages/Microsoft.4297127D64EC6_*/LocalCache/Local/runtime/*/{arch}/*/bin/{exe}"):
         candidates.append(pkg)
-    minecraft_roots = [Path.home() / ".minecraft", Path(r"D:\我的世界\.minecraft")]
+    minecraft_roots = [Path.home() / ".minecraft"]
+    if is_windows:
+        minecraft_roots.append(Path(r"D:\我的世界\.minecraft"))
     for mc in minecraft_roots:
-        candidates += list(mc.glob("runtime/**/bin/java.exe"))
-        candidates += list(mc.glob("versions/**/runtime/bin/java.exe"))
-    candidates += list(Path(r"C:\Program Files\Java").glob("jdk*/bin/java.exe"))
-    candidates += list(Path(r"C:\Program Files\Eclipse Adoptium").glob("jdk*/bin/java.exe"))
+        candidates += list(mc.glob(f"runtime/**/bin/{exe}"))
+        candidates += list(mc.glob(f"versions/**/runtime/bin/{exe}"))
+    if is_windows:
+        candidates += list(Path(r"C:\Program Files\Java").glob(f"jdk*/bin/{exe}"))
+        candidates += list(Path(r"C:\Program Files\Eclipse Adoptium").glob(f"jdk*/bin/{exe}"))
     if candidates:
         return str(sorted(candidates)[-1])
     roots = [Path(__file__).resolve().parent.parent, Path(__file__).resolve().parent.parent.parent]
     for root in roots:
-        for cand in root.glob(".toolchain/jdk/bin/java.exe"):
+        for cand in root.glob(f".toolchain/jdk/bin/{exe}"):
             return str(cand)
     raise RuntimeError("Java not found: set JAVA_HOME or MC_JAVA")
 def load_version(version_id: str, root: Path) -> dict:

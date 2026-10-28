@@ -85,6 +85,16 @@ mcbridge-launcher-0.3.5/
 
 包内 `README-PORTABLE.txt` 写了给小白看的三句话上手说明；更完整的教程在 `docs/guide.md`。
 
+**依赖缺失时不会静默出包**：`vendor_deps()` 只复制构建机 import 得到的依赖，缺
+`minecraft-launcher-lib` 时会直接 `RuntimeError` 退出（rc=1），不会产出一个"能启动、按下载就报错"的包。
+如果确实要出一个不含依赖的源码包，显式加 `--allow-missing-deps`。
+
+**跨平台边界（2026-10-28 实测）**：便携包**按构造只能用 Windows**——内嵌的是
+`python-{pyver}-embed-amd64`，启动脚本只有 `run.bat`（没有 `.sh`），包内也没有任何 `.jar`。
+`launcher/` 本身在 POSIX 上可以导入（`runs/p208-cross-platform/`：`sys.platform=linux` + 屏蔽
+Windows-only 模块后 4/4 模块可导入），但要真跑 Linux/macOS 需要另一套嵌入式运行时与另一份启动脚本，
+目前**没有做**，也没有声称能做。源码路径（clone + 系统 Python 3.10+ + JDK 21）是跨平台的。
+
 打完包可以这样自检（离线部分：内置 Python、依赖、打包后的 `verify`、页面与接口）：
 
 ```powershell

@@ -1,0 +1,67 @@
+{
+  "generated": "2026-10-28T23:14:47",
+  "package": "dist\\mcbridge-launcher-0.5.6.zip",
+  "launcher_sources": "as shipped in mcbridge-launcher-0.5.6.zip",
+  "overlaid": [],
+  "scrub": {
+    "PATH": "C:\\Windows\\System32;C:\\Windows",
+    "home": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p208-clean-host\\home",
+    "temp": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p208-clean-host\\tmp"
+  },
+  "checks": {
+    "no_system_python": true,
+    "no_system_java": true,
+    "bundled_python": true,
+    "no_jars_shipped": true,
+    "interpreter_is_bundled": true,
+    "hostile_pythonhome_ignored": true,
+    "api_status": true,
+    "guide_page": true
+  },
+  "passed": 8,
+  "total": 8,
+  "detail": {
+    "path_lookup": {
+      "python": null,
+      "java": null,
+      "PATH": "C:\\Windows\\System32;C:\\Windows"
+    },
+    "package": {
+      "zip": "mcbridge-launcher-0.5.6.zip",
+      "bytes": 11960113,
+      "entries": 231,
+      "launchers": [
+        "run.bat"
+      ],
+      "jars": []
+    },
+    "interpreter": {
+      "rc": 0,
+      "prefix": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p208-clean-host\\pkg\\mcbridge-launcher-0.5.6\\python",
+      "executable": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p208-clean-host\\pkg\\mcbridge-launcher-0.5.6\\python\\python.exe",
+      "stderr": ""
+    },
+    "hostile_env": {
+      "rc": 0,
+      "prefix": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p208-clean-host\\pkg\\mcbridge-launcher-0.5.6\\python",
+      "stderr": ""
+    },
+    "status": {
+      "ok": true,
+      "keys": [
+        "java",
+        "java_error",
+        "root",
+        "versions"
+      ],
+      "root": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p208-clean-host\\home\\.mcbridge\\mc",
+      "versions": 0,
+      "java": null,
+      "java_error": "Java not found: set JAVA_HOME or MC_JAVA"
+    }
+  },
+  "boundary": [
+    "same machine, different environment - not a different computer",
+    "Windows and the network are still this host's"
+  ]
+}

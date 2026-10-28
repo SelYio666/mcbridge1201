@@ -32,13 +32,18 @@ LOADERS = ("forge", "neoforge")
 
 def pick_java(mc: str) -> str | None:
     """Pick an installed official runtime that matches the game's Java era."""
-    import os
     import re
+    import sys
 
-    local = Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local")))
-    rt = local / "Packages"
+    from mclaunch import java_binary, local_app_data
+
+    rt = local_app_data() / "Packages"
+    # The Store runtime lives under windows-x64 on Windows; elsewhere the same
+    # layout uses a different directory name, so match any of them.
+    arch = "windows-x64" if sys.platform.startswith("win") else "*"
     runtimes = {}
-    for p in rt.glob("Microsoft.4297127D64EC6_*/LocalCache/Local/runtime/*/windows-x64/*/bin/java.exe"):
+    for p in rt.glob(f"Microsoft.4297127D64EC6_*/LocalCache/Local/runtime/*/{arch}/*/bin/"
+                     f"{java_binary()}"):
         runtimes.setdefault(p.parent.parent.name, str(p))
     try:
         parts = [int(x) for x in re.findall(r"\d+", mc)[:3]]

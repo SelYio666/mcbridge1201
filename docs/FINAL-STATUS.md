@@ -325,3 +325,35 @@ p192 结尾留下的 "concurrent same-tick trash operations from two clients" �
 - 边界：四个以上客户端、同一玩家的同 tick 两次操作、跨机器真实延迟未测；本轮截图未拍成
   （`_grab_window` 需要 Pillow，本机没有），两个客户端的 UI 状态是从日志的 `P203_TRASH`（含
   `carried`）读的，不是看图。
+
+## 十九、2026-10-28 更新（p208：干净环境交付验证 + 跨平台审计）
+
+p195 结尾的 "clean-host portable remain open" 与 p201 的 "Verified on Windows / Git for Windows only" 各关一半。
+
+- **干净环境**：`tools/test_portable.py` 用的是 `dict(os.environ, ...)`，继承调用者环境，因此只能证明
+  "在造它的机器上能跑"。`runs/p208-cross-platform/run_clean_host.py` 改为构造环境：`PATH` 只留
+  `System32` 与 `Windows`，`PYTHON*`/`JAVA_HOME` 移除，`HOME`/`USERPROFILE`/`TEMP`/`APPDATA`/
+  `LOCALAPPDATA` 全指向新建空目录；**先证明剥干净**（同环境 `which python`/`which java` 均为 `None`），
+  再验证包：`sys.prefix` 落在解压目录内、注入 `PYTHONHOME`/`PYTHONPATH` 不影响、`/api/status` 200、
+  `/guide` 200、不含任何 `.jar`、只有 `run.bat`。**8/8**，照发原件与叠加当前源码各一份；
+- **四个真缺陷**（`probe_behaviour.py` 修前 2/6 → 修后 6/6）：`default_root()` 在 `APPDATA` 未设置时
+  得到相对路径 `.minecraft`（会认领启动器 CWD，这条在纯 Windows 上就能复现）；`find_java()` 只找
+  `bin/java.exe`，POSIX 下 `JAVA_HOME` 被无视（探针修前返回的是另一个 JDK）；macOS 被送进 `xdg-open`
+  且无异常保护；一个从未引用的 `C://Program Files\Java\...` 常量（已删）。`LOCALAPPDATA` 的回退与
+  `pick_java` 的 `windows-x64` 目录名也改成按平台取。Windows 侧返回值实测不变；
+- **打包脚本的假成功**：`vendor_deps()` 静默跳过 import 不到的依赖，调用处忽略返回值，零依赖也
+  `done`+退出码 0。新增 `require_vendored`，缺 `minecraft_launcher_lib` 即 `rc=1` 并拒绝出包
+  （`--allow-missing-deps` 为显式开关），`build-blocked.log` 是那一跑的原始输出；
+- **跨平台只审计**：WSL 在本机被安全策略拦住（Program Blacklist），Linux 未执行，不绕过。静态命中
+  28→22、**未保护 24→4**（剩余 4 条全是便携包的 Windows-only 构造：`python-embed-amd64` + `run.bat`）；
+  POSIX 模拟（`sys.platform=linux` + 屏蔽 `winreg`/`msvcrt`/`_winapi`）下交付模块 **4/4** 可导入，
+  说明启动器没有 Windows-only 的导入依赖；
+- 三次"测量工具坏了"被记下来（翻 `sys.platform` 太早导致 `_posixsubprocess`、翻 `os.name` 导致
+  `PosixPath` 抛错、中文路径下内嵌 Python 用 cp936 写 stdout），详见 `runs/p208-cross-platform/README.md`；
+- 回归：新增 `test_cross_platform_delivery()`（39 条），从四份 JSON 与两份日志**重算**，并直接断言
+  `require_vendored` 的行为与 `java_binary()`/`open_in_explorer()` 的分支；
+- 门禁：`test_review_fixes` **227/227**、`check_hashes` **1337/1337**、`verify_evidence` passed、
+  228 个 md 全绿；无新 release（v0.5.6 不变）；
+- 边界：同一台机器不同环境而非另一台电脑；无 POSIX 内核参与；便携包按构造 Windows-only；
+  `install_jvm_runtime` 的下载未跑；完整重打包因本机无 `minecraft_launcher_lib` 未做，改用的是
+  "当前源码叠加到 0.5.6 包"。

@@ -1,0 +1,22 @@
+python runtime: 0074048458a5 11133606 bytes
+  missing dependency, skipped: minecraft_launcher_lib
+  missing dependency, skipped: requests
+  missing dependency, skipped: certifi
+  missing dependency, skipped: urllib3
+  missing dependency, skipped: idna
+  missing dependency, skipped: charset_normalizer
+  missing dependency, skipped: typing_extensions.py
+Traceback (most recent call last):
+  File "C:\Users\27682\Documents\新建文件夹\mcbridge1201\tools\build_portable.py", line 293, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "C:\Users\27682\Documents\新建文件夹\mcbridge1201\tools\build_portable.py", line 287, in main
+    out = build(args)
+  File "C:\Users\27682\Documents\新建文件夹\mcbridge1201\tools\build_portable.py", line 262, in build
+    require_vendored(copied, getattr(args, "allow_missing_deps", False))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\27682\Documents\新建文件夹\mcbridge1201\tools\build_portable.py", line 146, in require_vendored
+    raise RuntimeError(
+    ...<3 lines>...
+        "to build a source-only package on purpose.")
+RuntimeError: refusing to build: minecraft_launcher_lib (and its deps) were not importable by C:\Users\27682\.workbuddy\binaries\python\versions\3.13.12\python.exe, so the package would ship without them. Install them (pip install minecraft-launcher-lib requests) or pass --allow-missing-deps to build a source-only package on purpose.

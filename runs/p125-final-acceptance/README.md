@@ -327,9 +327,9 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 
 | 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | ✅ 共 **188 项**（本次 **188/188**；p202 新增 32 条悬停/异质 NBT，p203 新增 26 条并发 trash） |
-| `python tools/check_hashes.py` | ✅ **1324/1324**（mismatch 0 / missing 0） |
-| `python tools/verify_evidence.py` | ✅ passed（`text_encoding` 228 个 md 全绿、`review_regressions` 188/188） |
+| `python tools/test_review_fixes.py` | ✅ 共 **227 项**（本次 **227/227**；p202 悬停/异质 NBT 32 条、p203 并发 trash 26 条、p208 交付/跨平台 39 条） |
+| `python tools/check_hashes.py` | ✅ **1337/1337**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（`text_encoding` 228 个 md 全绿、`review_regressions` 227/227） |
 | 悬停来源 | ✅ 探针不写鼠标字段；外部进程移真实光标；`glfw`/`raw`/`mouse`/`target` 四者同为 `686,378`；`index=10 keysSent=false` |
 | 悬停更正 | ✅ 控制组只用 `SetCursorPos`、窗口置顶也能悬停 → 原"这台机器收不到 OS 光标"的结论作废（原因是窗口没置顶） |
 | 27 格异质 | ✅ `stacks=27 distinctComponents=27 distinctItems=27 distinctNames=27`；27 个 index 全部画出；27 个不同 payload |
@@ -347,4 +347,20 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | 隔离 | A 最终 `trash=empty`、B `trash=minecraft:diamondx3`，B 客户端 `carried=minecraft:diamondx1` |
 | 登录重置 | 加入时各有一条 `seeding=false … stack=empty`（tick 278 / 620），与 p65 的上游语义一致 |
 | 独立复现 | `repeat/round1-*` 那一轮两次写入同在 tick 905 |
-| 门禁 | `test_review_fixes` **188/188**、`check_hashes` **1324/1324**、`verify_evidence` passed |
+| 门禁 | `test_review_fixes` **227/227**、`check_hashes` **1337/1337**、`verify_evidence` passed |
+
+## p208 干净环境与跨平台审计增量（2026-10-28，正常 UTF-8）
+
+| 项 | 结果 |
+|---|---|
+| 剥离环境 | `PATH=C://Windows//System32;C://Windows`，`PYTHON*`/`JAVA_HOME` 移除，`HOME`/`APPDATA`/`LOCALAPPDATA` 指向新建空目录 |
+| 剥干净的证据 | 同环境 `which python`/`which java` 均为 `None` |
+| 照发原件跑包 | **8/8**（`clean-host-shipped.json`） |
+| 叠加当前源码跑包 | **8/8**（`clean-host-current.json`，`overlaid` 4 个模块） |
+| 干净环境的接口 | `/api/status` 200，`versions: 0`，`java: null`，`java_error: "Java not found: ..."` |
+| 包内容 | 231 条目、0 个 `.jar`、启动脚本只有 `run.bat` |
+| 平台探针 | 修前 **2/6** → 修后 **6/6** |
+| 静态命中 | 28（未保护 24）→ 22（未保护 4） |
+| POSIX 模拟导入 | 4/4 |
+| 依赖缺失时打包 | `rc=1` 拒绝，`build-blocked.log` |
+| 门禁 | `test_review_fixes` **227/227**、`check_hashes` **1337/1337** |

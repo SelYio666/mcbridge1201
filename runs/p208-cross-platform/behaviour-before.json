@@ -1,0 +1,54 @@
+{
+  "generated": "2026-10-28T23:09:03",
+  "host": {
+    "sys.platform": "win32",
+    "os.name": "nt",
+    "python": "3.13.14"
+  },
+  "probes": [
+    {
+      "name": "default_root_no_appdata",
+      "expect": "an absolute path outside the current directory",
+      "actual": ".minecraft",
+      "ok": false,
+      "detail": "APPDATA unset -> Path('')/'.minecraft' is relative and .exists() matched the decoy; the launcher would adopt its own CWD"
+    },
+    {
+      "name": "find_java_home_posix",
+      "expect": "JAVA_HOME honoured -> C:\\Users\\27682\\AppData\\Local\\Temp\\workbuddy-update-x64-workbuddy\\p208-jdk-648bhig2\\bin\\java",
+      "actual": "C:\\Users\\27682\\AppData\\Local\\Packages\\Microsoft.4297127D64EC6_8wekyb3d8bbwe\\LocalCache\\Local\\runtime\\java-runtime-epsilon\\windows-x64\\java-runtime-epsilon\\bin\\java.exe",
+      "ok": false,
+      "detail": "looked for bin/java.exe, so JAVA_HOME was skipped and another JDK won"
+    },
+    {
+      "name": "open_folder_darwin",
+      "expect": "open used",
+      "actual": "xdg-open",
+      "ok": false,
+      "detail": "chose 'xdg-open'"
+    },
+    {
+      "name": "open_folder_linux",
+      "expect": "xdg-open used",
+      "actual": "xdg-open",
+      "ok": true,
+      "detail": "chose 'xdg-open'"
+    },
+    {
+      "name": "open_folder_win32",
+      "expect": "startfile used",
+      "actual": "startfile",
+      "ok": true,
+      "detail": "chose 'startfile'"
+    },
+    {
+      "name": "java_fallback_unused",
+      "expect": "the constant is either used or absent",
+      "actual": "defined=True occurrences=1",
+      "ok": false,
+      "detail": "hardcoded C:\\Program Files\\Java\\... but never referenced"
+    }
+  ],
+  "passed": 2,
+  "total": 6
+}

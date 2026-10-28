@@ -69,11 +69,17 @@ def run_source_check(root: Path) -> None:
 
 
 def default_root() -> str:
-    cands = [
-        Path(os.environ.get("APPDATA", "")) / ".minecraft",
-        Path(r"D:\我的世界\.minecraft"),
-        Path.home() / ".minecraft",
-    ]
+    cands = []
+    # APPDATA is absent on POSIX; Path("") is ".", so an unguarded candidate
+    # would silently adopt whatever directory the launcher was started in.
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        cands.append(Path(appdata) / ".minecraft")
+    if os.name == "nt":
+        cands.append(Path(r"D:\我的世界\.minecraft"))
+    cands.append(Path.home() / ".minecraft")
+    if os.name != "nt":
+        cands.append(Path.home() / ".local" / "share" / "minecraft")
     for c in cands:
         try:
             if c.exists() and (c / "versions").exists():
@@ -179,15 +185,23 @@ def dir_target(root, target: str, version_id: str = ""):
     return path
 
 
-def open_in_explorer(path) -> None:
-    """Open a folder in the OS file manager (Windows: explorer)."""
-    path = Path(path)
-    if os.name == "nt":
-        os.startfile(str(path))  # noqa: S606 - local launcher opening a fixed folder
-    else:
-        import subprocess
+def open_in_explorer(path, platform: str | None = None) -> bool:
+    """Open a folder in the OS file manager.
 
-        subprocess.Popen(["xdg-open", str(path)])
+    Windows uses os.startfile, macOS `open`, everything else `xdg-open`. Returns
+    False when no opener is available instead of raising: a missing xdg-open
+    should not turn the HTTP request that asked for it into a 500.
+    """
+    path = Path(path)
+    platform = platform or sys.platform
+    try:
+        if platform.startswith("win"):
+            os.startfile(str(path))  # noqa: S606 - local launcher opening a fixed folder
+            return True
+        subprocess.Popen(["open" if platform == "darwin" else "xdg-open", str(path)])  # noqa: S603
+        return True
+    except (OSError, AttributeError):
+        return False
 
 
 def sync_profiles(root) -> list[str]:

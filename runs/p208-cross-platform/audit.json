@@ -1,0 +1,2201 @@
+{
+  "generated": "2026-10-28T23:11:47",
+  "host": {
+    "sys.platform": "win32",
+    "os.name": "nt",
+    "python": "3.13.14"
+  },
+  "simulation": {
+    "sys.platform": "linux",
+    "os.name": "nt",
+    "blocked_modules": [
+      "winreg",
+      "msvcrt",
+      "_winapi",
+      "_msi",
+      "winsound",
+      "win32api",
+      "win32con",
+      "win32com",
+      "pywintypes",
+      "ntsecuritycon"
+    ]
+  },
+  "caveats": [
+    "No POSIX kernel is involved: this is an import-level audit on Windows.",
+    "The dynamic pass flips sys.platform in a subprocess and blocks Windows-only modules; os.name is left alone because a Windows CPython cannot instantiate PosixPath, which would manufacture a failure instead of measuring one.",
+    "It therefore proves the import graph only: it cannot observe path semantics (separators, case sensitivity, locking, signals) that need a real POSIX host.",
+    "Harness hits are authoring tooling (runs/, probes/); they are counted but not treated as delivery defects."
+  ],
+  "counts": {
+    "tracked_py": 108,
+    "delivery_files_with_hits": 4,
+    "delivery_hits": 22,
+    "harness_hits": 172,
+    "delivery_hits_docstring": 6,
+    "delivery_hits_guarded": 12,
+    "delivery_hits_bare": 4,
+    "delivery_modules_imported": 4,
+    "delivery_modules_ok": 4
+  },
+  "delivery_hits_by_pattern": {
+    "appdata": 5,
+    "drive-letter": 4,
+    "java.exe": 3,
+    "os.name-branch": 1,
+    "os.startfile": 2,
+    "python.exe": 4,
+    "xdg-open": 3
+  },
+  "delivery_hits_by_state": {
+    "docstring": 6,
+    "guarded": 12,
+    "bare": 4
+  },
+  "static": [
+    {
+      "path": "launcher/mclaunch.py",
+      "kind": "delivery",
+      "hits": [
+        {
+          "line": 1015,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "\"\"\"The JVM executable name. POSIX calls it `java`, Windows `java.exe`.\"\"\"",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 1017,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "return \"java.exe\" if platform.startswith(\"win\") else \"java\"",
+          "guard": "return \"java.exe\" if platform.startswith(\"win\") else \"java\"",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 1023,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "LOCALAPPDATA is authoritative when set (so Windows behaviour is unchanged);",
+          "guard": "return \"java.exe\" if platform.startswith(\"win\") else \"java\"",
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 1027,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "env = os.environ.get(\"LOCALAPPDATA\")",
+          "guard": "return \"java.exe\" if platform.startswith(\"win\") else \"java\"",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 1054,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "for alt in (\"java\", \"java.exe\"):",
+          "guard": "is_windows = platform.startswith(\"win\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 1070,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "minecraft_roots.append(Path(r\"D:\\我的世界\\.minecraft\"))",
+          "guard": "if is_windows:",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 1075,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "candidates += list(Path(r\"C:\\Program Files\\Java\").glob(f\"jdk*/bin/{exe}\"))",
+          "guard": "if is_windows:",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 1075,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "candidates += list(Path(r\"C:\\Program Files\\Java\").glob(f\"jdk*/bin/{exe}\"))",
+          "guard": "if is_windows:",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 1076,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "candidates += list(Path(r\"C:\\Program Files\\Eclipse Adoptium\").glob(f\"jdk*/bin/{exe}\"))",
+          "guard": "if is_windows:",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 1076,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "candidates += list(Path(r\"C:\\Program Files\\Eclipse Adoptium\").glob(f\"jdk*/bin/{exe}\"))",
+          "guard": "if is_windows:",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "launcher/server.py",
+      "kind": "delivery",
+      "hits": [
+        {
+          "line": 75,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "appdata = os.environ.get(\"APPDATA\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 78,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "if os.name == \"nt\":",
+          "guard": "if os.name == \"nt\":",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 79,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "cands.append(Path(r\"D:\\我的世界\\.minecraft\"))",
+          "guard": "if os.name == \"nt\":",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 191,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "Windows uses os.startfile, macOS `open`, everything else `xdg-open`. Returns",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 191,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "Windows uses os.startfile, macOS `open`, everything else `xdg-open`. Returns",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 192,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "False when no opener is available instead of raising: a missing xdg-open",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 199,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "os.startfile(str(path))  # noqa: S606 - local launcher opening a fixed folder",
+          "guard": "if platform.startswith(\"win\"):",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 201,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "subprocess.Popen([\"open\" if platform == \"darwin\" else \"xdg-open\", str(path)])  # noqa: S603",
+          "guard": "if platform.startswith(\"win\"):",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p181-map-atlas-lifecycle/build_probe.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 25,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p183-trash-key/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 36,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p183-trash-key/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 92,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 110,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 111,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 127,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 151,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 151,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 213,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p184-trash-delete-all/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 36,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p184-trash-delete-all/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 91,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 109,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 110,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 126,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 153,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 153,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 223,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p185-trash-undelete-right/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 36,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p185-trash-undelete-right/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 91,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 109,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 110,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 124,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 144,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 144,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 206,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p186-shulker-grid-client-item/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 32,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p186-shulker-grid-client-item/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 64,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 82,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 83,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 145,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 145,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 211,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p187-grid-draw-probe/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 24,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "SPONGE = sorted(Path(r\"D:\\我的世界\\.minecraft\\libraries\\net\\fabricmc\\sponge-mixin\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 37,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p187-grid-draw-probe/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 77,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 102,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "if not ctypes.windll.user32.GetClientRect(hwnd, ctypes.byref(rect)):",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 108,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 109,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 194,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 194,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p188-atlas-overflow/build_probe.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 26,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "SPONGE = sorted(Path(r\"D:\\我的世界\\.minecraft\\libraries\\net\\fabricmc\\sponge-mixin\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 34,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p189-trash-creative/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 36,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p189-trash-creative/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 106,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 124,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 125,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 141,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 151,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 190,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 190,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 261,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p190-trash-multi/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 37,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p190-trash-multi/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 104,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 122,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 123,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 142,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 150,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 186,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 186,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 287,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p191-trash-residual/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 36,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p191-trash-residual/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 107,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 125,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 126,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 143,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 144,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 163,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 206,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 206,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 260,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p192-trash-multi-active/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 37,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p192-trash-multi-active/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 144,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 144,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p193-shulker-grid-residual/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 37,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p193-shulker-grid-residual/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 67,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 68,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 99,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 104,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 162,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 162,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p194-atlas-third/build_probe.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 34,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p196-shulker-grid27/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 37,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p196-shulker-grid27/make_video_simple.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 43,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "ZH = \"C:/Windows/Fonts/msyh.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 44,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "ZH_B = \"C:/Windows/Fonts/msyhbd.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 45,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "MONO_B = \"C:/Windows/Fonts/consolab.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p196-shulker-grid27/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 67,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 68,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 99,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 104,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 162,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 162,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p197-preview-key/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 37,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p197-preview-key/make_video.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 53,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_ZH = \"C:/Windows/Fonts/msyh.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 54,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_ZH_BOLD = \"C:/Windows/Fonts/msyhbd.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 55,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_MONO = \"C:/Windows/Fonts/consola.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 56,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_MONO_BOLD = \"C:/Windows/Fonts/consolab.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p197-preview-key/make_video_simple.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 43,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "ZH = \"C:/Windows/Fonts/msyh.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 44,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "ZH_B = \"C:/Windows/Fonts/msyhbd.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 45,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "MONO_B = \"C:/Windows/Fonts/consolab.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p197-preview-key/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 148,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 148,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p200-atlas-layout/build_probe.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 37,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p200-atlas-layout/run_client.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 85,
+          "pattern": "sys.platform-branch",
+          "why": "same, keyed on platform string",
+          "code": "if sys.platform == \"win32\":",
+          "guard": "if sys.platform == \"win32\":",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 86,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "kernel32 = ctypes.windll.kernel32",
+          "guard": "if sys.platform == \"win32\":",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 87,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "psapi = ctypes.windll.psapi",
+          "guard": "if sys.platform == \"win32\":",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 111,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "ctypes.windll.kernel32.CloseHandle(self.handle)",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p202-hover-nbt/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 41,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p202-hover-nbt/check_snbt.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 32,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / \"java.exe\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p202-hover-nbt/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 135,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 157,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 175,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 199,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "return int(ctypes.windll.user32.WindowFromPoint(point) or 0)",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 205,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "return int(ctypes.windll.user32.GetAncestor(hwnd, 2) or 0)  # GA_ROOT",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 213,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "ctypes.windll.user32.GetCursorPos(ctypes.byref(point))",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 221,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 237,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 325,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 325,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p203-trash-concurrent/build.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 39,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p203-trash-concurrent/run.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 190,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 190,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "guard": "java = Path(java_home) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "runs/p74-two-client/launch_client.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 7,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "MC = pathlib.Path(r\"D:\\我的世界\\.minecraft\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 10,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "JAVA = pathlib.Path(r\"C:\\Users\\27682\\AppData\\Local\\Packages\\Microsoft.4297127D64EC6_8wekyb3d8bbwe\\LocalCache\\Local\\runti",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 10,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "JAVA = pathlib.Path(r\"C:\\Users\\27682\\AppData\\Local\\Packages\\Microsoft.4297127D64EC6_8wekyb3d8bbwe\\LocalCache\\Local\\runti",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 11,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "OUT = pathlib.Path(r\"C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p50-client\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p75-two-client-server/launch_client.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 7,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "MC = pathlib.Path(r\"D:\\我的世界\\.minecraft\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 10,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "JAVA = pathlib.Path(r\"C:\\Users\\27682\\AppData\\Local\\Packages\\Microsoft.4297127D64EC6_8wekyb3d8bbwe\\LocalCache\\Local\\runti",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 10,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "JAVA = pathlib.Path(r\"C:\\Users\\27682\\AppData\\Local\\Packages\\Microsoft.4297127D64EC6_8wekyb3d8bbwe\\LocalCache\\Local\\runti",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 11,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "OUT = pathlib.Path(r\"C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p50-client\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/build_bridges.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 28,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = os.path.join(java_home, \"bin\", \"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = os.path.join(java_home, \"bin\", \"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "tools/build_immediatelyfast_port.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 60,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = Path(java_home) / \"bin\" / (\"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "tools/build_mixins.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 32,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "javac = os.path.join(java_home, \"bin\", \"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "guard": "javac = os.path.join(java_home, \"bin\", \"javac.exe\" if os.name == \"nt\" else \"javac\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "tools/build_portable.py",
+      "kind": "delivery",
+      "hits": [
+        {
+          "line": 149,
+          "pattern": "python.exe",
+          "why": "same for the interpreter",
+          "code": "\"if exist \\\"%~dp0python\\\\python.exe\\\" (\\r\\n\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 150,
+          "pattern": "python.exe",
+          "why": "same for the interpreter",
+          "code": "\"  \\\"%~dp0python\\\\python.exe\\\" \\\"%~dp0bootstrap.py\\\"\\r\\n\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 187,
+          "pattern": "python.exe",
+          "why": "same for the interpreter",
+          "code": "- 杀毒软件拦截：本包没有 exe 安装器，只有 python.exe（官方嵌入式运行时），可加信任。",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "tools/build_shulker_preview_companion.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 30,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "base = Path(r\"D:\\我的世界\\.minecraft\\libraries\\net\\fabricmc\\sponge-mixin\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/build_trashslot_creative_fix.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 25,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "base = Path(r\"D:\\我的世界\\.minecraft\\libraries\\net\\fabricmc\\sponge-mixin\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/from_source_install.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 297,
+          "pattern": "percent-env",
+          "why": "cmd.exe variable syntax",
+          "code": "\"\"\"Best-effort PCL game directory: env override, PCL Setup.ini, then %APPDATA%/.minecraft.\"\"\"",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 297,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "\"\"\"Best-effort PCL game directory: env override, PCL Setup.ini, then %APPDATA%/.minecraft.\"\"\"",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 305,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "appdata = os.environ.get(\"APPDATA\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 385,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "os.startfile(str(root))  # type: ignore[attr-defined]",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 440,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "os.startfile(str(root))  # type: ignore[attr-defined]",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/hash_evidence.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 1382,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "raise SystemExit(\"manifest lists missing files:\\n  \" + \"\\n  \".join(missing))",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/make_pcl_onclick_video.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 32,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CN = \"C:/Windows/Fonts/msyh.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 33,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CN_B = \"C:/Windows/Fonts/msyhbd.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 34,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CODE = \"C:/Windows/Fonts/consola.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/make_player_guide_video.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 30,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CN = \"C:/Windows/Fonts/msyh.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 31,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CN_B = \"C:/Windows/Fonts/msyhbd.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 32,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CODE = \"C:/Windows/Fonts/consola.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/make_promo_v2.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 14,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CN = \"C:/Windows/Fonts/msyh.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 15,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CN_B = \"C:/Windows/Fonts/msyhbd.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 16,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CODE = \"C:/Windows/Fonts/consola.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 17,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CODE_B = \"C:/Windows/Fonts/consolab.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/make_promo_video.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 14,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CN = \"C:/Windows/Fonts/msyh.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 15,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CN_B = \"C:/Windows/Fonts/msyhbd.ttc\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 16,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CODE = \"C:/Windows/Fonts/consola.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 17,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "FONT_CODE_B = \"C:/Windows/Fonts/consolab.ttf\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 179,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "(\"启动就崩\", \"NoSuchMethodError:\\nclass_634.method_2883\", AMBER),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/pcl_panel.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 187,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "os.startfile(path)  # type: ignore[attr-defined]",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/remap_server.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 20,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "\"mcbridge1201.bat\" if os.name == \"nt\" else \"mcbridge1201\")",
+          "guard": "\"mcbridge1201.bat\" if os.name == \"nt\" else \"mcbridge1201\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    },
+    {
+      "path": "tools/run_server.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 30,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "ap.add_argument(\"--java\", default=os.environ.get(\"JAVA_HOME\", \"\") + r\"\\bin\\java.exe\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/test_launcher_e2e.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 45,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 46,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "gdi32 = ctypes.windll.gdi32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 114,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "user32 = ctypes.windll.user32",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/test_portable.py",
+      "kind": "delivery",
+      "hits": [
+        {
+          "line": 56,
+          "pattern": "python.exe",
+          "why": "same for the interpreter",
+          "code": "py = pkg / \"python\" / \"python.exe\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/test_review_fixes.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 45,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "if os.name == \"nt\":",
+          "guard": "if os.name == \"nt\":",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 55,
+          "pattern": "os.name-branch",
+          "why": "behaviour silently takes the non-nt branch",
+          "code": "if env and (Path(env) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")).exists():",
+          "guard": "if os.name == \"nt\":",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 55,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "if env and (Path(env) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")).exists():",
+          "guard": "if os.name == \"nt\":",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 60,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "Path(r\"C:\\Program Files\\Java\"),",
+          "guard": "if env and (Path(env) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")).exists():",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 60,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "Path(r\"C:\\Program Files\\Java\"),",
+          "guard": "if env and (Path(env) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")).exists():",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 61,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "Path(r\"C:\\Program Files\\Eclipse Adoptium\"),",
+          "guard": "if env and (Path(env) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")).exists():",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 61,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "Path(r\"C:\\Program Files\\Eclipse Adoptium\"),",
+          "guard": "if env and (Path(env) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")).exists():",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 65,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "found = sorted(c.glob(\"jdk*/bin/java.exe\"))",
+          "guard": "if env and (Path(env) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")).exists():",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 69,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "elif (c / \"bin\" / \"java.exe\").exists():",
+          "guard": "if env and (Path(env) / \"bin\" / (\"java.exe\" if os.name == \"nt\" else \"java\")).exists():",
+          "in_docstring": false,
+          "handled": true
+        },
+        {
+          "line": 268,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "for bad_target, bad_vid in ((\"../\", \"\"), (\"C:/Windows\", \"\"), (\"version\", \"..\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "tools/verify_evidence.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 122,
+          "pattern": "sys.platform-branch",
+          "why": "same, keyed on platform string",
+          "code": "\"mcbridge1201.bat\" if sys.platform == \"win32\" else \"mcbridge1201\")",
+          "guard": "\"mcbridge1201.bat\" if sys.platform == \"win32\" else \"mcbridge1201\")",
+          "in_docstring": false,
+          "handled": true
+        }
+      ]
+    }
+  ],
+  "dynamic": [
+    {
+      "path": "launcher/backend.py",
+      "module": "backend",
+      "ok": true,
+      "rc": 0,
+      "stdout": "AUDIT_OK backend",
+      "stderr": [],
+      "seconds": 0.63
+    },
+    {
+      "path": "launcher/fetch.py",
+      "module": "fetch",
+      "ok": true,
+      "rc": 0,
+      "stdout": "AUDIT_OK fetch",
+      "stderr": [],
+      "seconds": 0.63
+    },
+    {
+      "path": "launcher/mclaunch.py",
+      "module": "mclaunch",
+      "ok": true,
+      "rc": 0,
+      "stdout": "AUDIT_OK mclaunch",
+      "stderr": [],
+      "seconds": 0.69
+    },
+    {
+      "path": "launcher/server.py",
+      "module": "server",
+      "ok": true,
+      "rc": 0,
+      "stdout": "AUDIT_OK server",
+      "stderr": [],
+      "seconds": 0.69
+    }
+  ]
+}

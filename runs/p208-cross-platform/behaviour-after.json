@@ -1,0 +1,54 @@
+{
+  "generated": "2026-10-28T23:10:23",
+  "host": {
+    "sys.platform": "win32",
+    "os.name": "nt",
+    "python": "3.13.14"
+  },
+  "probes": [
+    {
+      "name": "default_root_no_appdata",
+      "expect": "an absolute path outside the current directory",
+      "actual": "C:\\Users\\27682\\AppData\\Local\\Temp\\workbuddy-update-x64-workbuddy\\p208-root-p78b6o45\\home\\.mcbridge\\mc",
+      "ok": true,
+      "detail": "resolved away from the CWD"
+    },
+    {
+      "name": "find_java_home_posix",
+      "expect": "JAVA_HOME honoured -> C:\\Users\\27682\\AppData\\Local\\Temp\\workbuddy-update-x64-workbuddy\\p208-jdk-w071jm3y\\bin\\java",
+      "actual": "C:\\Users\\27682\\AppData\\Local\\Temp\\workbuddy-update-x64-workbuddy\\p208-jdk-w071jm3y\\bin\\java",
+      "ok": true,
+      "detail": "JAVA_HOME honoured"
+    },
+    {
+      "name": "open_folder_darwin",
+      "expect": "open used",
+      "actual": "open",
+      "ok": true,
+      "detail": "chose 'open'"
+    },
+    {
+      "name": "open_folder_linux",
+      "expect": "xdg-open used",
+      "actual": "xdg-open",
+      "ok": true,
+      "detail": "chose 'xdg-open'"
+    },
+    {
+      "name": "open_folder_win32",
+      "expect": "startfile used",
+      "actual": "startfile",
+      "ok": true,
+      "detail": "chose 'startfile'"
+    },
+    {
+      "name": "java_fallback_unused",
+      "expect": "the constant is either used or absent",
+      "actual": "defined=False occurrences=0",
+      "ok": true,
+      "detail": "consistent"
+    }
+  ],
+  "passed": 6,
+  "total": 6
+}
