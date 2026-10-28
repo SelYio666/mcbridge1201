@@ -190,8 +190,11 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   creative screen and the upstream undeleteLast is a stub) and the multi-client cases
   (`runs/p190`: A drains, B untouched; `runs/p192`: three clients, B actively drains its own
   trash, C constant, A's rejoin resets its trash to empty by upstream PlayerLoginEvent design)
-  all pass. Still untested: concurrent same-tick trash operations from two clients, four+
-  clients;
+  all pass. Concurrent same-tick operations from two clients now pass too: `runs/p203` fires both
+  clients on one shared epoch-ms instant and both writes land in the same server tick (819,
+  `P203_SET side=SERVER thread=Server thread`, 4 ms apart, A empty / B `diamondx3`), with the
+  serverbound messages (`MessageDeleteFromSlot`, `MessageTrashSlotClick`) stamped in that same
+  tick. Still untested: four+ clients, and two operations on the *same* player in one tick;
 - lithium gameplay/rendering: a smoke test passes (81/81 forced chunks, place + real block break,
   server and client alive; `runs/p73-lithium-play/`), a 60-second TPS sample reports 20.03 with
   289/289 chunks (`runs/p84-lithium-tps/`), a four-minute dedicated soak reports 20.00 TPS with

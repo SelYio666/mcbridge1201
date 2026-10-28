@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "p203concurrent",
+  "version": "1.0.0",
+  "name": "p203 concurrent trash probe",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["p203.ConcurrentProbe"],
+    "client": ["p203.ClientProbe"]
+  },
+  "mixins": ["p203.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "trashslot": "*"
+  }
+}

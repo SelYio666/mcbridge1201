@@ -1509,6 +1509,132 @@ def test_hover_and_heterogeneous_nbt() -> None:
               "mechanism=sendinput" not in control and "mechanism=setcursorpos" in control, "")
 
 
+def test_trash_concurrent_same_tick() -> None:
+    """p203: two players' trash writes landed in the same server tick, and stayed apart.
+
+    The claim is a server-side statement, so everything is recomputed from server.log: the tick
+    number is the probe's own counter (incremented at the end of every server tick), and the write
+    is stamped at TrashHelper.setTrashItem, the only place the per-player value changes. Client
+    logs are used only for the fire instant and for what each client shows afterwards.
+    """
+    run = ROOT / "runs" / "p203-trash-concurrent"
+    server_path = run / "server.log"
+    check("p203: server.log present", server_path.exists(), str(server_path))
+    if not server_path.exists():
+        return
+    server = server_path.read_text(encoding="utf-8", errors="replace")
+
+    sets = []
+    for line in server.splitlines():
+        match = re.search(r"P203_SET side=(\S+) thread=(.+?) tick=(-?\d+) wall=(\d+) "
+                          r"seeding=(\w+) user=(\S+) stack=(\S+)", line)
+        if match:
+            sets.append({"side": match.group(1), "thread": match.group(2),
+                         "tick": int(match.group(3)), "wall": int(match.group(4)),
+                         "seeding": match.group(5), "user": match.group(6),
+                         "stack": match.group(7)})
+    seeds = [s for s in sets if s["seeding"] == "true"]
+    writes = [s for s in sets if s["seeding"] == "false"]
+    check("p203: the probe's own seed is stamped and marked", len(seeds) == 2, str(len(seeds)))
+    check("p203: the seed wrote 5 and 4 diamonds",
+          sorted(s["stack"] for s in seeds)
+          == ["minecraft:diamondx4", "minecraft:diamondx5"],
+          str([s["stack"] for s in seeds]))
+    check("p203: joins reset the trash to empty before any player action",
+          [s["stack"] for s in writes if s["wall"] < (seeds[0]["wall"] if seeds else 0)]
+          == ["empty", "empty"], str([s["stack"] for s in writes]))
+
+    result = json.loads((run / "result.json").read_text(encoding="utf-8"))
+    fire = result.get("fire_instant_ms")
+    check("p203: result.json carries the shared fire instant", isinstance(fire, int), str(fire))
+    if not isinstance(fire, int):
+        return
+    window = [s for s in writes if fire - 500 <= s["wall"] <= fire + 5000]
+    by_user = {s["user"]: s for s in window}
+    check("p203: both players wrote inside the fire window", len(by_user) == 2, str(sorted(by_user)))
+    if len(by_user) != 2:
+        return
+    left, right = by_user.get("GridUser"), by_user.get("TrashB")
+    check("p203: the two writes carry the same server tick",
+          left is not None and right is not None and left["tick"] == right["tick"],
+          f"{left and left['tick']} vs {right and right['tick']}")
+    check("p203: both writes happened on the server thread",
+          all(s["thread"] == "Server thread" for s in window),
+          str([s["thread"] for s in window]))
+    check("p203: the two writes are milliseconds apart, not ticks",
+          left is not None and right is not None and abs(left["wall"] - right["wall"]) < 50,
+          str(abs(left["wall"] - right["wall"]) if left and right else None))
+    check("p203: the delete wrote empty and the right-click wrote three",
+          left is not None and right is not None and left["stack"] == "empty"
+          and right["stack"] == "minecraft:diamondx3",
+          f"{left and left['stack']} / {right and right['stack']}")
+
+    stamps = [ln for ln in server.splitlines() if "P203_S2C" in ln
+              and "wall=" in ln and fire - 500 <= int(ln.split("wall=")[1].split()[0]) <= fire + 5000]
+    check("p203: two serverbound messages were stamped in that window", len(stamps) == 2,
+          str(len(stamps)))
+    if len(stamps) == 2:
+        ticks = {int(ln.split("tick=")[1].split()[0]) for ln in stamps}
+        check("p203: the packets arrived in the same tick as the writes",
+              ticks == {left["tick"]}, str(ticks))
+        check("p203: the two actions use different messages",
+              "MessageDeleteFromSlot" in stamps[0] and "MessageTrashSlotClick" in stamps[1]
+              or "MessageDeleteFromSlot" in stamps[1] and "MessageTrashSlotClick" in stamps[0],
+              " / ".join(ln.rsplit("message=", 1)[-1] for ln in stamps))
+
+    states = {}
+    for line in server.splitlines():
+        match = re.search(r"P203_SERVER tick=(\d+) user=(\S+) trash=(\S+)", line)
+        if match:
+            states.setdefault(match.group(2), []).append((int(match.group(1)), match.group(3)))
+    last_a = states.get("GridUser", [(-1, "")])[-1]
+    last_b = states.get("TrashB", [(-1, "")])[-1]
+    check("p203: the server ends with A empty and B holding three",
+          last_a[1] == "empty" and last_b[1] == "minecraft:diamondx3",
+          f"{last_a} / {last_b}")
+    before = [t for t, v in states.get("GridUser", []) if v == "minecraft:diamondx5"]
+    check("p203: A really held five before the action", bool(before), str(len(before)))
+    check("p203: both states were re-read after the write",
+          last_a[0] > left["tick"] and last_b[0] > right["tick"],
+          f"{last_a[0]} / {last_b[0]} after tick {left['tick']}")
+
+    for role, expect in (("a", "trash=empty"), ("b", "trash=minecraft:diamondx3")):
+        path = run / f"client-{role}.log"
+        check(f"p203: client-{role}.log present", path.exists(), str(path))
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        fire_line = [ln for ln in text.splitlines() if "P203_FIRE" in ln]
+        check(f"p203: client {role.upper()} fired on the shared instant",
+              len(fire_line) == 1 and f"epochMs={fire}" in fire_line[0]
+              and "driftMs=0" in fire_line[0], fire_line[0][-60:] if fire_line else "none")
+        check(f"p203: client {role.upper()} shows its own result",
+              any(expect in ln for ln in text.splitlines() if f"P203_TRASH role={role.upper()}" in ln),
+              "")
+    b_log = (run / "client-b.log").read_text(encoding="utf-8", errors="replace")
+    check("p203: B's cursor holds exactly one diamond",
+          any("carried=minecraft:diamondx1" in ln for ln in b_log.splitlines()
+              if "P203_TRASH role=B" in ln), "")
+
+    checks = result.get("checks", {})
+    check("p203: every recorded check is true",
+          bool(checks) and all(checks.values()), str(checks))
+
+    repeat_path = run / "repeat" / "round1-server.log"
+    check("p203: round1 server log present", repeat_path.exists(), str(repeat_path))
+    if repeat_path.exists():
+        repeat = repeat_path.read_text(encoding="utf-8", errors="replace")
+        ticks: dict[int, set[str]] = {}
+        for line in repeat.splitlines():
+            match = re.search(r"P203_SET side=SERVER thread=Server thread tick=(-?\d+) "
+                              r"wall=\d+ seeding=false user=(\S+) stack=\S+", line)
+            if match:
+                ticks.setdefault(int(match.group(1)), set()).add(match.group(2))
+        shared = sorted(t for t, users in ticks.items() if len(users) == 2)
+        check("p203: an independent earlier round also shared one tick",
+              bool(shared), f"ticks={shared} all={sorted(ticks)}")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -1518,6 +1644,7 @@ def main() -> int:
     test_immediatelyfast_port()
     test_map_atlas_layout_evidence()
     test_hover_and_heterogeneous_nbt()
+    test_trash_concurrent_same_tick()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

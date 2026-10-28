@@ -1,0 +1,150 @@
+{
+  "fire_instant_ms": 1793197669309,
+  "fire_lines_a": [
+    "[22:27:49] [Render thread/INFO]: [STDOUT]: P203_FIRE role=A action=delete epochMs=1793197669309 driftMs=0 tick=585"
+  ],
+  "fire_lines_b": [
+    "[22:27:49] [Render thread/INFO]: [STDOUT]: P203_FIRE role=B action=take epochMs=1793197669309 driftMs=0 tick=229"
+  ],
+  "mutation_a": {
+    "side": "SERVER",
+    "thread": "Server thread",
+    "tick": 315,
+    "wall": 1793197640102,
+    "seeding": "false",
+    "user": "GridUser",
+    "stack": "empty"
+  },
+  "mutation_b": {
+    "side": "SERVER",
+    "thread": "Server thread",
+    "tick": 671,
+    "wall": 1793197657658,
+    "seeding": "false",
+    "user": "TrashB",
+    "stack": "empty"
+  },
+  "mutations_all": [
+    {
+      "side": "SERVER",
+      "thread": "Server thread",
+      "tick": 315,
+      "wall": 1793197640102,
+      "seeding": "false",
+      "user": "GridUser",
+      "stack": "empty"
+    },
+    {
+      "side": "SERVER",
+      "thread": "Server thread",
+      "tick": 671,
+      "wall": 1793197657658,
+      "seeding": "false",
+      "user": "TrashB",
+      "stack": "empty"
+    },
+    {
+      "side": "SERVER",
+      "thread": "Server thread",
+      "tick": 905,
+      "wall": 1793197669320,
+      "seeding": "false",
+      "user": "GridUser",
+      "stack": "empty"
+    },
+    {
+      "side": "SERVER",
+      "thread": "Server thread",
+      "tick": 905,
+      "wall": 1793197669323,
+      "seeding": "false",
+      "user": "TrashB",
+      "stack": "minecraft:diamondx3"
+    }
+  ],
+  "same_server_tick": false,
+  "wall_delta_ms": 17556,
+  "serverbound_stamps": [
+    {
+      "thread": "Server thread",
+      "tick": 905,
+      "wall": 1793197669314,
+      "message": "net.blay09.mods.trashslot.network.MessageDeleteFromSlot"
+    },
+    {
+      "thread": "Server thread",
+      "tick": 905,
+      "wall": 1793197669320,
+      "message": "net.blay09.mods.trashslot.network.MessageTrashSlotClick"
+    }
+  ],
+  "serverbound_same_tick": true,
+  "a_states_tail": [
+    "trash=empty",
+    "trash=empty",
+    "trash=empty",
+    "trash=empty"
+  ],
+  "b_states_tail": [
+    "trash=minecraft:diamondx3",
+    "trash=minecraft:diamondx3",
+    "trash=minecraft:diamondx3",
+    "trash=minecraft:diamondx3"
+  ],
+  "checks": {
+    "both_ready": true,
+    "both_fired": true,
+    "server_saw_both_writes": true,
+    "same_server_tick": false,
+    "writes_on_server_thread": true,
+    "a_seeded_five": true,
+    "b_seeded_four": true,
+    "a_emptied": true,
+    "b_took_exactly_one": true,
+    "a_client_shows_empty": true,
+    "b_client_shows_three": true,
+    "b_cursor_holds_one": true
+  },
+  "server_tail": [
+    "[22:27:49] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=900 user=GridUser trash=minecraft:diamondx5",
+    "[22:27:49] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=900 user=TrashB trash=minecraft:diamondx4",
+    "[22:27:49] [Server thread/INFO]: [STDOUT]: P203_S2C thread=Server thread tick=905 wall=1793197669314 message=net.blay09.mods.trashslot.network.MessageDeleteFromSlot",
+    "[22:27:49] [Server thread/INFO]: [STDOUT]: P203_SET side=SERVER thread=Server thread tick=905 wall=1793197669320 seeding=false user=GridUser stack=empty",
+    "[22:27:49] [Server thread/INFO]: [STDOUT]: P203_S2C thread=Server thread tick=905 wall=1793197669320 message=net.blay09.mods.trashslot.network.MessageTrashSlotClick",
+    "[22:27:49] [Server thread/INFO]: [STDOUT]: P203_SET side=SERVER thread=Server thread tick=905 wall=1793197669323 seeding=false user=TrashB stack=minecraft:diamondx3",
+    "[22:27:50] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=920 user=GridUser trash=empty",
+    "[22:27:50] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=920 user=TrashB trash=minecraft:diamondx3",
+    "[22:27:51] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=940 user=GridUser trash=empty",
+    "[22:27:51] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=940 user=TrashB trash=minecraft:diamondx3",
+    "[22:27:52] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=960 user=GridUser trash=empty",
+    "[22:27:52] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=960 user=TrashB trash=minecraft:diamondx3",
+    "[22:27:53] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=980 user=GridUser trash=empty",
+    "[22:27:53] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=980 user=TrashB trash=minecraft:diamondx3",
+    "[22:27:54] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=1000 user=GridUser trash=empty",
+    "[22:27:54] [Server thread/INFO]: [STDOUT]: P203_SERVER tick=1000 user=TrashB trash=minecraft:diamondx3"
+  ],
+  "a_tail": [
+    "[22:27:46] [Render thread/INFO]: [STDOUT]: P203_ARM role=A fireAt=1793197669309 now=1793197666334 waitMs=2975",
+    "[22:27:47] [Render thread/INFO]: [STDOUT]: P203_TRASH role=A tick=540 trash=minecraft:diamondx5 carried=empty",
+    "[22:27:48] [Render thread/INFO]: [STDOUT]: P203_TRASH role=A tick=560 trash=minecraft:diamondx5 carried=empty",
+    "[22:27:49] [Render thread/INFO]: [STDOUT]: P203_TRASH role=A tick=580 trash=minecraft:diamondx5 carried=empty",
+    "[22:27:49] [Render thread/INFO]: [STDOUT]: P203_FIRE role=A action=delete epochMs=1793197669309 driftMs=0 tick=585",
+    "[22:27:50] [Render thread/INFO]: [STDOUT]: P203_TRASH role=A tick=600 trash=empty carried=empty",
+    "[22:27:51] [Render thread/INFO]: [STDOUT]: P203_TRASH role=A tick=620 trash=empty carried=empty",
+    "[22:27:52] [Render thread/INFO]: [STDOUT]: P203_TRASH role=A tick=640 trash=empty carried=empty",
+    "[22:27:53] [Render thread/INFO]: [STDOUT]: P203_TRASH role=A tick=660 trash=empty carried=empty",
+    "[22:27:54] [Render thread/INFO]: [STDOUT]: P203_TRASH role=A tick=680 trash=empty carried=empty"
+  ],
+  "b_tail": [
+    "[22:27:46] [Render thread/INFO]: [STDOUT]: P203_ARM role=B fireAt=1793197669309 now=1793197666334 waitMs=2975",
+    "[22:27:46] [Render thread/INFO]: [STDOUT]: P203_TRASH role=B tick=180 trash=minecraft:diamondx4 carried=empty",
+    "[22:27:47] [Render thread/INFO]: [STDOUT]: P203_TRASH role=B tick=200 trash=minecraft:diamondx4 carried=empty",
+    "[22:27:48] [Render thread/INFO]: [STDOUT]: P203_TRASH role=B tick=220 trash=minecraft:diamondx4 carried=empty",
+    "[22:27:49] [Render thread/INFO]: [STDOUT]: P203_FIRE role=B action=take epochMs=1793197669309 driftMs=0 tick=229",
+    "[22:27:49] [Render thread/INFO]: [STDOUT]: P203_TRASH role=B tick=240 trash=minecraft:diamondx3 carried=minecraft:diamondx1",
+    "[22:27:50] [Render thread/INFO]: [STDOUT]: P203_TRASH role=B tick=260 trash=minecraft:diamondx3 carried=minecraft:diamondx1",
+    "[22:27:51] [Render thread/INFO]: [STDOUT]: P203_TRASH role=B tick=280 trash=minecraft:diamondx3 carried=minecraft:diamondx1",
+    "[22:27:52] [Render thread/INFO]: [STDOUT]: P203_TRASH role=B tick=300 trash=minecraft:diamondx3 carried=minecraft:diamondx1",
+    "[22:27:53] [Render thread/INFO]: [STDOUT]: P203_TRASH role=B tick=320 trash=minecraft:diamondx3 carried=minecraft:diamondx1"
+  ]
+}

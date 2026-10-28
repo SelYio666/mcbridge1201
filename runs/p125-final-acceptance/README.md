@@ -327,12 +327,24 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 
 | 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | ✅ 共 **162 项**（本次 **162/162**；新增 32 条悬停/异质 NBT 回归） |
-| `python tools/check_hashes.py` | ✅ **1301/1301**（mismatch 0 / missing 0） |
-| `python tools/verify_evidence.py` | ✅ passed（`text_encoding` 228 个 md 全绿、`review_regressions` 162/162） |
+| `python tools/test_review_fixes.py` | ✅ 共 **188 项**（本次 **188/188**；p202 新增 32 条悬停/异质 NBT，p203 新增 26 条并发 trash） |
+| `python tools/check_hashes.py` | ✅ **1324/1324**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（`text_encoding` 228 个 md 全绿、`review_regressions` 188/188） |
 | 悬停来源 | ✅ 探针不写鼠标字段；外部进程移真实光标；`glfw`/`raw`/`mouse`/`target` 四者同为 `686,378`；`index=10 keysSent=false` |
 | 悬停更正 | ✅ 控制组只用 `SetCursorPos`、窗口置顶也能悬停 → 原"这台机器收不到 OS 光标"的结论作废（原因是窗口没置顶） |
 | 27 格异质 | ✅ `stacks=27 distinctComponents=27 distinctItems=27 distinctNames=27`；27 个 index 全部画出；27 个不同 payload |
 | 截图 | ✅ 自相关测出 36 px 周期（=18×guiScale 2）；27 格无空白、27 个哈希互不相同 |
 | Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
 | 隐患 | 单机单显示器；FULL 仍需轮询边界伪造 J/K；嵌套潜影盒与逐格自定义模型未测 |
+
+## p203 同一服务端 tick 并发 trash 增量（2026-10-28，正常 UTF-8）
+
+| 项 | 结果 |
+|---|---|
+| 开火对齐 | 两个客户端读同一个 epoch-ms，客户端线程自旋到点：`P203_FIRE … epochMs=1793197755075 driftMs=0`（A/B 相同） |
+| 服务端并发 | `P203_SET … tick=819 … GridUser stack=empty` 与 `… tick=819 … TrashB stack=minecraft:diamondx3`，相隔 4 ms，均在 `Server thread` |
+| 包与写入同 tick | `P203_S2C tick=819 MessageDeleteFromSlot` / `MessageTrashSlotClick`，与两条写入同 tick |
+| 隔离 | A 最终 `trash=empty`、B `trash=minecraft:diamondx3`，B 客户端 `carried=minecraft:diamondx1` |
+| 登录重置 | 加入时各有一条 `seeding=false … stack=empty`（tick 278 / 620），与 p65 的上游语义一致 |
+| 独立复现 | `repeat/round1-*` 那一轮两次写入同在 tick 905 |
+| 门禁 | `test_review_fixes` **188/188**、`check_hashes` **1324/1324**、`verify_evidence` passed |

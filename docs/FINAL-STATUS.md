@@ -295,5 +295,33 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
 - **截图是真量出来的**：`verify_grid.py` 用亮度剖面**自相关**求周期（列 36 / 行 36，峰值 56817 vs 次峰 34665），相位取"离探针报的面板原点最近且最暗"的格线（列 18 / 行 18 → 原点 732,423），再取 27 个 `32×32`（16×scale）图元：**无空格、无纯色格、27 个哈希互不相同**；
 - **两次返工记在报告里**：① 外层组件键写成 `shulker_box["minecraft:container"=…]` → 服务端 `Unknown item component 'minecraft:'`；为此写了 `check_snbt.py`（只起服务端、用解析阶段验 SNBT，不用等客户端 3 分钟）。② 截图校验器第一版只 hash 了格子前 8 字节（27 格同长），第二版用"边框环最干净"当对齐判据（槽位自带描边，区分度仅 6%），都推翻重写；
 - 回归：新增 `test_hover_and_heterogeneous_nbt()`（32 条），从 `client.log`/`harness.log`/`grid-check.json`/`result.json` 与 **PNG 的 IHDR 头**重算报告里的每个数字；
-- 门禁：`test_review_fixes` **162/162**、`check_hashes` **1301/1301**、`verify_evidence` passed、228 个 md 全绿；
+- 门禁：`test_review_fixes` **162/162**、`check_hashes` **1301/1301**、`verify_evidence` passed、228 个 md 全绿（p203 之后为 188/188 与 1324/1324，见下节）；
 - 边界：单机单显示器、DPI 未变；FULL 仍需在 `InputConstants.isKeyDown` 轮询边界伪造 J(74)/K(75)（悬停本身不需要，见 `keysSent=false`）；未测嵌套潜影盒、逐格 `custom_model_data` 的模型差异；无新 release（v0.5.6，只加探针）。
+
+## 十八、2026-10-28 更新（p203：两个客户端同一服务端 tick 并发操作垃圾桶）
+
+p192 结尾留下的 "concurrent same-tick trash operations from two clients" 与 "four+ clients" 两条，
+关掉第一条。
+
+- **判据放在服务端**：客户端每 50 ms 一 tick，"间隔 2 ms 可能跨 tick、间隔 40 ms 可能同 tick"，
+  所以"并发"只能由有权威 tick 计数器的一侧定义。探针自己在 `END_SERVER_TICK` 里 `ticks++`，
+  并在 `TrashHelper.setTrashItem`（玩家持久化 NBT 的唯一写入口）打 `tick/thread/side/wall/seeding`;
+- **真的挤进同一 tick**：两个客户端都 READY 后 harness 才发同一个 epoch-ms，客户端在目标前 60 ms
+  自旋到点再走真实回调路径开火，`P203_FIRE driftMs=0`（两边 `epochMs` 完全相同）；
+- **结果**：`P203_SET … tick=819 … GridUser stack=empty` 与 `… tick=819 … TrashB
+  stack=minecraft:diamondx3`，相隔 4 ms、同 tick、同在 `Server thread`；两条 serverbound 消息
+  （`MessageDeleteFromSlot`、`MessageTrashSlotClick`）也在 tick 819。两种操作故意不同，串台会显示成
+  对方的数值；B 客户端读回 `carried=minecraft:diamondx1`；
+- **一次踩空**：先混入 `ServerPlayNetworkHandler.onCustomPayload`，`-Dmixin.debug=true` 确认
+  `Mixing PacketMixin … into class_3244` 生效，但正式跑连一行 `P203_PKT` 都没有——Balm 桥的
+  serverbound 消息不走这条派发。没有硬凑，把戳挪到状态写入点；
+- **第二次返工**：分析器取"每个玩家第一条写入"，取到的是登录重置的两条 `empty`（tick 315/671，
+  相隔 17 s），得出 `same_server_tick=false`。改成以开火时刻开窗（`[fire-500, fire+5000]`），
+  窗口之前的写入单列成 `mutations_before_fire`；
+- 回归：新增 `test_trash_concurrent_same_tick()`（26 条），从 `server.log`/`result.json`/两份客户端
+  日志重算，并校验 `repeat/round1-server.log` 那一轮同样同 tick（tick 905）；
+- 门禁：`test_review_fixes` **188/188**、`check_hashes` **1324/1324**、`verify_evidence` passed、
+  228 个 md 全绿；无新 release（v0.5.6，只加探针）；
+- 边界：四个以上客户端、同一玩家的同 tick 两次操作、跨机器真实延迟未测；本轮截图未拍成
+  （`_grab_window` 需要 Pillow，本机没有），两个客户端的 UI 状态是从日志的 `P203_TRASH`（含
+  `carried`）读的，不是看图。
