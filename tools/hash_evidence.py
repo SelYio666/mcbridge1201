@@ -1262,6 +1262,14 @@ FILES = [
     "runs/p197-preview-key/result.json",
     "runs/p197-preview-key/after-full.png",
     "runs/p197-preview-key/after-compact.png",
+    "tools/check_text_encoding.py",
+    "runs/p198-text-encoding/README.md",
+    "runs/p198-text-encoding/restore_report.py",
+    "runs/p198-text-encoding/restore-report.log",
+    "runs/p198-text-encoding/encoding-scan-before.log",
+    "runs/p198-text-encoding/encoding-scan-after.log",
+    "runs/p198-text-encoding/gate-verify.log",
+    "runs/p198-text-encoding/gate-review-fixes.log",
 ]
 
 

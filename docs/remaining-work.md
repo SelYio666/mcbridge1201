@@ -3,6 +3,22 @@
 This file records what is intentionally not verified in the current environment. It is not a
 claim that these paths work.
 
+## Update 2026-10-28 (documentation encoding)
+
+- The three documents corrupted during p195 (UTF-8 read as cp936 and re-saved) are readable again:
+  `README.md`, `docs/FINAL-STATUS.md`, `runs/p125-final-acceptance/README.md`. Repair is **not** a
+  full restoration: of 13385 damaged characters only 2599 (19.4%) round-trip back through
+  GBK→UTF-8; the other 10786 (80.6%) had bytes already replaced by `?` and were rewritten from
+  the surrounding intact sentences, path/number skeletons and the `runs/` evidence they cite
+  (386 lines untouched, 12 lines restored, 306 rewritten). See `runs/p198-text-encoding/`.
+- `tools/check_text_encoding.py` is a direct `verify_evidence` check (`text_encoding`), not only a
+  case inside the review suite, so it cannot be skipped together with the built CLI. It covers
+  bad UTF-8, `U+FFFD`, GBK user-area characters, the UTF-8-as-cp936 signature set, `?` byte-loss
+  patterns and the general double-encoded run.
+- Still open: **the writer that damaged the files was never traced** (only "must not re-enter" is
+  guarded); the guard scans `*.md` only; rewritten prose is semantically equivalent, not the
+  author's verbatim wording.
+
 ## Update 2026-10-23 (current state)
 
 - ImmediatelyFast 1.21.1 batching port is **verified** (HUD/items/overlay, per-lighting, Iris

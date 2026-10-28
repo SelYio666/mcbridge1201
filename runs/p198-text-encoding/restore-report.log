@@ -1,0 +1,13 @@
+restore report against HEAD
+
+| file | lines | identical | line-restored | rewritten | runs | runs reversible | chars | chars reversible |
+|---|---|---|---|---|---|---|---|---|
+| `README.md` | 151 | 0 | 0 | 0 | 791 | 285 | 3911 | 971 |
+| `docs/FINAL-STATUS.md` | 267 | 152 | 5 | 110 | 1323 | 281 | 5945 | 1034 |
+| `runs/p125-final-acceptance/README.md` | 286 | 0 | 0 | 0 | 921 | 152 | 3529 | 594 |
+
+line count preserved for every file: False
+lines: 152 untouched, 5 restored by round trip, 110 reconstructed
+damaged runs: 718/3035 reversible (23.7%)
+damaged chars: 2599/13385 reversible (19.4%)
+reconstructed share: 80.6% of damaged characters had lost bytes

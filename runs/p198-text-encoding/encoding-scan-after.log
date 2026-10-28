@@ -1,0 +1,9 @@
+### command: python tools/check_text_encoding.py README.md docs/FINAL-STATUS.md runs/p125-final-acceptance/README.md
+checked 3 markdown file(s): 3 clean, 0 finding(s)
+### exit=0
+
+### command: python tools/check_text_encoding.py   (all git-tracked *.md)
+exempt: runs/p198-text-encoding/README.md — p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept
+exempt files: 1, suppressed content findings: 3
+checked 223 markdown file(s): 223 clean, 0 finding(s)
+### exit=0

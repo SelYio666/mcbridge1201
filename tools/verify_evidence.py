@@ -97,6 +97,24 @@ def main() -> int:
     details["tracked_jars"] = jars
     details["unexpected_jars"] = bad
 
+    # The p195 corruption (UTF-8 read as cp936 and re-saved) must not come back into any
+    # tracked Markdown. This is a direct gate step, not only a case inside the review suite:
+    # docs are how the whole evidence bundle is read, so a mangled README fails the gate.
+    encoding_script = ROOT / "tools" / "check_text_encoding.py"
+    if encoding_script.exists():
+        proc = subprocess.run([sys.executable, "-B", str(encoding_script)], cwd=ROOT,
+                              capture_output=True, text=True)
+        lines = proc.stdout.strip().splitlines()
+        checks["text_encoding"] = proc.returncode == 0
+        details["text_encoding"] = {
+            "rc": proc.returncode,
+            "summary": lines[-1] if lines else "",
+            "findings": [line for line in lines if ": " in line][:10],
+        }
+    else:
+        checks["text_encoding"] = False
+        details["text_encoding"] = "missing tools/check_text_encoding.py"
+
     # External review regressions (ISSUE-02/03/05..08). They need the built CLI; without it
     # the suite self-skips (exit 2) and the gate records a skip instead of a false failure.
     review_script = ROOT / "tools" / "test_review_fixes.py"

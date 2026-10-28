@@ -1,176 +1,176 @@
-# p125 鈥?鎬婚獙鏀讹紙2026-10-22锛?
-鏈枃浠舵槸涓€娆?*鍙氦鎺ョ殑楠屾敹蹇収**锛氬湪杩欏彴鏈哄櫒涓婃妸浠撳簱鐨勮嚜鍔ㄥ寲闂ㄧ鍏ㄩ儴閲嶈窇浜嗕竴閬嶏紝骞舵妸
-鈥滃凡楠岃瘉 / 鏈獙璇佲€濈殑杈圭晫鍐欐竻妤氥€傜粨璁哄彧瑕嗙洊涓嬮潰鍒楀嚭鐨勮寖鍥达紝涓嶅鎺ㄣ€?
-## 闂ㄧ缁撴灉锛堟湰娆￠噸璺戯級
+# p125 — 总验收（2026-10-22）
+本文件是一次**可交接的验收快照**：在这台机器上把仓库的自动化门禁全部重跑了一遍，并把
+“已验证 / 未验证”的边界写清楚。结论只覆盖下面列出的范围，不外推。
+## 门禁结果（本次重跑）
 
-| 闂ㄧ | 缁撴灉 |
+| 门禁 | 结果 |
 |---|---|
-| `gradle -p java test installDist` | 鉁?BUILD SUCCESSFUL |
-| Java JUnit | 鉁?25/25 |
-| `python tools/test_review_fixes.py` | 鉁?**73/73** |
-| `python tools/check_hashes.py` | 鉁?**946/946**锛坢ismatch 0 / missing 0锛?|
-| `python tools/verify_evidence.py` | 鉁?passed锛?3/73锛?|
-| GitHub CI锛坢aster锛宲ush+dispatch锛?| 鉁?push 瑙﹀彂宸查獙璇侊紙澶氭 `build` success锛屾渶鏂拌 Actions锛夛紱姝ゅ墠鏃?run 鏄?GitHub Actions degraded performance |
-| Release 璧勪骇 | 鉁?`v0.5.1` / `mcbridge-launcher-0.5.1.zip` |
-| 宸ヤ綔鍖?| 鉁?骞插噣锛坄git status` 鏃犳敼鍔級 |
+| `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
+| Java JUnit | ✅ 25/25 |
+| `python tools/test_review_fixes.py` | ✅ **73/73** |
+| `python tools/check_hashes.py` | ✅ **946/946**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（73/73） |
+| GitHub CI（master，push+dispatch） | ✅ push 触发已验证（多次 `build` success，最新见 Actions）；此前无 run 是 GitHub Actions degraded performance |
+| Release 资产 | ✅ `v0.5.1` / `mcbridge-launcher-0.5.1.zip` |
+| 工作区 | ✅ 干净（`git status` 无改动） |
 
-鐜锛歐indows + JDK 21锛坄.toolchain/jdk`锛夈€丟radle 9.8.1锛坄.toolchain/gradle`锛夈€?鏈湴 CPython 3.12 杩愯鏃讹紱缃戠粶涓轰腑鍥藉ぇ闄嗙幆澧冿紙瀹樻柟婧?+ BMCL 闀滃儚锛夈€?
-## 宸查獙璇侊紙鍙互瀵瑰璇达級
+环境：Windows + JDK 21（`.toolchain/jdk`）、Gradle 9.8.1（`.toolchain/gradle`）、 本地 CPython 3.12 运行时；网络为中国大陆环境（官方源 + BMCL 镜像）。
+## 已验证（可以对外说）
 
-| 鑳藉姏 | 璇佹嵁 |
+| 能力 | 证据 |
 |---|---|
-| Fabric 1.21.1 鍏ㄩ噺鍐峰畨瑁咃紙3,911/3,911 assets銆?33.6 MB銆? 澶辫触锛夊苟杩涘叆鍗曚汉涓栫晫 | `runs/p118-full-install-world/`锛堝惈涓栫晫鎴浘銆乮nstall-summary.json锛?|
-| NeoForge 21.1.264 瀹夎骞跺埌杈句富鑿滃崟 | `runs/p116-neoforge-launch/`锛堝惈涓昏彍鍗曟埅鍥俱€乮nstaller/launch 鏃ュ織锛?|
-| NeoForge 甯︽ā缁勮繘涓栫晫锛欰ppleSkin / Farmer's Delight / Jade | `runs/p127`銆乣runs/p128`銆乣runs/p130`锛堝惈涓栫晫鎴浘銆佹ā缁勬棩蹇椼€丣ade tooltip锛?|
-| Forge 1.20.1-47.4.28 甯︽ā缁勮繘涓栫晫锛欰ppleSkin / Farmer's Delight | `runs/p129`銆乣runs/p131` |
-| Forge/NeoForge 瀹夎鑷姩琛ュ師鐗?base锛坬uickPlay 鍙傛暟涓嶄涪锛?| `runs/p127`銆乣runs/p129`銆丩OADER/NEOFORGE 鍥炲綊 |
-| 娓叉煋妯＄粍鑳藉姏锛欵ntityCulling 鐨?mixin 绉绘鍚庣湡姝ｇ敓鏁?| `runs/p119-entityculling-mixin/`锛團3 `Skipped: 1`锛? `runs/p121-entityculling-ab/`锛堝紑/鍏冲鐓э級 |
-| 涓嬭浇婧愶細鎸夎矾寰勯獙璇佺殑 BMCL 闀滃儚锛堝惈 intermediary锛夈€?04 蹇€€銆佽秴鏃堕噸璇曘€丼HA-1銆佹潵婧愯褰?| `runs/p122-source-canary/`銆乣docs/download-sources.md` |
-| 涓嬭浇婧愭ā寮忥細鑷姩 / 浠呭畼鏂?/ 闀滃儚浼樺厛锛涘け璐?host 鍋ュ悍缂撳瓨 + GUI canary 鍥炲啓 | `runs/p122`銆乣runs/p123`銆乣runs/p124` |
-| 1.20.1 鍏ㄩ噺鍐峰畨瑁?111.7 s / 739 MB / verify OK锛堟祴瀹屽垹闄わ級 | `runs/p122-source-canary/full-1.20.1.json` |
-| 渚挎惡鍖咃紙鍐呭祵 Python銆佹棤闇€姊瓙/鏃犻渶 Python 鐜锛?| v0.4.6 璧勪骇锛宍tools/test_portable.py` OK |
-| 瑙勫垯寮曟搸 + 璇佹嵁闂ㄧ + CI锛堣鍒?妗?璇佹嵁缁戝畾锛?| `docs/FINAL-STATUS.md`銆乣runs/SHA256SUMS.txt` |
+| Fabric 1.21.1 全量冷安装（3,911/3,911 assets、933.6 MB、0 失败）并进入单人世界 | `runs/p118-full-install-world/`（含世界截图、install-summary.json） |
+| NeoForge 21.1.264 安装并到达主菜单 | `runs/p116-neoforge-launch/`（含主菜单截图、installer/launch 日志） |
+| NeoForge 带模组进世界：AppleSkin / Farmer's Delight / Jade | `runs/p127`、`runs/p128`、`runs/p130`（含世界截图、模组日志、Jade tooltip） |
+| Forge 1.20.1-47.4.28 带模组进世界：AppleSkin / Farmer's Delight | `runs/p129`、`runs/p131` |
+| Forge/NeoForge 安装自动补原版 base（quickPlay 参数不丢） | `runs/p127`、`runs/p129`、LOADER/NEOFORGE 回归 |
+| 渲染模组能力：EntityCulling 的 mixin 移植后真正生效 | `runs/p119-entityculling-mixin/`（F3 `Skipped: 1`）+ `runs/p121-entityculling-ab/`（开/关对照） |
+| 下载源：按路径验证的 BMCL 镜像（含 intermediary）、404 快退、超时重试、SHA-1、来源记录 | `runs/p122-source-canary/`、`docs/download-sources.md` |
+| 下载源模式：自动 / 仅官方 / 镜像优先；失败 host 健康缓存 + GUI canary 回写 | `runs/p122`、`runs/p123`、`runs/p124` |
+| 1.20.1 全量冷安装 111.7 s / 739 MB / verify OK（测完删除） | `runs/p122-source-canary/full-1.20.1.json` |
+| 便携包（内嵌 Python、无需梯子/无需 Python 环境） | v0.4.6 资产，`tools/test_portable.py` OK |
+| 规则引擎 + 证据门禁 + CI（规则/桥/证据绑定） | `docs/FINAL-STATUS.md`、`runs/SHA256SUMS.txt` |
 
-## 鏈獙璇?/ 鏄庣‘涓嶇畻閫氳繃锛堜笉鑳藉澶栬锛?
-| 椤?| 鐘舵€?|
+## 未验证 / 明确不算通过（不能对外说）
+| 项 | 状态 |
 |---|---|
-| ImmediatelyFast 娓叉煋鎵瑰鐞?| 鉁?宸茬Щ妞嶅苟鐢熸晥锛氬崟浜?+ 涓撶敤鏈嶅姟鍣ㄥ浜猴紙hud=4659銆乮temModel=2258銆乮temOverlay=1129锛夛紝鍏抽棴寮€鍏冲綊闆讹紙`runs/p134`銆乣runs/p141`銆乣runs/p137`锛夛紱Iris 1.8.1/1.8.14 + shader pack r5.3锛坄runs/p142`/`p143`/`p145`/`p146`锛夈€乮tem per-lighting锛坄runs/p149`/`p150`锛?|
-| Sodium / Iris | 鉂?鏈Е纰?|
-| 娓叉煋妯＄粍鈥滄€ц兘鎻愬崌鈥濇暟瀛?| 鉂?鏈祴锛堝彧鏈?EntityCulling 鐨?F3 璁℃暟锛屼笉鏄抚鐜囧熀鍑嗭級 |
-| 瀹屾暣闀滃儚妯″紡鍏ㄩ噺瀹夎 | 鉂?鍙仛浜嗘湁鐣岄摼璺紙瀹㈡埛绔?搴?120 璧勬簮锛夛紱鍏ㄩ噺闀滃儚澶參宸蹭腑姝紙p123锛?|
-| NeoForge/Forge 鐨?*甯︽ā缁?*涓栫晫 | 鉁?宸插仛锛坧127鈥損131锛氭樉绀?鍐呭/鏁版嵁鍚屾锛夛紱**鏈祴** NeoForge/Forge 涓撶敤鏈嶅姟鍣ㄣ€佸鏉傚鏂瑰潡妯＄粍 |
-| 澶氫汉**涓撶敤**鏈嶅姟鍣紙dedicated server锛?| 鉁?Fabric 1.21.1锛氭棭鏈熷弻瀹㈡埛绔紙p75/p76锛? 鍚姩鍣ㄥ鎴风鍔犲叆锛坧132锛夛紱**鏈祴** NeoForge/Forge 涓撶敤鏈嶅姟鍣?|
-| 渚挎惡鍖呭湪鍏朵粬鏈哄櫒/鏃犵綉鐜 | 鉂?鏈獙璇侊紙浠呮湰鏈鸿В鍖?+ `test_portable`锛?|
-| 鐪熷疄娴忚鍣ㄩ噷鐨?UI 鐐瑰嚮 E2E | 鉂?鏈仛锛堝彧楠岃瘉浜?HTTP 绔偣涓庤繑鍥?JSON锛?|
-| 闀挎椂闂?soak / 宕╂簝鎭㈠ | 鉂?鏈仛 |
+| ImmediatelyFast 渲染批处理 | ✅ 已移植并生效：单人 + 专用服务器多人（hud=4659、itemModel=2258、itemOverlay=1129），关闭开关归零（`runs/p134`、`runs/p141`、`runs/p137`）；Iris 1.8.1/1.8.14 + shader pack r5.3（`runs/p142`/`p143`/`p145`/`p146`）、item per-lighting（`runs/p149`/`p150`） |
+| Sodium / Iris | ❌ 未触碰 |
+| 渲染模组“性能提升”数字 | ❌ 未测（只有 EntityCulling 的 F3 计数，不是帧率基准） |
+| 完整镜像模式全量安装 | ❌ 只做了有界链路（客户端+库+120 资源）；全量镜像太慢已中止（p123） |
+| NeoForge/Forge 的**带模组**世界 | ✅ 已做（p127–p131：显示/内容/数据同步）；**未测** NeoForge/Forge 专用服务器、复杂多方块模组 |
+| 多人**专用**服务器（dedicated server） | ✅ Fabric 1.21.1：早期双客户端（p75/p76）+ 启动器客户端加入（p132）；**未测** NeoForge/Forge 专用服务器 |
+| 便携包在其他机器/无网环境 | ❌ 未验证（仅本机解包 + `test_portable`） |
+| 真实浏览器里的 UI 点击 E2E | ❌ 未做（只验证了 HTTP 端点与返回 JSON） |
+| 长时间 soak / 崩溃恢复 | ❌ 未做 |
 
-## 澶嶇幇鍛戒护
+## 复现命令
 
 ```text
 # Java
 gradle -p java test installDist
 
-# Python 闂ㄧ
+# Python 门禁
 python tools/test_review_fixes.py
 python tools/check_hashes.py
 python tools/verify_evidence.py
 
-# 涓嬭浇婧愬仴搴凤紙鍙€夛級
+# 下载源健康（可选）
 python tools/check_download_sources.py
 python tools/check_download_sources.py --strict
 
-# 瀹夎/鍚姩锛堢ず渚嬶級
-python launcher/mclaunch.py install 1.21.1 <娓告垙鐩綍>
+# 安装/启动（示例）
+python launcher/mclaunch.py install 1.21.1 <游戏目录>
 python launcher/server.py
 
-# 渚挎惡鍖?python tools/build_portable.py --label 0.4.4
-python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
+# 便携包 python tools/build_portable.py --label 0.4.4
+python tools/test_portable.py --root <测试目录> --version 1.21.1
 ```
 
-## p175 澧為噺楠屾敹锛?026-10-23锛?
-| 闂ㄧ | 缁撴灉 |
+## p175 增量验收（2026-10-23）
+| 门禁 | 结果 |
 |---|---|
-| `gradle -p java test installDist` | 鉁?BUILD SUCCESSFUL |
-| Java JUnit | 鉁?25/25 |
-| `python tools/test_review_fixes.py` | 鉁?**79/79**锛堟柊澧?6 鏉″湴鍥?atlas 瑙勫垯/婧愮爜鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**962/962**锛坢ismatch 0 / missing 0锛?|
-| `python tools/verify_evidence.py` | 鉁?passed锛?9/79锛?|
-| ImmediatelyFast mixin 瀹¤ | `listed=36 inert=3`锛涗袱涓?map mixin 涓嶅啀 inert锛坄runs/p175-map-atlas/audit.log`锛?|
-| 鍦板浘 atlas 鐪熷疄娓叉煋 | 鉁?鍗曚汉 `ColdWorldMap` 鎵嬫寔 `filled_map`锛沗map-atlas bind 鈥?immediatelyfast:map_atlas/0`锛涙棤 ClassCastException/鏃?crash锛坄runs/p175-map-atlas/`锛?|
-| Release 璧勪骇 | 鉁?`v0.5.2` / `mcbridge-launcher-0.5.2.zip` |
+| `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
+| Java JUnit | ✅ 25/25 |
+| `python tools/test_review_fixes.py` | ✅ **79/79**（新增 6 条地图 atlas 规则/源码回归） |
+| `python tools/check_hashes.py` | ✅ **962/962**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（79/79） |
+| ImmediatelyFast mixin 审计 | `listed=36 inert=3`；两个 map mixin 不再 inert（`runs/p175-map-atlas/audit.log`） |
+| 地图 atlas 真实渲染 | ✅ 单人 `ColdWorldMap` 手持 `filled_map`；`map-atlas bind … immediatelyfast:map_atlas/0`；无 ClassCastException/无 crash（`runs/p175-map-atlas/`） |
+| Release 资产 | ✅ `v0.5.2` / `mcbridge-launcher-0.5.2.zip` |
 
-鍓╀綑 3 涓?inert 浠嶆槸 `MixinBufferBuilder`銆乣MixinVertexBuffer`銆乣MixinFontManager`锛堜笌鍦板浘鏃犲叧锛?鍘熷洜瑙?`runs/p169-inert-analysis/`锛夈€傚湴鍥惧彧楠岃瘉浜嗗崟浜虹涓€浜虹О鎵嬫寔鍦板浘锛岀墿鍝佸睍绀烘/澶氬湴鍥?鍔ㄦ€佹洿鏂?鏈祴銆?
-## p178 澧為噺楠屾敹锛?026-10-23锛?
-| 闂ㄧ | 缁撴灉 |
+剩余 3 个 inert 仍是 `MixinBufferBuilder`、`MixinVertexBuffer`、`MixinFontManager`（与地图无关） 原因见 `runs/p169-inert-analysis/`）。地图只验证了单人第一人称手持地图，物品展示框/多地图 动态更新 未测。
+## p178 增量验收（2026-10-23）
+| 门禁 | 结果 |
 |---|---|
-| `gradle -p java test installDist` | 鉁?BUILD SUCCESSFUL |
-| Java JUnit | 鉁?25/25 |
-| `python tools/test_review_fixes.py` | 鉁?**81/81**锛堟柊澧?2 鏉?VertexBuffer 瑙勫垯/璇佹嵁鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**1000/1000**锛坢ismatch 0 / missing 0锛?|
-| `python tools/verify_evidence.py` | 鉁?passed锛?1/81锛?|
-| ImmediatelyFast mixin 瀹¤ | `listed=37 inert=2`锛涗粎鍓?`MixinBufferBuilder`銆乣MixinFontManager`锛坄runs/p178-vertex-upload/audit.log`锛?|
-| VertexBuffer 鍔ㄦ€佷笂浼?fast path | 鉁?80 鐩旂敳鏋跺帇鍔涖€乷ff/off + on/on 瀵圭収锛沷n 渚?60/79 鏉?fast 鏍囪銆佹渶楂?76k 娆?`glBufferSubData`锛沷ff/on 鍍忕礌宸?0.0087%锛堜綆浜?off/off 瀵圭収 0.214%锛夛紱鏃?GL/mixin 閿欒 |
-| 鍦板浘 atlas 杈圭晫 | 鉁?p177锛氫袱寮犲湴鍥?tile 0/1 + 鐗╁搧灞曠ず妗嗗悓灞忔覆鏌?|
-| Release 璧勪骇 | 鉁?`v0.5.3` / `mcbridge-launcher-0.5.3.zip` |
+| `gradle -p java test installDist` | ✅ BUILD SUCCESSFUL |
+| Java JUnit | ✅ 25/25 |
+| `python tools/test_review_fixes.py` | ✅ **81/81**（新增 2 条 VertexBuffer 规则/证据回归） |
+| `python tools/check_hashes.py` | ✅ **1000/1000**（mismatch 0 / missing 0） |
+| `python tools/verify_evidence.py` | ✅ passed（81/81） |
+| ImmediatelyFast mixin 审计 | `listed=37 inert=2`；仅剩 `MixinBufferBuilder`、`MixinFontManager`（`runs/p178-vertex-upload/audit.log`） |
+| VertexBuffer 动态上传 fast path | ✅ 80 盔甲架压力、off/off + on/on 对照；on 侧 60/79 条 fast 标记、最高 76k 次 `glBufferSubData`；off/on 像素差 0.0087%（低于 off/off 对照 0.214%）；无 GL/mixin 错误 |
+| 地图 atlas 边界 | ✅ p177：两张地图 tile 0/1 + 物品展示框同屏渲染 |
+| Release 资产 | ✅ `v0.5.3` / `mcbridge-launcher-0.5.3.zip` |
 
-涓嶅绉版€ц兘鏀剁泭锛歱178 鍙瘉鏄?fast path 鎵ц涓旀棤瑙嗚/GL 鍥炲綊锛屾病鏈夊抚鐜囧熀鍑嗭紱鍙祴浜嗕竴鍙?NVIDIA
-鏈哄櫒鍜屼竴涓悎鎴愬帇鍔涘満鏅€?
-## p180 澧為噺楠屾敹锛?026-10-23锛?
-| 闂ㄧ | 缁撴灉 |
+不宣称性能收益：p178 只证明 fast path 执行且无视觉/GL 回归，没有帧率基准；只测了一台 NVIDIA
+机器和一个合成压力场景。
+## p180 增量验收（2026-10-23）
+| 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?**82/82**锛堟柊澧?1 鏉♀€滀笉寰楄鐧昏姝?mixin鈥濆洖褰掞級 |
-| `python tools/check_hashes.py` | 鉁?**1005/1005** |
-| `python tools/verify_evidence.py` | 鉁?passed锛?2/82锛?|
-| 瀹樻柟 1.21.1 mixin 瀹¤ | `listed=37 inert=0 problems=0`锛坄runs/p180-inert-closure/audit-native.log`锛?|
-| 绔彛 mixin 瀹¤ | `listed=37 inert=2 problems=0`锛涗袱涓?inert 鍦ㄥ畼鏂?jar 涓笉瀛樺湪锛?.20.4 閬楃暀姝讳唬鐮侊級 |
-| Release | 鏃犳柊 release锛泇0.5.3 浠嶆槸褰撳墠鍙戝竷锛坧180 鍙湁鏂囨。/璇佹嵁/鍥炲綊锛?|
+| `python tools/test_review_fixes.py` | ✅ **82/82**（新增 1 条“不得误登记死 mixin”回归） |
+| `python tools/check_hashes.py` | ✅ **1005/1005** |
+| `python tools/verify_evidence.py` | ✅ passed（82/82） |
+| 官方 1.21.1 mixin 审计 | `listed=37 inert=0 problems=0`（`runs/p180-inert-closure/audit-native.log`） |
+| 端口 mixin 审计 | `listed=37 inert=2 problems=0`；两个 inert 在官方 jar 中不存在（1.20.4 遗留死代码） |
+| Release | 无新 release；v0.5.3 仍是当前发布（p180 只有文档/证据/回归） |
 
-## p181 澧為噺楠屾敹锛?026-10-23锛?
-| 闂ㄧ | 缁撴灉 |
+## p181 增量验收（2026-10-23）
+| 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?鍏?**83 椤?*锛堟湰娆?**82/82** + `/api/jvm` 缃戠粶瓒呮椂 skip锛涙柊澧?1 鏉?atlas closed 瀹堝崼鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**1022/1022** |
-| `python tools/verify_evidence.py` | 鉁?passed锛堟帴鍙?`/api/jvm` skip锛?|
-| 鍦板浘鍔ㄦ€佹洿鏂?| 鉁?`locked=0` held map锛屾暟鎹寘绉诲姩鐜╁锛沗map-atlas update count=2`锛屾埅鍥炬樉绀哄湴褰㈣鐩栧垵濮嬪浘妗?|
-| 姝ｅ父閫€鍑烘竻鐞?| 鉁?client stop 鈫?`Stopping!` 鈫?`keep-dummy` 鈫?`close id=0` 鈫?`clear atlases=1`锛沞xit 0銆乧rash=null |
-| 閫€鍑哄穿婧冧慨澶?| 鉁?淇鍓?`Image is not allocated`锛坄crash-before-fix-map.txt`锛夛紱`MapAtlasTexture.isClosed` 瀹堝崼鍚庝笉鍐嶅穿 |
-| Release 璧勪骇 | 鉁?`v0.5.4` / `mcbridge-launcher-0.5.4.zip` |
+| `python tools/test_review_fixes.py` | ✅ 共 **83 项**（本次 **82/82** + `/api/jvm` 网络超时 skip；新增 1 条 atlas closed 守卫回归） |
+| `python tools/check_hashes.py` | ✅ **1022/1022** |
+| `python tools/verify_evidence.py` | ✅ passed（接受 `/api/jvm` skip） |
+| 地图动态更新 | ✅ `locked=0` held map，数据包移动玩家；`map-atlas update count=2`，截图显示地形覆盖初始图案 |
+| 正常退出清理 | ✅ client stop → `Stopping!` → `keep-dummy` → `close id=0` → `clear atlases=1`；exit 0、crash=null |
+| 退出崩溃修复 | ✅ 修复前 `Image is not allocated`（`crash-before-fix-map.txt`）；`MapAtlasTexture.isClosed` 守卫后不再崩 |
+| Release 资产 | ✅ `v0.5.4` / `mcbridge-launcher-0.5.4.zip` |
 
-## p183 澧為噺楠屾敹锛?026-10-23锛?
-| 闂ㄧ | 缁撴灉 |
+## p183 增量验收（2026-10-23）
+| 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?鍏?**84 椤?*锛堟湰娆?**84/84**锛涙柊澧?1 鏉?TrashSlot UI empty 閿洖褰掞紝`/api/jvm` 鏈鏈?skip锛?|
-| `python tools/check_hashes.py` | 鉁?**1035/1035** |
-| `python tools/verify_evidence.py` | 鉁?passed锛堟帴鍙?`/api/jvm` skip锛?|
-| TrashSlot 鐪熷疄 empty 閿?| 鉁?inventory 鎮仠 trash 鈫?Delete(261) 鈫?`DEBUG_EMPTY_PROVIDER` 鈫?`SERVER_TRASH empty=true`锛沗after.png` 鏄剧ず trash 绌?|
-| 澶辫触鏍瑰洜 | 鉁?p65/p85/p86 鐨?Delete 澶辫触鏄敞鍏ユ紡 `KEYEVENTF_EXTENDEDKEY`锛堟敹鍒?KP_DECIMAL 330锛夛紝涓嶆槸 Balm/mod锛涙棤浜у搧浠ｇ爜鏀瑰姩 |
-| Release | 浠呰瘉鎹?鍥炲綊锛屾部鐢?`v0.5.4`锛堟棤鏂扮増鏈級 |
+| `python tools/test_review_fixes.py` | ✅ 共 **84 项**（本次 **84/84**；新增 1 条 TrashSlot UI empty 键回归，`/api/jvm` 本次未 skip） |
+| `python tools/check_hashes.py` | ✅ **1035/1035** |
+| `python tools/verify_evidence.py` | ✅ passed（接受 `/api/jvm` skip） |
+| TrashSlot 真实 empty 键 | ✅ inventory 悬停 trash → Delete(261) → `DEBUG_EMPTY_PROVIDER` → `SERVER_TRASH empty=true`；`after.png` 显示 trash 空 |
+| 失败根因 | ✅ p65/p85/p86 的 Delete 失败是注入漏 `KEYEVENTF_EXTENDEDKEY`（收到 KP_DECIMAL 330），不是 Balm/mod；无产品代码改动 |
+| Release | 仅证据/回归，沿用 `v0.5.4`（无新版本） |
 
-## p184 澧為噺楠屾敹锛?026-10-23锛?
-| 闂ㄧ | 缁撴灉 |
+## p184 增量验收（2026-10-23）
+| 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?鍏?**85 椤?*锛堟湰娆?**85/85**锛涙柊澧?1 鏉?TrashSlot Shift+Delete 鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**1048/1048** |
-| `python tools/verify_evidence.py` | 鉁?passed |
-| Shift+Delete 璺ㄦЫ | 鉁?涓ゅ彔 5+3 閽荤煶锛坰lot 0/1锛夛紝Shift+Delete 鈫?`DEBUG_DELETE_CONTAINER all=true` 鈫?鏈嶅姟绔?瀹㈡埛绔?8鈫?锛沗after.png` 绌?|
-| 绗竴娆″皾璇?| 鈿狅笍 `give` 5+3 鍚堝苟鎴愪竴鍙?8锛岃櫧 `all=true` 浣嗘棤娉曡瘉鏄庤法妲斤紱鏈€缁堟敼涓?`method_5447` 鐩存帴鍐欎袱涓Ы浣?|
-| Release | 浠呰瘉鎹?鍥炲綊锛屾部鐢?`v0.5.4`锛堟棤鏂扮増鏈級 |
+| `python tools/test_review_fixes.py` | ✅ 共 **85 项**（本次 **85/85**；新增 1 条 TrashSlot Shift+Delete 回归） |
+| `python tools/check_hashes.py` | ✅ **1048/1048** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| Shift+Delete 跨槽 | ✅ 两叠 5+3 钻石（slot 0/1），Shift+Delete → `DEBUG_DELETE_CONTAINER all=true` → 服务端/客户端 8→0；`after.png` 空 |
+| 第一次尝试 | ⚠️ `give` 5+3 合并成一叠 8，虽 `all=true` 但无法证明跨槽；最终改为 `method_5447` 直接写两个槽位 |
+| Release | 仅证据/回归，沿用 `v0.5.4`（无新版本） |
 
-## p185 澧為噺楠屾敹锛?026-10-23锛?
-| 闂ㄧ | 缁撴灉 |
+## p185 增量验收（2026-10-23）
+| 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?鍏?**86 椤?*锛堟湰娆?**86/86**锛涙柊澧?1 鏉?TrashSlot right-click undelete 鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**1061/1061** |
-| `python tools/verify_evidence.py` | 鉁?passed |
-| 绌?cursor 鍙抽敭 undelete | 鉁?trash 5 鈫?鍙抽敭 鈫?cursor 1銆乼rash 4銆佹湇鍔＄ 4锛沗DEBUG_CLICK button=1 hovering=true`銆乣DEBUG_PROVIDER_UNDELETE right=true` |
-| focus/origin | 鉁?鍏?`focus_window` 鍐?`ClientToScreen`锛岄伩鍏?`ShowWindow` 鍚庡師鐐规紓绉伙紱涓€у乏閿悆鎺夋縺娲荤偣鍑?|
-| Release | 浠呰瘉鎹?鍥炲綊锛屾部鐢?`v0.5.4`锛堟棤鏂扮増鏈級 |
+| `python tools/test_review_fixes.py` | ✅ 共 **86 项**（本次 **86/86**；新增 1 条 TrashSlot right-click undelete 回归） |
+| `python tools/check_hashes.py` | ✅ **1061/1061** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| 空 cursor 右键 undelete | ✅ trash 5 → 右键 → cursor 1、trash 4、服务端 4；`DEBUG_CLICK button=1 hovering=true`、`DEBUG_PROVIDER_UNDELETE right=true` |
+| focus/origin | ✅ 先 `focus_window` 再 `ClientToScreen`，避免 `ShowWindow` 后原点漂移；中性左键吃掉激活点击 |
+| Release | 仅证据/回归，沿用 `v0.5.4`（无新版本） |
 
-## p186 澧為噺楠屾敹锛?026-10-24锛?
-| 闂ㄧ | 缁撴灉 |
+## p186 增量验收（2026-10-24）
+| 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?鍏?**87 椤?*锛堟湰娆?**87/87**锛涙柊澧?1 鏉?Shulker grid wrapper/t2/t4 鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**1072/1072** |
-| `python tools/verify_evidence.py` | 鉁?passed |
-| Shulker grid 閮ㄥ垎鎭㈠ | 鉁?client-side component + wrapper锛歚SBT_WRAP show=true inv=27 nonAir=1`锛泃ooltip 鍑虹幇棰勮妗嗕笌 `Diamond 脳5`锛坄grid.png`锛?|
-| 浠嶆湭瑙ｅ喅 | 鈿狅笍 缃戞牸 slot 鍐?item icon 鏈敾锛涚湡瀹?server `/item replace` 鏍堜粛 `!minecraft:container` |
-| Release | 浠呴儴鍒嗚瘉鎹?鍥炲綊锛屾部鐢?`v0.5.4`锛堟棤鏂扮増鏈級 |
+| `python tools/test_review_fixes.py` | ✅ 共 **87 项**（本次 **87/87**；新增 1 条 Shulker grid wrapper/t2/t4 回归） |
+| `python tools/check_hashes.py` | ✅ **1072/1072** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| Shulker grid 部分恢复 | ✅ client-side component + wrapper：`SBT_WRAP show=true inv=27 nonAir=1`；tooltip 出现预览框与 `Diamond ×5`（`grid.png`） |
+| 仍未解决 | ⚠️ 网格 slot 内 item icon 未画；真实 server `/item replace` 栈仍 `!minecraft:container` |
+| Release | 仅部分证据/回归，沿用 `v0.5.4`（无新版本） |
 
-## v0.5.5 涓€閿畨瑁呭埌 PCL 澧為噺楠屾敹锛?026-10-24锛?
-| 闂ㄧ | 缁撴灉 |
+## v0.5.5 一键安装到 PCL 增量验收（2026-10-24）
+| 门禁 | 结果 |
 |---|---|
-| `python tools/test_review_fixes.py` | 鉁?鍏?**88 椤?*锛堟湰娆?**88/88**锛涙柊澧?1 鏉?PCL 涓€閿潰鏉?鐗堟湰閫夋嫨鍥炲綊锛?|
-| `python tools/check_hashes.py` | 鉁?**1085/1085** |
-| `python tools/verify_evidence.py` | 鉁?passed |
-| 鍥惧舰闈㈡澘 | 鉁?`mcbridge-pcl-panel.zip`锛圧elease v0.5.5锛夛細鐗堟湰涓嬫媺/鎼滅储銆乺elease/snapshot/old_* / all銆佽繘搴︽潯/鏃ュ織銆丳CL2 鐩綍鑷姩妫€娴?|
-| 鍏?Python 瀹夎鍣?| 鉁?`mcbridge-pcl-setup.zip`锛汸CL2 2.13.1.1 渚挎惡鐗堝疄娴?1.20.4 鐗堟湰鍒楄〃鍑虹幇锛坄runs/p137-pcl2-onclick/`锛?|
-| 鐗堟湰閫夋嫨 | 鉁?`from_source_install.py --list --version-type all`銆乣--version latest-snapshot`锛泇0.5.5 release |
-| Release | **v0.5.5**锛堜富宸ュ叿 v0.5.4锛?|
+| `python tools/test_review_fixes.py` | ✅ 共 **88 项**（本次 **88/88**；新增 1 条 PCL 一键面板/版本选择回归） |
+| `python tools/check_hashes.py` | ✅ **1085/1085** |
+| `python tools/verify_evidence.py` | ✅ passed |
+| 图形面板 | ✅ `mcbridge-pcl-panel.zip`（Release v0.5.5）：版本下拉/搜索、release/snapshot/old_* / all、进度条/日志、PCL2 目录自动检测 |
+| 免 Python 安装器 | ✅ `mcbridge-pcl-setup.zip`；PCL2 2.13.1.1 便携版实测 1.20.4 版本列表出现（`runs/p137-pcl2-onclick/`） |
+| 版本选择 | ✅ `from_source_install.py --list --version-type all`、`--version latest-snapshot`；v0.5.5 release |
+| Release | **v0.5.5**（主工具 v0.5.4） |
 
-## 宸茬煡椋庨櫓
+## 已知风险
 
-- 闀滃儚鑺傜偣浼氶殢鏃堕棿/鍦板尯鍙樺寲锛宑anary 鍙槸鍗曟閲囨牱锛?- 瑙勫垯鏂囦欢鎸?`capability/risk/evidence` 缁戝畾锛屾柊澧炶兘鍔涘繀椤诲厛鏈夌湡瀹?boot/杩涗笘鐣岃瘉鎹紱
-- `work/` 涓?`dist/` 涓嶅叆搴擄紱浠撳簱涓嶅垎鍙戞父鎴?妯＄粍/杞崲鍚庣殑 jar锛?- ImmediatelyFast 宸插畬鎴?batching 寮曟搸绉绘锛圚UD/鐗╁搧鎵瑰鐞嗙敓鏁堬紝A/B 鍙鐜帮級锛汭ris銆乸er-lighting 鐗╁搧鍙樹綋涓庡抚鐜囧熀鍑嗕粛鏈仛銆?
+- 镜像节点会随时间/地区变化，canary 只是单次采样； - 规则文件按 `capability/risk/evidence` 绑定，新增能力必须先有真实 boot/进世界证据；
+- `work/` 与 `dist/` 不入库；仓库不分发游戏/模组/转换后的 jar； - ImmediatelyFast 已完成 batching 引擎移植（HUD/物品批处理生效，A/B 可复现）；Iris、per-lighting 物品变体与帧率基准仍未做。
 
 ## p187 Shulker 网格 icon + 服务端物品 增量验收（2026-10-24，本段为正常 UTF-8；上文历史段落保持原样）
 
@@ -283,3 +283,15 @@ python tools/test_portable.py --root <娴嬭瘯鐩綍> --version 1.21.1
 | 更正 | p196 “mod 忽略 config previewKey” 为误判（字段写在 `preview` 分类）；bytecode 显示读取 `controls.previewKey/fullPreviewKey` |
 | Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
 | 隐患 | 键状态仍在 `isKeyDown` 轮询边界注入（无 OS 级物理按键）；27 格不同 NBT/附魔未测 |
+## p198 文档双重编码修复 + 编码守卫 增量（2026-10-28，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **105 项**（本次 **105/105**；新增 6 条文档编码守卫回归） |
+| `python tools/check_hashes.py` | ✅ **1264/1264** |
+| `python tools/verify_evidence.py` | ✅ passed（新增 `text_encoding` 直接项） |
+| `python tools/check_text_encoding.py` | ✅ 223 个跟踪 `*.md` 全绿；修复前三个文件 892 条 finding（`runs/p198-text-encoding/encoding-scan-before.log`） |
+| p198 修复 | ✅ `README.md` / `docs/FINAL-STATUS.md` / `runs/p125-final-acceptance/README.md` 可正常阅读；行数不变（151/267/286） |
+| 修复性质 | ⚠️ 受损 13385 字符中可逆还原 2599（19.4%），10786（80.6%）为按上下文重写；行级 386 未动 / 12 还原 / 306 重写 |
+| Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
+| 隐患 | 重写段落是语义等价重述而非逐字原文；守卫只扫 `*.md`；p195 的写入路径未追溯 |

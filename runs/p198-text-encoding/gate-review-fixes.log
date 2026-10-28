@@ -1,0 +1,107 @@
+PASS ISSUE-03 broken mixin config fails
+PASS ISSUE-03 valid mixin config passes
+PASS ISSUE-02 unsupported schema exits 2
+PASS ISSUE-02 mixed targets exit 2
+PASS ISSUE-02 missing required hit exits 3
+PASS ISSUE-02 already-patched input exits 4
+PASS ISSUE-02 matching required hit exits 0
+PASS ISSUE-07 snapshot listed
+PASS ISSUE-07 old beta listed
+PASS ISSUE-07 modpack instance hidden
+PASS ISSUE-06 neoforge picks matching game version
+PASS launcher /api/mrpacks lists packs
+PASS launcher lists mods
+PASS launcher toggles a mod
+PASS launcher deletes an installed version
+PASS launcher rejects path traversal in delete
+PASS launcher serves the usage guide
+PASS launcher dir_target resolves mods
+PASS launcher dir_target rejects escapes
+PASS launcher /api/dirs lists game folders
+PASS launcher /api/downloads exposes the source log
+PASS launcher /api/task exposes byte progress and speed
+PASS launcher config stores download_source
+PASS launcher /api/source-health reports mode and hosts
+PASS launcher condenses canary results
+PASS launcher opens the mods folder
+PASS launcher rejects unknown open-dir target
+PASS launcher sync-profiles writes launcher_profiles entries
+PASS launcher /api/jvm returns json
+PASS launcher /api/loader-versions responds
+PASS ISSUE-05 encoded log path readable
+PASS ISSUE-08 missing java returns JSON
+PASS NEOFORGE empty root reports all artifacts missing
+PASS NEOFORGE verify rejects profile-only install
+PASS NEOFORGE build_command refuses incomplete install
+PASS NEOFORGE installer seeding skips verified files
+PASS NEOFORGE artifacts detected once present
+PASS NEOFORGE verify accepts a complete install
+PASS NEOFORGE complete install builds a command
+PASS NEOFORGE backend command keeps extra game args (quickPlay)
+PASS NEOFORGE verify flags a missing universal jar
+PASS LOADER install_forge ensures the vanilla base first
+PASS IFPORT rule binds 6+ replacements to capability/risk/evidence
+PASS IFPORT rule re-adds the HUD mixins with evidence
+PASS IFPORT rule bridges the Identifier constructors
+PASS IFPORT sources exist and avoid tombstones
+PASS IFPORT draw path does not double-close the builder allocator
+PASS IFPORT keeps the Iris compatibility branch wired
+PASS IFPORT keeps the universal-batching fallback (SimpleImmediate)
+PASS IFPORT keeps the item per-lighting variants wired
+PASS IFPORT no longer strips the map atlas mixins
+PASS IFPORT re-registers both map atlas mixins
+PASS IFPORT replaces both map mixins and embeds MapAtlasTexture
+PASS IFPORT map sources use the 1.21.1 signatures and drop lenni allocate
+PASS IFPORT embeds the 1.21.1 MapAtlasTexture factories
+PASS IFPORT build widens the package-private MapTexture stub
+PASS IFPORT re-registers MixinVertexBuffer with the 1.21.1 60829 entry point
+PASS IFPORT vertex A/B evidence stays within the off/off control
+PASS IFPORT leaves the upstream-removed BufferBuilder/FontManager mixins inert
+PASS IFPORT map atlas skips a closed image during world exit
+PASS TRASH the real empty-trash Delete key reaches the provider and server
+PASS TRASH Shift+Delete deletes same-item stacks across slots
+PASS TRASH empty-cursor right-click takes one item and leaves four
+PASS SBT grid preview reaches the tooltip with component wrapper and t2/t4 bridges
+PASS SBT grid draws item icons and serves the server-synced box (set-as-get fixed)
+PASS map atlas overflow creates the second atlas, encodes tiles and cleans up both
+PASS TRASH creative delete keys work via the 1.21.1 companion (hover null upstream)
+PASS TRASH multi-client: per-player isolation with A draining and B untouched
+PASS TRASH creative inventory tab: main slots delete, list slots are upstream-ignored
+PASS TRASH three clients: B drains its own trash, C untouched, A rejoin resets (upstream)
+PASS SBT grid residuals: multi-item, FULL, real mouse hover and server box
+PASS map atlas third: 2048+ maps, atlas 2, cross-atlas frame, cleanup
+PASS p195 delivery: v0.5.6 portable fresh root OK + panel smoke (PCL2 absent)
+PASS p196 shulker grid 27-slot full grid
+PASS p197 shulker preview keys rebound via config (J/K)
+PASS PCL one-click panel/version picker contract
+PASS PORTABLE mclaunch puts its directory on sys.path before importing fetch
+PASS encoding guard present
+PASS encoding guard: tracked docs clean
+PASS encoding guard: clean sample passes
+PASS encoding guard: corrupted sample fails
+PASS encoding guard: corrupted sample reports findings
+PASS encoding guard: exemption list points at real docs
+PASS DOWNLOAD fabric-loader has the verified BMCL maven fallback
+PASS DOWNLOAD intermediary has the verified BMCL maven fallback
+PASS DOWNLOAD fabric-api stays official (no verified mirror)
+PASS DOWNLOAD metadata uses the BMCL meta mirror
+PASS DOWNLOAD http_json falls back to the mirror
+PASS DOWNLOAD hedges a slow metadata host with the mirror
+PASS DOWNLOAD caches metadata for the TTL
+PASS DOWNLOAD max_age=0 bypasses the metadata cache
+PASS DOWNLOAD 404 skips to the mirror without retries
+PASS DOWNLOAD retries transient failures
+PASS DOWNLOAD verifies hashes and falls back
+PASS DOWNLOAD reads and caches maven sha1 sidecars
+PASS DOWNLOAD records the source it actually used
+PASS DOWNLOAD reports bytes and source through Progress
+PASS DOWNLOAD Progress computes a transfer speed
+PASS DOWNLOAD maven hot path uses the local sidecar
+PASS DOWNLOAD official mode disables mirrors
+PASS DOWNLOAD mirror mode puts mirrors first
+PASS DOWNLOAD auto mode starts with the official URL
+PASS DOWNLOAD a recently failing host is ordered last
+PASS DOWNLOAD persists and reloads host health
+PASS DOWNLOAD canary health merges into the cache
+
+105/105 checks passed

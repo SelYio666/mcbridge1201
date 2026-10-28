@@ -13,6 +13,7 @@ Exit code 0 means every check passed; 1 means at least one failed; 2 means a pre
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import sys
@@ -896,6 +897,70 @@ def test_immediatelyfast_port() -> None:
           "embedded CPython ._pth does not add the script directory")
 
 
+def test_text_encoding_guard() -> None:
+    """The docs must stay clean UTF-8: no GBK double-encoding, no '?' artifacts.
+
+    Guards against the p195 corruption (UTF-8 bytes read as cp936 and re-saved)
+    re-entering the repository through a future save with the wrong codec.
+    """
+    guard = ROOT / "tools" / "check_text_encoding.py"
+    check("encoding guard present", guard.exists(), str(guard))
+    if not guard.exists():
+        return
+    rc, out = run([sys.executable, "-B", str(guard)])
+    check("encoding guard: tracked docs clean", rc == 0,
+          out.strip().splitlines()[-1] if out.strip() else f"rc={rc}")
+
+    tmp = WORK / "encoding-guard"
+    tmp.mkdir(parents=True, exist_ok=True)
+    original = (
+        "# 标题（2026-10-28）\n"
+        "\n"
+        "正文说明，使用 `code` 与 [链接](x.md)，以及 10 份样本。\n"
+    )
+    good = tmp / "good.md"
+    good.write_text(original, encoding="utf-8")
+    rc, out = run([sys.executable, "-B", str(guard), str(good)])
+    check("encoding guard: clean sample passes", rc == 0, out[-200:])
+
+    # the exact damage: UTF-8 bytes decoded as cp936 with '?' fallback, re-saved
+    raw = original.encode("utf-8")
+    damaged = []
+    i = 0
+    while i < len(raw):
+        c = raw[i]
+        if c < 0x80:
+            damaged.append(chr(c))
+            i += 1
+        elif i + 1 < len(raw) and 0x40 <= raw[i + 1] <= 0xFE and raw[i + 1] != 0x7F:
+            pair = bytes(raw[i:i + 2])
+            try:
+                damaged.append(pair.decode("gbk"))
+            except UnicodeDecodeError:
+                damaged.append("?")
+            i += 2
+        else:
+            damaged.append("?")
+            i += 1
+    bad = tmp / "bad.md"
+    bad.write_text("".join(damaged), encoding="utf-8")
+    rc, out = run([sys.executable, "-B", str(guard), str(bad)])
+    lines = [l for l in out.strip().splitlines() if ": " in l]
+    check("encoding guard: corrupted sample fails", rc == 1,
+          out.strip().splitlines()[-1] if out.strip() else f"rc={rc}")
+    check("encoding guard: corrupted sample reports findings", len(lines) >= 1,
+          lines[0] if lines else "no findings")
+
+    # an exemption may only ever point at a document that still exists, so a renamed or
+    # deleted report cannot leave a stale "allow the damage" entry behind
+    spec = importlib.util.spec_from_file_location("check_text_encoding", guard)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    stale = [rel for rel in module.EXEMPT if not (ROOT / rel).exists()]
+    check("encoding guard: exemption list points at real docs", not stale,
+          ", ".join(stale) or f"{len(module.EXEMPT)} entr(ies)")
+
+
 def test_download_policy() -> None:
     """Offline checks for the download-source policy (mirrors, retries, checksums)."""
     sys.path.insert(0, str(ROOT / "launcher"))
@@ -1187,6 +1252,7 @@ def main() -> int:
     test_neoforge_install()
     test_loader_base_ensure()
     test_immediatelyfast_port()
+    test_text_encoding_guard()
     test_download_policy()
     failed = [name for name, ok, _ in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed"
