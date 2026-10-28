@@ -300,7 +300,7 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | 门禁 | 结果 |
 |---|---|
 | `python tools/test_review_fixes.py` | ✅ 共 **124 项**（本次 **124/124**；新增 16 条 atlas 逐 id 落点/并排回归 + 3 条转义控制字符回归） |
-| `python tools/check_hashes.py` | ✅ **1289/1289**（mismatch 0 / missing 0） |
+| `python tools/check_hashes.py` | ✅ **1289/1289**（mismatch 0 / missing 0；p201 起清单为 1269/1269，见下） |
 | `python tools/verify_evidence.py` | ✅ passed（`text_encoding` 226 个 md 全绿、`review_regressions` 124/124） |
 | 顺手修的第二类损伤 | ✅ `docs/remaining-work.md` 中 `\t`/`\r` 被解释成控制字符的两处已修回；守卫加 `control-tab`/`control-cr`（围栏内 TAB 合法）+ 3 条回归 |
 | 逐 id 校验 | ✅ `mapping-mismatch=0 pixel-verified=2050 pixel-mismatch=0`（不是抽样，也不是 p194 的共用内容校验） |
@@ -309,3 +309,16 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | 工作集 | ⚠️ 实测 +460.9 / +548.1 / +486.5 MB（三次），峰值 2192.0–2247.3；**显存未测** |
 | Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
 | 隐患 | 真实专用服务器 1024+ 张地图未做；只用到 2050 格（未压满 3072）；VRAM 未测 |
+
+## p201 哈希清单在干净 clone 里可验证 增量（2026-10-28，正常 UTF-8）
+
+| 门禁 | 结果 |
+|---|---|
+| `python tools/test_review_fixes.py` | ✅ 共 **130 项**（本次 **130/130**；新增 6 条行尾确定性回归） |
+| `python tools/check_hashes.py` | ✅ **1269/1269**（mismatch 0 / missing 0；条目由 1289 减到 1269，删掉 20 条指向 gitignored `work/` 的） |
+| `python tools/verify_evidence.py` | ✅ passed（`text_encoding` 227 个 md 全绿、`review_regressions` 130/130） |
+| 干净 clone（修复前） | ❌ clone `82e4e9f`：`ok=646 mismatch=623 missing=20` |
+| 干净 clone（修复后） | ✅ clone `2e34a9a`：`ok=1269 mismatch=0 missing=0`；`audit_eol` 1269/1269 可复现 |
+| 修法 | ✅ `.gitattributes` 钉 `* -text`、工作区归一到 blob 字节（纯行尾）、删 `work/` 条目、`git ls-files -z` |
+| Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
+| 隐患 | `test_review_fixes` 未在 clone 里跑（要 Java CLI）；只在 Windows / Git for Windows 实跑 |

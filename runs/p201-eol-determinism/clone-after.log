@@ -1,0 +1,24 @@
+# git clone of commit 2e34a9a (p201), then the clone-relevant gates.
+# Contrast with clone-before.log: same commands, one commit apart.
+#
+2e34a9a fix(evidence): pin byte-exact checkout so the manifest survives a clone (p201)
+# git version: git version 2.55.0.windows.3
+# core.autocrlf (inherited from this machine): true
+# gitattributes: * -text
+#
+## python tools/check_hashes.py
+ok=1269 mismatch=0 missing=0
+
+## python runs/p201-eol-determinism/audit_eol.py
+hashed paths: 1269
+reproducible from a fresh clone: 1269
+worktree bytes != checkout bytes: 0
+
+## python tools/check_text_encoding.py
+exempt: runs/p198-text-encoding/README.md — p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept
+exempt files: 1, suppressed content findings: 3
+checked 226 markdown file(s): 226 clean, 0 finding(s)
+
+# tools/test_review_fixes.py is NOT run here: most of its checks need the built Java CLI
+# (gradle test installDist), which a bare clone does not have. It is verified on the
+# authoring machine instead: 130/130 (runs/p201-eol-determinism/gate-review-fixes.log).

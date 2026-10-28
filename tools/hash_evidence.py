@@ -1303,6 +1303,12 @@ FILES = [
     "runs/p200-atlas-layout/repeat-runs.log",
     "runs/p200-atlas-layout/gate-review-fixes.log",
     "runs/p200-atlas-layout/gate-verify.log",
+    "runs/p201-eol-determinism/README.md",
+    "runs/p201-eol-determinism/audit_eol.py",
+    "runs/p201-eol-determinism/clone-before.log",
+    "runs/p201-eol-determinism/clone-after.log",
+    "runs/p201-eol-determinism/gate-review-fixes.log",
+    "runs/p201-eol-determinism/gate-verify.log",
 ]
 
 
