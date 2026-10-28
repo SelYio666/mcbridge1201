@@ -15,7 +15,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 - **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康缓存 + GUI 源检查；内嵌 Python 的便携包（v0.5.2）。
 - **已验证进世界**：Fabric 1.21.1（全量安装 + EntityCulling 真生效）；ImmediatelyFast 1.21.1 batching 移植（HUD/物品/overlay 计数、Iris 1.8.1/1.8.14 + shader pack、专用服务器多人加入；`runs/p134`-`p150`）；**ImmediatelyFast 地图 atlas 恢复：p175 单人真实手持 filled_map 渲染；p177 两张地图分别落到 atlas tile 0/1 并与物品展示框地图同屏渲染；p181 动态更新（第二次上传）+ 正常退出清理，并修复退出时向已释放 NativeImage 写入的崩溃；p178 在 80 盔甲架压力下启用 VertexBuffer 动态上传 fast path（on 侧最高 76k 次 glBufferSubData，off/on 截图差 0.0087%，低于 off/off 对照，无 GL/mixin 错误）**（`runs/p175-map-atlas/`、`runs/p177-map-atlas-edge/`、`runs/p181-map-atlas-lifecycle/`、`runs/p178-vertex-upload/`）；NeoForge 21.1.264（AppleSkin / Farmer's Delight / Jade + **专用服务器客户端加入**，`runs/p161-neoforge-server/`；**带 Farmer's Delight 的服务端/客户端同模组加入**，`runs/p163-neoforge-fd-server/`）；Forge 1.20.1-47.4.28（AppleSkin / Farmer's Delight + **专用服务器客户端加入**，`runs/p159-forge-server/`；**带 Farmer's Delight 的同模组加入**，`runs/p164-forge-fd-server/`）；mrpack 真实 files 导入通过（`runs/p160-mrpack/`）。
 - **未通过 / 未验证**：Sodium 1.20.1 转换探针为 `blocked_static`（missingClass=13、missingMember=15、descMismatch=16，`runs/p158-sodium-probe/`），需移植其渲染内核，本轮不做（p199 逐条定性 44 条：6 条为内嵌 Fabric API、7 条纯 id、7 条签名有明确写法、24 条卡在被换掉的即时模式顶点管线，见 [docs/sodium-plan.md](docs/sodium-plan.md)）；Iris 只验证了 ImmediatelyFast 的兼容分支（没有转换 Iris 本身）；ImmediatelyFast 端口 jar 仍有 **2 个 inert**，但它们是官方 1.21.1 已删除的 1.20.4 遗留类（BufferBuilder/FontManager；ChatHud/MinecraftClient/BufferRenderer 已在 p166–p168 重登记，两个 map mixin 在 p175 恢复，VertexBuffer 在 p178 启用；对照见 `runs/p180-inert-closure/`）；地图 atlas 已验证单人手持 + 两张地图（tile 0/1）+ 物品展示框 + p181 动态更新+正常退出清理；atlas 满 1024 张未测；性能**不宣称收益**——HUD 场景差异在噪声内（`runs/p148-bench/`），80 盔甲架实体压力交错两轮慢约 13%（`runs/p157-stress-interleaved/`）。
-- **门禁**：Java 25/25、`test_review_fixes` 共 227 项（本次 **227/227**）、`check_hashes` **1337/1337**、`verify_evidence` passed（含 `text_encoding` 直接项）；CI push 触发已验证（最近 `build` success，见 Actions）。
+- **门禁**：Java 25/25、`test_review_fixes` 共 227 项（本次 **227/227**）、`check_hashes` **1338/1338**、`verify_evidence` passed（含 `text_encoding` 直接项）；CI push 触发已验证（最近 `build` success，见 Actions）。
 - 详情：[总验收快照](runs/p125-final-acceptance/README.md)、[FINAL-STATUS](docs/FINAL-STATUS.md)、[使用说明](docs/guide.md)。
 
 ## 现状（2026-10-18）
@@ -198,7 +198,7 @@ MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecr
 - **交付路径的四个真缺陷**（修前 2/6，修后 6/6，`probe_behaviour.py` 同一脚本跑出两份 JSON）：`default_root()` 在 `APPDATA` 未设置时用相对路径 `.minecraft`，会认领启动器的工作目录；POSIX 下 `JAVA_HOME` 因只找 `bin/java.exe` 被无视；macOS 走 `xdg-open`（通常没有）且无异常保护；一个从未引用的 `C://Program Files\Java\...` 常量。
 - **打包脚本的假成功**：`vendor_deps()` 跳过 import 不到的依赖，调用处不接返回值，于是零依赖也 `done`、退出码 0。新增 `require_vendored`：缺 `minecraft_launcher_lib` 直接 `rc=1` 拒包（`--allow-missing-deps` 是显式开关）。
 - **跨平台只做审计，不假装跑过**：WSL 被本机安全策略拦住（`wsl.exe` 在 Program Blacklist），Linux 没有执行。静态命中 28→22、未保护 24→4（剩余 4 条是便携包按构造的 Windows-only 部分）；POSIX 模拟下交付模块 **4/4** 全部可导入。
-- **门禁**：`test_review_fixes` **227/227**（新增 39 条，从四份 JSON 与两份日志重算）、`check_hashes` **1337/1337**、`verify_evidence` passed；无新 release（v0.5.6 不变）。
+- **门禁**：`test_review_fixes` **227/227**（新增 39 条，从四份 JSON 与两份日志重算）、`check_hashes` **1338/1338**、`verify_evidence` passed；无新 release（v0.5.6 不变）。
 - 边界：**同一台机器、不同环境**（不是另一台电脑）；没有 POSIX 内核参与；便携包按构造 Windows-only；`install_jvm_runtime` 的下载未跑；完整重打包因本机缺依赖未做（改用的是叠加源码）。
 - 边界：四客户端及以上、同一玩家的同 tick 两次操作、跨机器真实延迟均未测。
 - 边界：单机单显示器；FULL 仍需在轮询边界伪造 J/K（悬停本身不需要）；未测嵌套潜影盒与逐格自定义模型。

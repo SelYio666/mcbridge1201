@@ -352,7 +352,7 @@ p195 结尾的 "clean-host portable remain open" 与 p201 的 "Verified on Windo
   `PosixPath` 抛错、中文路径下内嵌 Python 用 cp936 写 stdout），详见 `runs/p208-cross-platform/README.md`；
 - 回归：新增 `test_cross_platform_delivery()`（39 条），从四份 JSON 与两份日志**重算**，并直接断言
   `require_vendored` 的行为与 `java_binary()`/`open_in_explorer()` 的分支；
-- 门禁：`test_review_fixes` **227/227**、`check_hashes` **1337/1337**、`verify_evidence` passed、
+- 门禁：`test_review_fixes` **227/227**、`check_hashes` **1338/1338**、`verify_evidence` passed、
   228 个 md 全绿；无新 release（v0.5.6 不变）；
 - 边界：同一台机器不同环境而非另一台电脑；无 POSIX 内核参与；便携包按构造 Windows-only；
   `install_jvm_runtime` 的下载未跑；完整重打包因本机无 `minecraft_launcher_lib` 未做，改用的是

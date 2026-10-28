@@ -1371,6 +1371,7 @@ FILES = [
     "runs/p208-cross-platform/build-blocked.log",
     "runs/p208-cross-platform/gate-review-fixes.log",
     "runs/p208-cross-platform/gate-verify.log",
+    "runs/p208-cross-platform/clone-check.log",
 ]
 
 

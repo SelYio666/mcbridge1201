@@ -1,0 +1,19 @@
+clone of f89f0b2 at f89f0b2
+
+== check_hashes ==
+ok=1337 mismatch=0 missing=0
+
+== audit_portability ==
+tracked *.py: 111
+delivery hits: 22 in 4 files (docstring 6, guarded 12, bare 4) | harness hits: 220
+delivery modules imported under posix simulation: 4/4
+  OK   backend AUDIT_OK backend
+
+== probe_behaviour ==
+PASS default_root_no_appdata: 'C:\\Users\\27682\\AppData\\Local\\Temp\\workbuddy-update-x64-workbuddy\\p208-root-x3x33knj\\home\\.mcbridge\\mc' (want an absolute path outside the current directory)
+PASS find_java_home_posix: 'C:\\Users\\27682\\AppData\\Local\\Temp\\workbuddy-update-x64-workbuddy\\p208-jdk-sdlz4bza\\bin\\java' (want JAVA_HOME honoured -> C:\Users\27682\AppData\Local\Temp\workbuddy-update-x64-workbuddy\p208-jdk-sdlz4bza\bin\java)
+PASS open_folder_darwin: 'open' (want open used)
+PASS open_folder_linux: 'xdg-open' (want xdg-open used)
+PASS open_folder_win32: 'startfile' (want startfile used)
+PASS java_fallback_unused: 'defined=False occurrences=0' (want the constant is either used or absent)
+6/6 -> C:\Users\27682\AppData\Local\Temp\workbuddy-update-x64-workbuddy\p208-clone-probe.json

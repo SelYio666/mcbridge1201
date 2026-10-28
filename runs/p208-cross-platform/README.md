@@ -98,7 +98,7 @@ rc=1                                     ← 且 dist/ 下没有新产物
 WSL 在这台机器上是有的，但被安全策略拦住（`wsl.exe` 在 Program Blacklist 里），**Linux 没有
 被执行**。这个不绕过，直接写进边界。能做的是两遍独立检查：
 
-**静态**：108 个 tracked `*.py` 里挑出"收件人会跑的那部分"（`launcher/` 三个文件 +
+**静态**：tracked `*.py`（第一次跑时 108 个；三个新工具提交后是 111 个，新增的三个都归 harness，不改变交付路径的数字）里挑出"收件人会跑的那部分"（`launcher/` 三个文件 +
 `build_portable.py` + `test_portable.py`），扫 `os.name` / `sys.platform` 分支、`winreg`、
 `msvcrt`、`os.startfile`、`java.exe`、盘符、`%APPDATA%`、`chcp`、`taskkill` 等。
 
@@ -177,6 +177,23 @@ default_root()    C:\Users\27682\AppData\Roaming\.minecraft
 4. **误报要逐条核对**：`drive-letter` 正则把 `https://` 里的 `s:/` 当成盘符，`percent-env` 把
    `strftime` 的 `%Y%m%d` 当成环境变量，一次性贡献了 30 多条假命中。收紧成"盘符后必须跟字母或
    中文"、"百分号里只能是大写+数字"之后，命中数才从 58 掉到 28。
+
+## 5.5 克隆验证：收件人自己也能验
+
+交付验证的最后一步是"别人拿到能不能自己跑"。在 `f89f0b2` 上做了一次真克隆：
+
+```text
+== check_hashes ==          ok=1337 mismatch=0 missing=0
+== audit_portability ==     tracked *.py: 111 | delivery hits: 22 in 4 files
+                            (docstring 6, guarded 12, bare 4) | 4/4 可导入
+== probe_behaviour ==       6/6
+```
+
+原始输出在 `clone-check.log`。这里写 `ok=1337` 是因为克隆的是 `f89f0b2`——那份清单有 1337 项；
+`clone-check.log` 本身是在这次验证之后才加入清单的，所以当前清单是 1338 项。
+
+这一步同时反证了 p201 的成果：`.gitattributes` 的 `* -text` 加上 `git ls-files -z` 之后，克隆出来的
+字节和清单一致，不需要 `core.autocrlf` 配合。
 
 ## 6. 门禁与边界
 

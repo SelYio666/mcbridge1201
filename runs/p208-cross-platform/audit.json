@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-28T23:11:47",
+  "generated": "2026-10-28T23:58:02",
   "host": {
     "sys.platform": "win32",
     "os.name": "nt",
@@ -28,10 +28,10 @@
     "Harness hits are authoring tooling (runs/, probes/); they are counted but not treated as delivery defects."
   ],
   "counts": {
-    "tracked_py": 108,
+    "tracked_py": 111,
     "delivery_files_with_hits": 4,
     "delivery_hits": 22,
-    "harness_hits": 172,
+    "harness_hits": 220,
     "delivery_hits_docstring": 6,
     "delivery_hits_guarded": 12,
     "delivery_hits_bare": 4,
@@ -1539,6 +1539,189 @@
       ]
     },
     {
+      "path": "runs/p208-cross-platform/probe_behaviour.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 10,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "default_root_no_appdata    APPDATA unset (as on POSIX), a .minecraft/versions",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 16,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "must not depend on the file being called java.exe.",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 17,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "open_folder_darwin         macOS gets `open`, not `xdg-open`.",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 18,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "open_folder_windows        control: still os.startfile on Windows, so the",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 41,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "\"\"\"APPDATA unset + a decoy .minecraft in the CWD must not become the game root.\"\"\"",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 50,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "os.environ.pop(\"APPDATA\", None)",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 67,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "\"detail\": (\"APPDATA unset -> Path('')/'.minecraft' is relative and .exists() \"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 112,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "\"detail\": (\"looked for bin/java.exe, so JAVA_HOME was skipped and another JDK won\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 137,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "os.startfile = fake_startfile  # type: ignore[attr-defined]",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 155,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "os.startfile = saved_startfile  # type: ignore[attr-defined]",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 182,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "\"detail\": (\"hardcoded C:\\\\Program Files\\\\Java\\\\... but never referenced\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 196,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "probe_open_folder(\"linux\", \"xdg-open\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
+      "path": "runs/p208-cross-platform/run_clean_host.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 14,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "HOME/USERPROFILE/TEMP/APPDATA/LOCALAPPDATA",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 53,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "system32 = Path(os.environ.get(\"SystemRoot\", r\"C:\\Windows\")) / \"System32\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 55,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "\"SystemRoot\": str(Path(os.environ.get(\"SystemRoot\", r\"C:\\Windows\"))),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 57,
+          "pattern": "drive-letter",
+          "why": "absolute Windows path",
+          "code": "\"windir\": str(Path(os.environ.get(\"SystemRoot\", r\"C:\\Windows\"))),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 64,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "\"APPDATA\": str(home / \"AppData\" / \"Roaming\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 65,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "\"LOCALAPPDATA\": str(home / \"AppData\" / \"Local\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 130,
+          "pattern": "python.exe",
+          "why": "same for the interpreter",
+          "code": "py = pkg / \"python\" / \"python.exe\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        }
+      ]
+    },
+    {
       "path": "runs/p74-two-client/launch_client.py",
       "kind": "harness",
       "hits": [
@@ -1623,6 +1806,210 @@
       ]
     },
     {
+      "path": "tools/audit_portability.py",
+      "kind": "harness",
+      "hits": [
+        {
+          "line": 7,
+          "pattern": "winreg",
+          "why": "module does not exist on POSIX",
+          "code": "POSIX (os.name / sys.platform branches, winreg, msvcrt, .exe",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 7,
+          "pattern": "msvcrt",
+          "why": "module does not exist on POSIX",
+          "code": "POSIX (os.name / sys.platform branches, winreg, msvcrt, .exe",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 8,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "binaries, drive letters, %APPDATA% style env vars, os.startfile,",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 8,
+          "pattern": "percent-env",
+          "why": "cmd.exe variable syntax",
+          "code": "binaries, drive letters, %APPDATA% style env vars, os.startfile,",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 8,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "binaries, drive letters, %APPDATA% style env vars, os.startfile,",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 9,
+          "pattern": "taskkill",
+          "why": "process control is Windows-only",
+          "code": "chcp, taskkill). Hits are classified as delivery (what a recipient",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 9,
+          "pattern": "chcp",
+          "why": "console code page is Windows-only",
+          "code": "chcp, taskkill). Hits are classified as delivery (what a recipient",
+          "guard": null,
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 49,
+          "pattern": "winreg",
+          "why": "module does not exist on POSIX",
+          "code": "WINDOWS_ONLY = (\"winreg\", \"msvcrt\", \"_winapi\", \"_msi\", \"winsound\", \"win32api\",",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 49,
+          "pattern": "msvcrt",
+          "why": "module does not exist on POSIX",
+          "code": "WINDOWS_ONLY = (\"winreg\", \"msvcrt\", \"_winapi\", \"_msi\", \"winsound\", \"win32api\",",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 56,
+          "pattern": "winreg",
+          "why": "module does not exist on POSIX",
+          "code": "(\"winreg\", re.compile(r\"\\bwinreg\\b\"), \"module does not exist on POSIX\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 57,
+          "pattern": "msvcrt",
+          "why": "module does not exist on POSIX",
+          "code": "(\"msvcrt\", re.compile(r\"\\bmsvcrt\\b\"), \"module does not exist on POSIX\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 58,
+          "pattern": "ctypes.windll",
+          "why": "Win32 API only",
+          "code": "(\"ctypes.windll\", re.compile(r\"ctypes\\.windll|\\bwindll\\b\"), \"Win32 API only\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 59,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "(\"os.startfile\", re.compile(r\"os\\.startfile\"), \"Windows-only; needs open/xdg-open\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 59,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "(\"os.startfile\", re.compile(r\"os\\.startfile\"), \"Windows-only; needs open/xdg-open\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 60,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "(\"xdg-open\", re.compile(r\"xdg-open\"), \"absent on macOS, needs open\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 61,
+          "pattern": "taskkill",
+          "why": "process control is Windows-only",
+          "code": "(\"taskkill\", re.compile(r\"\\btaskkill\\b\"), \"process control is Windows-only\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 62,
+          "pattern": "chcp",
+          "why": "console code page is Windows-only",
+          "code": "(\"chcp\", re.compile(r\"\\bchcp\\b\"), \"console code page is Windows-only\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 63,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "(\"java.exe\", re.compile(r\"java\\.exe\"), \"the binary is called java on POSIX\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 64,
+          "pattern": "python.exe",
+          "why": "same for the interpreter",
+          "code": "(\"python.exe\", re.compile(r\"python\\.exe\"), \"same for the interpreter\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 70,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "(\"appdata\", re.compile(r\"APPDATA|LOCALAPPDATA|ProgramData|Program Files\"),",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 125,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "A hit on its own says nothing: `os.startfile` inside `if platform.startswith",
+          "guard": "r\"|is_windows|startswith\\(\\\"win\\\"\\)\")",
+          "in_docstring": true,
+          "handled": true
+        },
+        {
+          "line": 235,
+          "pattern": "sys.platform-branch",
+          "why": "same, keyed on platform string",
+          "code": "\"The dynamic pass flips sys.platform in a subprocess and blocks Windows-only \"",
+          "guard": "\"The dynamic pass flips sys.platform in a subprocess and blocks Windows-only \"",
+          "in_docstring": true,
+          "handled": true
+        }
+      ]
+    },
+    {
       "path": "tools/build_bridges.py",
       "kind": "harness",
       "hits": [
@@ -1672,7 +2059,7 @@
       "kind": "delivery",
       "hits": [
         {
-          "line": 149,
+          "line": 170,
           "pattern": "python.exe",
           "why": "same for the interpreter",
           "code": "\"if exist \\\"%~dp0python\\\\python.exe\\\" (\\r\\n\"",
@@ -1681,7 +2068,7 @@
           "handled": false
         },
         {
-          "line": 150,
+          "line": 171,
           "pattern": "python.exe",
           "why": "same for the interpreter",
           "code": "\"  \\\"%~dp0python\\\\python.exe\\\" \\\"%~dp0bootstrap.py\\\"\\r\\n\"",
@@ -1690,7 +2077,7 @@
           "handled": false
         },
         {
-          "line": 187,
+          "line": 208,
           "pattern": "python.exe",
           "why": "same for the interpreter",
           "code": "- 杀毒软件拦截：本包没有 exe 安装器，只有 python.exe（官方嵌入式运行时），可加信任。",
@@ -1786,7 +2173,7 @@
       "kind": "harness",
       "hits": [
         {
-          "line": 1382,
+          "line": 1395,
           "pattern": "drive-letter",
           "why": "absolute Windows path",
           "code": "raise SystemExit(\"manifest lists missing files:\\n  \" + \"\\n  \".join(missing))",
@@ -2141,6 +2528,69 @@
           "guard": null,
           "in_docstring": false,
           "handled": false
+        },
+        {
+          "line": 1676,
+          "pattern": "appdata",
+          "why": "Windows env vars / install roots",
+          "code": "check(\"p208: unset APPDATA used to give a relative game root\",",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 1689,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "check(\"p208: macOS used to be sent to xdg-open\",",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 1690,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "probe(before, \"open_folder_darwin\").get(\"actual\") == \"xdg-open\", \"\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 1781,
+          "pattern": "java.exe",
+          "why": "the binary is called java on POSIX",
+          "code": "mclaunch.java_binary(\"win32\") == \"java.exe\"",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 1789,
+          "pattern": "xdg-open",
+          "why": "absent on macOS, needs open",
+          "code": "raise FileNotFoundError(\"xdg-open\")",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 1794,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "server.os.startfile = lambda p, *a, **kw: opened.append(p)",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
+        },
+        {
+          "line": 1800,
+          "pattern": "os.startfile",
+          "why": "Windows-only; needs open/xdg-open",
+          "code": "server.os.startfile = real_startfile",
+          "guard": null,
+          "in_docstring": false,
+          "handled": false
         }
       ]
     },
@@ -2168,7 +2618,7 @@
       "rc": 0,
       "stdout": "AUDIT_OK backend",
       "stderr": [],
-      "seconds": 0.63
+      "seconds": 0.46
     },
     {
       "path": "launcher/fetch.py",
@@ -2177,7 +2627,7 @@
       "rc": 0,
       "stdout": "AUDIT_OK fetch",
       "stderr": [],
-      "seconds": 0.63
+      "seconds": 0.46
     },
     {
       "path": "launcher/mclaunch.py",
@@ -2186,7 +2636,7 @@
       "rc": 0,
       "stdout": "AUDIT_OK mclaunch",
       "stderr": [],
-      "seconds": 0.69
+      "seconds": 0.55
     },
     {
       "path": "launcher/server.py",
@@ -2195,7 +2645,7 @@
       "rc": 0,
       "stdout": "AUDIT_OK server",
       "stderr": [],
-      "seconds": 0.69
+      "seconds": 0.52
     }
   ]
 }

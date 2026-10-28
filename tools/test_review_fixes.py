@@ -1708,12 +1708,15 @@ def test_cross_platform_delivery() -> None:
     check("p208: 22 hits with 4 unguarded after",
           ca["delivery_hits"] == 22 and ca["delivery_hits_bare"] == 4,
           f"{ca['delivery_hits']}/{ca['delivery_hits_bare']}")
-    bare = sorted(f"{r['path']}:{h['line']}"
-                  for r in audit_after["static"] if r["kind"] == "delivery"
-                  for h in r["hits"] if not h["handled"])
+    bare = sorted((r["path"], h["code"]) for r in audit_after["static"]
+                  if r["kind"] == "delivery" for h in r["hits"] if not h["handled"])
+    # Line numbers drift with unrelated edits, so match on file and content instead.
     check("p208: the 4 remaining hits are the known Windows-only packaging spots",
-          bare == ["launcher/server.py:75", "tools/build_portable.py:149",
-                   "tools/build_portable.py:150", "tools/test_portable.py:56"], str(bare))
+          len(bare) == 4
+          and sorted({path for path, _ in bare}) == ["launcher/server.py",
+                                                     "tools/build_portable.py",
+                                                     "tools/test_portable.py"]
+          and all("python.exe" in code or "APPDATA" in code for _, code in bare), str(bare))
     check("p208: all delivery modules import under the posix simulation",
           ca["delivery_modules_ok"] == ca["delivery_modules_imported"] == 4,
           f"{ca['delivery_modules_ok']}/{ca['delivery_modules_imported']}")
