@@ -1,0 +1,11 @@
+# p202 run 2 (first successful run) - EXTRACT, not the full log.
+# The full client.log of the committed run is next to this file; this extract keeps the
+# lines that carry the claims, so the two runs can be compared line by line.
+
+[21:41:46] [Render thread/INFO]: [STDOUT]: P202_NBT_SUM stacks=27 distinctComponents=27 distinctItems=27 distinctNames=27
+[21:41:46] [Render thread/INFO]: [STDOUT]: P202_TARGET gx=343.0 gy=189.0 scale=2.0 winx=686.0 winy=378.0
+[21:41:46] [Render thread/INFO]: [STDOUT]: P202_WINDOW handle=2160038901056 m4480=1280 m4486=640 m4502=360 m4507=720 scale=2.0 focus=1 focused_method=true
+[21:41:47] [Render thread/INFO]: [STDOUT]: P202_HOVER_OK tick=28 index=10 item=minecraft:shulker_box name={minecraft:container=>net.minecraft.class_9288@2a6b3fc1, minecraft:max_stack_size=>1, minecraft:lore=>class_9290[lines=[], styledLines=[]], minecraft:enchantments=>ItemEnchantments{enchantments={}, showInTooltip=true}, minecraft:repair_cost=>0, minecraft:attribute_modifiers=>class_9285[modifiers=[], showInTooltip=true], minecraft:rarity=>COMMON} keysSent=false glfw=686.0,378.0 raw=686.0,378.0 mouse=686.0,378.0 target=686.0,378.0
+[21:41:57] [Render thread/INFO]: [STDOUT]: P202_FULL_REQUEST tick=228 K=75
+[21:42:17] [Render thread/INFO]: [STDOUT]: P202_DONE hoverTick=28 fallbackTick=-1 osCursor=true glfwCursor=false keysSent=true nbtStacks=27 nbtDistinct=27 drawnItems=3869046 drawnDistinct=28 drawItemsCalls=10880 lastType=COMPACT
+[21:41:57] [Render thread/INFO]: [STDOUT]: P202_DRAWITEMS call=2200 type=FULL items=27 x=355 y=189 first=minecraft:iron_ingotx3

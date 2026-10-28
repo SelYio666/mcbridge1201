@@ -1,0 +1,7 @@
+server ready
+server sent the 27-slot heterogeneous box
+OSMOVE 1 mechanism=sendinput hwnd=80744304 clientOrigin=(320,240) clientSize=1280x720 targetWin=(686.0,378.0) requested=(1006,618) accepted=1 cursorNow=(1006,618) underCursor=80744304 underIsGame=True
+OSMOVE 2 mechanism=sendinput hwnd=80744304 clientOrigin=(320,240) clientSize=1280x720 targetWin=(686.0,378.0) requested=(1006,619) accepted=1 cursorNow=(1006,619) underCursor=80744304 underIsGame=True
+OSMOVE 3 mechanism=setcursorpos hwnd=80744304 clientOrigin=(320,240) clientSize=1280x720 targetWin=(686.0,378.0) requested=(1007,618) accepted=1 cursorNow=(1007,618) underCursor=80744304 underIsGame=True
+rich box command accepted (no parser error in server.log)
+FULL screenshot taken

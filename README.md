@@ -15,7 +15,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 - **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康缓存 + GUI 源检查；内嵌 Python 的便携包（v0.5.2）。
 - **已验证进世界**：Fabric 1.21.1（全量安装 + EntityCulling 真生效）；ImmediatelyFast 1.21.1 batching 移植（HUD/物品/overlay 计数、Iris 1.8.1/1.8.14 + shader pack、专用服务器多人加入；`runs/p134`-`p150`）；**ImmediatelyFast 地图 atlas 恢复：p175 单人真实手持 filled_map 渲染；p177 两张地图分别落到 atlas tile 0/1 并与物品展示框地图同屏渲染；p181 动态更新（第二次上传）+ 正常退出清理，并修复退出时向已释放 NativeImage 写入的崩溃；p178 在 80 盔甲架压力下启用 VertexBuffer 动态上传 fast path（on 侧最高 76k 次 glBufferSubData，off/on 截图差 0.0087%，低于 off/off 对照，无 GL/mixin 错误）**（`runs/p175-map-atlas/`、`runs/p177-map-atlas-edge/`、`runs/p181-map-atlas-lifecycle/`、`runs/p178-vertex-upload/`）；NeoForge 21.1.264（AppleSkin / Farmer's Delight / Jade + **专用服务器客户端加入**，`runs/p161-neoforge-server/`；**带 Farmer's Delight 的服务端/客户端同模组加入**，`runs/p163-neoforge-fd-server/`）；Forge 1.20.1-47.4.28（AppleSkin / Farmer's Delight + **专用服务器客户端加入**，`runs/p159-forge-server/`；**带 Farmer's Delight 的同模组加入**，`runs/p164-forge-fd-server/`）；mrpack 真实 files 导入通过（`runs/p160-mrpack/`）。
 - **未通过 / 未验证**：Sodium 1.20.1 转换探针为 `blocked_static`（missingClass=13、missingMember=15、descMismatch=16，`runs/p158-sodium-probe/`），需移植其渲染内核，本轮不做（p199 逐条定性 44 条：6 条为内嵌 Fabric API、7 条纯 id、7 条签名有明确写法、24 条卡在被换掉的即时模式顶点管线，见 [docs/sodium-plan.md](docs/sodium-plan.md)）；Iris 只验证了 ImmediatelyFast 的兼容分支（没有转换 Iris 本身）；ImmediatelyFast 端口 jar 仍有 **2 个 inert**，但它们是官方 1.21.1 已删除的 1.20.4 遗留类（BufferBuilder/FontManager；ChatHud/MinecraftClient/BufferRenderer 已在 p166–p168 重登记，两个 map mixin 在 p175 恢复，VertexBuffer 在 p178 启用；对照见 `runs/p180-inert-closure/`）；地图 atlas 已验证单人手持 + 两张地图（tile 0/1）+ 物品展示框 + p181 动态更新+正常退出清理；atlas 满 1024 张未测；性能**不宣称收益**——HUD 场景差异在噪声内（`runs/p148-bench/`），80 盔甲架实体压力交错两轮慢约 13%（`runs/p157-stress-interleaved/`）。
-- **门禁**：Java 25/25、`test_review_fixes` 共 130 项（本次 **130/130**）、`check_hashes` 1269/1269、`verify_evidence` passed（新增 `text_encoding` 直接项）；CI push 触发已验证（最近 `build` success，见 Actions）。
+- **门禁**：Java 25/25、`test_review_fixes` 共 162 项（本次 **162/162**）、`check_hashes` **1301/1301**、`verify_evidence` passed（含 `text_encoding` 直接项）；CI push 触发已验证（最近 `build` success，见 Actions）。
 - 详情：[总验收快照](runs/p125-final-acceptance/README.md)、[FINAL-STATUS](docs/FINAL-STATUS.md)、[使用说明](docs/guide.md)。
 
 ## 现状（2026-10-18）
@@ -175,3 +175,12 @@ MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecr
 - 修：`.gitattributes` 钉 `* -text`；`git checkout-index -a -f` 把工作区归一到 blob 字节（纯行尾差异，无内容变化）；删 20 条 `work/` 条目；`hash_evidence.py` 改用 `git ls-files -z`（否则非 ASCII 路径被引号转义，3 个已跟踪的 `share/` 文件会误判未跟踪）。
 - 现在 clone：`ok=1269 mismatch=0 missing=0`、`audit_eol` 1269/1269 可复现、227 个 md 全绿；回归 6 条（`test_eol_determinism`），允许未提交改动漂移。
 - 边界：clone 里 `test_review_fixes` **125/125**（`ISSUE-02` 组 skip，需已构建 CLI），作者机 130/130；只在 Windows / Git for Windows 实跑。证据 `runs/p201-eol-determinism/`。
+
+## p202 OS 光标级悬停 + 27 格异质 NBT 增量（2026-10-28，正常 UTF-8）
+
+- **悬停这次是窗口系统送进来的**：探针不写任何鼠标字段（两个 accessor 只有 getter），由外部进程把真实光标移到探针公布的窗口坐标；`P202_HOVER_OK index=10 keysSent=false` 时 `glfwGetCursorPos` / 回调原始字段 / `Mouse.getX/getY` / 探针独立算的目标值四者同为 `686,378`。
+- **纠正一条继承下来的错误结论**：p191/p193/p197 记的"这台机器收不到 OS 光标移动"是错的。控制组只做 `SetCursorPos`（不做 SendInput）也能悬停 —— 真正原因是游戏窗口没在最上层，光标底下压着的是终端。`_focus()` 现在 `SetWindowPos(HWND_TOPMOST)` 并在每次移动后记 `WindowFromPoint`。
+- **27 格 27 套 NBT**：服务端下发不同 item id / 数量 / 自定义名 + lore / 附魔 / custom_model_data 的混搭；客户端读出 `stacks=27 distinctComponents=27 distinctItems=27 distinctNames=27`，27 个不同 payload 到达 `drawItem`，截图按自相关测出的 36 px 周期（= 18×guiScale 2）定位后 27 格互不相同。
+- **返工两次也记下来**：第一次服务端回 `Unknown item component 'minecraft:'`（外层组件键被加了引号），为此写了不需要客户端的 `check_snbt.py`；截图校验器前两版分别栽在"只 hash 前 8 字节"和"用边框环当对齐判据"。
+- **门禁**：`test_review_fixes` **162/162**（新增 32 条，从日志/截图/PNG 头**重算**）、`check_hashes` **1301/1301**、`verify_evidence` passed、228 个 md 全绿；无新 release（v0.5.6，只加探针）。
+- 边界：单机单显示器；FULL 仍需在轮询边界伪造 J/K（悬停本身不需要）；未测嵌套潜影盒与逐格自定义模型。

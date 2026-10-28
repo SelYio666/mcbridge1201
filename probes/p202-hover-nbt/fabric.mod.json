@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "p202probe",
+  "version": "1.0.0",
+  "name": "p202 OS-cursor hover + heterogeneous NBT probe",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["p202probe.HoverNbtProbe"]
+  },
+  "mixins": [
+    "p202probe.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "1.21.1",
+    "fabric-lifecycle-events-v1": "*"
+  }
+}

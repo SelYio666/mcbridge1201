@@ -1,0 +1,121 @@
+{
+  "png": "after-full.png",
+  "probe": {
+    "items": 27,
+    "grid_x": 355,
+    "grid_y": 189,
+    "scale": 2.0,
+    "client_w": 1280,
+    "client_h": 720
+  },
+  "checks": {
+    "probe_reported_27_items": true,
+    "cell_is_18_times_scale": true,
+    "column_pitch_is_one_cell": true,
+    "row_pitch_is_one_cell": true,
+    "separators_darker_than_slots": true,
+    "all_27_cells_have_ink": true,
+    "no_flat_cell": true,
+    "27_distinct_cell_pixels": true
+  },
+  "passed": true,
+  "image_size": [
+    1296,
+    759
+  ],
+  "frame_offset": [
+    8.0,
+    31.0
+  ],
+  "base_origin": [
+    718,
+    409
+  ],
+  "cell_size": 36,
+  "pitch": {
+    "columns": 36,
+    "rows": 36,
+    "column_peak": 56817.7,
+    "column_runner_up": 34665.6,
+    "row_peak": 11578.5,
+    "row_runner_up": 4973.8
+  },
+  "phase": {
+    "columns": 18,
+    "rows": 18,
+    "column_darkest": 41.5,
+    "column_brightest": 103.6,
+    "row_darkest": 44.8,
+    "row_brightest": 106.2
+  },
+  "lattice_origin": [
+    732,
+    423
+  ],
+  "sprite_size": 32,
+  "distinct_cells": 27,
+  "blank_cells": 0,
+  "flat_cells": 0,
+  "ink_pixels": [
+    480,
+    464,
+    584,
+    540,
+    548,
+    404,
+    412,
+    672,
+    584,
+    356,
+    236,
+    348,
+    260,
+    524,
+    404,
+    464,
+    524,
+    616,
+    384,
+    432,
+    348,
+    352,
+    468,
+    648,
+    152,
+    360,
+    504
+  ],
+  "colour_counts": [
+    241,
+    13,
+    10,
+    9,
+    325,
+    10,
+    8,
+    12,
+    253,
+    8,
+    7,
+    6,
+    116,
+    10,
+    10,
+    7,
+    282,
+    10,
+    11,
+    12,
+    188,
+    6,
+    9,
+    13,
+    107,
+    8,
+    11
+  ],
+  "grid_span": [
+    324,
+    108
+  ]
+}

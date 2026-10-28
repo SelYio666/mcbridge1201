@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "p202probe.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "InputPollMixin",
+    "DrawTooltipProbeMixin",
+    "PreviewDrawProbeMixin",
+    "HandledScreenAccessor",
+    "MouseReadAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

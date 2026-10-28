@@ -1364,6 +1364,151 @@ def test_map_atlas_layout_evidence() -> None:
           len({tuple(b["rgb"]) for b in blocks}) == 3, str([b["rgb"] for b in blocks]))
 
 
+def _png_size(path: Path) -> tuple[int, int] | None:
+    """Width/height straight out of the PNG IHDR, so the check needs no Pillow."""
+    try:
+        head = path.read_bytes()[:33]
+    except OSError:
+        return None
+    if len(head) < 24 or head[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+
+
+def test_hover_and_heterogeneous_nbt() -> None:
+    """p202: the hover came from the window system, and the 27 slots really differ.
+
+    Every number in runs/p202-hover-nbt/README.md is re-derived here from the committed log,
+    harness log, screenshot check and the PNG header. The two claims being guarded:
+
+    * hover: the probe never writes mouse state (its accessors are getters only), so the only way
+      P202_HOVER_OK can name slot 10 with keysSent=false is that a real cursor position arrived
+      through GLFW -> Mouse -> Screen.render -> focusedSlot;
+    * heterogeneity: 27 stacks with 27 different component maps, 27 grid indices drawn, 27
+      different cell images.
+    """
+    run = ROOT / "runs" / "p202-hover-nbt"
+    log_path = run / "client.log"
+    check("p202: client.log present", log_path.exists(), str(log_path))
+    if not log_path.exists():
+        return
+    text = log_path.read_text(encoding="utf-8", errors="replace")
+    lines = text.splitlines()
+
+    # --- the hover
+    hover = [ln for ln in lines if "P202_HOVER_OK" in ln]
+    check("p202: slot 10 reported hovered", len(hover) == 1, f"{len(hover)} lines")
+    if hover:
+        match = re.search(r"index=(-?\d+)", hover[0])
+        check("p202: the hovered slot is inventory slot 10",
+              match is not None and int(match.group(1)) == 10,
+              match.group(1) if match else "no index")
+        check("p202: no synthetic key was held when the hover appeared",
+              "keysSent=false" in hover[0], hover[0][-80:])
+        values = dict(re.findall(r"(glfw|raw|mouse|target)=([\d.]+,[\d.]+)", hover[0]))
+        check("p202: glfw/raw/mouse/target all agree", len(set(values.values())) == 1
+              and len(values) == 4, str(values))
+    check("p202: the probe never needed its glfwSetCursorPos fallback",
+          "P202_FALLBACK tick=" not in text, "")
+
+    # --- the cursor was moved from outside the process
+    harness_path = run / "harness.log"
+    check("p202: harness.log present", harness_path.exists(), str(harness_path))
+    moves = [ln for ln in harness_path.read_text(encoding="utf-8", errors="replace").splitlines()
+             if ln.startswith("OSMOVE")] if harness_path.exists() else []
+    check("p202: three OS cursor moves were issued", len(moves) == 3, str(len(moves)))
+    if moves:
+        check("p202: every move was accepted by the OS",
+              all("accepted=1" in ln for ln in moves), moves[0][-60:])
+        check("p202: the point under the cursor was the game window",
+              all("underIsGame=True" in ln for ln in moves), "")
+        check("p202: the first two moves injected input rather than warping",
+              "mechanism=sendinput" in moves[0] and "mechanism=sendinput" in moves[1], moves[0])
+        target = re.search(r"P202_TARGET gx=[-\d.]+ gy=[-\d.]+ scale=[-\d.]+ "
+                           r"winx=([\d.]+) winy=([\d.]+)", text)
+        requested = re.search(r"targetWin=\(([\d.]+),([\d.]+)\)", moves[0])
+        check("p202: the harness moved to the coordinates the probe announced",
+              target is not None and requested is not None
+              and target.groups() == requested.groups(),
+              f"{target.groups() if target else None} vs {requested.groups() if requested else None}")
+
+    window = re.search(r"P202_WINDOW handle=\d+ m4480=(\d+) m4486=(\d+) m4502=(\d+) m4507=(\d+)",
+                       text)
+    check("p202: the game window is 1280x720 with guiScale 2",
+          window is not None and (int(window.group(1)), int(window.group(4))) == (1280, 720)
+          and (int(window.group(2)), int(window.group(3))) == (640, 360),
+          window.groups() if window else "missing")
+
+    # --- 27 heterogeneous stacks, read back on the client
+    nbt = [ln for ln in lines if "P202_NBT seq=" in ln]
+    check("p202: 27 stacks were read out of the synced box", len(nbt) == 27, str(len(nbt)))
+    names = {m.group(1) for ln in nbt if (m := re.search(r"name=(\S+)", ln))}
+    items = {m.group(1) for ln in nbt if (m := re.search(r"item=(minecraft:[a-z_]+)", ln))}
+    check("p202: all 27 custom names differ", len(names) == 27, str(len(names)))
+    check("p202: all 27 item ids differ", len(items) == 27, str(len(items)))
+    summary = next((ln for ln in lines if "P202_NBT_SUM" in ln), "")
+    check("p202: the probe's own component count agrees",
+          "stacks=27 distinctComponents=27 distinctItems=27 distinctNames=27" in summary,
+          summary[-80:])
+
+    # --- what reached the renderer
+    draws = [ln for ln in lines if "P202_DRAWITEM call=" in ln]
+    indices = {int(m.group(1)) for ln in draws if (m := re.search(r"index=(-?\d+)", ln))}
+    payloads = {ln.split("comps=", 1)[1] for ln in draws if "comps=" in ln}
+    check("p202: every cell 0..26 was drawn", set(range(27)) <= indices, str(sorted(indices)))
+    check("p202: 27 different payloads reached the renderer", len(payloads) == 27,
+          str(len(payloads)))
+    check("p202: FULL drew 27 items", "type=FULL items=27" in text, "")
+
+    # --- the screenshot check, and the screenshot it describes
+    grid_path = run / "grid-check.json"
+    check("p202: grid-check.json present", grid_path.exists(), str(grid_path))
+    if not grid_path.exists():
+        return
+    grid = json.loads(grid_path.read_text(encoding="utf-8"))
+    check("p202: the committed grid check passed", grid.get("passed") is True,
+          str(grid.get("checks")))
+    cell = grid.get("cell_size")
+    check("p202: the measured pitch is exactly one cell, in both axes",
+          cell == 36 and grid.get("pitch", {}).get("columns") == cell
+          and grid.get("pitch", {}).get("rows") == cell, str(grid.get("pitch")))
+    check("p202: 27 different cells, none blank", grid.get("distinct_cells") == 27
+          and grid.get("blank_cells") == 0,
+          f"{grid.get('distinct_cells')} distinct / {grid.get('blank_cells')} blank")
+    origin, base = grid.get("lattice_origin") or [0, 0], grid.get("base_origin") or [0, 0]
+    check("p202: the lattice sits within one cell of the panel origin the probe logged",
+          all(abs(o - b) < cell for o, b in zip(origin, base)), f"{origin} vs {base}")
+    size = _png_size(run / "after-full.png")
+    probe = grid.get("probe", {})
+    check("p202: the PNG in the repo is the one the check described",
+          size is not None and list(size) == grid.get("image_size"),
+          f"{size} vs {grid.get('image_size')}")
+    frame = grid.get("frame_offset") or [0, 0]
+    if size and probe:
+        # PrintWindow adds an 8 px border on left/right/bottom and a 31 px title bar on top, so the
+        # extra width is 2*frame_x and the extra height is frame_x + frame_y (bottom = side border)
+        check("p202: client area + frame accounts for the PNG size",
+              size[0] - probe.get("client_w", 0) == round(2 * frame[0])
+              and size[1] - probe.get("client_h", 0) == round(frame[0] + frame[1]),
+              f"{size} frame={frame}")
+
+    # --- the result flags, and the control that corrected the earlier claim
+    result = json.loads((run / "result.json").read_text(encoding="utf-8"))
+    check("p202: hover came from the OS cursor, not the fallback",
+          result.get("os_cursor_hover") is True and result.get("glfw_cursor_fallback") is False,
+          str(result.get("os_cursor_hover")))
+    check("p202: the box was placed with per-slot components (not the plain fallback)",
+          result.get("box_mode") == "rich", str(result.get("box_mode")))
+    control_path = run / "repeat" / "run3-control-warp.log"
+    check("p202: control log present", control_path.exists(), str(control_path))
+    if control_path.exists():
+        control = control_path.read_text(encoding="utf-8", errors="replace")
+        check("p202: control (SetCursorPos only, window raised) also hovered",
+              "P202_HOVER_OK" in control and "P202_FALLBACK tick=" not in control, "")
+        check("p202: the control used only the pointer warp",
+              "mechanism=sendinput" not in control and "mechanism=setcursorpos" in control, "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -1372,6 +1517,7 @@ def main() -> int:
     test_loader_base_ensure()
     test_immediatelyfast_port()
     test_map_atlas_layout_evidence()
+    test_hover_and_heterogeneous_nbt()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

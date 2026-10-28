@@ -104,7 +104,7 @@ EntityCulling 被剥离的 `EntityRendererMixin` 已按 1.21.1 的 6 参 shadow 
 ### 工程与门禁
 
 - 单测 25/25；`verify_evidence` passed；哈希 1269 项（以 `runs/SHA256SUMS.txt` 实际行数为准；p201 删掉 20 条指向 gitignored `work/` 的条目）；桥一致性 0（ImmediatelyFast 端口 jar，p165/p181）；mixin 审计 inert=2（`listed=37`；p175 恢复 map mixin、p177 补多地图/展示框、p178 启用 VertexBuffer；剩余两个是官方 1.21.1 已删除的 1.20.4 遗留类，见 `runs/p180-inert-closure/`）；
-- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归 + 1 项死 mixin 防误登记回归 + 1 项 atlas closed 守卫回归 + 1 项 TrashSlot UI empty 键回归 + 1 项 TrashSlot Shift+Delete 回归 + 1 项 TrashSlot right-click undelete 回归 + 1 项 Shulker 网格 wrapper/t2/t4 回归 + 1 项 PCL 一键面板/版本选择回归 + 6 项文档编码守卫回归 + 3 项转义控制字符回归 + 16 项 atlas 逐 id 落点/并排回归 + 6 项行尾确定性回归（`tools/test_review_fixes.py`，共 130 项；本次 **130/130**）接入统一门禁；（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归、p193 Shulker grid 残余、p194 第三 atlas/跨 atlas、p195 交付验证、p196 27 格、p198 文档编码守卫、p200 atlas 逐 id 落点）；`verify_evidence` 另有 `text_encoding` 直接项（`tools/check_text_encoding.py`，跟踪 Markdown 8 条规则，p198/p200）；
+- 外部问题汇总 20 项回归 + 9 项 NeoForge 安装/启动回归 + 10 项目录/兼容/说明回归 + 1 项加载器安装回归 + 8 项 ImmediatelyFast 移植回归 + 1 项便携包回归 + 24 项下载源/进度回归 + 6 项地图 atlas 回归 + 2 项 VertexBuffer 回归 + 1 项死 mixin 防误登记回归 + 1 项 atlas closed 守卫回归 + 1 项 TrashSlot UI empty 键回归 + 1 项 TrashSlot Shift+Delete 回归 + 1 项 TrashSlot right-click undelete 回归 + 1 项 Shulker 网格 wrapper/t2/t4 回归 + 1 项 PCL 一键面板/版本选择回归 + 6 项文档编码守卫回归 + 3 项转义控制字符回归 + 16 项 atlas 逐 id 落点/并排回归 + 6 项行尾确定性回归 + 32 项 OS 光标悬停/异质 NBT 回归（`tools/test_review_fixes.py`，共 162 项；本次 **162/162**）接入统一门禁；（新增项 = p187 SBT 网格 icon + 服务端物品、p188 atlas overflow、p189 creative 删除、p190 多客户端独立 trash 回归、p193 Shulker grid 残余、p194 第三 atlas/跨 atlas、p195 交付验证、p196 27 格、p198 文档编码守卫、p200 atlas 逐 id 落点、p202 OS 光标悬停 + 异质 NBT）；`verify_evidence` 另有 `text_encoding` 直接项（`tools/check_text_encoding.py`，跟踪 Markdown 8 条规则，p198/p200）；
 - 使用说明与教程 `docs/guide.md`（启动器、PCL 共用、迁移教程、FAQ），界面「使用说明」按钮直接打开；
 - 启动器端到端脚本（安装→启动→主菜单，支持 `--version` / `--require` / `--screenshot`）；
 - GitHub Actions：push 触发**已验证可用**（`e9ca30c` run `39796030299`；`742d133` run `39799555425`，check-run `build` success，含 API 推送）；此前“push 无 run”是 GitHub Actions `degraded_performance`（22:18 UTC）导致排队，重推 workflow 文件后索引恢复。若再遇无 run，先看 [githubstatus.com](https://www.githubstatus.com)，再重推 workflow 文件刷新索引。
@@ -285,3 +285,15 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
 - **回归 6 条**（`test_eol_determinism`）：`.gitattributes` 钉 `-text`、已提交文件零漂移、清单无未跟踪路径；未提交的改动允许漂移（清单是对已提交字节的声明）；
 - 门禁：`test_review_fixes` **130/130**、`check_hashes` **1269/1269**、`verify_evidence` passed、227 个 md 全绿；
 - 边界：clone 里 `test_review_fixes` 是 **125/125（`ISSUE-02` 组 skip，需已构建的 Java CLI / 网络）**，作者机 130/130（`clone-head.log`）；只在 Windows / Git for Windows 实跑过，Linux/macOS 上 `* -text` 应是无操作但未验证；无 release 变化。
+
+## 十七、2026-10-28 更新（p202：OS 光标级悬停 + 27 格异质 NBT）
+
+- **悬停**：p191/p193/p197 的 hover 都是探针用 accessor 写 `Mouse.field_1795/1794` 摆出来的。p202 的探针**不写鼠标状态**（`MouseReadAccessor`、`HandledScreenAccessor` 都只有 getter，编译期就没有 setter），改由外部进程把**真实光标**移到探针公布的窗口坐标（`P202_TARGET winx=686 winy=378`）；位置只能经 `WM_MOUSEMOVE → GLFW callback → Mouse.onCursorPos → Mouse.tick → Screen.render(mouseX,mouseY) → HandledScreen.focusedSlot` 变成悬停；
+- **四路读数一致**：`P202_HOVER_OK` 行同时给出 `glfw=686.0,378.0 raw=686.0,378.0 mouse=686.0,378.0 target=686.0,378.0`，且 `index=10 keysSent=false` —— 悬停发生时一个合成按键都还没发；
+- **一条继承结论被推翻**：p191/p193/p197 的注释写着"这台机器收不到 OS 光标移动（RES_MOUSE 一直停在窗口中心）"。第 1 轮用 `SetCursorPos` 且窗口没置顶 → 确实不悬停；加 `SetWindowPos(HWND_TOPMOST)` 置顶后，第 2/3 轮（SendInput）与**控制组（只用 SetCursorPos）**都悬停（`repeat/run3-control-warp.log`）。所以问题从来不是注入机制，而是**光标底下压着的窗口不是游戏**。`harness.log` 每次移动都记 `WindowFromPoint` 与 `underIsGame`；p193/p197 的 README 已各加一行指向本次更正；
+- **27 格异质 NBT**：服务端 `/item replace` 下发 27 格，每格不同 item id、不同数量（1–3）、不同自定义名（`S00`…`S26`），并混入 `lore`（2 行）、`enchantments`（sharpness 1–5）、`custom_model_data`（100+i）。客户端读回 `stacks=27 distinctComponents=27 distinctItems=27 distinctNames=27`；渲染器 `P202_DRAWITEM index=0..26` 共 27 格、27 个不同组件映射、`type=FULL items=27`；
+- **截图是真量出来的**：`verify_grid.py` 用亮度剖面**自相关**求周期（列 36 / 行 36，峰值 56817 vs 次峰 34665），相位取"离探针报的面板原点最近且最暗"的格线（列 18 / 行 18 → 原点 732,423），再取 27 个 `32×32`（16×scale）图元：**无空格、无纯色格、27 个哈希互不相同**；
+- **两次返工记在报告里**：① 外层组件键写成 `shulker_box["minecraft:container"=…]` → 服务端 `Unknown item component 'minecraft:'`；为此写了 `check_snbt.py`（只起服务端、用解析阶段验 SNBT，不用等客户端 3 分钟）。② 截图校验器第一版只 hash 了格子前 8 字节（27 格同长），第二版用"边框环最干净"当对齐判据（槽位自带描边，区分度仅 6%），都推翻重写；
+- 回归：新增 `test_hover_and_heterogeneous_nbt()`（32 条），从 `client.log`/`harness.log`/`grid-check.json`/`result.json` 与 **PNG 的 IHDR 头**重算报告里的每个数字；
+- 门禁：`test_review_fixes` **162/162**、`check_hashes` **1301/1301**、`verify_evidence` passed、228 个 md 全绿；
+- 边界：单机单显示器、DPI 未变；FULL 仍需在 `InputConstants.isKeyDown` 轮询边界伪造 J(74)/K(75)（悬停本身不需要，见 `keysSent=false`）；未测嵌套潜影盒、逐格 `custom_model_data` 的模型差异；无新 release（v0.5.6，只加探针）。

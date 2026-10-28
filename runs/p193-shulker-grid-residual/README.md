@@ -70,6 +70,7 @@ zcode 额度中断时留下的 p193 source/run 是中间态：
 ## 边界（如实记录）
 
 - 真实 hover 是 **GLFW 回调级注入**，不是 OS 级鼠标；它与真实输入走同一 `Screen`/tooltip 代码路径，但操作系统光标层未验证。
+  - **2026-10-28 更正（p202）**：这一条后来做到了——探针不写鼠标字段，由外部进程移动真实光标，`focusedSlot` 变成槽位 10 时 `keysSent=false`（`runs/p202-hover-nbt/`）。同处也纠正了"OS 级光标注入在这台机器上不可靠"：真正的原因是游戏窗口没在最上层，不是注入机制（控制组只做指针 warp 也能悬停，见 `runs/p202-hover-nbt/repeat/run3-control-warp.log`）。
 - FULL 依赖 `preview.alwaysOn=true` + preview key（342）；默认按键/其他配置未逐一验证。
 - 服务端 box 只验证了 dedicated server 的 `/item replace container.10`；integrated server 的 mcfunction 组件语法问题见 p188，未在这里重复。
 - 27 格全满/多组不同物品的网格、preview key 的按键重绑定、真实 OS 鼠标 hover 未测。
