@@ -58,7 +58,13 @@ claim that these paths work.
 - Performance: no reproducible gain; 80-armor-stand interleaved runs are ~13% slower with
   universal batching (`runs/p148`, `p157`). Do not claim a speedup.
 - Sodium conversion probe: `blocked_static` 13/15/16 (`runs/p158`); needs its rendering core
-  ported, out of scope.
+  ported, out of scope. Dated assessment: `docs/sodium-plan.md` (p199, 2026-10-28) resolves every
+  entry against the 1.20.1 / 1.21.1 mappings → of 44 entries, 6 come only from the 1.20.1-era
+  Fabric API modules bundled in Sodium's `META-INF/jars` (not Sodium's code, unverified), 7 are
+  pure intermediary id changes, 7 are signature changes with a clear 1.21.1 spelling, and 24 sit
+  on the immediate-mode vertex pipeline (`BufferBuilder`/`Tesselator`/`DefaultVertexFormat`),
+  which 1.21.1 replaced with `ByteBufferBuilder` + `MeshData`. Conclusion unchanged: not feasible
+  without rewriting that path; no rule was written and no game was launched.
 - Shulker grid item icons and real server-item sync are now restored (`runs/p187-grid-draw-probe/`,
   2026-10-24): two real bugs fixed. (1) Every component "read" in the bridges/companion used
   `ItemStack.method_57379(type, null)`, which is `set(type, value)` and **cleared** the CONTAINER

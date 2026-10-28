@@ -1,0 +1,59 @@
+bucket        status     1.20.1 symbol                                                1.21.1 / detail
+------------------------------------------------------------------------------------------------------------------------------------------------------
+missingClass  removed    com.mojang.blaze3d.vertex.DefaultedVertexConsumer            
+missingClass  removed    com.mojang.blaze3d.vertex.DefaultedVertexConsumer#<init>     no constructor in 1.21.1
+missingClass  removed    net.minecraft.world.level.storage.loot.LootDataManager        [API]
+missingClass  removed    com.mojang.blaze3d.vertex.BufferBuilder$RenderedBuffer       
+missingClass  re-ID      net.minecraft.util.CubicSampler#gaussianSampleVec3           same signature
+missingClass  re-ID      net.minecraft.client.player.LocalPlayer#blockPosition        inherited from net.minecraft.world.level.entit
+missingClass  re-ID      com.mojang.blaze3d.vertex.BufferBuilder#format               same signature
+missingClass  re-ID      net.minecraft.client.renderer.LevelRenderer#globalBlockEnt   same signature
+missingClass  re-ID      net.minecraft.client.multiplayer.ClientChunkCache$Storage#   same signature
+missingClass  re-ID      net.minecraft.client.model.geom.ModelPart$Cube#polygons      same signature
+missingClass  re-signed  com.mojang.blaze3d.vertex.DefaultedVertexConsumer#putBulkD   (Lcom.mojang.blaze3d.vertex.PoseStack$Pose;Lne
+missingClass  re-signed  com.mojang.blaze3d.vertex.DefaultedVertexConsumer#putBulkD   (Lcom.mojang.blaze3d.vertex.PoseStack$Pose;Lne
+missingClass  re-ID      net.minecraft.client.renderer.texture.SpriteContents#origi   same signature
+missingMember unresolved net.minecraft.world.level.block.entity.BlockEntity#getRend   declared by a Fabric API interface, absent fro
+missingMember removed    com.mojang.blaze3d.vertex.Tesselator#getBuilder              ()Lcom.mojang.blaze3d.vertex.BufferBuilder;
+missingMember removed    com.mojang.blaze3d.vertex.BufferBuilder#begin                (Lcom.mojang.blaze3d.vertex.VertexFormat$Mode;
+missingMember unresolved net.minecraft.server.packs.repository.Pack$ResourcesSuppli   declared by a Fabric API interface, absent fro [API]
+missingMember removed    com.mojang.blaze3d.vertex.BufferBuilder#end                  ()Lcom.mojang.blaze3d.vertex.BufferBuilder$Ren
+missingMember removed    com.mojang.blaze3d.vertex.DefaultVertexFormat#ELEMENT_PADD   Lcom.mojang.blaze3d.vertex.VertexFormatElement
+missingMember removed    com.mojang.blaze3d.vertex.BufferBuilder#defaultColor         gone from com.mojang.blaze3d.vertex.VertexCons
+missingMember removed    com.mojang.blaze3d.vertex.BufferBuilder#unsetDefaultColor    gone from com.mojang.blaze3d.vertex.VertexCons
+missingMember removed    com.mojang.blaze3d.vertex.Tesselator#end                     ()V
+missingMember removed    com.mojang.blaze3d.vertex.DefaultVertexFormat#ELEMENT_POSI   Lcom.mojang.blaze3d.vertex.VertexFormatElement
+missingMember removed    com.mojang.blaze3d.vertex.DefaultVertexFormat#ELEMENT_COLO   Lcom.mojang.blaze3d.vertex.VertexFormatElement
+missingMember removed    com.mojang.blaze3d.vertex.DefaultVertexFormat#ELEMENT_UV0    Lcom.mojang.blaze3d.vertex.VertexFormatElement
+missingMember removed    com.mojang.blaze3d.vertex.DefaultVertexFormat#ELEMENT_UV1    Lcom.mojang.blaze3d.vertex.VertexFormatElement
+missingMember removed    com.mojang.blaze3d.vertex.DefaultVertexFormat#ELEMENT_UV2    Lcom.mojang.blaze3d.vertex.VertexFormatElement
+missingMember removed    com.mojang.blaze3d.vertex.DefaultVertexFormat#ELEMENT_NORM   Lcom.mojang.blaze3d.vertex.VertexFormatElement
+descMismatch  re-signed  net.minecraft.resources.ResourceLocation#<init>              (Ljava.lang.String;)V -> (Ljava.lang.String;Lj
+descMismatch  re-signed  net.minecraft.client.renderer.texture.TextureAtlasSprite#g   (D)F -> (F)F
+descMismatch  re-signed  net.minecraft.client.renderer.texture.TextureAtlasSprite#g   (D)F -> (F)F
+descMismatch  re-signed  net.minecraft.server.packs.repository.Pack#readMetaAndCrea   (Ljava.lang.String;Lnet.minecraft.network.chat [API]
+descMismatch  re-signed  com.mojang.blaze3d.vertex.VertexFormat#getElements           ()Lcom.google.common.collect.ImmutableList; ->
+descMismatch  re-signed  net.minecraft.nbt.NbtIo#readCompressed                       (Ljava.io.File;)Lnet.minecraft.nbt.CompoundTag [API]
+descMismatch  unresolved net.minecraft.nbt.ListTag#add                                declared by a Fabric API interface, absent fro [API]
+descMismatch  re-signed  net.minecraft.nbt.NbtIo#writeCompressed                      (Lnet.minecraft.nbt.CompoundTag;Ljava.io.File; [API]
+descMismatch  re-signed  net.minecraft.client.gui.screens.Screen#renderBackground     (Lnet.minecraft.client.gui.GuiGraphics;)V -> (
+descMismatch  removed    net.minecraft.client.gui.screens.VideoSettingsScreen#<init   no constructor in 1.21.1
+descMismatch  re-signed  com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator#<in   (Lcom.mojang.blaze3d.vertex.VertexConsumer;Lor
+descMismatch  re-signed  com.mojang.blaze3d.vertex.VertexBuffer#upload                (Lcom.mojang.blaze3d.vertex.BufferBuilder$Rend
+descMismatch  re-signed  net.minecraft.world.effect.MobEffects#FIRE_RESISTANCE        Lnet.minecraft.world.effect.MobEffect; -> Lnet
+descMismatch  re-signed  net.minecraft.client.player.LocalPlayer#hasEffect            (Lnet.minecraft.world.effect.MobEffect;)Z -> (
+descMismatch  re-signed  net.minecraft.client.renderer.FogRenderer$MobEffectFogFunc   ()Lnet.minecraft.world.effect.MobEffect; -> ()
+descMismatch  re-signed  net.minecraft.client.player.LocalPlayer#getEffect            (Lnet.minecraft.world.effect.MobEffect;)Lnet.m
+
+api-jar  re-signed  3
+api-jar  removed    1
+api-jar  unresolved 2
+sodium   re-ID      7
+sodium   re-signed  13
+sodium   removed    17
+sodium   unresolved 1
+
+unresolved (listed, not dropped):
+  net.minecraft.world.level.block.entity.BlockEntity#getRenderData
+  net.minecraft.server.packs.repository.Pack$ResourcesSupplier#open
+  net.minecraft.nbt.ListTag#add

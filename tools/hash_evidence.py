@@ -1270,6 +1270,12 @@ FILES = [
     "runs/p198-text-encoding/encoding-scan-after.log",
     "runs/p198-text-encoding/gate-verify.log",
     "runs/p198-text-encoding/gate-review-fixes.log",
+    "docs/sodium-plan.md",
+    "runs/p199-sodium-plan/README.md",
+    "runs/p199-sodium-plan/resolve.py",
+    "runs/p199-sodium-plan/resolve-table.log",
+    "runs/p199-sodium-plan/resolve.json",
+    "runs/p199-sodium-plan/gate.log",
 ]
 
 

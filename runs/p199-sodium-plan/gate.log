@@ -1,0 +1,19 @@
+### python tools/check_text_encoding.py
+exempt: runs/p198-text-encoding/README.md — p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept
+exempt files: 1, suppressed content findings: 3
+checked 225 markdown file(s): 225 clean, 0 finding(s)
+### exit=0
+
+### python tools/test_review_fixes.py
+
+105/105 checks passed
+
+### python tools/verify_evidence.py
+passed = True
+failed = []
+text_encoding = checked 225 markdown file(s): 225 clean, 0 finding(s)
+review = 105/105 checks passed
+
+### python runs/p199-sodium-plan/resolve.py --json | (counts)
+rows = 44
+{('sodium', 'removed'): 17, ('API', 'removed'): 1, ('sodium', 're-ID'): 7, ('sodium', 're-signed'): 13, ('sodium', 'unresolved'): 1, ('API', 'unresolved'): 2, ('API', 're-signed'): 3}
