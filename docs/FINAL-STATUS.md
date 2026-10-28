@@ -284,4 +284,4 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
 - **证据**：同一条命令、只差一个提交——clone `82e4e9f` = `ok=646 mismatch=623 missing=20`，clone `2e34a9a` = `ok=1269 mismatch=0 missing=0`，`audit_eol` 1269/1269 可复现（`runs/p201-eol-determinism/clone-before.log`、`clone-after.log`）；
 - **回归 6 条**（`test_eol_determinism`）：`.gitattributes` 钉 `-text`、已提交文件零漂移、清单无未跟踪路径；未提交的改动允许漂移（清单是对已提交字节的声明）；
 - 门禁：`test_review_fixes` **130/130**、`check_hashes` **1269/1269**、`verify_evidence` passed、227 个 md 全绿；
-- 边界：`test_review_fixes` 未在 clone 里跑（多数检查要已构建的 Java CLI）；只在 Windows / Git for Windows 实跑过，Linux/macOS 上 `* -text` 应是无操作但未验证；无 release 变化。
+- 边界：clone 里 `test_review_fixes` 是 **125/125（`ISSUE-02` 组 skip，需已构建的 Java CLI / 网络）**，作者机 130/130（`clone-head.log`）；只在 Windows / Git for Windows 实跑过，Linux/macOS 上 `* -text` 应是无操作但未验证；无 release 变化。

@@ -174,4 +174,4 @@ MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecr
 - 原因一：`core.autocrlf=true` 且无 `.gitattributes`——blob 存 LF、检出写 CRLF，而哈希取自 1224 LF / 422 CRLF / 264 混合的工作区。原因二：20 条清单指向 gitignored 的 `work/` 构建产物，别人clone 出来必然 missing。
 - 修：`.gitattributes` 钉 `* -text`；`git checkout-index -a -f` 把工作区归一到 blob 字节（纯行尾差异，无内容变化）；删 20 条 `work/` 条目；`hash_evidence.py` 改用 `git ls-files -z`（否则非 ASCII 路径被引号转义，3 个已跟踪的 `share/` 文件会误判未跟踪）。
 - 现在 clone：`ok=1269 mismatch=0 missing=0`、`audit_eol` 1269/1269 可复现、227 个 md 全绿；回归 6 条（`test_eol_determinism`），允许未提交改动漂移。
-- 边界：`test_review_fixes` 未在 clone 里跑（要已构建的 Java CLI）；只在 Windows / Git for Windows 实跑。证据 `runs/p201-eol-determinism/`。
+- 边界：clone 里 `test_review_fixes` **125/125**（`ISSUE-02` 组 skip，需已构建 CLI），作者机 130/130；只在 Windows / Git for Windows 实跑。证据 `runs/p201-eol-determinism/`。

@@ -19,6 +19,7 @@ exempt: runs/p198-text-encoding/README.md — p198 report quotes the damaged byt
 exempt files: 1, suppressed content findings: 3
 checked 226 markdown file(s): 226 clean, 0 finding(s)
 
-# tools/test_review_fixes.py is NOT run here: most of its checks need the built Java CLI
-# (gradle test installDist), which a bare clone does not have. It is verified on the
-# authoring machine instead: 130/130 (runs/p201-eol-determinism/gate-review-fixes.log).
+# tools/test_review_fixes.py is missing from this log because the first attempt was cut
+# off by a 120 s timeout, NOT because it cannot run in a clone: see clone-head.log, where
+# it gives 125/125 (ISSUE-02 skipped - that module needs the built Java CLI). The
+# authoring machine reports 130/130 in gate-review-fixes.log.

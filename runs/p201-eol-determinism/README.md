@@ -45,15 +45,29 @@ ok=646 mismatch=623 missing=20
 | `check_hashes` | `ok=646 mismatch=623 missing=20` | `ok=1269 mismatch=0 missing=0` |
 | `audit_eol` 漂移 | —（该提交还没有这个脚本） | `reproducible 1269/1269, drifted 0` |
 | `check_text_encoding` | — | `226 markdown, 226 clean`（本报告加入后为 227） |
+| `test_review_fixes` | — | 未在该次 clone 里跑（见 `clone-head.log`：HEAD 上 125/125，ISSUE-02 skip） |
 
 文件：`clone-before.log`、`clone-after.log`、`audit_eol.py`、`gate-review-fixes.log`（130/130）、`gate-verify.log`（`verify_evidence` passed）。
 
 两个 clone 日志各自带 `git log --oneline -1` 头，数字只对那一个提交成立；清单一旦把这几个文件本身也收进去，clone 的计数就会比 HEAD 少 6 条——"清单包含自己的日志"必然落后一步。这里不重跑，宁可让数字少 6，也不写一个对不上的数。
 
 
+## 第三个基线：HEAD 自己的 clone
+
+`clone-head.log`：clone 上面两个提交之后的 HEAD（`1c9cd48`），得到
+
+```text
+check_hashes        ok=1275 mismatch=0 missing=0
+audit_eol           1275/1275 reproducible, drifted 0
+check_text_encoding 227 markdown, 227 clean
+test_review_fixes   125/125 checks passed, skipped: ISSUE-02
+```
+
+清单此时是 1275 条（1289 − 20 个 `work/` + 6 个 p201 文件），clone 出来的和本机一模一样。`clone-head.log` **故意不进清单**：清单要是把"证明清单可验证"的日志也收进去，每跑一次就得重算一次，永远自证不完。
+
 ## 边界（如实）
 
-- **`test_review_fixes.py` 没有在 clone 里跑**：它大部分检查要已构建的 Java CLI（`gradle test installDist`），裸 clone 没有。这条只在作者机上验证（130/130）。clone 里跑的是三个纯 Python 门禁。
+- **`test_review_fixes.py` 在 clone 里能跑，但少 5 条**：裸 clone 跑出 `125/125 checks passed, skipped: ISSUE-02`（ISSUE-02 那组要已构建的 Java CLI / 网络）。作者机上是 130/130。第一版这里写的是"clone 里没跑"，那是被一次 120 秒超时误导的结论，实跑之后改掉（`clone-head.log`）。
 - **只在 Windows + Git for Windows 上验证**：`core.autocrlf` 是这台机器的全局配置，`* -text` 在 Linux/macOS 上是无操作（本来就不转换），但没有在那边实跑过。
 - 这次没有改动任何 mod/launcher 代码，release 仍是 `v0.5.6`。
 - `share/` 下三个交付物（`一键装到PCL.bat`、`从零下载.pdf`、`从零下载长图.png`）本来就在库里，只是被 `ls-files` 的引号转义误判；我没有"补提交"它们，只修了判断。

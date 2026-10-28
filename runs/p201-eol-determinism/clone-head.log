@@ -1,0 +1,24 @@
+# git clone of HEAD (1c9cd48), all gates that a bare clone can run.
+# Numbers here describe THIS commit; the log is deliberately not in the manifest
+# (a manifest that hashes its own verification log is always one step behind).
+#
+1c9cd48 docs(p201): record the clone before/after and add the p201 files to the manifest
+# git version: git version 2.55.0.windows.3
+# core.autocrlf: true  (inherited from this machine)
+#
+## python tools/check_hashes.py
+ok=1275 mismatch=0 missing=0
+
+## python runs/p201-eol-determinism/audit_eol.py
+hashed paths: 1275
+reproducible from a fresh clone: 1275
+worktree bytes != checkout bytes: 0
+
+## python tools/check_text_encoding.py
+exempt files: 1, suppressed content findings: 3
+checked 227 markdown file(s): 227 clean, 0 finding(s)
+
+## python -B tools/test_review_fixes.py
+PASS DOWNLOAD canary health merges into the cache
+
+125/125 checks passed, skipped: ISSUE-02

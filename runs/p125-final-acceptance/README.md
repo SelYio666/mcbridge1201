@@ -321,4 +321,4 @@ python tools/test_portable.py --root <测试目录> --version 1.21.1
 | 干净 clone（修复后） | ✅ clone `2e34a9a`：`ok=1269 mismatch=0 missing=0`；`audit_eol` 1269/1269 可复现 |
 | 修法 | ✅ `.gitattributes` 钉 `* -text`、工作区归一到 blob 字节（纯行尾）、删 `work/` 条目、`git ls-files -z` |
 | Release | 沿用 `v0.5.6`（无 mod 改动、无新 release） |
-| 隐患 | `test_review_fixes` 未在 clone 里跑（要 Java CLI）；只在 Windows / Git for Windows 实跑 |
+| 隐患 | clone 里 `test_review_fixes` 125/125（`ISSUE-02` skip，需已构建 CLI），作者机 130/130；只在 Windows / Git for Windows 实跑 |
