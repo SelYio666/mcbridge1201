@@ -16,8 +16,8 @@
 2. **44 条里有 6 条根本不是 Sodium 的问题。** 它们来自 Sodium 的 `META-INF/jars/` 里内嵌的 1.20.1 版
    Fabric API 模块（block-view、resource-loader）。真机上 1.21.1 的 API 模块会按版本胜出，所以这 6 条
    大概率不会阻塞——但**本轮没有验证**，只按“来源”标出来，不计入 Sodium 自身工作量。
-3. **剩下 38 条里：纯规则可解的 7 条，写适配层能解的 7 条，必须动渲染内核的 24 条。**
-   前 14 条可以做，也值得做（能让静态分析从 `blocked_static` 收敛）；后 24 条不是规则问题。
+3. **剩下 38 条里：纯规则可解的 7 条，写适配层能解的 7 条，必须动渲染内核的 23 条，另有 1 条连不上映射。**
+   前 14 条可以做，也值得做（能让静态分析从 `blocked_static` 收敛）；后 23 条不是规则问题。
 
 ## 二、方法与证据
 
@@ -114,11 +114,12 @@
 | 纯 id 变化（`re-ID`） | 7 | Sodium 侧，签名不变 | 规则可解，半天级 |
 | 签名变化、有明确对应写法 | 7 | `ResourceLocation(String)`、`getU/getV`、`MobEffect` 改 `Holder`（3 处）、`renderBackground` | 适配层，1–2 天级 |
 | 签名变化、依赖新网格模型 | 6 | `VertexBuffer#upload`、`DecalGenerator`、`VertexFormat#getElements`、`putBulkData` ×2 | 内核工作量 |
-| 成员/类被删除 | 18 | `DefaultedVertexConsumer`、`RenderedBuffer`、`BufferBuilder.begin/end`、`Tesselator` 全删、`ELEMENT_*` 全删 | **重写**，不可规则化 |
+| 成员/类被删除 | 17 | `DefaultedVertexConsumer`、`RenderedBuffer`、`BufferBuilder.begin/end`、`Tesselator` 全删、`ELEMENT_*` 全删 | **重写**，不可规则化 |
+| 连不上映射（已单列） | 1 | `BlockEntity#getRenderData`，Fabric API 注入的方法 | 不猜，按未解析记 |
 | 不是 Sodium 的代码 | 6 | 内嵌 1.20.1 Fabric API 模块 | 大概率随 1.21.1 API 消失，未验证 |
 
-- Sodium 自身：38 条 = 7 + 7 + 6 + 18，另有 3 条 `unresolved`（1 条 Sodium 侧调用、2 条纯 Fabric API）已单列。
-- 粗略量级：前两类 14 条，按本项目以往的规则/适配节奏是“数天”；后两类 24 条落在渲染内核上，
+- Sodium 自身：38 条 = 7 + 7 + 6 + 17 + 1（`unresolved`）。另有 2 条纯 Fabric API 的 `unresolved` 已在第四节/第五节单列。
+- 粗略量级：前两类 14 条，按本项目以往的规则/适配节奏是“数天”；后两类 23 条落在渲染内核上，
   不是“数天”的量级——按 1.21.1 的 `ByteBufferBuilder` + `MeshData` 重做即时模式路径，工作量与
   **移植/重写一个 Sodium 相当**，这也是 p158 当初判 `blocked_static` 的原因。
 - 这个排序有实际含义：先做 14 条不会让 Sodium 跑起来，只会让静态分析变干净。**不要**把它当成
