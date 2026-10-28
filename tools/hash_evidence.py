@@ -1,18 +1,43 @@
-"""Record SHA-256 for the evidence artifacts produced by P0 (docs + manifests)."""
+"""Record SHA-256 for the evidence artifacts produced by P0 (docs + manifests).
+
+Two rules keep the manifest verifiable by someone who just cloned the repo:
+
+* every listed path must be **tracked**. A gitignored build output under work/
+  (patched jars, remap output) exists only on the machine that built it, so hashing
+  it produces an entry nobody else can check — and check_hashes then reports
+  "missing" in a clean clone. The 20 such entries that were here until p201 are gone.
+* every listed path must have the **same bytes after checkout**. That needs
+  .gitattributes to pin `* -text` (see p201): with core.autocrlf=true and no
+  attributes, git rewrote 532 of these files to CRLF on checkout, so the hashes
+  matched here and nowhere else.
+"""
 import hashlib
 import os
+import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+def _tracked_paths():
+    """Paths git knows about, or None when git is unavailable.
+
+    Uses -z: without it `git ls-files` quotes non-ASCII names (share/from-source/
+    \\344\\273\\216...), so a plain set lookup calls three tracked files untracked.
+    """
+    try:
+        proc = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT, capture_output=True)
+    except OSError:
+        return None
+    if proc.returncode != 0:
+        return None
+    return {p.decode("utf-8") for p in proc.stdout.split(b"\0") if p}
+
 FILES = [
     "runs/p0-fabric-target/plan.json",
     "docs/generated/static-matrix-fabric-1.21.1.md",
-    "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1.jar",
-    "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-patched.jar",
     "runs/p2-server-ironchests-rule1/server.log",
     "runs/p2-server-ironchests-rule2/server.log",
-    "work/cb/out/ironchests/ironchests-5.0.2-fabric+1.21.1-aw.jar",
     "runs/p3-server-accesswidener/server.log",
     "runs/p4-contract-place/server.log",
     "runs/p4-contract-restart/server.log",
@@ -58,7 +83,6 @@ FILES = [
     "runs/p11-lithium-explosion/ironchests-patch-recheck.log",
     "runs/p11-lithium-explosion/gradle-test.log",
     "runs/p11-lithium-explosion/gradle-install.log",
-    "work/cb/out/lithium/lithium-patched-explosion3.jar",
     "runs/p12-chunk-access/README.md",
     "runs/p13-chunk-port/README.md",
     "runs/p13-chunk-port/verdict.json",
@@ -74,7 +98,6 @@ FILES = [
     "runs/p13-chunk-port/server-chunk-port2.log",
     "runs/p13-chunk-port/ironchests-patch-recheck.log",
     "runs/p13-chunk-port/build-reports.log",
-    "work/cb/out/lithium/lithium-patched-chunkport.jar",
     "runs/p15-trashslot/README.md",
     "runs/p15-trashslot/convert.log",
     "runs/p15-trashslot/convert-balm.log",
@@ -85,7 +108,6 @@ FILES = [
     "runs/p15-trashslot/server-trashslot2.log",
     "runs/p15-trashslot/server-trashslot3.log",
     "runs/p15-trashslot/gradle-test.log",
-    "work/cb/out/trashslot/trashslot-patched.jar",
     "rules/fabric-1.21.1/trashslot.json",
     "runs/p16-balm/README.md",
     "runs/p16-balm/patch.log",
@@ -93,8 +115,6 @@ FILES = [
     "runs/p16-balm/inject-aw-trashslot.log",
     "runs/p16-balm/server-balm.log",
     "runs/p16-balm/server-balm2.log",
-    "work/cb/out/trashslot/trashslot-patched-balm.jar",
-    "work/cb/out/trashslot/trashslot-patched-balm-aw.jar",
     "runs/p17-balm-net/README.md",
     "runs/p17-balm-net/verdict.json",
     "runs/p17-balm-net/patch2.log",
@@ -102,7 +122,6 @@ FILES = [
     "runs/p17-balm-net/build-bridges.log",
     "runs/p17-balm-net/server-net.log",
     "runs/p17-balm-net/server-net2.log",
-    "work/cb/out/trashslot/trashslot-patched-net2-aw.jar",
     "runs/p18-nested-bridges/README.md",
     "runs/p18-nested-bridges/gradle-test.log",
     "runs/p18-nested-bridges/install-dist.log",
@@ -111,8 +130,6 @@ FILES = [
     "runs/p18-nested-bridges/server-nested.log",
     "runs/p18-nested-bridges/contract.log",
     "runs/p18-nested-bridges/contract/verdict.json",
-    "work/tmp/p18/ironchests-repatch3.jar",
-    "work/tmp/p18/ironchests-repatch3-aw.jar",
     "runs/p19-bytecode-verify/README.md",
     "runs/p19-bytecode-verify/compile.log",
     "runs/p19-bytecode-verify/verify.log",
@@ -167,7 +184,6 @@ FILES = [
     "runs/p25-codec-guard/contract/verdict.json",
     "runs/p25-codec-guard/gradle-test.log",
     "runs/p25-codec-guard/install-dist.log",
-    "work/tmp/p25/ironchests-guard-aw.jar",
     "runs/p26-codec-safe/README.md",
     "runs/p26-codec-safe/verdict.json",
     "runs/p26-codec-safe/build-bridges.log",
@@ -177,8 +193,6 @@ FILES = [
     "runs/p26-codec-safe/contract/verdict.json",
     "runs/p26-codec-safe/gradle-test.log",
     "runs/p26-codec-safe/install-dist.log",
-    "work/tmp/p26-final/ironchests-safe.jar",
-    "work/tmp/p26-final/ironchests-safe-aw.jar",
     "runs/p27-combined-safe-codec/README.md",
     "runs/p27-combined-safe-codec/verdict-summary.json",
     "runs/p27-combined-safe-codec/verdict.json",
@@ -196,7 +210,6 @@ FILES = [
     "runs/p29-client-receiver/inject-aw.log",
     "runs/p29-client-receiver/server.log",
     "runs/p29-client-receiver/server.result.json",
-    "work/tmp/p29/trashslot-client-aw.jar",
     "profiles/README.md",
     "profiles/lithium-0.11.4-fabric__fabric-1.21.1.json",
     "profiles/trashslot-15.1.5-fabric__fabric-1.21.1.json",
@@ -1214,11 +1227,7 @@ FILES = [
     "runs/p14-lithium-ironchests/run.txt",
     "runs/p14-lithium-ironchests/build-reports.log",
     "runs/p14-lithium-ironchests/hash-evidence.log",
-    "work/cb/out/lithium/lithium-patched-final.jar",
     "rules/fabric-1.21.1/lithium.json",
-    "work/cb/out/ironchests/report.md",
-    "work/cb/out/ironchests/full-audit.tsv",
-    "work/remap/server-intermediary.jar",
     "runs/p1-server-baseline/server.log",
     "runs/p1-server-baseline/server-baseline.log",
     "runs/p1-server-baseline/server-rerun.log",
@@ -1226,7 +1235,6 @@ FILES = [
     "runs/p0-server-baseline/server.log",
     "runs/p0-server-baseline/server-l016.log",
     "runs/p0-server-baseline/server-outside.log",
-    "work/evidence/doctor.json",
     "manifests/corpus.json",
     "manifests/environment.lock.json",
     "manifests/upstream.lock.json",
@@ -1317,6 +1325,15 @@ def main():
         lines.append(f"{sha256(p)}  {rel}")
     if missing:
         raise SystemExit("manifest lists missing files:\n  " + "\n  ".join(missing))
+    tracked = _tracked_paths()
+    if tracked is not None:
+        untracked = [rel for rel in FILES if rel not in tracked]
+        if untracked:
+            # a warning, not a failure: a new artifact is hashed before it is staged
+            print("warning: listed but not tracked by git (a clean clone cannot "
+                  "verify these):", file=sys.stderr)
+            for rel in untracked:
+                print(f"  {rel}", file=sys.stderr)
     out = os.path.join(ROOT, "runs", "SHA256SUMS.txt")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w", encoding="utf-8", newline="\n") as f:

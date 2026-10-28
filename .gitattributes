@@ -1,0 +1,23 @@
+# Byte-exact checkouts: what is committed is exactly what lands on disk.
+#
+# Why: runs/SHA256SUMS.txt hashes raw bytes (tools/check_hashes.py). This machine
+# has core.autocrlf=true, so without this file a fresh Windows clone would convert
+# every text file to CRLF on checkout and the whole manifest would mismatch --
+# a "clean machine" run would then look like a failure that is not real.
+#
+# "* -text" means "never convert, never guess": no CRLF<->LF rewriting in either
+# direction. launcher/run.bat is committed with LF and is hashed, so it must not be
+# rewritten either. Byte-for-byte is the only thing the manifest can promise.
+* -text
+
+# Self-documenting (already implied by "* -text"): these are never text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.jar binary
+*.zip binary
+*.class binary
+*.mp4 binary
+*.webp binary
+*.ico binary

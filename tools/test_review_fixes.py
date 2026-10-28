@@ -979,6 +979,50 @@ def test_text_encoding_guard() -> None:
           ", ".join(stale) or f"{len(module.EXEMPT)} entr(ies)")
 
 
+def test_eol_determinism() -> None:
+    """p201: runs/SHA256SUMS.txt must still match after a fresh clone.
+
+    The manifest hashes raw bytes. On this machine core.autocrlf=true and there was
+    no .gitattributes, so git rewrote 532 of the 1289 hashed files to CRLF on
+    checkout while the worktree here kept LF: check_hashes passed here and would
+    fail anywhere else. Two invariants hold the promise up:
+      * .gitattributes pins "* -text", so checkout never rewrites bytes;
+      * every listed path is tracked and its worktree bytes equal the blob bytes
+        (uncommitted edits excepted - those are the author's own work in progress).
+    """
+    attrs = ROOT / ".gitattributes"
+    check("p201: .gitattributes exists", attrs.exists(), str(attrs))
+    if attrs.exists():
+        rules = [l.strip() for l in attrs.read_text(encoding="utf-8").splitlines()
+                 if l.strip() and not l.strip().startswith("#")]
+        pinned = [r for r in rules if r.split()[0] == "*" and "-text" in r.split()[1:]]
+        check("p201: pins * -text so checkout never rewrites bytes",
+              bool(pinned), str(rules[:3]))
+
+    audit = ROOT / "runs" / "p201-eol-determinism" / "audit_eol.py"
+    check("p201: audit script present", audit.exists(), str(audit))
+    if not audit.exists():
+        return
+    rc, out = run([sys.executable, "-B", str(audit), "--json"])
+    try:
+        data = json.loads(out)
+    except ValueError:
+        check("p201: audit produced json", False, out[-200:])
+        return
+    check("p201: audit read the whole manifest", data.get("total", 0) > 1000,
+          str(data.get("total")))
+
+    # porcelain -z: "XY path\0" - a path with uncommitted work is allowed to differ
+    proc_status = run(["git", "status", "--porcelain", "-z"])[1]
+    dirty = {e[3:] for e in proc_status.split("\0") if len(e) > 3}
+    unexpected = [p for p in data.get("drifted", []) if p not in dirty]
+    check("p201: every hashed file's bytes survive a checkout", not unexpected,
+          ", ".join(unexpected[:5]) or f"{len(data.get('drifted', []))} drifted, all uncommitted")
+    check("p201: no hashed path is untracked (a clean clone must be able to check it)",
+          not data.get("missing_or_untracked"),
+          ", ".join(data.get("missing_or_untracked") or [])[:200])
+
+
 def test_download_policy() -> None:
     """Offline checks for the download-source policy (mirrors, retries, checksums)."""
     sys.path.insert(0, str(ROOT / "launcher"))
@@ -1329,6 +1373,7 @@ def main() -> int:
     test_immediatelyfast_port()
     test_map_atlas_layout_evidence()
     test_text_encoding_guard()
+    test_eol_determinism()
     test_download_policy()
     failed = [name for name, ok, _ in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed"
