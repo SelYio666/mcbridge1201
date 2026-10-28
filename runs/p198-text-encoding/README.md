@@ -42,7 +42,7 @@
 - 行级：386 行未动、12 行可由逆运算整行还原、**306 行必须重写**。
 - 字符级：受损 13385 字，可逆 2599 字（19.4%），**10786 字（80.6%）所在的字节已被 `?` 吞掉**。
 - 重写依据：同一文件内未损坏的句子、同段落的英文/路径/数字骨架（`runs/pNNN`、版本号、统计数）、`git log` 的提交标题、以及被引用的 `runs/` 证据目录本身。示例：`# mcbridge1201锛圥0 鐮斿彂浠撳簱锛?` → `# mcbridge1201（P0 研发仓库）`，其中 `P0` 的 `P` 已丢成 `?`，是按下文“P0 的事实与证据”补回的，不是还原。
-- 提交说明里逐段标注了哪三个文件属于“还原 + 重写混合”，没有把重写说成还原。
+- 提交说明里给出了可整行还原的 12 个行号（`README.md:57,65,113`；`docs/FINAL-STATUS.md:10,20,33,153,155`；`runs/p125-final-acceptance/README.md:20,25,47,170`），其余 306 行受损行明确标为重写，没有把重写说成还原。
 
 ## 守卫规则（`tools/check_text_encoding.py`）
 
@@ -94,7 +94,7 @@ python runs/p198-text-encoding/restore_report.py          # 还原/重写量化�
 python tools/check_text_encoding.py                       # 全量扫描
 python tools/check_text_encoding.py README.md docs/FINAL-STATUS.md runs/p125-final-acceptance/README.md
 python tools/verify_evidence.py                           # 统一门禁（含 text_encoding 项）
-python tools/test_review_fixes.py                         # 回归（含 ENCODING 5 条）
+python tools/test_review_fixes.py                         # 回归（含编码守卫 6 条）
 ```
 
 ## 证据
