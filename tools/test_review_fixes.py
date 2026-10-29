@@ -1984,9 +1984,12 @@ def test_modmenu_rows() -> None:
     check("p205: Entry.drawBorder is called before Entry.render", "method_49568" in code, "")
     check("p205: hovered is decided by getEntryAtPosition, not a rectangle guess",
           "method_25308" in code and "isHovered" in code, "")
-    check("p205: the debug line is behind -Dmcbridge.listrender.debug",
-          code.count("System.out") == 1 and "Boolean.getBoolean" in code,
-          str(code.count("System.out")))
+    # p206 added two more reports (selection change, highlight rectangle), so the invariant is no
+    # longer "one println" but "every println sits behind the same flag".
+    check("p205: every debug line is behind -Dmcbridge.listrender.debug",
+          code.count("System.out") == code.count("if (DEBUG")
+          and 'Boolean.getBoolean("mcbridge.listrender.debug")' in code,
+          f'{code.count("System.out")} prints vs {code.count("if (DEBUG")} guards')
 
     # --- the two runs
     checks_path = run / "rows-check.json"
@@ -2062,6 +2065,126 @@ def test_modmenu_rows() -> None:
         SKIPPED.append("p205 build_command")
 
 
+def test_modmenu_selection() -> None:
+    """p206: a real click selects a row and the bridge now draws a highlight for it.
+
+    Three claims are guarded, and each one is measured rather than asserted:
+
+    * the old jar selects the row too but paints nothing (92 changed pixels, no band);
+    * the new jar lights up exactly one row, at the position the row geometry predicts;
+    * the description panel is empty because the redirect replaced the method body that *built* the
+      description rows - the bytecode evidence for that lives in runs/p206-modmenu-select/bytecode/.
+    """
+    run = ROOT / "runs" / "p206-modmenu-select"
+    bridge_path = (ROOT / "java" / "src" / "bridge" / "java" / "top" / "mcbridge1201" / "bridge"
+                   / "ModMenuListRenderBridge.java")
+    report_path = run / "highlight-check.json"
+    check("p206: the screenshot check is committed", report_path.exists(), str(report_path))
+    check("p206: the bridge source is present", bridge_path.exists(), str(bridge_path))
+    if not (report_path.exists() and bridge_path.exists()):
+        return
+
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    control, fixed = report["control"], report["fix"]
+    check("p206: the committed check passed", report.get("passed") is True,
+          str(report.get("failed")))
+
+    # --- the two runs really are a matched pair ------------------------------------------------
+    p205 = json.loads((ROOT / "runs" / "p205-modmenu-rows" / "after" / "result.json")
+                      .read_text(encoding="utf-8"))
+    check("p206: the control run is the p205 jar",
+          control["jar_sha256"] == p205["modmenu_sha256"],
+          f'{control["jar_sha256"][:16]} vs {p205["modmenu_sha256"][:16]}')
+    check("p206: the two runs use different jars", control["jar_sha256"] != fixed["jar_sha256"], "")
+    check("p206: both runs clicked the same device pixel",
+          control["click"]["device"] == fixed["click"]["device"],
+          f'{control["click"]["device"]} vs {fixed["click"]["device"]}')
+
+    # --- the defect and the fix, recomputed from the two result.json files ----------------------
+    check("p206: the control jar selects the row but reports no selection (it predates the line)",
+          control["selection_before"] is None and control["selection_after"] is None,
+          str((control["selection_before"], control["selection_after"])))
+    check("p206: the fixed jar moved the selection from row 0 to the clicked row",
+          (fixed["selection_before"] or {}).get("selected") == 0
+          and (fixed["selection_after"] or {}).get("selected") == fixed["click"]["row"],
+          str((fixed["selection_before"], fixed["selection_after"])))
+    check("p206: the click also gave the list focus",
+          (fixed["selection_before"] or {}).get("focused") is False
+          and (fixed["selection_after"] or {}).get("focused") is True,
+          str(fixed["selection_after"]))
+
+    # --- geometry: where the highlight should be, and where it actually is ---------------------
+    geo = fixed["geometry"]
+    row = fixed["click"]["row"]
+    item = fixed["mod_list"]["itemHeight"]
+    list_top = fixed["probe_list"]["gui"][1]
+    scale, (_ox, y_off) = geo["scale"], geo["offsets"]
+    predicted_top = y_off + int((list_top + row * item - 2) * scale)
+    predicted_bottom = y_off + int((list_top + row * item + item - 4 + 2) * scale)
+    gained = fixed["gained"]
+    lost = fixed["lost"]
+    check("p206: the fixed jar changed more pixels than the control",
+          fixed["changed_pixels"] > 3 * max(control["changed_pixels"], 1),
+          f'{fixed["changed_pixels"]} vs {control["changed_pixels"]}')
+    check("p206: the control jar produced no highlight band",
+          not control["gained"] and not control["lost"],
+          str((control["gained"], control["lost"])))
+    check("p206: the fixed jar gained exactly one band and lost exactly one",
+          len(gained) == 1 and len(lost) == 1, str((gained, lost)))
+    if len(gained) == 1:
+        top, bottom = gained[0]
+        centre = (top + bottom) / 2
+        height = bottom - top + 1
+        check("p206: the gained band sits on the clicked row",
+              abs(centre - (predicted_top + predicted_bottom) / 2) <= 12,
+              f'centre {centre} vs {(predicted_top + predicted_bottom) / 2}')
+        check("p206: the gained band is about one row tall",
+              abs(height - (predicted_bottom - predicted_top)) <= 16,
+              f'height {height} vs {predicted_bottom - predicted_top}')
+    check("p206: the lost band sits on row 0, where the selection used to be",
+          len(lost) == 1
+          and abs((lost[0][0] + lost[0][1]) / 2
+                  - (y_off + (list_top + item - 4 - 2) * scale / 2
+                     + (list_top - 2) * scale / 2)) <= 12,
+          str(lost))
+
+    # --- the bridge draws what it says --------------------------------------------------------
+    source = bridge_path.read_text(encoding="utf-8")
+    code = re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", source, flags=re.S))
+    check("p206: the bridge draws the selection once per selected row",
+          len(re.findall(r"drawSelection\(list, context, top, rowWidth, rowHeight,", code)) == 1, "")
+    check("p206: the selection colour is the vanilla pair plus a documented wash",
+          "0xFFFFFFFF" in code and "0xFF808080" in code and "0xFF000000" in code
+          and "0x40FFFFFF" in code, "")
+    check("p206: no diagnostic colours were left in the bridge",
+          "TEMP" not in code and "FFFF00FF" not in code and "FFFF0000" not in code, "")
+    check("p206: the bridge never sets the scroll amount (p204's rule still holds)",
+          not re.search(r"method_(60321|25307)\s*\(", code), "")
+
+    # --- why the description panel is empty ---------------------------------------------------
+    redirected = (run / "bytecode" / "render-redirected.txt").read_text(encoding="utf-8")
+    original = (run / "bytecode" / "render-original.txt").read_text(encoding="utf-8")
+    check("p206: the description render is a bare redirect in the patched jar",
+          "ModMenuListRenderBridge.renderList" in redirected and "DescriptionEntry" not in redirected,
+          "")
+    check("p206: the redirect replaced a body that built the description rows",
+          original.count("DescriptionEntry") >= 20 and "method_25339" in original
+          and original.count("Tombstones_modmenu_7_2_2") >= 4,
+          f'{original.count("DescriptionEntry")} constructions, '
+          f'{original.count("Tombstones_modmenu_7_2_2")} tombstone sites')
+    for label, data in (("control", control), ("fixed", fixed)):
+        check(f"p206: the {label} run reports an empty description list on every frame",
+              bool(data["description_counts"]) and all(c == 0 for c in data["description_counts"]),
+              str(data["description_counts"]))
+    check("p206: the check records the empty panel instead of calling it untested",
+          report["checks"].get("description_panel_is_empty_in_both_runs") is True, "")
+
+    # --- the harness re-raises instead of quietly clicking into the terminal -------------------
+    harness = (run / "run.py").read_text(encoding="utf-8")
+    check("p206: the harness retries the window raise and records underIsGame",
+          "for attempt in range(1, 4)" in harness and "underIsGame" in harness, "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2075,6 +2198,7 @@ def main() -> int:
     test_cross_platform_delivery()
     test_real_wheel_input()
     test_modmenu_rows()
+    test_modmenu_selection()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

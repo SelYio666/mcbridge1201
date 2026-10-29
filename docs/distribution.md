@@ -196,7 +196,7 @@ python tools/build_clumps_companion.py --stub <client-1.21.1-intermediary.jar>  
 ## Mod Menu 列表渲染桥（p205）
 
 `work/client/modmenu-patched.jar` 是修前的构建（列表只画黑底不画行），保留它只为让
-`runs/p204-wheel-input/` 的证据仍可复现。**分发要用 `work/client/modmenu-rows.jar`**
+`runs/p204-wheel-input/` 的证据仍可复现。**分发要用 `work/client/modmenu-selected.jar`**（p206：行渲染 + 选中高亮）
 （`runs/p205-modmenu-rows/build.py` 产出：javac 单桥 + `tools/inject_bridges.py` 注入）。
 全量重打包时仍需用同一 `--bridge-dir` 走 `patch`，否则旧的 `ModMenuListRenderBridge` 会留在 jar 里。
 

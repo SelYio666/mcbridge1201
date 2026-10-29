@@ -1,0 +1,12 @@
+# DescriptionListWidget.render (method_48579) in the patched jar: the whole body is the redirect.
+# javap -p -c -cp work/client/modmenu-selected.jar com.terraformersmc.modmenu.gui.widget.DescriptionListWidget
+  public void method_48579(net.minecraft.class_332, int, int, float);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: iload_3
+       4: fload         4
+       6: invokestatic  #157                // Method top/mcbridge1201/bridge/ModMenuListRenderBridge.renderList:(Ljava/lang/Object;Lnet/minecraft/class_332;IIF)V
+       9: return
+

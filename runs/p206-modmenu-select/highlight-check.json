@@ -1,0 +1,221 @@
+{
+  "predicted_band_height": 72,
+  "gained_band_height": 86,
+  "predicted_band_centre": 413.0,
+  "gained_band_centre": 420.5,
+  "first_row_band_centre": 197.0,
+  "lost_band_centre": 204.5,
+  "checks": {
+    "control_draws_no_selection": true,
+    "fix_changes_more_than_control": true,
+    "fix_gains_exactly_one_band": true,
+    "fix_loses_exactly_one_band": true,
+    "gained_band_height_matches_the_row": true,
+    "gained_band_sits_on_the_clicked_row": true,
+    "lost_band_sits_on_the_previously_selected_row": true,
+    "fix_selection_moved_to_the_clicked_row": true,
+    "fix_list_took_focus": true,
+    "description_panel_is_empty_in_both_runs": true
+  },
+  "control": {
+    "run": "no-highlight",
+    "jar_sha256": "9cb27e5455a2a01eb6a653111a91790184be1cd9f91367cd4ff23d51e65d9b0c",
+    "jar_size": 679052,
+    "selection_before": null,
+    "selection_after": null,
+    "click": {
+      "row": 3,
+      "gui": [
+        156,
+        193
+      ],
+      "device": [
+        632,
+        626
+      ],
+      "accepted": 3
+    },
+    "mod_list": {
+      "class": "ModListWidget",
+      "count": 11,
+      "left": 6,
+      "rowWidth": 294,
+      "itemHeight": 36,
+      "rows": [
+        67,
+        324
+      ],
+      "mouse": [
+        0,
+        0
+      ],
+      "focused": null,
+      "box": null
+    },
+    "probe_list": {
+      "gui": [
+        0,
+        67,
+        312,
+        257
+      ],
+      "win": [
+        0,
+        134
+      ]
+    },
+    "geometry": {
+      "shot": [
+        1296,
+        759
+      ],
+      "client": [
+        1280,
+        720
+      ],
+      "scale": 2.0,
+      "offsets": [
+        8,
+        31
+      ],
+      "list_box_px": [
+        8,
+        165,
+        632,
+        679
+      ],
+      "row_top_gui": 175,
+      "predicted_ring": [
+        377,
+        449
+      ]
+    },
+    "changed_pixels": 92,
+    "gained": [],
+    "lost": [],
+    "first_row_band": [
+      161,
+      233
+    ],
+    "description_lines": [
+      "P205_LIST class=DescriptionListWidget count=0 left=7 rowWidth=302 itemHeight=10 rows=108..324 mouse=0,0 firstEntry=none"
+    ],
+    "description_counts": [
+      0
+    ]
+  },
+  "fix": {
+    "run": "highlight",
+    "jar_sha256": "8cbb82df59be78b430d9f935df304f794494e58d4df4698a97fc77251456dd09",
+    "jar_size": 679937,
+    "selection_before": {
+      "class": "ModListWidget",
+      "selected": 0,
+      "count": 11,
+      "focused": false
+    },
+    "selection_after": {
+      "class": "ModListWidget",
+      "selected": 3,
+      "count": 11,
+      "focused": true
+    },
+    "click": {
+      "row": 3,
+      "gui": [
+        156,
+        193
+      ],
+      "device": [
+        632,
+        626
+      ],
+      "accepted": 3
+    },
+    "mod_list": {
+      "class": "ModListWidget",
+      "count": 11,
+      "left": 6,
+      "rowWidth": 294,
+      "itemHeight": 36,
+      "rows": [
+        67,
+        324
+      ],
+      "mouse": [
+        0,
+        0
+      ],
+      "focused": false,
+      "box": [
+        0,
+        67,
+        312,
+        257
+      ]
+    },
+    "probe_list": {
+      "gui": [
+        0,
+        67,
+        312,
+        257
+      ],
+      "win": [
+        0,
+        134
+      ]
+    },
+    "geometry": {
+      "shot": [
+        1296,
+        759
+      ],
+      "client": [
+        1280,
+        720
+      ],
+      "scale": 2.0,
+      "offsets": [
+        8,
+        31
+      ],
+      "list_box_px": [
+        8,
+        165,
+        632,
+        679
+      ],
+      "row_top_gui": 175,
+      "predicted_ring": [
+        377,
+        449
+      ]
+    },
+    "changed_pixels": 47602,
+    "gained": [
+      [
+        378,
+        463
+      ]
+    ],
+    "lost": [
+      [
+        165,
+        244
+      ]
+    ],
+    "first_row_band": [
+      161,
+      233
+    ],
+    "description_lines": [
+      "P205_LIST class=DescriptionListWidget count=0 left=7 rowWidth=302 itemHeight=10 rows=108..324 mouse=0,0 focused=false box=0,108,312,216 firstEntry=none"
+    ],
+    "description_counts": [
+      0
+    ]
+  },
+  "passed": true,
+  "failed": []
+}

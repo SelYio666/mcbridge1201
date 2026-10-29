@@ -1,0 +1,97 @@
+{
+  "modmenu_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\modmenu-rows.jar",
+  "modmenu_sha256": "9cb27e5455a2a01eb6a653111a91790184be1cd9f91367cd4ff23d51e65d9b0c",
+  "modmenu_size": 679052,
+  "jvm_flags": [
+    "-Dmcbridge.listrender.debug=true"
+  ],
+  "mods": [
+    "fabric-api.jar",
+    "modmenu.jar",
+    "balm.jar",
+    "shulker-patched2.jar",
+    "sbtpreview.jar",
+    "appleskin-patched.jar",
+    "ironchests-final.jar",
+    "lithium-final.jar",
+    "trashslot-client-final.jar",
+    "fallingtree-patched.jar",
+    "p204probe.jar"
+  ],
+  "click_row": 3,
+  "window": {
+    "client_w": 1280,
+    "client_h": 720,
+    "scale": 2.0
+  },
+  "scroll_before": 0.0,
+  "entries": 11,
+  "mod_list": {
+    "class": "ModListWidget",
+    "count": 11,
+    "left": 6,
+    "rowWidth": 294,
+    "itemHeight": 36,
+    "rows": [
+      67,
+      324
+    ],
+    "mouse": [
+      0,
+      0
+    ],
+    "focused": null,
+    "box": null
+  },
+  "cursor_on_game": true,
+  "select_before": null,
+  "probe_list": {
+    "gui": [
+      0,
+      67,
+      312,
+      257
+    ],
+    "win": [
+      0,
+      134
+    ]
+  },
+  "click": {
+    "row": 3,
+    "gui": [
+      156,
+      193
+    ],
+    "device": [
+      632,
+      626
+    ],
+    "accepted": 3
+  },
+  "select_after": null,
+  "p205_select": [],
+  "description": {
+    "class": "DescriptionListWidget",
+    "count": 0,
+    "left": 7,
+    "rowWidth": 302,
+    "itemHeight": 10,
+    "rows": [
+      108,
+      324
+    ],
+    "mouse": [
+      0,
+      0
+    ],
+    "focused": null,
+    "box": null
+  },
+  "widget_lines": [
+    "P205_LIST class=DescriptionListWidget count=0 left=7 rowWidth=302 itemHeight=10 rows=108..324 mouse=0,0 firstEntry=none",
+    "P205_LIST class=ModListWidget count=11 left=6 rowWidth=294 itemHeight=36 rows=67..324 mouse=0,0 firstEntry=com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry"
+  ],
+  "select_lines": [],
+  "scroll_after": 0.0
+}

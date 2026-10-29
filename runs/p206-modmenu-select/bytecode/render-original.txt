@@ -1,0 +1,851 @@
+# Same method in the pre-redirect jar (converted, tombstones intact).
+# Lines 0..1397 build the DescriptionEntry rows from the selected mod; the tail calls the four
+# removed 1.20.1 buffer-pipeline tombstones (t1 getBufferBuilder, t2 begin, t3 vertex, t4 draw).
+  public void method_48579(net.minecraft.class_332, int, int, float);
+    Code:
+       0: aload_0
+       1: getfield      #72                 // Field parent:Lcom/terraformersmc/modmenu/gui/ModsScreen;
+       4: invokevirtual #103                // Method com/terraformersmc/modmenu/gui/ModsScreen.getSelectedEntry:()Lcom/terraformersmc/modmenu/gui/widget/entries/ModListEntry;
+       7: astore        5
+       9: aload         5
+      11: aload_0
+      12: getfield      #70                 // Field lastSelected:Lcom/terraformersmc/modmenu/gui/widget/entries/ModListEntry;
+      15: if_acmpeq     1397
+      18: aload_0
+      19: aload         5
+      21: putfield      #70                 // Field lastSelected:Lcom/terraformersmc/modmenu/gui/widget/entries/ModListEntry;
+      24: aload_0
+      25: invokevirtual #155                // Method method_25339:()V
+      28: aload_0
+      29: ldc2_w        #156                // double -1.7976931348623157E308d
+      32: invokevirtual #161                // Method method_25307:(D)V
+      35: aload_0
+      36: getfield      #70                 // Field lastSelected:Lcom/terraformersmc/modmenu/gui/widget/entries/ModListEntry;
+      39: ifnull        1397
+      42: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+      45: dup
+      46: aload_0
+      47: getstatic     #167                // Field net/minecraft/class_5481.field_26385:Lnet/minecraft/class_5481;
+      50: invokespecial #170                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;)V
+      53: astore        6
+      55: aload_0
+      56: invokevirtual #172                // Method method_25322:()I
+      59: iconst_5
+      60: isub
+      61: istore        7
+      63: aload_0
+      64: getfield      #70                 // Field lastSelected:Lcom/terraformersmc/modmenu/gui/widget/entries/ModListEntry;
+      67: invokevirtual #109                // Method com/terraformersmc/modmenu/gui/widget/entries/ModListEntry.getMod:()Lcom/terraformersmc/modmenu/util/mod/Mod;
+      70: astore        8
+      72: aload         8
+      74: invokeinterface #175,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getTranslatedDescription:()Ljava/lang/String;
+      79: astore        9
+      81: aload         9
+      83: invokevirtual #181                // Method java/lang/String.isEmpty:()Z
+      86: ifne          162
+      89: aload_0
+      90: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+      93: aload         9
+      95: ldc           #183                // String \n
+      97: ldc           #185                // String \n\n
+      99: invokevirtual #188                // Method java/lang/String.replaceAll:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     102: invokestatic  #194                // InterfaceMethod net/minecraft/class_2561.method_43470:(Ljava/lang/String;)Lnet/minecraft/class_5250;
+     105: iload         7
+     107: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+     110: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     115: astore        10
+     117: aload         10
+     119: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     124: ifeq          162
+     127: aload         10
+     129: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     134: checkcast     #163                // class net/minecraft/class_5481
+     137: astore        11
+     139: aload_0
+     140: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     143: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+     146: dup
+     147: aload_0
+     148: aload         11
+     150: invokespecial #170                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;)V
+     153: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     158: pop
+     159: goto          117
+     162: getstatic     #229                // Field com/terraformersmc/modmenu/config/ModMenuConfig.UPDATE_CHECKER:Lcom/terraformersmc/modmenu/config/option/BooleanConfigOption;
+     165: invokevirtual #234                // Method com/terraformersmc/modmenu/config/option/BooleanConfigOption.getValue:()Z
+     168: ifeq          635
+     171: getstatic     #238                // Field com/terraformersmc/modmenu/config/ModMenuConfig.DISABLE_UPDATE_CHECKER:Lcom/terraformersmc/modmenu/config/option/StringSetConfigOption;
+     174: invokevirtual #243                // Method com/terraformersmc/modmenu/config/option/StringSetConfigOption.getValue:()Ljava/util/Set;
+     177: aload         8
+     179: invokeinterface #246,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getId:()Ljava/lang/String;
+     184: invokeinterface #251,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+     189: ifne          635
+     192: aload         8
+     194: invokeinterface #255,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getModrinthData:()Lcom/terraformersmc/modmenu/util/mod/ModrinthData;
+     199: ifnull        525
+     202: aload_0
+     203: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     206: aload         6
+     208: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     213: pop
+     214: iconst_0
+     215: istore        10
+     217: aload_0
+     218: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+     221: getstatic     #257                // Field HAS_UPDATE_TEXT:Lnet/minecraft/class_2561;
+     224: iload         7
+     226: bipush        11
+     228: isub
+     229: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+     232: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     237: astore        11
+     239: aload         11
+     241: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     246: ifeq          302
+     249: aload         11
+     251: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     256: checkcast     #163                // class net/minecraft/class_5481
+     259: astore        12
+     261: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+     264: dup
+     265: aload_0
+     266: aload         12
+     268: invokespecial #170                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;)V
+     271: astore        13
+     273: iload         10
+     275: ifne          284
+     278: aload         13
+     280: invokevirtual #260                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry.setUpdateTextEntry:()Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry;
+     283: pop
+     284: aload_0
+     285: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     288: aload         13
+     290: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     295: pop
+     296: iinc          10, 1
+     299: goto          239
+     302: aload_0
+     303: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+     306: getstatic     #262                // Field EXPERIMENTAL_TEXT:Lnet/minecraft/class_2561;
+     309: iload         7
+     311: bipush        16
+     313: isub
+     314: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+     317: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     322: astore        11
+     324: aload         11
+     326: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     331: ifeq          371
+     334: aload         11
+     336: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     341: checkcast     #163                // class net/minecraft/class_5481
+     344: astore        12
+     346: aload_0
+     347: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     350: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+     353: dup
+     354: aload_0
+     355: aload         12
+     357: bipush        8
+     359: invokespecial #265                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;I)V
+     362: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     367: pop
+     368: goto          324
+     371: ldc_w         #267                // String modmenu.updateText
+     374: iconst_2
+     375: anewarray     #269                // class java/lang/Object
+     378: dup
+     379: iconst_0
+     380: aload         8
+     382: invokeinterface #255,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getModrinthData:()Lcom/terraformersmc/modmenu/util/mod/ModrinthData;
+     387: invokevirtual #274                // Method com/terraformersmc/modmenu/util/mod/ModrinthData.versionNumber:()Ljava/lang/String;
+     390: invokestatic  #280                // Method com/terraformersmc/modmenu/util/VersionUtil.stripPrefix:(Ljava/lang/String;)Ljava/lang/String;
+     393: aastore
+     394: dup
+     395: iconst_1
+     396: getstatic     #282                // Field MODRINTH_TEXT:Lnet/minecraft/class_2561;
+     399: aastore
+     400: invokestatic  #286                // InterfaceMethod net/minecraft/class_2561.method_43469:(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/class_5250;
+     403: getstatic     #292                // Field net/minecraft/class_124.field_1078:Lnet/minecraft/class_124;
+     406: invokevirtual #298                // Method net/minecraft/class_5250.method_27692:(Lnet/minecraft/class_124;)Lnet/minecraft/class_5250;
+     409: getstatic     #301                // Field net/minecraft/class_124.field_1073:Lnet/minecraft/class_124;
+     412: invokevirtual #298                // Method net/minecraft/class_5250.method_27692:(Lnet/minecraft/class_124;)Lnet/minecraft/class_5250;
+     415: astore        11
+     417: ldc_w         #303                // String https://modrinth.com/project/%s/version/%s
+     420: iconst_2
+     421: anewarray     #269                // class java/lang/Object
+     424: dup
+     425: iconst_0
+     426: aload         8
+     428: invokeinterface #255,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getModrinthData:()Lcom/terraformersmc/modmenu/util/mod/ModrinthData;
+     433: invokevirtual #306                // Method com/terraformersmc/modmenu/util/mod/ModrinthData.projectId:()Ljava/lang/String;
+     436: aastore
+     437: dup
+     438: iconst_1
+     439: aload         8
+     441: invokeinterface #255,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getModrinthData:()Lcom/terraformersmc/modmenu/util/mod/ModrinthData;
+     446: invokevirtual #309                // Method com/terraformersmc/modmenu/util/mod/ModrinthData.versionId:()Ljava/lang/String;
+     449: aastore
+     450: invokevirtual #313                // Method java/lang/String.formatted:([Ljava/lang/Object;)Ljava/lang/String;
+     453: astore        12
+     455: aload_0
+     456: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+     459: aload         11
+     461: iload         7
+     463: bipush        16
+     465: isub
+     466: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+     469: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     474: astore        13
+     476: aload         13
+     478: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     483: ifeq          525
+     486: aload         13
+     488: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     493: checkcast     #163                // class net/minecraft/class_5481
+     496: astore        14
+     498: aload_0
+     499: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     502: new           #8                  // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$LinkEntry
+     505: dup
+     506: aload_0
+     507: aload         14
+     509: aload         12
+     511: bipush        8
+     513: invokespecial #316                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$LinkEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;Ljava/lang/String;I)V
+     516: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     521: pop
+     522: goto          476
+     525: aload         8
+     527: invokeinterface #319,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getChildHasUpdate:()Z
+     532: ifeq          635
+     535: aload_0
+     536: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     539: aload         6
+     541: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     546: pop
+     547: iconst_0
+     548: istore        10
+     550: aload_0
+     551: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+     554: getstatic     #321                // Field CHILD_HAS_UPDATE_TEXT:Lnet/minecraft/class_2561;
+     557: iload         7
+     559: bipush        11
+     561: isub
+     562: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+     565: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     570: astore        11
+     572: aload         11
+     574: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     579: ifeq          635
+     582: aload         11
+     584: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     589: checkcast     #163                // class net/minecraft/class_5481
+     592: astore        12
+     594: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+     597: dup
+     598: aload_0
+     599: aload         12
+     601: invokespecial #170                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;)V
+     604: astore        13
+     606: iload         10
+     608: ifne          617
+     611: aload         13
+     613: invokevirtual #260                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry.setUpdateTextEntry:()Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry;
+     616: pop
+     617: aload_0
+     618: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     621: aload         13
+     623: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     628: pop
+     629: iinc          10, 1
+     632: goto          572
+     635: aload         8
+     637: invokeinterface #325,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getLinks:()Ljava/util/Map;
+     642: astore        10
+     644: aload         8
+     646: invokeinterface #328,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getSource:()Ljava/lang/String;
+     651: astore        11
+     653: aload         10
+     655: invokeinterface #331,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+     660: ifeq          668
+     663: aload         11
+     665: ifnull        852
+     668: getstatic     #334                // Field com/terraformersmc/modmenu/config/ModMenuConfig.HIDE_MOD_LINKS:Lcom/terraformersmc/modmenu/config/option/BooleanConfigOption;
+     671: invokevirtual #234                // Method com/terraformersmc/modmenu/config/option/BooleanConfigOption.getValue:()Z
+     674: ifne          852
+     677: aload_0
+     678: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     681: aload         6
+     683: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     688: pop
+     689: aload_0
+     690: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+     693: getstatic     #336                // Field LINKS_TEXT:Lnet/minecraft/class_2561;
+     696: iload         7
+     698: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+     701: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     706: astore        12
+     708: aload         12
+     710: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     715: ifeq          753
+     718: aload         12
+     720: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     725: checkcast     #163                // class net/minecraft/class_5481
+     728: astore        13
+     730: aload_0
+     731: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     734: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+     737: dup
+     738: aload_0
+     739: aload         13
+     741: invokespecial #170                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;)V
+     744: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     749: pop
+     750: goto          708
+     753: aload         11
+     755: ifnull        837
+     758: bipush        8
+     760: istore        12
+     762: aload_0
+     763: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+     766: getstatic     #338                // Field SOURCE_TEXT:Lnet/minecraft/class_2561;
+     769: iload         7
+     771: bipush        16
+     773: isub
+     774: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+     777: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     782: astore        13
+     784: aload         13
+     786: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     791: ifeq          837
+     794: aload         13
+     796: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     801: checkcast     #163                // class net/minecraft/class_5481
+     804: astore        14
+     806: aload_0
+     807: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     810: new           #8                  // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$LinkEntry
+     813: dup
+     814: aload_0
+     815: aload         14
+     817: aload         11
+     819: iload         12
+     821: invokespecial #316                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$LinkEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;Ljava/lang/String;I)V
+     824: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     829: pop
+     830: bipush        16
+     832: istore        12
+     834: goto          784
+     837: aload         10
+     839: aload_0
+     840: iload         7
+     842: invokedynamic #358,  0            // InvokeDynamic #1:accept:(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;I)Ljava/util/function/BiConsumer;
+     847: invokeinterface #362,  2          // InterfaceMethod java/util/Map.forEach:(Ljava/util/function/BiConsumer;)V
+     852: aload         8
+     854: invokeinterface #365,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getLicense:()Ljava/util/Set;
+     859: astore        12
+     861: getstatic     #368                // Field com/terraformersmc/modmenu/config/ModMenuConfig.HIDE_MOD_LICENSE:Lcom/terraformersmc/modmenu/config/option/BooleanConfigOption;
+     864: invokevirtual #234                // Method com/terraformersmc/modmenu/config/option/BooleanConfigOption.getValue:()Z
+     867: ifne          1069
+     870: aload         12
+     872: invokeinterface #369,  1          // InterfaceMethod java/util/Set.isEmpty:()Z
+     877: ifne          1069
+     880: aload_0
+     881: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     884: aload         6
+     886: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     891: pop
+     892: aload_0
+     893: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+     896: getstatic     #371                // Field LICENSE_TEXT:Lnet/minecraft/class_2561;
+     899: iload         7
+     901: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+     904: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     909: astore        13
+     911: aload         13
+     913: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     918: ifeq          956
+     921: aload         13
+     923: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     928: checkcast     #163                // class net/minecraft/class_5481
+     931: astore        14
+     933: aload_0
+     934: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+     937: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+     940: dup
+     941: aload_0
+     942: aload         14
+     944: invokespecial #170                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;)V
+     947: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     952: pop
+     953: goto          911
+     956: aload         12
+     958: invokeinterface #372,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+     963: astore        13
+     965: aload         13
+     967: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     972: ifeq          1069
+     975: aload         13
+     977: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     982: checkcast     #177                // class java/lang/String
+     985: astore        14
+     987: bipush        8
+     989: istore        15
+     991: aload_0
+     992: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+     995: aload         14
+     997: invokestatic  #194                // InterfaceMethod net/minecraft/class_2561.method_43470:(Ljava/lang/String;)Lnet/minecraft/class_5250;
+    1000: iload         7
+    1002: bipush        16
+    1004: isub
+    1005: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+    1008: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+    1013: astore        16
+    1015: aload         16
+    1017: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    1022: ifeq          1066
+    1025: aload         16
+    1027: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    1032: checkcast     #163                // class net/minecraft/class_5481
+    1035: astore        17
+    1037: aload_0
+    1038: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+    1041: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+    1044: dup
+    1045: aload_0
+    1046: aload         17
+    1048: iload         15
+    1050: invokespecial #265                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;I)V
+    1053: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+    1058: pop
+    1059: bipush        16
+    1061: istore        15
+    1063: goto          1015
+    1066: goto          965
+    1069: getstatic     #375                // Field com/terraformersmc/modmenu/config/ModMenuConfig.HIDE_MOD_CREDITS:Lcom/terraformersmc/modmenu/config/option/BooleanConfigOption;
+    1072: invokevirtual #234                // Method com/terraformersmc/modmenu/config/option/BooleanConfigOption.getValue:()Z
+    1075: ifne          1397
+    1078: ldc_w         #377                // String minecraft
+    1081: aload         8
+    1083: invokeinterface #246,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getId:()Ljava/lang/String;
+    1088: invokevirtual #380                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    1091: ifeq          1173
+    1094: aload_0
+    1095: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+    1098: aload         6
+    1100: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+    1105: pop
+    1106: aload_0
+    1107: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+    1110: getstatic     #382                // Field VIEW_CREDITS_TEXT:Lnet/minecraft/class_2561;
+    1113: iload         7
+    1115: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+    1118: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+    1123: astore        13
+    1125: aload         13
+    1127: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    1132: ifeq          1170
+    1135: aload         13
+    1137: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    1142: checkcast     #163                // class net/minecraft/class_5481
+    1145: astore        14
+    1147: aload_0
+    1148: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+    1151: new           #10                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$MojangCreditsEntry
+    1154: dup
+    1155: aload_0
+    1156: aload         14
+    1158: invokespecial #383                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$MojangCreditsEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;)V
+    1161: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+    1166: pop
+    1167: goto          1125
+    1170: goto          1397
+    1173: ldc_w         #385                // String java
+    1176: aload         8
+    1178: invokeinterface #246,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getId:()Ljava/lang/String;
+    1183: invokevirtual #380                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+    1186: ifne          1397
+    1189: aload         8
+    1191: invokeinterface #388,  1          // InterfaceMethod com/terraformersmc/modmenu/util/mod/Mod.getCredits:()Ljava/util/List;
+    1196: astore        13
+    1198: aload         13
+    1200: invokeinterface #389,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+    1205: ifne          1397
+    1208: aload_0
+    1209: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+    1212: aload         6
+    1214: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+    1219: pop
+    1220: aload_0
+    1221: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+    1224: getstatic     #391                // Field CREDITS_TEXT:Lnet/minecraft/class_2561;
+    1227: iload         7
+    1229: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+    1232: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+    1237: astore        14
+    1239: aload         14
+    1241: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    1246: ifeq          1284
+    1249: aload         14
+    1251: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    1256: checkcast     #163                // class net/minecraft/class_5481
+    1259: astore        15
+    1261: aload_0
+    1262: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+    1265: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+    1268: dup
+    1269: aload_0
+    1270: aload         15
+    1272: invokespecial #170                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;)V
+    1275: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+    1280: pop
+    1281: goto          1239
+    1284: aload         13
+    1286: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+    1291: astore        14
+    1293: aload         14
+    1295: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    1300: ifeq          1397
+    1303: aload         14
+    1305: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    1310: checkcast     #177                // class java/lang/String
+    1313: astore        15
+    1315: bipush        8
+    1317: istore        16
+    1319: aload_0
+    1320: getfield      #79                 // Field textRenderer:Lnet/minecraft/class_327;
+    1323: aload         15
+    1325: invokestatic  #194                // InterfaceMethod net/minecraft/class_2561.method_43470:(Ljava/lang/String;)Lnet/minecraft/class_5250;
+    1328: iload         7
+    1330: bipush        16
+    1332: isub
+    1333: invokevirtual #200                // Method net/minecraft/class_327.method_1728:(Lnet/minecraft/class_5348;I)Ljava/util/List;
+    1336: invokeinterface #206,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+    1341: astore        17
+    1343: aload         17
+    1345: invokeinterface #211,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+    1350: ifeq          1394
+    1353: aload         17
+    1355: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+    1360: checkcast     #163                // class net/minecraft/class_5481
+    1363: astore        18
+    1365: aload_0
+    1366: invokevirtual #219                // Method method_25396:()Ljava/util/List;
+    1369: new           #14                 // class com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry
+    1372: dup
+    1373: aload_0
+    1374: aload         18
+    1376: iload         16
+    1378: invokespecial #265                // Method com/terraformersmc/modmenu/gui/widget/DescriptionListWidget$DescriptionEntry."<init>":(Lcom/terraformersmc/modmenu/gui/widget/DescriptionListWidget;Lnet/minecraft/class_5481;I)V
+    1381: invokeinterface #223,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+    1386: pop
+    1387: bipush        16
+    1389: istore        16
+    1391: goto          1343
+    1394: goto          1293
+    1397: invokestatic  #397                // Method net/minecraft/class_289.method_1348:()Lnet/minecraft/class_289;
+    1400: astore        6
+    1402: aload         6
+    1404: invokestatic  #403                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t1:(Lnet/minecraft/class_289;)Lnet/minecraft/class_287;
+    1407: astore        7
+    1409: invokedynamic #416,  0            // InvokeDynamic #2:get:()Ljava/util/function/Supplier;
+    1414: invokestatic  #422                // Method com/mojang/blaze3d/systems/RenderSystem.setShader:(Ljava/util/function/Supplier;)V
+    1417: iconst_0
+    1418: getstatic     #428                // Field net/minecraft/class_437.field_44669:Lnet/minecraft/class_2960;
+    1421: invokestatic  #432                // Method com/mojang/blaze3d/systems/RenderSystem.setShaderTexture:(ILnet/minecraft/class_2960;)V
+    1424: fconst_1
+    1425: fconst_1
+    1426: fconst_1
+    1427: fconst_1
+    1428: invokestatic  #436                // Method com/mojang/blaze3d/systems/RenderSystem.setShaderColor:(FFFF)V
+    1431: aload         7
+    1433: getstatic     #440                // Field net/minecraft/class_293$class_5596.field_27382:Lnet/minecraft/class_293$class_5596;
+    1436: getstatic     #446                // Field net/minecraft/class_290.field_1575:Lnet/minecraft/class_293;
+    1439: invokestatic  #450                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t2:(Lnet/minecraft/class_287;Lnet/minecraft/class_293$class_5596;Lnet/minecraft/class_293;)V
+    1442: aload         7
+    1444: aload_0
+    1445: getfield      #94                 // Field field_19088:I
+    1448: i2d
+    1449: aload_0
+    1450: getfield      #453                // Field field_19086:I
+    1453: i2d
+    1454: dconst_0
+    1455: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1458: aload_0
+    1459: getfield      #94                 // Field field_19088:I
+    1462: i2f
+    1463: ldc_w         #460                // float 32.0f
+    1466: fdiv
+    1467: aload_0
+    1468: getfield      #453                // Field field_19086:I
+    1471: aload_0
+    1472: invokevirtual #464                // Method method_25341:()D
+    1475: d2i
+    1476: iadd
+    1477: i2f
+    1478: ldc_w         #460                // float 32.0f
+    1481: fdiv
+    1482: invokeinterface #470,  3          // InterfaceMethod net/minecraft/class_4588.method_22913:(FF)Lnet/minecraft/class_4588;
+    1487: bipush        32
+    1489: bipush        32
+    1491: bipush        32
+    1493: sipush        255
+    1496: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1501: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1504: aload         7
+    1506: aload_0
+    1507: getfield      #481                // Field field_19087:I
+    1510: i2d
+    1511: aload_0
+    1512: getfield      #453                // Field field_19086:I
+    1515: i2d
+    1516: dconst_0
+    1517: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1520: aload_0
+    1521: getfield      #481                // Field field_19087:I
+    1524: i2f
+    1525: ldc_w         #460                // float 32.0f
+    1528: fdiv
+    1529: aload_0
+    1530: getfield      #453                // Field field_19086:I
+    1533: aload_0
+    1534: invokevirtual #464                // Method method_25341:()D
+    1537: d2i
+    1538: iadd
+    1539: i2f
+    1540: ldc_w         #460                // float 32.0f
+    1543: fdiv
+    1544: invokeinterface #470,  3          // InterfaceMethod net/minecraft/class_4588.method_22913:(FF)Lnet/minecraft/class_4588;
+    1549: bipush        32
+    1551: bipush        32
+    1553: bipush        32
+    1555: sipush        255
+    1558: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1563: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1566: aload         7
+    1568: aload_0
+    1569: getfield      #481                // Field field_19087:I
+    1572: i2d
+    1573: aload_0
+    1574: getfield      #484                // Field field_19085:I
+    1577: i2d
+    1578: dconst_0
+    1579: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1582: aload_0
+    1583: getfield      #481                // Field field_19087:I
+    1586: i2f
+    1587: ldc_w         #460                // float 32.0f
+    1590: fdiv
+    1591: aload_0
+    1592: getfield      #484                // Field field_19085:I
+    1595: aload_0
+    1596: invokevirtual #464                // Method method_25341:()D
+    1599: d2i
+    1600: iadd
+    1601: i2f
+    1602: ldc_w         #460                // float 32.0f
+    1605: fdiv
+    1606: invokeinterface #470,  3          // InterfaceMethod net/minecraft/class_4588.method_22913:(FF)Lnet/minecraft/class_4588;
+    1611: bipush        32
+    1613: bipush        32
+    1615: bipush        32
+    1617: sipush        255
+    1620: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1625: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1628: aload         7
+    1630: aload_0
+    1631: getfield      #94                 // Field field_19088:I
+    1634: i2d
+    1635: aload_0
+    1636: getfield      #484                // Field field_19085:I
+    1639: i2d
+    1640: dconst_0
+    1641: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1644: aload_0
+    1645: getfield      #94                 // Field field_19088:I
+    1648: i2f
+    1649: ldc_w         #460                // float 32.0f
+    1652: fdiv
+    1653: aload_0
+    1654: getfield      #484                // Field field_19085:I
+    1657: aload_0
+    1658: invokevirtual #464                // Method method_25341:()D
+    1661: d2i
+    1662: iadd
+    1663: i2f
+    1664: ldc_w         #460                // float 32.0f
+    1667: fdiv
+    1668: invokeinterface #470,  3          // InterfaceMethod net/minecraft/class_4588.method_22913:(FF)Lnet/minecraft/class_4588;
+    1673: bipush        32
+    1675: bipush        32
+    1677: bipush        32
+    1679: sipush        255
+    1682: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1687: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1690: aload         6
+    1692: invokestatic  #488                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t4:(Lnet/minecraft/class_289;)V
+    1695: aload_0
+    1696: aload_1
+    1697: invokevirtual #492                // Method method_49603:(Lnet/minecraft/class_332;)V
+    1700: aload_0
+    1701: aload_1
+    1702: iload_2
+    1703: iload_3
+    1704: fload         4
+    1706: invokevirtual #495                // Method method_25311:(Lnet/minecraft/class_332;IIF)V
+    1709: aload_1
+    1710: invokevirtual #500                // Method net/minecraft/class_332.method_44380:()V
+    1713: sipush        515
+    1716: invokestatic  #504                // Method com/mojang/blaze3d/systems/RenderSystem.depthFunc:(I)V
+    1719: invokestatic  #507                // Method com/mojang/blaze3d/systems/RenderSystem.disableDepthTest:()V
+    1722: invokestatic  #510                // Method com/mojang/blaze3d/systems/RenderSystem.enableBlend:()V
+    1725: getstatic     #514                // Field com/mojang/blaze3d/platform/GlStateManager$class_4535.SRC_ALPHA:Lcom/mojang/blaze3d/platform/GlStateManager$class_4535;
+    1728: getstatic     #518                // Field com/mojang/blaze3d/platform/GlStateManager$class_4534.ONE_MINUS_SRC_ALPHA:Lcom/mojang/blaze3d/platform/GlStateManager$class_4534;
+    1731: getstatic     #521                // Field com/mojang/blaze3d/platform/GlStateManager$class_4535.ZERO:Lcom/mojang/blaze3d/platform/GlStateManager$class_4535;
+    1734: getstatic     #524                // Field com/mojang/blaze3d/platform/GlStateManager$class_4534.ONE:Lcom/mojang/blaze3d/platform/GlStateManager$class_4534;
+    1737: invokestatic  #528                // Method com/mojang/blaze3d/systems/RenderSystem.blendFuncSeparate:(Lcom/mojang/blaze3d/platform/GlStateManager$class_4535;Lcom/mojang/blaze3d/platform/GlStateManager$class_4534;Lcom/mojang/blaze3d/platform/GlStateManager$class_4535;Lcom/mojang/blaze3d/platform/GlStateManager$class_4534;)V
+    1740: invokedynamic #533,  0            // InvokeDynamic #3:get:()Ljava/util/function/Supplier;
+    1745: invokestatic  #422                // Method com/mojang/blaze3d/systems/RenderSystem.setShader:(Ljava/util/function/Supplier;)V
+    1748: aload         7
+    1750: getstatic     #440                // Field net/minecraft/class_293$class_5596.field_27382:Lnet/minecraft/class_293$class_5596;
+    1753: getstatic     #536                // Field net/minecraft/class_290.field_1576:Lnet/minecraft/class_293;
+    1756: invokestatic  #450                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t2:(Lnet/minecraft/class_287;Lnet/minecraft/class_293$class_5596;Lnet/minecraft/class_293;)V
+    1759: aload         7
+    1761: aload_0
+    1762: getfield      #94                 // Field field_19088:I
+    1765: i2d
+    1766: aload_0
+    1767: getfield      #484                // Field field_19085:I
+    1770: iconst_4
+    1771: iadd
+    1772: i2d
+    1773: dconst_0
+    1774: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1777: iconst_0
+    1778: iconst_0
+    1779: iconst_0
+    1780: iconst_0
+    1781: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1786: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1789: aload         7
+    1791: aload_0
+    1792: getfield      #481                // Field field_19087:I
+    1795: i2d
+    1796: aload_0
+    1797: getfield      #484                // Field field_19085:I
+    1800: iconst_4
+    1801: iadd
+    1802: i2d
+    1803: dconst_0
+    1804: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1807: iconst_0
+    1808: iconst_0
+    1809: iconst_0
+    1810: iconst_0
+    1811: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1816: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1819: aload         7
+    1821: aload_0
+    1822: getfield      #481                // Field field_19087:I
+    1825: i2d
+    1826: aload_0
+    1827: getfield      #484                // Field field_19085:I
+    1830: i2d
+    1831: dconst_0
+    1832: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1835: iconst_0
+    1836: iconst_0
+    1837: iconst_0
+    1838: sipush        255
+    1841: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1846: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1849: aload         7
+    1851: aload_0
+    1852: getfield      #94                 // Field field_19088:I
+    1855: i2d
+    1856: aload_0
+    1857: getfield      #484                // Field field_19085:I
+    1860: i2d
+    1861: dconst_0
+    1862: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1865: iconst_0
+    1866: iconst_0
+    1867: iconst_0
+    1868: sipush        255
+    1871: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1876: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1879: aload         7
+    1881: aload_0
+    1882: getfield      #94                 // Field field_19088:I
+    1885: i2d
+    1886: aload_0
+    1887: getfield      #453                // Field field_19086:I
+    1890: i2d
+    1891: dconst_0
+    1892: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1895: iconst_0
+    1896: iconst_0
+    1897: iconst_0
+    1898: sipush        255
+    1901: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1906: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1909: aload         7
+    1911: aload_0
+    1912: getfield      #481                // Field field_19087:I
+    1915: i2d
+    1916: aload_0
+    1917: getfield      #453                // Field field_19086:I
+    1920: i2d
+    1921: dconst_0
+    1922: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1925: iconst_0
+    1926: iconst_0
+    1927: iconst_0
+    1928: sipush        255
+    1931: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1936: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1939: aload         7
+    1941: aload_0
+    1942: getfield      #481                // Field field_19087:I
+    1945: i2d
+    1946: aload_0
+    1947: getfield      #453                // Field field_19086:I
+    1950: iconst_4
+    1951: isub
+    1952: i2d
+    1953: dconst_0
+    1954: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1957: iconst_0
+    1958: iconst_0
+    1959: iconst_0
+    1960: iconst_0
+    1961: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1966: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1969: aload         7
+    1971: aload_0
+    1972: getfield      #94                 // Field field_19088:I
+    1975: i2d
+    1976: aload_0
+    1977: getfield      #453                // Field field_19086:I
+    1980: iconst_4
+    1981: isub
+    1982: i2d
+    1983: dconst_0
+    1984: invokevirtual #459                // Method net/minecraft/class_287.method_22912:(DDD)Lnet/minecraft/class_4588;
+    1987: iconst_0
+    1988: iconst_0
+    1989: iconst_0
+    1990: iconst_0
+    1991: invokeinterface #474,  5          // InterfaceMethod net/minecraft/class_4588.method_1336:(IIII)Lnet/minecraft/class_4588;
+    1996: invokestatic  #478                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t3:(Lnet/minecraft/class_4588;)V
+    1999: aload         6
+    2001: invokestatic  #488                // Method centurybridge/gen/Tombstones_modmenu_7_2_2.t4:(Lnet/minecraft/class_289;)V
+    2004: aload_0
+    2005: aload         7
+    2007: aload         6
+    2009: invokevirtual #540                // Method renderScrollBar:(Lnet/minecraft/class_287;Lnet/minecraft/class_289;)V
+    2012: invokestatic  #543                // Method com/mojang/blaze3d/systems/RenderSystem.disableBlend:()V
+    2015: return
+
+  public void renderScrollBar(net.minecraft.class_287, net.minecraft.class_289);

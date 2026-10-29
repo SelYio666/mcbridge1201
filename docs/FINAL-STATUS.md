@@ -421,3 +421,29 @@ p195 结尾的 "clean-host portable remain open" 与 p201 的 "Verified on Windo
   `build.log`、桥源码与 `build_command` 实算；
 - 边界：单机单显示器、guiScale 2；只验证模组列表；纹理背景未恢复（平色 `0x80000000`），
   选中高亮未画，描述面板未验证；Cloth 配置界面仍打不开。
+
+## 二十二、2026-10-29 更新（p206：选中行高亮 + 描述面板空的原因）
+
+p205 留下的两条尾巴：一条收掉，一条查到底并如实标记为未修。
+
+- **高亮按原版复刻**：`EntryListWidget.method_44398` 的画法是「选中色条（上下各溢出 2 px）+ 内缩 1 px 的黑芯」，也就是
+  原版的"选中"其实是 1 px 描边。桥调用不到这个方法（redirect 只替换被替换方法的方法体），所以从其字节码逐条重写
+  （`method_44398` 的两处 `method_25294`、`hasFocus() ? -1 : -8355712`、边框 `-16777216`）；
+- **有意偏离**：1 px 白边在近黑平色行底上几乎不可见，因此再铺一层半透明底（`0x40FFFFFF` / `0x24FFFFFF`），代码注释、
+  run README 与本节都写明这是偏离，不是原版行为；
+- **匹配对照**（同客户端/11 模组/同窗口 guiScale 2/同一光标点 `(632,626)`/同一次真实左键）：p205 的 jar 变化 **92** 像素、
+  **0 条带**；本轮 jar 变化 **47602** 像素，**变亮一条** `378..463`（86 px，预测 72）落在点中的第 3 行，**变暗一条**
+  `165..244` 落在原先选中的第 0 行；`P205_SELECT` 从 `selected=0 focused=false` 到 `selected=3 focused=true`；
+- **判据**：`verify_rows.py` 做有符号差分（变亮/变暗分开计），按行统计超过行宽 40% 的变化合并成条带；10 项全过
+  （控制组无条带、变化量 >3×、恰好一增一减、高度 ±16、位置 ±12、选中号与焦点、描述面板在两份运行里都为 0）；
+- **描述面板为空的原因（未修）**：`DescriptionListWidget.method_48579` 在打补丁的 jar 里只剩
+  `ModMenuListRenderBridge.renderList(...)` 一次调用（`bytecode/render-redirected.txt`，12 行字节码）；而它的原始方法体
+  （`bytecode/render-original.txt`，851 行）前 1397 个字节码是**建行**——`parent.getSelectedEntry()`、与 `lastSelected` 比较、
+  `method_25339()` 清空、`method_25307(-MAX)` 回顶、`getTranslatedDescription()` 换行后逐行 `new DescriptionEntry(...)`
+  （共 24 处构造），之后才是 17 处 tombstone 的 1.20.1 `BufferBuilder` 管线。整段替换等于把建行的副作用一起删了，
+  所以 `count` 每帧为 0，面板只剩 ModsScreen 画的图标/名字/两枚按钮；
+- **顺带**：`run.py` 的置顶改为重试三次并逐次记录 `underIsGame`（本轮第一次运行就撞上系统忽略 `SetWindowPos`，直接退出而不是
+  带着空点击继续跑）；
+- 回归：新增 `test_modmenu_selection()`（25 条），并把 p205 那条"只有一处 println"改成"每处 println 都在同一个 DEBUG 门后"；
+- 门禁：`test_review_fixes` **312/312**；`check_hashes`、`verify_evidence`、`check_text_encoding` 见提交说明；
+- 边界：单机单显示器、guiScale 2；只点第 3 行；截图有 +8 px 竖直偏差（用相对间距校验）；描述面板仍空。

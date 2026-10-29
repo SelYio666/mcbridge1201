@@ -166,9 +166,21 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   `getEntryAtPosition`, and `Entry.drawBorder` before `Entry.render`. Matched runs (same client,
   mods, window and cursor; only the bridge differs) go from 0 bright / 0 coloured list pixels to
   11147 / 20211 with six icon bands, and the rows move exactly 36 device px for a 36 px scroll
-  delta. Still degraded: the original textured backdrop is not restored (flat 0x80000000 band), the
-  selection highlight (`method_44398`) is not drawn, and the description panel's rows are untested
-  (it uses the same bridge but had `count=0` in this run).
+  delta. The selection highlight now exists (`runs/p206-modmenu-select/`): a real left click on row 3
+  moved the selection 0 -> 3 and the list took focus, and the before/after pixel difference gained
+  exactly one band (378..463 device px, 86 tall) on the clicked row and lost exactly one on row 0,
+  against 92 changed pixels with no band at all for the p205 jar. The bridge re-implements vanilla
+  `method_44398` (1 px outline around a black interior) and adds a translucent wash on top, which is
+  a deliberate, documented deviation: the vanilla outline alone is invisible on this flat backdrop.
+  Still degraded: the original textured backdrop is not restored (flat 0x80000000 band), and the
+  **description panel body is empty** - not "untested" any more. Its render method
+  (`DescriptionListWidget.method_48579`) is replaced wholesale by the bridge, and the original body's
+  first 1397 bytecode ops are what *build* the DescriptionEntry rows (24 constructions, from
+  `getSelectedEntry()` + `getTranslatedDescription()` wrapped to width) before the 1.20.1 buffer
+  pipeline (17 tombstone call sites) that crashed. Dropping the body dropped the entry building, so
+  `count` is 0 on every frame and only ModsScreen's own icon/name/buttons draw. Bytecode and
+  screenshots are in `runs/p206-modmenu-select/bytecode/`; fixing it means re-implementing that entry
+  builder against 1.21.1 or replacing only the tombstoned tail.
   Real wheel and keyboard input now work (`runs/p204-wheel-input/`, closing p104): nine OS wheel
   notches over the list stepped the scroll 18/36/54/72/90/108/126/144 and clamped at max 147,
   each notch showing up as one `dy=-1.0` at `Mouse.onMouseScroll`; a wheel outside the window
