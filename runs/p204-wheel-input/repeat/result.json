@@ -1,0 +1,170 @@
+{
+  "mods": [
+    "fabric-api.jar",
+    "modmenu-patched.jar",
+    "balm.jar",
+    "shulker-patched2.jar",
+    "sbtpreview.jar",
+    "appleskin-patched.jar",
+    "ironchests-final.jar",
+    "lithium-final.jar",
+    "trashslot-client-final.jar",
+    "fallingtree-patched.jar",
+    "p204probe.jar"
+  ],
+  "list": {
+    "gui": [
+      0,
+      67,
+      312,
+      257
+    ],
+    "win": [
+      0,
+      134
+    ]
+  },
+  "search": {
+    "gui": [
+      16,
+      22,
+      258,
+      20
+    ],
+    "win": [
+      32,
+      44
+    ]
+  },
+  "window": {
+    "client_w": 1280,
+    "client_h": 720,
+    "scale": 2.0
+  },
+  "item_height": 36,
+  "expected_step": 18.0,
+  "max_scroll": 147,
+  "entries_before": 11,
+  "control_a": {
+    "point": [
+      1660,
+      600
+    ],
+    "under_is_game": false,
+    "accepted": 9,
+    "scroll_before": 0.0,
+    "scroll_after": 0.0,
+    "events_delta": 0,
+    "cursor": [
+      1660,
+      600
+    ]
+  },
+  "control_b": {
+    "offset": [
+      1240,
+      391
+    ],
+    "accepted": 9,
+    "scroll_before": 0.0,
+    "scroll_after": 0.0,
+    "events_delta": 2
+  },
+  "wheel_steps": [
+    {
+      "notch": 1,
+      "scroll": 18.0,
+      "scroll_events": 3
+    },
+    {
+      "notch": 2,
+      "scroll": 36.0,
+      "scroll_events": 4
+    },
+    {
+      "notch": 3,
+      "scroll": 54.0,
+      "scroll_events": 5
+    },
+    {
+      "notch": 4,
+      "scroll": 72.0,
+      "scroll_events": 6
+    },
+    {
+      "notch": 5,
+      "scroll": 90.0,
+      "scroll_events": 7
+    },
+    {
+      "notch": 6,
+      "scroll": 108.0,
+      "scroll_events": 8
+    },
+    {
+      "notch": 7,
+      "scroll": 126.0,
+      "scroll_events": 9
+    },
+    {
+      "notch": 8,
+      "scroll": 144.0,
+      "scroll_events": 10
+    },
+    {
+      "notch": 9,
+      "scroll": 147.0,
+      "scroll_events": 11
+    }
+  ],
+  "scroll_before_wheel": 0.0,
+  "keyboard": {
+    "click": [
+      290,
+      64
+    ],
+    "sent": "menu",
+    "accepted": 8,
+    "chars": 4,
+    "keys": 8,
+    "text_after": "menu",
+    "entries_after": 1,
+    "foreground": true
+  },
+  "scroll_events_total": 11,
+  "raw_scroll_lines": [
+    "[22:56:12] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=1 dx=0.0 dy=-1.0",
+    "[22:56:12] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=2 dx=0.0 dy=-7.0",
+    "[22:56:14] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=3 dx=0.0 dy=-1.0",
+    "[22:56:16] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=4 dx=0.0 dy=-1.0",
+    "[22:56:17] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=5 dx=0.0 dy=-1.0",
+    "[22:56:18] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=6 dx=0.0 dy=-1.0",
+    "[22:56:19] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=7 dx=0.0 dy=-1.0",
+    "[22:56:20] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=8 dx=0.0 dy=-1.0",
+    "[22:56:21] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=9 dx=0.0 dy=-1.0",
+    "[22:56:21] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=10 dx=0.0 dy=-1.0",
+    "[22:56:22] [Render thread/INFO]: [STDOUT]: P204_SCROLL n=11 dx=0.0 dy=-1.0"
+  ],
+  "done": "[22:56:30] [Render thread/INFO]: [STDOUT]: P204_DONE tick=484 scroll=0.0 max=0 entries=1 text=\"menu\" scrollEvents=11 charEvents=4 keyEvents=8",
+  "increments": [
+    18.0,
+    18.0,
+    18.0,
+    18.0,
+    18.0,
+    18.0,
+    18.0,
+    18.0,
+    3.0
+  ],
+  "checks": {
+    "probe_ready": true,
+    "control_a_no_event": true,
+    "control_b_list_unchanged": true,
+    "wheel_staircase": true,
+    "wheel_reached_max": true,
+    "keyboard_text": true,
+    "keyboard_filter": true
+  },
+  "passed": true
+}

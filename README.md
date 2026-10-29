@@ -202,3 +202,15 @@ MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecr
 - 边界：**同一台机器、不同环境**（不是另一台电脑）；没有 POSIX 内核参与；便携包按构造 Windows-only；`install_jvm_runtime` 的下载未跑；完整重打包因本机缺依赖未做（改用的是叠加源码）。
 - 边界：四客户端及以上、同一玩家的同 tick 两次操作、跨机器真实延迟均未测。
 - 边界：单机单显示器；FULL 仍需在轮询边界伪造 J/K（悬停本身不需要）；未测嵌套潜影盒与逐格自定义模型。
+
+## p204 真实滚轮 + 真实键盘打进 Mod Menu（2026-10-28，正常 UTF-8）
+
+- **p104 那句"这台机器收不到滚轮"是错的**：当时窗口没在最上层，光标底下压着终端（同一个根因 p202 已经纠正过）。这次用 `SetWindowPos(HWND_TOPMOST)` 抬起窗口、每次移动都记 `underIsGame`，九格滚轮在 `Mouse.method_1598`（GLFW 回调落地处）留下九条 `dy=-1.0`。
+- **滚动量不是探针写的**：探针只有 getter（`method_25341`/`method_25331`/`method_25396`/`field_22741`/四个控件矩形/`method_1882`），`method_60321` 在源码里一次都没出现（测试会去源码里找，找到就红）。列表走的是原版 `scroll -= amount * itemHeight/2`。
+- **阶梯正好对上原版算术**：`itemHeight=36` → 一格 18，实测 `18/36/54/72/90/108/126/144`，第九格被 `clamp(0,max)` 夹到 **147**。
+- **两个对照**：窗口外滚 9 格 → **0 事件、列表不动**；窗口内右侧面板滚 9 格 → 事件到了（`-1` 和 `-8` 两条，合计 −9）、**列表不动**。说明位置命中测试在起作用，不是"窗口收到滚轮就全局滚"。
+- **键盘**：真实左键点搜索框（`searchFocused=true`）后 `SendInput` 送 `m/e/n/u`，`chars=4`、`text="menu"`、条目 **11→1**、`max` 147→0。键事件是 `code=-1`（`VK_PACKET`），字符从 char 回调进——所以"按键数"不能当证据。
+- **Cloth Config 半条关不了，但是有原因的**：环境里只有 **1.20.1 的 JiJ**（`cloth-config-fabric-11.1.136`），`ConfigBuilderImpl.<init>` 一碰 `class_437.field_44669` 就 `NoSuchFieldError`；Mod Menu 初始化时替每个模组问配置界面，`trashslot`/`fallingtree`/`shulkerboxtooltip`/`appleskin` 四家全炸。所以 Cloth 界面不是"未测"，是**打不开**，栈在 `client.log` 里。
+- **顺手纠正 p94 的一句话**：它的截图里列表其实是全黑的，p204 四张截图也一样——列表行不画、滚动条画。视觉校验因此做在**滚动条**上（控件自己按滚动量算出来的）：一格位移预测 `18/147×(514−328)=23`、实测 **22**；满格预测 186、实测 **184**；过滤后不画滑杆。
+- **门禁**：`test_review_fixes` **260/260**（新增 33 条，从 `client.log`/`harness.log`/两份 `result.json`/`scroll-check.json` 重算）、`check_hashes` 见下、`verify_evidence` passed；无新 release（v0.5.6，只加探针）。
+- 边界：单机单显示器；只测 Mod Menu 的列表与搜索框；方向键/PageDown 未测（`KEYEVENTF_UNICODE` 只能送字符）；列表行不画是独立缺陷，本轮没修也没假装它不存在；两次运行。

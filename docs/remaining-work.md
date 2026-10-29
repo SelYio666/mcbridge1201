@@ -153,16 +153,24 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   vanilla merge() keeps min(value); the companion writes the summed value and discards the other orb.
   Residual: tick-driven instead of inside ExperienceOrbEntity.tick, fixed 2-block radius, ignores
   Clumps' config;
-- Mod Menu mod list opens, stays stable and now draws its rows (`runs/p94-modmenu-list/`): the
-  `render-widget-override` rule no longer renames `Screen.render`, and `bodyRedirects` replaces the
-  two shader-based list renderers with a DrawContext row renderer. The row backdrop is simplified and
-  the magenta checkerboard is this machine's missing assets; scrolling/search/config interaction is
-  scrolling state and search filtering are verified with screenshots (0→40 rows move; "menu" 8→2);
-  real mouse-wheel/keyboard events are still unverified (three OS injection methods left the
-  scroll amount at 0.0, so this is an input-injection limitation, not a conversion regression;
-  see runs/p104-wheel-input/); Mod Menu's own config screen opens and
-  draws ten option rows (`runs/p97-modmenu-config/`), but other mods' Cloth-Config screens and
-  individual toggles are untested;
+- Mod Menu mod list opens and stays stable (`runs/p94-modmenu-list/`): the `render-widget-override`
+  rule no longer renames `Screen.render`, and `bodyRedirects` replaces the two shader-based list
+  renderers with a DrawContext row renderer. **Correction (p204):** the list ROWS still do not paint
+  - the area is black in p94's own committed screenshots and in all four p204 shots; only the
+  scrollbar and the surrounding widgets draw. That is an open rendering defect, not an input one.
+  Real wheel and keyboard input now work (`runs/p204-wheel-input/`, closing p104): nine OS wheel
+  notches over the list stepped the scroll 18/36/54/72/90/108/126/144 and clamped at max 147,
+  each notch showing up as one `dy=-1.0` at `Mouse.onMouseScroll`; a wheel outside the window
+  produced no event, a wheel over the right pane produced events but did not move the list; a real
+  left click focused the search box and four `KEYEVENTF_UNICODE` characters typed "menu", filtering
+  11 entries down to 1. p104's "this machine cannot receive wheel input" was the same window-not-on-
+  top problem p202 found. Still untested: arrow keys / PageDown (unicode injection only sends
+  characters), and the list rows themselves. Mod Menu's own config screen opens and draws ten option
+  rows (`runs/p97-modmenu-config/`), but **Cloth-Config screens cannot open at all**: the only Cloth
+  Config here is the 1.20.1 JiJ (`cloth-config-fabric-11.1.136` bundled inside AppleSkin /
+  ShulkerBoxTooltip) and `ConfigBuilderImpl.<init>` dies on the removed `class_437.field_44669`,
+  which Mod Menu's per-mod config probe hits for appleskin / fallingtree / shulkerboxtooltip /
+  trashslot (stack trace in `runs/p204-wheel-input/client.log`). Individual toggles are untested;
 - Mod Menu title screen passes (`runs/p92-modmenu/`): the private field is read reflectively and the
   button widget overrides `renderWidget` after a `methodRenames` rule; the mod list screen itself
   and config UI are untested;

@@ -357,3 +357,37 @@ p195 结尾的 "clean-host portable remain open" 与 p201 的 "Verified on Windo
 - 边界：同一台机器不同环境而非另一台电脑；无 POSIX 内核参与；便携包按构造 Windows-only；
   `install_jvm_runtime` 的下载未跑；完整重打包因本机无 `minecraft_launcher_lib` 未做，改用的是
   "当前源码叠加到 0.5.6 包"。
+
+## 二十、2026-10-28 更新（p204：真实滚轮 + 真实键盘打进 Mod Menu）
+
+任务 5 的输入半条关闭；Cloth Config 半条有了带栈的结论。
+
+- **p104 的归因是错的**：它把"三种注入方式之后 scroll 仍是 0.0"记成"本机输入注入限制"。p202 已经证明
+  同一类失败的真因是**游戏窗口不在最上层**，光标底下的点是终端的。p204 用同一套修法
+  （`ShowWindow(SW_RESTORE)` + `SetWindowPos(HWND_TOPMOST)` + `BringWindowToTop`），并且每次移动都把
+  `WindowFromPoint` 是否落在游戏窗口记进 `harness.log`；
+- **滚轮**：探针只有 getter（`method_25341`/`method_25331`/`method_25396`/`field_22741`/控件矩形/
+  `method_1882`），`method_60321` 在源码里一次都没出现。九格滚轮 → `18/36/54/72/90/108/126/144`，
+  第九格被 `clamp(0,max)` 夹到 **147**（`itemHeight=36`，原版公式是 `scroll -= amount * itemHeight/2`）；
+  九格在 `Mouse.method_1598` 各留一条 `dy=-1.0`；
+- **两个对照**：窗口外滚 9 格 → **0 事件、列表不动**；窗口内右侧面板滚 9 格 → 事件到了（`-1`、`-8`
+  两条，合计 −9）、**列表不动**。后者同时说明刻度没被注入器放大或缩小；
+- **键盘**：真实左键点搜索框后 `searchFocused=true`，`SendInput` 的 `KEYEVENTF_UNICODE` 送 `m/e/n/u`，
+  文本字段收到四条 `P204_CHAR`、`text="menu"`、条目 **11→1**、`max` 147→0。键事件是 `code=-1`
+  （`VK_PACKET` → `GLFW_KEY_UNKNOWN`），字符从 char 回调进，所以"按键数"不是证据；
+- **键盘需要真焦点**：滚轮跟着光标底下的窗口，键盘跟着前台窗口。测试前显式查
+  `GetForegroundWindow()==hwnd`，抢不到就 `AttachThreadInput` 借前台线程的权限再 `SetForegroundWindow`；
+- **Cloth Config 不是未测，是打不开**：环境里唯一的一份是 1.20.1 的 JiJ（`cloth-config-fabric-11.1.136`，
+  藏在 AppleSkin / ShulkerBoxTooltip 的 `META-INF/jars/`），`ConfigBuilderImpl.<init>` 读
+  `class_437.field_44669`（1.21.1 已移除）直接 `NoSuchFieldError`；Mod Menu 的 `ModsScreen` 初始化时替
+  每个模组问配置界面，`appleskin`/`fallingtree`/`shulkerboxtooltip`/`trashslot` 四家各炸一次。要用它得先
+  把 Cloth Config 本身转换到 1.21.1，属于单独一轮；
+- **顺手纠正 p94**：它写"截图里能看到列表行"，但自己的两张截图里列表是全黑的；p204 四张也一样。视觉校验
+  因此做在**滚动条**上（控件按滚动量算出来的）：一格位移预测 `18/147×(514−328)=23`、实测 **22**；满格
+  预测 186、实测 **184**；过滤后（max=0）不画滑杆；
+- 回归：新增 `test_real_wheel_input()`（33 条），从 `client.log`/`harness.log`/两份 `result.json`/
+  `scroll-check.json` **重算**，并直接检查探针源码里没有 `setScrollAmount`；
+- 门禁：`test_review_fixes` **260/260**、`check_hashes` 见提交说明、`verify_evidence` passed；
+  无新 release（v0.5.6 不变）；
+- 边界：单机单显示器、窗口 1280×720 / guiScale 2；只测 Mod Menu 的列表与搜索框；方向键/PageDown 未测
+  （`KEYEVENTF_UNICODE` 只能送字符）；列表行不画是独立缺陷，本轮没修也没掩盖；只有两次运行。

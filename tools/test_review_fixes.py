@@ -1803,6 +1803,154 @@ def test_cross_platform_delivery() -> None:
             server.os.startfile = real_startfile
 
 
+def test_real_wheel_input() -> None:
+    """p204: a real OS wheel and a real keystroke reached the Mod Menu screen.
+
+    The claim is an input claim, so it is re-derived from three independent places instead of
+    trusting one:
+
+    * client.log - the scroll amount (read from the widget) after each notch, the per-event
+      P204_SCROLL lines logged at Mouse.onMouseScroll, and the chars the focused text field took;
+    * harness.log - what was injected, where the cursor was, and whether that point belonged to
+      the game window at the time;
+    * scroll-check.json - the scrollbar thumb measured off the screenshots, which is the widget's
+      own rendering of the same scroll amount.
+
+    Also guarded: the probe must not be able to set the scroll amount at all, the two controls must
+    stay clean (no event outside the window, no list movement over the pane), and the Cloth Config
+    finding stays on record (its stack trace is the reason that half of the task is not "untested"
+    but "unreachable").
+    """
+    run = ROOT / "runs" / "p204-wheel-input"
+    log_path = run / "client.log"
+    check("p204: client.log present", log_path.exists(), str(log_path))
+    if not log_path.exists():
+        return
+    text = log_path.read_text(encoding="utf-8", errors="replace")
+    lines = text.splitlines()
+
+    # --- the staircase, straight out of the log
+    states = [dict(re.findall(r"(\w+)=([^ ]+)", ln.split("P204_SCROLL_STATE ", 1)[1]))
+              for ln in lines if "P204_SCROLL_STATE " in ln]
+    check("p204: the list state was logged", len(states) >= 11, str(len(states)))
+    scrolls = [float(s["scroll"]) for s in states]
+    steps = [x for x in scrolls if x > 0]
+    check("p204: nine notches stepped by itemHeight/2 = 18",
+          steps[:8] == [18.0, 36.0, 54.0, 72.0, 90.0, 108.0, 126.0, 144.0], str(steps[:9]))
+    maximum = float(states[0]["max"]) if states else -1
+    check("p204: the ninth notch clamped at max scroll", max(scrolls) == maximum == 147.0,
+          f"max seen {max(scrolls)} / max_scroll {maximum}")
+    check("p204: the list started at 0", scrolls[0] == 0.0, str(scrolls[0]))
+
+    # --- every notch arrived as its own window event
+    events = [ln.split("P204_SCROLL ", 1)[1] for ln in lines if "P204_SCROLL n=" in ln]
+    dy = [float(re.search(r"dy=(-?[\d.]+)", e).group(1)) for e in events if "dy=" in e]
+    # control B's two messages come first (-1 and -8), then one message per notch over the list
+    check("p204: the test phase delivered exactly one message per notch",
+          dy[-9:] == [-1.0] * 9 and len(dy) == 11, str(dy))
+    check("p204: the control and the test account for all 18 wheel units",
+          abs(sum(dy) + 18.0) < 1e-9, str(sum(dy)))
+    check("p204: no scroll event was delivered as a positive delta",
+          all(v <= 0 for v in dy), str(dy))
+
+    # --- the controls
+    harness_path = run / "harness.log"
+    check("p204: harness.log present", harness_path.exists(), str(harness_path))
+    harness = harness_path.read_text(encoding="utf-8", errors="replace") if harness_path.exists() else ""
+    control_a = re.search(r"CONTROL_A outside=\(\d+,\s*\d+\) underIsGame=(True|False) accepted=(\d+) "
+                          r"scroll ([\d.]+) -> ([\d.]+) eventsDelta=(\d+)", harness)
+    check("p204: control A (wheel outside the window) was sent", control_a is not None, "")
+    if control_a:
+        check("p204: control A pointed outside the game window",
+              control_a.group(1) == "False", control_a.group(1))
+        check("p204: control A produced no scroll event and no movement",
+              control_a.group(5) == "0" and control_a.group(3) == control_a.group(4),
+              control_a.group(0)[-60:])
+    control_b = re.search(r"CONTROL_B pane=\(\d+,\s*\d+\) accepted=(\d+) "
+                          r"scroll ([\d.]+) -> ([\d.]+) eventsDelta=(\d+)", harness)
+    check("p204: control B (wheel over the right pane) was sent", control_b is not None, "")
+    if control_b:
+        check("p204: control B delivered an event but left the list alone",
+              int(control_b.group(4)) > 0 and control_b.group(2) == control_b.group(3),
+              control_b.group(0)[-60:])
+    moves = [ln for ln in harness.splitlines() if ln.startswith("MOVE listCenter")]
+    check("p204: the cursor was really over the list for the test phase",
+          bool(moves) and all("underIsGame=True" in ln for ln in moves), str(len(moves)))
+    check("p204: the game window was the foreground window before typing",
+          "ok=True" in harness and "foreground=" in harness, "")
+
+    # --- the keyboard
+    chars = [ln.split("P204_CHAR ", 1)[1] for ln in lines if "P204_CHAR n=" in ln]
+    typed = "".join(re.search(r"c=(\S)", c).group(1) for c in chars if "c=" in c)
+    check("p204: four characters reached the focused text field", len(chars) == 4, str(len(chars)))
+    check("p204: the characters are exactly what was typed", typed == "menu", typed)
+    final = states[-1] if states else {}
+    check("p204: the search box holds the typed text", final.get("text") == '"menu"', str(final))
+    check("p204: the list filtered down to one entry",
+          final.get("entries") == "1" and final.get("max") == "0",
+          f"{final.get('entries')} entries / max {final.get('max')}")
+    check("p204: the run ended on its own marker",
+          any("P204_DONE" in ln and 'text="menu"' in ln for ln in lines), "")
+
+    # --- what the screenshots say
+    check_path = run / "scroll-check.json"
+    check("p204: scroll-check.json present", check_path.exists(), str(check_path))
+    if check_path.exists():
+        visual = json.loads(check_path.read_text(encoding="utf-8"))
+        check("p204: the committed screenshot check passed", visual.get("passed") is True,
+              str(visual.get("checks")))
+        predicted = visual.get("predicted_one_notch_shift")
+        measured = visual.get("measured_one_notch_shift")
+        check("p204: the scrollbar thumb moved by the predicted 18/147 of the free track",
+              predicted is not None and measured is not None and abs(measured - predicted) <= 3,
+              f"predicted {predicted} / measured {measured}")
+        free = visual.get("free_track_px") or 0
+        check("p204: at max scroll the thumb sits at the bottom",
+              free and abs((visual.get("measured_full_shift") or 0) - free) <= 3,
+              f"{visual.get('measured_full_shift')} vs {free}")
+        check("p204: the filtered list no longer draws a scrollbar",
+              (visual.get("shots", {}).get("list-filtered", {}).get("has_thumb")) is False, "")
+
+    # --- the probe cannot move the list
+    probe_src = ROOT / "probes" / "p204-wheel-input" / "src" / "p204probe"
+    sources = {p.name: p.read_text(encoding="utf-8", errors="replace")
+               for p in probe_src.rglob("*.java")}
+    def stripped(source: str) -> str:
+        """Drop comments before looking for a call: the probe's own javadoc says it does NOT
+        call setScrollAmount, and a substring search would count that sentence as the call."""
+        import re as _re
+
+        without_block = _re.sub(r"/\*.*?\*/", "", source, flags=_re.S)
+        return _re.sub(r"//[^\n]*", "", without_block)
+
+    code = "\n".join(stripped(v) for v in sources.values())
+    check("p204: the probe never calls setScrollAmount",
+          not re.search(r"method_(60321|25307)\s*\(", code)
+          and "setScrollAmount(" not in code, str(sorted(sources)))
+    accessors = (sources.get("WidgetAccessor.java", "") + sources.get("ListAccessor.java", ""))
+    check("p204: the geometry accessors are getters only",
+          "@Accessor" in accessors and "p204$set" not in accessors
+          and "void p204$" not in accessors, "")
+
+    # --- the repeat run, and the Cloth Config finding
+    repeat = run / "repeat" / "result.json"
+    check("p204: the independent repeat run is on record", repeat.exists(), str(repeat))
+    if repeat.exists():
+        again = json.loads(repeat.read_text(encoding="utf-8"))
+        check("p204: the repeat passed the same checks",
+              all((again.get("checks") or {}).values()) and again.get("passed") is True,
+              str(again.get("checks")))
+        again_steps = [s["scroll"] for s in again.get("wheel_steps") or []]
+        check("p204: the repeat produced the same staircase",
+              again_steps[:8] == [18.0, 36.0, 54.0, 72.0, 90.0, 108.0, 126.0, 144.0],
+              str(again_steps))
+    check("p204: the Cloth Config failure is on record with its frame",
+          "ConfigBuilderImpl.<init>" in text
+          and "does not have member field 'net.minecraft.class_2960 field_44669'" in text, "")
+    check("p204: the Cloth failure is attributed to Mod Menu's config probe",
+          "ModsScreen.method_25426" in text and "ModMenu.getConfigScreen" in text, "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -1814,6 +1962,7 @@ def main() -> int:
     test_hover_and_heterogeneous_nbt()
     test_trash_concurrent_same_tick()
     test_cross_platform_delivery()
+    test_real_wheel_input()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

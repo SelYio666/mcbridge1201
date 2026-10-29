@@ -1,0 +1,21 @@
+mods: fabric-api.jar, modmenu-patched.jar, balm.jar, shulker-patched2.jar, sbtpreview.jar, appleskin-patched.jar, ironchests-final.jar, lithium-final.jar, trashslot-client-final.jar, fallingtree-patched.jar, p204probe.jar
+READY list={'gui': [0, 67, 312, 257], 'win': [0, 134]} search={'gui': [16, 22, 258, 20], 'win': [32, 44]} listCenter=(312, 391) searchCenter=(290, 64)
+WINDOW P204_WINDOW handle=2862630658256 m4480=1280 m4486=640 m4502=360 m4507=720 scale=2.0
+CLIENTAREA origin=(320,240) size=1280x720 hwnd=3020618
+PREDICT itemHeight=36 step=18.0 max=147 entries=11
+CONTROL_A outside=(1660, 600) underIsGame=False accepted=9 scroll 0.0 -> 0.0 eventsDelta=0
+CONTROL_B pane=(1240,391) accepted=9 scroll 0.0 -> 0.0 eventsDelta=2
+MOVE listCenter requested=(632,631) accepted=1 cursorNow=(632,631) underIsGame=True
+WHEEL notch=1 scroll=18.0 scrollEvents=3
+MOVE listCenter-again requested=(632,631) accepted=1 cursorNow=(632,631) underIsGame=True
+WHEEL notch=2 scroll=36.0 scrollEvents=4
+WHEEL notch=3 scroll=54.0 scrollEvents=5
+WHEEL notch=4 scroll=72.0 scrollEvents=6
+WHEEL notch=5 scroll=90.0 scrollEvents=7
+WHEEL notch=6 scroll=108.0 scrollEvents=8
+WHEEL notch=7 scroll=126.0 scrollEvents=9
+WHEEL notch=8 scroll=144.0 scrollEvents=10
+WHEEL notch=9 scroll=147.0 scrollEvents=11
+FOREGROUND hwnd=3020618 foreground=3020618 ok=True
+CLICK searchCenter=(290, 64) searchFocused=['true', 'true', 'true']
+KEYBOARD click=(290, 64) sent=menu accepted=8 chars=4 keys=8 text=menu entries=1

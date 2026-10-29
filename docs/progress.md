@@ -1,6 +1,7 @@
 # 进度交接
 
-最后更新：2026-10-20 23:35（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+最后更新：2026-10-28（Asia/Shanghai）。下一轮从这里继续，不必重读方案全文。
+更新（2026-10-28）：**真实滚轮/键盘打进 Mod Menu 成功，p104 那句归因是错的**。窗口不在最上层时光标底下压着终端（与 p202 同一根因）；抬起窗口后九格滚轮让列表 18→…→147 逐格走、每格一条 `dy=-1.0`，窗口外滚轮 0 事件、右侧面板滚动事件到但列表不动；真实点击定位搜索框 + 四个字符把 11 项过滤到 1 项。同时确认 **Cloth Config 界面打不开**：只有 1.20.1 的 JiJ，`ConfigBuilderImpl.<init>` 撞 `class_437.field_44669` 抛 `NoSuchFieldError`。列表行仍不画（p94 截图其实也是全黑），视觉校验改做在滚动条上。证据 `runs/p204-wheel-input/`。
 
 更新（2026-10-20 23:35）：**Shulker 网格预览尝试未打通**。写了伴生 mixin（注入 `getTooltipData` 返回 `PreviewTooltipData`）与 NBT `contains(9/99)` 兼容桥；mixin 已生效、provider 已识别，但客户端 `ContainerComponent` 三种访问器都读不到物品（服务端 NBT 正确），`shouldDisplay=false`。如实记录，网格仍不可用。证据 `runs/p110-shulker-grid/`。
 更新（2026-10-20 23:25）：**最终回归联测通过**。用本轮重打的 AppleSkin/Mod Menu/Shulker/重建 IronChests/Lithium/TrashSlot 一起进世界：`COMBINED_SMOKE in-world`，无崩溃/新异常。证据 `runs/p109-combined-regression/`。
