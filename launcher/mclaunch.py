@@ -1158,7 +1158,7 @@ def build_command(version_id: str, root: Path, username: str, max_mem="2G",
             ensure_version_libraries(version_id, root)
             cmd = backend.command(version_id, root, username) or []
             if cmd:
-                cmd = [cmd[0], f"-Xmx{max_mem}"] + cmd[1:]
+                cmd = [cmd[0], f"-Xmx{max_mem}"] + list(extra_jvm or []) + cmd[1:]
                 if extra_game:
                     cmd += extra_game
                 log = root / "logs" / f"launch-{time.strftime('%Y%m%d-%H%M%S')}.log"
@@ -1249,7 +1249,7 @@ def build_command(version_id: str, root: Path, username: str, max_mem="2G",
     ensure("--userType", "msa")
     ensure("--versionType", data.get("type", "release"))
     java = find_runtime_java(root) or find_java()
-    cmd = [java, f"-Xmx{max_mem}"] + jvm_args + [main_class] + game_args
+    cmd = [java, f"-Xmx{max_mem}"] + list(extra_jvm or []) + jvm_args + [main_class] + game_args
     if extra_game:
         cmd += extra_game
     log = root / "logs" / f"launch-{time.strftime('%Y%m%d-%H%M%S')}.log"
@@ -1257,8 +1257,9 @@ def build_command(version_id: str, root: Path, username: str, max_mem="2G",
 
 
 def launch(version_id: str, root: Path, username: str, log_path: Path | None = None,
-           max_mem="2G", extra_game=None):
-    cmd, log, root = build_command(version_id, root, username, max_mem, extra_game=extra_game)
+           max_mem="2G", extra_game=None, extra_jvm=None):
+    cmd, log, root = build_command(version_id, root, username, max_mem, extra_jvm=extra_jvm,
+                                   extra_game=extra_game)
     log.parent.mkdir(parents=True, exist_ok=True)
     log_path = log_path or log
     f = open(log_path, "w", encoding="utf-8", errors="replace")

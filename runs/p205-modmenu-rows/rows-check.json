@@ -1,0 +1,142 @@
+{
+  "before": {
+    "modmenu_sha256": "9989cf3ce8196920753695c5c0b64483b0b8fbdbc296606eef6e36f4fb8ad0a5",
+    "scroll": [
+      0.0,
+      18.0
+    ],
+    "expected_device_shift": 36.0,
+    "before_scroll": {
+      "image": "rows-before.png",
+      "box": [
+        16,
+        169,
+        604,
+        675
+      ],
+      "bright": 0,
+      "saturated": 0,
+      "content_bands": 0,
+      "band_heights": [],
+      "icon_bands": 0,
+      "icon_band_heights": [],
+      "bright_rows": 0
+    },
+    "after_scroll": {
+      "image": "rows-scrolled.png",
+      "box": [
+        16,
+        169,
+        604,
+        675
+      ],
+      "bright": 0,
+      "saturated": 0,
+      "content_bands": 0,
+      "band_heights": [],
+      "icon_bands": 0,
+      "icon_band_heights": [],
+      "bright_rows": 0
+    },
+    "shift": {
+      "best_dy": -4,
+      "best_score": 1.42,
+      "runner_up": [
+        -4,
+        1.42
+      ],
+      "zero_shift_score": 1.44
+    },
+    "p205_lines": [],
+    "shift_matches": false
+  },
+  "after": {
+    "modmenu_sha256": "9cb27e5455a2a01eb6a653111a91790184be1cd9f91367cd4ff23d51e65d9b0c",
+    "scroll": [
+      0.0,
+      18.0
+    ],
+    "expected_device_shift": 36.0,
+    "before_scroll": {
+      "image": "rows-before.png",
+      "box": [
+        16,
+        169,
+        604,
+        675
+      ],
+      "bright": 11147,
+      "saturated": 20211,
+      "content_bands": 4,
+      "band_heights": [
+        65,
+        54,
+        54,
+        32
+      ],
+      "icon_bands": 6,
+      "icon_band_heights": [
+        51,
+        44,
+        11,
+        67,
+        63,
+        74
+      ],
+      "bright_rows": 205
+    },
+    "after_scroll": {
+      "image": "rows-scrolled.png",
+      "box": [
+        16,
+        169,
+        604,
+        675
+      ],
+      "bright": 12162,
+      "saturated": 19514,
+      "content_bands": 5,
+      "band_heights": [
+        65,
+        54,
+        54,
+        32,
+        27
+      ],
+      "icon_bands": 5,
+      "icon_band_heights": [
+        28,
+        44,
+        10,
+        67,
+        143
+      ],
+      "bright_rows": 232
+    },
+    "shift": {
+      "best_dy": -36,
+      "best_score": 1.37,
+      "runner_up": [
+        -35,
+        1.92
+      ],
+      "zero_shift_score": 16.82
+    },
+    "p205_lines": [
+      "P205_LIST class=DescriptionListWidget count=0 left=7 rowWidth=302 itemHeight=10 rows=108..324 mouse=0,0 firstEntry=none",
+      "P205_LIST class=ModListWidget count=11 left=6 rowWidth=294 itemHeight=36 rows=67..324 mouse=0,0 firstEntry=com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry"
+    ],
+    "shift_matches": true
+  },
+  "checks": {
+    "before_draws_no_rows": true,
+    "after_draws_rows": true,
+    "after_icons_are_row_sized": true,
+    "after_has_icons": true,
+    "after_text_far_brighter": true,
+    "rows_move_with_scroll": true,
+    "before_rows_do_not_move": true,
+    "debug_line_names_modlistwidget": true
+  },
+  "passed": true
+}

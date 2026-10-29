@@ -155,9 +155,20 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   Clumps' config;
 - Mod Menu mod list opens and stays stable (`runs/p94-modmenu-list/`): the `render-widget-override`
   rule no longer renames `Screen.render`, and `bodyRedirects` replaces the two shader-based list
-  renderers with a DrawContext row renderer. **Correction (p204):** the list ROWS still do not paint
-  - the area is black in p94's own committed screenshots and in all four p204 shots; only the
-  scrollbar and the surrounding widgets draw. That is an open rendering defect, not an input one.
+  renderers with a DrawContext row renderer. **Fixed in p205:** the rows do paint now
+  (`runs/p205-modmenu-rows/`). p204's correction stands for the record - the list was black in p94's
+  own committed screenshots and in all four p204 shots, and only the scrollbar drew. The cause was
+  the bridge's entry call: `Entry.render` takes `(ctx, index, y, x, width, height, ...)` and the old
+  body passed `(left, top, ...)`, so icons and names were laid out elsewhere while the row backdrop
+  (which uses left/top directly) still painted. The bridge now mirrors vanilla `renderList` +
+  `method_44397`: y before x, row width from `getRowWidth()` (294 for ModListWidget, not
+  widgetWidth - 8), height `itemHeight - 4`, visibility against `getY()`/`getBottom()`, hover from
+  `getEntryAtPosition`, and `Entry.drawBorder` before `Entry.render`. Matched runs (same client,
+  mods, window and cursor; only the bridge differs) go from 0 bright / 0 coloured list pixels to
+  11147 / 20211 with six icon bands, and the rows move exactly 36 device px for a 36 px scroll
+  delta. Still degraded: the original textured backdrop is not restored (flat 0x80000000 band), the
+  selection highlight (`method_44398`) is not drawn, and the description panel's rows are untested
+  (it uses the same bridge but had `count=0` in this run).
   Real wheel and keyboard input now work (`runs/p204-wheel-input/`, closing p104): nine OS wheel
   notches over the list stepped the scroll 18/36/54/72/90/108/126/144 and clamped at max 147,
   each notch showing up as one `dy=-1.0` at `Mouse.onMouseScroll`; a wheel outside the window
@@ -165,7 +176,7 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   left click focused the search box and four `KEYEVENTF_UNICODE` characters typed "menu", filtering
   11 entries down to 1. p104's "this machine cannot receive wheel input" was the same window-not-on-
   top problem p202 found. Still untested: arrow keys / PageDown (unicode injection only sends
-  characters), and the list rows themselves. Mod Menu's own config screen opens and draws ten option
+  characters). Mod Menu's own config screen opens and draws ten option
   rows (`runs/p97-modmenu-config/`), but **Cloth-Config screens cannot open at all**: the only Cloth
   Config here is the 1.20.1 JiJ (`cloth-config-fabric-11.1.136` bundled inside AppleSkin /
   ShulkerBoxTooltip) and `ConfigBuilderImpl.<init>` dies on the removed `class_437.field_44669`,

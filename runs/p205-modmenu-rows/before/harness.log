@@ -1,0 +1,8 @@
+JVMFLAG -Dmcbridge.listrender.debug=true (the bridge only prints P205_LIST with it set)
+MODMENU C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\modmenu-patched.jar sha256=9989cf3ce8196920753695c5c0b64483b0b8fbdbc296606eef6e36f4fb8ad0a5
+mods: fabric-api.jar, modmenu.jar, balm.jar, shulker-patched2.jar, sbtpreview.jar, appleskin-patched.jar, ironchests-final.jar, lithium-final.jar, trashslot-client-final.jar, fallingtree-patched.jar, p204probe.jar
+CLIENTAREA origin=(320,240) size=1280x720 hwnd=922876
+MOVE listCenter requested=(632,631) cursorNow=(632,631) underIsGame=True
+WHEEL notches=2 accepted=2
+SCROLL 0.0 -> 18.0 events=1
+P205 missing

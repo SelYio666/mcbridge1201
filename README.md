@@ -214,3 +214,31 @@ MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecr
 - **顺手纠正 p94 的一句话**：它的截图里列表其实是全黑的，p204 四张截图也一样——列表行不画、滚动条画。视觉校验因此做在**滚动条**上（控件自己按滚动量算出来的）：一格位移预测 `18/147×(514−328)=23`、实测 **22**；满格预测 186、实测 **184**；过滤后不画滑杆。
 - **门禁**：`test_review_fixes` **260/260**（新增 33 条，从 `client.log`/`harness.log`/两份 `result.json`/`scroll-check.json` 重算）、`check_hashes` 见下、`verify_evidence` passed；无新 release（v0.5.6，只加探针）。
 - 边界：单机单显示器；只测 Mod Menu 的列表与搜索框；方向键/PageDown 未测（`KEYEVENTF_UNICODE` 只能送字符）；列表行不画是独立缺陷，本轮没修也没假装它不存在；两次运行。
+
+## p205 修掉 Mod Menu 列表行不画（2026-10-28，正常 UTF-8）
+
+p204 把「列表全黑」记成独立缺陷并明说没修；这一轮修掉。
+
+- **根因是参数顺序**，不是缺资源也不是绘制被裁掉：桥调用 `Entry.render` 时传的是
+  `(ctx, index, left, top, ...)`，而原版的参数是 `(ctx, index, y, x, ...)`。行底色是桥自己用
+  `fill(left, top, ...)` 画的，坐标没错，所以现象是「黑底上有行、行里没东西」。
+- **三处独立证据**：`class_350.method_44397` 的字节码（`iload 7` 先当 y、`iload 6` 当 x）、
+  `ModListEntry.method_25343` 的字节码（`iload 4` 加偏移当 x、`iload 3` 当 y）、修前清单里
+  列表区**零**亮像素。
+- **顺手对齐原版其余口径**：行宽取 `getRowWidth()`（ModListWidget 是 **294**，不是
+  `widgetWidth - 8`）、行高 `itemHeight - 4`、可见性对 `getY()`/`getBottom()`、hovered 用
+  `getEntryAtPosition`、先 `Entry.drawBorder` 再 `Entry.render`。
+- **匹配对照**：同一套模组、同一窗口（1280×720 / guiScale 2）、同一光标点，只换 `modmenu.jar`。
+  旧桥列表区亮像素 **0**、彩色像素 **0**、图标条带 **0**；新桥 **11147 / 20211 / 6 条**，
+  两格滚轮后行**整体上移 36 设备像素**（`scroll 0→18` × scale 2，互相关最优点正是 −36）。
+- **顺带修了一个启动器缺陷**：`mclaunch.build_command` 的 `extra_jvm` 只有形参、从没进命令行
+  （第一次跑就是这么变成"以为开了调试其实没开"的）。两条组装路径都补上，回归里直接断言
+  「标志紧跟 `-Xmx`」。
+- **调试行**：`-Dmcbridge.listrender.debug=true` 时打印一次
+  `P205_LIST class=ModListWidget count=11 left=6 rowWidth=294 itemHeight=36 rows=67..324`；默认关，
+  发布 jar 不打印。
+- **门禁**：`test_review_fixes` **287/287**（新增 27 条，全部从 `rows-check.json`、两份
+  `result.json`、`build.log` 与桥源码重算）、`check_hashes` 见下、`verify_evidence` passed；
+  无新 release（v0.5.6，只改桥）。
+- 边界：单机单显示器、guiScale 2；只验证模组列表；纹理背景没有恢复（仍是平色带），选中高亮
+  （`method_44398`）没画，描述面板这一轮 `count=0` 没验证；Cloth 配置界面依旧打不开（p204 的栈）。

@@ -193,6 +193,16 @@ python tools/build_clumps_companion.py --stub <client-1.21.1-intermediary.jar>  
 服务端每 20 tick 合并 2 格范围内的经验球（写和 + discard），不读 Clumps 配置；客户端无需安装。
 仓库只提供源码与构建脚本，不附带 jar。
 
+## Mod Menu 列表渲染桥（p205）
+
+`work/client/modmenu-patched.jar` 是修前的构建（列表只画黑底不画行），保留它只为让
+`runs/p204-wheel-input/` 的证据仍可复现。**分发要用 `work/client/modmenu-rows.jar`**
+（`runs/p205-modmenu-rows/build.py` 产出：javac 单桥 + `tools/inject_bridges.py` 注入）。
+全量重打包时仍需用同一 `--bridge-dir` 走 `patch`，否则旧的 `ModMenuListRenderBridge` 会留在 jar 里。
+
+调试：加 `-Dmcbridge.listrender.debug=true` 才会打印 `P205_LIST class=… count=… rowWidth=…`，
+默认不打印。
+
 ## 多补丁 jar 的桥版本
 
 每个补丁 jar 都会内嵌一份桥类（如 `FabricLegacyNetworking`、`IdentifierBridge`）。多个补丁 jar

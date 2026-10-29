@@ -1951,6 +1951,117 @@ def test_real_wheel_input() -> None:
           "ModsScreen.method_25426" in text and "ModMenu.getConfigScreen" in text, "")
 
 
+def test_modmenu_rows() -> None:
+    """p205: the Mod Menu list really paints rows, and the fix is the entry-call argument order.
+
+    Two things are guarded here. The first is the defect itself: the bridge used to pass
+    (context, index, left, top, ...) to Entry.render, whose parameters are (y, x), so every icon and
+    name was laid out at the wrong place while the row backdrop - which uses left/top directly -
+    still painted. The second is that the claim is measured, not asserted: the numbers come from the
+    two committed runs (same client, same mods, same cursor, different bridge) and from the
+    screenshot check, not from prose.
+    """
+    run = ROOT / "runs" / "p205-modmenu-rows"
+    bridge_path = (ROOT / "java" / "src" / "bridge" / "java" / "top" / "mcbridge1201" / "bridge"
+                   / "ModMenuListRenderBridge.java")
+    check("p205: bridge source present", bridge_path.exists(), str(bridge_path))
+    if not bridge_path.exists():
+        return
+    source = bridge_path.read_text(encoding="utf-8")
+    code = re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", source, flags=re.S))
+
+    check("p205: the entry call passes y before x",
+          len(re.findall(r"entryCall\(entry, \"method_(25343|49568)\", context, i, top, left",
+                         code)) == 2,
+          str(re.findall(r"entryCall\([^)]*", code)[:2]))
+    check("p205: the old swapped order is gone", "context, i, left, top" not in code, "")
+    check("p205: the row width comes from getRowWidth (method_25322), not the widget width",
+          "method_25322" in code and "method_25368" not in code, "")
+    check("p205: the row height is itemHeight - 4 like vanilla",
+          "itemHeight - 4" in code, "")
+    check("p205: the visibility test uses the widget top and bottom",
+          "method_46427" in code and "method_55443" in code, "")
+    check("p205: Entry.drawBorder is called before Entry.render", "method_49568" in code, "")
+    check("p205: hovered is decided by getEntryAtPosition, not a rectangle guess",
+          "method_25308" in code and "isHovered" in code, "")
+    check("p205: the debug line is behind -Dmcbridge.listrender.debug",
+          code.count("System.out") == 1 and "Boolean.getBoolean" in code,
+          str(code.count("System.out")))
+
+    # --- the two runs
+    checks_path = run / "rows-check.json"
+    check("p205: rows-check.json present", checks_path.exists(), str(checks_path))
+    if not checks_path.exists():
+        return
+    report = json.loads(checks_path.read_text(encoding="utf-8"))
+    before = report["before"]["before_scroll"]
+    after = report["after"]["before_scroll"]
+    check("p205: the baseline list is completely blank",
+          before["bright"] == 0 and before["saturated"] == 0 and before["icon_bands"] == 0,
+          json.dumps(before))
+    check("p205: the fixed list shows at least five row icons",
+          after["icon_bands"] >= 5, str(after["icon_bands"]))
+    check("p205: the fixed list has thousands of legible text pixels",
+          after["bright"] > 5000, str(after["bright"]))
+    check("p205: the two runs differ only in the bridge (same mods, same window)",
+          report["before"]["p205_lines"] == [] and report["after"]["p205_lines"] != [],
+          str(report["before"]["p205_lines"]))
+    check("p205: the debug line reports ModListWidget with 11 entries and 36 px rows",
+          any("class=ModListWidget count=11" in line and "itemHeight=36" in line
+              for line in report["after"]["p205_lines"]),
+          str(report["after"]["p205_lines"])[:200])
+    shift = report["after"]["shift"]
+    check("p205: the rows move up by exactly the scroll delta when wheeled",
+          shift["best_dy"] == -36 and report["after"]["expected_device_shift"] == 36.0,
+          json.dumps(shift))
+    check("p205: the blank list has no rows to move",
+          report["before"]["before_scroll"]["icon_bands"] == 0, "")
+    check("p205: every screenshot check passed",
+          report["passed"] is True and all(report["checks"].values()),
+          json.dumps({k: v for k, v in report["checks"].items() if not v}))
+
+    # --- the jar that carried the fix
+    build_log = run / "build.log"
+    check("p205: build.log present", build_log.exists(), str(build_log))
+    if build_log.exists():
+        text = build_log.read_text(encoding="utf-8", errors="replace")
+        before_sha = re.search(r"BEFORE .*sha256=([0-9a-f]{64})", text)
+        after_sha = re.search(r"AFTER .*sha256=([0-9a-f]{64})", text)
+        check("p205: the injected class is not the old one",
+              before_sha and after_sha and before_sha.group(1) != after_sha.group(1),
+              f"{before_sha.group(1) if before_sha else None} -> "
+              f"{after_sha.group(1) if after_sha else None}")
+        check("p205: the build reports the jar it wrote",
+              "OUT " in text and "modmenu-rows.jar" in text, "")
+    for label in ("before", "after"):
+        result_path = run / label / "result.json"
+        check(f"p205: {label}/result.json present", result_path.exists(), str(result_path))
+        if result_path.exists():
+            result = json.loads(result_path.read_text(encoding="utf-8"))
+            check(f"p205: {label} ran with the debug flag on the command line",
+                  result.get("jvm_flags") == ["-Dmcbridge.listrender.debug=true"],
+                  str(result.get("jvm_flags")))
+
+    # --- the launcher had to learn extra_jvm to make that flag reach the JVM
+    launcher = ROOT / "launcher" / "mclaunch.py"
+    launcher_text = launcher.read_text(encoding="utf-8")
+    check("p205: build_command honours extra_jvm in both command paths",
+          launcher_text.count('list(extra_jvm or [])') == 2, "")
+    client = ROOT / "work" / "launcher-e2e"
+    if (client / "versions").exists():
+        sys.path.insert(0, str(ROOT / "launcher"))
+        import mclaunch  # noqa: PLC0415
+
+        cmd, _, _ = mclaunch.build_command("fabric-loader-0.19.5-1.21.1", client, "RowUser", "2G",
+                                           extra_jvm=["-Dmcbridge.listrender.debug=true"])
+        check("p205: the flag lands immediately after -Xmx",
+              "-Dmcbridge.listrender.debug=true" in cmd
+              and cmd.index("-Dmcbridge.listrender.debug=true") == cmd.index("-Xmx2G") + 1,
+              str(cmd[:4]))
+    else:
+        SKIPPED.append("p205 build_command")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -1963,6 +2074,7 @@ def main() -> int:
     test_trash_concurrent_same_tick()
     test_cross_platform_delivery()
     test_real_wheel_input()
+    test_modmenu_rows()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

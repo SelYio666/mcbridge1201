@@ -391,3 +391,33 @@ p195 结尾的 "clean-host portable remain open" 与 p201 的 "Verified on Windo
   无新 release（v0.5.6 不变）；
 - 边界：单机单显示器、窗口 1280×720 / guiScale 2；只测 Mod Menu 的列表与搜索框；方向键/PageDown 未测
   （`KEYEVENTF_UNICODE` 只能送字符）；列表行不画是独立缺陷，本轮没修也没掩盖；只有两次运行。
+
+## 二十一、2026-10-28 更新（p205：Mod Menu 列表行修复）
+
+任务 5 落后的一条真缺陷关闭：列表原本只画黑底不画行。
+
+- **根因**：`ModMenuListRenderBridge.renderList` 把 `left, top` 传给了 `Entry.render`，而原版
+  参数是 `(ctx, index, y, x, width, height, ...)`。行底色由桥自己 `fill(left, top, ...)` 画，
+  所以「行在、行里没东西」。证据：`class_350.method_44397` 与 `ModListEntry.method_25343` 的
+  字节码，加修前截图里列表区 0 亮像素；
+- **修法**（逐条对齐原版）：y 在前 x 在后；行宽 `getRowWidth()`（294）；行高 `itemHeight - 4`；
+  可见性 `getY()`/`getBottom()`（`method_46427`/`method_55443`）；hovered 取
+  `getEntryAtPosition`（`method_25308`）；先 `method_49568`（`Entry.drawBorder`）再
+  `method_25343`；
+- **匹配对照**（同一客户端/模组/窗口/光标点，只换桥）：0 亮像素 / 0 彩色像素 / 0 图标条带
+  → 11147 / 20211 / 6 条（高度 51/44/11/67/63/74 px，判据取 30–90 px 的条带 ≥5 条）；
+  两格滚轮 `scroll 0→18`，行整体上移 **−36** 设备像素，互相关最优点就是 −36；
+- **调试行**：`-Dmcbridge.listrender.debug=true` 才打印
+  `P205_LIST class=ModListWidget count=11 left=6 rowWidth=294 itemHeight=36 rows=67..324`，
+  另有一行 `DescriptionListWidget count=0`（描述面板这一轮没选中模组，未验证）；
+- **附带修复**：`launcher/mclaunch.py:build_command` 的 `extra_jvm` 形参从未被使用，导致第一次
+  带 `-D` 的运行根本没带上标志（`P205 missing`）。两条组装路径都插入 `extra_jvm`，`launch()`
+  透传，回归里有断言；
+- **构建**：只重编 `ModMenuListRenderBridge` 一个类并用 `tools/inject_bridges.py` 注入
+  （`build.py` 有日志：旧类 `48515717…` → 新类 `3336cf73…`，jar
+  `9cb27e5455a2a01eb6a653111a91790184be1cd9f91367cd4ff23d51e65d9b0c`）。全量重打包仍应走
+  `patch --bridge-dir`；
+- 回归：新增 `test_modmenu_rows()`（27 条），从 `rows-check.json`、两份 `result.json`、
+  `build.log`、桥源码与 `build_command` 实算；
+- 边界：单机单显示器、guiScale 2；只验证模组列表；纹理背景未恢复（平色 `0x80000000`），
+  选中高亮未画，描述面板未验证；Cloth 配置界面仍打不开。
