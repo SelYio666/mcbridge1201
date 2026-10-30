@@ -134,9 +134,14 @@ MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecr
 ## p195 v0.5.6 交付验证 增量（2026-10-26，正常 UTF-8）
 
 - portable：`dist/mcbridge-launcher-0.5.6.zip` 在全新 `work/tmp/p195-portable` 根目录跑 `test_portable.py --version 1.21.1`，deps + `/api/status` + `/guide` 全过（`RESULT: OK`）；`runs/p195-delivery-validation/portable-test.log`。
-- panel：同源 `tools/pcl_panel.py` 打开面板，103 个正式版、PCL 目录默认值正常（`panel-smoke.png`）；PCL2 本机路径不存在，完整点击安装 E2E 未做；面板资产只下载到 3,361,813/12,361,982 bytes。
+- panel：同源 `tools/pcl_panel.py` 打开面板，103 个正式版、PCL 目录默认值正常（`panel-smoke.png`）；完整点击安装 E2E 未做；面板资产只下载到 3,361,813/12,361,982 bytes。
+  **2026-10-30 更正（p211）**：当时把"记录里的路径不存在"当成了"本机没有 PCL2"——那是错的。
+  PCL2 **2.13.1.1** 一直在 `D:\浏览器所下载文件\我的世界PCL2启动器_2.12.8.2\plain craft launcher 2.exe`，
+  只有 p137 记录的 `D:\我的世界\.minecraft\涟漪专用启动器` 被删了（桌面快捷方式仍指向那个死路径）。
+  其 `PCL/Setup.ini` 指向 `C:\Users\27682\AppData\Roaming\.minecraft`；顺带修掉"失效快捷方式被静默
+  跳过"的问题（现在会点出死路径并说明回退）。证据 `runs/p211-pcl2-detect/`。
 - 门禁：`test_review_fixes` 97/97、`check_hashes` 1212/1212、`verify_evidence` passed；无新 release（v0.5.6）。
-- 边界：PCL2 缺失、panel 资产不完整、干净/离线主机未验证。
+- 边界：PCL2 当时确实没被检测到（p211 在另一个路径找到 2.13.1.1）、panel 资产不完整、干净/离线主机未验证。
 ## p196 Shulker grid 27 格全满 增量（2026-10-26，正常 UTF-8）
 
 - 27 种不同物品（`GRID_DRAWITEMS items=27`、`GRID_SETRENDER inv=27`）、FULL、server box、真实 tooltip 路径四项全过；`runs/p196-shulker-grid27/`（`after-full/after-server/after-compact.png`）。

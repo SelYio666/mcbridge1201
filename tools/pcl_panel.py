@@ -48,10 +48,18 @@ class Panel:
         type_box.bind("<<ComboboxSelected>>", lambda e: self._reload_versions())
 
         ttk.Label(top, text="PCL 目录 / 游戏目录").grid(row=1, column=0, sticky="w", pady=(10, 0))
-        self.dir_var = tk.StringVar(value=str(fs.detect_pcl_root() or ""))
+        # Why the field holds what it holds: a stale desktop shortcut used to be dropped in
+        # silence, leaving the %APPDATA%/.minecraft fallback looking like a real detection
+        # (runs/p211-pcl2-detect/). The notes are shown next to the field instead of a log line
+        # the user never opens.
+        detect_notes: list[str] = []
+        self.dir_var = tk.StringVar(value=str(fs.detect_pcl_root(detect_notes) or ""))
         dir_entry = ttk.Entry(top, textvariable=self.dir_var, width=44)
         dir_entry.grid(row=1, column=1, columnspan=2, sticky="we", padx=6, pady=(10, 0))
         ttk.Button(top, text="浏览…", command=self._browse).grid(row=1, column=3, pady=(10, 0))
+        self.note_label = ttk.Label(top, text="；".join(detect_notes), foreground="#8a6d00",
+                                    wraplength=520, justify="left")
+        self.note_label.grid(row=3, column=0, columnspan=4, sticky="w", padx=12)
 
         self.open_var = tk.BooleanVar(value=True)
         ttk.Checkbutton(top, text="装完打开游戏目录", variable=self.open_var).grid(

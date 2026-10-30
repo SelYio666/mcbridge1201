@@ -1,0 +1,14 @@
+{
+  "dir_field": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+  "note_label": "Plain Craft Launcher 2.lnk：快捷方式指向的路径已不存在（D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe）；快捷方式没有给出游戏目录，回退到 C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+  "note_visible": true,
+  "note_geometry": [
+    491,
+    72
+  ],
+  "title": "mcbridge · 一键安装到 PCL",
+  "versions_loaded": 921,
+  "status": "就绪",
+  "screenshot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p211-pcl2-detect\\panel-smoke.png",
+  "screenshot_bytes": 20564
+}

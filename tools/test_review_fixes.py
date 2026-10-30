@@ -2629,6 +2629,137 @@ def test_cloth_config() -> None:
           "appleskin-cloth.jar" in distribution, "")
 
 
+def test_pcl2_detect() -> None:
+    """p211: PCL2 is on this machine, and a dead desktop shortcut is no longer skipped in silence.
+
+    p195/p137 recorded 任务 6 as blocked for lack of a PCL2 install. It was not missing: the
+    recorded path (`D:\\我的世界\\.minecraft\\涟漪专用启动器`) had been deleted while the launcher
+    itself still lived under a download folder, and the desktop shortcut still named the dead path.
+    `pcl2_from_desktop()` dropped a shortcut whose target did not exist without a word, so
+    `detect_pcl_root()` fell through to `%APPDATA%/.minecraft` and reported it as "detected" - which
+    happens to be the right folder here, and would not be on a machine whose PCL2 uses a custom
+    folder (runs/p211-pcl2-detect/).
+
+    The resolver is tested on synthetic trees (the game-dir resolution) and with an injected
+    desktop/resolver (the notes), because COM and a real desktop are exactly what a test cannot
+    assume.
+    """
+    run = ROOT / "runs" / "p211-pcl2-detect"
+    verify_path = run / "detect-check.json"
+    missing = [str(p.relative_to(ROOT)) for p in
+               (run / "probe_pcl.py", run / "panel_smoke.py", run / "verify_detect.py",
+                verify_path, run / "before" / "probe.json", run / "after" / "probe.json",
+                run / "panel-smoke.json", run / "panel-smoke.png",
+                ROOT / "tools" / "from_source_install.py", ROOT / "tools" / "pcl_panel.py")
+               if not p.exists()]
+    check("p211: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    sys.path.insert(0, str(ROOT / "tools"))
+    import from_source_install as fs
+
+    # --- the resolver, on synthetic trees -----------------------------------------------------
+    base = WORK / "pcl2-detect"
+    if base.exists():
+        import shutil
+
+        shutil.rmtree(base, ignore_errors=True)
+    game_abs = base / "absolute-game"
+    game_abs.mkdir(parents=True, exist_ok=True)
+    launcher = base / "launcher"
+    (launcher / "PCL").mkdir(parents=True, exist_ok=True)
+    (launcher / "PCL" / "Setup.ini").write_text(
+        f"LaunchFolderSelect:{game_abs}\\\nVersionArgumentIndie:0\n", encoding="utf-8")
+    check("p211: an absolute LaunchFolderSelect is followed",
+          fs.pcl2_game_dir(launcher) == Path(str(game_abs)), str(fs.pcl2_game_dir(launcher)))
+    check("p211: the same holds when the caller passes the exe",
+          fs.pcl2_game_dir(launcher / "plain craft launcher 2.exe") == Path(str(game_abs)), "")
+
+    rel = base / "relative"
+    (rel / "PCL").mkdir(parents=True, exist_ok=True)
+    (rel / "PCL" / "Setup.ini").write_text("LaunchFolderSelect:$minecraft\n", encoding="utf-8")
+    check("p211: a $-relative LaunchFolderSelect resolves inside the launcher folder",
+          fs.pcl2_game_dir(rel) == rel / "minecraft", str(fs.pcl2_game_dir(rel)))
+
+    portable = base / "portable"
+    (portable / ".minecraft").mkdir(parents=True, exist_ok=True)
+    check("p211: with no Setup.ini the portable .minecraft is used",
+          fs.pcl2_game_dir(portable) == portable / ".minecraft", str(fs.pcl2_game_dir(portable)))
+
+    nothing = base / "nothing"
+    nothing.mkdir(parents=True, exist_ok=True)
+    check("p211: a folder with neither config nor .minecraft yields None",
+          fs.pcl2_game_dir(nothing) is None, str(fs.pcl2_game_dir(nothing)))
+
+    # --- the notes, with an injected desktop and resolver -------------------------------------
+    fake_desktop = base / "desktop"
+    fake_desktop.mkdir(parents=True, exist_ok=True)
+    (fake_desktop / "Plain Craft Launcher 2.lnk").write_text("not a real shortcut",
+                                                             encoding="utf-8")
+    dead = str(base / "deleted-launcher" / "Plain Craft Launcher 2.exe")
+    resolved, notes = fs.pcl2_shortcut_scan(fake_desktop, resolve=lambda lnk: dead)
+    check("p211: a shortcut whose target is gone reports the dead path instead of vanishing",
+          resolved is None and any("已不存在" in n and dead in n for n in notes), str(notes))
+    resolved, notes = fs.pcl2_shortcut_scan(fake_desktop, resolve=lambda lnk: None)
+    check("p211: an unreadable shortcut says so", resolved is None
+          and any("读不到" in n for n in notes), str(notes))
+    empty_desktop = base / "empty-desktop"
+    empty_desktop.mkdir(parents=True, exist_ok=True)
+    resolved, notes = fs.pcl2_shortcut_scan(empty_desktop, resolve=lambda lnk: dead)
+    check("p211: a desktop without a PCL shortcut says so",
+          resolved is None and any("没有 PCL 快捷方式" in n for n in notes), str(notes))
+
+    live = base / "live"
+    (live / "PCL").mkdir(parents=True, exist_ok=True)
+    (live / "PCL" / "Setup.ini").write_text(f"LaunchFolderSelect:{game_abs}\n", encoding="utf-8")
+    resolved, notes = fs.pcl2_shortcut_scan(fake_desktop, resolve=lambda lnk: str(live))
+    check("p211: a live shortcut still resolves without notes",
+          resolved == Path(str(game_abs)) and notes == [], f"{resolved} {notes}")
+
+    # --- the callers actually show the notes --------------------------------------------------
+    install_src = (ROOT / "tools" / "from_source_install.py").read_text(encoding="utf-8")
+    check("p211: detect_pcl_root can hand its notes to a caller",
+          "def detect_pcl_root(notes: list[str] | None = None)" in install_src, "")
+    check("p211: the CLI prints the notes rather than only the folder",
+          install_src.count('print("PCL 检测:", note') == 2, "")
+    panel_src = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8")
+    check("p211: the panel shows the notes next to the folder field",
+          "detect_notes: list[str] = []" in panel_src and "self.note_label" in panel_src, "")
+
+    # --- the evidence -------------------------------------------------------------------------
+    verdict = json.loads(verify_path.read_text(encoding="utf-8"))
+    failed_checks = [c["name"] for c in verdict["checks"] if not c["ok"]]
+    check("p211: the committed verdict passed every one of its checks",
+          not failed_checks and len(verdict["checks"]) >= 25,
+          f"{len(verdict['checks'])} checks, failed: {failed_checks}")
+    pcl2 = verdict["pcl2"]
+    check("p211: the evidence names the launcher, its version and its game folder",
+          pcl2["file_version"] == "2.13.1.1" and pcl2["game_dir"]
+          and pcl2["launch_folder_select"], json.dumps(pcl2, ensure_ascii=False)[:160])
+    check("p211: the stale shortcut is recorded as the p137 folder",
+          "涟漪专用启动器" in (verdict["shortcut"]["target"] or "")
+          and verdict["shortcut"]["target_exists"] is False, "")
+    check("p211: before the fix nothing was reported, after it the miss is explained",
+          verdict["before_notes"] == [] and any("已不存在" in n for n in verdict["after_notes"]),
+          str(verdict["after_notes"])[:120])
+    check("p211: the panel really rendered the note (widget + pixels)",
+          verdict["panel"]["note_visible"] is True
+          and Path(verdict["panel"]["screenshot"]).is_file(), verdict["panel"]["note_label"][:90])
+
+    # --- docs moved with the finding ----------------------------------------------------------
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    check("p211: README no longer says PCL2 is missing on this machine",
+          "PCL2 本机路径不存在" not in readme and "runs/p211-pcl2-detect" in readme, "")
+    status = (ROOT / "docs" / "FINAL-STATUS.md").read_text(encoding="utf-8")
+    check("p211: FINAL-STATUS carries the corrected environment fact",
+          "2.13.1.1" in status and "runs/p211-pcl2-detect" in status, "")
+    remaining = (ROOT / "docs" / "remaining-work.md").read_text(encoding="utf-8")
+    check("p211: remaining-work stops calling 任务 6 blocked for lack of PCL2",
+          "PCL2 本机路径不存在" not in remaining
+          and "本机没有 PCL2" not in remaining, "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2646,6 +2777,7 @@ def main() -> int:
     test_modmenu_description()
     test_modmenu_scroll()
     test_cloth_config()
+    test_pcl2_detect()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

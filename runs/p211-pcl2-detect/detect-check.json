@@ -1,0 +1,171 @@
+{
+  "pcl2": {
+    "exe": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe",
+    "exe_sha256": "30eb93c62fc51ede0898648e67455478a3d5a4f279938ae65aec77b84cb9703f",
+    "exe_bytes": 5750272,
+    "file_version": "2.13.1.1",
+    "folder_name": "我的世界PCL2启动器_2.12.8.2",
+    "setup_ini": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\PCL\\Setup.ini",
+    "launch_folder_select": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\",
+    "game_dir": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "game_dir_versions": [
+      "1.21.1"
+    ]
+  },
+  "shortcut": {
+    "lnk": "C:\\Users\\27682\\Desktop\\Plain Craft Launcher 2.lnk",
+    "target": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe",
+    "target_exists": false
+  },
+  "before_notes": [],
+  "after_notes": [
+    "Plain Craft Launcher 2.lnk：快捷方式指向的路径已不存在（D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe）",
+    "快捷方式没有给出游戏目录，回退到 C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+  ],
+  "panel": {
+    "dir_field": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "note_label": "Plain Craft Launcher 2.lnk：快捷方式指向的路径已不存在（D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe）；快捷方式没有给出游戏目录，回退到 C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "note_visible": true,
+    "note_geometry": [
+      491,
+      72
+    ],
+    "title": "mcbridge · 一键安装到 PCL",
+    "versions_loaded": 921,
+    "status": "就绪",
+    "screenshot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p211-pcl2-detect\\panel-smoke.png",
+    "screenshot_bytes": 20564
+  },
+  "checks": [
+    {
+      "name": "pcl2_exists_on_this_machine",
+      "ok": true,
+      "detail": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe"
+    },
+    {
+      "name": "pcl2_is_the_version_p137_tested",
+      "ok": true,
+      "detail": "2.13.1.1 / dir name 我的世界PCL2启动器_2.12.8.2"
+    },
+    {
+      "name": "the_folder_name_disagrees_with_the_exe",
+      "ok": true,
+      "detail": "我的世界PCL2启动器_2.12.8.2 vs 2.13.1.1"
+    },
+    {
+      "name": "the_launcher_config_names_a_game_folder",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\"
+    },
+    {
+      "name": "the_launcher_config_and_the_parser_agree",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\ vs C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    {
+      "name": "the_game_folder_is_real_and_has_versions",
+      "ok": true,
+      "detail": "['1.21.1']"
+    },
+    {
+      "name": "both_runs_saw_the_same_launcher_bytes",
+      "ok": true,
+      "detail": "30eb93c62fc51ede…"
+    },
+    {
+      "name": "the_desktop_shortcut_is_on_record",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\Desktop\\Plain Craft Launcher 2.lnk"
+    },
+    {
+      "name": "its_target_no_longer_exists",
+      "ok": true,
+      "detail": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe"
+    },
+    {
+      "name": "the_stale_target_is_the_folder_p137_used",
+      "ok": true,
+      "detail": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe"
+    },
+    {
+      "name": "before_the_fix_the_shortcut_was_the_only_input_and_it_failed",
+      "ok": true,
+      "detail": "None"
+    },
+    {
+      "name": "before_the_fix_nothing_explained_the_miss",
+      "ok": true,
+      "detail": "accepts_notes=False notes=[]"
+    },
+    {
+      "name": "before_the_fix_a_game_folder_came_back_anyway",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    {
+      "name": "after_the_fix_the_call_accepts_notes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "after_the_fix_the_stale_shortcut_is_named",
+      "ok": true,
+      "detail": "Plain Craft Launcher 2.lnk：快捷方式指向的路径已不存在（D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe） 快捷方式没有给出游戏目录，回退到 C:\\User"
+    },
+    {
+      "name": "after_the_fix_the_dead_target_is_quoted",
+      "ok": true,
+      "detail": "涟漪专用启动器"
+    },
+    {
+      "name": "after_the_fix_the_fallback_says_it_is_a_fallback",
+      "ok": true,
+      "detail": "启动器\\Plain Craft Launcher 2.exe） 快捷方式没有给出游戏目录，回退到 C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    {
+      "name": "the_fix_does_not_move_the_detected_folder",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft -> C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    {
+      "name": "the_shortcut_still_yields_no_game_folder_of_its_own",
+      "ok": true,
+      "detail": "the launcher is not at the shortcut's target; the fix explains, it does not guess"
+    },
+    {
+      "name": "the_scan_reports_the_same_single_miss",
+      "ok": true,
+      "detail": "['Plain Craft Launcher 2.lnk：快捷方式指向的路径已不存在（D:\\\\我的世界\\\\.minecraft\\\\涟漪专用启动器\\\\Plain Craft Launcher 2.exe）']"
+    },
+    {
+      "name": "the_panel_renders_the_note",
+      "ok": true,
+      "detail": "Plain Craft Launcher 2.lnk：快捷方式指向的路径已不存在（D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe）；快捷方式"
+    },
+    {
+      "name": "the_panel_field_still_holds_the_game_folder",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    {
+      "name": "the_panel_loaded_the_version_list",
+      "ok": true,
+      "detail": "921 versions"
+    },
+    {
+      "name": "the_panel_screenshot_exists",
+      "ok": true,
+      "detail": "20564 bytes"
+    },
+    {
+      "name": "the_probe_is_read_only",
+      "ok": true,
+      "detail": "found: []"
+    },
+    {
+      "name": "the_probe_records_the_path_it_was_given",
+      "ok": true,
+      "detail": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe"
+    }
+  ]
+}

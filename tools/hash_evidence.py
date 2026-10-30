@@ -1503,6 +1503,19 @@ FILES = [
     "runs/p210-cloth-config/after3/toggle.png",
     "runs/p210-cloth-config/gate-review-fixes.log",
     "runs/p210-cloth-config/gate-verify.log",
+    "runs/p211-pcl2-detect/probe_pcl.py",
+    "runs/p211-pcl2-detect/panel_smoke.py",
+    "runs/p211-pcl2-detect/verify_detect.py",
+    "runs/p211-pcl2-detect/README.md",
+    "runs/p211-pcl2-detect/before/probe.json",
+    "runs/p211-pcl2-detect/before/probe.log",
+    "runs/p211-pcl2-detect/after/probe.json",
+    "runs/p211-pcl2-detect/after/probe.log",
+    "runs/p211-pcl2-detect/panel-smoke.json",
+    "runs/p211-pcl2-detect/panel-smoke.png",
+    "runs/p211-pcl2-detect/detect-check.json",
+    "runs/p211-pcl2-detect/gate-review-fixes.log",
+    "runs/p211-pcl2-detect/gate-verify.log",
 ]
 
 

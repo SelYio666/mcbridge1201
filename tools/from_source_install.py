@@ -263,42 +263,83 @@ def pcl2_game_dir(target: str | Path) -> Path | None:
     return portable if portable.is_dir() else None
 
 
-def pcl2_from_desktop() -> Path | None:
-    """Best effort: resolve a PCL shortcut on the desktop and read its game directory."""
+def _resolve_lnk_target(lnk: Path) -> str | None:
+    """Target path of a .lnk, through WScript.Shell (no pywin32). None when unreadable."""
     if os.name != "nt":
         return None
-    desktop = Path(os.environ.get("USERPROFILE", "")) / "Desktop"
-    if not desktop.is_dir():
+    try:
+        ps = ("$p=(New-Object -ComObject WScript.Shell).CreateShortcut('" + str(lnk)
+              + "').TargetPath; [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($p))")
+        raw = subprocess.run(["powershell", "-NoProfile", "-Command", ps],
+                             capture_output=True, text=True, encoding="ascii",
+                             errors="ignore", timeout=20).stdout.strip()
+        return base64.b64decode(raw).decode("utf-8", "replace").strip() or None
+    except Exception:  # noqa: BLE001
         return None
-    for lnk in desktop.glob("*.lnk"):
+
+
+def pcl2_shortcut_scan(desktop: Path | None = None,
+                       resolve=None) -> tuple[Path | None, list[str]]:
+    """Resolve PCL shortcuts on the desktop; return (game_dir, notes explaining the misses).
+
+    `notes` is the point: a shortcut whose target was moved or deleted used to be skipped in
+    silence, so the caller fell back to `%APPDATA%/.minecraft` and reported that as "detected".
+    On the machine this was found on, the PCL2 install lives under a download folder and the
+    desktop shortcut still names the folder p137 used (deleted since) - the fallback happened to
+    point at the same game folder, so nothing looked wrong (runs/p211-pcl2-detect/).
+
+    `desktop` and `resolve` are injectable so the decision can be tested without COM or a desktop.
+    """
+    notes: list[str] = []
+    if os.name != "nt":
+        return None, notes
+    desktop = desktop if desktop is not None else Path(os.environ.get("USERPROFILE", "")) / "Desktop"
+    if not desktop.is_dir():
+        notes.append(f"没有桌面目录：{desktop}")
+        return None, notes
+    resolve = resolve or _resolve_lnk_target
+    seen = False
+    for lnk in sorted(desktop.glob("*.lnk")):
         name = lnk.name.lower()
         if "pcl" not in name and "plain craft" not in name:
             continue
-        try:
-            ps = ("$p=(New-Object -ComObject WScript.Shell).CreateShortcut('" + str(lnk)
-                  + "').TargetPath; [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($p))")
-            raw = subprocess.run(["powershell", "-NoProfile", "-Command", ps],
-                                 capture_output=True, text=True, encoding="ascii",
-                                 errors="ignore", timeout=20).stdout.strip()
-            try:
-                out = base64.b64decode(raw).decode("utf-8", "replace").strip()
-            except Exception:  # noqa: BLE001
-                out = ""
-        except Exception:  # noqa: BLE001
+        seen = True
+        target = resolve(lnk)
+        if not target:
+            notes.append(f"{lnk.name}：读不到快捷方式目标")
             continue
-        if out and Path(out).exists():
-            g = pcl2_game_dir(out)
-            if g:
-                return g
-    return None
+        if not Path(target).exists():
+            notes.append(f"{lnk.name}：快捷方式指向的路径已不存在（{target}）")
+            continue
+        game = pcl2_game_dir(target)
+        if not game:
+            notes.append(f"{lnk.name}：{target} 里既没有 PCL/Setup.ini 也没有 .minecraft")
+            continue
+        return game, notes
+    if not seen:
+        notes.append("桌面上没有 PCL 快捷方式")
+    return None, notes
 
 
-def detect_pcl_root() -> Path | None:
-    """Best-effort PCL game directory: env override, PCL Setup.ini, then %APPDATA%/.minecraft."""
+def pcl2_from_desktop(desktop: Path | None = None) -> Path | None:
+    """Best effort: resolve a PCL shortcut on the desktop and read its game directory."""
+    return pcl2_shortcut_scan(desktop)[0]
+
+
+def detect_pcl_root(notes: list[str] | None = None) -> Path | None:
+    """Best-effort PCL game directory: env override, PCL Setup.ini, then %APPDATA%/.minecraft.
+
+    Pass a list as `notes` to receive why a step was skipped (a stale desktop shortcut, a folder
+    with no launcher config, which fallback won). The caller decides whether to show them; the CLI
+    and the GUI panel do.
+    """
+    notes = notes if notes is not None else []
     env = os.environ.get("MCBRIDGE_PCL_DIR")
     if env and Path(env).is_dir():
+        notes.append(f"使用 MCBRIDGE_PCL_DIR={env}")
         return Path(env)
-    via_shortcut = pcl2_from_desktop()
+    via_shortcut, shortcut_notes = pcl2_shortcut_scan()
+    notes.extend(shortcut_notes)
     if via_shortcut and via_shortcut.is_dir():
         return via_shortcut
     cands = []
@@ -318,6 +359,8 @@ def detect_pcl_root() -> Path | None:
     cands.append(Path.home() / ".minecraft")
     for c in cands:
         if c.is_dir():
+            if shortcut_notes:
+                notes.append(f"快捷方式没有给出游戏目录，回退到 {c}")
             return c
     return None
 
@@ -364,7 +407,10 @@ def interactive() -> int:
     elif raw.isdigit() and 1 <= int(raw) <= len(recent):
         raw = recent[int(raw) - 1]["id"]
     ver = raw or default_ver
-    root = detect_pcl_root()
+    notes: list[str] = []
+    root = detect_pcl_root(notes)
+    for note in notes:
+        print("PCL 检测:", note)
     if root:
         print("检测到 PCL 游戏目录:", root)
     else:
@@ -424,7 +470,10 @@ def main() -> int:
     else:
         root = Path(args.pcl_dir) if args.pcl_dir else Path(args.root)
     if args.pcl and not args.pcl_dir:
-        detected = detect_pcl_root()
+        notes: list[str] = []
+        detected = detect_pcl_root(notes)
+        for note in notes:
+            print("PCL 检测:", note, file=sys.stderr)
         if detected is None:
             print("没有找到 PCL 游戏目录，请用 --pcl-dir 指定（里面有 versions/ 的那个 .minecraft）")
             return 2

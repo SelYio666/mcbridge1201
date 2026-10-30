@@ -249,9 +249,9 @@ p188 补上 p181 留下的 "Atlas overflow (1024 maps) is still untested"（证�
 ## 十二、2026-10-26 更新（p195：v0.5.6 交付验证）
 
 - **portable**：`dist/mcbridge-launcher-0.5.6.zip` 在全新 `work/tmp/p195-portable` 根目录通过 `test_portable.py --version 1.21.1`（deps + `/api/status` + `/guide`，`RESULT: OK`）；证据 `runs/p195-delivery-validation/portable-test.log`；
-- **panel UI smoke**：同源 `tools/pcl_panel.py` 打开，103 个正式版、PCL 目录默认值正常（`panel-smoke.png`）；本机 PCL2 路径不存在，完整“安装到 PCL”点击/进度/PCL2 版本刷新未做；panel 资产下载不完整（3,361,813/12,361,982 bytes，`gh release download` 挂起已终止）；
+- **panel UI smoke**：同源 `tools/pcl_panel.py` 打开，103 个正式版、PCL 目录默认值正常（`panel-smoke.png`）；完整“安装到 PCL”点击/进度/PCL2 版本刷新未做；panel 资产下载不完整（3,361,813/12,361,982 bytes，`gh release download` 挂起已终止）；本行原来写的“本机 PCL2 路径不存在”已被 p211 更正——见第二十六节；
 - 门禁：test_review_fixes **97/97**、check_hashes **1212/1212**、verify_evidence passed；无新 release（v0.5.6）；
-- 边界：PCL2 缺失、panel 资产不完整、干净/离线主机未验证；v0.5.7 视 p193–p195 与用户确认（目前无用户可见修复，可保持 v0.5.6）。
+- 边界：PCL2 当时未被检测到（p211 在另一个路径找到 2.13.1.1）、panel 资产不完整、干净/离线主机未验证；v0.5.7 视 p193–p195 与用户确认（目前无用户可见修复，可保持 v0.5.6）。
 ## 十三、2026-10-26 更新（p196：Shulker grid 27 格全满）
 
 - **p196**：27 种不同物品（diamond/emerald/iron_ingot/.../slime_ball），`GRID_SETRENDER inv=27`、`GRID_DRAWITEMS items=27`，FULL 网格 27 格；server box（2 钻 + 4 绿宝石）与真实 tooltip 路径仍正常；`result.json` 4/4 true；证据 `runs/p196-shulker-grid27/`；
@@ -548,3 +548,32 @@ AppleSkin 的配置界面是 1.20.1 的 Cloth Config 11.1.136（jar-in-jar）画
 - 门禁：`test_review_fixes` 见提交说明；`check_hashes`、`verify_evidence`、`check_text_encoding` 同；
 - 边界：单机、1280×720、guiScale 2；只点第一条布尔开关，其余开关、文本框、浮点列表未交互；
   跨机器未做。
+
+## 二十六、2026-10-30 更新（p211：PCL2 其实在机器上；失效快捷方式不再被静默跳过）
+
+任务 6 一直按"本机没有 PCL2"记成受阻。这一轮把环境查了一遍：**PCL2 在**，只是不在记录的那个路径。
+
+- **实际位置**：`D:\浏览器所下载文件\我的世界PCL2启动器_2.12.8.2\plain craft launcher 2.exe`
+  （5,750,272 B，sha256 `30eb93c6…`），`FileVersion = 2.13.1.1`——正是 p137 实测过的那个版本；
+  目录名里的 `2.12.8.2` 只是下载文件夹的名字；
+- **游戏目录**：同目录 `PCL\Setup.ini` 的 `LaunchFolderSelect:C:\Users\27682\AppData\Roaming\.minecraft\`，
+  与 `pcl2_game_dir()` 解析结果一致；该目录存在（`versions\1.21.1`、`launcher_profiles.json`）；
+- **为什么之前判定"没有"**：p137 记录的 `D:\我的世界\.minecraft\涟漪专用启动器` 已被删除，而桌面
+  快捷方式 `Plain Craft Launcher 2.lnk` 仍指向它。`pcl2_from_desktop()` 对"目标不存在"是
+  **静默 continue**，于是 `detect_pcl_root()` 落到 `%APPDATA%\.minecraft` 兜底并把它当"检测到了"。
+  这次恰好是同一个目录，所以看不出问题；换一台 PCL2 用自定义目录的机器，会静默装错地方；
+- **修法**：新增 `pcl2_shortcut_scan(desktop=None, resolve=None)`，返回 `(游戏目录, notes)`，
+  notes 逐条说明"读不到目标／目标已不存在（带路径）／目录里既无 Setup.ini 也无 .minecraft／桌面上没有
+  PCL 快捷方式"；`detect_pcl_root(notes=…)` 收集并补一条"回退到 X"。CLI 打到 stderr（`PCL 检测:`），
+  面板在目录框下方用一条琥珀色标签显示。**行为没有改变**：检测结果仍是同一个目录，本轮只是把
+  "静默"变成"说明"；
+- **证据**：`runs/p211-pcl2-detect/` —— `before/`（修前：`notes=[]`、无 scan API、快捷方式被静默丢弃、
+  仍返回目录）与 `after/`（修后：点出死路径 + 回退说明），同一台机器相隔几分钟；`panel-smoke.png`
+  是真实面板截图（note 标签可见，921 个版本）；`verify_detect.py` 26/26；
+- 回归：新增 `test_pcl2_detect()`（21 条：`Setup.ini` 绝对/`$` 相对/portable/都没有、四种 notes 分支、
+  CLI 与面板接线、提交证据、文档更正）；
+- 门禁：`test_review_fixes` **430/430**（新增 `test_pcl2_detect()` 21 条）、`check_hashes` **1482/1482**、
+  `verify_evidence` passed、`check_text_encoding` 238/238 clean；无新 release；
+- 边界：**没有做**"从 PCL2 启动进游戏"与"面板点安装 → PCL2 版本刷新"的端到端（那要往真机
+  `.minecraft` 写版本并启动 PCL2 窗口）；本轮只把环境与检测逻辑钉死。任务 6 的 E2E 仍然待做，
+  但现在**不再受阻于"没有 PCL2"**。

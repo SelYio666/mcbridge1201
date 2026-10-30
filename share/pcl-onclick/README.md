@@ -35,6 +35,12 @@ python tools/from_source_install.py --version 1.21.1 --pcl2 "D:\...\你的PCL2�
 `--pcl` 也会自动沿快捷方式定位。实测 PCL2 版本列表能直接看到新装的 1.20.4
 （见 `runs/p137-pcl2-onclick/`）。
 
+**快捷方式失效时会告诉你**（p211）：如果桌面快捷方式指向的路径已经被移动/删除，`--pcl` 不再静默
+回退到 `%APPDATA%\.minecraft` 了，而是打印例如
+`PCL 检测: Plain Craft Launcher 2.lnk：快捷方式指向的路径已不存在（D:\...\Plain Craft Launcher 2.exe）`
+再加一句 `回退到 C:\Users\...\AppData\Roaming\.minecraft`；面板上同一条信息显示在目录框下方。
+这时建议直接用 `--pcl2 "<PCL2 目录>"` 指过去（实测见 `runs/p211-pcl2-detect/`）。
+
 ## 方式 B：已有 Python 3
 
 双击 `一键装到PCL.bat`（可带版本号：`一键装到PCL.bat 1.20.1`），或命令行：
