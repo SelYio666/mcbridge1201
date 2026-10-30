@@ -1,0 +1,46 @@
+{
+  "zip": "D:\\浏览器所下载文件\\PCL 快照版 2.99.0.0.zip",
+  "zip_bytes": 2666697,
+  "zip_sha256": "de20453499b757f0859f6ed2f7a699b644d4ba5c5644ee3db6096795430811ca",
+  "launcher_dir": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2",
+  "exe": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\Plain Craft Launcher 2.exe",
+  "expect_version": "2.99.0.0",
+  "member": {
+    "name": "Plain Craft Launcher 2.exe",
+    "bytes": 5985280,
+    "sha256": "5b64d6d540c376390470cea3ab99d47661e8bca81be2ba647ea83e7d2e9428fa"
+  },
+  "before": {
+    "exe": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\Plain Craft Launcher 2.exe",
+    "exists": true,
+    "sha256": "30eb93c62fc51ede0898648e67455478a3d5a4f279938ae65aec77b84cb9703f",
+    "info": {
+      "size": 5750272,
+      "product_version": "2.13.1.1",
+      "description": "Plain Craft Launcher 启动器",
+      "file_version": "2.13.1.1"
+    }
+  },
+  "backup": {
+    "path": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\Plain Craft Launcher 2.exe.2.13.1.1.bak",
+    "bytes": 5750272,
+    "sha256": "30eb93c62fc51ede0898648e67455478a3d5a4f279938ae65aec77b84cb9703f"
+  },
+  "after": {
+    "exe": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\Plain Craft Launcher 2.exe",
+    "exists": true,
+    "sha256": "5b64d6d540c376390470cea3ab99d47661e8bca81be2ba647ea83e7d2e9428fa",
+    "info": {
+      "size": 5985280,
+      "product_version": "2.99.0.0",
+      "description": "Plain Craft Launcher 启动器",
+      "file_version": "2.99.0.0"
+    }
+  },
+  "extracted_matches_zip": true,
+  "version_matches_name": true,
+  "setup_ini_still_there": true,
+  "launch_folder_select": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\",
+  "pcl2_from_desktop": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+  "detect_pcl_root": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+}

@@ -1,0 +1,32 @@
+{
+  "lnk": "C:\\Users\\27682\\Desktop\\Plain Craft Launcher 2.lnk",
+  "target": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe",
+  "target_exists": true,
+  "restored_from": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\desktop-shortcut-before.lnk",
+  "before": {
+    "icon": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe,0",
+    "working_dir": "D:\\我的世界\\.minecraft\\涟漪专用启动器",
+    "description": "D盘涟漪专用PCL启动器，使用原游戏与存档",
+    "target": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe",
+    "_rc": 0,
+    "lnk_bytes": 1033,
+    "lnk_sha256": "4c8df05385aae73bb4d03d97dca3e9309b6eac6a92ab3833367ff51e2cd9d3b2"
+  },
+  "backup": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\desktop-shortcut-before.lnk",
+  "create": {
+    "saved": true,
+    "_rc": 0
+  },
+  "after": {
+    "icon": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe,0",
+    "working_dir": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2",
+    "description": "Plain Craft Launcher 2",
+    "target": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe",
+    "_rc": 0,
+    "lnk_bytes": 1041,
+    "lnk_sha256": "6a2310bd8d6c283b34259bcb8e73be550dbb5f669dccef5157337a8866a7c902",
+    "points_at_the_launcher": true
+  },
+  "detect_pcl_root": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+  "pcl2_from_desktop": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+}

@@ -1,0 +1,30 @@
+{
+  "game": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+  "version": "1.20.4",
+  "ran_at": "2026-10-30T18:36:05",
+  "version_dir_removed": {
+    "path": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\versions\\1.20.4",
+    "files": {
+      "1.20.4.jar": {
+        "bytes": 24445539,
+        "sha1": "fd19469fed4a4b4c15b2d5133985f0e3e7816a8a"
+      },
+      "1.20.4.json": {
+        "bytes": 49394,
+        "sha1": "8d8190e2172770196d8e37b6e6553bb8a6d2e2a5"
+      }
+    }
+  },
+  "profile_removed": {
+    "name": "1.20.4 (mcbridge)",
+    "type": "custom",
+    "created": "2026-10-30T10:35:33.000Z",
+    "lastVersionId": "1.20.4",
+    "gameDir": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+  },
+  "profile_keys_after": [
+    "PCL"
+  ],
+  "selected_profile_after": "PCL",
+  "version_dir_exists_after": false
+}

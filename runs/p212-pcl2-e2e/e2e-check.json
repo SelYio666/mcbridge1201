@@ -1,0 +1,276 @@
+{
+  "shortcut": {
+    "lnk": "C:\\Users\\27682\\Desktop\\Plain Craft Launcher 2.lnk",
+    "target": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe",
+    "target_exists": true,
+    "restored_from": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\desktop-shortcut-before.lnk",
+    "before": {
+      "icon": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe,0",
+      "working_dir": "D:\\我的世界\\.minecraft\\涟漪专用启动器",
+      "description": "D盘涟漪专用PCL启动器，使用原游戏与存档",
+      "target": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe",
+      "_rc": 0,
+      "lnk_bytes": 1033,
+      "lnk_sha256": "4c8df05385aae73bb4d03d97dca3e9309b6eac6a92ab3833367ff51e2cd9d3b2"
+    },
+    "backup": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\desktop-shortcut-before.lnk",
+    "create": {
+      "saved": true,
+      "_rc": 0
+    },
+    "after": {
+      "icon": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe,0",
+      "working_dir": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2",
+      "description": "Plain Craft Launcher 2",
+      "target": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe",
+      "_rc": 0,
+      "lnk_bytes": 1041,
+      "lnk_sha256": "6a2310bd8d6c283b34259bcb8e73be550dbb5f669dccef5157337a8866a7c902",
+      "points_at_the_launcher": true
+    },
+    "detect_pcl_root": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "pcl2_from_desktop": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+  },
+  "clean": {
+    "game": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "version": "1.20.4",
+    "ran_at": "2026-10-30T18:36:05",
+    "version_dir_removed": {
+      "path": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\versions\\1.20.4",
+      "files": {
+        "1.20.4.jar": {
+          "bytes": 24445539,
+          "sha1": "fd19469fed4a4b4c15b2d5133985f0e3e7816a8a"
+        },
+        "1.20.4.json": {
+          "bytes": 49394,
+          "sha1": "8d8190e2172770196d8e37b6e6553bb8a6d2e2a5"
+        }
+      }
+    },
+    "profile_removed": {
+      "name": "1.20.4 (mcbridge)",
+      "type": "custom",
+      "created": "2026-10-30T10:35:33.000Z",
+      "lastVersionId": "1.20.4",
+      "gameDir": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    "profile_keys_after": [
+      "PCL"
+    ],
+    "selected_profile_after": "PCL",
+    "version_dir_exists_after": false
+  },
+  "install": {
+    "status": "完成",
+    "seconds": 10.3,
+    "before": [
+      "1.21.1"
+    ],
+    "after": [
+      "1.20.4",
+      "1.21.1"
+    ],
+    "files": {
+      "1.20.4.jar": 24445539,
+      "1.20.4.json": 49394
+    },
+    "profile": {
+      "name": "1.20.4 (mcbridge)",
+      "type": "custom",
+      "created": "2026-10-30T10:36:18.000Z",
+      "lastVersionId": "1.20.4",
+      "gameDir": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    "dialogs": [
+      {
+        "kind": "info",
+        "title": "完成",
+        "message": "1.20.4 已装好。打开 PCL 刷新版本列表即可。"
+      }
+    ]
+  },
+  "launcher": {
+    "before": {
+      "size": 5750272,
+      "product_version": "2.13.1.1",
+      "description": "Plain Craft Launcher 启动器",
+      "file_version": "2.13.1.1"
+    },
+    "after": {
+      "size": 5985280,
+      "product_version": "2.99.0.0",
+      "description": "Plain Craft Launcher 启动器",
+      "file_version": "2.99.0.0"
+    },
+    "zip_sha256": "de20453499b757f0859f6ed2f7a699b644d4ba5c5644ee3db6096795430811ca",
+    "exe_sha256": "5b64d6d540c376390470cea3ab99d47661e8bca81be2ba647ea83e7d2e9428fa"
+  },
+  "pcl2": {
+    "title": "Plain Craft Launcher　",
+    "clicks": [
+      {
+        "at": [
+          1093,
+          722
+        ],
+        "shot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\pcl2-click-1.png"
+      },
+      {
+        "at": [
+          608,
+          815
+        ],
+        "shot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\pcl2-click-2.png"
+      }
+    ],
+    "frame_diff": 0.2599
+  },
+  "checks": [
+    {
+      "name": "every evidence file exists",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "shortcut_points_at_the_launcher",
+      "ok": true,
+      "detail": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe"
+    },
+    {
+      "name": "the_broken_shortcut_is_recorded_before_it_was_replaced",
+      "ok": true,
+      "detail": "D:\\我的世界\\.minecraft\\涟漪专用启动器\\Plain Craft Launcher 2.exe"
+    },
+    {
+      "name": "the_old_shortcut_bytes_are_kept",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_detector_resolves_through_the_shortcut_now",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    {
+      "name": "the_previous_attempt_was_removed_and_recorded",
+      "ok": true,
+      "detail": "files=['1.20.4.jar', '1.20.4.json']"
+    },
+    {
+      "name": "nothing_of_it_was_left_behind",
+      "ok": true,
+      "detail": "['PCL']"
+    },
+    {
+      "name": "the_panel_reported_success",
+      "ok": true,
+      "detail": "status=完成 10.3s"
+    },
+    {
+      "name": "before_the_click_the_version_was_not_there",
+      "ok": true,
+      "detail": "['1.21.1']"
+    },
+    {
+      "name": "after_the_click_the_version_is_there",
+      "ok": true,
+      "detail": "['1.20.4', '1.21.1']"
+    },
+    {
+      "name": "the_panel_wrote_the_client_and_the_version_json",
+      "ok": true,
+      "detail": "{\"1.20.4.jar\": 24445539, \"1.20.4.json\": 49394}"
+    },
+    {
+      "name": "the_panel_added_a_launcher_profile",
+      "ok": true,
+      "detail": "1.20.4 (mcbridge)"
+    },
+    {
+      "name": "the_panel_walked_the_launcher_steps",
+      "ok": true,
+      "detail": "['准备中…', 'manifest 0/0 读取版本清单', 'client 0/0 下载客户端 1.20.4']"
+    },
+    {
+      "name": "the_only_stubbed_thing_is_the_modal_dialog",
+      "ok": true,
+      "detail": "[{'kind': 'info', 'title': '完成', 'message': '1.20.4 已装好。打开 PCL 刷新版本列表即可。'}]"
+    },
+    {
+      "name": "the_panel_screenshots_show_the_progress_state",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_version_folder_is_on_disk",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\versions\\1.20.4"
+    },
+    {
+      "name": "the_version_json_is_a_real_mojang_manifest",
+      "ok": true,
+      "detail": "id=1.20.4 assets=12"
+    },
+    {
+      "name": "the_client_jar_matches_the_manifest_hash",
+      "ok": true,
+      "detail": "24445539 bytes"
+    },
+    {
+      "name": "the_profile_survives_on_disk",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_launcher_was_updated_from_the_snapshot_zip",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_extracted_exe_is_the_zip_member_byte_for_byte",
+      "ok": true,
+      "detail": "5b64d6d540c37639…"
+    },
+    {
+      "name": "the_old_launcher_is_kept_as_a_rollback",
+      "ok": true,
+      "detail": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\Plain Craft Launcher 2.exe.2.13.1.1.bak"
+    },
+    {
+      "name": "the_update_kept_the_launcher_settings",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\"
+    },
+    {
+      "name": "the_shortcut_still_resolves_after_the_update",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    {
+      "name": "pcl2_started_and_showed_a_window",
+      "ok": true,
+      "detail": "Plain Craft Launcher　"
+    },
+    {
+      "name": "the_window_was_grabbed",
+      "ok": true,
+      "detail": "33658 bytes"
+    },
+    {
+      "name": "version_selection_was_clicked_and_captured",
+      "ok": true,
+      "detail": "[{'at': [1093, 722], 'shot': 'C:\\\\Users\\\\27682\\\\Documents\\\\新建文件夹\\\\mcbridge1201\\\\runs\\\\p212-pcl2-e2e\\\\pcl2-click-1.png'}, {'at': [608, 815], 'shot': 'C:\\\\Users\\\\27682\\\\Documents\\\\新建文件夹\\\\mcbridge1201\\\\runs\\\\p212-pcl2-e2e\\\\pcl2-click-2.png'}]"
+    },
+    {
+      "name": "the_version_page_is_a_different_frame",
+      "ok": true,
+      "detail": "26.0% of pixels changed"
+    },
+    {
+      "name": "the_launcher_was_closed_again",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

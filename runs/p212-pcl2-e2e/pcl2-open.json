@@ -1,0 +1,39 @@
+{
+  "exe": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe",
+  "exe_exists": true,
+  "killed_existing": [],
+  "pid": 26368,
+  "window_titles": [
+    "Plain Craft Launcher　"
+  ],
+  "window_found": true,
+  "window_title": "Plain Craft Launcher　",
+  "screenshots": [
+    "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\pcl2-window.png",
+    "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\pcl2-click-1.png",
+    "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\pcl2-click-2.png"
+  ],
+  "window_rect": [
+    510,
+    325,
+    1410,
+    875
+  ],
+  "clicks": [
+    {
+      "at": [
+        1093,
+        722
+      ],
+      "shot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\pcl2-click-1.png"
+    },
+    {
+      "at": [
+        608,
+        815
+      ],
+      "shot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\pcl2-click-2.png"
+    }
+  ],
+  "terminated": true
+}

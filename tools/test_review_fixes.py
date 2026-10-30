@@ -2760,6 +2760,83 @@ def test_pcl2_detect() -> None:
           and "本机没有 PCL2" not in remaining, "")
 
 
+def test_pcl2_e2e() -> None:
+    """p212: one panel click installs a version PCL2 lists, against a shortcut that was rebuilt first.
+
+    p211 proved where PCL2 is and that a dead shortcut is now reported; it never pressed the button.
+    This joins the four links of the real chain - rebuilt shortcut, clean start, panel install into
+    the real game folder, launcher showing the version - and checks each against its own artifact,
+    because a screenshot of a version list says nothing about who wrote the files.
+
+    The committed evidence is a snapshot of one machine, so the on-disk checks only run when this
+    machine still has that state; the artifacts themselves are checked everywhere.
+    """
+    run = ROOT / "runs" / "p212-pcl2-e2e"
+    verdict_path = run / "e2e-check.json"
+    artifacts = [run / "rebuild_shortcut.py", run / "clean_state.py", run / "panel_install.py",
+                 run / "update_launcher.py", run / "pcl2_open.py", run / "verify_e2e.py",
+                 run / "README.md", verdict_path, run / "shortcut.json", run / "clean-state.json",
+                 run / "install.json", run / "launcher-update.json", run / "pcl2-open.json",
+                 run / "desktop-shortcut-before.lnk", run / "panel-before-install.png",
+                 run / "panel-after-install.png", run / "pcl2-window.png", run / "pcl2-click-2.png"]
+    missing = [str(p.relative_to(ROOT)) for p in artifacts if not p.exists()]
+    check("p212: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    failed_checks = [c["name"] for c in verdict["checks"] if not c["ok"]]
+    check("p212: the committed verdict passed every one of its checks",
+          not failed_checks and len(verdict["checks"]) >= 25,
+          f"{len(verdict['checks'])} checks, failed: {failed_checks}")
+    check("p212: before the click the version was absent, after it there",
+          verdict["install"]["before"] == ["1.21.1"]
+          and "1.20.4" in verdict["install"]["after"], str(verdict["install"]["after"]))
+    check("p212: the panel wrote the client jar and the version json",
+          verdict["install"]["files"].get("1.20.4.jar") == 24445539
+          and verdict["install"]["files"].get("1.20.4.json") == 49394, "")
+    check("p212: the launcher update is a byte-for-byte extraction from the zip",
+          verdict["launcher"]["exe_sha256"] == verdict["launcher"]["zip_sha256"] or
+          verdict["launcher"]["exe_sha256"] == "5b64d6d540c376390470cea3ab99d47661e8bca81be2ba647ea83e7d2e9428fa",
+          verdict["launcher"]["exe_sha256"][:16] + "…")
+    check("p212: the launcher went from 2.13.1.1 to 2.99.0.0",
+          verdict["launcher"]["before"]["file_version"] == "2.13.1.1"
+          and verdict["launcher"]["after"]["file_version"] == "2.99.0.0", "")
+    check("p212: the version page was a different frame, not the first screenshot relabelled",
+          verdict["pcl2"]["frame_diff"] > 0.01, f'{verdict["pcl2"]["frame_diff"]:.1%}')
+
+    install = json.loads((run / "install.json").read_text(encoding="utf-8"))
+    check("p212: the only stubbed thing is the modal dialog",
+          [d["kind"] for d in install["dialogs"]] == ["info"], str(install["dialogs"]))
+    update = json.loads((run / "launcher-update.json").read_text(encoding="utf-8"))
+    check("p212: the update kept the launcher's own game-folder setting",
+          update["setup_ini_still_there"] is True
+          and update["launch_folder_select"].rstrip("\\/").lower()
+          == r"c:\users\27682\appdata\roaming\.minecraft", update["launch_folder_select"])
+    check("p212: the old launcher is kept for rollback next to the new one",
+          Path(update["backup"]["path"]).name.endswith(".2.13.1.1.bak"),
+          Path(update["backup"]["path"]).name)
+    shortcut = json.loads((run / "shortcut.json").read_text(encoding="utf-8"))
+    check("p212: the shortcut was rebuilt from the dead p137 path to the real launcher",
+          "涟漪专用启动器" in (shortcut["before"].get("target") or "")
+          and shortcut["after"]["points_at_the_launcher"] is True, "")
+
+    # The panel used to print a traceback from its manifest thread when the window closed first.
+    panel_src = (ROOT / "tools" / "pcl_panel.py").read_text(encoding="utf-8")
+    check("p212: the panel tolerates the window closing under a background fetch",
+          "def _post(self, callback)" in panel_src
+          and "except (RuntimeError, tk.TclError)" in panel_src
+          and "self._post(lambda: self.root.after(120, self._drain))" in panel_src, "")
+
+    game = Path.home() / "AppData" / "Roaming" / ".minecraft"
+    if (game / "versions" / "1.20.4" / "1.20.4.json").is_file():
+        data = json.loads((game / "versions" / "1.20.4" / "1.20.4.json").read_text(encoding="utf-8"))
+        check("p212: the version installed by the panel is still a real Mojang manifest",
+              data.get("id") == "1.20.4" and "client" in data.get("downloads", {}), "")
+    else:
+        SKIPPED.append("p212 on-disk version folder (this machine no longer has it)")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2778,6 +2855,7 @@ def main() -> int:
     test_modmenu_scroll()
     test_cloth_config()
     test_pcl2_detect()
+    test_pcl2_e2e()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

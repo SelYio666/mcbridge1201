@@ -1,0 +1,92 @@
+{
+  "version": "1.20.4",
+  "dialogs": [
+    {
+      "kind": "info",
+      "title": "完成",
+      "message": "1.20.4 已装好。打开 PCL 刷新版本列表即可。"
+    }
+  ],
+  "manifest_versions": 921,
+  "panel_dir_field": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+  "note_label": "",
+  "before": {
+    "game": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "versions": [
+      "1.21.1"
+    ],
+    "version_dir": null,
+    "version_files": {},
+    "profile_keys": [
+      "PCL"
+    ],
+    "profile_for_version": null,
+    "selected_profile": "PCL",
+    "checked_at": "2026-10-30T18:36:07"
+  },
+  "screenshot_before": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\panel-before-install.png",
+  "busy_after_invoke": true,
+  "seconds": 10.3,
+  "progress": [
+    "准备中…",
+    "manifest 0/0 读取版本清单",
+    "client 0/0 下载客户端 1.20.4",
+    "assets 0/0 下载资源索引",
+    "完成"
+  ],
+  "status": "完成",
+  "log_tail": [
+    "读取版本清单",
+    "下载客户端 1.20.4",
+    "下载库与 natives",
+    "下载资源索引",
+    "200 个已通过校验",
+    "400 个已通过校验",
+    "600 个已通过校验",
+    "800 个已通过校验",
+    "1000 个已通过校验",
+    "1200 个已通过校验",
+    "1400 个已通过校验",
+    "1600 个已通过校验",
+    "1800 个已通过校验",
+    "2000 个已通过校验",
+    "2200 个已通过校验",
+    "2400 个已通过校验",
+    "2600 个已通过校验",
+    "2800 个已通过校验",
+    "3000 个已通过校验",
+    "3200 个已通过校验",
+    "3400 个已通过校验",
+    "3600 个已通过校验",
+    "3788 个已通过校验",
+    "下载完成",
+    "完成：1.20.4 已写入 C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+  ],
+  "after": {
+    "game": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "versions": [
+      "1.20.4",
+      "1.21.1"
+    ],
+    "version_dir": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\versions\\1.20.4",
+    "version_files": {
+      "1.20.4.jar": 24445539,
+      "1.20.4.json": 49394
+    },
+    "profile_keys": [
+      "PCL",
+      "mcbridge-1.20.4"
+    ],
+    "profile_for_version": {
+      "name": "1.20.4 (mcbridge)",
+      "type": "custom",
+      "created": "2026-10-30T10:36:18.000Z",
+      "lastVersionId": "1.20.4",
+      "gameDir": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft"
+    },
+    "selected_profile": "PCL",
+    "checked_at": "2026-10-30T18:36:18"
+  },
+  "install_ok": true,
+  "screenshot_after": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p212-pcl2-e2e\\panel-after-install.png"
+}

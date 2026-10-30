@@ -86,12 +86,27 @@ class Panel:
         self.root.after(100, self._drain)
 
     # ---------- versions ----------
+    def _post(self, callback) -> None:
+        """Schedule a UI callback, tolerating a window that was closed while a fetch ran.
+
+        `root.after` raises RuntimeError ("main thread is not in main loop") once the Tk root is
+        gone, and the manifest fetch is a background thread - closing the panel while it is in
+        flight used to print a traceback from that thread (seen in runs/p212-pcl2-e2e). Losing a
+        progress line is fine; a crash-on-exit is not.
+        """
+        try:
+            self.root.after(0, callback)
+        except (RuntimeError, tk.TclError):
+            pass
+
     def _load_versions(self) -> None:
         try:
-            self._all = list(fs.manifest()["versions"])
-            self.root.after(0, self._reload_versions)
+            versions = list(fs.manifest()["versions"])
         except Exception as exc:  # noqa: BLE001
-            self.root.after(0, lambda: self._write(f"版本清单加载失败: {exc}\n"))
+            self._post(lambda: self._write(f"版本清单加载失败: {exc}\n"))
+            return
+        self._all = versions
+        self._post(self._reload_versions)
 
     def _kind(self) -> str:
         return {"正式版": "release", "快照": "snapshot", "全部": "all"}[self.type_var.get()]
@@ -203,7 +218,7 @@ class Panel:
                     messagebox.showerror("失败", item[1])
         except queue.Empty:
             pass
-        self.root.after(120, self._drain)
+        self._post(lambda: self.root.after(120, self._drain))
 
 
 def main() -> None:

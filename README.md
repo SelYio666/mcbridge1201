@@ -52,7 +52,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 第三样本 trashslot | 原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥，**专用服务端 BOOTED**（`Done (4.655s)`）；三个包 codec（含 5 钻石）往返通过；clientbound receiver 后续已在客户端执行（p29/p64） | `runs/p15-trashslot/`、`runs/p16-balm/`、`runs/p17-balm-net/`、`runs/p29-client-receiver/`、`runs/p32-trashslot-codec/`、`runs/p33-all-packets/`、`rules/fabric-1.21.1/trashslot.json` |
 | 客户端首次运行（PCL） | 1.21.1 Fabric 客户端已装，五模组加载；RL 网络/Balm 客户端初始化/ironchests 模型桥后**到达主菜单**；Balm writer + lithium `VarInt` 桥后**进入单人世界并渲染**；背包 + TrashSlot 按钮已渲染、5 钻石可进背包；trash **移入/取回/clientbound/empty 均通过**（`p63`/`p64`/`p65`）；IronChests **模型 + 同步 NBT + 箱子 GUI（真实九宫格背景）+ 取放交互 + 关箱持久化/S2C** 均通过（`p66`–`p72`），修复流水线已入仓（`p71`）；lithium 玩法冒烟通过（`p73`，非完整评估）；双客户端 **服务端→客户端内容同步 + 访客取走→主机可见的往返均通过**（`p75`/`p76`；LAN 尝试的认证墙见 `p74`）；**双端关屏通过**（`p77`；`Screen.close()`，服务端菜单回落到 46 格）；**同箱双客户端操作总数守恒、无复制**（`p78`）；**同 tick 并发点击服务端只给一人、不复制**（`p79`/`p80`，干净重跑确认输家被纠正）；物理 ESC **通过**（`p83`；传送+新方块后按 ESC，双端回落 46 格；早前失败见 `p81`/`p82`）；lithium TPS 采样 20.03（`p84`，289 区块/60 秒）；empty-trash 真实 Delete 键已通过（`p183`；`p85`/`p86` 的按键失败根因是注入漏 `KEYEVENTF_EXTENDEDKEY`，provider 级见 `p65`）；Shift+Delete 跨槽删除（两叠 5+3）通过（`p184`）；空 cursor 右键取 1 留 4 通过（`p185`）；扩模 6 个样本：5 阻断 / 1 仅启动（`p88`，见 [mod-expansion](docs/mod-expansion.md)） | `runs/p50-client/`、`runs/p51-client-bridge/`、`runs/p52-client-balm/`、`runs/p53-client-world/`、`runs/p54-client-lithium/`、`runs/p55-client-gui/`、`runs/p56-client-item/`、`runs/p57-trash-persist/`、`runs/p58-trash-click/`、`runs/p59-trash-send/`、`runs/p60-trash-return/`、`runs/p61-trash-clean-return/`、`runs/p63-trash-debug/`、`runs/p64-trash-s2c/`、`runs/p65-trash-empty/`、`runs/p66-ironchests-gui/`、`runs/p67-ironchests-gui-nbt/`、`runs/p68-ironchests-gui/`、`runs/p69-ironchests-interaction/`、`runs/p70-ironchests-persist/`、`runs/p71-rebuild-pipeline/`、`runs/p72-ironchests-nine-slice/`、`runs/p73-lithium-play/`、`runs/p74-two-client/`、`runs/p75-two-client-server/`、`runs/p76-two-client-move/`、`runs/p77-two-client-close/`、`runs/p78-two-client-race/`、`runs/p79-two-client-simultaneous/`、`runs/p80-two-client-clean/`、`runs/p81-esc-key/`、`runs/p82-esc-onuse/`、`runs/p83-esc-teleport/`、`runs/p84-lithium-tps/`、`runs/p85-empty-key/`、`runs/p86-empty-hover/`、`runs/p87-independent-test/`、`runs/p88-mod-expansion/`、`runs/p183-trash-key/`、`runs/p184-trash-delete-all/`、`runs/p185-trash-undelete-right/`、[docs/mod-expansion](docs/mod-expansion.md)、[remaining-work](docs/remaining-work.md) |
 | **ShulkerBoxTooltip 网格预览（部分）** | p186：client-side `ContainerComponent` + `ComponentPreviewProvider` + grid renderer 的 t2/t4 桥，tooltip 出现预览框与 `Diamond ×5`；网格 item icon 仍缺、真实 server item 仍空 | `runs/p186-shulker-grid-client-item/` |
-| **一键安装到 PCL（v0.5.5）** | 图形面板 `mcbridge-pcl-panel.zip` + 免 Python `mcbridge-pcl-setup.zip`；版本下拉/搜索/进度/PCL2 自动检测；`from_source_install` 支持 release/snapshot/old_* / all / latest-snapshot；PCL2 2.13.1.1 实测 | `share/pcl-onclick/`、`runs/p137-pcl2-onclick/` |
+| **一键安装到 PCL（v0.5.5）** | 图形面板 `mcbridge-pcl-panel.zip` + 免 Python `mcbridge-pcl-setup.zip`；版本下拉/搜索/进度/PCL2 自动检测；`from_source_install` 支持 release/snapshot/old_* / all / latest-snapshot；**p212：面板真点一次安装 → PCL2 2.99.0.0 的「版本选择」里出现 1.20.4**（快捷方式已重建、检测不再是 `%APPDATA%` 兜底） | `share/pcl-onclick/`、`runs/p137-pcl2-onclick/`、`runs/p212-pcl2-e2e/` |
 | **Cloth Config 配置界面（p210）** | AppleSkin 的 1.20.1 JiJ `cloth-config-fabric-11.1.136` 在 1.21.1 上**能开、能画 13 行、点得动**：`rows=13 kinds={BooleanToggleBuilder$1=9, …}`、`client_errors=[]`，真实点击把第一条开关由 ON 翻成 OFF；6 处装饰降级为 no-op，`GlobalizedClothConfigScreen` 未覆盖 | `runs/p210-cloth-config/`、`rules/fabric-1.21.1/cloth-config.json`、`rules/fabric-1.21.1/cloth-config-render.json` |
 
 ## 交接
@@ -375,3 +375,26 @@ AppleSkin 的配置界面是 **1.20.1 的 Cloth Config 11.1.136**（jar-in-jar�
 - **判据**：`runs/p210-cloth-config/verify_cloth.py` 31/31（同时读 `before/` 与 `after3/`，两边的
   sha256 都与 `result.json` 和现场 jar 比对）；`test_review_fixes` 新增 `test_cloth_config()`。
 - 边界：单机、1280×720、guiScale 2；只点第一条布尔开关，其余开关/文本框/浮点列表未交互；跨机器未做。
+
+## p212 PCL 面板真装一次 + 启动器更到 2.99.0.0（2026-10-30，正常 UTF-8）
+
+p211 查清了 PCL2 在哪、失效快捷方式不再静默；这一轮**真的按了那个按钮**，并把启动器换成快照版。
+
+- **快捷方式重建**：桌面 `Plain Craft Launcher 2.lnk` 原来指向已删除的
+  `D:\我的世界\.minecraft\涟漪专用启动器\…`，改指真实启动器后，`pcl2_from_desktop()` 首次**沿快捷方式**
+  解析出游戏目录（p211 时它返回 `None`，靠 `%APPDATA%` 兜底）。旧 `.lnk` 字节留档。
+- **面板真点**：先删掉上一轮装出来的 1.20.4 与 profile（`clean-state.json`），再调面板按钮的 command
+  （`install_btn.invoke()`，与点击同一条路径）。10.3 s：`versions ['1.21.1'] → ['1.20.4','1.21.1']`，
+  `1.20.4.jar` 24,445,539 B（sha1 与官方 manifest 一致）、`1.20.4.json` 49,394 B，`launcher_profiles.json`
+  新增 `1.20.4 (mcbridge)`。**唯一的替身是模态弹窗**（`showinfo`→记录函数，`open_var` 关掉）。
+- **启动器更新**：`PCL 快照版 2.99.0.0.zip` 只有一个 exe，原地覆盖 2.13.1.1 → 2.99.0.0
+  （解出的 exe 与 zip 成员 sha256 逐字节相同，旧 exe 留 `.2.13.1.1.bak`，`PCL\Setup.ini` 未动）。
+- **看得到**：启动 2.99.0.0 → 更新日志 →「版本选择」页 **常规版本 (2)：1.21.1 / 1.20.4**
+  （`runs/p212-pcl2-e2e/pcl2-click-2.png`，与首帧差 26% 像素，说明是另一个页面而非同一帧）。
+- **两个发现**：PCL 2.99.0.0 的更新日志写明**不再提供 MC 下载**，所以"用 PCL 装版本"这条路在新启动器上
+  没了，本仓库的安装器更关键；PCL2 是**单实例**，已有实例在跑时新进程立刻退出，截图脚本必须先杀旧实例。
+- **顺手修的真缺陷**：面板的 manifest 线程在窗口销毁后仍 `root.after`，会在线程里抛
+  `RuntimeError: main thread is not in main loop`；新增 `_post()` 兜住 `RuntimeError`/`TclError`。
+- **判据**：`runs/p212-pcl2-e2e/verify_e2e.py` 29/29；回归新增 `test_pcl2_e2e()`（13 条）。
+- 边界：没有从 PCL2 点「启动游戏」进世界（要账号/GPU 会话），没有重跑 1.21.1 启动回归；写进真机的东西
+  见 `runs/p212-pcl2-e2e/README.md`（版本目录、profile、1.20.4 的 asset 对象、exe 替换）。
