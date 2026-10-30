@@ -236,6 +236,24 @@ def main() -> int:
             entry["activation"] = activate(hwnd)
             entry["sent"] = drv._click(x, y)
             time.sleep(1.2)
+        elif kind in ("click-win", "move-win"):
+            # Window-relative variant: absolute launcher coordinates break as soon as the
+            # window moved between runs (p215 hit exactly that).
+            x, y = (int(v) for v in value.split(","))
+            if not hwnd:
+                entry["error"] = "no launcher window"
+            else:
+                entry["activation"] = activate(hwnd)
+                time.sleep(0.6)
+                rect = rect_of(hwnd)
+                entry["rect"] = rect
+                entry["window_at"] = [x, y]
+                entry["screen_at"] = [rect[0] + x, rect[1] + y]
+                if kind == "click-win":
+                    entry["sent"] = drv._click(rect[0] + x, rect[1] + y)
+                else:
+                    hover(rect[0] + x, rect[1] + y)
+                time.sleep(1.2 if kind == "click-win" else 0.8)
         elif kind == "sleep":
             time.sleep(float(value))
         elif kind == "shot":

@@ -1,0 +1,99 @@
+{
+  "exe": "D:\\浏览器所下载文件\\我的世界PCL2启动器_2.12.8.2\\plain craft launcher 2.exe",
+  "version": "1.20.4",
+  "steps": [
+    "click-game:594,428",
+    "sleep:1",
+    "click-game:594,428",
+    "sleep:3",
+    "shot-game:create-before2"
+  ],
+  "actions": [
+    {
+      "step": "click-game:594,428",
+      "at": "22:29:35",
+      "activation": {
+        "attempts": 1,
+        "foreground": true
+      },
+      "rect": [
+        525,
+        329,
+        1395,
+        848
+      ],
+      "screen_at": [
+        1119,
+        757
+      ],
+      "sent": 3
+    },
+    {
+      "step": "sleep:1",
+      "at": "22:29:38"
+    },
+    {
+      "step": "click-game:594,428",
+      "at": "22:29:39",
+      "activation": {
+        "attempts": 1,
+        "foreground": true
+      },
+      "rect": [
+        525,
+        329,
+        1395,
+        848
+      ],
+      "screen_at": [
+        1119,
+        757
+      ],
+      "sent": 3
+    },
+    {
+      "step": "sleep:3",
+      "at": "22:29:41"
+    },
+    {
+      "step": "shot-game:create-before2",
+      "at": "22:29:44",
+      "saved": true
+    }
+  ],
+  "shots": [
+    "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p215-pcl2-create-button\\redo\\create-before2.png"
+  ],
+  "attached": true,
+  "launcher_window": null,
+  "attached_game_title": "Minecraft 1.20.4 - 单人游戏",
+  "attached_game_rect": [
+    525,
+    329,
+    1395,
+    848
+  ],
+  "markers": {
+    "exists": true,
+    "path": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft\\versions\\1.20.4\\logs\\latest.log",
+    "bytes": 6935,
+    "setting_user": [
+      "[22:28:10] [Render thread/INFO]: Setting user: SelYio"
+    ],
+    "title_screen": [
+      "[22:28:22] [Render thread/INFO]: Sound engine started"
+    ],
+    "world": [
+      "[22:29:13] [Render thread/INFO]: Time elapsed: 2678 ms"
+    ],
+    "crashed": [],
+    "tail": [
+      "[22:29:13] [Render thread/INFO]: Time elapsed: 2678 ms",
+      "[22:29:13] [Server thread/INFO]: Changing view distance to 12, from 10",
+      "[22:29:13] [Server thread/INFO]: Changing simulation distance to 12, from 0",
+      "[22:29:13] [Server thread/INFO]: SelYio[local:E:b9f1ea98] logged in with entity id 104 at (0.0, 0.0, 0.0)",
+      "[22:29:13] [Server thread/INFO]: SelYio��������Ϸ",
+      "[22:29:14] [Render thread/INFO]: Loaded 2 advancements"
+    ]
+  }
+}
