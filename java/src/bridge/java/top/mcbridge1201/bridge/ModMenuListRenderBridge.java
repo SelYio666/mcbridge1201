@@ -56,11 +56,14 @@ import net.minecraft.class_332;
 public final class ModMenuListRenderBridge {
     /** Off by default: the bridge is shipped in release jars and must not chatter. */
     private static final boolean DEBUG = Boolean.getBoolean("mcbridge.listrender.debug");
-    /** Entry count last reported per list class: the description panel starts empty and fills in
-     * when a mod is selected, so its line has to be printed again on the change, not once. */
-    private static final java.util.Map<String, Integer> LAST_COUNT = new java.util.HashMap<>();
+    /** Count/scroll/max last reported per list class: the description panel starts empty and fills
+     * in when a mod is selected, and a wheel notch changes the scroll without changing the count,
+     * so the line has to be reprinted on either change - not once, and not every frame. */
+    private static final java.util.Map<String, String> LAST_COUNT = new java.util.HashMap<>();
     private static final java.util.Set<String> HIGHLIGHT_ANNOUNCED = new java.util.HashSet<>();
     private static final java.util.Set<String> PANEL_ANNOUNCED = new java.util.HashSet<>();
+    /** Last scroll/max pair per list class, so a wheel notch is reported as a new line. */
+    private static final java.util.Map<String, String> LAST_SCROLL_STATE = new java.util.HashMap<>();
     /** Last selected row per list class, so a click can be reported once instead of every frame. */
     private static final java.util.Map<String, Integer> LAST_SELECTED = new java.util.HashMap<>();
     private static final int SELECTED_FOCUSED = 0xFFFFFFFF;
@@ -141,18 +144,29 @@ public final class ModMenuListRenderBridge {
         Object hovered = invoke(type, list, "method_25308", (double) mouseX, (double) mouseY);
         boolean focused = (boolean) invoke(type, list, "method_25370");
         int rowHeight = Math.max(1, itemHeight - 4);
-        Integer previousCount = DEBUG ? LAST_COUNT.put(type.getName(), count) : null;
-        if (DEBUG && (previousCount == null || previousCount != count)) {
-            System.out.println("P205_LIST class=" + type.getSimpleName() + " count=" + count
-                    + " left=" + left + " rowWidth=" + rowWidth
-                    + " itemHeight=" + itemHeight + " rows=" + widgetTop + ".." + widgetBottom
-                    + " mouse=" + mouseX + "," + mouseY
-                    + " focused=" + focused
-                    + " box=" + boxLeft + "," + widgetTop + "," + (boxRight - boxLeft)
-                    + "," + (widgetBottom - widgetTop)
-                    + " legacy=" + legacy + " getX=" + (int) invoke(type, list, "method_46426")
-                    + " firstEntry=" + (count > 0
-                    ? invoke(type, list, "method_25326", 0).getClass().getName() : "none"));
+        // The scroll pair belongs in this line, not only in the panel's own line: the mod list and
+        // the description panel are both EntryListWidgets, and the probe in runs/p204-wheel-input
+        // reports whichever of them has the larger maxScroll - so once a long description is
+        // selected, "did the mod list move?" has no other source (runs/p209-description-scroll/).
+        // Behind the DEBUG gate like every other read that exists only for the line: two reflective
+        // lookups per widget per frame is not something a release jar should pay for.
+        if (DEBUG) {
+            double scroll = (double) invoke(type, list, "method_25341");
+            int maxScroll = (int) invoke(type, list, "method_25331");
+            String lineKey = count + ":" + scroll + ":" + maxScroll;
+            if (!lineKey.equals(LAST_COUNT.put(type.getName(), lineKey))) {
+                System.out.println("P205_LIST class=" + type.getSimpleName() + " count=" + count
+                        + " left=" + left + " rowWidth=" + rowWidth
+                        + " itemHeight=" + itemHeight + " rows=" + widgetTop + ".." + widgetBottom
+                        + " mouse=" + mouseX + "," + mouseY
+                        + " focused=" + focused
+                        + " box=" + boxLeft + "," + widgetTop + "," + (boxRight - boxLeft)
+                        + "," + (widgetBottom - widgetTop)
+                        + " legacy=" + legacy + " getX=" + (int) invoke(type, list, "method_46426")
+                        + " scroll=" + scroll + " max=" + maxScroll
+                        + " firstEntry=" + (count > 0
+                        ? invoke(type, list, "method_25326", 0).getClass().getName() : "none"));
+            }
         }
         if (panel) {
             context.method_25294(boxLeft, widgetTop, boxRight, widgetBottom, PANEL_BACKDROP);
@@ -242,23 +256,30 @@ public final class ModMenuListRenderBridge {
         double scroll = (double) invoke(type, list, "method_25341");
         int maxScroll = (int) invoke(type, list, "method_25331");
         int viewHeight = widgetBottom - widgetTop;
-        if (maxScroll <= 0 || viewHeight < 12) {
-            return;
-        }
         int trackTop = widgetTop + 2;
         int trackHeight = viewHeight - 4;
-        double visible = trackHeight / (double) (trackHeight + maxScroll);
-        int thumbHeight = Math.max(16, (int) Math.round(trackHeight * visible));
-        double ratio = Math.min(1.0, Math.max(0.0, scroll / (double) maxScroll));
-        int thumbTop = trackTop + (int) Math.round((trackHeight - thumbHeight) * ratio);
-        int x2 = boxRight - 2;
-        int x1 = Math.max(boxLeft + 2, x2 - 6);
-        context.method_25294(x1, trackTop, x2, trackTop + trackHeight, SCROLL_TRACK);
-        context.method_25294(x1, thumbTop, x2, thumbTop + thumbHeight, SCROLL_THUMB);
-        if (DEBUG) {
+        boolean drawn = maxScroll > 0 && viewHeight >= 12;
+        int thumbTop = -1;
+        int thumbHeight = 0;
+        if (drawn) {
+            double visible = trackHeight / (double) (trackHeight + maxScroll);
+            thumbHeight = Math.max(16, (int) Math.round(trackHeight * visible));
+            double ratio = Math.min(1.0, Math.max(0.0, scroll / (double) maxScroll));
+            thumbTop = trackTop + (int) Math.round((trackHeight - thumbHeight) * ratio);
+            int x2 = boxRight - 2;
+            int x1 = Math.max(boxLeft + 2, x2 - 6);
+            context.method_25294(x1, trackTop, x2, trackTop + trackHeight, SCROLL_TRACK);
+            context.method_25294(x1, thumbTop, x2, thumbTop + thumbHeight, SCROLL_THUMB);
+        }
+        // Reported on the change, not once and not every frame: "there is nothing to scroll" is a
+        // result worth recording (p207 shipped without ever reaching the drawing branch), and a
+        // wheel notch has to show up as a new line or it cannot be told from a stale one.
+        String state = scroll + ":" + maxScroll + ":" + drawn;
+        if (DEBUG && !state.equals(LAST_SCROLL_STATE.put(type.getName(), state))) {
             System.out.println("P207_SCROLL class=" + type.getSimpleName()
-                    + " scroll=" + scroll + " max=" + maxScroll
-                    + " thumb=" + thumbTop + "+" + thumbHeight + " x=" + x1 + ".." + x2);
+                    + " scroll=" + scroll + " max=" + maxScroll + " view=" + viewHeight
+                    + " drawn=" + drawn
+                    + " thumb=" + (drawn ? thumbTop + "+" + thumbHeight : "none"));
         }
     }
 

@@ -150,6 +150,9 @@ PASS fix_panel_ink_dominates_the_control             2920 vs 204
 `drawScrollBar()` 第一行就返回了。`verify_description.py` 把它如实打印成
 "scrollbar not drawn in this run (maxScroll=0: no description long enough to scroll)"，
 `description-check.json` 里 `scrollbar_lines` 是空数组——它**没有被算成一条通过的检查**。
+这一段在 p209 补上了：把窗口压到 800 px 宽，同一段文字换行变多，面板就必须滚；那里还发现原来那行
+调试输出分不清"不需要滚"和"根本没跑到"，于是在 p209 里改成状态变化就打一次。
+见 `runs/p209-description-scroll/`。
 
 ## 复现
 

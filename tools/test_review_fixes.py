@@ -2289,7 +2289,10 @@ def test_modmenu_description() -> None:
           in bridge_code,
           "")
     check("p207: the scrollbar only draws when there is something to scroll",
-          "maxScroll <= 0 || viewHeight < 12" in bridge_code
+          # p209 moved this guard into a named flag so the "nothing to scroll" case could be
+          # reported instead of returning silently; the condition itself is unchanged.
+          ("maxScroll <= 0 || viewHeight < 12" in bridge_code
+           or "boolean drawn = maxScroll > 0 && viewHeight >= 12" in bridge_code)
           and "method_25331" in bridge_code and "P207_SCROLL" in bridge_code, "")
     check("p207: every debug line is still behind -Dmcbridge.listrender.debug",
           bridge_code.count("System.out") == bridge_code.count("if (DEBUG")
@@ -2356,6 +2359,135 @@ def test_modmenu_description() -> None:
           and "has no tombstone reference" in (run / "build.py").read_text(encoding="utf-8"), "")
 
 
+def test_modmenu_scroll() -> None:
+    """p209: the scrollbar branch finally runs, and a real wheel drives the description panel.
+
+    p207 recorded "scrollbar not drawn in this run (maxScroll=0)" and left the drawing code
+    unexercised. This guards both halves of closing that gap:
+
+    * a narrower window makes the same text wrap until the panel scrolls, so the branch runs;
+    * the wheel moves the panel when it is over the panel and the mod list when it is over the mod
+      list - measured in one run, in both directions, because "the wheel goes to what is under the
+      cursor" cannot be shown by one direction.
+
+    The control is the p207 jar at the same window size: it scrolls too (so p209 adds no behaviour),
+    but its debug line cannot say when it did *not* scroll, which is what the new fields fix.
+    """
+    run = ROOT / "runs" / "p209-description-scroll"
+    bridge = (ROOT / "java" / "src" / "bridge" / "java" / "top" / "mcbridge1201" / "bridge"
+              / "ModMenuListRenderBridge.java")
+    verdict_path = run / "scroll-check.json"
+    missing = [str(p) for p in (bridge, verdict_path, run / "build.log", run / "run.py",
+                                run / "verify_scroll.py") if not p.exists()]
+    check("p209: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    bridge_code = re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", bridge.read_text(encoding="utf-8"),
+                                                 flags=re.S))
+    check("p209: the scrollbar decision is a named flag, not an early return",
+          "boolean drawn = maxScroll > 0 && viewHeight >= 12" in bridge_code
+          and "if (drawn) {" in bridge_code, "")
+    check("p209: the scroll line reports the case where nothing scrolls",
+          'String state = scroll + ":" + maxScroll + ":" + drawn' in bridge_code
+          and "LAST_SCROLL_STATE" in bridge_code and '" drawn=" + drawn' in bridge_code, "")
+    check("p209: the mod list line reports its own scroll, so the wheel routing is measurable",
+          '" scroll=" + scroll + " max=" + maxScroll' in bridge_code
+          and 'method_25331' in bridge_code, "")
+    check("p209: the extra reflective reads are behind the debug gate",
+          re.search(r"if \(DEBUG\) \{\s*double scroll = \(double\) invoke\(type, list, "
+                    r"\"method_25341\"\)", bridge_code) is not None, "")
+    check("p209: every debug line is still behind -Dmcbridge.listrender.debug",
+          bridge_code.count("System.out") == bridge_code.count("if (DEBUG")
+          and 'Boolean.getBoolean("mcbridge.listrender.debug")' in bridge_code,
+          f'{bridge_code.count("System.out")} prints vs {bridge_code.count("if (DEBUG")} guards')
+
+    build_log = (run / "build.log").read_text(encoding="utf-8", errors="replace")
+    check("p209: the build swapped exactly one class and said so",
+          "DIFF changed=top/mcbridge1201/bridge/ModMenuListRenderBridge.class added=none "
+          "removed=none" in build_log, "")
+
+    report = json.loads(verdict_path.read_text(encoding="utf-8"))
+    check("p209: the committed verdict passed every one of its checks",
+          all(c["ok"] for c in report["checks"]) and len(report["checks"]) >= 23,
+          str([c["name"] for c in report["checks"] if not c["ok"]]))
+    check("p209: the jar differs from the p207 one only in the bridge",
+          report["changed_entries"] == ["top/mcbridge1201/bridge/ModMenuListRenderBridge.class"],
+          str(report["changed_entries"]))
+
+    # --- the control (p207 jar, same window, same notches) --------------------------------------
+    control = report["control"]
+    c_scan = {e["row"]: e for e in control["scan"]}
+    check("p209: the p207 jar scrolls the panel too, so this is evidence and not new behaviour",
+          control["before"]["desc"]["scroll"] == 0.0
+          and control["after_panel_wheel"]["desc"]["scroll"] > 0,
+          f'{control["before"]["desc"]["scroll"]} -> '
+          f'{control["after_panel_wheel"]["desc"]["scroll"]}')
+    check("p209: the p207 line reports the previous row's max after an empty selection",
+          c_scan[6]["description_count"] == 0 and c_scan[6]["max"] == c_scan[5]["max"] == 568,
+          f'row6 count={c_scan[6]["description_count"]} max={c_scan[6]["max"]} '
+          f'row5 max={c_scan[5]["max"]}')
+
+    # --- the run ----------------------------------------------------------------------------
+    fix = report["fix"]
+    scan = {e["row"]: e for e in fix["scan"]}
+    check("p209: exactly one of the seven visible rows needs to scroll",
+          [r for r, e in scan.items() if e["drawn"]] == [5]
+          and fix["chosen"]["max"] > 0 and fix["chosen"]["description_count"] >= 50,
+          f'row5 max={scan[5]["max"]} rows={scan[5]["description_count"]}')
+    check("p209: the empty row now says max=0 instead of repeating the previous line",
+          scan[6]["max"] == 0 and scan[6]["drawn"] is False, str(scan[6]))
+    check("p209: the wheel over the panel moves the panel and not the mod list",
+          fix["after_panel_wheel"]["desc"]["scroll"] > fix["before"]["desc"]["scroll"]
+          and fix["after_panel_wheel"]["mod"]["scroll"] == fix["before"]["mod"]["scroll"],
+          f'panel {fix["before"]["desc"]["scroll"]} -> '
+          f'{fix["after_panel_wheel"]["desc"]["scroll"]}, '
+          f'list {fix["before"]["mod"]["scroll"]} -> {fix["after_panel_wheel"]["mod"]["scroll"]}')
+    check("p209: the same wheel over the mod list moves the mod list and not the panel",
+          fix["after_mod_wheel"]["mod"]["scroll"] > 0
+          and fix["after_mod_wheel"]["desc"]["scroll"] == fix["after_panel_wheel"]["desc"]["scroll"],
+          f'list {fix["after_mod_wheel"]["mod"]["scroll"]}, '
+          f'panel {fix["after_mod_wheel"]["desc"]["scroll"]}')
+
+    # --- pixels ---------------------------------------------------------------------------------
+    thumb_before, thumb_after = fix["thumb_before"], fix["thumb_after"]
+    check("p209: the pixels show one thumb at the panel edge, and it moved down",
+          len(thumb_before) == 1 and len(thumb_after) == 1
+          and thumb_after[0][0] > thumb_before[0][0],
+          f"{thumb_before} -> {thumb_after}")
+    check("p209: the thumb is the height the formula predicts",
+          abs((thumb_before[0][1] - thumb_before[0][0] + 1) - 116) <= 4,
+          str(thumb_before))
+    check("p209: the text moved up by the scroll amount",
+          fix["shift"]["best_dy"] < 0
+          and abs(fix["shift"]["best_dy"] + 2 * (fix["after_panel_wheel"]["desc"]["scroll"]
+                                                - fix["before"]["desc"]["scroll"])) <= 4,
+          f'{fix["shift"]["best_dy"]} vs '
+          f'{fix["after_panel_wheel"]["desc"]["scroll"] - fix["before"]["desc"]["scroll"]}')
+    check("p209: the same measurement on the control run moves by its own scroll amount",
+          control["shift"]["best_dy"] < 0
+          and abs(control["shift"]["best_dy"] + 2 * (control["after_panel_wheel"]["desc"]["scroll"]
+                                                     - control["before"]["desc"]["scroll"])) <= 4,
+          f'{control["shift"]["best_dy"]}')
+
+    # --- the traps this run had to document ----------------------------------------------------
+    check("p209: the result records that the probe's target switches between the two lists",
+          fix["probe_state_targets"] == [11, 78], str(fix["probe_state_targets"]))
+    runner = (run / "run.py").read_text(encoding="utf-8")
+    check("p209: the harness explains the probe's findList trap where it matters",
+          "findList` picks" in runner or "picks the EntryListWidget with the largest `maxScroll`"
+          in runner, "")
+    check("p209: the harness re-clicks the chosen row before wheeling",
+          "RESELECT" in runner and "reselected" in runner, "")
+    verifier = (run / "verify_scroll.py").read_text(encoding="utf-8")
+    check("p209: the verdict computes the thumb travel from its ratio, not 1:1",
+          "travel = track - predicted" in verifier and "travel * (scroll_delta / max_scroll)"
+          in verifier, "")
+    check("p207: the README points at p209 for the scrollbar it never exercised",
+          "runs/p209-description-scroll" in (ROOT / "runs" / "p207-description-panel"
+                                            / "README.md").read_text(encoding="utf-8"), "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2371,6 +2503,7 @@ def main() -> int:
     test_modmenu_rows()
     test_modmenu_selection()
     test_modmenu_description()
+    test_modmenu_scroll()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

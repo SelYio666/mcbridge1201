@@ -1,0 +1,6 @@
+COMPILE C:\Users\27682\Documents\新建文件夹\.toolchain\jdk\bin\javac.exe -nowarn -proc:none -encoding UTF-8 -J-Duser.language=en -J-Dfile.encoding=UTF-8 -cp C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\cb\data\jars\client-1.21.1-intermediary.jar -d C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p209-bridges C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\src\bridge\java\top\mcbridge1201\bridge\ModMenuListRenderBridge.java
+COMPILED ModMenuListRenderBridge.class sha256=ac5176ae24a6f971e0ff34b236071882bb05eef94a6302edc2832464072190bc size=9724
+BASE     top/mcbridge1201/bridge/ModMenuListRenderBridge from modmenu-description.jar sha256=eeb9f2edfb4db4c386a5de5b043f981ac6d04bc62af2f08579376c14f7eae750 size=9275
+INJECT C:\Users\27682\AppData\Local\Programs\Python\Python312\python.exe C:\Users\27682\Documents\新建文件夹\mcbridge1201\tools\inject_bridges.py --jar C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\modmenu-description.jar --out C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\modmenu-scroll.jar --classes C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p209-bridges --replace top/mcbridge1201/bridge/ModMenuListRenderBridge
+DIFF changed=top/mcbridge1201/bridge/ModMenuListRenderBridge.class added=none removed=none
+OUT modmenu-scroll.jar sha256=01019f6a8b47a324187bece6472a54b06659afb6d52ff83ab394e6cb6dba0c3b size=682967

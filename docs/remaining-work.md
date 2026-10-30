@@ -187,8 +187,17 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   cuts raise instead of shipping a `VerifyError`. Two side findings, both fixed: the panel was
   drawn at x=0 because `setLeftPos` never reached `ClickableWidget.x` (so clicks and wheel over the
   panel went to the mod list), and the panel now paints one backdrop instead of a band per row.
-  Still degraded: the flat panel backdrop and the flat scrollbar replace textured sprites, and the
-  scrollbar branch was never exercised in that run (`maxScroll=0`).
+  Still degraded: the flat panel backdrop and the flat scrollbar replace textured sprites.
+  **The scrollbar branch is exercised now (p209, `runs/p209-description-scroll/`)**: at 800 px wide the
+  same text wraps until one mod's description needs scrolling (78 rows, maxScroll 568), the wheel over
+  the panel moves the panel and leaves the mod list alone, and the same notches over the mod list do
+  the opposite. The drawn thumb is 116 device px tall, which is what `max(16, round(track*visible))`
+  predicts, and the text shifts up by exactly the scroll amount. Two measurement traps came out of
+  it: the p207 debug line printed only after drawing, so "nothing to scroll" and "never reached" were
+  indistinguishable (fixed: it now reports on change with `drawn=`), and the p204 probe's `findList`
+  picks the EntryListWidget with the largest maxScroll, so it silently switches from the mod list to
+  the panel once a long description is selected (the mod list's scroll is now read from the bridge).
+  Still untested there: trackpads and sub-notch scrolling, Shift-wheel, and rows below the fold.
   Real wheel and keyboard input now work (`runs/p204-wheel-input/`, closing p104): nine OS wheel
   notches over the list stepped the scroll 18/36/54/72/90/108/126/144 and clamped at max 147,
   each notch showing up as one `dy=-1.0` at `Mouse.onMouseScroll`; a wheel outside the window

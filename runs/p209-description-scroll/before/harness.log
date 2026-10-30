@@ -1,0 +1,22 @@
+JVMFLAG -Dmcbridge.listrender.debug=true
+WINDOW requested=800x720
+MODMENU C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\modmenu-description.jar sha256=6a6a14eae22099ab53160567987e3ece83a264f98296d74b05f777b16f16321a size=682775
+mods: fabric-api.jar, modmenu.jar, balm.jar, shulker-patched2.jar, sbtpreview.jar, appleskin-patched.jar, ironchests-final.jar, lithium-final.jar, trashslot-client-final.jar, fallingtree-patched.jar, p204probe.jar
+CLIENTAREA origin=(560,240) size=800x720 hwnd=461784 scale=2.0
+RAISE attempt=1 cursor=(960,600) underIsGame=True
+SCAN rows=[0, 1, 2, 3, 4, 5, 6] listTop=67 listHeight=257 itemHeight=36
+SCAN row=0 desc_count=11 max=None drawn=None thumb=None
+SCAN row=1 desc_count=11 max=None drawn=None thumb=None
+SCAN row=2 desc_count=10 max=None drawn=None thumb=None
+SCAN row=3 desc_count=15 max=None drawn=None thumb=None
+SCAN row=4 desc_count=6 max=None drawn=None thumb=None
+SCAN row=5 desc_count=78 max=568 drawn=True thumb=110+58
+SCAN row=6 desc_count=0 max=568 drawn=True thumb=110+58
+CHOSEN row=5 desc_count=78 max=568 thumb=110+58
+RESELECT row=5 desc={'class': 'DescriptionListWidget', 'scroll': 0.0, 'max': 568, 'view': None, 'drawn': True, 'thumb': '110+58', 'format': 'p207'}
+MOVE panelCentre=(1168,672) underIsGame=True
+WHEEL over=panel notches=-3 desc={'class': 'DescriptionListWidget', 'scroll': 0.0, 'max': 568, 'view': None, 'drawn': True, 'thumb': '110+58', 'format': 'p207'} -> {'class': 'DescriptionListWidget', 'scroll': 10.0, 'max': 568, 'view': None, 'drawn': True, 'thumb': '113+58', 'format': 'p207'}
+WHEEL over=panel modListScroll=None -> None
+WHEEL over=list notches=-3 modListScroll=None -> None
+WHEEL over=list descScroll=10.0 -> 10.0
+PROBE entries_seen=[11, 78] -> switches between both lists

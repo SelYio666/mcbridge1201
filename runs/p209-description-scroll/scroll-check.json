@@ -1,0 +1,623 @@
+{
+  "scroll_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\modmenu-scroll.jar",
+  "control_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\modmenu-description.jar",
+  "changed_entries": [
+    "top/mcbridge1201/bridge/ModMenuListRenderBridge.class"
+  ],
+  "control": {
+    "scan": [
+      {
+        "row": 0,
+        "gui": [
+          96,
+          85
+        ],
+        "device": [
+          752,
+          410
+        ],
+        "description_count": 11,
+        "scroll": null,
+        "max": null,
+        "drawn": null,
+        "thumb": null
+      },
+      {
+        "row": 1,
+        "gui": [
+          96,
+          121
+        ],
+        "device": [
+          752,
+          482
+        ],
+        "description_count": 11,
+        "scroll": null,
+        "max": null,
+        "drawn": null,
+        "thumb": null
+      },
+      {
+        "row": 2,
+        "gui": [
+          96,
+          157
+        ],
+        "device": [
+          752,
+          554
+        ],
+        "description_count": 10,
+        "scroll": null,
+        "max": null,
+        "drawn": null,
+        "thumb": null
+      },
+      {
+        "row": 3,
+        "gui": [
+          96,
+          193
+        ],
+        "device": [
+          752,
+          626
+        ],
+        "description_count": 15,
+        "scroll": null,
+        "max": null,
+        "drawn": null,
+        "thumb": null
+      },
+      {
+        "row": 4,
+        "gui": [
+          96,
+          229
+        ],
+        "device": [
+          752,
+          698
+        ],
+        "description_count": 6,
+        "scroll": null,
+        "max": null,
+        "drawn": null,
+        "thumb": null
+      },
+      {
+        "row": 5,
+        "gui": [
+          96,
+          265
+        ],
+        "device": [
+          752,
+          770
+        ],
+        "description_count": 78,
+        "scroll": 0.0,
+        "max": 568,
+        "drawn": true,
+        "thumb": "110+58"
+      },
+      {
+        "row": 6,
+        "gui": [
+          96,
+          301
+        ],
+        "device": [
+          752,
+          842
+        ],
+        "description_count": 0,
+        "scroll": 0.0,
+        "max": 568,
+        "drawn": true,
+        "thumb": "110+58"
+      }
+    ],
+    "before": {
+      "desc": {
+        "class": "DescriptionListWidget",
+        "scroll": 0.0,
+        "max": 568,
+        "view": null,
+        "drawn": true,
+        "thumb": "110+58",
+        "format": "p207"
+      },
+      "mod": {
+        "class": "ModListWidget",
+        "count": 11,
+        "left": 6,
+        "rowWidth": 174,
+        "itemHeight": 36,
+        "rows": [
+          67,
+          324
+        ],
+        "mouse": [
+          0,
+          0
+        ],
+        "focused": false,
+        "box": [
+          0,
+          67,
+          192,
+          257
+        ],
+        "legacy": false,
+        "getX": 0,
+        "scroll": null,
+        "max": null,
+        "first": "com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry"
+      },
+      "probe_scroll": 0.0
+    },
+    "after_panel_wheel": {
+      "desc": {
+        "class": "DescriptionListWidget",
+        "scroll": 10.0,
+        "max": 568,
+        "view": null,
+        "drawn": true,
+        "thumb": "113+58",
+        "format": "p207"
+      },
+      "mod": {
+        "class": "ModListWidget",
+        "count": 11,
+        "left": 6,
+        "rowWidth": 174,
+        "itemHeight": 36,
+        "rows": [
+          67,
+          324
+        ],
+        "mouse": [
+          0,
+          0
+        ],
+        "focused": false,
+        "box": [
+          0,
+          67,
+          192,
+          257
+        ],
+        "legacy": false,
+        "getX": 0,
+        "scroll": null,
+        "max": null,
+        "first": "com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry"
+      },
+      "probe_scroll": 10.0
+    },
+    "shift": {
+      "best_dy": -20,
+      "best_score": 1.53,
+      "runner_up": [
+        -19,
+        1.72
+      ],
+      "zero_score": 5.69
+    },
+    "panel_box": [
+      208,
+      108,
+      192,
+      216
+    ]
+  },
+  "fix": {
+    "scan": [
+      {
+        "row": 0,
+        "gui": [
+          96,
+          85
+        ],
+        "device": [
+          752,
+          410
+        ],
+        "description_count": 11,
+        "scroll": 0.0,
+        "max": 0,
+        "drawn": false,
+        "thumb": "none"
+      },
+      {
+        "row": 1,
+        "gui": [
+          96,
+          121
+        ],
+        "device": [
+          752,
+          482
+        ],
+        "description_count": 11,
+        "scroll": 0.0,
+        "max": 0,
+        "drawn": false,
+        "thumb": "none"
+      },
+      {
+        "row": 2,
+        "gui": [
+          96,
+          157
+        ],
+        "device": [
+          752,
+          554
+        ],
+        "description_count": 10,
+        "scroll": 0.0,
+        "max": 0,
+        "drawn": false,
+        "thumb": "none"
+      },
+      {
+        "row": 3,
+        "gui": [
+          96,
+          193
+        ],
+        "device": [
+          752,
+          626
+        ],
+        "description_count": 15,
+        "scroll": 0.0,
+        "max": 0,
+        "drawn": false,
+        "thumb": "none"
+      },
+      {
+        "row": 4,
+        "gui": [
+          96,
+          229
+        ],
+        "device": [
+          752,
+          698
+        ],
+        "description_count": 6,
+        "scroll": 0.0,
+        "max": 0,
+        "drawn": false,
+        "thumb": "none"
+      },
+      {
+        "row": 5,
+        "gui": [
+          96,
+          265
+        ],
+        "device": [
+          752,
+          770
+        ],
+        "description_count": 78,
+        "scroll": 0.0,
+        "max": 568,
+        "drawn": true,
+        "thumb": "110+58"
+      },
+      {
+        "row": 6,
+        "gui": [
+          96,
+          301
+        ],
+        "device": [
+          752,
+          842
+        ],
+        "description_count": 0,
+        "scroll": 0.0,
+        "max": 0,
+        "drawn": false,
+        "thumb": "none"
+      }
+    ],
+    "chosen": {
+      "row": 5,
+      "gui": [
+        96,
+        265
+      ],
+      "device": [
+        752,
+        770
+      ],
+      "description_count": 78,
+      "scroll": 0.0,
+      "max": 568,
+      "drawn": true,
+      "thumb": "110+58"
+    },
+    "panel": {
+      "box": [
+        208,
+        108,
+        192,
+        216
+      ],
+      "count": 11,
+      "legacy": true,
+      "rowLeft": 215
+    },
+    "before": {
+      "desc": {
+        "class": "DescriptionListWidget",
+        "scroll": 0.0,
+        "max": 568,
+        "view": 216,
+        "drawn": true,
+        "thumb": "110+58",
+        "format": "p209"
+      },
+      "mod": {
+        "class": "ModListWidget",
+        "count": 11,
+        "left": 6,
+        "rowWidth": 174,
+        "itemHeight": 36,
+        "rows": [
+          67,
+          324
+        ],
+        "mouse": [
+          0,
+          0
+        ],
+        "focused": false,
+        "box": [
+          0,
+          67,
+          192,
+          257
+        ],
+        "legacy": false,
+        "getX": 0,
+        "scroll": 0.0,
+        "max": 147,
+        "first": "com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry"
+      },
+      "probe_scroll": 0.0
+    },
+    "after_panel_wheel": {
+      "desc": {
+        "class": "DescriptionListWidget",
+        "scroll": 10.0,
+        "max": 568,
+        "view": 216,
+        "drawn": true,
+        "thumb": "113+58",
+        "format": "p209"
+      },
+      "mod": {
+        "class": "ModListWidget",
+        "count": 11,
+        "left": 6,
+        "rowWidth": 174,
+        "itemHeight": 36,
+        "rows": [
+          67,
+          324
+        ],
+        "mouse": [
+          0,
+          0
+        ],
+        "focused": false,
+        "box": [
+          0,
+          67,
+          192,
+          257
+        ],
+        "legacy": false,
+        "getX": 0,
+        "scroll": 0.0,
+        "max": 147,
+        "first": "com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry"
+      },
+      "probe_scroll": 10.0
+    },
+    "after_mod_wheel": {
+      "mod": {
+        "class": "ModListWidget",
+        "count": 11,
+        "left": 6,
+        "rowWidth": 174,
+        "itemHeight": 36,
+        "rows": [
+          67,
+          324
+        ],
+        "mouse": [
+          96,
+          195
+        ],
+        "focused": true,
+        "box": [
+          0,
+          67,
+          192,
+          257
+        ],
+        "legacy": false,
+        "getX": 0,
+        "scroll": 36.0,
+        "max": 147,
+        "first": "com.terraformersmc.modmenu.gui.widget.entries.IndependentEntry"
+      },
+      "desc": {
+        "class": "DescriptionListWidget",
+        "scroll": 10.0,
+        "max": 568,
+        "view": 216,
+        "drawn": true,
+        "thumb": "113+58",
+        "format": "p209"
+      }
+    },
+    "probe_state_targets": [
+      11,
+      78
+    ],
+    "thumb_before": [
+      [
+        251,
+        366
+      ]
+    ],
+    "thumb_after": [
+      [
+        257,
+        372
+      ]
+    ],
+    "shift": {
+      "best_dy": -20,
+      "best_score": 1.53,
+      "runner_up": [
+        -19,
+        1.72
+      ],
+      "zero_score": 5.69
+    },
+    "device_box": [
+      432,
+      251,
+      800,
+      675
+    ]
+  },
+  "checks": [
+    {
+      "name": "only_the_bridge_differs_from_the_p207_jar",
+      "ok": true,
+      "detail": "changed=['top/mcbridge1201/bridge/ModMenuListRenderBridge.class'] added=[]"
+    },
+    {
+      "name": "the_shipped_bridge_reports_scroll_and_max",
+      "ok": true,
+      "detail": "9724 bytes"
+    },
+    {
+      "name": "the_p207_bridge_does_not_report_the_same_fields",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_shipped_bridge_still_filters_its_debug_lines",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "control_panel_also_scrolls_the_wheel_already_worked",
+      "ok": true,
+      "detail": "0.0 -> 10.0"
+    },
+    {
+      "name": "control_line_cannot_tell_stale_from_empty",
+      "ok": true,
+      "detail": "row6 count=0 max=568 (row5 max=568)"
+    },
+    {
+      "name": "control_cannot_measure_the_mod_list_scroll",
+      "ok": true,
+      "detail": "the p207 line has no scroll= field"
+    },
+    {
+      "name": "exactly_one_row_needs_scrolling",
+      "ok": true,
+      "detail": "[5] of [0, 1, 2, 3, 4, 5, 6]"
+    },
+    {
+      "name": "that_row_is_long_enough_to_scroll",
+      "ok": true,
+      "detail": "max=568 rows=78"
+    },
+    {
+      "name": "every_other_row_reports_max_zero_instead_of_nothing",
+      "ok": true,
+      "detail": "[(0, 0, False), (1, 0, False), (2, 0, False), (3, 0, False), (4, 0, False), (6, 0, False)]"
+    },
+    {
+      "name": "the_empty_row_is_no_longer_a_stale_copy_of_the_previous_one",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_panel_wheel_moved_the_panel",
+      "ok": true,
+      "detail": "0.0 -> 10.0"
+    },
+    {
+      "name": "the_panel_wheel_left_the_mod_list_alone",
+      "ok": true,
+      "detail": "0.0 -> 0.0"
+    },
+    {
+      "name": "the_panel_wheel_moved_the_thumb_down",
+      "ok": true,
+      "detail": "110+58 -> 113+58"
+    },
+    {
+      "name": "the_mod_list_wheel_moved_the_mod_list",
+      "ok": true,
+      "detail": "0.0 -> 36.0"
+    },
+    {
+      "name": "the_mod_list_wheel_left_the_panel_alone",
+      "ok": true,
+      "detail": "10.0 -> 10.0"
+    },
+    {
+      "name": "the_run_recorded_that_the_probe_switches_targets",
+      "ok": true,
+      "detail": "[11, 78] (11 = mod list, 78 = panel)"
+    },
+    {
+      "name": "no_linkage_error_from_the_two_new_reflective_reads",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "one_thumb_is_drawn_at_the_panel_edge",
+      "ok": true,
+      "detail": "[[251, 366]] / [[257, 372]]"
+    },
+    {
+      "name": "the_thumb_height_is_what_the_formula_predicts",
+      "ok": true,
+      "detail": "116 device px vs 2*58"
+    },
+    {
+      "name": "the_thumb_moves_by_the_scroll_ratio",
+      "ok": true,
+      "detail": "moved 6 device px, expected 5 (154 gui px of travel over 568 of scroll)"
+    },
+    {
+      "name": "the_text_moves_up_by_the_scroll_amount",
+      "ok": true,
+      "detail": "best_dy=-20 expected -20"
+    },
+    {
+      "name": "the_control_text_moves_by_its_own_scroll_amount",
+      "ok": true,
+      "detail": "best_dy=-20 expected -20"
+    }
+  ]
+}
