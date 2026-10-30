@@ -2903,6 +2903,53 @@ def test_pcl2_launch() -> None:
           and "title_screen" in driver, "")
 
 
+
+def test_pcl2_1211() -> None:
+    """p214: the same offline path works for 1.21.1, the version this repo converts mods for.
+
+    p213 covered 1.20.4 because that is what the panel installed; 1.21.1 had never been started
+    through PCL2 here at all. The claim is deliberately the same shape so the two runs are
+    comparable - offline identity in the argv, title screen, world entered by clicking - and it is
+    recorded separately instead of folded into p213, because "1.20.4 works" says nothing about the
+    target version.
+    """
+    run = ROOT / "runs" / "p214-pcl2-1211"
+    verdict_path = run / "launch-check.json"
+    artifacts = [run / "README.md", run / "verify_1211.py", verdict_path, run / "drive.json",
+                 run / "home.png", run / "versions.png", run / "game-window.png",
+                 run / "game-title.png", run / "world-list.png", run / "world-selected.png",
+                 run / "world-loading.png", run / "in-game.png", run / "world-entry.png",
+                 run / "after-enter.png"]
+    missing = [str(p.relative_to(ROOT)) for p in artifacts if not p.exists()]
+    check("p214: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    failed_checks = [c["name"] for c in verdict["checks"] if not c["ok"]]
+    check("p214: the committed verdict passed every one of its checks",
+          not failed_checks and len(verdict["checks"]) >= 18,
+          f"{len(verdict['checks'])} checks, failed: {failed_checks}")
+    check("p214: the run targeted 1.21.1", verdict["version"] == "1.21.1", verdict["version"])
+    args = verdict["offline_args"]
+    check("p214: the session was offline and pointed at 1.21.1",
+          args.get("username") == "SelYio" and args.get("version") == "1.21.1"
+          and args.get("uuid", "").startswith("000000000000")
+          and args.get("accessToken") == args.get("uuid"), json.dumps(args))
+    errors = verdict.get("errors") or []
+    known = ("Realms", "realms", "401", "user properties", "profile key pair")
+    check("p214: the title screen was reached and only offline errors were logged",
+          verdict["title_screen"] is True
+          and all(any(token in e for token in known) for e in errors), str(errors))
+    check("p214: a world finished loading", bool(verdict.get("world"))
+          and any("Time elapsed" in ln for ln in verdict["world"]), str(verdict.get("world")))
+    check("p214: 1.20.4's unexplained error did not reappear on 1.21.1",
+          not any("Not a string" in e for e in verdict.get("errors") or []), "")
+    driver = (ROOT / "runs" / "p213-pcl2-offline-launch" / "drive_pcl.py").read_text(encoding="utf-8")
+    check("p214: the driver is the p213 one, so the two runs measured the same way",
+          "def activate(" in driver and "wait-title" in driver, "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2923,6 +2970,7 @@ def main() -> int:
     test_pcl2_detect()
     test_pcl2_e2e()
     test_pcl2_launch()
+    test_pcl2_1211()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

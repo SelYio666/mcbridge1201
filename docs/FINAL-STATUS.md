@@ -643,3 +643,25 @@ p212 结尾我写"没做：从 PCL2 进世界（要账号）"，**那句是错�
 - 门禁：`test_review_fixes`、`check_hashes`、`verify_evidence`、`check_text_encoding` 见提交说明；
 - 边界：创建世界页那个按钮不吃合成点击未查清；没重跑 1.21.1 启动回归；截图是 `PrintWindow` 的窗口位图；
   跑完已关闭游戏进程。
+
+## 二十九、2026-10-30 更新（p214：1.21.1 也走通同一条离线路径）
+
+p213 证明的是 **1.20.4**（面板装出来的那个）。1.21.1 早就由 PCL2 自己装在机器上，是本仓库所有模组
+转换的目标版本，却**从没在 PCL2 里启动过一次**。这一轮用同一套驱动把它跑了一遍。
+
+- **启动与身份**：PCL2 2.99.0.0 →「版本选择」点 `1.21.1` →「启动游戏」；java 命令行里
+  `--username SelYio`、`--uuid`/`--accessToken` = `0000000000003006998F555B73D6DCEF`、`--userType msa`、
+  `--version 1.21.1`、`-Dminecraft.launcher.brand=PCL`，用 PCL 自带 `java-runtime-delta`；
+- **标题界面**：`Setting user: SelYio` → `Sound engine started`，截图 350 KB（与闪屏差 90%）；
+- **进世界（点击）**：「单人游戏」→ 世界列表 → 点该行 →「进入选中的世界」→ `Time elapsed: 229 ms`，
+  `versions\1.21.1\saves\新的世界\` 存在，`in-game.png` 是草地/天空/准星/生命/快捷栏的第一人称画面；
+- **错误只有离线必然的两条**（`Failed to fetch user properties`、`Couldn't connect to realms`）；
+  1.20.4 那条来源未查清的 `Not a string` 在 1.21.1 上**没有出现**——这条也做成了判据；
+- **创建那个世界仍是按 Enter**：点「创建新的世界」按钮不生效（与 p213 记录的 1.20.4 一致），
+  那两帧留作 `world-entry.png` / `after-enter.png`；本轮断言的是**点击进入**这条已被复现的路径；
+- **判据**：`runs/p214-pcl2-1211/verify_1211.py` **19/19**；驱动复用
+  `runs/p213-pcl2-offline-launch/drive_pcl.py`（同一套坐标/等待逻辑，`930,472` 是 1.21.1 那一行）；
+- 回归：新增 `test_pcl2_1211()`（8 条）；
+- 门禁：`test_review_fixes`、`check_hashes`、`verify_evidence`、`check_text_encoding` 见提交说明；
+- 边界：只到「离线启动 → 标题界面 → 进世界」，没做游戏内玩法/多人/模组加载（这个实例里没有转换件）；
+  结束后游戏与启动器进程都已关闭；写进真机的东西是 `versions\1.21.1\saves\新的世界\`。

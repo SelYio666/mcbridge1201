@@ -1,0 +1,119 @@
+{
+  "version": "1.21.1",
+  "launcher": "Plain Craft Launcher　",
+  "offline_args": {
+    "username": "SelYio",
+    "version": "1.21.1",
+    "uuid": "0000000000003006998F555B73D6DCEF",
+    "accessToken": "0000000000003006998F555B73D6DCEF",
+    "userType": "msa"
+  },
+  "title_screen": true,
+  "world": [
+    "[21:00:11] [Render thread/INFO]: Time elapsed: 229 ms"
+  ],
+  "errors": [
+    "[20:59:49] [Download-2/ERROR]: Failed to fetch user properties",
+    "[20:59:54] [IO-Worker-1/ERROR]: Couldn't connect to realms"
+  ],
+  "saves": [
+    "新的世界"
+  ],
+  "checks": [
+    {
+      "name": "every evidence file exists",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_launcher_window_was_the_real_launcher",
+      "ok": true,
+      "detail": "Plain Craft Launcher　"
+    },
+    {
+      "name": "the_run_targeted_1_21_1",
+      "ok": true,
+      "detail": "1.21.1"
+    },
+    {
+      "name": "the_version_selector_was_opened",
+      "ok": true,
+      "detail": "26.0% changed"
+    },
+    {
+      "name": "pcl2_started_the_1_21_1_window",
+      "ok": true,
+      "detail": "Minecraft 1.21.1"
+    },
+    {
+      "name": "the_session_is_an_offline_one",
+      "ok": true,
+      "detail": "{\"username\": \"SelYio\", \"version\": \"1.21.1\", \"uuid\": \"0000000000003006998F555B73D6DCEF\", \"accessToken\": \"0000000000003006998F555B73D6DCEF\", \"userType\": \"msa\"}"
+    },
+    {
+      "name": "the_java_process_targets_1_21_1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_launcher_is_named_in_the_java_args",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_title_screen_was_reached",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_log_names_the_offline_user",
+      "ok": true,
+      "detail": "['[20:59:42] [Render thread/INFO]: Setting user: SelYio']"
+    },
+    {
+      "name": "the_title_screenshot_is_not_the_splash",
+      "ok": true,
+      "detail": "350473 bytes"
+    },
+    {
+      "name": "a_click_opened_the_world_list",
+      "ok": true,
+      "detail": "89.6% changed after 单人游戏"
+    },
+    {
+      "name": "the_world_was_entered_by_clicking",
+      "ok": true,
+      "detail": "row click + 进入选中的世界"
+    },
+    {
+      "name": "the_world_finished_loading",
+      "ok": true,
+      "detail": "['[21:00:11] [Render thread/INFO]: Time elapsed: 229 ms']"
+    },
+    {
+      "name": "the_in_game_frame_is_not_the_world_list",
+      "ok": true,
+      "detail": "90.8% different"
+    },
+    {
+      "name": "a_world_folder_exists_for_1_21_1",
+      "ok": true,
+      "detail": "['新的世界']"
+    },
+    {
+      "name": "the_game_did_not_crash",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "the_only_errors_are_the_offline_ones",
+      "ok": true,
+      "detail": "2 expected"
+    },
+    {
+      "name": "no_1_20_4_only_error_leaked_into_1_21_1",
+      "ok": true,
+      "detail": "1.20.4 logged one; 1.21.1 does not"
+    }
+  ]
+}

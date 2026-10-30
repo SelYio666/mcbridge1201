@@ -1,0 +1,465 @@
+PASS ISSUE-03 broken mixin config fails
+PASS ISSUE-03 valid mixin config passes
+PASS ISSUE-02 unsupported schema exits 2
+PASS ISSUE-02 mixed targets exit 2
+PASS ISSUE-02 missing required hit exits 3
+PASS ISSUE-02 already-patched input exits 4
+PASS ISSUE-02 matching required hit exits 0
+PASS ISSUE-07 snapshot listed
+PASS ISSUE-07 old beta listed
+PASS ISSUE-07 modpack instance hidden
+PASS ISSUE-06 neoforge picks matching game version
+PASS launcher /api/mrpacks lists packs
+PASS launcher lists mods
+PASS launcher toggles a mod
+PASS launcher deletes an installed version
+PASS launcher rejects path traversal in delete
+PASS launcher serves the usage guide
+PASS launcher dir_target resolves mods
+PASS launcher dir_target rejects escapes
+PASS launcher /api/dirs lists game folders
+PASS launcher /api/downloads exposes the source log
+PASS launcher /api/task exposes byte progress and speed
+PASS launcher config stores download_source
+PASS launcher /api/source-health reports mode and hosts
+PASS launcher condenses canary results
+PASS launcher opens the mods folder
+PASS launcher rejects unknown open-dir target
+PASS launcher sync-profiles writes launcher_profiles entries
+PASS launcher /api/jvm returns json
+PASS launcher /api/loader-versions responds
+PASS ISSUE-05 encoded log path readable
+PASS ISSUE-08 missing java returns JSON
+PASS NEOFORGE empty root reports all artifacts missing
+PASS NEOFORGE verify rejects profile-only install
+PASS NEOFORGE build_command refuses incomplete install
+PASS NEOFORGE installer seeding skips verified files
+PASS NEOFORGE artifacts detected once present
+PASS NEOFORGE verify accepts a complete install
+PASS NEOFORGE complete install builds a command
+PASS NEOFORGE backend command keeps extra game args (quickPlay)
+PASS NEOFORGE verify flags a missing universal jar
+PASS LOADER install_forge ensures the vanilla base first
+PASS IFPORT rule binds 6+ replacements to capability/risk/evidence
+PASS IFPORT rule re-adds the HUD mixins with evidence
+PASS IFPORT rule bridges the Identifier constructors
+PASS IFPORT sources exist and avoid tombstones
+PASS IFPORT draw path does not double-close the builder allocator
+PASS IFPORT keeps the Iris compatibility branch wired
+PASS IFPORT keeps the universal-batching fallback (SimpleImmediate)
+PASS IFPORT keeps the item per-lighting variants wired
+PASS IFPORT no longer strips the map atlas mixins
+PASS IFPORT re-registers both map atlas mixins
+PASS IFPORT replaces both map mixins and embeds MapAtlasTexture
+PASS IFPORT map sources use the 1.21.1 signatures and drop lenni allocate
+PASS IFPORT embeds the 1.21.1 MapAtlasTexture factories
+PASS IFPORT build widens the package-private MapTexture stub
+PASS IFPORT re-registers MixinVertexBuffer with the 1.21.1 60829 entry point
+PASS IFPORT vertex A/B evidence stays within the off/off control
+PASS IFPORT leaves the upstream-removed BufferBuilder/FontManager mixins inert
+PASS IFPORT map atlas skips a closed image during world exit
+PASS TRASH the real empty-trash Delete key reaches the provider and server
+PASS TRASH Shift+Delete deletes same-item stacks across slots
+PASS TRASH empty-cursor right-click takes one item and leaves four
+PASS SBT grid preview reaches the tooltip with component wrapper and t2/t4 bridges
+PASS SBT grid draws item icons and serves the server-synced box (set-as-get fixed)
+PASS map atlas overflow creates the second atlas, encodes tiles and cleans up both
+PASS TRASH creative delete keys work via the 1.21.1 companion (hover null upstream)
+PASS TRASH multi-client: per-player isolation with A draining and B untouched
+PASS TRASH creative inventory tab: main slots delete, list slots are upstream-ignored
+PASS TRASH three clients: B drains its own trash, C untouched, A rejoin resets (upstream)
+PASS SBT grid residuals: multi-item, FULL, real mouse hover and server box
+PASS map atlas third: 2048+ maps, atlas 2, cross-atlas frame, cleanup
+PASS p195 delivery: v0.5.6 portable fresh root OK + panel smoke (PCL2 absent)
+PASS p196 shulker grid 27-slot full grid
+PASS p197 shulker preview keys rebound via config (J/K)
+PASS PCL one-click panel/version picker contract
+PASS PORTABLE mclaunch puts its directory on sys.path before importing fetch
+PASS p200: client.log present
+PASS p200: tile-sweep line present
+PASS p200: 2050 ids swept
+PASS p200: every id sits at the expected atlas slot
+PASS p200: every id verified by its own content
+PASS p200: three 4096^2 atlas images
+PASS p200: 192 MiB of atlas images
+PASS p200: all three atlases cleared on exit
+PASS p200: no atlas/GL failure marker
+PASS p200: layout-check.json present
+PASS p200: screenshot check passed
+PASS p200: three map blocks on screen
+PASS p200: blocks are 128 * guiScale = 256 px
+PASS p200: blocks spaced by 136 * guiScale = 272 px
+PASS p200: one window offset for all three blocks
+PASS p200: three distinct block colours
+PASS p202: client.log present
+PASS p202: slot 10 reported hovered
+PASS p202: the hovered slot is inventory slot 10
+PASS p202: no synthetic key was held when the hover appeared
+PASS p202: glfw/raw/mouse/target all agree
+PASS p202: the probe never needed its glfwSetCursorPos fallback
+PASS p202: harness.log present
+PASS p202: three OS cursor moves were issued
+PASS p202: every move was accepted by the OS
+PASS p202: the point under the cursor was the game window
+PASS p202: the first two moves injected input rather than warping
+PASS p202: the harness moved to the coordinates the probe announced
+PASS p202: the game window is 1280x720 with guiScale 2
+PASS p202: 27 stacks were read out of the synced box
+PASS p202: all 27 custom names differ
+PASS p202: all 27 item ids differ
+PASS p202: the probe's own component count agrees
+PASS p202: every cell 0..26 was drawn
+PASS p202: 27 different payloads reached the renderer
+PASS p202: FULL drew 27 items
+PASS p202: grid-check.json present
+PASS p202: the committed grid check passed
+PASS p202: the measured pitch is exactly one cell, in both axes
+PASS p202: 27 different cells, none blank
+PASS p202: the lattice sits within one cell of the panel origin the probe logged
+PASS p202: the PNG in the repo is the one the check described
+PASS p202: client area + frame accounts for the PNG size
+PASS p202: hover came from the OS cursor, not the fallback
+PASS p202: the box was placed with per-slot components (not the plain fallback)
+PASS p202: control log present
+PASS p202: control (SetCursorPos only, window raised) also hovered
+PASS p202: the control used only the pointer warp
+PASS p203: server.log present
+PASS p203: the probe's own seed is stamped and marked
+PASS p203: the seed wrote 5 and 4 diamonds
+PASS p203: joins reset the trash to empty before any player action
+PASS p203: result.json carries the shared fire instant
+PASS p203: both players wrote inside the fire window
+PASS p203: the two writes carry the same server tick
+PASS p203: both writes happened on the server thread
+PASS p203: the two writes are milliseconds apart, not ticks
+PASS p203: the delete wrote empty and the right-click wrote three
+PASS p203: two serverbound messages were stamped in that window
+PASS p203: the packets arrived in the same tick as the writes
+PASS p203: the two actions use different messages
+PASS p203: the server ends with A empty and B holding three
+PASS p203: A really held five before the action
+PASS p203: both states were re-read after the write
+PASS p203: client-a.log present
+PASS p203: client A fired on the shared instant
+PASS p203: client A shows its own result
+PASS p203: client-b.log present
+PASS p203: client B fired on the shared instant
+PASS p203: client B shows its own result
+PASS p203: B's cursor holds exactly one diamond
+PASS p203: every recorded check is true
+PASS p203: round1 server log present
+PASS p203: an independent earlier round also shared one tick
+PASS p208: the pre-fix probe run really failed
+PASS p208: every probe passes after the fix
+PASS p208: unset APPDATA used to give a relative game root
+PASS p208: the game root is absolute now
+PASS p208: JAVA_HOME used to be ignored on POSIX
+PASS p208: JAVA_HOME's bin/java is used now
+PASS p208: macOS used to be sent to xdg-open
+PASS p208: macOS gets open now
+PASS p208: the linux and windows openers are unchanged
+PASS p208: the dead Windows java constant was detected
+PASS p208: the dead constant is gone
+PASS p208: the audit found 28 hits with 24 unguarded before
+PASS p208: 22 hits with 4 unguarded after
+PASS p208: the 4 remaining hits are the known Windows-only packaging spots
+PASS p208: all delivery modules import under the posix simulation
+PASS p208: the audit states that no POSIX kernel was involved
+PASS p208: clean host (shipped) passes every check
+PASS p208: clean host (shipped) proves the scrub removed python and java
+PASS p208: clean host (shipped) ran the bundled interpreter
+PASS p208: clean host (shipped) shipped no jar
+PASS p208: clean host (shipped) starts from run.bat only (portable is Windows-only)
+PASS p208: clean host (shipped) reports an empty root and no JVM, not a crash
+PASS p208: clean host (current sources) passes every check
+PASS p208: clean host (current sources) proves the scrub removed python and java
+PASS p208: clean host (current sources) ran the bundled interpreter
+PASS p208: clean host (current sources) shipped no jar
+PASS p208: clean host (current sources) starts from run.bat only (portable is Windows-only)
+PASS p208: clean host (current sources) reports an empty root and no JVM, not a crash
+PASS p208: the shipped run used the zip's own sources
+PASS p208: the second run overlaid the current sources
+PASS p208: the overlay replaced every launcher module in the package
+PASS p208: the three files this change touched are among them
+PASS p208: building without the deps is refused
+PASS p208: the refused build does not print done
+PASS p208: require_vendored rejects an empty dependency set
+PASS p208: require_vendored accepts the dep, and the explicit override
+PASS p208: the JVM binary name follows the platform
+PASS p208: a missing opener returns False instead of raising
+PASS p208: Windows still opens through startfile
+PASS p204: client.log present
+PASS p204: the list state was logged
+PASS p204: nine notches stepped by itemHeight/2 = 18
+PASS p204: the ninth notch clamped at max scroll
+PASS p204: the list started at 0
+PASS p204: the test phase delivered exactly one message per notch
+PASS p204: the control and the test account for all 18 wheel units
+PASS p204: no scroll event was delivered as a positive delta
+PASS p204: harness.log present
+PASS p204: control A (wheel outside the window) was sent
+PASS p204: control A pointed outside the game window
+PASS p204: control A produced no scroll event and no movement
+PASS p204: control B (wheel over the right pane) was sent
+PASS p204: control B delivered an event but left the list alone
+PASS p204: the cursor was really over the list for the test phase
+PASS p204: the game window was the foreground window before typing
+PASS p204: four characters reached the focused text field
+PASS p204: the characters are exactly what was typed
+PASS p204: the search box holds the typed text
+PASS p204: the list filtered down to one entry
+PASS p204: the run ended on its own marker
+PASS p204: scroll-check.json present
+PASS p204: the committed screenshot check passed
+PASS p204: the scrollbar thumb moved by the predicted 18/147 of the free track
+PASS p204: at max scroll the thumb sits at the bottom
+PASS p204: the filtered list no longer draws a scrollbar
+PASS p204: the probe never calls setScrollAmount
+PASS p204: the geometry accessors are getters only
+PASS p204: the independent repeat run is on record
+PASS p204: the repeat passed the same checks
+PASS p204: the repeat produced the same staircase
+PASS p204: the Cloth Config failure is on record with its frame
+PASS p204: the Cloth failure is attributed to Mod Menu's config probe
+PASS p205: bridge source present
+PASS p205: the entry call passes y before x
+PASS p205: the old swapped order is gone
+PASS p205: the row width comes from getRowWidth (method_25322), not the widget width
+PASS p205: the row height is itemHeight - 4 like vanilla
+PASS p205: the visibility test uses the widget top and bottom
+PASS p205: Entry.drawBorder is called before Entry.render
+PASS p205: hovered is decided by getEntryAtPosition, not a rectangle guess
+PASS p205: every debug line is behind -Dmcbridge.listrender.debug
+PASS p205: rows-check.json present
+PASS p205: the baseline list is completely blank
+PASS p205: the fixed list shows at least five row icons
+PASS p205: the fixed list has thousands of legible text pixels
+PASS p205: the two runs differ only in the bridge (same mods, same window)
+PASS p205: the debug line reports ModListWidget with 11 entries and 36 px rows
+PASS p205: the rows move up by exactly the scroll delta when wheeled
+PASS p205: the blank list has no rows to move
+PASS p205: every screenshot check passed
+PASS p205: build.log present
+PASS p205: the injected class is not the old one
+PASS p205: the build reports the jar it wrote
+PASS p205: before/result.json present
+PASS p205: before ran with the debug flag on the command line
+PASS p205: after/result.json present
+PASS p205: after ran with the debug flag on the command line
+PASS p205: build_command honours extra_jvm in both command paths
+PASS p205: the flag lands immediately after -Xmx
+PASS p206: the screenshot check is committed
+PASS p206: the bridge source is present
+PASS p206: the committed check passed
+PASS p206: the control run is the p205 jar
+PASS p206: the two runs use different jars
+PASS p206: both runs clicked the same device pixel
+PASS p206: the control jar selects the row but reports no selection (it predates the line)
+PASS p206: the fixed jar moved the selection from row 0 to the clicked row
+PASS p206: the click also gave the list focus
+PASS p206: the fixed jar changed more pixels than the control
+PASS p206: the control jar produced no highlight band
+PASS p206: the fixed jar gained exactly one band and lost exactly one
+PASS p206: the gained band sits on the clicked row
+PASS p206: the gained band is about one row tall
+PASS p206: the lost band sits on row 0, where the selection used to be
+PASS p206: the bridge draws the selection once per selected row
+PASS p206: the selection colour is the vanilla pair plus a documented wash
+PASS p206: no diagnostic colours were left in the bridge
+PASS p206: the bridge never sets the scroll amount (p204's rule still holds)
+PASS p206: the description render is a bare redirect in the patched jar
+PASS p206: the redirect replaced a body that built the description rows
+PASS p206: the control run reports an empty description list on every frame
+PASS p206: the fixed run reports an empty description list on every frame
+PASS p206: the check records the empty panel instead of calling it untested
+PASS p206: the harness retries the window raise and records underIsGame
+PASS p207: every input of this check is committed
+PASS p207: the rule model has a keep-the-prefix mode
+PASS p207: keeping the prefix goes through its own routine, not the wholesale replacement
+PASS p207: the cut prefers a label that a jump or a handler targets
+PASS p207: the three unsafe cuts are refused instead of shipped
+PASS p207: a body with no tombstone is refused, not silently left alone
+PASS p207: the new mode has its own regression test
+PASS p207: that test covers success and both refusals
+PASS p207: the success case asserts the prefix's field write survives
+PASS p207: the rule that replaced the whole description body is gone
+PASS p207: the description tail is redirected under both names a jar can carry
+PASS p207: both description rules keep the prefix and call the same bridge method
+PASS p207: the mod list redirect is untouched by this change
+PASS p207: the rule note says why the prefix matters
+PASS p207: the panel geometry comes from the 1.20.1 fields when they exist
+PASS p207: an absent legacy field is a nil answer, not a crash
+PASS p207: the panel is one backdrop, the list keeps its per-row bands
+PASS p207: the scrollbar only draws when there is something to scroll
+PASS p207: every debug line is still behind -Dmcbridge.listrender.debug
+PASS p207: setLeftPos also moves the widget's own x, so clicks land on the panel
+PASS p207: the committed verdict passed every one of its checks
+PASS p207: the two runs are the p206 jar and the new jar
+PASS p207: both runs clicked the same row at the same device pixel
+PASS p207: only the description panel changed; the mod list kept its geometry
+PASS p207: the control panel had no rows at all
+PASS p207: the fixed panel has the selected mod's rows
+PASS p207: the panel now reports its real box instead of x=0
+PASS p207: the panel read its layout from the legacy fields, as designed
+PASS p207: the fix paints text bands where the control had almost none
+PASS p207: exactly the three rebuilt classes differ from the p206 jar
+PASS p207: the body that was cut is byte-identical to the p206 record
+PASS p207: the scrollbar branch is recorded as not exercised, not as passing
+PASS p207: the build proved the renamed rule matched exactly once
+PASS p207: the build refuses a class with debug prints or no tombstone as 'pristine'
+PASS p209: every input of this check is committed
+PASS p209: the scrollbar decision is a named flag, not an early return
+PASS p209: the scroll line reports the case where nothing scrolls
+PASS p209: the mod list line reports its own scroll, so the wheel routing is measurable
+PASS p209: the extra reflective reads are behind the debug gate
+PASS p209: every debug line is still behind -Dmcbridge.listrender.debug
+PASS p209: the build swapped exactly one class and said so
+PASS p209: the committed verdict passed every one of its checks
+PASS p209: the jar differs from the p207 one only in the bridge
+PASS p209: the p207 jar scrolls the panel too, so this is evidence and not new behaviour
+PASS p209: the p207 line reports the previous row's max after an empty selection
+PASS p209: exactly one of the seven visible rows needs to scroll
+PASS p209: the empty row now says max=0 instead of repeating the previous line
+PASS p209: the wheel over the panel moves the panel and not the mod list
+PASS p209: the same wheel over the mod list moves the mod list and not the panel
+PASS p209: the pixels show one thumb at the panel edge, and it moved down
+PASS p209: the thumb is the height the formula predicts
+PASS p209: the text moved up by the scroll amount
+PASS p209: the same measurement on the control run moves by its own scroll amount
+PASS p209: the result records that the probe's target switches between the two lists
+PASS p209: the harness explains the probe's findList trap where it matters
+PASS p209: the harness re-clicks the chosen row before wheeling
+PASS p209: the verdict computes the thumb travel from its ratio, not 1:1
+PASS p207: the README points at p209 for the scrollbar it never exercised
+PASS p210: every input of this check is committed
+PASS p210: cloth-config.screen-background documents capability/risk/evidence (cloth-config.json)
+PASS p210: cloth-config.textfield.cursor-to-start documents capability/risk/evidence (cloth-config.json)
+PASS p210: cloth-config.textfield.set-cursor documents capability/risk/evidence (cloth-config.json)
+PASS p210: cloth-config.screen.render-background.clothconfigscreen documents capability/risk/evidence (cloth-config.json)
+PASS p210: cloth-config.screen.render-background.globalizedclothconfigscreen documents capability/risk/evidence (cloth-config.json)
+PASS p210: cloth-config.render.demo-enchantment documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.demo-add-enchantment documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.buffer-accessor documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.textfield-tick documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.demo-item-name documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.list-backdrop documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.list-vignette documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.screen-overlay documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.tab-shades documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.fill-gradient documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: cloth-config.render.dropdown-shadow documents capability/risk/evidence (cloth-config-render.json)
+PASS p210: fabric.legacy.render-widget-override documents capability/risk/evidence (render-widget-override.json)
+PASS p210: fabric.legacy.clickable-text-override documents capability/risk/evidence (render-widget-override.json)
+PASS p210: the two cloth rule files carry sixteen rules
+PASS p210: the new demo rules are field+callSite adaptations, not body replacements
+PASS p210: the render rule file still records the screen it does not cover
+PASS p210: the build validated all three rule files
+PASS p210: every rule matched exactly as often as the build says it must
+PASS p210: the build wrote the jar this evidence came from
+PASS p210: the committed verdict passed every one of its checks
+PASS p210: the control run failed on the removed field and nowhere else
+PASS p210: the fix run drew thirteen rows with nine toggles
+PASS p210: the click moved the value without the direct-press fallback
+PASS p210: the fix run recorded no mod error
+PASS p210: the verdict and the run describe the same jar
+PASS p210: the shipped jar is the one the evidence ran against
+PASS p210: the onlyIfExtends gate has four regression cases
+PASS p210: the cases cover direct parent, deep ancestor, unrelated parent, unknown chain
+PASS p210: the test states the rule the gate protects
+PASS p210: an unresolvable ancestor aborts the walk instead of answering yes
+PASS p210: remaining-work no longer says the Cloth screens cannot open
+PASS p210: FINAL-STATUS records the screen as open and the one screen left uncovered
+PASS p210: distribution ships appleskin-cloth.jar
+PASS p211: every input of this check is committed
+PASS p211: an absolute LaunchFolderSelect is followed
+PASS p211: the same holds when the caller passes the exe
+PASS p211: a $-relative LaunchFolderSelect resolves inside the launcher folder
+PASS p211: with no Setup.ini the portable .minecraft is used
+PASS p211: a folder with neither config nor .minecraft yields None
+PASS p211: a shortcut whose target is gone reports the dead path instead of vanishing
+PASS p211: an unreadable shortcut says so
+PASS p211: a desktop without a PCL shortcut says so
+PASS p211: a live shortcut still resolves without notes
+PASS p211: detect_pcl_root can hand its notes to a caller
+PASS p211: the CLI prints the notes rather than only the folder
+PASS p211: the panel shows the notes next to the folder field
+PASS p211: the committed verdict passed every one of its checks
+PASS p211: the evidence names the launcher, its version and its game folder
+PASS p211: the stale shortcut is recorded as the p137 folder
+PASS p211: before the fix nothing was reported, after it the miss is explained
+PASS p211: the panel really rendered the note (widget + pixels)
+PASS p211: README no longer says PCL2 is missing on this machine
+PASS p211: FINAL-STATUS carries the corrected environment fact
+PASS p211: remaining-work stops calling 任务 6 blocked for lack of PCL2
+PASS p212: every input of this check is committed
+PASS p212: the committed verdict passed every one of its checks
+PASS p212: before the click the version was absent, after it there
+PASS p212: the panel wrote the client jar and the version json
+PASS p212: the launcher update is a byte-for-byte extraction from the zip
+PASS p212: the launcher went from 2.13.1.1 to 2.99.0.0
+PASS p212: the version page was a different frame, not the first screenshot relabelled
+PASS p212: the only stubbed thing is the modal dialog
+PASS p212: the update kept the launcher's own game-folder setting
+PASS p212: the old launcher is kept for rollback next to the new one
+PASS p212: the shortcut was rebuilt from the dead p137 path to the real launcher
+PASS p212: the panel tolerates the window closing under a background fetch
+PASS p212: the version installed by the panel is still a real Mojang manifest
+PASS p213: every input of this check is committed
+PASS p213: the committed verdict passed every one of its checks
+PASS p213: the session was offline, according to the argv the launcher built
+PASS p213: the launched version is the one the panel installed
+PASS p213: the client reached the title screen without crashing
+PASS p213: the log names the offline user
+PASS p213: the world finished loading, per the log
+PASS p213: an in-game frame exists and is not the world list
+PASS p213: the title screenshot is not the splash frame
+PASS p213: the driver reports whether the window really became foreground
+PASS p213: the driver measures the game rectangle after restoring the window
+PASS p213: it waits for the title-screen log marker instead of the first window
+PASS p214: every input of this check is committed
+PASS p214: the committed verdict passed every one of its checks
+PASS p214: the run targeted 1.21.1
+PASS p214: the session was offline and pointed at 1.21.1
+PASS p214: the title screen was reached and only offline errors were logged
+PASS p214: a world finished loading
+PASS p214: 1.20.4's unexplained error did not reappear on 1.21.1
+PASS p214: the driver is the p213 one, so the two runs measured the same way
+PASS encoding guard present
+PASS encoding guard: tracked docs clean
+PASS encoding guard: clean sample passes
+PASS encoding guard: corrupted sample fails
+PASS encoding guard: corrupted sample reports findings
+PASS encoding guard: escaped TAB/CR damage fails
+PASS encoding guard: names control-tab and control-cr
+PASS encoding guard: TAB inside a code fence is not a finding
+PASS encoding guard: exemption list points at real docs
+PASS p201: .gitattributes exists
+PASS p201: pins * -text so checkout never rewrites bytes
+PASS p201: audit script present
+PASS p201: audit read the whole manifest
+PASS p201: every hashed file's bytes survive a checkout
+PASS p201: no hashed path is untracked (a clean clone must be able to check it)
+PASS DOWNLOAD fabric-loader has the verified BMCL maven fallback
+PASS DOWNLOAD intermediary has the verified BMCL maven fallback
+PASS DOWNLOAD fabric-api stays official (no verified mirror)
+PASS DOWNLOAD metadata uses the BMCL meta mirror
+PASS DOWNLOAD http_json falls back to the mirror
+PASS DOWNLOAD hedges a slow metadata host with the mirror
+PASS DOWNLOAD caches metadata for the TTL
+PASS DOWNLOAD max_age=0 bypasses the metadata cache
+PASS DOWNLOAD 404 skips to the mirror without retries
+PASS DOWNLOAD retries transient failures
+PASS DOWNLOAD verifies hashes and falls back
+PASS DOWNLOAD reads and caches maven sha1 sidecars
+PASS DOWNLOAD records the source it actually used
+PASS DOWNLOAD reports bytes and source through Progress
+PASS DOWNLOAD Progress computes a transfer speed
+PASS DOWNLOAD maven hot path uses the local sidecar
+PASS DOWNLOAD official mode disables mirrors
+PASS DOWNLOAD mirror mode puts mirrors first
+PASS DOWNLOAD auto mode starts with the official URL
+PASS DOWNLOAD a recently failing host is ordered last
+PASS DOWNLOAD persists and reloads host health
+PASS DOWNLOAD canary health merges into the cache
+
+463/463 checks passed
