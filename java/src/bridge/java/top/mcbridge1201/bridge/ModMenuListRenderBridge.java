@@ -40,6 +40,18 @@ import net.minecraft.class_332;
  * the index is {@code y}, the third is {@code x} - so passing them the other way round puts every
  * row somewhere else on screen. That was the p205 defect: the row backdrop was painted (it uses the
  * same left/top values the loop already had) while the icon and the name went missing.
+ *
+ * <p>The description panel is the other shape of the same problem. {@code DescriptionListWidget}'s
+ * render method builds its rows first and only then draws through the removed pipeline, so its body
+ * is not replaced wholesale: the rule keeps everything up to the removed tail and appends
+ * {@link #renderDescription}, which draws the panel backdrop, the already-built rows, and a
+ * scrollbar. Nothing here rebuilds ModMenu's row list - that is still its own code.
+ *
+ * <p>Where the panel is drawn is read from the widget's 1.20.1 geometry fields (left/right/top/
+ * bottom, written by {@code setLeftPos}) when a converted subclass keeps them, not from
+ * {@code getX()}: in 1.21.1 that accessor belongs to ClickableWidget and never sees setLeftPos, so
+ * the first version of this bridge drew the panel at x=0 - on top of the mod list, which is painted
+ * afterwards - while the screen had placed it at x=328.
  */
 public final class ModMenuListRenderBridge {
     /** Off by default: the bridge is shipped in release jars and must not chatter. */
@@ -48,6 +60,7 @@ public final class ModMenuListRenderBridge {
      * when a mod is selected, so its line has to be printed again on the change, not once. */
     private static final java.util.Map<String, Integer> LAST_COUNT = new java.util.HashMap<>();
     private static final java.util.Set<String> HIGHLIGHT_ANNOUNCED = new java.util.HashSet<>();
+    private static final java.util.Set<String> PANEL_ANNOUNCED = new java.util.HashSet<>();
     /** Last selected row per list class, so a click can be reported once instead of every frame. */
     private static final java.util.Map<String, Integer> LAST_SELECTED = new java.util.HashMap<>();
     private static final int SELECTED_FOCUSED = 0xFFFFFFFF;
@@ -60,72 +73,135 @@ public final class ModMenuListRenderBridge {
      */
     private static final int SELECTED_WASH_FOCUSED = 0x40FFFFFF;
     private static final int SELECTED_WASH_IDLE = 0x24FFFFFF;
+    /** Replaces the removed textured panel backdrop of the description list. */
+    private static final int PANEL_BACKDROP = 0x80000000;
+    private static final int SCROLL_TRACK = 0x40000000;
+    private static final int SCROLL_THUMB = 0xC0A0A0A0;
 
     private ModMenuListRenderBridge() {
     }
 
+    /** ModListWidget.method_25311: rows on top of a flat band, no panel of their own. */
     public static void renderList(Object list, class_332 context, int mouseX, int mouseY, float delta) {
         try {
-            Class<?> type = list.getClass();
-            int count = (int) invoke(type, list, "method_25340");
-            int left = (int) invoke(type, list, "method_25342");
-            int rowWidth = (int) invoke(type, list, "method_25322");
-            int itemHeight = field(type, "field_22741").getInt(list);
-            int widgetTop = (int) invoke(type, list, "method_46427");
-            int widgetBottom = (int) invoke(type, list, "method_55443");
-            Object hovered = invoke(type, list, "method_25308", (double) mouseX, (double) mouseY);
-            boolean focused = (boolean) invoke(type, list, "method_25370");
-            int rowHeight = Math.max(1, itemHeight - 4);
-            Integer previousCount = DEBUG ? LAST_COUNT.put(type.getName(), count) : null;
-            if (DEBUG && (previousCount == null || previousCount != count)) {
-                int boxX = (int) invoke(type, list, "method_46426");
-                int boxWidth = field(type, "field_22758").getInt(list);
-                System.out.println("P205_LIST class=" + type.getSimpleName() + " count=" + count
-                        + " left=" + left + " rowWidth=" + rowWidth
-                        + " itemHeight=" + itemHeight + " rows=" + widgetTop + ".." + widgetBottom
-                        + " mouse=" + mouseX + "," + mouseY
-                        + " focused=" + focused
-                        + " box=" + boxX + "," + widgetTop + "," + boxWidth
-                        + "," + (widgetBottom - widgetTop)
-                        + " firstEntry=" + (count > 0
-                        ? invoke(type, list, "method_25326", 0).getClass().getName() : "none"));
-            }
-            int selected = -1;
-            for (int i = 0; i < count; i++) {
-                int top = (int) invoke(type, list, "method_25337", i);
-                int bottom = top + itemHeight;
-                if (bottom < widgetTop || top > widgetBottom) {
-                    continue;
-                }
-                Object entry = invoke(type, list, "method_25326", i);
-                boolean isHovered = Objects.equals(entry, hovered);
-                boolean isSelected = (boolean) invoke(type, list, "method_25332", i);
-                if (isSelected) {
-                    selected = i;
-                }
-                // The old shader backdrop is what is being replaced; this keeps a row band so the
-                // list is still legible against the blurred screen background.
-                context.method_25294(left, top, left + rowWidth, bottom, 0x80000000);
-                if (isSelected) {
-                    drawSelection(list, context, top, rowWidth, rowHeight,
-                            focused ? SELECTED_FOCUSED : SELECTED_UNFOCUSED,
-                            focused ? SELECTED_WASH_FOCUSED : SELECTED_WASH_IDLE);
-                }
-                entryCall(entry, "method_49568", context, i, top, left, rowWidth, rowHeight,
-                        mouseX, mouseY, isHovered, delta);
-                entryCall(entry, "method_25343", context, i, top, left, rowWidth, rowHeight,
-                        mouseX, mouseY, isHovered, delta);
-            }
-            if (DEBUG) {
-                Integer previous = LAST_SELECTED.put(type.getName(), selected);
-                if (previous == null || previous != selected) {
-                    System.out.println("P205_SELECT class=" + type.getSimpleName()
-                            + " selected=" + selected + " count=" + count
-                            + " focused=" + focused);
-                }
-            }
+            draw(list, context, mouseX, mouseY, delta, false);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Mod Menu list render failed", e);
+        }
+    }
+
+    /**
+     * Tail of DescriptionListWidget's render, appended after its own row building. The widget is
+     * one panel, not a list of bands: the backdrop goes behind all rows and the scrollbar is drawn
+     * because the removed tail also drew it.
+     */
+    public static void renderDescription(Object list, class_332 context, int mouseX, int mouseY,
+                                         float delta) {
+        try {
+            draw(list, context, mouseX, mouseY, delta, true);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Mod Menu description render failed", e);
+        }
+    }
+
+    private static void draw(Object list, class_332 context, int mouseX, int mouseY, float delta,
+                             boolean panel) throws ReflectiveOperationException {
+        Class<?> type = list.getClass();
+        int count = (int) invoke(type, list, "method_25340");
+        int rowWidth = (int) invoke(type, list, "method_25322");
+        int itemHeight = field(type, "field_22741").getInt(list);
+        // Where the widget really is. 1.21.1's getX()/getY() come from ClickableWidget, and for a
+        // converted 1.20.1 subclass they hold what its constructor passed - not what the screen
+        // moved it to afterwards: Mod Menu sets the description panel's left with the 1.20.1
+        // EntryListWidget.setLeftPos, which no longer exists and is kept by LegacyParentWidget in
+        // field_19088. Reading that pair first is the difference between drawing the panel over the
+        // mod list (x = 0) and drawing it where the screen put it (x = 328 on a 640 wide GUI).
+        // The mod list keeps the vanilla accessors so the geometry p205/p206 measured does not move.
+        int boxLeft;
+        int boxRight;
+        int boxTop;
+        int boxBottom;
+        boolean legacy = panel && fieldOrNull(type, "field_19088") != null;
+        if (legacy) {
+            boxLeft = field(type, "field_19088").getInt(list);
+            boxRight = field(type, "field_19087").getInt(list);
+            boxTop = field(type, "field_19085").getInt(list);
+            boxBottom = field(type, "field_19086").getInt(list);
+        } else {
+            boxLeft = (int) invoke(type, list, "method_46426");
+            boxRight = boxLeft + field(type, "field_22758").getInt(list);
+            boxTop = (int) invoke(type, list, "method_46427");
+            boxBottom = (int) invoke(type, list, "method_55443");
+        }
+        // 1.20.1 EntryListWidget.getRowLeft(): the row area is centred in the widget, plus 2 px.
+        int left = legacy ? (boxLeft + boxRight) / 2 - rowWidth / 2 + 2
+                : (int) invoke(type, list, "method_25342");
+        int widgetTop = boxTop;
+        int widgetBottom = boxBottom;
+        Object hovered = invoke(type, list, "method_25308", (double) mouseX, (double) mouseY);
+        boolean focused = (boolean) invoke(type, list, "method_25370");
+        int rowHeight = Math.max(1, itemHeight - 4);
+        Integer previousCount = DEBUG ? LAST_COUNT.put(type.getName(), count) : null;
+        if (DEBUG && (previousCount == null || previousCount != count)) {
+            System.out.println("P205_LIST class=" + type.getSimpleName() + " count=" + count
+                    + " left=" + left + " rowWidth=" + rowWidth
+                    + " itemHeight=" + itemHeight + " rows=" + widgetTop + ".." + widgetBottom
+                    + " mouse=" + mouseX + "," + mouseY
+                    + " focused=" + focused
+                    + " box=" + boxLeft + "," + widgetTop + "," + (boxRight - boxLeft)
+                    + "," + (widgetBottom - widgetTop)
+                    + " legacy=" + legacy + " getX=" + (int) invoke(type, list, "method_46426")
+                    + " firstEntry=" + (count > 0
+                    ? invoke(type, list, "method_25326", 0).getClass().getName() : "none"));
+        }
+        if (panel) {
+            context.method_25294(boxLeft, widgetTop, boxRight, widgetBottom, PANEL_BACKDROP);
+            if (DEBUG && PANEL_ANNOUNCED.add(type.getName())) {
+                System.out.println("P207_PANEL class=" + type.getSimpleName()
+                        + " box=" + boxLeft + "," + widgetTop + "," + (boxRight - boxLeft) + ","
+                        + (widgetBottom - widgetTop) + " count=" + count
+                        + " legacy=" + legacy + " rowLeft=" + left);
+            }
+        }
+        int selected = -1;
+        for (int i = 0; i < count; i++) {
+            int top = (int) invoke(type, list, "method_25337", i);
+            int bottom = top + itemHeight;
+            if (bottom < widgetTop || top > widgetBottom) {
+                continue;
+            }
+            Object entry = invoke(type, list, "method_25326", i);
+            boolean isHovered = Objects.equals(entry, hovered);
+            boolean isSelected = (boolean) invoke(type, list, "method_25332", i);
+            if (isSelected) {
+                selected = i;
+            }
+            // The old shader backdrop is what is being replaced; this keeps a row band so the
+            // list is still legible against the blurred screen background. The description panel
+            // has one backdrop for all rows instead, so its text is not striped.
+            if (!panel) {
+                context.method_25294(left, top, left + rowWidth, bottom, 0x80000000);
+            }
+            if (isSelected) {
+                drawSelection(list, context, top, rowWidth, rowHeight,
+                        focused ? SELECTED_FOCUSED : SELECTED_UNFOCUSED,
+                        focused ? SELECTED_WASH_FOCUSED : SELECTED_WASH_IDLE);
+            }
+            entryCall(entry, "method_49568", context, i, top, left, rowWidth, rowHeight,
+                    mouseX, mouseY, isHovered, delta);
+            entryCall(entry, "method_25343", context, i, top, left, rowWidth, rowHeight,
+                    mouseX, mouseY, isHovered, delta);
+        }
+        if (panel) {
+            drawScrollBar(list, context, boxLeft, boxRight, widgetTop, widgetBottom);
+        }
+        if (DEBUG) {
+            Integer previous = LAST_SELECTED.put(type.getName(), selected);
+            if (previous == null || previous != selected) {
+                System.out.println("P205_SELECT class=" + type.getSimpleName()
+                        + " selected=" + selected + " count=" + count
+                        + " focused=" + focused);
+            }
         }
     }
 
@@ -151,6 +227,39 @@ public final class ModMenuListRenderBridge {
         context.method_25294(x1, y - 2, x2, y + rowHeight + 2, color);
         context.method_25294(x1 + 1, y - 1, x2 - 1, y + rowHeight + 1, SELECTED_BORDER);
         context.method_25294(x1 + 1, y - 1, x2 - 1, y + rowHeight + 1, wash);
+    }
+
+    /**
+     * A plain scrollbar replacing {@code DescriptionListWidget.renderScrollBar}, which drew into a
+     * 1.20.1 BufferBuilder. Geometry follows the vanilla numbers (2 px inset, 4 px of slack); the
+     * colours are flat because the textured sprite is gone. It is an approximation, and it is only
+     * drawn when there is something to scroll.
+     */
+    private static void drawScrollBar(Object list, class_332 context, int boxLeft, int boxRight,
+                                      int widgetTop, int widgetBottom)
+            throws ReflectiveOperationException {
+        Class<?> type = list.getClass();
+        double scroll = (double) invoke(type, list, "method_25341");
+        int maxScroll = (int) invoke(type, list, "method_25331");
+        int viewHeight = widgetBottom - widgetTop;
+        if (maxScroll <= 0 || viewHeight < 12) {
+            return;
+        }
+        int trackTop = widgetTop + 2;
+        int trackHeight = viewHeight - 4;
+        double visible = trackHeight / (double) (trackHeight + maxScroll);
+        int thumbHeight = Math.max(16, (int) Math.round(trackHeight * visible));
+        double ratio = Math.min(1.0, Math.max(0.0, scroll / (double) maxScroll));
+        int thumbTop = trackTop + (int) Math.round((trackHeight - thumbHeight) * ratio);
+        int x2 = boxRight - 2;
+        int x1 = Math.max(boxLeft + 2, x2 - 6);
+        context.method_25294(x1, trackTop, x2, trackTop + trackHeight, SCROLL_TRACK);
+        context.method_25294(x1, thumbTop, x2, thumbTop + thumbHeight, SCROLL_THUMB);
+        if (DEBUG) {
+            System.out.println("P207_SCROLL class=" + type.getSimpleName()
+                    + " scroll=" + scroll + " max=" + maxScroll
+                    + " thumb=" + thumbTop + "+" + thumbHeight + " x=" + x1 + ".." + x2);
+        }
     }
 
     private static Object invoke(Class<?> type, Object target, String name, Object... args)
@@ -198,5 +307,19 @@ public final class ModMenuListRenderBridge {
             }
         }
         throw new NoSuchFieldException(type.getName() + "." + name);
+    }
+
+    /** Same walk, but "absent" is an answer rather than an error: legacy fields are optional. */
+    private static Field fieldOrNull(Class<?> type, String name) {
+        for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+            try {
+                Field f = c.getDeclaredField(name);
+                f.setAccessible(true);
+                return f;
+            } catch (NoSuchFieldException ignored) {
+                // keep walking up
+            }
+        }
+        return null;
     }
 }

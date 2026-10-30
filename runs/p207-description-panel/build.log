@@ -1,0 +1,16 @@
+COMPILE C:\Users\27682\Documents\新建文件夹\.toolchain\jdk\bin\javac.exe -nowarn -proc:none -encoding UTF-8 -J-Duser.language=en -J-Dfile.encoding=UTF-8 -cp C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\cb\data\jars\client-1.21.1-intermediary.jar -d C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p207-bridges C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\src\bridge\java\top\mcbridge1201\bridge\ModMenuListRenderBridge.java C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\src\bridge\java\top\mcbridge1201\bridge\LegacyParentWidget.java
+COMPILED ModMenuListRenderBridge.class sha256=eeb9f2edfb4db4c386a5de5b043f981ac6d04bc62af2f08579376c14f7eae750 size=9275
+COMPILED LegacyParentWidget.class sha256=452de3701f625540a04d846f648f817063847758ca5bae61a4e4874ba77ad590 size=824
+PRISTINE com/terraformersmc/modmenu/gui/widget/DescriptionListWidget from modmenu-instrumented.jar sha256=b2f90586bda8f3e77132ac74bbdcefd61e8139f8494d2a6bc4513a0559cdd76f size=16051
+BASE     com/terraformersmc/modmenu/gui/widget/DescriptionListWidget from modmenu-patched.jar sha256=2e56f0f3c312b9013b1d61db075dc7bc924c0eef6978672aba4d85abe4279b7d size=9045
+RESTORED C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p207\restored.jar sha256=26b14e55b7f292b440c245e69f97cb24e37baded8b6c7c389bb357a8812eef1e size=681384
+PATCH C:\Users\27682\Documents\新建文件夹\.toolchain\jdk\bin\java.exe -cp C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\build\install\mcbridge1201\lib\* top.mcbridge1201.Main patch --in C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p207\restored.jar --out C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p207\patched.jar --rules C:\Users\27682\Documents\新建文件夹\mcbridge1201\rules\fabric-1.21.1\modmenu-list-render.json --bridge-dir C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p207-bridges
+  validated 1 rule file(s): schema=0.1-draft target=fabric-1.21.1
+  patched restored.jar -> patched.jar (classes changed=2)
+    rule modmenu.description.render-tail-renamed applied 1 time(s)
+    rule modmenu.list.render-body applied 1 time(s)
+    bridges embedded: [top/mcbridge1201/bridge/ModMenuListRenderBridge]
+    javac bridges: [top/mcbridge1201/bridge/ModMenuListRenderBridge]
+    sha256 dfb1f33d8e73e724305efa8981834ca4b6db9926335a24693031fb58b4af97ea
+INJECT C:\Users\27682\.workbuddy\binaries\python\versions\3.13.12\python.exe C:\Users\27682\Documents\新建文件夹\mcbridge1201\tools\inject_bridges.py --jar C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p207\patched.jar --out C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\modmenu-description.jar --classes C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p207-bridges --replace top/mcbridge1201/bridge/LegacyParentWidget
+OUT modmenu-description.jar sha256=6a6a14eae22099ab53160567987e3ece83a264f98296d74b05f777b16f16321a size=682775

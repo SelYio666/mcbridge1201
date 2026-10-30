@@ -193,15 +193,24 @@ python tools/build_clumps_companion.py --stub <client-1.21.1-intermediary.jar>  
 服务端每 20 tick 合并 2 格范围内的经验球（写和 + discard），不读 Clumps 配置；客户端无需安装。
 仓库只提供源码与构建脚本，不附带 jar。
 
-## Mod Menu 列表渲染桥（p205）
+## Mod Menu 列表渲染桥（p205 / p206 / p207）
 
 `work/client/modmenu-patched.jar` 是修前的构建（列表只画黑底不画行），保留它只为让
-`runs/p204-wheel-input/` 的证据仍可复现。**分发要用 `work/client/modmenu-selected.jar`**（p206：行渲染 + 选中高亮）
-（`runs/p205-modmenu-rows/build.py` 产出：javac 单桥 + `tools/inject_bridges.py` 注入）。
+`runs/p204-wheel-input/` 的证据仍可复现。中间的 `modmenu-rows.jar`（p205：行渲染）与
+`modmenu-selected.jar`（p206：+ 选中高亮）同样只作为对照基准保留。
+**分发要用 `work/client/modmenu-description.jar`**（p207：行渲染 + 选中高亮 + 描述面板有内容）。
+三者都由「javac 单桥 + `tools/inject_bridges.py` 注入」产出（`runs/p205-modmenu-rows/build.py`、
+`runs/p206-modmenu-select/build.py`、`runs/p207-description-panel/build.py`）。
 全量重打包时仍需用同一 `--bridge-dir` 走 `patch`，否则旧的 `ModMenuListRenderBridge` 会留在 jar 里。
 
-调试：加 `-Dmcbridge.listrender.debug=true` 才会打印 `P205_LIST class=… count=… rowWidth=…`，
-默认不打印。
+p207 的 jar 里 `DescriptionListWidget` 不再是被整段替换的，而是**只换尾部**：规则
+`modmenu.description.render-tail`（`method_25394`）/`modmenu.description.render-tail-renamed`
+（`method_48579`）带 `keepPrefixBeforeTombstones: true`。用旧的 `patch` 重新生成时必须带这份规则，
+否则描述面板会退回 p206 的空面板。`LegacyParentWidget` 也在这一轮改了（`setLeftPos` 现在同步
+`ClickableWidget.x`），它是注入替换的类，全量重打包同样要跟上。
+
+调试：加 `-Dmcbridge.listrender.debug=true` 才会打印 `P205_LIST class=… count=… rowWidth=…`、
+`P206_HIGHLIGHT …`、`P207_PANEL …`、`P207_SCROLL …`，默认不打印。
 
 ## 多补丁 jar 的桥版本
 

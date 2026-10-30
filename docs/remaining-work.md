@@ -173,14 +173,22 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   `method_44398` (1 px outline around a black interior) and adds a translucent wash on top, which is
   a deliberate, documented deviation: the vanilla outline alone is invisible on this flat backdrop.
   Still degraded: the original textured backdrop is not restored (flat 0x80000000 band), and the
-  **description panel body is empty** - not "untested" any more. Its render method
-  (`DescriptionListWidget.method_48579`) is replaced wholesale by the bridge, and the original body's
+  description panel body used to be empty - not "untested" any more. Its render method
+  (`DescriptionListWidget.method_48579`) was replaced wholesale by the bridge, and the original body's
   first 1397 bytecode ops are what *build* the DescriptionEntry rows (24 constructions, from
   `getSelectedEntry()` + `getTranslatedDescription()` wrapped to width) before the 1.20.1 buffer
   pipeline (17 tombstone call sites) that crashed. Dropping the body dropped the entry building, so
-  `count` is 0 on every frame and only ModsScreen's own icon/name/buttons draw. Bytecode and
-  screenshots are in `runs/p206-modmenu-select/bytecode/`; fixing it means re-implementing that entry
-  builder against 1.21.1 or replacing only the tombstoned tail.
+  `count` was 0 on every frame and only ModsScreen's own icon/name/buttons drew. Bytecode and
+  screenshots are in `runs/p206-modmenu-select/bytecode/`. **Fixed in p207**
+  (`runs/p207-description-panel/`): `bodyRedirects` gained `keepPrefixBeforeTombstones`, which keeps
+  everything before the first tombstone reference's block entry and replaces only the tail, so the
+  row building survives (500->13 rows: `count=0` on the p206 jar vs `count=13` here, 1 text band /
+  204 px vs 7 bands / 2920 px). The cut prefers a label a jump actually targets, and three unsafe
+  cuts raise instead of shipping a `VerifyError`. Two side findings, both fixed: the panel was
+  drawn at x=0 because `setLeftPos` never reached `ClickableWidget.x` (so clicks and wheel over the
+  panel went to the mod list), and the panel now paints one backdrop instead of a band per row.
+  Still degraded: the flat panel backdrop and the flat scrollbar replace textured sprites, and the
+  scrollbar branch was never exercised in that run (`maxScroll=0`).
   Real wheel and keyboard input now work (`runs/p204-wheel-input/`, closing p104): nine OS wheel
   notches over the list stepped the scroll 18/36/54/72/90/108/126/144 and clamped at max 147,
   each notch showing up as one `dy=-1.0` at `Mouse.onMouseScroll`; a wheel outside the window

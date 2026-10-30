@@ -266,3 +266,37 @@ p205 修好行渲染时留下两条尾巴，这条收掉一条、把另一条查
   `run.py` 重算）、`check_hashes` 见提交说明、`verify_evidence` passed；无新 release（v0.5.6，只改桥）。
 - 边界：单机单显示器、guiScale 2；只点第 3 行，未测键盘选择与多行框选；截图相对客户区有 +8 px 竖直偏差（判据用相对间距校验）；
   描述面板仍是空的。
+
+## p207 描述面板（2026-10-29，正常 UTF-8）
+
+p206 把「面板为什么是全空」查到底但没修；这一轮修掉了。
+
+- **新能力 `keepPrefixBeforeTombstones`**：redirect 不再只能整段替换。`JarPatcher.keepPrefixThenCall()`
+  从方法头找到第一条引用 tombstone 桩的指令，再从它往前找**块入口 label**（优先取被跳转/异常表引用的那个），
+  保留之前的一切、只把之后换成 `INVOKESTATIC bridge` + `RETURN`。切点取错不是报错而是运行期 `VerifyError`，
+  所以三种不安全的切法**抛异常**：保留段跳进被替换的尾部、保留段仍引用 tombstone、被丢的尾部在写本类字段
+  （后者正是 p206 那个缺陷的另一种形状——丢状态变化）。找不到 tombstone 也拒绝，不静默算成功。
+- **第一次实现是错的，被产物自己抓出来**：取「最近的 label」切在 1402（块内部的行号 label），产物尾部残留了
+  `class_289.method_1348()` 与一次 `astore 6`；改成优先取被引用的 label，切点回到 1397，残留消失。
+- **规则拆成两条**：`modmenu.description.render-tail`（`method_25394`，转换后的 jar 上的老名字）与
+  `modmenu.description.render-tail-renamed`（`method_48579`，改名后的入口），都带 `keepPrefixBeforeTombstones: true`；
+  一个 jar 最多命中一条（`build.log` 里是 `applied 1 time(s)`）。
+- **顺手修掉一个真 bug**：面板一直画在 `x=0`。Mod Menu 用 1.20.1 的 `setLeftPos` 定位，1.21.1 删了它，
+  `LegacyParentWidget` 复刻成写 `field_19088`，却从没同步 `ClickableWidget.x`，于是 `getX()` 返回 0——不止画错位置，
+  **面板区域里所有点击与滚轮都落到了 ModListWidget 上**。修法两头：`method_25333` 补一次 `method_46421(left)`，
+  桥优先读 legacy 四字段（`field_19088/19087/19085/19086`），没有才退回 1.21.1 的访问器（`fieldOrNull` 让"没有"是正常答案）。
+- **面板画成一块底**（`PANEL_BACKDROP = 0x80000000`），行条带只在 `if (!panel)` 时画——否则正文会变成斑马纹。
+  补了 `drawScrollBar()`（右内缩 2 px、宽 6 px，平色），**只在 `maxScroll > 0` 时画**。
+- **匹配对照**：同一客户端/11 个模组/1280×720 guiScale 2/同一光标点 `(632,626)`/同样真实左键点第 3 行，只换 jar。
+  p206 的 jar：`count=0`、`box=0,108`、`firstEntry=none`、面板 1 条带 204 px；本轮 jar：`count=13`、`box=328,108`、
+  `legacy=true getX=328`、`firstEntry=…DescriptionEntry`、7 条带 2920 px。两次都选中第 3 行，ModListWidget 几何未变。
+- **字节码**：产物 `method_48579` 550 行 javap，仍有 `method_25396` 与 24 处 `DescriptionEntry`（建行活着），
+  **0 处 `Tombstones`**，尾部只剩 `renderDescription` + `return`；被切的方法体与 p206 记录逐行相同（843 行是 846 行的前缀）。
+  相对 p206 的 jar **只有 3 个 class 变**：`DescriptionListWidget` 9045→13335、`ModMenuListRenderBridge` 7278→9275、
+  `LegacyParentWidget` 790→824。
+- **门禁**：`test_review_fixes` **346/346**（+34 条，全部从 `description-check.json`、两份 `result.json`、`build.log`、
+  桥/`LegacyParentWidget`/`JarPatcher`/规则文件与新增的 Java 回归测试重算）、`check_hashes` 见提交说明、`verify_evidence` passed；
+  无新 release（v0.5.6，只改桥与 patcher）。
+- 边界：只点第 3 行、一种描述长度；**滚动条分支本轮未被执行**（`maxScroll=0`，无描述长到需要滚动），
+  `verify_description.py` 把它如实打印成「未绘制」，没有算成一条通过的检查；面板底与滚动条是平色，原版贴图 sprite 未复刻；
+  `legacy=true` 只对转换来的 1.20.1 子类成立。

@@ -39,5 +39,10 @@ public abstract class LegacyParentWidget extends class_350 {
     public void method_25333(int left) {
         this.field_19088 = left;
         this.field_19087 = left + this.field_22742;
+        // 1.21.1 has no setLeftPos; the widget's own x is what mouse hit testing and narration read,
+        // and a converted subclass only ever sets its left here, so the two must not drift apart.
+        // Observed before this: Mod Menu placed the description panel at x=328 but the widget still
+        // reported x=0, so every click and every scroll notch over the panel went to the mod list.
+        this.method_46421(left);
     }
 }

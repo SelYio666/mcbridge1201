@@ -46,6 +46,16 @@ public final class RuleSet {
         public String bridgeClass;
         public String bridgeMethod;
         public String bridgeDesc;
+        /**
+         * When true the body is not dropped wholesale: everything before the block that opens the
+         * removed-API tail is kept, and only that tail is replaced by the bridge call. The boundary
+         * is the label of the block that contains the first reference to a tombstone stub
+         * ({@code centurybridge/gen/}). This exists because some methods do their real work - state
+         * updates, list rebuilds - in the same body that ends in removed drawing calls, so dropping
+         * the body also drops the side effect (Mod Menu's description panel: the rows were built
+         * before the shader tail and never appeared again).
+         */
+        public boolean keepPrefixBeforeTombstones;
         public String capability;
         public String risk;
         public String evidence;

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "0.1-draft",
   "target": "fabric-1.21.1",
-  "note": "ModListWidget.method_25311 draws its custom list background through 1.20.1 RenderSystem/Shader calls that were removed in 1.21.1 (tombstones t1-t4). They cannot be forwarded sensibly, so the body is replaced with a DrawContext-based renderer that paints a plain row background and then calls the unchanged Entry.method_25343 hook for every entry.",
+  "note": "ModListWidget.method_25311 draws its custom list background through 1.20.1 RenderSystem/Shader calls that were removed in 1.21.1 (tombstones t1-t4). They cannot be forwarded sensibly, so the body is replaced with a DrawContext-based renderer that paints a plain row background and then calls the unchanged Entry.method_25343 hook for every entry. DescriptionListWidget is the opposite case: its render method builds the description rows first and only then draws through the same removed pipeline, so only its tail is replaced and its prefix is kept (keepPrefixBeforeTombstones) - dropping the whole body removed the rows as a side effect and left the panel empty (runs/p206-modmenu-select/). The description rule is listed twice, once for the pre-rename name (method_25394, what a converted jar still has) and once for method_48579 (what a jar looks like after render-widget-override.json renamed the override); both do the same thing and a given jar matches at most one of them.",
   "bodyRedirects": [
     {
       "id": "modmenu.list.render-body",
@@ -16,16 +16,30 @@
       "evidence": "Opening the list after the screen render was restored crashed with 'CenturyBridge tombstone: net.minecraft.class_289.method_1349 no longer exists in 1.21.1' inside ModListWidget.method_25311 (runs/p94-modmenu-list/). The replacement keeps row rendering (entries, scrolling geometry) but drops the old shader-based backdrop, which is recorded as a visual degradation."
     },
     {
-      "id": "modmenu.description.render-body",
+      "id": "modmenu.description.render-tail",
       "owner": "com/terraformersmc/modmenu/gui/widget/DescriptionListWidget",
       "name": "method_25394",
       "desc": "(Lnet/minecraft/class_332;IIF)V",
       "bridgeClass": "top/mcbridge1201/bridge/ModMenuListRenderBridge",
-      "bridgeMethod": "renderList",
+      "bridgeMethod": "renderDescription",
       "bridgeDesc": "(Ljava/lang/Object;Lnet/minecraft/class_332;IIF)V",
+      "keepPrefixBeforeTombstones": true,
       "capability": "modmenu.description.render",
       "risk": "medium",
-      "evidence": "After the mod list body was replaced, the description panel crashed with the same class_289.method_1349 tombstone (DescriptionListWidget.method_25394); it uses the same generic entry-list rendering."
+      "evidence": "The first attempt replaced this whole body and the description panel went empty: the first 1397 bytes of the method build the DescriptionEntry rows (clearEntries, scroll to top, wrap getTranslatedDescription, 24 entry constructions) before the 1.20.1 BufferBuilder tail, so the crash and the side effect live in one body (runs/p206-modmenu-select/bytecode/render-original.txt; count=0 on every frame in that run). This rule keeps the prefix and replaces only the tail."
+    },
+    {
+      "id": "modmenu.description.render-tail-renamed",
+      "owner": "com/terraformersmc/modmenu/gui/widget/DescriptionListWidget",
+      "name": "method_48579",
+      "desc": "(Lnet/minecraft/class_332;IIF)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ModMenuListRenderBridge",
+      "bridgeMethod": "renderDescription",
+      "bridgeDesc": "(Ljava/lang/Object;Lnet/minecraft/class_332;IIF)V",
+      "keepPrefixBeforeTombstones": true,
+      "capability": "modmenu.description.render",
+      "risk": "medium",
+      "evidence": "Same redirect as modmenu.description.render-tail, matched after render-widget-override.json renamed the override to the 1.21.1 entry point (class_350.method_48579). A jar that already went through the rename has only this name; a converted jar has only the old one."
     }
   ]
 }

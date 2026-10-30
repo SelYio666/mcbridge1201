@@ -1,0 +1,9 @@
+JVMFLAG -Dmcbridge.listrender.debug=true
+MODMENU C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\modmenu-selected.jar sha256=8cbb82df59be78b430d9f935df304f794494e58d4df4698a97fc77251456dd09 size=679937
+mods: fabric-api.jar, modmenu.jar, balm.jar, shulker-patched2.jar, sbtpreview.jar, appleskin-patched.jar, ironchests-final.jar, lithium-final.jar, trashslot-client-final.jar, fallingtree-patched.jar, p204probe.jar
+CLIENTAREA origin=(320,240) size=1280x720 hwnd=264856 scale=2.0
+MOVE attempt=1 listCenter=(632,631) cursorNow=(632,631) underIsGame=True
+CLICK row=3 gui=(156,193) device=(632,626)
+SELECT before={'class': 'ModListWidget', 'selected': 0, 'count': 11, 'focused': False}
+SELECT after={'class': 'ModListWidget', 'selected': 3, 'count': 11, 'focused': True}
+DESCRIPTION count=0 box=[0, 108, 312, 216]

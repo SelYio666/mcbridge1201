@@ -247,6 +247,13 @@ public final class JarPatcher {
                 if (!mn.name.equals(r.name) || !mn.desc.equals(r.desc)) {
                     continue;
                 }
+                if (r.keepPrefixBeforeTombstones) {
+                    keepPrefixThenCall(cn, mn, r);
+                    st.applied.merge(r.id, 1, Integer::sum);
+                    recordBridge(st, used, r.bridgeClass);
+                    changed = true;
+                    continue;
+                }
                 mn.instructions.clear();
                 mn.tryCatchBlocks.clear();
                 mn.localVariables = null;
@@ -274,6 +281,158 @@ public final class JarPatcher {
             }
         }
         return changed;
+    }
+
+    /** Tombstone stubs live in this package; a reference to one marks the start of removed API use. */
+    private static final String TOMBSTONE_PREFIX = "centurybridge/gen/";
+
+    /**
+     * Keeps the part of a body that still works and replaces only the tail that calls removed API.
+     *
+     * <p>The tail is identified by the first reference to a tombstone stub. The cut is a block
+     * entry before that reference, never the reference itself: the instructions before it are the
+     * argument setup for the removed call, and cutting mid-expression would leave values on the
+     * operand stack at a point where earlier branches arrive with nothing.
+     *
+     * <p>Block entry means "a label some jump targets" first, because that is where the original
+     * control flow can still arrive; a bare label in the middle of the tail is only a line-number
+     * marker and would keep a statement whose result nobody reads (observed in Mod Menu: cutting at
+     * the inner label kept {@code RenderSystem.getRenderSystem()} and its dead store). If the tail
+     * block is reached only by fall-through, the nearest plain label is used instead.
+     *
+     * <p>Three preconditions are checked rather than assumed, because a wrong cut turns into a
+     * {@code VerifyError} at runtime instead of an error here: every jump that stays in the method
+     * must land before the cut, the retained part must not itself reference a tombstone, and the
+     * dropped part must not write a field of this class (that would be a state change being thrown
+     * away, which is exactly the p206 defect in a different shape).
+     */
+    private static void keepPrefixThenCall(ClassNode cn, MethodNode mn, RuleSet.BodyRedirect r) {
+        AbstractInsnNode firstTombstone = null;
+        for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+            if (referencesTombstone(insn)) {
+                firstTombstone = insn;
+                break;
+            }
+        }
+        if (firstTombstone == null) {
+            throw new IllegalArgumentException(r.id + " (" + cn.name + "." + mn.name
+                    + "): keepPrefixBeforeTombstones found no reference to " + TOMBSTONE_PREFIX
+                    + "*, so the boundary between kept and replaced code is undefined");
+        }
+        Set<LabelNode> entries = new HashSet<>();
+        for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null; insn = insn.getNext()) {
+            entries.addAll(jumpTargets(insn));
+        }
+        for (var b : mn.tryCatchBlocks) {
+            entries.add(b.handler);
+        }
+        LabelNode anyLabel = null;
+        LabelNode entryLabel = null;
+        for (AbstractInsnNode insn = firstTombstone.getPrevious(); insn != null; insn = insn.getPrevious()) {
+            if (insn instanceof LabelNode label) {
+                if (anyLabel == null) {
+                    anyLabel = label;
+                }
+                if (entries.contains(label)) {
+                    entryLabel = label;
+                    break;
+                }
+            }
+        }
+        LabelNode boundary = entryLabel != null ? entryLabel : anyLabel;
+        if (boundary == null) {
+            throw new IllegalArgumentException(r.id + " (" + cn.name + "." + mn.name
+                    + "): the block with the first tombstone call is not opened by a label, "
+                    + "so there is no safe place to cut");
+        }
+        Set<AbstractInsnNode> retained = new HashSet<>();
+        for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != boundary; insn = insn.getNext()) {
+            retained.add(insn);
+        }
+        for (AbstractInsnNode insn : retained) {
+            for (LabelNode target : jumpTargets(insn)) {
+                if (!retained.contains(target) && target != boundary) {
+                    throw new IllegalArgumentException(r.id + " (" + cn.name + "." + mn.name
+                            + "): kept code jumps past the cut to " + target
+                            + ", which would land inside the replaced tail");
+                }
+            }
+            if (referencesTombstone(insn)) {
+                throw new IllegalArgumentException(r.id + " (" + cn.name + "." + mn.name
+                        + "): kept code still references " + TOMBSTONE_PREFIX + "*");
+            }
+        }
+        for (AbstractInsnNode insn = boundary; insn != null; insn = insn.getNext()) {
+            if (insn instanceof FieldInsnNode f
+                    && (f.getOpcode() == Opcodes.PUTFIELD || f.getOpcode() == Opcodes.PUTSTATIC)
+                    && f.owner.equals(cn.name)) {
+                throw new IllegalArgumentException(r.id + " (" + cn.name + "." + mn.name
+                        + "): the replaced tail writes " + f.owner + "." + f.name
+                        + ", so cutting it would drop a state change; move the cut or keep the body");
+            }
+        }
+        // Drop the tail. Everything after the boundary goes, boundary stays as the entry point.
+        for (AbstractInsnNode insn = boundary.getNext(); insn != null; ) {
+            AbstractInsnNode next = insn.getNext();
+            mn.instructions.remove(insn);
+            insn = next;
+        }
+        // A handler or range that covered the tail cannot be kept; this method has none, and a
+        // silent partial keep would be worse than failing, so record what was dropped.
+        List<org.objectweb.asm.tree.TryCatchBlockNode> blocks = mn.tryCatchBlocks;
+        for (int i = blocks.size() - 1; i >= 0; i--) {
+            var b = blocks.get(i);
+            if (!retained.contains(b.start) || !retained.contains(b.end) || !retained.contains(b.handler)) {
+                blocks.remove(i);
+            }
+        }
+        mn.localVariables = null;
+        mn.visibleLocalVariableAnnotations = null;
+        mn.invisibleLocalVariableAnnotations = null;
+        InsnList il = new InsnList();
+        int slot = 0;
+        if ((mn.access & Opcodes.ACC_STATIC) == 0) {
+            il.add(new org.objectweb.asm.tree.VarInsnNode(Opcodes.ALOAD, 0));
+            slot = 1;
+        }
+        for (Type t : Type.getArgumentTypes(mn.desc)) {
+            il.add(new org.objectweb.asm.tree.VarInsnNode(t.getOpcode(Opcodes.ILOAD), slot));
+            slot += t.getSize();
+        }
+        il.add(new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass, r.bridgeMethod,
+                r.bridgeDesc, false));
+        il.add(new org.objectweb.asm.tree.InsnNode(Opcodes.RETURN));
+        mn.instructions.insert(boundary, il);
+        mn.maxLocals = Math.max(mn.maxLocals, slot);
+    }
+
+    private static boolean referencesTombstone(AbstractInsnNode insn) {
+        String owner = null;
+        if (insn instanceof MethodInsnNode m) {
+            owner = m.owner;
+        } else if (insn instanceof FieldInsnNode f) {
+            owner = f.owner;
+        } else if (insn instanceof org.objectweb.asm.tree.TypeInsnNode t) {
+            owner = t.desc;
+        }
+        return owner != null && owner.startsWith(TOMBSTONE_PREFIX);
+    }
+
+    private static List<LabelNode> jumpTargets(AbstractInsnNode insn) {
+        if (insn instanceof org.objectweb.asm.tree.JumpInsnNode j) {
+            return List.of(j.label);
+        }
+        if (insn instanceof org.objectweb.asm.tree.TableSwitchInsnNode ts) {
+            List<LabelNode> out = new ArrayList<>(ts.labels);
+            out.add(ts.dflt);
+            return out;
+        }
+        if (insn instanceof org.objectweb.asm.tree.LookupSwitchInsnNode ls) {
+            List<LabelNode> out = new ArrayList<>(ls.labels);
+            out.add(ls.dflt);
+            return out;
+        }
+        return List.of();
     }
 
     /** Retargets classes whose old superclass constructor no longer exists to a bridge superclass. */

@@ -2185,6 +2185,177 @@ def test_modmenu_selection() -> None:
           "for attempt in range(1, 4)" in harness and "underIsGame" in harness, "")
 
 
+def test_modmenu_description() -> None:
+    """p207: the description panel finally has rows, because the working prefix of the body is kept.
+
+    p206 diagnosed the empty panel but left it empty: the redirect replaced the whole render body,
+    and the first ~1397 bytes of that body are the part that *builds* the description rows. p207
+    adds a second redirect mode - keep everything before the removed-API tail, replace only the tail
+    - and applies it. Four things are guarded, and again each one is read back from a committed
+    artefact rather than asserted:
+
+    * the patcher can do the cut and refuses three specific unsafe ones;
+    * both description rules keep the prefix, and the whole-body rule is gone;
+    * the two runs differ only in `modmenu.jar` and only the panel changed: 0 rows -> 13 rows;
+    * the panel now reports its real box (x=328) instead of x=0, which also fixes where clicks land.
+    """
+    run = ROOT / "runs" / "p207-description-panel"
+    patcher = ROOT / "java" / "src" / "main" / "java" / "top" / "mcbridge1201" / "rules" / "JarPatcher.java"
+    rule_set = ROOT / "java" / "src" / "main" / "java" / "top" / "mcbridge1201" / "rules" / "RuleSet.java"
+    bridge = (ROOT / "java" / "src" / "bridge" / "java" / "top" / "mcbridge1201" / "bridge"
+              / "ModMenuListRenderBridge.java")
+    legacy = bridge.parent / "LegacyParentWidget.java"
+    rules = ROOT / "rules" / "fabric-1.21.1" / "modmenu-list-render.json"
+    verdict_path = run / "description-check.json"
+    # Every input must exist: silently skipping a missing one would turn a regression into a pass.
+    missing = [str(p) for p in (patcher, rule_set, bridge, legacy, rules, verdict_path) if not p.exists()]
+    check("p207: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    def code_of(path: Path) -> str:
+        text = path.read_text(encoding="utf-8")
+        return re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", text, flags=re.S))
+
+    # --- 1. the new redirect mode ---------------------------------------------------------------
+    patcher_code = code_of(patcher)
+    rule_set_code = code_of(rule_set)
+    check("p207: the rule model has a keep-the-prefix mode",
+          "keepPrefixBeforeTombstones" in rule_set_code, "")
+    check("p207: keeping the prefix goes through its own routine, not the wholesale replacement",
+          "if (r.keepPrefixBeforeTombstones)" in patcher_code
+          and "keepPrefixThenCall(cn, mn, r)" in patcher_code
+          and patcher_code.index("keepPrefixThenCall(cn, mn, r)")
+          < patcher_code.index("mn.instructions.clear()"),
+          "")
+    check("p207: the cut prefers a label that a jump or a handler targets",
+          "entries.contains(label)" in patcher_code
+          and "entryLabel != null ? entryLabel : anyLabel" in patcher_code,
+          "a plain line-number label in the tail would keep a dead statement")
+    check("p207: the three unsafe cuts are refused instead of shipped",
+          "jumps past the cut to" in patcher_code
+          and "still references \" + TOMBSTONE_PREFIX" in patcher_code
+          and "so cutting it would drop a state change" in patcher_code,
+          "")
+    check("p207: a body with no tombstone is refused, not silently left alone",
+          "found no reference to \" + TOMBSTONE_PREFIX" in patcher_code, "")
+
+    java_test = ROOT / "java" / "src" / "test" / "java" / "top" / "mcbridge1201" / "JarPatcherKeepPrefixTest.java"
+    check("p207: the new mode has its own regression test", java_test.exists(), str(java_test))
+    if java_test.exists():
+        test_code = java_test.read_text(encoding="utf-8")
+        check("p207: that test covers success and both refusals",
+              test_code.count("@Test") == 3
+              and "keepsTheWorkingPrefixAndReplacesOnlyTheTombstoneTail" in test_code
+              and "refusesWhenKeptCodeJumpsIntoTheReplacedTail" in test_code
+              and "refusesWhenThereIsNoTombstoneReference" in test_code,
+              f'{test_code.count("@Test")} tests')
+        check("p207: the success case asserts the prefix's field write survives",
+              "writesCol" in test_code and "writesLast" in test_code
+              and "no removed-API call may survive the patch" in test_code, "")
+
+    # --- 2. the rules that use it ---------------------------------------------------------------
+    spec = json.loads(rules.read_text(encoding="utf-8"))
+    by_id = {r["id"]: r for r in spec["bodyRedirects"]}
+    check("p207: the rule that replaced the whole description body is gone",
+          "modmenu.description.render-body" not in by_id, str(sorted(by_id)))
+    tails = [by_id.get("modmenu.description.render-tail"),
+             by_id.get("modmenu.description.render-tail-renamed")]
+    check("p207: the description tail is redirected under both names a jar can carry",
+          all(tails) and [t["name"] for t in tails] == ["method_25394", "method_48579"],
+          str([t["name"] for t in tails if t]))
+    check("p207: both description rules keep the prefix and call the same bridge method",
+          all(t and t.get("keepPrefixBeforeTombstones") is True
+              and t["bridgeMethod"] == "renderDescription" for t in tails),
+          str([(t or {}).get("keepPrefixBeforeTombstones") for t in tails]))
+    check("p207: the mod list redirect is untouched by this change",
+          by_id["modmenu.list.render-body"].get("keepPrefixBeforeTombstones") is None
+          and by_id["modmenu.list.render-body"]["bridgeMethod"] == "renderList", "")
+    check("p207: the rule note says why the prefix matters",
+          "only its tail is replaced" in spec["note"] and "count=0" in by_id[
+              "modmenu.description.render-tail"]["evidence"], "")
+
+    # --- 3. the bridge follows the panel to where the screen put it -----------------------------
+    bridge_code = code_of(bridge)
+    check("p207: the panel geometry comes from the 1.20.1 fields when they exist",
+          all(f in bridge_code for f in ("field_19088", "field_19087", "field_19085", "field_19086"))
+          and "boolean legacy = panel && fieldOrNull(type, \"field_19088\") != null" in bridge_code,
+          "")
+    check("p207: an absent legacy field is a nil answer, not a crash",
+          "fieldOrNull" in bridge_code and "return null" in bridge_code, "")
+    check("p207: the panel is one backdrop, the list keeps its per-row bands",
+          "if (!panel)" in bridge_code
+          and "context.method_25294(boxLeft, widgetTop, boxRight, widgetBottom, PANEL_BACKDROP)"
+          in bridge_code,
+          "")
+    check("p207: the scrollbar only draws when there is something to scroll",
+          "maxScroll <= 0 || viewHeight < 12" in bridge_code
+          and "method_25331" in bridge_code and "P207_SCROLL" in bridge_code, "")
+    check("p207: every debug line is still behind -Dmcbridge.listrender.debug",
+          bridge_code.count("System.out") == bridge_code.count("if (DEBUG")
+          and 'Boolean.getBoolean("mcbridge.listrender.debug")' in bridge_code,
+          f'{bridge_code.count("System.out")} prints vs {bridge_code.count("if (DEBUG")} guards')
+    legacy_code = code_of(legacy)
+    check("p207: setLeftPos also moves the widget's own x, so clicks land on the panel",
+          re.search(r"method_25333\(int left\)[^}]*method_46421\(left\)", legacy_code, flags=re.S)
+          is not None, "")
+
+    # --- 4. what the two runs actually measured -------------------------------------------------
+    report = json.loads(verdict_path.read_text(encoding="utf-8"))
+    before = json.loads((run / "before" / "result.json").read_text(encoding="utf-8"))
+    after = json.loads((run / "after" / "result.json").read_text(encoding="utf-8"))
+    check("p207: the committed verdict passed every one of its checks",
+          all(c["ok"] for c in report["checks"]) and len(report["checks"]) >= 17,
+          str([c["name"] for c in report["checks"] if not c["ok"]]))
+    check("p207: the two runs are the p206 jar and the new jar",
+          before["modmenu_sha256"] == "8cbb82df59be78b430d9f935df304f794494e58d4df4698a97fc77251456dd09"
+          and before["modmenu_sha256"] != after["modmenu_sha256"],
+          f'{before["modmenu_sha256"][:12]} vs {after["modmenu_sha256"][:12]}')
+    check("p207: both runs clicked the same row at the same device pixel",
+          before["click"] == after["click"] and after["click"]["row"] == 3,
+          f'{before["click"]} vs {after["click"]}')
+    check("p207: only the description panel changed; the mod list kept its geometry",
+          before["mod_list"] == after["mod_list"] and after["mod_list"]["count"] == 11,
+          f'{before["mod_list"]} vs {after["mod_list"]}')
+    check("p207: the control panel had no rows at all",
+          (before.get("description") or {}).get("count") == 0, str(before.get("description")))
+    check("p207: the fixed panel has the selected mod's rows",
+          (after.get("description") or {}).get("count", 0) >= 10,
+          f'count={(after.get("description") or {}).get("count")}')
+    check("p207: the panel now reports its real box instead of x=0",
+          report["control"]["description"]["box"] == [0, 108, 312, 216]
+          and report["fix"]["description"]["box"] == [328, 108, 312, 216],
+          f'{report["control"]["description"]["box"]} -> {report["fix"]["description"]["box"]}')
+    check("p207: the panel read its layout from the legacy fields, as designed",
+          "legacy=true" in (report["fix"]["panel_line"] or ""),
+          str(report["fix"]["panel_line"]))
+    check("p207: the fix paints text bands where the control had almost none",
+          report["fix"]["bands"] >= 5 and report["control"]["bands"] <= 1
+          and report["fix"]["ink"] > report["control"]["ink"] * 5,
+          f'{report["control"]["bands"]}/{report["control"]["ink"]} -> '
+          f'{report["fix"]["bands"]}/{report["fix"]["ink"]}')
+    check("p207: exactly the three rebuilt classes differ from the p206 jar",
+          report["differing_entries"] == [
+              "com/terraformersmc/modmenu/gui/widget/DescriptionListWidget.class",
+              "top/mcbridge1201/bridge/LegacyParentWidget.class",
+              "top/mcbridge1201/bridge/ModMenuListRenderBridge.class"],
+          str(report["differing_entries"]))
+    check("p207: the body that was cut is byte-identical to the p206 record",
+          any(c["name"] == "pre_redirect_body_matches_the_p206_record" and c["ok"]
+              for c in report["checks"]), "")
+    check("p207: the scrollbar branch is recorded as not exercised, not as passing",
+          report["scrollbar_lines"] == []
+          and "scrollbar not drawn in this run" in
+          (run / "verify_description.py").read_text(encoding="utf-8"),
+          str(report["scrollbar_lines"]))
+    build_log = (run / "build.log").read_text(encoding="utf-8", errors="replace")
+    check("p207: the build proved the renamed rule matched exactly once",
+          "modmenu.description.render-tail-renamed applied 1 time(s)" in build_log, "")
+    check("p207: the build refuses a class with debug prints or no tombstone as 'pristine'",
+          "carries a println; refusing to ship it" in (run / "build.py").read_text(encoding="utf-8")
+          and "has no tombstone reference" in (run / "build.py").read_text(encoding="utf-8"), "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2199,6 +2370,7 @@ def main() -> int:
     test_real_wheel_input()
     test_modmenu_rows()
     test_modmenu_selection()
+    test_modmenu_description()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

@@ -447,3 +447,36 @@ p205 留下的两条尾巴：一条收掉，一条查到底并如实标记为未
 - 回归：新增 `test_modmenu_selection()`（25 条），并把 p205 那条"只有一处 println"改成"每处 println 都在同一个 DEBUG 门后"；
 - 门禁：`test_review_fixes` **312/312**；`check_hashes`、`verify_evidence`、`check_text_encoding` 见提交说明；
 - 边界：单机单显示器、guiScale 2；只点第 3 行；截图有 +8 px 竖直偏差（用相对间距校验）；描述面板仍空。
+
+## 二十三、2026-10-29 更新（p207：描述面板真的有字了）
+
+p206 只诊断没修的那条，这一轮修掉了，方式是给 redirect 加一种新形态而不是重写 Mod Menu 的建行逻辑。
+
+- **新能力 `keepPrefixBeforeTombstones`**（`RuleSet.BodyRedirect` 的字段 + `JarPatcher.keepPrefixThenCall()`）：
+  从方法头找到第一条引用 tombstone 桩的指令，从它往前找**块入口 label**，保留之前的一切，之后整体换成
+  `INVOKESTATIC bridge` + `RETURN`。**块入口优先取被跳转或异常表引用的 label**，找不到才退回最近的普通 label——
+  这一条是本轮的真 bug：取"最近的 label"会切在块内部的 1397/1402，产物尾部残留 `class_289.method_1348()`
+  与一次 `astore 6`（没人读的死语句）；改对之后残留消失；
+- **切错不报错会变成运行期 `VerifyError`，所以三条前置检查抛异常**：保留段跳进被替换的尾部、保留段仍引用
+  `centurybridge/gen/*`、被丢的尾部在写本类字段（后者等于丢状态变化，正是 p206 缺陷的另一种形状）；
+  找不到 tombstone 也拒绝，而不是"什么都没做报成功"；
+- **规则一条拆两条**：`modmenu.description.render-tail`（`method_25394`）与 `modmenu.description.render-tail-renamed`
+  （`method_48579`），都带 `"keepPrefixBeforeTombstones": true`，一个 jar 最多命中一条；
+- **匹配对照**（同客户端/11 模组/同窗口 guiScale 2/同一光标点/同一次真实左键点第 3 行，只换 `modmenu.jar`）：
+  p206 的 jar `count=0`、`box=0,108`、`firstEntry=none`、面板 1 条带 204 px；本轮 `count=13`、`box=328,108`、
+  `legacy=true getX=328`、`firstEntry=…DescriptionEntry`、7 条带 2920 px；两次都选中第 3 行，ModListWidget 几何未变；
+- **顺手修掉一个真 bug**：面板一直画在 `x=0`。`DescriptionListWidget.method_46426()`（1.21.1 的 `getX()`）返回 0，
+  因为 Mod Menu 用 1.20.1 的 `setLeftPos` 定位，而 `LegacyParentWidget` 复刻它时只写了 `field_19088`、从未同步
+  `ClickableWidget.x`——**不止画错位置，面板区域里所有点击与滚轮都落到了 ModListWidget 上**。修法两头：
+  `method_25333` 末尾补 `method_46421(left)`；桥优先读 legacy 四字段，没有才退回 1.21.1 访问器（`fieldOrNull`）；
+- **面板画成一块底**（`0x80000000`），行条带只在 `if (!panel)` 时画（否则正文是斑马纹）；补 `drawScrollBar()`
+  （右内缩 2 px、宽 6 px、平色），**只在 `maxScroll > 0` 时画**；
+- **字节码判据**：产物 `method_48579` 550 行 javap，仍有 `method_25396` 与 24 处 `DescriptionEntry`（建行活着），
+  **0 处 `Tombstones`**，尾部只剩 `renderDescription` + `return`；被切的方法体与 p206 记录逐行相同
+  （843 行是 846 行的前缀，p206 的 dump 停在最后一个 tombstone）；相对 p206 的 jar 只有 3 个 class 变
+  （`DescriptionListWidget` 9045→13335、`ModMenuListRenderBridge` 7278→9275、`LegacyParentWidget` 790→824）；
+- 回归：新增 `test_modmenu_description()`（34 条）与 Java 侧的 `JarPatcherKeepPrefixTest`（3 例：保留前缀、
+  拒绝跳进尾部、拒绝找不到 tombstone）；
+- 门禁：`test_review_fixes` **346/346**；`check_hashes`、`verify_evidence`、`check_text_encoding` 见提交说明；
+- 边界：只点第 3 行、一种描述长度；**滚动条分支本轮未被执行**（`maxScroll=0`），判据里如实打印「未绘制」而
+  不算通过；面板底与滚动条是平色，原版贴图 sprite 未复刻；`legacy=true` 只对转换来的 1.20.1 子类成立。

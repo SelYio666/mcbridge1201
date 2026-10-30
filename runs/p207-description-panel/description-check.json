@@ -1,0 +1,183 @@
+{
+  "built_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\modmenu-description.jar",
+  "control_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\modmenu-selected.jar",
+  "description_method_lines": 550,
+  "differing_entries": [
+    "com/terraformersmc/modmenu/gui/widget/DescriptionListWidget.class",
+    "top/mcbridge1201/bridge/LegacyParentWidget.class",
+    "top/mcbridge1201/bridge/ModMenuListRenderBridge.class"
+  ],
+  "control": {
+    "count": 0,
+    "bands": 1,
+    "ink": 204,
+    "description": {
+      "class": "DescriptionListWidget",
+      "count": 0,
+      "left": 7,
+      "rowWidth": 302,
+      "itemHeight": 10,
+      "rows": [
+        108,
+        324
+      ],
+      "mouse": [
+        0,
+        0
+      ],
+      "focused": false,
+      "box": [
+        0,
+        108,
+        312,
+        216
+      ]
+    }
+  },
+  "fix": {
+    "count": 13,
+    "bands": 7,
+    "ink": 2920,
+    "bands_y": [
+      [
+        260,
+        267
+      ],
+      [
+        279,
+        289
+      ],
+      [
+        301,
+        308
+      ],
+      [
+        399,
+        425
+      ],
+      [
+        459,
+        468
+      ],
+      [
+        480,
+        490
+      ],
+      [
+        497,
+        508
+      ]
+    ],
+    "description": {
+      "class": "DescriptionListWidget",
+      "count": 13,
+      "left": 335,
+      "rowWidth": 302,
+      "itemHeight": 10,
+      "rows": [
+        108,
+        324
+      ],
+      "mouse": [
+        156,
+        193
+      ],
+      "focused": false,
+      "box": [
+        328,
+        108,
+        312,
+        216
+      ]
+    },
+    "panel_line": "P207_PANEL class=DescriptionListWidget box=328,108,312,216 count=10 legacy=true rowLeft=335"
+  },
+  "scrollbar_lines": [],
+  "checks": [
+    {
+      "name": "description_method_exists",
+      "ok": true,
+      "detail": "550 lines of javap"
+    },
+    {
+      "name": "description_method_keeps_row_building",
+      "ok": true,
+      "detail": "getEntryList + DescriptionEntry constructions still in the body"
+    },
+    {
+      "name": "description_method_calls_the_bridge",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "description_method_has_no_tombstone_call",
+      "ok": true,
+      "detail": "no centurybridge tombstone reference remains"
+    },
+    {
+      "name": "pre_redirect_body_matches_the_p206_record",
+      "ok": true,
+      "detail": "recorded 843 lines are the prefix of 846"
+    },
+    {
+      "name": "only_the_three_rebuilt_classes_changed",
+      "ok": true,
+      "detail": "com/terraformersmc/modmenu/gui/widget/DescriptionListWidget.class, top/mcbridge1201/bridge/LegacyParentWidget.class, top/mcbridge1201/bridge/ModMenuListRenderBridge.class"
+    },
+    {
+      "name": "control_panel_has_no_rows",
+      "ok": true,
+      "detail": "count=0"
+    },
+    {
+      "name": "fix_panel_has_rows",
+      "ok": true,
+      "detail": "count=13"
+    },
+    {
+      "name": "both_runs_selected_the_same_row",
+      "ok": true,
+      "detail": "3 / 3"
+    },
+    {
+      "name": "mod_list_geometry_unchanged",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "panel_reports_its_real_position",
+      "ok": true,
+      "detail": "P207_PANEL class=DescriptionListWidget box=328,108,312,216 count=10 legacy=true rowLeft=335"
+    },
+    {
+      "name": "panel_sits_in_the_right_half",
+      "ok": true,
+      "detail": "box=328,108,312,216"
+    },
+    {
+      "name": "panel_read_its_layout_from_the_legacy_fields",
+      "ok": true,
+      "detail": "legacy=true"
+    },
+    {
+      "name": "no_linkage_error_in_the_patched_classes",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "control_panel_has_no_text_bands",
+      "ok": true,
+      "detail": "1 band(s), 204 text-coloured px"
+    },
+    {
+      "name": "fix_panel_has_text_bands",
+      "ok": true,
+      "detail": "7 band(s), 2920 text-coloured px"
+    },
+    {
+      "name": "fix_panel_ink_dominates_the_control",
+      "ok": true,
+      "detail": "2920 vs 204"
+    }
+  ]
+}
