@@ -1,0 +1,7 @@
+WINDOW requested=1280x720
+APPLESKIN C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\appleskin-cloth.jar sha256=294482f71b8f37577644e4782008590103e4e4e2f756d68cb3d6952b3bbdbece size=1105374
+MODMENU C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\modmenu-description.jar sha256=6a6a14eae22099ab53160567987e3ece83a264f98296d74b05f777b16f16321a
+mods: fabric-api.jar, modmenu.jar, balm.jar, shulker-patched2.jar, sbtpreview.jar, ironchests-final.jar, lithium-final.jar, trashslot-client-final.jar, fallingtree-patched.jar, appleskin.jar, p210probe.jar
+SHOT config.png
+client exited early
+RESULT {"config": {"ok": true, "screen": "me.shedaniel.clothconfig2.gui.ClothConfigScreen", "micros": 1365, "title": "translation{key='text.autoconfig.appleskin.title', args=[]}", "widgets": "0"}, "switched": {"screen": "me.shedaniel.clothconfig2.gui.ClothConfigScreen", "title": "translation{key='text.autoconfig.appleskin.title', args=[]}", "widgets": "3"}, "done": null, "no_such_field": 0, "no_such_method": 0}

@@ -209,6 +209,15 @@ public final class RuleSet {
         public String oldDesc;
         public String newName;
         public boolean rewriteSuperCalls;
+        /**
+         * Only rename in classes that are this type or inherit from it. A wildcard rename has to
+         * know what it is renaming for: {@code method_25394} is final on {@code ClickableWidget},
+         * so a subclass that declares it must be renamed, but a class that only implements
+         * {@code Renderable} (Cloth Config's list widget extends {@code class_362}) still needs
+         * {@code method_25394} to be called at all. Without this gate the rename turned a working
+         * list into thirteen rows that never painted.
+         */
+        public String onlyIfExtends;
         /** If set, classes whose direct superclass equals this name are left untouched. */
         public String excludeSuper;
         public String capability;

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "Cloth Config 11.1.136 is the 1.20.1 build folded into AppleSkin's META-INF/jars. Three kinds of breakage: (1) ConfigBuilderImpl.<init> reads Screen.field_44669 (1.20.1's OPTIONS_BACKGROUND_TEXTURE) which 1.21.1 deleted, so every config screen dies with NoSuchFieldError before it exists; (2) TextFieldWidget gained a shiftKeyPressed flag on setCursorToStart/setCursor, so Cloth's text-field cell ctor throws NoSuchMethodError; (3) the jar also needs the generic render-widget-override rule (12 method_25394 overrides that became final) - that one lives in render-widget-override.json and build.py passes both files.",
+  "fieldRedirects": [
+    {
+      "id": "cloth-config.screen-background",
+      "sourceOwner": "net/minecraft/class_437",
+      "sourceName": "field_44669",
+      "sourceDesc": "Lnet/minecraft/class_2960;",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothConfigBridge",
+      "bridgeMethod": "defaultBackground",
+      "bridgeDesc": "()Lnet/minecraft/class_2960;",
+      "capability": "cloth-config.screen-background",
+      "risk": "low",
+      "evidence": "ConfigBuilderImpl.<init> bytecode: getstatic net/minecraft/class_437.field_44669:Lnet/minecraft/class_2960; putfield defaultBackground. Runtime: 'NoSuchFieldError: Class net.minecraft.class_437 does not have member field net.minecraft.class_2960 field_44669' at ConfigBuilderImpl.<init>(ConfigBuilderImpl.java:53), wrapped by ModMenu.getConfigScreen for four mods (runs/p204-wheel-input/client.log:134)."
+    }
+  ],
+  "callSiteAdaptations": [
+    {
+      "id": "cloth-config.textfield.cursor-to-start",
+      "sourceOwner": "net/minecraft/class_342",
+      "sourceName": "method_1870",
+      "sourceDesc": "()V",
+      "sourceOpcode": 182,
+      "targetOwner": "net/minecraft/class_342",
+      "targetName": "method_1870",
+      "targetDesc": "(Z)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothTextFieldBridge",
+      "bridgeMethod": "setCursorToStart",
+      "bridgeDesc": "(Lnet/minecraft/class_342;)V",
+      "capability": "cloth-config.textfield.cursor-to-start",
+      "risk": "low",
+      "evidence": "NoSuchMethodError 'void net.minecraft.class_342.method_1870()' from AbstractTextFieldListListEntry$AbstractTextFieldListCell.<init>(AbstractTextFieldListListEntry.java:87) while ClothConfigScreen was being built; 1.21.1 has method_1870(Z)V (yarn setCursorToStart(boolean)), and the old body only moved the cursor, so false is the same behaviour."
+    },
+    {
+      "id": "cloth-config.textfield.set-cursor",
+      "sourceOwner": "net/minecraft/class_342",
+      "sourceName": "method_1883",
+      "sourceDesc": "(I)V",
+      "sourceOpcode": 182,
+      "targetOwner": "net/minecraft/class_342",
+      "targetName": "method_1883",
+      "targetDesc": "(IZ)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothTextFieldBridge",
+      "bridgeMethod": "setCursor",
+      "bridgeDesc": "(Lnet/minecraft/class_342;I)V",
+      "capability": "cloth-config.textfield.set-cursor",
+      "risk": "low",
+      "evidence": "Same class of change: 1.20.1 setCursor(int) is 1.21.1 setCursor(int, boolean). Found by runs/p210-cloth-config/scan_refs.py, which lists the whole constant-pool gap instead of surfacing one member per client launch; this call site is in the same text-field cell and was not reached separately because the ctor died one call earlier."
+    }
+  ],
+  "methodRedirects": [
+    {
+      "id": "cloth-config.screen.render-background.clothconfigscreen",
+      "sourceOwner": "me/shedaniel/clothconfig2/gui/ClothConfigScreen",
+      "sourceName": "method_25434",
+      "sourceDesc": "(Lnet/minecraft/class_332;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/ClothConfigScreenBridge",
+      "bridgeMethod": "renderBackground",
+      "bridgeDesc": "(Lnet/minecraft/class_437;Lnet/minecraft/class_332;)V",
+      "capability": "cloth-config.screen.render-background",
+      "risk": "low",
+      "evidence": "First frame of an opened AppleSkin config screen: NoSuchMethodError 'void me.shedaniel.clothconfig2.gui.ClothConfigScreen.method_25434(class_332)' from ClothConfigScreen.method_25394 (runs/p210-cloth-config/after/client.log:193). 1.20.1 Screen.renderBackground(ctx) is 1.21.1 renderBackground(ctx,int,int,float); the backdrop ignores the pointer, so neutral values are forwarded."
+    },
+    {
+      "id": "cloth-config.screen.render-background.globalizedclothconfigscreen",
+      "sourceOwner": "me/shedaniel/clothconfig2/gui/GlobalizedClothConfigScreen",
+      "sourceName": "method_25434",
+      "sourceDesc": "(Lnet/minecraft/class_332;)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/ClothConfigScreenBridge",
+      "bridgeMethod": "renderBackground",
+      "bridgeDesc": "(Lnet/minecraft/class_437;Lnet/minecraft/class_332;)V",
+      "capability": "cloth-config.screen.render-background",
+      "risk": "low",
+      "evidence": "First frame of an opened AppleSkin config screen: NoSuchMethodError 'void me.shedaniel.clothconfig2.gui.ClothConfigScreen.method_25434(class_332)' from ClothConfigScreen.method_25394 (runs/p210-cloth-config/after/client.log:193). 1.20.1 Screen.renderBackground(ctx) is 1.21.1 renderBackground(ctx,int,int,float); the backdrop ignores the pointer, so neutral values are forwarded."
+    }
+  ]
+}

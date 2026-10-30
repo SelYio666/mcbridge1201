@@ -137,6 +137,12 @@ public final class JarPatcher {
                                                     Map<String, byte[]> bridgeClasses) {
         Map<String, byte[]> out = new LinkedHashMap<>();
         Set<String> used = new TreeSet<>();
+        // Which class extends which, for this jar level. Rules like render-widget-override used to
+        // apply to every class that declared the method, including classes that do not extend
+        // ClickableWidget at all - Cloth Config's list widget extends class_362 and must keep
+        // method_25394, because that is still the Renderable entry point in 1.21.1. Renaming it
+        // there silently produced a list with thirteen rows that never painted.
+        Map<String, String> superOf = superNames(entries);
         for (Map.Entry<String, byte[]> e : entries.entrySet()) {
             String name = e.getKey();
             if (name.startsWith("META-INF/") && (name.endsWith(".SF") || name.endsWith(".RSA")
@@ -164,11 +170,55 @@ public final class JarPatcher {
                 out.put(name, e.getValue());
                 continue;
             }
-            byte[] bytes = patchClass(e.getValue(), rules, idx, st, used);
+            byte[] bytes = patchClass(e.getValue(), rules, idx, st, used, superOf);
             out.put(name, bytes);
         }
         embedUsedBridges(out, used, st, bridgeClasses);
         return out;
+    }
+
+    /** Class name -> superclass name for every class in this jar level. */
+    private static Map<String, String> superNames(Map<String, byte[]> entries) {
+        Map<String, String> out = new HashMap<>();
+        for (Map.Entry<String, byte[]> e : entries.entrySet()) {
+            if (!e.getKey().endsWith(".class")) {
+                continue;
+            }
+            try {
+                ClassReader cr = new ClassReader(e.getValue());
+                out.put(cr.getClassName(), cr.getSuperName());
+            } catch (RuntimeException ignored) {
+                // a class the reader cannot parse cannot be judged either way; it simply will not
+                // be listed as an ancestor
+            }
+        }
+        return out;
+    }
+
+    /**
+     * True when {@code name} is {@code target} or inherits from it. The jar's own classes come from
+     * {@code superOf}; classes outside the jar (Minecraft itself) are looked up in the optional
+     * target index, which is why {@code patch} needs {@code --client-jar} for rules that use
+     * {@code onlyIfExtends}. An unresolvable link ends the walk: not knowing an ancestor is not
+     * evidence of having it.
+     */
+    private static boolean extendsType(String name, Map<String, String> superOf,
+                                       top.mcbridge1201.index.TargetIndex idx, String target) {
+        String cur = name;
+        for (int guard = 0; guard < 64 && cur != null; guard++) {
+            if (cur.equals(target)) {
+                return true;
+            }
+            String next = superOf.get(cur);
+            if (next == null && idx != null) {
+                var info = idx.classes.get(cur);
+                if (info != null) {
+                    next = info.superName;
+                }
+            }
+            cur = next;
+        }
+        return false;
     }
 
     /**
@@ -459,10 +509,16 @@ public final class JarPatcher {
         return changed;
     }
 
-    private static boolean applyMethodRenames(ClassNode cn, RuleSet rules, Stats st) {
+    private static boolean applyMethodRenames(ClassNode cn, RuleSet rules, Stats st,
+                                              Map<String, String> superOf,
+                                              top.mcbridge1201.index.TargetIndex idx) {
         boolean changed = false;
         for (RuleSet.MethodRename rr : rules.methodRenames) {
             if (!"*".equals(rr.owner) && !cn.name.equals(rr.owner)) {
+                continue;
+            }
+            if (rr.onlyIfExtends != null
+                    && !extendsType(cn.name, superOf, idx, rr.onlyIfExtends)) {
                 continue;
             }
             if (rr.excludeSuper != null) {
@@ -515,7 +571,7 @@ public final class JarPatcher {
 
     private static byte[] patchClass(byte[] bytes, RuleSet rules,
                                      top.mcbridge1201.index.TargetIndex idx, Stats st,
-                                     Set<String> used) {
+                                     Set<String> used, Map<String, String> superOf) {
         ClassNode cn = new ClassNode();
         new ClassReader(bytes).accept(cn, 0);
         boolean changed = false;
@@ -528,7 +584,7 @@ public final class JarPatcher {
             changed = true;
             framesAffected = true;
         }
-        if (applyMethodRenames(cn, rules, st)) {
+        if (applyMethodRenames(cn, rules, st, superOf, idx)) {
             changed = true;
             framesAffected = true;
         }

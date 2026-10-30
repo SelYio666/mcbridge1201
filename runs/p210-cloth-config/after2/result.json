@@ -1,0 +1,70 @@
+{
+  "appleskin_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\appleskin-cloth.jar",
+  "appleskin_sha256": "c4f1b70d391352b81f44acc8c14a2fc6c281905a53eaead39b4a0e166bd053b0",
+  "appleskin_size": 1101379,
+  "modmenu_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\modmenu-description.jar",
+  "modmenu_sha256": "6a6a14eae22099ab53160567987e3ece83a264f98296d74b05f777b16f16321a",
+  "requested_window": [
+    1280,
+    720
+  ],
+  "mods": [
+    "fabric-api.jar",
+    "modmenu.jar",
+    "balm.jar",
+    "shulker-patched2.jar",
+    "sbtpreview.jar",
+    "ironchests-final.jar",
+    "lithium-final.jar",
+    "trashslot-client-final.jar",
+    "fallingtree-patched.jar",
+    "appleskin.jar",
+    "p210probe.jar"
+  ],
+  "config": {
+    "ok": true,
+    "screen": "me.shedaniel.clothconfig2.gui.ClothConfigScreen",
+    "micros": 811,
+    "title": "translation{key='text.autoconfig.appleskin.title', args=[]}",
+    "widgets": "0"
+  },
+  "switched": {
+    "screen": "me.shedaniel.clothconfig2.gui.ClothConfigScreen",
+    "title": "translation{key='text.autoconfig.appleskin.title', args=[]}",
+    "widgets": "3"
+  },
+  "screen_constants": [
+    {
+      "field": "field_49511",
+      "value": "minecraft:textures/gui/menu_background.png"
+    },
+    {
+      "field": "field_49895",
+      "value": "minecraft:textures/gui/header_separator.png"
+    },
+    {
+      "field": "field_49896",
+      "value": "minecraft:textures/gui/footer_separator.png"
+    },
+    {
+      "field": "field_49897",
+      "value": "minecraft:textures/gui/inworld_header_separator.png"
+    },
+    {
+      "field": "field_49898",
+      "value": "minecraft:textures/gui/inworld_footer_separator.png"
+    }
+  ],
+  "done": {
+    "tick": 182,
+    "screen": "me.shedaniel.clothconfig2.gui.ClothConfigScreen",
+    "widgets": "3"
+  },
+  "stack": [],
+  "no_such_field": 0,
+  "no_such_method": 0,
+  "client_errors": [
+    "[16:23:17] [Render thread/ERROR]: Error from mod 'cloth-config'"
+  ],
+  "screenshot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p210-cloth-config\\after2\\config.png"
+}

@@ -2488,6 +2488,147 @@ def test_modmenu_scroll() -> None:
                                             / "README.md").read_text(encoding="utf-8"), "")
 
 
+def test_cloth_config() -> None:
+    """p210: AppleSkin's Cloth Config screen opens on 1.21.1, draws its 13 rows, and a click moves it.
+
+    The screen is drawn by a jar-in-jar (Cloth Config 11.1.136, a 1.20.1 build) that has to be
+    taken out, patched against 1.21.1 and put back, so the thing that can silently rot is *the rule
+    hit count*: a rule that stops matching ships the crash it exists to remove, and the client only
+    says so five minutes into a launch. This reads the committed build log and asserts every rule
+    in the rule files matched the expected number of times.
+
+    Everything else here is the committed verdict (`cloth-check.json`, produced by
+    `verify_cloth.py` from `before/` + `after3/`), the shipped jar's hash, and the regression test
+    for the `onlyIfExtends` gate this run added to `JarPatcher` - the gate that failed loudly once
+    already (renaming `method_25394` under `class_362` produced thirteen rows that never painted).
+    """
+    run = ROOT / "runs" / "p210-cloth-config"
+    rules_dir = ROOT / "rules" / "fabric-1.21.1"
+    rule_files = [rules_dir / "cloth-config.json", rules_dir / "cloth-config-render.json",
+                  rules_dir / "render-widget-override.json"]
+    verdict_path = run / "cloth-check.json"
+    inputs = [run / "build.py", run / "run.py", run / "build_probe.py", run / "scan_refs.py",
+              run / "verify_cloth.py", run / "README.md", run / "build.log", verdict_path,
+              run / "before" / "result.json", run / "after3" / "result.json",
+              run / "after3" / "client.log",
+              ROOT / "java" / "src" / "test" / "java" / "top" / "mcbridge1201"
+              / "JarPatcherMethodRenameTest.java"] + rule_files
+    missing = [str(p.relative_to(ROOT)) for p in inputs if not p.exists()]
+    check("p210: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    # --- the rules parse, and each carries the fields the project requires ---------------------
+    rule_ids: dict[str, str] = {}
+    for path in rule_files:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        for key in ("fieldRedirects", "callSiteAdaptations", "methodRedirects", "bodyRedirects",
+                    "methodRenames", "superclassReplacements"):
+            for rule in data.get(key) or []:
+                rule_ids[rule["id"]] = key
+                check(f"p210: {rule['id']} documents capability/risk/evidence ({path.name})",
+                      all(rule.get(field) for field in ("capability", "risk", "evidence")), "")
+    cloth_ids = {rid for rid in rule_ids if rid.startswith("cloth-config.")}
+    check("p210: the two cloth rule files carry sixteen rules", len(cloth_ids) == 16,
+          f"{len(cloth_ids)} rules: {sorted(cloth_ids)}")
+    check("p210: the new demo rules are field+callSite adaptations, not body replacements",
+          rule_ids.get("cloth-config.render.demo-enchantment") == "fieldRedirects"
+          and rule_ids.get("cloth-config.render.demo-add-enchantment") == "callSiteAdaptations",
+          str({k: rule_ids.get(k) for k in ("cloth-config.render.demo-enchantment",
+                                            "cloth-config.render.demo-add-enchantment")}))
+    render = json.loads(rule_files[1].read_text(encoding="utf-8"))
+    notes = render.get("note", "")
+    check("p210: the render rule file still records the screen it does not cover",
+          "GlobalizedClothConfigScreen" in notes and "27" in notes, "note names the 27 stubs")
+
+    # --- the build hit every rule the expected number of times --------------------------------
+    build_log = (run / "build.log").read_text(encoding="utf-8", errors="replace")
+    check("p210: the build validated all three rule files",
+          "validated 3 rule file(s)" in build_log, "")
+    expected = {rid: 1 for rid in cloth_ids}
+    expected["cloth-config.render.buffer-accessor"] = 5   # 1 live t0 in method_25394, 1 dead in renderList
+    expected["fabric.legacy.clickable-text-override"] = 8
+    expected["fabric.legacy.render-widget-override"] = 6
+    wrong = []
+    for rid, count in sorted(expected.items()):
+        match = re.search(rf"rule {re.escape(rid)} applied (\d+) time\(s\)", build_log)
+        if not match:
+            wrong.append(f"{rid}: not applied")
+        elif int(match.group(1)) != count:
+            wrong.append(f"{rid}: {match.group(1)} != {count}")
+    check("p210: every rule matched exactly as often as the build says it must",
+          not wrong, "; ".join(wrong))
+    check("p210: the build wrote the jar this evidence came from",
+          "OUT appleskin-cloth.jar sha256=" in build_log, "")
+
+    # --- the committed verdict ----------------------------------------------------------------
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    failed_checks = [c["name"] for c in verdict["checks"] if not c["ok"]]
+    check("p210: the committed verdict passed every one of its checks",
+          not failed_checks and len(verdict["checks"]) >= 30,
+          f"{len(verdict['checks'])} checks, failed: {failed_checks}")
+    check("p210: the control run failed on the removed field and nowhere else",
+          verdict["control"]["config"]["ok"] is False
+          and "field_44669" in verdict["control"]["config"]["error"], "")
+    check("p210: the fix run drew thirteen rows with nine toggles",
+          verdict["fix"]["rows"] == 13
+          and verdict["fix"]["kinds"].get("BooleanToggleBuilder$1") == 9,
+          f"rows={verdict['fix']['rows']} kinds={verdict['fix']['kinds']}")
+    check("p210: the click moved the value without the direct-press fallback",
+          verdict["fix"]["toggle"]["flipped"] is True
+          and verdict["fix"]["toggle"]["direct_press"] is False
+          and "handled=true" in (verdict["fix"]["toggle_click"] or ""),
+          str(verdict["fix"]["toggle"]))
+
+    # --- provenance: the verdict, the run and the jar all name the same bytes -----------------
+    after = json.loads((run / "after3" / "result.json").read_text(encoding="utf-8"))
+    check("p210: the fix run recorded no mod error",
+          after.get("client_errors") == [] and after.get("no_such_field") == 0
+          and after.get("no_such_method") == 0,
+          str(after.get("client_errors")))
+    check("p210: the verdict and the run describe the same jar",
+          verdict["fixed_sha256"] == after.get("appleskin_sha256"),
+          f'{verdict["fixed_sha256"]} vs {after.get("appleskin_sha256")}')
+    jar = ROOT / "work" / "client" / "appleskin-cloth.jar"
+    if jar.exists():
+        digest = __import__("hashlib").sha256(jar.read_bytes()).hexdigest()
+        check("p210: the shipped jar is the one the evidence ran against",
+              digest == verdict["fixed_sha256"], f"{digest} vs {verdict['fixed_sha256']}")
+    else:
+        SKIPPED.append("p210 shipped jar hash (run runs/p210-cloth-config/build.py first)")
+
+    # --- the regression test that pins the onlyIfExtends gate ---------------------------------
+    test_src = (ROOT / "java" / "src" / "test" / "java" / "top" / "mcbridge1201"
+                / "JarPatcherMethodRenameTest.java").read_text(encoding="utf-8")
+    cases = re.findall(r"void (\w+)\(\) throws Exception", test_src)
+    check("p210: the onlyIfExtends gate has four regression cases", len(cases) == 4, str(cases))
+    check("p210: the cases cover direct parent, deep ancestor, unrelated parent, unknown chain",
+          all(fragment in test_src for fragment in (
+              "renamesWhenTheDirectParentIsTheGatedType",
+              "renamesWhenTheGatedTypeIsThreeLevelsUp",
+              "doesNotRenameUnderAnUnrelatedParent",
+              "doesNotRenameWhenTheAncestorCannotBeResolved")), "")
+    check("p210: the test states the rule the gate protects",
+          "onlyIfExtends" in test_src and "class_362" in test_src, "")
+    patcher = (ROOT / "java" / "src" / "main" / "java" / "top" / "mcbridge1201" / "rules"
+               / "JarPatcher.java").read_text(encoding="utf-8")
+    check("p210: an unresolvable ancestor aborts the walk instead of answering yes",
+          re.search(r"not knowing an ancestor is not\s*\*?\s*evidence of having it",
+                    patcher) is not None
+          and "cur = next;" in patcher, "")
+
+    # --- docs moved with the behaviour --------------------------------------------------------
+    remaining = (ROOT / "docs" / "remaining-work.md").read_text(encoding="utf-8")
+    check("p210: remaining-work no longer says the Cloth screens cannot open",
+          "Cloth-Config screens cannot open at all" not in remaining, "")
+    status = (ROOT / "docs" / "FINAL-STATUS.md").read_text(encoding="utf-8")
+    check("p210: FINAL-STATUS records the screen as open and the one screen left uncovered",
+          "rows=13" in status and "GlobalizedClothConfigScreen" in status, "")
+    distribution = (ROOT / "docs" / "distribution.md").read_text(encoding="utf-8")
+    check("p210: distribution ships appleskin-cloth.jar",
+          "appleskin-cloth.jar" in distribution, "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2504,6 +2645,7 @@ def main() -> int:
     test_modmenu_selection()
     test_modmenu_description()
     test_modmenu_scroll()
+    test_cloth_config()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

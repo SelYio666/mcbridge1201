@@ -206,11 +206,25 @@ inventory hovered over the trash slot, extended Delete (`key=261`, not KP_DECIMA
   11 entries down to 1. p104's "this machine cannot receive wheel input" was the same window-not-on-
   top problem p202 found. Still untested: arrow keys / PageDown (unicode injection only sends
   characters). Mod Menu's own config screen opens and draws ten option
-  rows (`runs/p97-modmenu-config/`), but **Cloth-Config screens cannot open at all**: the only Cloth
-  Config here is the 1.20.1 JiJ (`cloth-config-fabric-11.1.136` bundled inside AppleSkin /
-  ShulkerBoxTooltip) and `ConfigBuilderImpl.<init>` dies on the removed `class_437.field_44669`,
-  which Mod Menu's per-mod config probe hits for appleskin / fallingtree / shulkerboxtooltip /
-  trashslot (stack trace in `runs/p204-wheel-input/client.log`). Individual toggles are untested;
+  rows (`runs/p97-modmenu-config/`). **Cloth-Config screens now open and draw on 1.21.1**
+  (`runs/p210-cloth-config/`): the only Cloth Config here is the 1.20.1 JiJ
+  (`cloth-config-fabric-11.1.136` bundled inside AppleSkin / ShulkerBoxTooltip), and five layers had
+  to be bridged — removed `class_437.field_44669`, `method_25394` becoming final on `class_339`
+  (gated by `onlyIfExtends`, otherwise the list's rows exist but never paint),
+  `TextFieldWidget.setCursor*` gaining a `boolean`, `renderBackground` gaining three parameters, and
+  the immediate-mode render model (`Immediate.getBuffer` / `BufferBuilder.begin` / vertex / draw)
+  disappearing entirely. Evidence: the control jar dies with
+  `NoSuchFieldError: class_437 … field_44669` (`runs/p210-cloth-config/before/`), the fixed jar
+  reports `rows=13`, `kinds={BooleanToggleBuilder$1=9, EmptyEntry=2, FloatListEntry=1,
+  SearchFieldEntry=1}`, `client_errors=[]`, and a click on the first toggle's ON button flips its
+  value (`after3/client.log:153-156`; `after3/toggle.png` shows the first row OFF while the other
+  eight stay ON). Six decorations are degraded to no-ops (list backdrop, edge vignette, screen dim,
+  tab shades, row gradient, dropdown shadow), and Cloth's own demo sample item keeps neither its
+  custom name nor its enchantment; every degradation is recorded in the matching rule `evidence`.
+  **Still uncovered: `GlobalizedClothConfigScreen.method_25394`** (the Ctrl-scroll global settings
+  screen) has 27 tombstones and needs its tab strip rebuilt — AppleSkin never opens it; and
+  `DynamicElementListWidget$ElementEntry.method_25401(DDD)` (`isMouseOver` lost its 3-arg form) stays
+  unbridged because no verified path reaches it. Toggles past the first one are untested;
 - Mod Menu title screen passes (`runs/p92-modmenu/`): the private field is read reflectively and the
   button widget overrides `renderWidget` after a `methodRenames` rule; the mod list screen itself
   and config UI are untested;

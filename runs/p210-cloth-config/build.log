@@ -1,0 +1,38 @@
+COMPILE C:\Users\27682\Documents\新建文件夹\.toolchain\jdk\bin\javac.exe -nowarn -proc:none -encoding UTF-8 -J-Duser.language=en -J-Dfile.encoding=UTF-8 -cp C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\cb\data\jars\client-1.21.1-intermediary.jar -d C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p210-bridges C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\src\bridge\java\top\mcbridge1201\bridge\ClothConfigBridge.java C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\src\bridge\java\top\mcbridge1201\bridge\ClothTextFieldBridge.java C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\src\bridge\java\top\mcbridge1201\bridge\ClothConfigScreenBridge.java C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\src\bridge\java\top\mcbridge1201\bridge\ClothRenderBridge.java
+COMPILED ClothConfigBridge.class sha256=d90d8583b4b90a3d3b50e0d2b0d04a8b4e2eb760f62fa236db8fcfca02694f3b size=508
+COMPILED ClothTextFieldBridge.class sha256=65fb548507dc91df11ec59a89fab2c10a2628fa4f7b7240ff65321ce8099639d size=525
+COMPILED ClothConfigScreenBridge.class sha256=b3d6d77086adb56d8adce44881ddd0d9ebcfc124188312bffd7d9d9fbafe32ac size=462
+COMPILED ClothRenderBridge.class sha256=f63da60152c8f787da1df4269c8092118b7f5c8b7e1f54bd68990a0b2b16b5e9 size=1466
+BASE appleskin-patched.jar sha256=b415bfc28ccb4de405adc3ef3647ad4f88c1ca896d0f1db90ea59ea19a6a8112 size=1104012
+NESTED META-INF/jars/cloth-config-fabric-11.1.136.jar sha256=16e0aecd27f911ecf41f81321c9551e3506ec770b52973f3c9a0414fca06f4c7 size=1152767
+TARGET me/shedaniel/clothconfig2/impl/ConfigBuilderImpl.class sha256=35dacf8b2a2c578ddff4324d7ae4d731c76d9bbf4015a6885be030217f306964 size=9200 mentionsField=True
+PATCH C:\Users\27682\Documents\新建文件夹\.toolchain\jdk\bin\java.exe -cp C:\Users\27682\Documents\新建文件夹\mcbridge1201\java\build\install\mcbridge1201\lib\* top.mcbridge1201.Main patch --in C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p210\cloth-in.jar --out C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p210\cloth-patched.jar --rules C:\Users\27682\Documents\新建文件夹\mcbridge1201\rules\fabric-1.21.1\render-widget-override.json --rules C:\Users\27682\Documents\新建文件夹\mcbridge1201\rules\fabric-1.21.1\cloth-config.json --rules C:\Users\27682\Documents\新建文件夹\mcbridge1201\rules\fabric-1.21.1\cloth-config-render.json --bridge-dir C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\tmp\p210-bridges --client-jar C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\cb\data\jars\client-1.21.1-intermediary.jar --mappings C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\cb\data\mappings\intermediary-1.21.1.tiny
+  validated 3 rule file(s): schema=0.1-draft target=fabric-1.21.1
+  patched cloth-in.jar -> cloth-patched.jar (classes changed=22)
+    rule cloth-config.render.buffer-accessor applied 5 time(s)
+    rule cloth-config.render.demo-add-enchantment applied 1 time(s)
+    rule cloth-config.render.demo-enchantment applied 1 time(s)
+    rule cloth-config.render.demo-item-name applied 1 time(s)
+    rule cloth-config.render.dropdown-shadow applied 1 time(s)
+    rule cloth-config.render.fill-gradient applied 1 time(s)
+    rule cloth-config.render.list-backdrop applied 1 time(s)
+    rule cloth-config.render.list-vignette applied 1 time(s)
+    rule cloth-config.render.screen-overlay applied 1 time(s)
+    rule cloth-config.render.tab-shades applied 1 time(s)
+    rule cloth-config.render.textfield-tick applied 1 time(s)
+    rule cloth-config.screen-background applied 1 time(s)
+    rule cloth-config.screen.render-background.clothconfigscreen applied 1 time(s)
+    rule cloth-config.screen.render-background.globalizedclothconfigscreen applied 1 time(s)
+    rule cloth-config.textfield.cursor-to-start applied 1 time(s)
+    rule cloth-config.textfield.set-cursor applied 1 time(s)
+    rule fabric.legacy.clickable-text-override applied 8 time(s)
+    rule fabric.legacy.render-widget-override applied 6 time(s)
+    bridges embedded: [top/mcbridge1201/bridge/ClothConfigBridge, top/mcbridge1201/bridge/ClothConfigScreenBridge, top/mcbridge1201/bridge/ClothRenderBridge, top/mcbridge1201/bridge/ClothTextFieldBridge]
+    javac bridges: [top/mcbridge1201/bridge/ClothConfigBridge, top/mcbridge1201/bridge/ClothConfigScreenBridge, top/mcbridge1201/bridge/ClothRenderBridge, top/mcbridge1201/bridge/ClothTextFieldBridge]
+    sha256 8193994e50a544857cfcab14080d19111dfdf942f13ac345154b4b3e1cfb6a83
+PATCHED cloth-patched.jar sha256=8193994e50a544857cfcab14080d19111dfdf942f13ac345154b4b3e1cfb6a83 size=1151112
+EMBEDDED top/mcbridge1201/bridge/ClothConfigBridge.class present
+EMBEDDED top/mcbridge1201/bridge/ClothTextFieldBridge.class present
+EMBEDDED top/mcbridge1201/bridge/ClothConfigScreenBridge.class present
+EMBEDDED top/mcbridge1201/bridge/ClothRenderBridge.class present
+OUT appleskin-cloth.jar sha256=af9cdc3ac28a8c60d09064f0156e5d687598bc1cb95e346c717ca67bc5ef20ff size=1101433

@@ -1,0 +1,152 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "note": "Cloth Config 11.1.136's GUI is written against the pre-1.21 immediate-mode drawing model, and 1.21.1 deleted that model wholesale: Immediate.getBuffer (class_289.method_1349), BufferBuilder.begin (class_287.method_1328), VertexConsumer's chain terminator (class_4588.method_1344) and Immediate.draw (class_289.method_1350) all went away when RenderLayer + a single VertexConsumer replaced them. Those four calls already sit behind generated tombstone stubs in this jar (centurybridge/gen/Tombstones_...$1 t0/t1/t2/t3), so this file does not re-target Minecraft: it retargets the stubs, at the call sites, to the no-op bridges in ClothRenderBridge. The stubs themselves are left intact so the patch report keeps showing which removed API each site stood for. Why the screen is recoverable at all: DynamicEntryListWidget.renderList opens with 'vcp = Immediate.getInstance(); bb = t0(vcp)' and never reads either local again - rows are drawn by class_332.method_25294 and renderItem(DrawContext, Entry, ...), which take no BufferBuilder. Only that dead preamble, plus five decoration helpers, has to go. Known gap, deliberately not covered here: GlobalizedClothConfigScreen.method_25394 (the Ctrl-scroll global settings screen) has its own 27 stubs and needs the tab strip rebuilt, not stubbed; AppleSkin never opens it. The tombstone owner below is bound to this exact jar name because the stub class name is derived from the mod file name - if the nested jar is ever replaced, the build's 'must hit' assertions fail instead of silently shipping the old crash.",
+  "fieldRedirects": [
+    {
+      "id": "cloth-config.render.demo-enchantment",
+      "sourceOwner": "net/minecraft/class_1893",
+      "sourceName": "field_9131",
+      "sourceDesc": "Lnet/minecraft/class_1887;",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "demoEnchantment",
+      "bridgeDesc": "()Lnet/minecraft/class_1887;",
+      "capability": "cloth-config.render.demo-enchantment",
+      "risk": "low",
+      "evidence": "ClothConfigDemo.lambda$getConfigBuilderWithDemo$20:10 reads Enchantments.field_9131 (a class_1887) to enchant its sample item; 1.21.1 keeps the field name but the type is class_5321<class_1887> (RegistryKey), so the read is a NoSuchFieldError ('Class net.minecraft.class_1893 does not have member field net.minecraft.class_1887 field_9131', runs/p210-cloth-config/after3/client.log:129). Not fixable in place: converting the key needs a Registry<Enchantment>, and the 1.21.1 client's class_7923 has no such static field (75 class_2378 fields, none of them enchantment) - enchantments resolve through the per-world DynamicRegistryManager, which this lambda cannot see. Degradation: the demo's sample item is not enchanted. Paired with cloth-config.render.demo-add-enchantment; the build asserts one hit each."
+    }
+  ],
+  "callSiteAdaptations": [
+    {
+      "id": "cloth-config.render.demo-add-enchantment",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7978",
+      "sourceDesc": "(Lnet/minecraft/class_1887;I)V",
+      "sourceOpcode": 182,
+      "targetOwner": "net/minecraft/class_1799",
+      "targetName": "method_7978",
+      "targetDesc": "(Lnet/minecraft/class_6880;I)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "demoAddEnchantment",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_1887;I)V",
+      "capability": "cloth-config.render.demo-add-enchantment",
+      "risk": "low",
+      "evidence": "Same lambda, one instruction after the field read: ItemStack.addEnchantment(Enchantment,int) became addEnchantment(RegistryEntry<Enchantment>,int) in 1.21.1, so the old descriptor is a NoSuchMethodError that the first run never showed because the field read threw three instructions earlier (runs/p210-cloth-config/refs-after.json lists both under used_by ClothConfigDemo). The bridge keeps the old stack shape and adds nothing, for the reason recorded on demo-enchantment. Degradation: same one - no enchantment on the demo item."
+    }
+  ],
+  "methodRedirects": [
+    {
+      "id": "cloth-config.render.buffer-accessor",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2_cloth_config_fabric_11_1_136$1",
+      "sourceName": "t0",
+      "sourceDesc": "(Lnet/minecraft/class_289;)Lnet/minecraft/class_287;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "buffer",
+      "bridgeDesc": "(Lnet/minecraft/class_289;)Lnet/minecraft/class_287;",
+      "capability": "cloth-config.render.buffer-accessor",
+      "risk": "medium",
+      "evidence": "Replaces the stub for class_289.method_1349 (Immediate.getBuffer, died 1.20.6->1.21). The bridge returns null; that is only safe because every live consumer of t0 was replaced in the same patch. runs/p210-cloth-config/scan_tombstones.py lists all 6 call sites: DynamicEntryListWidget.method_25394:58 (dead - slot stored, never read), renderList:7 (dead - slot 8 is never loaded again in the 284-instruction body), renderBackBackground/renderHoleBackground (body replaced below), ClothConfigScreen.drawTabsShades (body replaced below), AbstractConfigScreen.overlayBackground (body replaced below), DropdownBoxEntry$DefaultDropdownMenuElement.lateRender (body replaced below), GlobalizedClothConfigScreen.method_25394 (not covered - see note)."
+    },
+    {
+      "id": "cloth-config.render.textfield-tick",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2_cloth_config_fabric_11_1_136$1",
+      "sourceName": "t5",
+      "sourceDesc": "(Lnet/minecraft/class_342;)V",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "textFieldTick",
+      "bridgeDesc": "(Lnet/minecraft/class_342;)V",
+      "capability": "cloth-config.render.textfield-tick",
+      "risk": "low",
+      "evidence": "Replaces the stub for class_342.method_1865 (TextFieldWidget.tick, died 1.20.1->1.20.2). Called once per frame from AbstractConfigScreen.method_25393:69, inside 'for (child : method_25396()) if (child instanceof class_342) t5(child)', so leaving it as a stub would crash the first tick rather than the first frame. 1.21.1 has no per-tick hook on the text field - the caret blink lives in the widget's own render - so an empty body is the translation, and the TickableWidget loop right after this call is untouched."
+    },
+    {
+      "id": "cloth-config.render.demo-item-name",
+      "sourceOwner": "centurybridge/gen/Tombstones_appleskin_fabric_mc1_20_1_2_5_2_cloth_config_fabric_11_1_136$1",
+      "sourceName": "t4",
+      "sourceDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2561;)Lnet/minecraft/class_1799;",
+      "sourceOpcode": 184,
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "keepStackName",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2561;)Lnet/minecraft/class_1799;",
+      "capability": "cloth-config.render.demo-item-name",
+      "risk": "low",
+      "evidence": "Replaces the stub for class_1799.method_7977 (ItemStack.setCustomName, died 1.20.4->1.20.5). AppleSkin never reaches it: the only caller is ClothConfigDemo.lambda$getConfigBuilderWithDemo$20, Cloth's own sample screen. It became visible here anyway because Mod Menu asks every listed mod for a config factory while the mod list inits, so visiting the list logged \"Error from mod 'cloth-config'\" even with AppleSkin's screen working (runs/p210-cloth-config/after2/client.log:138, stack through ClothConfigModMenuDemo -> ClothConfigDemo). Degradation: the demo's sample items keep their default names."
+    }
+  ],
+  "bodyRedirects": [
+    {
+      "id": "cloth-config.render.list-backdrop",
+      "owner": "me/shedaniel/clothconfig2/gui/widget/DynamicEntryListWidget",
+      "name": "renderBackBackground",
+      "desc": "(Lnet/minecraft/class_332;Lnet/minecraft/class_287;Lnet/minecraft/class_289;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "listBackdrop",
+      "bridgeDesc": "(Ljava/lang/Object;Lnet/minecraft/class_332;Lnet/minecraft/class_287;Lnet/minecraft/class_289;)V",
+      "capability": "cloth-config.render.list-backdrop",
+      "risk": "medium",
+      "evidence": "Body is 4 hand-built QUADS through RenderSystem.setShader + BufferBuilder.begin/vertex/texture/color/draw (t1 at :47, t2 at :110/:173/:236/:299, t3 at :303). None of the five survives 1.21.1. Degradation: the tiled menu_background behind the list is not drawn; class_362.drawBackground (called at method_25394:34, already 1.21.1-clean) still paints the list area, so the rows are readable, just without the tiled texture."
+    },
+    {
+      "id": "cloth-config.render.list-vignette",
+      "owner": "me/shedaniel/clothconfig2/gui/widget/DynamicEntryListWidget",
+      "name": "renderHoleBackground",
+      "desc": "(Lnet/minecraft/class_332;IIII)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "listVignette",
+      "bridgeDesc": "(Ljava/lang/Object;Lnet/minecraft/class_332;IIII)V",
+      "capability": "cloth-config.render.list-vignette",
+      "risk": "low",
+      "evidence": "Same immediate-mode body (t0 at :7, t1 at :55, t2 at :98/:154/:210/:253, t3 at :258); called twice from method_25394 (:170, :186) to fade the top and bottom edges of the list. Degradation: edge fade is missing, list content is unaffected."
+    },
+    {
+      "id": "cloth-config.render.screen-overlay",
+      "owner": "me/shedaniel/clothconfig2/gui/AbstractConfigScreen",
+      "name": "overlayBackground",
+      "desc": "(Lorg/joml/Matrix4f;Lme/shedaniel/math/Rectangle;IIIII)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "screenOverlay",
+      "bridgeDesc": "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;IIIII)V",
+      "capability": "cloth-config.render.screen-overlay",
+      "risk": "low",
+      "evidence": "Immediate-mode body: t0 at :15, t1 at :51, t2 at :106/:161/:216/:271, t3 at :276. Degradation: the dim layer Cloth paints under its own panels is missing. The screen still gets the vanilla backdrop, because class_437.method_25420 is what ClothConfigScreen.method_25434 forwards to (cloth-config.screen.render-background)."
+    },
+    {
+      "id": "cloth-config.render.tab-shades",
+      "owner": "me/shedaniel/clothconfig2/gui/ClothConfigScreen",
+      "name": "drawTabsShades",
+      "desc": "(Lorg/joml/Matrix4f;II)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "tabShades",
+      "bridgeDesc": "(Ljava/lang/Object;Ljava/lang/Object;II)V",
+      "capability": "cloth-config.render.tab-shades",
+      "risk": "low",
+      "evidence": "Private helper of ClothConfigScreen.method_25394: t0 at :29, t1 at :42, t2 at :89/:136/:181/:226/:271/:316/:363/:410, t3 at :415. Degradation: the gradient under the category tab strip is missing. AppleSkin's config has a single category, so the strip is one tab wide."
+    },
+    {
+      "id": "cloth-config.render.fill-gradient",
+      "owner": "me/shedaniel/clothconfig2/gui/ClothConfigScreen$ListWidget",
+      "name": "fillGradient",
+      "desc": "(Lorg/joml/Matrix4f;Lnet/minecraft/class_287;DDDDIII)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "fillGradient",
+      "bridgeDesc": "(Ljava/lang/Object;Lnet/minecraft/class_287;DDDDIII)V",
+      "capability": "cloth-config.render.fill-gradient",
+      "risk": "low",
+      "evidence": "Static immediate-mode gradient helper (t2 at :141/:170/:199/:229 - start, three vertices, end). It takes no DrawContext at all, so it cannot be re-pointed at class_332.method_25296; with the BufferBuilder model gone there is nothing left to call. Degradation: row gradients (hover/selection fallback) are not painted; selection is still visible through the method_25294 bars in renderList."
+    },
+    {
+      "id": "cloth-config.render.dropdown-shadow",
+      "owner": "me/shedaniel/clothconfig2/gui/entries/DropdownBoxEntry$DefaultDropdownMenuElement",
+      "name": "lateRender",
+      "desc": "(Lnet/minecraft/class_332;IIF)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ClothRenderBridge",
+      "bridgeMethod": "dropdownShadow",
+      "bridgeDesc": "(Ljava/lang/Object;Lnet/minecraft/class_332;IIF)V",
+      "capability": "cloth-config.render.dropdown-shadow",
+      "risk": "low",
+      "evidence": "t0 at :829, t1 at :842, t2 at :874/:906/:935/:964/:998/:1034/:1065/:1094, t3 at :1099: draws the drop shadow behind an open enum dropdown. AppleSkin's config has 9 boolean toggles and no dropdown, so this path is not walked today; it is stubbed anyway because an unrelated AppleSkin option (or a future one) turning into an enum would otherwise crash on click-open. Degradation: no drop shadow, the dropdown itself (drawn elsewhere) is unaffected."
+    }
+  ]
+}

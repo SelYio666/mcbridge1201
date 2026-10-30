@@ -1,0 +1,208 @@
+{
+  "control_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\appleskin-patched.jar",
+  "control_sha256": "b415bfc28ccb4de405adc3ef3647ad4f88c1ca896d0f1db90ea59ea19a6a8112",
+  "fixed_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\appleskin-cloth.jar",
+  "fixed_sha256": "af9cdc3ac28a8c60d09064f0156e5d687598bc1cb95e346c717ca67bc5ef20ff",
+  "control": {
+    "config": {
+      "ok": false,
+      "error": "java.lang.NoSuchFieldError: Class net.minecraft.class_437 does not have member field 'net.minecraft.class_2960 field_44669'"
+    },
+    "stack_head": "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//me.shedaniel.clothconfig2.impl.ConfigBuilderImpl.<init>(ConfigBuilderImpl.java:53)"
+  },
+  "fix": {
+    "config": {
+      "ok": true,
+      "screen": "me.shedaniel.clothconfig2.gui.ClothConfigScreen",
+      "micros": 1197,
+      "title": "translation{key='text.autoconfig.appleskin.title', args=[]}",
+      "widgets": "0"
+    },
+    "rows": 13,
+    "kinds": {
+      "BooleanToggleBuilder$1": 9,
+      "EmptyEntry": 2,
+      "FloatListEntry": 1,
+      "SearchFieldEntry": 1
+    },
+    "done": {
+      "tick": 182,
+      "screen": "me.shedaniel.clothconfig2.gui.ClothConfigScreen",
+      "widgets": "3"
+    },
+    "client_errors": [],
+    "toggle": {
+      "row": "me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder$1",
+      "before": "true",
+      "after": "false",
+      "flipped": true,
+      "direct_press": false
+    },
+    "toggle_row": {
+      "class": "me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder$1",
+      "before": "true",
+      "button": "net.minecraft.class_4185",
+      "box": "452,68,114,20,-,-"
+    },
+    "toggle_click": "handled=true at=509,78 before=true after=false screen=ClothConfigScreen",
+    "screenshot_bytes": 323358,
+    "toggle_screenshot_bytes": 325347
+  },
+  "checks": [
+    {
+      "name": "control_screen_does_not_open",
+      "ok": true,
+      "detail": "ok=False"
+    },
+    {
+      "name": "control_dies_on_the_removed_field",
+      "ok": true,
+      "detail": "java.lang.NoSuchFieldError: Class net.minecraft.class_437 does not have member field 'net.minecraft.class_2960 field_446"
+    },
+    {
+      "name": "control_dies_inside_cloth_builder",
+      "ok": true,
+      "detail": "stack names ConfigBuilderImpl.<init>"
+    },
+    {
+      "name": "control_kept_a_picture_of_the_failure",
+      "ok": true,
+      "detail": "308838 bytes"
+    },
+    {
+      "name": "fix_screen_opens",
+      "ok": true,
+      "detail": "ok=True"
+    },
+    {
+      "name": "fix_screen_is_the_cloth_screen",
+      "ok": true,
+      "detail": "me.shedaniel.clothconfig2.gui.ClothConfigScreen"
+    },
+    {
+      "name": "fix_reports_a_row_list",
+      "ok": true,
+      "detail": "P210_CHILD i=0 class=me.shedaniel.clothconfig2.gui.ClothConfigScreen$ListWidget rows=13 kinds={BooleanToggleBuilder$1=9, EmptyEntry=2, FloatListEntry=1, SearchF"
+    },
+    {
+      "name": "fix_has_at_least_thirteen_rows",
+      "ok": true,
+      "detail": "rows=13"
+    },
+    {
+      "name": "fix_rows_are_the_nine_toggles",
+      "ok": true,
+      "detail": "kinds={\"BooleanToggleBuilder$1\": 9, \"EmptyEntry\": 2, \"FloatListEntry\": 1, \"SearchFieldEntry\": 1}"
+    },
+    {
+      "name": "fix_has_no_mod_error",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "fix_has_no_missing_member",
+      "ok": true,
+      "detail": "no_such_field=0 no_such_method=0"
+    },
+    {
+      "name": "fix_reached_the_end_of_the_probe",
+      "ok": true,
+      "detail": "done.tick=182 screen=me.shedaniel.clothconfig2.gui.ClothConfigScreen"
+    },
+    {
+      "name": "fix_screenshot_exists",
+      "ok": true,
+      "detail": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p210-cloth-config\\after3\\config.png"
+    },
+    {
+      "name": "fix_screenshot_is_not_empty",
+      "ok": true,
+      "detail": "323358 bytes"
+    },
+    {
+      "name": "fix_log_has_no_buried_linkage_error",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "fix_toggle_was_found_and_clicked",
+      "ok": true,
+      "detail": "me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder$1"
+    },
+    {
+      "name": "fix_click_was_delivered_by_the_screen",
+      "ok": true,
+      "detail": "handled=true at=509,78 before=true after=false screen=ClothConfigScreen"
+    },
+    {
+      "name": "fix_toggle_value_flipped",
+      "ok": true,
+      "detail": "true -> false"
+    },
+    {
+      "name": "fix_toggle_flip_came_from_the_click",
+      "ok": true,
+      "detail": "direct_press=False"
+    },
+    {
+      "name": "fix_toggle_screenshot_exists",
+      "ok": true,
+      "detail": "325347 bytes"
+    },
+    {
+      "name": "builder_no_longer_mentions_the_removed_field",
+      "ok": true,
+      "detail": "9204 bytes"
+    },
+    {
+      "name": "builder_calls_the_background_bridge",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "demo_no_longer_reads_the_old_enchantment_field",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "demo_no_longer_calls_the_old_add_enchantment",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "demo_uses_the_bridges",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "control_hash_matches_its_jar",
+      "ok": true,
+      "detail": "recorded=b415bfc28ccb4de405adc3ef3647ad4f88c1ca896d0f1db90ea59ea19a6a8112 on_disk=b415bfc28ccb4de405adc3ef3647ad4f88c1ca896d0f1db90ea59ea19a6a8112"
+    },
+    {
+      "name": "fix_hash_matches_its_jar",
+      "ok": true,
+      "detail": "recorded=af9cdc3ac28a8c60d09064f0156e5d687598bc1cb95e346c717ca67bc5ef20ff on_disk=af9cdc3ac28a8c60d09064f0156e5d687598bc1cb95e346c717ca67bc5ef20ff"
+    },
+    {
+      "name": "the_two_runs_used_different_jars",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "fix_run_is_the_shipped_jar",
+      "ok": true,
+      "detail": "af9cdc3ac28a8c60d09064f0156e5d687598bc1cb95e346c717ca67bc5ef20ff"
+    },
+    {
+      "name": "both_runs_used_the_same_mod_menu",
+      "ok": true,
+      "detail": "6a6a14eae22099ab53160567987e3ece83a264f98296d74b05f777b16f16321a"
+    },
+    {
+      "name": "both_runs_loaded_the_probe",
+      "ok": true,
+      "detail": "fabric-api.jar, modmenu.jar, balm.jar, shulker-patched2.jar, sbtpreview.jar, ironchests-final.jar, lithium-final.jar, trashslot-client-final.jar, fallingtree-patched.jar, appleskin.jar, p210probe.jar"
+    }
+  ]
+}

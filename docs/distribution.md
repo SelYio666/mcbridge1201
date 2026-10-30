@@ -148,8 +148,26 @@ python tools\rebuild_ironchests_client.py `
 
 如果缺中间件，脚本会直接报错并指出缺少的是“CenturyBridge 转换后的输入”，而不是假装成功。
 
-## 4. 精确版本
+## 3.5 AppleSkin（配置界面用 p210 的 jar）
 
+AppleSkin 的配置界面由内嵌的 Cloth Config 11.1.136（1.20.1 的 jar-in-jar）绘制。p210 之前它在
+1.21.1 上**打不开**（`class_437.field_44669` 被删），所以：
+
+- **分发要用 `work/client/appleskin-cloth.jar`**
+  （sha256=`af9cdc3ac28a8c60d09064f0156e5d687598bc1cb95e346c717ca67bc5ef20ff`，size=1101433；
+  与 `runs/p210-cloth-config/build.log` 的 `OUT appleskin-cloth.jar sha256=…` 一致）；
+- `work/client/appleskin-patched.jar`（`b415bfc2…`）是 p204–p209 的对照基准，**不要发**：它的
+  Cloth 还是原样，进模组列表会报 `Error from mod 'appleskin'` / `'cloth-config'`，配置界面打不开；
+- 重新构建：`py -3.12 runs/p210-cloth-config/build.py`（需要 `JAVA_HOME`；会把嵌套 cloth jar 抽出来、
+  用 `cloth-config.json` + `cloth-config-render.json` + `render-widget-override.json` 打补丁再塞回去，
+  并断言每条规则的命中数）；
+- **必须一起说明的降级**：6 处装饰不再绘制（列表平铺背景、列表上下边缘渐变、screen dim 层、
+  tab 阴影、行渐变、下拉阴影；行本身、选中条、文字、按钮都在），Cloth 自己 demo 屏的样例物品
+  没有自定义名字、没有附魔；`GlobalizedClothConfigScreen`（Ctrl+滚轮全局设置屏）会崩，AppleSkin
+  不会打开它。逐条写在两个规则文件的 `risk`/`evidence` 里；
+- 证据：`runs/p210-cloth-config/`（控制组 `before/`、修复组 `after3/`、判据 `verify_cloth.py`）。
+
+## 4. 精确版本
 | 组件 | 版本 |
 |---|---|
 | Minecraft | 1.21.1 |

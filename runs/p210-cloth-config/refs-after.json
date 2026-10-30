@@ -1,0 +1,41 @@
+{
+  "jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p210\\cloth-patched.jar",
+  "jar_sha256": "8193994e50a544857cfcab14080d19111dfdf942f13ac345154b4b3e1cfb6a83",
+  "client_index": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\cb\\data\\jars\\client-1.21.1-intermediary.jar",
+  "client_classes": 8271,
+  "references_checked": 783,
+  "references_unchecked": 0,
+  "missing_classes": [],
+  "missing_members": [
+    {
+      "owner": "net/minecraft/class_287",
+      "name": "method_22912",
+      "desc": "(DDD)Lnet/minecraft/class_4588;",
+      "kind": "method",
+      "used_by": [
+        "me/shedaniel/clothconfig2/gui/GlobalizedClothConfigScreen"
+      ],
+      "count": 1
+    },
+    {
+      "owner": "net/minecraft/class_4597",
+      "name": "method_22991",
+      "desc": "(Lnet/minecraft/class_287;)Lnet/minecraft/class_4597$class_4598;",
+      "kind": "method",
+      "used_by": [
+        "me/shedaniel/clothconfig2/gui/GlobalizedClothConfigScreen"
+      ],
+      "count": 1
+    },
+    {
+      "owner": "net/minecraft/class_4069",
+      "name": "method_25401",
+      "desc": "(DDD)Z",
+      "kind": "method",
+      "used_by": [
+        "me/shedaniel/clothconfig2/gui/widget/DynamicElementListWidget$ElementEntry"
+      ],
+      "count": 1
+    }
+  ]
+}

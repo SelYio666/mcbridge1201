@@ -360,7 +360,7 @@ p195 结尾的 "clean-host portable remain open" 与 p201 的 "Verified on Windo
 
 ## 二十、2026-10-28 更新（p204：真实滚轮 + 真实键盘打进 Mod Menu）
 
-任务 5 的输入半条关闭；Cloth Config 半条有了带栈的结论。
+任务 5 的输入半条关闭；Cloth Config 半条有了带栈的结论（p210 已把它打通，见第二十五节）。
 
 - **p104 的归因是错的**：它把"三种注入方式之后 scroll 仍是 0.0"记成"本机输入注入限制"。p202 已经证明
   同一类失败的真因是**游戏窗口不在最上层**，光标底下的点是终端的。p204 用同一套修法
@@ -377,11 +377,12 @@ p195 结尾的 "clean-host portable remain open" 与 p201 的 "Verified on Windo
   （`VK_PACKET` → `GLFW_KEY_UNKNOWN`），字符从 char 回调进，所以"按键数"不是证据；
 - **键盘需要真焦点**：滚轮跟着光标底下的窗口，键盘跟着前台窗口。测试前显式查
   `GetForegroundWindow()==hwnd`，抢不到就 `AttachThreadInput` 借前台线程的权限再 `SetForegroundWindow`；
-- **Cloth Config 不是未测，是打不开**：环境里唯一的一份是 1.20.1 的 JiJ（`cloth-config-fabric-11.1.136`，
-  藏在 AppleSkin / ShulkerBoxTooltip 的 `META-INF/jars/`），`ConfigBuilderImpl.<init>` 读
-  `class_437.field_44669`（1.21.1 已移除）直接 `NoSuchFieldError`；Mod Menu 的 `ModsScreen` 初始化时替
-  每个模组问配置界面，`appleskin`/`fallingtree`/`shulkerboxtooltip`/`trashslot` 四家各炸一次。要用它得先
-  把 Cloth Config 本身转换到 1.21.1，属于单独一轮；
+- **Cloth Config 当时打不开，现在打开了**（p210，见本文第二十一节）：环境里唯一的一份是 1.20.1 的 JiJ
+  （`cloth-config-fabric-11.1.136`，藏在 AppleSkin / ShulkerBoxTooltip 的 `META-INF/jars/`），
+  `ConfigBuilderImpl.<init>` 读 `class_437.field_44669`（1.21.1 已移除）直接 `NoSuchFieldError`；
+  Mod Menu 的 `ModsScreen` 初始化时替每个模组问配置界面，`appleskin`/`fallingtree`/
+  `shulkerboxtooltip`/`trashslot` 四家各炸一次。p210 把这份 JiJ 抽出来打到 1.21.1 再塞回去，
+  控制台的 5 层断点 + Cloth demo 的 2 个尾巴逐条桥接（`runs/p210-cloth-config/`）；
 - **顺手纠正 p94**：它写"截图里能看到列表行"，但自己的两张截图里列表是全黑的；p204 四张也一样。视觉校验
   因此做在**滚动条**上（控件按滚动量算出来的）：一格位移预测 `18/147×(514−328)=23`、实测 **22**；满格
   预测 186、实测 **184**；过滤后（max=0）不画滑杆；
@@ -420,7 +421,7 @@ p195 结尾的 "clean-host portable remain open" 与 p201 的 "Verified on Windo
 - 回归：新增 `test_modmenu_rows()`（27 条），从 `rows-check.json`、两份 `result.json`、
   `build.log`、桥源码与 `build_command` 实算；
 - 边界：单机单显示器、guiScale 2；只验证模组列表；纹理背景未恢复（平色 `0x80000000`），
-  选中高亮未画，描述面板未验证；Cloth 配置界面仍打不开。
+  选中高亮未画，描述面板未验证；Cloth 配置界面这一轮还打不开（p210 已解决）。
 
 ## 二十二、2026-10-29 更新（p206：选中行高亮 + 描述面板空的原因）
 
@@ -503,3 +504,47 @@ p207 留下的"写了但没跑过"的那段，这一轮跑起来，并证明滚�
 - 门禁：`test_review_fixes` **370/370**；`check_hashes`、`verify_evidence`、`check_text_encoding` 见提交说明；
 - 边界：gui 宽 400 下面板左右各剩 2 px，该宽度下的换行数是本轮特有的；只测 7 个可见行；滚轮落地 2~3 格不稳定；
   滑块仍是平色近似；触摸板亚格输入与 Shift 横向滚轮未测。
+
+## 二十五、2026-10-30 更新（p210：Cloth Config 配置界面能打开、画出 13 行、点得动）
+
+AppleSkin 的配置界面是 1.20.1 的 Cloth Config 11.1.136（jar-in-jar）画的，不是 AppleSkin 画的。
+这一轮把它抽出来、打到 1.21.1、塞回去，并逐层记录退化。
+
+- **控制组（不修就是打不开）**：`work/client/appleskin-patched.jar`
+  （`b415bfc2…`，1104012）→ `config.ok=false`，`NoSuchFieldError: class_437 … field_44669`，
+  栈在 `ConfigBuilderImpl.<init>`，5 个模组各报一次（`runs/p210-cloth-config/before/client.log:183,203`）；
+- **5 层断点**：① `Screen.field_44669` 被删 → 桥返回 1.21.1 自己的 `menu_background.png`；
+  ② `method_25394` 在 `class_339` 上变 final → 改名到 `method_48579`，**必须** `onlyIfExtends: class_339`
+  （否则 Cloth 的列表（`class_362` 子树）被误改，13 行构造好但一个像素不画）；③ `TextFieldWidget` 两个
+  setter 各多一个 `boolean`；④ `renderBackground` 多三个参数；⑤ 立即模式渲染模型整代消失
+  （`Immediate.getBuffer` / `BufferBuilder.begin` / 顶点链终点 / `Immediate.draw`）；
+- **第 5 层为什么能救**：`renderList` 开头 `vcp=Immediate.getInstance(); bb=t0(vcp)` 是死代码（slot 8 全程
+  未被 `aload`），行本身走 `renderItem(DrawContext, Entry, …)`。`buffer()` 返回 `null` → 13 行出现；
+  只有 1–4 层时 `after/` 的崩溃报告证明了这条链活着：`t0` 从
+  `DynamicEntryListWidget.method_25394:298` 抛出（`after/client.log:207`，"Rendering overlay"）；
+- **两个末端尾巴**（层 6/7）：Cloth 自己的 demo 屏用 `ItemStack.setCustomName`（层 6，`keepStackName`）和
+  `Enchantments.field_9131` + `addEnchantment(Enchantment,int)`（层 7）。层 6 修掉后层 7 才暴露
+  （`attempt2-demo-enchantment/client.log:129`）。层 7 是**真退化**：1.21.1 的 `class_7923` 里 75 个
+  `class_2378` 字段没有一个是附魔注册表，附魔只能从 per-world `DynamicRegistryManager` 取，而这个 lambda
+  里没有 world，所以样例物品不附魔；层 6 同样使样例物品没有自定义名字。两条都写在规则 `evidence` 里；
+- **验收**：`client_errors=[]`、`no_such_field=0`、`no_such_method=0`、`done.tick=182`、
+  `rows=13 kinds={BooleanToggleBuilder$1=9, EmptyEntry=2, FloatListEntry=1, SearchFieldEntry=1}`
+  （`after3/result.json`、`after3/client.log:147`），截图 `after3/config.png` 323358 B；
+- **交互（P1）**：探针取第一条布尔行的 `class_4185` 中心，用 **`Screen.method_25402`** 发真实点击 →
+  `handled=true`，`getValue()` 由 `true` 变 `false`，且 `direct_press=false`（不是靠直接调
+  `ButtonWidget.method_25306` 兜底）；`after3/toggle.png` 里第一行按钮变 OFF、其余 8 行仍 ON
+  （`after3/client.log:153-156`）；
+- **退化清单（6 条装饰 + 2 条 demo）**：列表平铺背景、列表上下边缘渐变、screen dim 层、tab 阴影、
+  行渐变、下拉阴影改 no-op；行本身、选中条、文字、按钮都在。逐条写在
+  `rules/fabric-1.21.1/cloth-config-render.json` 的 `risk`/`evidence`；
+- **未覆盖**：`GlobalizedClothConfigScreen.method_25394`（Ctrl+滚轮全局设置屏，27 处 tombstone，
+  需重建 tab 栏；AppleSkin 永不打开）与 `DynamicElementListWidget$ElementEntry.method_25401(DDD)`
+  （1.21.1 的 `class_4069` 已无 3 参 `isMouseOver`；`scan_refs.py` 的 `refs-after.json` 里剩这两类，
+  实测路径不经过）；
+- **规则命中数（构建断言）**：`buffer-accessor 5`、其余 14 条各 1、`clickable-text-override 8`、
+  `render-widget-override 6`；
+- 回归：新增 `test_cloth_config()`，以及 Java 侧 `JarPatcherMethodRenameTest`（4 例：直接父类、三级祖先、
+  无关父类（`class_362` 场景）、祖先解析不出→不改）；判据脚本 `verify_cloth.py` 31/31；
+- 门禁：`test_review_fixes` 见提交说明；`check_hashes`、`verify_evidence`、`check_text_encoding` 同；
+- 边界：单机、1280×720、guiScale 2；只点第一条布尔开关，其余开关、文本框、浮点列表未交互；
+  跨机器未做。

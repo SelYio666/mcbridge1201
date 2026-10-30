@@ -53,6 +53,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 客户端首次运行（PCL） | 1.21.1 Fabric 客户端已装，五模组加载；RL 网络/Balm 客户端初始化/ironchests 模型桥后**到达主菜单**；Balm writer + lithium `VarInt` 桥后**进入单人世界并渲染**；背包 + TrashSlot 按钮已渲染、5 钻石可进背包；trash **移入/取回/clientbound/empty 均通过**（`p63`/`p64`/`p65`）；IronChests **模型 + 同步 NBT + 箱子 GUI（真实九宫格背景）+ 取放交互 + 关箱持久化/S2C** 均通过（`p66`–`p72`），修复流水线已入仓（`p71`）；lithium 玩法冒烟通过（`p73`，非完整评估）；双客户端 **服务端→客户端内容同步 + 访客取走→主机可见的往返均通过**（`p75`/`p76`；LAN 尝试的认证墙见 `p74`）；**双端关屏通过**（`p77`；`Screen.close()`，服务端菜单回落到 46 格）；**同箱双客户端操作总数守恒、无复制**（`p78`）；**同 tick 并发点击服务端只给一人、不复制**（`p79`/`p80`，干净重跑确认输家被纠正）；物理 ESC **通过**（`p83`；传送+新方块后按 ESC，双端回落 46 格；早前失败见 `p81`/`p82`）；lithium TPS 采样 20.03（`p84`，289 区块/60 秒）；empty-trash 真实 Delete 键已通过（`p183`；`p85`/`p86` 的按键失败根因是注入漏 `KEYEVENTF_EXTENDEDKEY`，provider 级见 `p65`）；Shift+Delete 跨槽删除（两叠 5+3）通过（`p184`）；空 cursor 右键取 1 留 4 通过（`p185`）；扩模 6 个样本：5 阻断 / 1 仅启动（`p88`，见 [mod-expansion](docs/mod-expansion.md)） | `runs/p50-client/`、`runs/p51-client-bridge/`、`runs/p52-client-balm/`、`runs/p53-client-world/`、`runs/p54-client-lithium/`、`runs/p55-client-gui/`、`runs/p56-client-item/`、`runs/p57-trash-persist/`、`runs/p58-trash-click/`、`runs/p59-trash-send/`、`runs/p60-trash-return/`、`runs/p61-trash-clean-return/`、`runs/p63-trash-debug/`、`runs/p64-trash-s2c/`、`runs/p65-trash-empty/`、`runs/p66-ironchests-gui/`、`runs/p67-ironchests-gui-nbt/`、`runs/p68-ironchests-gui/`、`runs/p69-ironchests-interaction/`、`runs/p70-ironchests-persist/`、`runs/p71-rebuild-pipeline/`、`runs/p72-ironchests-nine-slice/`、`runs/p73-lithium-play/`、`runs/p74-two-client/`、`runs/p75-two-client-server/`、`runs/p76-two-client-move/`、`runs/p77-two-client-close/`、`runs/p78-two-client-race/`、`runs/p79-two-client-simultaneous/`、`runs/p80-two-client-clean/`、`runs/p81-esc-key/`、`runs/p82-esc-onuse/`、`runs/p83-esc-teleport/`、`runs/p84-lithium-tps/`、`runs/p85-empty-key/`、`runs/p86-empty-hover/`、`runs/p87-independent-test/`、`runs/p88-mod-expansion/`、`runs/p183-trash-key/`、`runs/p184-trash-delete-all/`、`runs/p185-trash-undelete-right/`、[docs/mod-expansion](docs/mod-expansion.md)、[remaining-work](docs/remaining-work.md) |
 | **ShulkerBoxTooltip 网格预览（部分）** | p186：client-side `ContainerComponent` + `ComponentPreviewProvider` + grid renderer 的 t2/t4 桥，tooltip 出现预览框与 `Diamond ×5`；网格 item icon 仍缺、真实 server item 仍空 | `runs/p186-shulker-grid-client-item/` |
 | **一键安装到 PCL（v0.5.5）** | 图形面板 `mcbridge-pcl-panel.zip` + 免 Python `mcbridge-pcl-setup.zip`；版本下拉/搜索/进度/PCL2 自动检测；`from_source_install` 支持 release/snapshot/old_* / all / latest-snapshot；PCL2 2.13.1.1 实测 | `share/pcl-onclick/`、`runs/p137-pcl2-onclick/` |
+| **Cloth Config 配置界面（p210）** | AppleSkin 的 1.20.1 JiJ `cloth-config-fabric-11.1.136` 在 1.21.1 上**能开、能画 13 行、点得动**：`rows=13 kinds={BooleanToggleBuilder$1=9, …}`、`client_errors=[]`，真实点击把第一条开关由 ON 翻成 OFF；6 处装饰降级为 no-op，`GlobalizedClothConfigScreen` 未覆盖 | `runs/p210-cloth-config/`、`rules/fabric-1.21.1/cloth-config.json`、`rules/fabric-1.21.1/cloth-config-render.json` |
 
 ## 交接
 
@@ -210,7 +211,7 @@ MIT，见 [LICENSE](LICENSE)。第三方组件：CenturyBridge（MIT）、minecr
 - **阶梯正好对上原版算术**：`itemHeight=36` → 一格 18，实测 `18/36/54/72/90/108/126/144`，第九格被 `clamp(0,max)` 夹到 **147**。
 - **两个对照**：窗口外滚 9 格 → **0 事件、列表不动**；窗口内右侧面板滚 9 格 → 事件到了（`-1` 和 `-8` 两条，合计 −9）、**列表不动**。说明位置命中测试在起作用，不是"窗口收到滚轮就全局滚"。
 - **键盘**：真实左键点搜索框（`searchFocused=true`）后 `SendInput` 送 `m/e/n/u`，`chars=4`、`text="menu"`、条目 **11→1**、`max` 147→0。键事件是 `code=-1`（`VK_PACKET`），字符从 char 回调进——所以"按键数"不能当证据。
-- **Cloth Config 半条关不了，但是有原因的**：环境里只有 **1.20.1 的 JiJ**（`cloth-config-fabric-11.1.136`），`ConfigBuilderImpl.<init>` 一碰 `class_437.field_44669` 就 `NoSuchFieldError`；Mod Menu 初始化时替每个模组问配置界面，`trashslot`/`fallingtree`/`shulkerboxtooltip`/`appleskin` 四家全炸。所以 Cloth 界面不是"未测"，是**打不开**，栈在 `client.log` 里。
+- **Cloth Config 半条当时关不了，p210 已关**：环境里只有 **1.20.1 的 JiJ**（`cloth-config-fabric-11.1.136`），`ConfigBuilderImpl.<init>` 一碰 `class_437.field_44669` 就 `NoSuchFieldError`；Mod Menu 初始化时替每个模组问配置界面，`trashslot`/`fallingtree`/`shulkerboxtooltip`/`appleskin` 四家全炸。当时的结论是"打不开"，栈在 `client.log` 里；p210 把这份 JiJ 抽出来打到 1.21.1 再塞回去，界面现在能开、能画 13 行、点得动（见下文 p210 一节）。
 - **顺手纠正 p94 的一句话**：它的截图里列表其实是全黑的，p204 四张截图也一样——列表行不画、滚动条画。视觉校验因此做在**滚动条**上（控件自己按滚动量算出来的）：一格位移预测 `18/147×(514−328)=23`、实测 **22**；满格预测 186、实测 **184**；过滤后不画滑杆。
 - **门禁**：`test_review_fixes` **260/260**（新增 33 条，从 `client.log`/`harness.log`/两份 `result.json`/`scroll-check.json` 重算）、`check_hashes` 见下、`verify_evidence` passed；无新 release（v0.5.6，只加探针）。
 - 边界：单机单显示器；只测 Mod Menu 的列表与搜索框；方向键/PageDown 未测（`KEYEVENTF_UNICODE` 只能送字符）；列表行不画是独立缺陷，本轮没修也没假装它不存在；两次运行。
@@ -241,7 +242,7 @@ p204 把「列表全黑」记成独立缺陷并明说没修；这一轮修掉。
   `result.json`、`build.log` 与桥源码重算）、`check_hashes` 见下、`verify_evidence` passed；
   无新 release（v0.5.6，只改桥）。
 - 边界：单机单显示器、guiScale 2；只验证模组列表；纹理背景没有恢复（仍是平色带），选中高亮
-  （`method_44398`）没画，描述面板这一轮 `count=0` 没验证；Cloth 配置界面依旧打不开（p204 的栈）。
+  （`method_44398`）没画，描述面板这一轮 `count=0` 没验证；Cloth 配置界面这一轮还打不开（p204 的栈，p210 已解决）。
 
 ## p206 选中行高亮（2026-10-29，正常 UTF-8）
 
@@ -328,3 +329,44 @@ p207 结尾留下的「写了但没跑过」的那段代码，这一轮跑起来
   无新 release（v0.5.6，只改桥的调试输出）。
 - 边界：gui 宽只有 400，面板左右各剩 2 px 余量，这个宽度下的换行数是本轮特有的；只测 7 个可见行；
   滚轮格数落地 2~3 格不稳定；滑块颜色/宽度仍是 p207 的平色近似；触摸板的亚格输入与 Shift 横向滚轮没测。
+
+## p210 Cloth Config 配置界面（2026-10-30，正常 UTF-8）
+
+AppleSkin 的配置界面是 **1.20.1 的 Cloth Config 11.1.136**（jar-in-jar，
+`META-INF/jars/cloth-config-fabric-11.1.136.jar`）画的。p204 把它记成"打不开"，这一轮把它打通：
+界面能开、能画 13 行、点得动。规则在 `rules/fabric-1.21.1/cloth-config.json`（层 1/3/4）与
+`cloth-config-render.json`（层 5–7），桥在 `java/src/bridge/.../Cloth*Bridge.java`，全过程与逐条退化
+写在 `runs/p210-cloth-config/README.md`。
+
+- **5 层断点**：① `Screen.field_44669` 被删（桥返回 1.21.1 自己的 `menu_background.png`）；
+  ② `method_25394` 在 `class_339` 上变成 final（改名到 `method_48579`，**必须**加 `onlyIfExtends`）；
+  ③ `TextFieldWidget.setCursor*` 各多一个 `boolean`；④ `renderBackground` 多三个参数；
+  ⑤ 立即模式渲染模型整代消失（`Immediate.getBuffer` / `BufferBuilder.begin` / 顶点链终点 / `draw`）。
+- **没 `onlyIfExtends` 会怎样**（这是本轮修的真缺陷）：Cloth 的列表继承 `class_362`，它**仍然需要**
+  `method_25394` 被调用；无闸门的通配改名把 13 行的列表改成"行都在、一个像素不画"。
+  `JarPatcherMethodRenameTest` 用 4 个合成 jar 用例把这个闸门钉住（直接父类 / 三级祖先 / 无关父类 /
+  祖先解析不出→不改）。
+- **第 5 层为什么救得回来**：`DynamicEntryListWidget.renderList` 开头 `vcp=Immediate.getInstance();
+  bb=t0(vcp)` 是死代码（slot 8 全程没被 `aload`），行本身走 `renderItem(DrawContext, Entry, …)`。
+  桥让 `buffer()` 返回 `null`，13 行就出来了。只有 1–4 层时的崩溃报告反过来证明这条链是活的
+  （`t0` 从 `DynamicEntryListWidget.method_25394:298` 抛出）。
+- **两个末端尾巴**：Cloth 自己的 demo 屏用 `ItemStack.setCustomName`（层 6）和
+  `Enchantments.field_9131` + `addEnchantment(Enchantment,int)`（层 7）。不处理就每次进模组列表都报
+  `Error from mod 'cloth-config'`。层 7 是**真退化**：1.21.1 的 `class_7923` 里 75 个 `class_2378` 字段
+  没有一个是附魔注册表，附魔只能从 per-world 的 `DynamicRegistryManager` 拿，而这个 lambda 里没有 world，
+  所以样例物品不附魔（层 6 同样让它没有自定义名字）。两条都写在规则 `evidence` 里。
+- **验收**：`client_errors=[]`、`no_such_field=0`、`no_such_method=0`、`done.tick=182`、
+  `rows=13 kinds={BooleanToggleBuilder$1=9, EmptyEntry=2, FloatListEntry=1, SearchFieldEntry=1}`
+  （`runs/p210-cloth-config/after3/`）；对照组同一操作是
+  `NoSuchFieldError: class_437 … field_44669`（`before/`）。
+- **交互**：探针用 **`Screen.method_25402`** 在第一条布尔行的 ON 按钮中心发真实点击 → `handled=true`，
+  `getValue()` `true→false`，`direct_press=false`（不是靠直接调 `onPress` 兜底）；
+  `after3/toggle.png` 里第一行按钮变 OFF、其余 8 行仍 ON。
+- **降级（写进规则，没藏）**：列表平铺背景、列表上下边缘渐变、screen dim 层、tab 阴影、行渐变、
+  下拉阴影共 6 处装饰改 no-op；行本身、选中条、文字、按钮都在。
+- **未覆盖**：`GlobalizedClothConfigScreen.method_25394`（Ctrl+滚轮全局设置屏，27 处 tombstone，需重建
+  tab 栏；AppleSkin 永不打开）与 `DynamicElementListWidget$ElementEntry.method_25401(DDD)`
+  （`class_4069` 在 1.21.1 已无 3 参 `isMouseOver`；`scan_refs.py` 的 `refs-after.json` 里就剩这两类）。
+- **判据**：`runs/p210-cloth-config/verify_cloth.py` 31/31（同时读 `before/` 与 `after3/`，两边的
+  sha256 都与 `result.json` 和现场 jar 比对）；`test_review_fixes` 新增 `test_cloth_config()`。
+- 边界：单机、1280×720、guiScale 2；只点第一条布尔开关，其余开关/文本框/浮点列表未交互；跨机器未做。

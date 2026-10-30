@@ -1,0 +1,7 @@
+WINDOW requested=1280x720
+APPLESKIN C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\appleskin-patched.jar sha256=b415bfc28ccb4de405adc3ef3647ad4f88c1ca896d0f1db90ea59ea19a6a8112 size=1104012
+MODMENU C:\Users\27682\Documents\新建文件夹\mcbridge1201\work\client\modmenu-description.jar sha256=6a6a14eae22099ab53160567987e3ece83a264f98296d74b05f777b16f16321a
+mods: fabric-api.jar, modmenu.jar, balm.jar, shulker-patched2.jar, sbtpreview.jar, ironchests-final.jar, lithium-final.jar, trashslot-client-final.jar, fallingtree-patched.jar, appleskin.jar, p210probe.jar
+SHOT config.png (failure state)
+timeout waiting for P210_DONE
+RESULT {"config": {"ok": false, "error": "java.lang.NoSuchFieldError: Class net.minecraft.class_437 does not have member field 'net.minecraft.class_2960 field_44669'"}, "switched": null, "done": null, "no_such_field": 6, "no_such_method": 0}

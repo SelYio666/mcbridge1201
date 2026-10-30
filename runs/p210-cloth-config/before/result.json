@@ -1,0 +1,81 @@
+{
+  "appleskin_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\appleskin-patched.jar",
+  "appleskin_sha256": "b415bfc28ccb4de405adc3ef3647ad4f88c1ca896d0f1db90ea59ea19a6a8112",
+  "appleskin_size": 1104012,
+  "modmenu_jar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\client\\modmenu-description.jar",
+  "modmenu_sha256": "6a6a14eae22099ab53160567987e3ece83a264f98296d74b05f777b16f16321a",
+  "requested_window": [
+    1280,
+    720
+  ],
+  "mods": [
+    "fabric-api.jar",
+    "modmenu.jar",
+    "balm.jar",
+    "shulker-patched2.jar",
+    "sbtpreview.jar",
+    "ironchests-final.jar",
+    "lithium-final.jar",
+    "trashslot-client-final.jar",
+    "fallingtree-patched.jar",
+    "appleskin.jar",
+    "p210probe.jar"
+  ],
+  "config": {
+    "ok": false,
+    "error": "java.lang.NoSuchFieldError: Class net.minecraft.class_437 does not have member field 'net.minecraft.class_2960 field_44669'"
+  },
+  "screen_constants": [
+    {
+      "field": "field_49511",
+      "value": "minecraft:textures/gui/menu_background.png"
+    },
+    {
+      "field": "field_49895",
+      "value": "minecraft:textures/gui/header_separator.png"
+    },
+    {
+      "field": "field_49896",
+      "value": "minecraft:textures/gui/footer_separator.png"
+    },
+    {
+      "field": "field_49897",
+      "value": "minecraft:textures/gui/inworld_header_separator.png"
+    },
+    {
+      "field": "field_49898",
+      "value": "minecraft:textures/gui/inworld_footer_separator.png"
+    }
+  ],
+  "stack": [
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//me.shedaniel.clothconfig2.impl.ConfigBuilderImpl.<init>(ConfigBuilderImpl.java:53)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//me.shedaniel.clothconfig2.api.ConfigBuilder.create(ConfigBuilder.java:36)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//me.shedaniel.autoconfig.gui.ConfigScreenProvider.get(ConfigScreenProvider.java:95)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//me.shedaniel.autoconfig.gui.ConfigScreenProvider.get(ConfigScreenProvider.java:45)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//squeek.appleskin.gui.ModMenuIntegration.lambda$getModConfigScreenFactory$0(ModMenuIntegration.java:16)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//com.terraformersmc.modmenu.ModMenu.getConfigScreen(ModMenu.java:61)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at java.base/java.lang.reflect.Method.invoke(Method.java:565)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//p210probe.ClothProbe.askForConfig(ClothProbe.java:114)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//p210probe.ClothProbe.lambda$onInitializeClient$0(ClothProbe.java:64)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.lambda$static$2(ClientTickEvents.java:43)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//net.minecraft.class_310.handler$zhm000$fabric-lifecycle-events-v1$onEndTick(class_310.java:5183)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//net.minecraft.class_310.method_1574(class_310.java:2012)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//net.minecraft.class_310.method_1523(class_310.java:1246)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//net.minecraft.class_310.method_1514(class_310.java:882)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at knot//net.minecraft.client.main.Main.main(Main.java:256)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:517)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)",
+    "[16:11:22] [Render thread/INFO]: [STDOUT]: P210_STACK at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)"
+  ],
+  "no_such_field": 6,
+  "no_such_method": 0,
+  "client_errors": [
+    "[16:11:21] [Render thread/ERROR]: Error from mod 'appleskin'",
+    "[16:11:21] [Render thread/ERROR]: Error from mod 'cloth-config'",
+    "[16:11:21] [Render thread/ERROR]: Error from mod 'fallingtree'",
+    "[16:11:21] [Render thread/ERROR]: Error from mod 'shulkerboxtooltip'",
+    "[16:11:21] [Render thread/ERROR]: Error from mod 'trashslot'"
+  ],
+  "screenshot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p210-cloth-config\\before\\config.png"
+}
