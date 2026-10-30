@@ -38,6 +38,19 @@ from test_launcher_e2e import _print_window  # noqa: E402
 SLEEP_BEFORE_FIRST = 6
 
 
+def hover(x: int, y: int) -> int:
+    """Move the cursor without clicking (SendInput absolute, same scaling as _click)."""
+    user32 = ctypes.windll.user32
+    sw, sh = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+    move = drv.INPUT()
+    move.type = 0
+    move.u.mi = drv.MOUSEINPUT(int(round(x * 65535 / max(sw - 1, 1))),
+                               int(round(y * 65535 / max(sh - 1, 1))), 0,
+                               drv.MOUSEEVENTF_MOVE | drv.MOUSEEVENTF_ABSOLUTE, 0, None)
+    array = (drv.INPUT * 1)(move)
+    return int(user32.SendInput(1, array, ctypes.sizeof(drv.INPUT)))
+
+
 def rect_of(hwnd: int) -> list[int]:
     r = ctypes.wintypes.RECT()
     ctypes.windll.user32.GetWindowRect(hwnd, ctypes.byref(r))
@@ -253,6 +266,32 @@ def main() -> int:
                 entry["rect"] = rect_of(gw)
                 entry["title"] = drv.title_of(gw)
                 entry["activation"] = activate(gw)
+        elif kind == "move-game":
+            x, y = (int(v) for v in value.split(","))
+            gw = game_window()
+            if not gw:
+                entry["error"] = "no game window"
+            else:
+                entry["activation"] = activate(gw)
+                time.sleep(0.4)
+                rect = rect_of(gw)
+                # Move only: a disabled button never draws its hover state, so this tells "the
+                # click missed" apart from "the button is not accepting input".
+                hover(rect[0] + x, rect[1] + y)
+                time.sleep(0.8)
+        elif kind == "key-game":
+            gw = game_window()
+            if not gw:
+                entry["error"] = "no game window"
+            else:
+                entry["activation"] = activate(gw)
+                import ctypes as _ct
+                vk = int(value or 13)
+                _ct.windll.user32.keybd_event(vk, 0, 0, 0)
+                time.sleep(0.08)
+                _ct.windll.user32.keybd_event(vk, 0, 2, 0)
+                entry["vk"] = vk
+                time.sleep(1.2)
         elif kind == "click-game":
             x, y = (int(v) for v in value.split(","))
             gw = game_window()
@@ -321,8 +360,10 @@ def main() -> int:
     info["markers"] = latest_log_markers(game, info.get("version"))
     (out / "drive.json").write_text(json.dumps(info, ensure_ascii=False, indent=2) + "\n",
                                     encoding="utf-8", newline="\n")
+    # ensure_ascii=True: the console here is GBK and a Chinese path in the summary used to
+    # kill the process AFTER drive.json was written, which made a good run look failed.
     print(json.dumps({k: info[k] for k in ("launcher_window", "actions") if k in info},
-                     ensure_ascii=False, indent=2)[:4000])
+                     ensure_ascii=True, indent=2)[:4000])
     return 0
 
 

@@ -410,7 +410,8 @@ PASS p213: the session was offline, according to the argv the launcher built
 PASS p213: the launched version is the one the panel installed
 PASS p213: the client reached the title screen without crashing
 PASS p213: the log names the offline user
-PASS p213: creating a world is recorded as NOT achieved
+PASS p213: the world finished loading, per the log
+PASS p213: an in-game frame exists and is not the world list
 PASS p213: the title screenshot is not the splash frame
 PASS p213: the driver reports whether the window really became foreground
 PASS p213: the driver measures the game rectangle after restoring the window
@@ -453,4 +454,4 @@ PASS DOWNLOAD a recently failing host is ordered last
 PASS DOWNLOAD persists and reloads host health
 PASS DOWNLOAD canary health merges into the cache
 
-454/454 checks passed
+455/455 checks passed

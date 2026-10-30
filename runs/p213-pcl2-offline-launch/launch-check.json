@@ -7,20 +7,22 @@
     "accessToken": "0000000000003006998F555B73D6DCEF",
     "userType": "msa"
   },
-  "java_pid": 24988,
+  "java_pid": 4720,
   "title_screen": true,
   "log_markers": {
     "setting_user": [
-      "[19:55:04] [Render thread/INFO]: Setting user: SelYio"
+      "[20:32:43] [Render thread/INFO]: Setting user: SelYio"
     ],
     "title_screen": [
-      "[19:55:15] [Render thread/INFO]: Sound engine started"
+      "[20:32:54] [Render thread/INFO]: Sound engine started"
     ],
-    "world": [],
+    "world": [
+      "[20:33:13] [Render thread/INFO]: Time elapsed: 1413 ms"
+    ],
     "crashed": []
   },
-  "world_created": false,
-  "world_attempt_note": "创建新的世界 点击后画面字节未变、日志无世界记录；预览服务已启动（Loaded 7 recipes），未继续深挖",
+  "world_created": true,
+  "world_attempt_note": "本轮用点击进入世界（世界列表 → 行 → 进入选中的世界，Time elapsed: 1413 ms）；早前在创建世界页点「创建新的世界」未触发，换 Enter 才创建成功（详见 README）",
   "checks": [
     {
       "name": "every evidence file exists",
@@ -80,17 +82,17 @@
     {
       "name": "the_log_says_the_client_entered_the_game",
       "ok": true,
-      "detail": "['[19:55:04] [Render thread/INFO]: Setting user: SelYio']"
+      "detail": "['[20:32:43] [Render thread/INFO]: Setting user: SelYio']"
     },
     {
       "name": "the_sound_engine_started_which_is_the_title_screen",
       "ok": true,
-      "detail": "['[19:55:15] [Render thread/INFO]: Sound engine started']"
+      "detail": "['[20:32:54] [Render thread/INFO]: Sound engine started']"
     },
     {
       "name": "the_title_screen_screenshot_is_not_the_splash",
       "ok": true,
-      "detail": "392775 bytes, 90.1% differs from the splash"
+      "detail": "367447 bytes, 90.7% differs from the splash"
     },
     {
       "name": "the_game_did_not_crash",
@@ -98,24 +100,49 @@
       "detail": "[]"
     },
     {
-      "name": "the_only_errors_are_the_offline_ones",
+      "name": "the_only_errors_are_the_offline_ones_plus_one_unexplained",
       "ok": true,
-      "detail": "3 expected"
+      "detail": "4 known (incl. one 'Not a string' on join)"
+    },
+    {
+      "name": "the_unexplained_error_is_named_in_the_verdict",
+      "ok": true,
+      "detail": "it is recorded, not filtered away"
     },
     {
       "name": "a_click_inside_the_game_worked",
       "ok": true,
-      "detail": "90.5% changed after 单人游戏"
+      "detail": "90.0% changed after 单人游戏"
     },
     {
-      "name": "creating_a_world_did_not_take (recorded, not hidden)",
+      "name": "the_world_was_entered_by_clicking",
       "ok": true,
-      "detail": "no world-load lines; log grew 5023->5966 bytes from screen drawing, not from a world"
+      "detail": "row click + 进入选中的世界"
     },
     {
-      "name": "and_no_world_folder_was_created",
+      "name": "the_world_finished_loading",
       "ok": true,
-      "detail": "[]"
+      "detail": "['[20:33:13] [Render thread/INFO]: Time elapsed: 1413 ms']"
+    },
+    {
+      "name": "the_world_list_shows_the_created_world",
+      "ok": true,
+      "detail": "选择世界 page after 单人游戏"
+    },
+    {
+      "name": "the_in_game_frame_is_not_the_world_list",
+      "ok": true,
+      "detail": "90.7% different"
+    },
+    {
+      "name": "a_world_folder_exists_with_the_name_from_the_screen",
+      "ok": true,
+      "detail": "['新的世界']"
+    },
+    {
+      "name": "the_log_grew_because_a_world_loaded",
+      "ok": true,
+      "detail": "5024 -> 6823 bytes"
     }
   ]
 }

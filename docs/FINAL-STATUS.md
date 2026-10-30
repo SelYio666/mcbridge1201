@@ -609,3 +609,37 @@ p211 只把环境与检测钉死，没按过按钮。这一轮把整条链跑通
 - 边界：从 PCL2 点「启动游戏」这一条本轮没做（当时误写成"要账号"，其实 PCL2 有离线登录，已由 p213 补上，见第二十八节）；没有重跑 1.21.1 启动回归；
   写进真机的东西：`versions\1.20.4\`、`mcbridge-1.20.4` profile、1.20.4 新增的 asset 对象、
   启动器 exe 被替换（旧版留 `.bak`）。
+
+## 二十八、2026-10-30 更新（p213：离线模式能启动，并且真的进了世界）
+
+p212 结尾我写"没做：从 PCL2 进世界（要账号）"，**那句是错的**。PCL2 的「离线」登录不需要账号，
+它给游戏一个占位 UUID/token，用户名自选。这一轮把"启动 → 进世界"整段跑通。
+
+- **离线身份来自 argv，不是设置界面**：PCL2 2.99.0.0 拉起的 java 命令里有
+  `--username SelYio --uuid 0000000000003006998F555B73D6DCEF --accessToken <同一个占位值>
+  --userType msa`，还有 `-Dminecraft.launcher.brand=PCL` 与 `--version 1.20.4`；用的是 PCL 自带的
+  `java-runtime-delta`，版本目录是 PCL 的隔离模式（`--gameDir …\versions\1.20.4`，所以日志在
+  `versions\1.20.4\logs\latest.log`，不在 `.minecraft\logs`）；
+- **到标题界面**：日志 `Setting user: SelYio` → `Sound engine started`，截图 367 KB（与启动闪屏差 90%），
+  无崩溃；只有离线必然出现的错误（Realms 401、`Failed to fetch user properties`、`profile key pair`）；
+- **进世界，全是点出来的**：标题界面「单人游戏」→ 世界列表（`新的世界 (2026/10/30 20:26) 生存模式，
+  版本：1.20.4`）→ 点该行 →「进入选中的世界」，日志 `Time elapsed: 1413 ms`，窗口标题变
+  `Minecraft 1.20.4 - 单人游戏`，`versions\1.20.4\saves\新的世界\` 出现（`in-game.png`：准星、生命、
+  饥饿、快捷栏都在）；
+- **早前一次失败如实留着**：第一次是在创建世界页点「创建新的世界」——同坐标 hover 无高亮、点击后画面
+  只少了 tooltip（`world-select.png` 与 `world-clicked.png` 的全部差别就是这个）、日志没有世界加载行；
+  在那一页**按 Enter** 才把世界建出来（`diag-enter.png` 是按下后出现的世界预览帧 "1×"）。所以"合成点击
+  能进 GLFW 窗口"是成立的（标题界面与世界列表都点得动），但**那一个按钮**为什么不吃点击没查清，
+  不据此下结论；
+- **一条未查清的日志**：加入世界瞬间有 `[Server thread/ERROR]: Not a string`（紧接着
+  `SelYio[local:E:…] logged in with entity id 1`），来源没查到；它在判据的允许名单里被**单独点名**，
+  没有悄悄过滤；
+- **三个坑**（都写进 run README）：① 后台进程直接 `SetForegroundWindow` 常被拒——点击落到终端而脚本
+  还"成功"返回，改用 `AttachThreadInput` 抢前台并把 `foreground` 写进证据；② 被最小化的窗口
+  （`-32000,-32000`）必须先 `SW_RESTORE` 再量矩形，否则坐标过期（第一次偏 119 px，点到「允许作弊」）；
+  ③ "窗口出现"是 Mojang 闪屏，要等日志的 `Sound engine started` 才算到标题界面；
+- **判据**：`runs/p213-pcl2-offline-launch/verify_launch.py` **24/24**；
+- 回归：新增 `test_pcl2_launch()`（12 条，含"离线身份在 argv 里""标题截图不是闪屏""进世界靠点击"）；
+- 门禁：`test_review_fixes`、`check_hashes`、`verify_evidence`、`check_text_encoding` 见提交说明；
+- 边界：创建世界页那个按钮不吃合成点击未查清；没重跑 1.21.1 启动回归；截图是 `PrintWindow` 的窗口位图；
+  跑完已关闭游戏进程。

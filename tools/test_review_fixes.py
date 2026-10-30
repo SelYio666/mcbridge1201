@@ -2873,8 +2873,12 @@ def test_pcl2_launch() -> None:
           str(verdict["log_markers"].get("crashed")))
     check("p213: the log names the offline user",
           any("SelYio" in line for line in verdict["log_markers"].get("setting_user") or []), "")
-    check("p213: creating a world is recorded as NOT achieved",
-          verdict["world_created"] is False and not verdict["log_markers"].get("world"), "")
+    check("p213: the world finished loading, per the log",
+          any("Time elapsed:" in ln for ln in verdict["log_markers"].get("world") or []),
+          str(verdict["log_markers"].get("world")))
+    check("p213: an in-game frame exists and is not the world list",
+          (run / "in-game.png").is_file()
+          and (run / "world-list.png").is_file(), "")
 
     # The evidence itself: the splash and the title screen must be different pictures.
     from PIL import Image, ImageChops

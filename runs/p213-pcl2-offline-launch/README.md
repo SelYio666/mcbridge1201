@@ -16,9 +16,11 @@ p212 结尾我写了一句"没做：从 PCL2 进世界（要账号）"，**那�
 | 进到标题界面 | 日志 `Setting user: SelYio` → `Sound engine started`；截图是标题界面 | `game-title.png`（392 KB，与启动闪屏差 90%） |
 | 没有崩溃 | 只有离线模式必然出现的 3 条错误（Realms 认证 401、`Failed to fetch user properties`、`profile key pair`） | 日志 + `launch-check.json` |
 | 游戏内点击也生效 | 点「单人游戏」→ 进入创建世界页（画面变 90%） | `world-select.png` |
-| **建世界没成功** | 点「创建新的世界」无效果：日志没有世界加载行、`saves/` 仍为空 | 如实记录，见下 |
+| **进世界成功** | 点「单人游戏」→ 世界列表点 `新的世界` →「进入选中的世界」：日志 `Time elapsed: 1413 ms`，标题变 `Minecraft 1.20.4 - 单人游戏`，`saves\新的世界\` 已存在 | `world-list.png`、`in-game.png` |
 
 ![离线启动后的标题界面](game-title.png)
+
+![进入世界](in-game.png)
 
 ## 复现
 
@@ -55,19 +57,24 @@ py -3.12 runs/p213-pcl2-offline-launch/verify_launch.py
 3. **"窗口出现" ≠ "游戏起来了"**：先出现的是 Mojang 红底闪屏。`wait-title` 等日志里的
    `Sound engine started` 才算到标题界面，然后才截图。
 
-## 建世界为什么没成（没深挖，如实记）
+## 进世界这一段（以及一次没生效的点击）
 
-- 点「单人游戏」能进创建世界页（这证明游戏吃到了合成点击）；
-- 点「创建新的世界」后：画面只少了悬停提示（`world-select.png` 与 `world-clicked.png` 的差别就是
-  那个 tooltip），日志**没有**任何世界加载行（`Preparing spawn area` / `Time elapsed:`），
-  `versions\1.20.4\saves\` 仍是空的；
-- 创建世界页会先在后台起一个"世界预览"服务（日志里 `Loaded 7 recipes` / `Loaded 1271 advancements`
-  就是它），创建按钮在预览就绪前可能是禁用的。这一轮没有去证明/排除它，所以**只记录为未通过**，
-  不写成"PCL2 起不来"。
+- **本轮的成功路径全是点击**：标题界面点「单人游戏」→ 世界列表（`新的世界 (2026/10/30 20:26) 生存模式，
+  版本：1.20.4`）→ 点这一行 → 点「进入选中的世界」→ 日志 `Time elapsed: 1413 ms`，窗口标题变
+  `Minecraft 1.20.4 - 单人游戏`，`versions\1.20.4\saves\新的世界\` 出现；
+- **早前的一次失败，如实留着**：第一次是点创建世界页的「创建新的世界」，同坐标 hover 无高亮、
+  点击后画面只少了 tooltip（`world-select.png` 与 `world-clicked.png` 的全部差别就是这个），
+  日志没有世界加载行；在那一页**按 Enter** 才把世界建出来（`diag-enter.png` 是按下后出现的世界预览帧
+  "1×"）。所以"合成点击进 GLFW 窗口"是成立的（标题界面与世界列表都点得动），但创建世界页**那一个
+  按钮**为什么不吃点击，本轮没有查清，也不据此下结论；
+- **一条未查清的日志**：日志里有 `[Server thread/ERROR]: Not a string`，出现在玩家加入世界那一瞬间
+  （紧接着就是 `SelYio[local:E:…] logged in with entity id 1`）。来源没查到；它被显式列进
+  `verify_launch.py` 的允许名单，并**单独成一条检查**（"named in the verdict"），没有悄悄过滤掉。
 
 ## 边界
 
-- 只验证到「离线启动 + 标题界面 + 游戏内点击生效」；**建世界/进世界未通过**；
+- 只验证到「离线启动 + 标题界面 + 进世界 + 游戏内点击生效」；创建世界页那个按钮不吃合成点击
+  **没查清**（世界是那一页按 Enter 建出来的）；
 - 用的是 PCL2 2.99.0.0 自带的 `java-runtime-delta`（未用系统 JDK）；版本目录是 PCL 的隔离模式
   （`--gameDir ...\versions\1.20.4`），所以日志在 `versions\1.20.4\logs\latest.log`，不在
   `.minecraft\logs`；

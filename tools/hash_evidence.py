@@ -1551,6 +1551,11 @@ FILES = [
     "runs/p213-pcl2-offline-launch/world-clicked.png",
     "runs/p213-pcl2-offline-launch/gate-review-fixes.log",
     "runs/p213-pcl2-offline-launch/gate-verify.log",
+    "runs/p213-pcl2-offline-launch/world-list.png",
+    "runs/p213-pcl2-offline-launch/world-selected.png",
+    "runs/p213-pcl2-offline-launch/world-loading.png",
+    "runs/p213-pcl2-offline-launch/in-game.png",
+    "runs/p213-pcl2-offline-launch/diag-enter.png",
 ]
 
 

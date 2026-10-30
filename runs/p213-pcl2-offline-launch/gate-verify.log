@@ -4362,7 +4362,7 @@
     },
     "review_regressions": {
       "rc": 0,
-      "summary": "454/454 checks passed",
+      "summary": "455/455 checks passed",
       "skipped": false,
       "stdout_tail": [
         "PASS DOWNLOAD official mode disables mirrors",
@@ -4372,7 +4372,7 @@
         "PASS DOWNLOAD persists and reloads host health",
         "PASS DOWNLOAD canary health merges into the cache",
         "",
-        "454/454 checks passed"
+        "455/455 checks passed"
       ],
       "stderr_tail": []
     }
