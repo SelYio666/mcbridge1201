@@ -1537,6 +1537,20 @@ FILES = [
     "runs/p212-pcl2-e2e/pcl2-click-2.png",
     "runs/p212-pcl2-e2e/gate-review-fixes.log",
     "runs/p212-pcl2-e2e/gate-verify.log",
+    "runs/p213-pcl2-offline-launch/drive_pcl.py",
+    "runs/p213-pcl2-offline-launch/verify_launch.py",
+    "runs/p213-pcl2-offline-launch/README.md",
+    "runs/p213-pcl2-offline-launch/drive.json",
+    "runs/p213-pcl2-offline-launch/launch-check.json",
+    "runs/p213-pcl2-offline-launch/home.png",
+    "runs/p213-pcl2-offline-launch/versions.png",
+    "runs/p213-pcl2-offline-launch/selected.png",
+    "runs/p213-pcl2-offline-launch/game-window.png",
+    "runs/p213-pcl2-offline-launch/game-title.png",
+    "runs/p213-pcl2-offline-launch/world-select.png",
+    "runs/p213-pcl2-offline-launch/world-clicked.png",
+    "runs/p213-pcl2-offline-launch/gate-review-fixes.log",
+    "runs/p213-pcl2-offline-launch/gate-verify.log",
 ]
 
 

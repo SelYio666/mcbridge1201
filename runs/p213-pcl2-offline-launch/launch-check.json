@@ -1,0 +1,121 @@
+{
+  "launcher": "Plain Craft Launcher　",
+  "version": "1.20.4",
+  "offline_args": {
+    "username": "SelYio",
+    "uuid": "0000000000003006998F555B73D6DCEF",
+    "accessToken": "0000000000003006998F555B73D6DCEF",
+    "userType": "msa"
+  },
+  "java_pid": 24988,
+  "title_screen": true,
+  "log_markers": {
+    "setting_user": [
+      "[19:55:04] [Render thread/INFO]: Setting user: SelYio"
+    ],
+    "title_screen": [
+      "[19:55:15] [Render thread/INFO]: Sound engine started"
+    ],
+    "world": [],
+    "crashed": []
+  },
+  "world_created": false,
+  "world_attempt_note": "创建新的世界 点击后画面字节未变、日志无世界记录；预览服务已启动（Loaded 7 recipes），未继续深挖",
+  "checks": [
+    {
+      "name": "every evidence file exists",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_launcher_window_was_the_real_launcher",
+      "ok": true,
+      "detail": "Plain Craft Launcher　"
+    },
+    {
+      "name": "the_version_selector_was_opened",
+      "ok": true,
+      "detail": "26.0% of pixels changed"
+    },
+    {
+      "name": "the_target_version_was_the_one_the_panel_installed",
+      "ok": true,
+      "detail": "1.20.4"
+    },
+    {
+      "name": "pcl2_started_a_game_window",
+      "ok": true,
+      "detail": "Minecraft 1.20.4"
+    },
+    {
+      "name": "the_window_belongs_to_the_installed_version",
+      "ok": true,
+      "detail": "Minecraft 1.20.4"
+    },
+    {
+      "name": "the_launcher_is_named_in_the_java_args",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_java_process_was_pointed_at_the_installed_version",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the_session_is_an_offline_one",
+      "ok": true,
+      "detail": "{\"username\": \"SelYio\", \"uuid\": \"0000000000003006998F555B73D6DCEF\", \"accessToken\": \"0000000000003006998F555B73D6DCEF\", \"userType\": \"msa\"}"
+    },
+    {
+      "name": "no_real_token_was_used",
+      "ok": true,
+      "detail": "0000000000003006998F555B73D6DCEF"
+    },
+    {
+      "name": "the_title_screen_was_reached",
+      "ok": true,
+      "detail": "True"
+    },
+    {
+      "name": "the_log_says_the_client_entered_the_game",
+      "ok": true,
+      "detail": "['[19:55:04] [Render thread/INFO]: Setting user: SelYio']"
+    },
+    {
+      "name": "the_sound_engine_started_which_is_the_title_screen",
+      "ok": true,
+      "detail": "['[19:55:15] [Render thread/INFO]: Sound engine started']"
+    },
+    {
+      "name": "the_title_screen_screenshot_is_not_the_splash",
+      "ok": true,
+      "detail": "392775 bytes, 90.1% differs from the splash"
+    },
+    {
+      "name": "the_game_did_not_crash",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "the_only_errors_are_the_offline_ones",
+      "ok": true,
+      "detail": "3 expected"
+    },
+    {
+      "name": "a_click_inside_the_game_worked",
+      "ok": true,
+      "detail": "90.5% changed after 单人游戏"
+    },
+    {
+      "name": "creating_a_world_did_not_take (recorded, not hidden)",
+      "ok": true,
+      "detail": "no world-load lines; log grew 5023->5966 bytes from screen drawing, not from a world"
+    },
+    {
+      "name": "and_no_world_folder_was_created",
+      "ok": true,
+      "detail": "[]"
+    }
+  ]
+}

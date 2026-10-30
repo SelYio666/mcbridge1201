@@ -396,5 +396,25 @@ p211 查清了 PCL2 在哪、失效快捷方式不再静默；这一轮**真的�
 - **顺手修的真缺陷**：面板的 manifest 线程在窗口销毁后仍 `root.after`，会在线程里抛
   `RuntimeError: main thread is not in main loop`；新增 `_post()` 兜住 `RuntimeError`/`TclError`。
 - **判据**：`runs/p212-pcl2-e2e/verify_e2e.py` 29/29；回归新增 `test_pcl2_e2e()`（13 条）。
-- 边界：没有从 PCL2 点「启动游戏」进世界（要账号/GPU 会话），没有重跑 1.21.1 启动回归；写进真机的东西
+- 边界：没有从 PCL2 点「启动游戏」进世界（当时误以为要账号；PCL2 有离线登录，已由 p213 补上），没有重跑 1.21.1 启动回归；写进真机的东西
   见 `runs/p212-pcl2-e2e/README.md`（版本目录、profile、1.20.4 的 asset 对象、exe 替换）。
+
+## p213 离线模式启动（2026-10-30，正常 UTF-8）
+
+p212 结尾我写"进世界要账号"，**错了**：PCL2 的「离线」登录不需要账号。这一轮把启动这一段跑通。
+
+- **离线身份在 argv 里**：PCL2 2.99.0.0 拉起面板装出来的 1.20.4，java 命令含
+  `--username SelYio --uuid 0000000000003006998F555B73D6DCEF --accessToken <同一个占位值>
+  --userType msa`、`-Dminecraft.launcher.brand=PCL`、`--version 1.20.4`；用 PCL 自带的
+  `java-runtime-delta`，版本隔离（`--gameDir …\versions\1.20.4`，所以日志在
+  `versions\1.20.4\logs\latest.log`）。
+- **到标题界面**：`Setting user: SelYio` → `Sound engine started`，截图 392 KB（与启动闪屏差 90%），
+  无崩溃；只有离线必然的 3 条错误（Realms 401、用户属性、profile key pair）。
+- **游戏内点击也生效**：点「单人游戏」进入创建世界页（画面变 90%）。
+- **建世界没成**：点「创建新的世界」后日志无世界加载行、`saves\` 仍空；创建页会先起"世界预览"服务，
+  按钮可能在其就绪前禁用——本轮没证明也没排除，**如实记为未通过**。
+- **三个坑**：后台 `SetForegroundWindow` 常被拒（改用 `AttachThreadInput`，并把 `foreground` 写进证据）；
+  最小化的窗口（`-32000,-32000`）必须先 `SW_RESTORE` 再量矩形，否则点击偏 119 px；"窗口出现"是 Mojang
+  闪屏，要等日志的 `Sound engine started` 才算到标题界面。
+- **判据**：`runs/p213-pcl2-offline-launch/verify_launch.py` 19/19；回归新增 `test_pcl2_launch()`（11 条）。
+- 边界：只到「离线启动 + 标题界面 + 游戏内点击生效」；建世界/进世界未通过；没重跑 1.21.1 启动回归。

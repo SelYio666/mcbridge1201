@@ -2837,6 +2837,68 @@ def test_pcl2_e2e() -> None:
         SKIPPED.append("p212 on-disk version folder (this machine no longer has it)")
 
 
+def test_pcl2_launch() -> None:
+    """p213: PCL2 launches the installed version in offline mode, and the game reaches the title screen.
+
+    p212 stopped at "the launcher lists it" and I wrongly wrote that launching needed an account.
+    PCL2 has an offline login: the launcher hands the game a placeholder uuid/accessToken and the
+    username, so the claim "it launches offline" is checkable in the argv PCL2 built - not in a
+    settings screen. The world-creation attempt is recorded as not achieved; a check that silently
+    dropped it would make the next reader think entering a world was proven.
+    """
+    run = ROOT / "runs" / "p213-pcl2-offline-launch"
+    verdict_path = run / "launch-check.json"
+    artifacts = [run / "drive_pcl.py", run / "verify_launch.py", run / "README.md", verdict_path,
+                 run / "drive.json", run / "home.png", run / "versions.png", run / "selected.png",
+                 run / "game-window.png", run / "game-title.png", run / "world-select.png",
+                 run / "world-clicked.png"]
+    missing = [str(p.relative_to(ROOT)) for p in artifacts if not p.exists()]
+    check("p213: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    verdict = json.loads(verdict_path.read_text(encoding="utf-8"))
+    failed_checks = [c["name"] for c in verdict["checks"] if not c["ok"]]
+    check("p213: the committed verdict passed every one of its checks",
+          not failed_checks and len(verdict["checks"]) >= 18,
+          f"{len(verdict['checks'])} checks, failed: {failed_checks}")
+    args = verdict["offline_args"]
+    check("p213: the session was offline, according to the argv the launcher built",
+          args.get("username") == "SelYio" and args.get("uuid", "").startswith("000000000000")
+          and args.get("accessToken") == args.get("uuid"), json.dumps(args))
+    check("p213: the launched version is the one the panel installed",
+          verdict["version"] == "1.20.4", str(verdict["version"]))
+    check("p213: the client reached the title screen without crashing",
+          verdict["title_screen"] is True and not verdict["log_markers"].get("crashed"),
+          str(verdict["log_markers"].get("crashed")))
+    check("p213: the log names the offline user",
+          any("SelYio" in line for line in verdict["log_markers"].get("setting_user") or []), "")
+    check("p213: creating a world is recorded as NOT achieved",
+          verdict["world_created"] is False and not verdict["log_markers"].get("world"), "")
+
+    # The evidence itself: the splash and the title screen must be different pictures.
+    from PIL import Image, ImageChops
+
+    splash = Image.open(run / "game-window.png").convert("RGB")
+    title = Image.open(run / "game-title.png").convert("RGB")
+    hist = ImageChops.difference(splash, title).convert("L").histogram() \
+        if splash.size == title.size else None
+    changed = 1.0 if hist is None else (splash.size[0] * splash.size[1] - hist[0]) / \
+        (splash.size[0] * splash.size[1])
+    check("p213: the title screenshot is not the splash frame", changed > 0.05,
+          f"{changed:.1%} differs")
+
+    driver = (run / "drive_pcl.py").read_text(encoding="utf-8")
+    check("p213: the driver reports whether the window really became foreground",
+          "AttachThreadInput" in driver and '"foreground"' in driver, "")
+    check("p213: the driver measures the game rectangle after restoring the window",
+          driver.index("entry[\"activation\"] = activate(gw)") <
+          driver.index("rect = rect_of(gw)"), "")
+    check("p213: it waits for the title-screen log marker instead of the first window",
+          "wait-title" in driver and "Sound engine started" in driver
+          and "title_screen" in driver, "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2856,6 +2918,7 @@ def main() -> int:
     test_cloth_config()
     test_pcl2_detect()
     test_pcl2_e2e()
+    test_pcl2_launch()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()
