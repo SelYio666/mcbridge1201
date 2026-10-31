@@ -1263,6 +1263,8 @@ FILES = [
     "runs/p223-launcher-pcl-ui/drive.py",
     "runs/p223-launcher-pcl-ui/ui-result.json",
     "runs/p223-launcher-pcl-ui/after-import.png",
+    "runs/p224-launcher-0510-clean-host/README.md",
+    "runs/p224-launcher-0510-clean-host/clean-host.json",
     "docs/guide.md",
     "docs/download-sources.md",
     "tools/build_portable.py",

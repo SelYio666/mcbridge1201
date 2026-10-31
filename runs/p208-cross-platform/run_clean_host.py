@@ -87,10 +87,13 @@ def main() -> int:
     ap.add_argument("--out", default="clean-host.json")
     args = ap.parse_args()
 
-    packages = sorted((ROOT / "dist").glob("mcbridge-launcher-*.zip"))
+    packages = list((ROOT / "dist").glob("mcbridge-launcher-*.zip"))
     if not packages:
         print("SKIP: no dist/mcbridge-launcher-*.zip")
         return 2
+    # natural version order: "0.5.10" must beat "0.5.7" (plain string sort puts it first)
+    import re as _re
+    packages.sort(key=lambda p: [int(x) for x in _re.findall(r"\d+", p.stem)])
     package = packages[-1]
 
     if WORK.exists():
