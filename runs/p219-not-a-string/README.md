@@ -68,3 +68,19 @@
   时序）或当次偶发；下一步是在 PCL 里带同样的 JVM 参数启动后抓 JFR。
 
 可复用脚本：`jfr_repro.py`（参数：`--root --version --world --jfr`）。
+
+## 用 PCL 自己的启动命令复现（2026-10-31）
+
+`PCL\LatestLaunch.bat` 保存着 PCL 上次启动的完整 java 命令（本质是模板：末尾的
+`--clientId ${clientid} --xuid ${auth_xuid}` 由 PCL 运行时替换，`cd /D` 到
+`versions\1.20.4`）。本轮直接取这条命令：
+
+- 在 `java.exe` 后插入 `-XX:StartFlightRecording=filename=...,settings=profile,dumponexit=true`；
+- 末尾追加 `--quickPlaySingleplayer 新的世界`；
+- 以 `versions\1.20.4` 为 cwd 运行，等 `joined the game` 后用 `jcmd JFR.stop` 收尾。
+
+结果：**仍然没有 `Not a string`**（`logged in`/`joined the game` 正常，只有离线必然的 401 两条）。
+因此这条日志既不复现于我们的启动器、也不复现于 PCL 同款命令；更像 p213 那次
+**首次创建世界/首次加入**时的一次性事件，而不是稳定路径。
+
+若之后再遇到：同样的 JFR 参数 + `jfr print --events jdk.JavaExceptionThrow --stack-depth 30` 即可拿栈。
