@@ -21,3 +21,8 @@ share/player-guide.zip
 
 # 编译期 stub / 端口构建缓存（不是交付物）
 .build/
+
+# local-only intermediate attempts (not committed)
+.workbuddy/
+runs/p215-pcl2-create-button/
+runs/p210-cloth-config/attempt1-field-only/
