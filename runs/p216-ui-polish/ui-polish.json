@@ -1,0 +1,64 @@
+{
+  "run": "p216-ui-polish",
+  "date": "2026-10-30",
+  "scope": "对三个面向用户的页面做视觉翻新，功能与接口不变",
+  "pages": {
+    "launcher_web": {
+      "files": ["launcher/web/index.html", "launcher/web/style.css", "launcher/web/app.js"],
+      "fixes": [
+        "深色主题重设计：侧边版本库 + 主操作区双栏布局",
+        "修复加载即抛出的 ReferenceError：补齐 loadLoaderVersions / loadJvm / installJvm / loadMods / toggleMod / loadMrpacks / installMrpacks",
+        "高级设置区（整合包/模组/Java 运行时）从完全不可用变为可用",
+        "状态（hover/disabled/error/focus-visible）与 prefers-reduced-motion 支持",
+        "900px 与 480px 宽度实测无横向溢出"
+      ],
+      "screenshot_before": "runs/p216-ui-polish/launcher-before.png",
+      "screenshot_after": "runs/p216-ui-polish/launcher-after.png",
+      "verification": {
+        "capture": "Edge headless + CDP，等待版本清单（921 个）加载完成后截取",
+        "interact_check": "interact_check.mjs：选中/键盘 Enter/模式切换 aria-pressed/搜索过滤/加载器版本查询(256 选项)/vanilla 禁用加载器/高级设置展开/JVM、模组、整合包下拉填充/最新正式版快捷键，console errors = 0"
+      }
+    },
+    "pcl_panel": {
+      "files": ["tools/pcl_panel.py"],
+      "fixes": [
+        "vista 默认主题 → clam 自定义深色主题，与启动器同一套配色",
+        "「选择版本 → 游戏目录 → 安装」三步卡片布局替代一屏堆控件",
+        "状态文字按阶段着色（就绪灰 / 进行中黄 / 完成绿 / 失败红）",
+        "版本清单加载失败显示在字段旁而不只是日志里",
+        "日志区等宽字体 + 滚动条",
+        "保留全部方法与属性契约（_post/_drain/_reload_versions 等测试断言的字符串不变）"
+      ],
+      "screenshot_before": "runs/p216-ui-polish/panel-before.png",
+      "screenshot_after": "runs/p216-ui-polish/panel-after.png",
+      "verification": {
+        "capture": "真实 Tk mainloop 运行 capture_panel.py，921 个版本加载完成、安装按钮可用"
+      }
+    },
+    "download_sources": {
+      "files": ["share/download-sources/index.html", "share/download-sources/preview.png"],
+      "fixes": [
+        "吸顶页内导航（官方源/加载器/镜像/实测/校验/FAQ）",
+        "表格卡片化：斑马纹、hover、圆角、窄屏横向滚动保护",
+        "代码块改深色终端风，对比度达标",
+        "prefers-color-scheme 深色适配（低刺激配色）",
+        "编号式标题层级与 eyebrow 排版",
+        "内容与链接全部保持不变"
+      ],
+      "screenshot_before": "runs/p216-ui-polish/download-sources-before.png",
+      "screenshot_after": "runs/p216-ui-polish/download-sources-after.png"
+    }
+  },
+  "gates": {
+    "gradle_test_installDist": "pass（9.8.1 + JDK21，BUILD SUCCESSFUL，gate-gradle.log）",
+    "test_review_fixes": "pass（见最终 gate-review-fixes.log，初次运行 462/463，唯一 FAIL p201 因 p216 证据文件未 add，add 后复跑通过）",
+    "check_text_encoding": "pass（243 markdown clean，exit 0）",
+    "check_hashes": "pass（hash_evidence 重新生成 SHA256SUMS.txt 后 exit 0）",
+    "verify_evidence": "pass（复跑，review_regressions=true，gate-verify.log）"
+  },
+  "notes": [
+    "runs/SHA256SUMS.txt 在本文件写完后由 tools/hash_evidence.py 重新生成，覆盖本文件与其余 p216 证据。",
+    "未改动任何安装/启动/离线逻辑接口；launcher/server.py 与 backend.py 未触碰。",
+    "已知取舍见 runs/p216-ui-polish/README.md。"
+  ]
+}

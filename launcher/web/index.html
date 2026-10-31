@@ -2,75 +2,109 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <title>mcbridge launcher</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101713">
+  <meta name="description" content="mcbridge 本地离线安装与启动台">
+  <title>mcbridge · 游戏启动台</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <div class="app">
   <aside class="side">
     <div class="brand">
-      <div class="logo">m</div>
+      <div class="logo" aria-hidden="true">M<span></span></div>
       <div>
-        <div class="title">mcbridge launcher</div>
-        <div class="sub">离 线 安 装 与 启 动</div>
+        <div class="title">mcbridge</div>
+        <div class="sub">1.20.1 <span>→</span> 1.21.1 工具箱</div>
       </div>
     </div>
-    <div class="modebar">
-      <button id="modeInstall" class="on">可安装 <span id="cntInstall"></span></button>
-      <button id="modeInstalled">已安装 <span id="cntInstalled"></span></button>
+    <div class="library-label">版本库</div>
+    <div class="modebar" role="group" aria-label="版本筛选">
+      <button id="modeInstall" class="on" aria-pressed="true">可安装 <span id="cntInstall"></span></button>
+      <button id="modeInstalled" aria-pressed="false">已安装 <span id="cntInstalled"></span></button>
     </div>
-    <input id="verSearch" class="search" placeholder="搜索版本号，例如 1.20 / fabric">
-    <div class="verlist" id="verlist"></div>
-    <div class="foot">仅单机 / 局域网 · 不打包游戏文件</div>
+    <label class="sr-only" for="verSearch">搜索版本</label>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path></svg>
+      <input id="verSearch" class="search" placeholder="搜索版本或加载器…" autocomplete="off">
+    </div>
+    <div class="verlist" id="verlist" role="listbox" aria-label="Minecraft 版本"></div>
+    <div class="foot"><span class="foot-dot"></span>仅单机 / 局域网 · 不打包游戏文件</div>
   </aside>
 
   <main class="main">
     <header class="top">
-      <div class="statusline">
-        <span class="dot" id="dot"></span>
-        <span id="statusText">未连接</span>
+      <div class="page-heading">
+        <div class="eyebrow">LOCAL LAUNCHER</div>
+        <h1>游戏启动台</h1>
+        <p>安装、管理并启动你的 Minecraft 版本。</p>
       </div>
-      <div class="buttons">
-        <button class="ghost" id="refresh">刷新列表</button>
-        <button class="ghost" id="help" title="打开 docs/guide.md：安装、迁移、PCL 共用、FAQ">使用说明</button>
-        <button class="ghost" id="openRoot" title="游戏根目录（libraries / assets / mods / saves 都在这里）">打开游戏目录</button>
-        <button class="ghost" id="openMods" title="全局模组目录：其他启动器不开版本隔离时也读这里">打开 mods</button>
-        <button class="ghost" id="openSaves" title="存档目录">打开存档</button>
+      <div class="top-actions">
+        <div class="statusline" role="status" aria-live="polite">
+          <span class="dot" id="dot"></span>
+          <span id="statusText">正在连接本地服务…</span>
+        </div>
+        <div class="buttons">
+          <button class="ghost" id="refresh" title="重新读取已安装版本与 Java 状态">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"></path></svg>刷新
+          </button>
+          <button class="ghost" id="help" title="打开 docs/guide.md：安装、迁移、PCL 共用、FAQ">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.8 9a2.3 2.3 0 1 1 3.3 2.1c-.8.4-1.1 1-1.1 1.9M12 17h.01"></path></svg>使用说明
+          </button>
+          <button class="ghost" id="openRoot" title="游戏根目录（libraries / assets / mods / saves 都在这里）">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3z"></path></svg>游戏目录
+          </button>
+          <button class="ghost" id="openMods" title="全局模组目录：其他启动器不开版本隔离时也读这里">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9"></path></svg>mods
+          </button>
+          <button class="ghost" id="openSaves" title="存档目录">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h12l2 2v16H5zM8 3v6h8V3M8 21v-7h8v7"></path></svg>存档
+          </button>
+        </div>
       </div>
     </header>
 
-    <section class="card hero">
-      <div class="row">
-        <select id="mcver" class="verpick"></select>
-        <select id="loader">
+    <section class="card hero" aria-labelledby="launch-title">
+      <div class="hero-heading">
+        <div>
+          <div class="eyebrow">NEW INSTANCE</div>
+          <h2 id="launch-title">安装并启动</h2>
+          <p>选择游戏版本与加载器，剩下的交给启动器。</p>
+        </div>
+        <span class="flow-badge">下载 <b>→</b> 安装 <b>→</b> 启动</span>
+      </div>
+      <div class="row launch-controls">
+        <select id="mcver" class="verpick" aria-label="Minecraft 版本"></select>
+        <select id="loader" aria-label="加载器">
           <option value="fabric">Fabric（推荐）</option>
           <option value="vanilla">原版</option>
           <option value="forge">Forge</option>
           <option value="neoforge">NeoForge</option>
         </select>
-        <select id="loaderVer" title="加载器版本">
+        <select id="loaderVer" title="加载器版本" aria-label="加载器版本">
           <option value="">加载器：最新</option>
         </select>
-        <button id="install" class="primary big">安装并启动</button>
+        <button id="install" class="primary big">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6z"></path></svg><span>安装并启动</span>
+        </button>
       </div>
       <div class="row quick">
         <button class="chip" id="pickRelease">最新正式版</button>
         <button class="chip" id="pickSnapshot">最新快照</button>
-        <label class="chk"><input type="checkbox" id="allsnap" checked> 含快照/远古</label>
+        <label class="chk"><input type="checkbox" id="allsnap" checked> 含快照 / 远古</label>
         <span class="hint" id="vercount"></span>
       </div>
-      <div class="hint">没装过会先自动下载安装，装完自动进游戏；已安装则直接启动。</div>
-      <div class="progress"><div id="bar"></div></div>
-      <div class="taskmsg" id="taskmsg">就绪</div>
+      <div class="launch-hint"><span aria-hidden="true">i</span>未安装的版本会先自动下载；已安装的版本可直接启动。</div>
+      <div class="progress" role="progressbar" aria-label="安装进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="bar"></div></div>
+      <div class="taskmsg" id="taskmsg" role="status" aria-live="polite">就绪</div>
 
       <details class="adv">
-        <summary>高级设置</summary>
+        <summary><span>高级设置</span><small>用户名、目录、下载源、模组与 Java 运行时</small></summary>
         <div class="row">
           <label>用户名</label>
           <input id="username" placeholder="Player">
           <label>内存</label>
-          <input id="mem" class="narrow" placeholder="2G">
-          <label class="chk"><input type="checkbox" id="allsnap" checked> 含快照/远古</label>
+          <input id="mem" class="narrow" placeholder="2G" aria-label="最大内存">
         </div>
         <div class="row">
           <label>游戏目录</label>
@@ -118,12 +152,17 @@
       </details>
     </section>
 
-    <section class="card grow">
-      <div class="row between">
-        <div class="selinfo" id="selinfo">未选择版本</div>
-        <button id="play" class="ghost" disabled>启动已选版本</button>
+    <section class="card grow console-card" aria-labelledby="console-title">
+      <div class="row between console-head">
+        <div>
+          <div class="eyebrow">ACTIVITY</div>
+          <div class="console-title-row"><h2 id="console-title">运行控制台</h2><span class="selinfo" id="selinfo">未选择版本</span></div>
+        </div>
+        <button id="play" class="ghost play-selected" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6z"></path></svg>启动已选版本
+        </button>
       </div>
-      <pre class="console" id="console"></pre>
+      <pre class="console" id="console" role="log" aria-live="polite" aria-label="游戏与安装日志"></pre>
     </section>
   </main>
 </div>

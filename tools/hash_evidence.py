@@ -1582,6 +1582,17 @@ FILES = [
     "runs/p214-pcl2-1211/after-enter.png",
     "runs/p214-pcl2-1211/gate-review-fixes.log",
     "runs/p214-pcl2-1211/gate-verify.log",
+    "runs/p216-ui-polish/README.md",
+    "runs/p216-ui-polish/ui-polish.json",
+    "runs/p216-ui-polish/capture_web.mjs",
+    "runs/p216-ui-polish/capture_panel.py",
+    "runs/p216-ui-polish/interact_check.mjs",
+    "runs/p216-ui-polish/launcher-before.png",
+    "runs/p216-ui-polish/launcher-after.png",
+    "runs/p216-ui-polish/panel-before.png",
+    "runs/p216-ui-polish/panel-after.png",
+    "runs/p216-ui-polish/download-sources-before.png",
+    "runs/p216-ui-polish/download-sources-after.png",
 ]
 
 

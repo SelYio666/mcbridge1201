@@ -1,7 +1,15 @@
 let state = { cfg: null, versions: [], mode: "installable", query: "", selected: null, logOffset: 0, logPath: null, manifest: [], latest: {} };
 let oneClickTimer = null;
+let loaderRequest = 0;
 
 const $ = (id) => document.getElementById(id);
+
+function setTaskMessage(text, kind = "") {
+  const box = $("taskmsg");
+  box.textContent = text;
+  box.classList.toggle("error", kind === "error");
+  box.classList.toggle("busy", kind === "busy");
+}
 
 async function api(path, opts) {
   const r = await fetch(path, opts);
@@ -44,6 +52,9 @@ function renderVersions() {
   for (const v of items.slice(0, 400)) {
     const el = document.createElement("div");
     el.className = "ver" + (state.selected === v.id ? " sel" : "");
+    el.setAttribute("role", "option");
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("aria-selected", state.selected === v.id ? "true" : "false");
     const type = v.inherits ? kind(v.id) : (v.type === "release" ? "正式版" : (TYPE_LABEL[v.type] || v.type));
     el.innerHTML = `<div class="id">${v.id}${inst.has(v.id) ? ' <span class="badge">已安装</span>' : ""}</div>
       <div class="meta">${type}${v.inherits ? " · 基于 " + v.inherits : ""}
@@ -64,6 +75,12 @@ function renderVersions() {
       $("play").disabled = !inst.has(v.id);
       renderVersions();
     };
+    el.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        el.click();
+      }
+    };
     el.ondblclick = () => {
       if ($("mcver")) $("mcver").value = v.id;
       oneClick();
@@ -71,11 +88,11 @@ function renderVersions() {
     list.appendChild(el);
   }
   if (!items.length) {
-    list.innerHTML = `<div class="ver"><div class="meta">没有匹配的版本</div></div>`;
+    list.innerHTML = `<div class="ver empty"><strong>没有找到版本</strong><div class="meta">试试其他关键词，或切换版本分类</div></div>`;
   } else if (items.length > 400) {
     const more = document.createElement("div");
-    more.className = "ver";
-    more.innerHTML = `<div class="meta">还有 ${items.length - 400} 个，用搜索缩小范围</div>`;
+    more.className = "ver more";
+    more.innerHTML = `<div class="meta">还有 ${items.length - 400} 个版本<br>输入关键词可缩小范围</div>`;
     list.appendChild(more);
   }
 }
@@ -98,12 +115,16 @@ async function refresh() {
     const st = await api("/api/status");
     state.versions = st.versions || [];
     $("dot").classList.add("ok");
-    $("statusText").textContent = "Java: " + st.java;
+    document.querySelector(".statusline").classList.remove("error");
+    $("statusText").textContent = st.java ? "Java 已就绪 · " + st.java : "未找到 Java · 请先安装运行时";
+    $("statusText").title = st.java || st.java_error || "未找到 Java";
     renderVersions();
     loadSourceStatus();
   } catch (e) {
     $("dot").classList.remove("ok");
-    $("statusText").textContent = "连接失败: " + e.message;
+    document.querySelector(".statusline").classList.add("error");
+    $("statusText").textContent = "本地服务连接失败 · " + e.message;
+    $("statusText").title = e.message;
   }
 }
 
@@ -113,6 +134,7 @@ async function loadManifest() {
     state.manifest = data.versions || [];
     state.latest = data.latest || {};
     renderManifest(true);
+    loadLoaderVersions();
   } catch (e) {
     console.warn("manifest", e);
   }
@@ -291,13 +313,17 @@ async function saveCfg() {
 $("modeInstall").onclick = () => {
   state.mode = "installable";
   $("modeInstall").classList.add("on");
+  $("modeInstall").setAttribute("aria-pressed", "true");
   $("modeInstalled").classList.remove("on");
+  $("modeInstalled").setAttribute("aria-pressed", "false");
   renderVersions();
 };
 $("modeInstalled").onclick = () => {
   state.mode = "installed";
   $("modeInstalled").classList.add("on");
+  $("modeInstalled").setAttribute("aria-pressed", "true");
   $("modeInstall").classList.remove("on");
+  $("modeInstall").setAttribute("aria-pressed", "false");
   renderVersions();
 };
 $("verSearch").oninput = (e) => { state.query = e.target.value; renderVersions(); };
@@ -389,6 +415,182 @@ async function syncProfiles() {
       : "所有已安装版本都已有 profile 条目";
   } catch (e) {
     alert("写入 profile 失败: " + e.message);
+  }
+}
+
+async function loadLoaderVersions() {
+  const sel = $("loaderVer");
+  if (!sel) return;
+  const loader = $("loader").value;
+  const mc = $("mcver").value.trim();
+  const req = ++loaderRequest;
+  if (loader === "vanilla") {
+    sel.innerHTML = '<option value="">原版无需加载器</option>';
+    sel.disabled = true;
+    return;
+  }
+  sel.disabled = false;
+  if (!mc) {
+    sel.innerHTML = '<option value="">加载器：最新</option>';
+    return;
+  }
+  sel.innerHTML = '<option value="">查询版本中…</option>';
+  try {
+    const r = await api(`/api/loader-versions?loader=${encodeURIComponent(loader)}&mc=${encodeURIComponent(mc)}`);
+    if (req !== loaderRequest) return;
+    sel.innerHTML = '<option value="">加载器：最新</option>';
+    for (const v of r.versions || []) {
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = v;
+      sel.appendChild(o);
+    }
+    sel.title = r.error ? "在线查询失败，安装时将使用最新版" : "";
+  } catch (e) {
+    if (req !== loaderRequest) return;
+    sel.innerHTML = '<option value="">加载器：最新</option>';
+    sel.title = "查询失败: " + e.message;
+  }
+}
+
+async function loadJvm() {
+  const sel = $("jvmSelect");
+  if (!sel) return;
+  try {
+    const r = await api("/api/jvm");
+    const prev = sel.value;
+    const available = r.available || [];
+    const installed = r.installed || [];
+    sel.innerHTML = "";
+    for (const id of available) {
+      const o = document.createElement("option");
+      o.value = id;
+      o.textContent = id + (installed.includes(id) ? "（已安装）" : "");
+      sel.appendChild(o);
+    }
+    if (!available.length) {
+      const o = document.createElement("option");
+      o.value = "";
+      o.textContent = r.error ? "在线查询失败" : "暂无可用运行时";
+      sel.appendChild(o);
+    }
+    if (prev && available.includes(prev)) sel.value = prev;
+    $("jvmStatus").textContent = installed.length
+      ? "游戏目录已有 " + installed.length + " 个运行时"
+      : "游戏目录内暂无专用运行时，启动时用系统 Java";
+  } catch (e) {
+    $("jvmStatus").textContent = "运行时查询失败: " + e.message;
+  }
+}
+
+async function loadMods() {
+  const sel = $("modPick");
+  if (!sel) return;
+  try {
+    const r = await api("/api/mods");
+    const prev = sel.value;
+    sel.innerHTML = "";
+    for (const m of r.mods || []) {
+      const o = document.createElement("option");
+      o.value = m.name;
+      o.textContent = (m.enabled ? "" : "⏸ ") + m.name;
+      sel.appendChild(o);
+    }
+    if (!(r.mods || []).length) {
+      const o = document.createElement("option");
+      o.value = "";
+      o.textContent = "mods 目录为空";
+      sel.appendChild(o);
+    }
+    if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+  } catch (e) {
+    $("taskmsg").textContent = "读取模组失败: " + e.message;
+  }
+}
+
+async function toggleMod() {
+  const name = $("modPick").value;
+  if (!name) return alert("先选一个模组");
+  try {
+    const r = await api("/api/toggle-mod", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name })
+    });
+    $("taskmsg").textContent = (r.enabled ? "已启用 " : "已禁用 ") + r.name;
+    await loadMods();
+    $("modPick").value = r.name;
+  } catch (e) {
+    alert("切换模组失败: " + e.message);
+  }
+}
+
+async function loadMrpacks() {
+  const sel = $("mrpackPick");
+  if (!sel) return;
+  try {
+    const r = await api("/api/mrpacks");
+    sel.innerHTML = "";
+    const o0 = document.createElement("option");
+    o0.value = "";
+    o0.textContent = (r.packs || []).length ? "选择整合包…" : "packs / 下载目录中没有 .mrpack";
+    sel.appendChild(o0);
+    for (const p of r.packs || []) {
+      const o = document.createElement("option");
+      o.value = p.path;
+      const bits = [p.name, p.version, p.minecraft ? "MC " + p.minecraft : ""].filter(Boolean);
+      o.textContent = bits.join(" · ") + (p.error ? "（索引不可读）" : "");
+      sel.appendChild(o);
+    }
+  } catch { /* 列表加载失败不阻塞主流程 */ }
+}
+
+function watchTask(label, onDone) {
+  const timer = setInterval(async () => {
+    let t;
+    try { t = await api("/api/task"); } catch { return; }
+    if (t.phase === "error") {
+      clearInterval(timer);
+      $("taskmsg").textContent = label + "失败: " + t.error;
+      $("taskmsg").classList.add("error");
+    } else if (t.phase === "done") {
+      clearInterval(timer);
+      $("taskmsg").classList.remove("error");
+      $("taskmsg").textContent = label + "完成 · " + (t.message || "");
+      if (onDone) onDone(t);
+    }
+  }, 1200);
+}
+
+async function installJvm() {
+  const id = $("jvmSelect").value;
+  if (!id) return alert("先选一个要安装的 Java 运行时");
+  try {
+    await api("/api/install-jvm", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id })
+    });
+    $("taskmsg").textContent = "正在安装 Java 运行时 " + id + " …";
+    watchTask("Java 运行时", () => loadJvm());
+  } catch (e) {
+    alert("安装 Java 失败: " + e.message);
+  }
+}
+
+async function installMrpack() {
+  const path = $("mrpackPath").value.trim();
+  if (!path) return alert("先选择整合包或粘贴 .mrpack 路径");
+  try {
+    await api("/api/install-mrpack", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path })
+    });
+    $("taskmsg").textContent = "正在安装整合包…";
+    watchTask("整合包", (t) => {
+      refresh();
+      if (t.message && t.message.includes("|")) select(t.message.split("|")[1]);
+    });
+  } catch (e) {
+    alert("安装整合包失败: " + e.message);
   }
 }
 

@@ -6,43 +6,125 @@
 <title>Minecraft 下载源速查（1.20.1 / 1.21.1）</title>
 <style>
   :root {
-    --fg: #1c2430; --dim: #5b6b7f; --line: #d8e0ea; --bg: #f6f8fb;
-    --accent: #0b6bcb; --warn: #b45309; --ok: #15803d; --code: #f0f4f9;
+    --fg: #1c2430; --dim: #5b6b7f; --line: #dde4ee; --bg: #f6f8fb;
+    --card: #ffffff; --accent: #0b6bcb; --accent-soft: #e8f1fc;
+    --warn: #b45309; --ok: #15803d; --code: #f0f4f9;
+    --term-bg: #0f172a; --term-fg: #dbe6f5; --term-line: #24334d;
+    --note-bg: #fff8e6; --note-line: #f1d9a7;
+    --danger-bg: #fdecec; --danger-line: #f3bdbd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fg: #d7e0ec; --dim: #8b99ad; --line: #2a3547; --bg: #0e141d;
+      --card: #151d29; --accent: #6aa8ec; --accent-soft: #182a40;
+      --warn: #e2b25c; --ok: #6fce91; --code: #1b2534;
+      --note-bg: #251f10; --note-line: #4d3f1c;
+      --danger-bg: #2a1518; --danger-line: #5a2c31;
+    }
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 76px; }
   body { margin: 0; background: var(--bg); color: var(--fg);
-    font: 16px/1.65 "Microsoft YaHei", "Segoe UI", system-ui, sans-serif; }
-  main { max-width: 960px; margin: 0 auto; padding: 40px 20px 80px; }
-  h1 { font-size: 30px; margin: 0 0 6px; }
-  .sub { color: var(--dim); margin-bottom: 28px; font-size: 14px; }
-  h2 { font-size: 21px; margin: 34px 0 10px; padding-top: 12px; border-top: 1px solid var(--line); }
-  h3 { font-size: 17px; margin: 20px 0 8px; }
+    font: 16px/1.7 "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; }
+
+  .topnav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px);
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    border-bottom: 1px solid var(--line); }
+  .topnav-inner { max-width: 960px; margin: 0 auto; padding: 10px 20px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .topnav .brand { font-weight: 700; font-size: 14px; margin-right: 10px;
+    display: flex; align-items: center; gap: 8px; }
+  .topnav .brand i { width: 10px; height: 10px; border-radius: 3px;
+    background: var(--accent); display: inline-block; }
+  .topnav a { color: var(--dim); font-size: 13.5px; padding: 4px 10px;
+    border-radius: 999px; text-decoration: none; white-space: nowrap; }
+  .topnav a:hover { color: var(--accent); background: var(--accent-soft); }
+  .topnav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  main { max-width: 960px; margin: 0 auto; padding: 44px 20px 80px; }
+  .eyebrow { font-size: 12px; letter-spacing: .22em; color: var(--accent);
+    font-weight: 700; text-transform: uppercase; }
+  h1 { font-size: 32px; line-height: 1.25; margin: 8px 0 10px; }
+  .sub { color: var(--dim); margin: 0 0 30px; font-size: 14px; }
+  h2 { font-size: 21px; margin: 44px 0 12px; padding-top: 18px;
+    border-top: 1px solid var(--line); display: flex; align-items: baseline; gap: 10px; }
+  h2 .no { color: var(--accent); font-size: 14px; font-weight: 700;
+    font-variant-numeric: tabular-nums; }
+  h3 { font-size: 16.5px; margin: 22px 0 8px; }
   p { margin: 8px 0; }
-  table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 14px; }
-  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
-  th { background: #eaf1f9; font-weight: 700; }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line);
+    border-radius: 12px; background: var(--card); margin: 12px 0 18px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .05); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+  th, td { padding: 10px 14px; text-align: left; vertical-align: top;
+    border-bottom: 1px solid var(--line); }
+  th { background: var(--code); font-weight: 700; font-size: 13px;
+    color: var(--dim); white-space: nowrap; }
+  tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--code) 45%, transparent); }
+  tbody tr:hover td { background: var(--accent-soft); }
+  tbody tr:last-child td { border-bottom: none; }
+
   code, pre { font-family: Consolas, "Courier New", monospace; }
-  code { background: var(--code); padding: 1px 5px; border-radius: 4px; font-size: 13.5px; }
-  pre { background: var(--code); border: 1px solid var(--line); border-radius: 8px;
-    padding: 10px 12px; overflow: auto; font-size: 13.5px; white-space: pre-wrap; word-break: break-all; }
-  a { color: var(--accent); text-decoration: none; word-break: break-all; }
+  code { background: var(--code); padding: 1.5px 6px; border-radius: 5px; font-size: 13.5px; }
+  pre { background: var(--term-bg); color: var(--term-fg);
+    border: 1px solid var(--term-line); border-radius: 10px;
+    padding: 14px 16px; overflow: auto; font-size: 13.5px; line-height: 1.75;
+    white-space: pre-wrap; word-break: break-all; }
+  @media (prefers-color-scheme: dark) {
+    pre { background: #0a0f18; }
+  }
+
+  a { color: var(--accent); text-decoration: none; word-break: break-all;
+    text-underline-offset: 3px; }
   a:hover { text-decoration: underline; }
-  .badge { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+  .badge { display: inline-block; font-size: 12px; padding: 2px 10px;
+    border-radius: 999px; font-weight: 600; white-space: nowrap; }
   .ok { background: #dcfce7; color: var(--ok); }
   .warn { background: #fef3c7; color: var(--warn); }
-  .note { background: #fff8e6; border: 1px solid #f1d9a7; border-radius: 8px; padding: 10px 14px; }
-  .danger { background: #fdecec; border: 1px solid #f3bdbd; border-radius: 8px; padding: 10px 14px; }
-  footer { margin-top: 46px; color: var(--dim); font-size: 13px; }
+  @media (prefers-color-scheme: dark) {
+    .ok { background: #123322; }
+    .warn { background: #322610; }
+  }
+  .note, .danger { border-radius: 12px; padding: 14px 18px; margin: 14px 0; }
+  .note { background: var(--note-bg); border: 1px solid var(--note-line); }
+  .danger { background: var(--danger-bg); border: 1px solid var(--danger-line); }
+
+  footer { margin-top: 52px; color: var(--dim); font-size: 13px;
+    border-top: 1px solid var(--line); padding-top: 16px; }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 26px; }
+    main { padding: 32px 16px 60px; }
+    .topnav-inner { padding: 8px 14px; }
+  }
   @media print {
+    .topnav { display: none; }
     body { background: #fff; }
     main { max-width: none; padding: 0; }
     h2 { page-break-after: avoid; }
-    table, pre { page-break-inside: avoid; }
+    .table-wrap, pre { page-break-inside: avoid; }
+    pre { background: #f5f5f5; color: #111; border-color: #ccc; }
   }
 </style>
 </head>
 <body>
+<nav class="topnav" aria-label="页内导航">
+  <div class="topnav-inner">
+    <span class="brand"><i></i>下载源速查</span>
+    <a href="#official">Mojang 官方</a>
+    <a href="#loaders">加载器</a>
+    <a href="#mirror">国内镜像</a>
+    <a href="#status">实测状态</a>
+    <a href="#verify">校验</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</nav>
 <main>
+  <div class="eyebrow">MCBRIDGE · DOWNLOAD SOURCES</div>
   <h1>Minecraft 下载源速查</h1>
   <div class="sub">覆盖 1.20.1 / 1.21.1（Fabric · Forge · NeoForge · Java 运行时）· 整理于 2026-10-22 · 公开地址，不含任何游戏文件</div>
 
@@ -55,9 +137,11 @@
     本页不托管、不分发游戏或模组文件，只列公开链接。
   </div>
 
-  <h2>一、Mojang 官方源</h2>
+  <h2 id="official"><span class="no">01</span>Mojang 官方源</h2>
+  <div class="table-wrap">
   <table>
-    <tr><th>用途</th><th>地址</th><th>说明</th></tr>
+    <thead><tr><th>用途</th><th>地址</th><th>说明</th></tr></thead>
+    <tbody>
     <tr>
       <td>版本清单</td>
       <td><a href="https://piston-meta.mojang.com/mc/game/version_manifest_v2.json">piston-meta.mojang.com/mc/game/version_manifest_v2.json</a></td>
@@ -83,9 +167,11 @@
       <td><a href="https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json">launchermeta.mojang.com/.../java-runtime/all.json</a></td>
       <td>官方 JRE 组件（jre-legacy / gamma / delta / epsilon 等）</td>
     </tr>
+    </tbody>
   </table>
+  </div>
 
-  <h2>二、加载器官方源</h2>
+  <h2 id="loaders"><span class="no">02</span>加载器官方源</h2>
   <h3>Fabric</h3>
   <pre>版本列表        https://meta.fabricmc.net/v2/versions/loader/&lt;MC版本&gt;
 安装 profile    https://meta.fabricmc.net/v2/versions/loader/&lt;MC版本&gt;/&lt;loader版本&gt;/profile/json
@@ -99,7 +185,7 @@ Maven           https://maven.fabricmc.net/</pre>
   <pre>版本列表 API    https://maven.neoforged.net/api/maven/versions/releases/net/neoforged/neoforge
 安装器          https://maven.neoforged.net/releases/net/neoforged/neoforge/&lt;版本&gt;/neoforge-&lt;版本&gt;-installer.jar</pre>
 
-  <h2>三、国内镜像（第三方，非官方）</h2>
+  <h2 id="mirror"><span class="no">03</span>国内镜像（第三方，非官方）</h2>
   <div class="note">
     BMCLAPI 是社区镜像，<b>非 Mojang 官方</b>。适合官方 CDN 超时/被墙时兜底；速度、同步及时性不保证，
     与本项目及 Mojang 均无隶属关系。
@@ -111,9 +197,11 @@ Maven（库/加载器）https://bmclapi2.bangbang93.com/maven/&lt;maven 相对�
 https://bmclapi2.bangbang93.com/assets/74/74703134a27a57d2de96860bca55d447759c0edc
 https://bmclapi2.bangbang93.com/maven/org/ow2/asm/asm/9.7.1/asm-9.7.1.jar</pre>
 
-  <h2>四、本次实测状态（2026-10-22）</h2>
+  <h2 id="status"><span class="no">04</span>本次实测状态（2026-10-22）</h2>
+  <div class="table-wrap">
   <table>
-    <tr><th>源</th><th>状态</th><th>备注</th></tr>
+    <thead><tr><th>源</th><th>状态</th><th>备注</th></tr></thead>
+    <tbody>
     <tr><td>piston-meta 版本清单</td><td><span class="badge ok">可用</span></td><td>0.2s</td></tr>
     <tr><td>resources 资源对象</td><td><span class="badge ok">可用</span></td><td>0.3s</td></tr>
     <tr><td>meta.fabricmc.net</td><td><span class="badge ok">可用</span></td><td>0.6s</td></tr>
@@ -123,9 +211,11 @@ https://bmclapi2.bangbang93.com/maven/org/ow2/asm/asm/9.7.1/asm-9.7.1.jar</pre>
     <tr><td>BMCLAPI 资源 / 清单</td><td><span class="badge warn">波动</span></td><td>连续两次运行：一次超时、一次通过；重试通常可过</td></tr>
     <tr><td>libraries.minecraft.net</td><td><span class="badge ok">按清单路径可用</span></td><td>用版本 JSON 里的完整路径（实测 206）；自己拼路径可能 404</td></tr>
     <tr><td>maven.neoforged.net API</td><td><span class="badge warn">间歇超时</span></td><td>本次与上次均超时；换 urllib、重试、稍后再试</td></tr>
+    </tbody>
   </table>
+  </div>
 
-  <h2>五、怎么验证下载没被改</h2>
+  <h2 id="verify"><span class="no">05</span>怎么验证下载没被改</h2>
   <p>所有官方文件都带 sha1：版本 JSON、库、资源索引里都有。下载后校验：</p>
   <pre># Windows PowerShell
 Get-FileHash .\1.21.1.jar -Algorithm SHA1
@@ -134,7 +224,7 @@ Get-FileHash .\1.21.1.jar -Algorithm SHA1
 sha1sum 1.21.1.jar</pre>
   <p>资源对象没有文件名，直接按 <code>objects/&lt;hash前2位&gt;/&lt;hash&gt;</code> 存放，路径本身就是校验值。</p>
 
-  <h2>六、常见问题</h2>
+  <h2 id="faq"><span class="no">06</span>常见问题</h2>
   <p><strong>官方 CDN 一直超时？</strong>先用镜像下资源；库和加载器优先官方 Maven，失败再切镜像。</p>
   <p><strong>Forge/NeoForge 安装器下不动？</strong>它们各自在自己的 Maven（forge 用 maven.minecraftforge.net，
   neoforge 用 maven.neoforged.net），和 Mojang CDN 不是一个线路。</p>
