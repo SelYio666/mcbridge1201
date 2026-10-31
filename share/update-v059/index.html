@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>mcbridge 一键安装 · v0.5.8 → v0.5.9 更新教程</title>
+<style>
+  :root{
+    --bg:#0a101a; --bg2:#111c2c; --fg:#eaf2fc; --dim:#8a9eb8; --accent:#38bdf8;
+    --green:#4ade80; --amber:#fbbf24; --card:#182437; --line:#2e3f58;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    width:1080px; background:radial-gradient(1200px 600px at 15% -5%, #123 0%, var(--bg) 55%);
+    color:var(--fg); font-family:"Microsoft YaHei","PingFang SC",sans-serif; padding:56px 64px 44px;
+  }
+  h1{font-size:44px; line-height:1.25; letter-spacing:.5px;}
+  .sub{margin-top:14px; color:var(--dim); font-size:19px;}
+  .chips{margin-top:22px; display:flex; gap:12px;}
+  .chip{padding:7px 16px; border-radius:999px; font-size:16px; border:1px solid #2b4a63; background:#16283b;}
+  .chip.g{color:var(--green); border-color:#2f5a3e;}
+  .chip.a{color:var(--accent); border-color:#2b4a63;}
+  .chip.y{color:var(--amber); border-color:#5a4a26;}
+  h2{margin-top:44px; font-size:25px; display:flex; align-items:center; gap:12px;}
+  h2::before{content:""; width:6px; height:24px; border-radius:3px; background:var(--accent);}
+  .grid{margin-top:18px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 18px 16px;}
+  .card .k{font-size:13px; color:var(--dim); letter-spacing:1px;}
+  .card .t{margin-top:8px; font-size:19px; font-weight:700;}
+  .card .d{margin-top:8px; font-size:15px; color:#c6d4e6; line-height:1.65;}
+  .card.a .t{color:var(--accent);} .card.g .t{color:var(--green);} .card.y .t{color:var(--amber);}
+  .cmd{margin-top:14px; background:#0f1a29; border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .cmd .label{font-size:14px; color:var(--dim); margin-bottom:8px;}
+  .cmd .label b{color:var(--fg); font-size:15px;}
+  code{font-family:Consolas,"Courier New",monospace; font-size:16.5px; color:#dbeafe;}
+  .note{margin-top:10px; color:var(--dim); font-size:14.5px; line-height:1.65;}
+  .steps{margin-top:16px; counter-reset:s;}
+  .step{position:relative; padding:12px 0 12px 46px; border-bottom:1px dashed #223349; font-size:16px; color:#cfdceb;}
+  .step:last-child{border-bottom:0;}
+  .step::before{counter-increment:s; content:counter(s); position:absolute; left:0; top:12px; width:28px; height:28px;
+    border-radius:50%; background:#1d3b52; color:var(--accent); font-size:15px; text-align:center; line-height:28px;}
+  .faq{margin-top:14px;}
+  .q{margin-top:14px; font-size:17px; font-weight:700;}
+  .q span{color:var(--amber);}
+  .a{margin-top:6px; font-size:15.5px; color:#c6d4e6; line-height:1.7;}
+  .foot{margin-top:40px; padding-top:18px; border-top:1px solid #223349; color:var(--dim); font-size:14px; line-height:1.8;}
+  .foot b{color:var(--fg);}
+</style>
+</head>
+<body>
+  <h1>一键安装 · 这次更新了什么</h1>
+  <div class="sub">mcbridge1201 &nbsp;v0.5.8 → v0.5.9 &nbsp;|&nbsp; PCL + HMCL &nbsp;|&nbsp; 更新教程</div>
+  <div class="chips">
+    <div class="chip g">HMCL 支持</div>
+    <div class="chip a">下载更稳</div>
+    <div class="chip y">目录修复</div>
+  </div>
+
+  <h2>这次更新一览</h2>
+  <div class="grid">
+    <div class="card a">
+      <div class="k">v0.5.9</div><div class="t">支持 HMCL</div>
+      <div class="d"><code>--hmcl</code> 自动读 HMCL 配置；<code>--hmcl-dir</code> 指定便携版目录。装完 HMCL 的「实例管理」直接可见。</div>
+    </div>
+    <div class="card g">
+      <div class="k">v0.5.9</div><div class="t">下载更稳</div>
+      <div class="d">urllib3 连接池（keep-alive + gzip），清单/JSON 3 次重试；TLS 偶发重置不再直接崩。</div>
+    </div>
+    <div class="card y">
+      <div class="k">v0.5.8</div><div class="t">目录修复</div>
+      <div class="d">配置里“写了但不存在”的目录不再被使用：回退便携 <code>.minecraft</code>，都没有就明确报错。</div>
+    </div>
+  </div>
+
+  <h2>选择你的启动器</h2>
+
+  <div class="cmd">
+    <div class="label"><b>PCL2</b> · 自动检测</div>
+    <code>python tools/from_source_install.py --version 1.21.1 --pcl</code>
+    <div class="note">读 PCL2 的 <code>PCL/Setup.ini</code>；找不到就用 <code>--pcl-dir &lt;那个 .minecraft&gt;</code>。</div>
+  </div>
+
+  <div class="cmd">
+    <div class="label"><b>HMCL</b> · 普通安装</div>
+    <code>python tools/from_source_install.py --version 1.21.1 --hmcl</code>
+    <div class="note">读 <code>%APPDATA%\.hmcl\config\user-game-directories.json</code>。</div>
+  </div>
+
+  <div class="cmd">
+    <div class="label"><b>HMCL</b> · 便携版 / 自定义目录</div>
+    <code>python tools/from_source_install.py --version 1.21.1 --hmcl-dir "D:\HMCL\.minecraft"</code>
+    <div class="note">便携版配置里是相对启动目录的 <code>.minecraft</code>，自动检测拿不到，用这个直接指过去；装完重启 HMCL。</div>
+  </div>
+
+  <h2>图形面板（不想敲命令）</h2>
+  <div class="steps">
+    <div class="step">Releases 下载 <code>mcbridge-pcl-panel.zip</code>。</div>
+    <div class="step">解压，双击 <code>mcbridge-pcl-panel.exe</code>。</div>
+    <div class="step">选版本 → 安装 → 进度条跑完，打开启动器版本列表即可看到。</div>
+  </div>
+
+  <h2>常见问题</h2>
+  <div class="faq">
+    <div class="q"><span>Q1</span> HMCL 里显示“没有游戏实例”？</div>
+    <div class="a">装到了它不认的目录。看 HMCL 设置里的“游戏目录”；便携版用 <code>--hmcl-dir</code> 指到它的 <code>.minecraft</code>，然后重启 HMCL。</div>
+    <div class="q"><span>Q2</span> 下载报 <code>SSL: UNEXPECTED_EOF_WHILE_READING</code>？</div>
+    <div class="a">v0.5.9 已内置连接池和 3 次重试；仍失败多半是网络整体抖动，隔一会儿重跑，已下载的部分会跳过。</div>
+    <div class="q"><span>Q3</span> 会不会装到我没想到的地方？</div>
+    <div class="a">v0.5.8 起不会：配置目录必须已存在才用；否则回退便携 <code>.minecraft</code>；都没有就报错停下。</div>
+    <div class="q"><span>Q4</span> 要手动改 <code>launcher_profiles.json</code> 吗？</div>
+    <div class="a">不用。安装器会写；PCL/HMCL 主要看 <code>versions/</code>，profile 只是顺手兼容官方启动器。</div>
+  </div>
+
+  <div class="foot">
+    <b>发布：</b>github.com/SelYio666/mcbridge1201/releases/tag/v0.5.9<br>
+    <b>视频：</b>share/update-v059/update-intro.mp4 &nbsp;&nbsp; <b>文字版：</b>share/update-v059/README.md<br>
+    <b>证据：</b>runs/p222-hmcl（HMCL 实测）· runs/p220-pcl2-dir-check（目录 4/4）· runs/p221-clean-clone（干净 clone）
+  </div>
+</body>
+</html>
