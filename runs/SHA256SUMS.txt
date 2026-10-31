@@ -1557,10 +1557,10 @@ d7592022937bfbe44da74ef58d8ce7b9ea38b6d4acb5c0dfc48e2e87190864f2  runs/p216-ui-p
 12426643ec84f0a1f79b893645ca7694f4ab091283262b9be851a3e5ca68d4ee  runs/p216-ui-polish/panel-after.png
 eb5cae6319a61297d4f090352800815fc49c6810ad1afc5f798a360db2fc1b19  runs/p216-ui-polish/download-sources-before.png
 ffe3879d8902db2db8eae745c41cf932ba6cacaa98a1c1f9c0d064174716fa0a  runs/p216-ui-polish/download-sources-after.png
-2c0a03b8febd92565c35ac6b0d590f4d7d47aef1516e5c8b8e2eadc9ab5b3c10  runs/p216-ui-polish/acceptance-2026-10-31.md
+b7e423c22a24ed59903151aee2ca19709794a47b091dde04c8743649bafe44a2  runs/p216-ui-polish/acceptance-2026-10-31.md
 bb37d4d03b786ecd884168bdcf85cc1114847365db9fade271e0f5af032df36c  runs/p216-ui-polish/redo-launcher-after.png
 d47190dc6584f7541a57b8a7b9d30460cd6466ad2080499b3739f1c96f7cb429  runs/p216-ui-polish/redo-panel-after.png
 d0ca212fdf469d7ff08464b3ff6f57961d727173b1778d71cd596346a96a6fba  runs/p216-ui-polish/redo-download-dark.png
 c36323ed706e3ee74511934aae3e79d9f5b13d6b108142fe2ab0fdafb76ed34c  runs/p216-ui-polish/fixed-list-count.png
-57bd8cf7eeaee5d0772bb4f406c5c47640bcc39532b8213e1a09f4aa93f10283  runs/p217-release-v0.5.7/README.md
-4207b0490f96d7bcd825f1955cc0d24119a1f5c1490ec0a4b9068d8fd9f20bb3  runs/p217-release-v0.5.7/release-notes.md
+d9706da201b25e27a9aef60003151466c8ed6b560b05e6cee9534ccf596befc5  runs/p217-release-v0.5.7/README.md
+657156b1a7eefa0d6adbb97286c769ac91490f2371b9098edd841fb897bcbd59  runs/p217-release-v0.5.7/release-notes.md
