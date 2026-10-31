@@ -88,6 +88,15 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6z"></path></svg><span>安装并启动</span>
         </button>
       </div>
+      <div class="row target-row">
+        <label class="target-label" for="target">安装到</label>
+        <select id="target" aria-label="安装位置">
+          <option value="local">本启动器游戏目录</option>
+          <option value="pcl">PCL2 游戏目录（自动检测）</option>
+        </select>
+        <span class="hint" id="pclHint">装进 PCL2 后，打开 PCL 的版本列表即可看到</span>
+        <button class="chip" id="pclSet" hidden>设置 PCL 目录</button>
+      </div>
       <div class="row quick">
         <button class="chip" id="pickRelease">最新正式版</button>
         <button class="chip" id="pickSnapshot">最新快照</button>

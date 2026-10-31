@@ -93,8 +93,10 @@ def load_config():
     if CONFIG.exists():
         cfg = json.loads(CONFIG.read_text(encoding="utf-8"))
         cfg.setdefault("download_source", "auto")
+        cfg.setdefault("pcl_dir", "")
         return cfg
-    return {"root": default_root(), "username": "Player", "mem": "2G", "download_source": "auto"}
+    return {"root": default_root(), "username": "Player", "mem": "2G",
+            "download_source": "auto", "pcl_dir": ""}
 
 
 def save_config(cfg):
@@ -228,11 +230,32 @@ def sync_profiles(root) -> list[str]:
     return added
 
 
-def run_install(mc, loader, version):
+def pcl_target() -> tuple[str | None, list[str]]:
+    """Configured or auto-detected PCL2 game directory (the folder holding versions/)."""
+    cfg = load_config()
+    configured = str(cfg.get("pcl_dir") or "").strip()
+    if configured and Path(configured).is_dir():
+        return configured, ["使用已保存的 PCL 目录"]
+    tools = Path(__file__).resolve().parent.parent / "tools"
+    if str(tools) not in sys.path:
+        sys.path.insert(0, str(tools))
+    try:
+        import from_source_install as fs
+        notes: list[str] = []
+        found = fs.detect_pcl_root(notes)
+    except Exception as exc:  # noqa: BLE001 - report, do not break the launcher
+        return None, [f"检测失败: {exc}"]
+    if found and Path(found).is_dir():
+        return str(found), notes
+    return None, notes
+
+
+def run_install(mc, loader, version, root=None):
     with TASK_LOCK:
         TASK.__init__()
     cfg = load_config()
-    root = Path(cfg["root"])
+    root = Path(root or cfg["root"])
+    root.mkdir(parents=True, exist_ok=True)
     try:
         TASK.set(phase="start", message=f"{loader} {mc}")
         if loader == "vanilla":
@@ -258,6 +281,10 @@ def run_install(mc, loader, version):
                 vid = backend.install(loader, mc, root, version, java, TASK)
         else:
             raise RuntimeError("unknown loader " + loader)
+        try:
+            sync_profiles(root)
+        except Exception:  # noqa: BLE001 - PCL/HMCL scan versions/ directly
+            pass
         TASK.set(phase="done", message=vid)
     except Exception as exc:  # noqa: BLE001
         TASK.set(phase="error", error=str(exc))
@@ -290,6 +317,10 @@ class Handler(BaseHTTPRequestHandler):
                 cfg["java"] = None
                 cfg["java_error"] = str(exc)
             return self._send(200, cfg)
+        if path == "/api/pcl":
+            found, notes = pcl_target()
+            return self._send(200, {"dir": found, "notes": notes})
+
         if path == "/api/status":
             cfg = load_config()
             try:
@@ -444,6 +475,17 @@ class Handler(BaseHTTPRequestHandler):
             body = self._read_json()
         except Exception:
             return self._send(400, {"error": "bad json"})
+        if path == "/api/pcl":
+            target = str(body.get("dir", "")).strip()
+            if not target or not Path(target).is_dir():
+                return self._send(400, {"error": "目录不存在: " + target})
+            if not (Path(target) / "versions").is_dir():
+                return self._send(400, {"error": "这个目录里没有 versions/，不像是游戏目录"})
+            cfg = load_config()
+            cfg["pcl_dir"] = target
+            save_config(cfg)
+            return self._send(200, {"dir": target})
+
         if path == "/api/config":
             cfg = load_config()
             cfg.update({k: body[k] for k in ("root", "username", "mem") if k in body})
@@ -548,8 +590,15 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(400, {"error": "mc required"})
             if TASK.snapshot()["phase"] in ("start", "download"):
                 return self._send(409, {"error": "a task is running"})
-            threading.Thread(target=run_install, args=(mc, loader, version), daemon=True).start()
-            return self._send(200, {"started": True})
+            target = str(body.get("target", "local"))
+            root = None
+            if target == "pcl":
+                root, notes = pcl_target()
+                if not root:
+                    return self._send(400, {"error": "没有找到 PCL2 游戏目录；请在启动器里设置",
+                                            "notes": notes})
+            threading.Thread(target=run_install, args=(mc, loader, version, root), daemon=True).start()
+            return self._send(200, {"started": True, "target": target, "root": root})
         if path == "/api/toggle-mod":
             cfg = load_config()
             name = str(body.get("name", "")).strip()

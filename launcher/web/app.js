@@ -210,20 +210,42 @@ function setButton(busy, text) {
   b.textContent = text;
 }
 
+function installLabel() {
+  return ($("target") && $("target").value === "pcl") ? "安装到 PCL" : "安装并启动";
+}
+
+async function refreshPcl() {
+  const hint = $("pclHint");
+  if (!hint) return;
+  try {
+    const r = await api("/api/pcl");
+    window.pclDir = r.dir || "";
+    if ($("target") && $("target").value === "pcl") {
+      hint.textContent = r.dir ? ("将装进 PCL2：" + r.dir)
+                               : "未找到 PCL2，请点「设置 PCL 目录」";
+      if ($("pclSet")) $("pclSet").hidden = !!r.dir;
+    }
+  } catch (e) {
+    hint.textContent = "检测 PCL 失败：" + e.message;
+  }
+}
+
 async function oneClick() {
   const mc = $("mcver").value.trim();
   if (!mc) return alert("先填版本号，例如 1.21.1");
+  const target = $("target") ? $("target").value : "local";
   setButton(true, "安装中…");
-  $("console").textContent = "开始安装 " + mc + " …\n";
+  $("console").textContent = "开始安装 " + mc + (target === "pcl" ? "（到 PCL2）" : "") + " …\n";
   try {
     await api("/api/install", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mc, loader: $("loader").value,
-        loader_version: $("loaderVer") && $("loaderVer").value ? $("loaderVer").value : null })
+        loader_version: $("loaderVer") && $("loaderVer").value ? $("loaderVer").value : null,
+        target })
     });
   } catch (e) {
     alert("安装失败: " + e.message);
-    setButton(false, "安装并启动");
+    setButton(false, installLabel());
     return;
   }
   clearInterval(oneClickTimer);
@@ -232,15 +254,22 @@ async function oneClick() {
     try { t = await api("/api/task"); } catch { return; }
     if (t.phase === "error") {
       clearInterval(oneClickTimer);
-      setButton(false, "安装并启动");
+      setButton(false, installLabel());
       $("taskmsg").textContent = "错误: " + t.error;
       alert("安装失败: " + t.error);
       return;
     }
     if (t.phase === "done") {
       clearInterval(oneClickTimer);
-      setButton(false, "安装并启动");
+      setButton(false, installLabel());
       await refresh();
+      if (target === "pcl") {
+        let dir = window.pclDir || "";
+        if (!dir) { try { dir = (await api("/api/pcl")).dir || ""; } catch {} }
+        $("taskmsg").textContent = "已装进 PCL2：" + (dir || "PCL 游戏目录") +
+          " —— 打开 PCL 的版本列表即可看到";
+        return;
+      }
       const vid = t.message && t.message.includes("loader") || t.message && t.message.includes("forge") || t.message && t.message.includes("neoforge")
         ? t.message : mc;
       await play(vid);
@@ -342,6 +371,19 @@ $("verSearch").oninput = (e) => { state.query = e.target.value; renderVersions()
 $("refresh").onclick = refresh;
 $("save").onclick = saveCfg;
 $("install").onclick = oneClick;
+$("target").onchange = () => { setButton(false, installLabel()); refreshPcl(); };
+$("pclSet").onclick = async () => {
+  const dir = prompt("PCL2 的游戏目录（包含 versions/ 的 .minecraft）：", window.pclDir || "");
+  if (!dir) return;
+  try {
+    await api("/api/pcl", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dir }) });
+    await refreshPcl();
+  } catch (e) {
+    alert("设置失败: " + e.message);
+  }
+};
+refreshPcl();
 $("play").onclick = () => play();
 $("allsnap").onchange = () => { renderManifest(false); renderVersions(); };
 $("loader").onchange = loadLoaderVersions;

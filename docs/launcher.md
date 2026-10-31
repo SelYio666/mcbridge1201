@@ -323,3 +323,18 @@ python tools/test_launcher_e2e.py --root work/launcher-e2e --mc 1.21.1
 - `POST /api/toggle-mod {"name":"xxx.jar"}`：`.jar` ↔ `.jar.disabled`
 
 只操作 `mods/` 目录内的文件（路径穿越 400）；回归套件覆盖“列表”和“切换”两项。
+
+## 装进 PCL2（界面里直接导入）
+
+「安装并启动」上方新增 **安装到** 选择：
+
+- `本启动器游戏目录`（默认）：装到当前启动器的 root，装完可直接启动；
+- `PCL2 游戏目录（自动检测）`：装到 PCL2 的游戏目录，装完不在这里启动，去 PCL 的版本列表里看。
+
+自动检测顺序：界面里保存过的 PCL 目录 → 桌面快捷方式指向的 PCL2 → `PCL/Setup.ini` 的
+`LaunchFolderSelect` → 都失败时显示「设置 PCL 目录」，点开手动填那个含 `versions/` 的
+`.minecraft`（写入 `launcher/config.json` 的 `pcl_dir`）。
+
+接口：`GET /api/pcl`（返回检测结果）、`POST /api/pcl {"dir": "..."}`（保存）；安装请求带
+`"target": "pcl"` 时服务端会把 root 切到 PCL 目录并写 `launcher_profiles.json`。
+实测：`target=pcl` 安装 1.20.6 返回 `root=C:\Users\27682\AppData\Roaming\.minecraft`，任务完成。
