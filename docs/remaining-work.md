@@ -368,6 +368,13 @@ Therefore:
 
 - p219 (2026-10-31): tried to trace the `Not a string` line. It is **not 1.20.4-specific**: the same line appears in the 1.21.1 ImmediatelyFast runs (p134/p149/p150/p151/p166/p167/p168/p170/p171/p173), and the 1.20.4 run (p213) had **no mods at all** (`versions/1.20.4/mods` and the global `mods/` do not exist). The 1.20.4 world's own JSON is valid (advancement criteria are string timestamps, stats are integers, no datapacks, no map data under `data/`). p214's 'does not reappear on 1.21.1' is true for that run but must not be read as '1.20.4-only'. It fires during `PlayerList.placeNewPlayer` (between `Changing simulation distance` and `logged in`), is non-blocking, and still has no stack trace; narrowing it needs a `-javaagent`/Arthas watch on the `getAsString -> JsonSyntaxException("Not a string")` throw site. See `runs/p219-not-a-string/`.
 
+- p226 (2026-10-31): **p215's 'bottom row ignores synthetic clicks' was a probe coordinate error, not**
+  **Minecraft behaviour.** Pixel analysis of p215's own screenshot: the create screen's 创建新的世界/取消
+  buttons occupy y 457-488 (x 126-421 / 446-741), while the probe clicked (277,437) and (585,437) - 20 px
+  above the buttons. The same probe's 游戏模式 click (435,205) hit its button (y 184-224) and toggled the mode,
+  and the world list click (594,428) hit that page's higher button row (y 411-443), which is why only the
+  create row looked dead. Enter was a normal keyboard path, not a workaround. See runs/p226-p215-coordinate/.
+
 - p196 (2026-10-26): 27 distinct items in the shulker box render 27 grid icons (GRID_SETRENDER inv=27, GRID_DRAWITEMS items=27), FULL/server box/real tooltip path all pass (runs/p196-shulker-grid27/). Its claim that the mod ignores the config previewKey was WRONG: the key was written under the `preview` category and F is vanilla swap-offhand. 27 distinct NBT/enchant stacks untested (closed by p202).
 - p197 (2026-10-26): preview keys ARE rebindable through the mod config. `javap` shows `ShulkerBoxTooltipClient.isKeyPressed` reads `config.controls.<key>.get().getCode()` and calls `InputConstants.isKeyDown` (defaults 340/342). With `controls.previewKey=key.keyboard.j(74)`, `controls.fullPreviewKey=key.keyboard.k(75)` and `alwaysOn=false`, the mod's own state machine runs NO_PREVIEW -> COMPACT (J) -> FULL (J+K) -> COMPACT (release K) -> NO_PREVIEW (release J) over a server-provided 27-item box (runs/p197-preview-key/). Boundary: held state is synthesised at the isKeyDown poll boundary, not an OS-level physical key press. 27 distinct NBT/enchant stacks still untested (closed by p202).
 

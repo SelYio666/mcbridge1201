@@ -1,0 +1,76 @@
+{
+  "image": "C:\\Users\\27682\\Documents\\\u65b0\u5efa\u6587\u4ef6\u5939\\mcbridge1201\\runs\\p215-pcl2-create-button\\attempt1.png",
+  "size": [
+    870,
+    519
+  ],
+  "rows": [],
+  "button_boxes_screenshot": [
+    [
+      126,
+      457,
+      421,
+      488
+    ],
+    [
+      446,
+      457,
+      741,
+      488
+    ]
+  ],
+  "clicks": [
+    [
+      277,
+      437
+    ],
+    [
+      585,
+      437
+    ]
+  ],
+  "click_checks": [
+    {
+      "click": [
+        277,
+        437
+      ],
+      "inside": []
+    },
+    {
+      "click": [
+        585,
+        437
+      ],
+      "inside": []
+    }
+  ],
+  "frame_inset": [
+    8,
+    30
+  ],
+  "button_boxes_client": [
+    [
+      118,
+      427,
+      413,
+      458
+    ],
+    [
+      438,
+      427,
+      733,
+      458
+    ]
+  ],
+  "clicks_client": [
+    [
+      269,
+      407
+    ],
+    [
+      577,
+      407
+    ]
+  ]
+}
