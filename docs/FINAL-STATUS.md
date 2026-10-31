@@ -1,12 +1,13 @@
 # mcbridge1201 最终状态（更新至 2026-10-31）
 
 > 定位：**Minecraft 版本迁移与运行辅助工具箱**。迁移与验证归本工具，日常启动交给 PCL。
-> 最新发布：[v0.5.8](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.8)（PCL 安装器：修复“配置目录不存在仍被使用”）。
+> 最新发布：[v0.5.9](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.9)（一键安装支持 HMCL + 连接池/重试）。
 > 下文第六节之后是按轮次追加的历史更新；**最新结论以下面这一节和 [report-2026-10-30.md](report-2026-10-30.md) 为准**。
 
 ## 最新状态（2026-10-31）
 
-- **发布**：v0.5.8（`mcbridge-pcl-setup.zip` / `mcbridge-pcl-panel.zip`，含 p220 目录修复）；
+- **发布**：v0.5.9（支持 HMCL，`runs/p222`；`mcbridge-pcl-setup.zip` / `mcbridge-pcl-panel.zip`）；
+  v0.5.8（p220 目录修复）；
   v0.5.7 为启动器 UI 打磨；v0.5.6 另含两个 companion jar
   （`shulkerpreview 1.1.0`、`trashcreativefix 1.0.0`）。
 - **CI**：最近 5 次 push 触发全部 `success`。
