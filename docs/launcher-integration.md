@@ -95,3 +95,17 @@ python launcher/mclaunch.py install 1.21.1 "D:\tmp\compare" fabric
 | 官方 | `%APPDATA%\.minecraft` |
 
 > 提醒：不同启动器的“全局 mods”和“实例 mods”优先级不同；排查时先确认到底加载了哪一份。
+
+## 用本工具一键装进 HMCL
+
+```text
+# 普通安装（读 %APPDATA%\.hmcl\config\user-game-directories.json）
+python tools/from_source_install.py --version 1.21.1 --hmcl
+
+# 便携版 / 自定义游戏目录（直接指到那个 .minecraft）
+python tools/from_source_install.py --version 1.21.1 --hmcl-dir "D:\HMCL\.minecraft"
+```
+
+注意：HMCL **便携版**的 `game-directories.json` 里写的是相对启动目录的 `.minecraft`，
+`--hmcl` 的自动检测只读 `%APPDATA%\.hmcl` 的全局配置；便携版请用 `--hmcl-dir`。
+实测 HMCL 3.17.0.363 能直接列出这样装进去的版本（`runs/p222-hmcl/`）。

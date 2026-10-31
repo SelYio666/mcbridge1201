@@ -26,3 +26,6 @@ share/player-guide.zip
 .workbuddy/
 runs/p215-pcl2-create-button/
 runs/p210-cloth-config/attempt1-field-only/
+
+# 本地 Gradle/JDK 缓存（不是交付物）
+.toolchain/

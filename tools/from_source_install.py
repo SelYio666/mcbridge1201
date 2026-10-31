@@ -23,6 +23,14 @@ import sys
 import time
 import urllib.error
 import urllib.request
+
+try:  # pooled transport: survives TLS resets that break plain urllib/requests here
+    import urllib3
+
+    _POOL = urllib3.PoolManager(num_pools=8, maxsize=32, block=False, retries=False)
+except Exception:  # noqa: BLE001
+    urllib3 = None  # type: ignore[assignment]
+    _POOL = None
 import zipfile
 from pathlib import Path
 
@@ -41,10 +49,26 @@ def mirror_of(url: str) -> str | None:
     return None
 
 
-def http_get(url: str, timeout: int = 60) -> bytes:
-    req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+def http_get(url: str, timeout: int = 60, retries: int = 3) -> bytes:
+    last = None
+    for attempt in range(max(1, retries)):
+        try:
+            if _POOL is not None:
+                r = _POOL.request(
+                    "GET", url,
+                    timeout=urllib3.Timeout(connect=10, read=timeout),
+                    headers={**UA, "Accept-Encoding": "gzip"},
+                    decode_content=True)
+                if r.status >= 400:
+                    raise RuntimeError(f"HTTP {r.status}")
+                return r.data
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.read()
+        except Exception as exc:  # noqa: BLE001 - Mojang endpoints drop TLS intermittently
+            last = exc
+            time.sleep(1.5 * (attempt + 1))
+    raise RuntimeError(f"GET {url} failed after {retries} attempts: {type(last).__name__}: {last}")
 
 
 def get_json(url: str):
@@ -98,13 +122,32 @@ def download(url: str, dest: Path, sha1: str | None = None, retries: int = 3) ->
     for attempt in range(retries):
         for cand in candidates:
             try:
-                req = urllib.request.Request(cand, headers=UA)
-                with urllib.request.urlopen(req, timeout=60) as r, open(part, "wb") as f:
-                    while True:
-                        chunk = r.read(1 << 20)
-                        if not chunk:
-                            break
-                        f.write(chunk)
+                if _POOL is not None:
+                    r = _POOL.request(
+                        "GET", cand,
+                        timeout=urllib3.Timeout(connect=10, read=60),
+                        preload_content=False, decode_content=True,
+                        headers={**UA, "Accept-Encoding": "gzip"})
+                    try:
+                        if r.status >= 400:
+                            raise RuntimeError(f"HTTP {r.status}")
+                        with open(part, "wb") as f:
+                            while True:
+                                chunk = r.read(1 << 20)
+                                if not chunk:
+                                    break
+                                f.write(chunk)
+                    finally:
+                        r.release_conn()
+                        r.close()
+                else:
+                    req = urllib.request.Request(cand, headers=UA)
+                    with urllib.request.urlopen(req, timeout=60) as r, open(part, "wb") as f:
+                        while True:
+                            chunk = r.read(1 << 20)
+                            if not chunk:
+                                break
+                            f.write(chunk)
                 if sha1 and sha1_file(part) != sha1:
                     part.unlink(missing_ok=True)
                     continue
@@ -332,6 +375,33 @@ def pcl2_from_desktop(desktop: Path | None = None) -> Path | None:
     return pcl2_shortcut_scan(desktop)[0]
 
 
+def hmcl_config_dir() -> Path:
+    appdata = os.environ.get("APPDATA")
+    return (Path(appdata) / ".hmcl") if appdata else (Path.home() / ".hmcl")
+
+
+def hmcl_game_dir(target: str | Path | None = None) -> Path | None:
+    """HMCL game directory: explicit target, user-game-directories.json, then %APPDATA%/.minecraft."""
+    if target:
+        p = Path(target)
+        if (p / "versions").is_dir():
+            return p
+        nested = p / ".minecraft"
+        return nested if nested.is_dir() else None
+    cfg = hmcl_config_dir() / "config" / "user-game-directories.json"
+    if cfg.is_file():
+        try:
+            data = json.loads(cfg.read_text(encoding="utf-8", errors="replace"))
+            for entry in data.get("directories", []):
+                path = entry.get("path")
+                if path and Path(path).is_dir():
+                    return Path(path)
+        except Exception:  # noqa: BLE001
+            pass
+    fallback = Path(os.environ.get("APPDATA", "")) / ".minecraft"
+    return fallback if fallback.is_dir() else None
+
+
 def detect_pcl_root(notes: list[str] | None = None) -> Path | None:
     """Best-effort PCL game directory: env override, PCL Setup.ini, then %APPDATA%/.minecraft.
 
@@ -413,18 +483,30 @@ def interactive() -> int:
     elif raw.isdigit() and 1 <= int(raw) <= len(recent):
         raw = recent[int(raw) - 1]["id"]
     ver = raw or default_ver
-    notes: list[str] = []
-    root = detect_pcl_root(notes)
-    for note in notes:
-        print("PCL 检测:", note)
-    if root:
-        print("检测到 PCL 游戏目录:", root)
+    target = input("装到哪个启动器？[1=PCL2  2=HMCL]: ").strip() or "1"
+    if target == "2":
+        root = hmcl_game_dir()
+        if root is None:
+            raw = input("没有自动找到 HMCL 目录，请输入（含 versions/ 的 .minecraft）: ").strip()
+            if not raw:
+                print("已取消")
+                return 2
+            root = Path(raw)
+        else:
+            print("检测到 HMCL 游戏目录:", root)
     else:
-        raw = input("没有自动找到，请输入 PCL 的游戏目录（包含 versions/ 的 .minecraft）: ").strip()
-        if not raw:
-            print("已取消")
-            return 2
-        root = Path(raw)
+        notes: list[str] = []
+        root = detect_pcl_root(notes)
+        for note in notes:
+            print("PCL 检测:", note)
+        if root:
+            print("检测到 PCL 游戏目录:", root)
+        else:
+            raw = input("没有自动找到，请输入 PCL 的游戏目录（包含 versions/ 的 .minecraft）: ").strip()
+            if not raw:
+                print("已取消")
+                return 2
+            root = Path(raw)
     print(f"将安装 {ver} 到 {root}")
     if input("继续？[Y/n]: ").strip().lower() in ("n", "no"):
         print("已取消")
@@ -459,14 +541,32 @@ def main() -> int:
                     help="显式指定 PCL 游戏目录（包含 versions/ 的那个 .minecraft）")
     ap.add_argument("--pcl2", default=None,
                     help="PCL2 的 exe 或安装目录；会读取 PCL/Setup.ini 的 LaunchFolderSelect")
+    ap.add_argument("--hmcl", action="store_true",
+                    help="装进 HMCL 的游戏目录（读 APPDATA 下的 .hmcl 配置）")
+    ap.add_argument("--hmcl-dir", default=None,
+                    help="显式指定 HMCL 的游戏目录（含 versions/ 的那个 .minecraft）")
     ap.add_argument("--open", action="store_true", help="装完后打开游戏目录")
     args = ap.parse_args()
     if args.list:
         print_versions(args.version_type, args.contains, 200)
         return 0
 
-    pcl_mode = args.pcl or bool(args.pcl_dir) or bool(args.pcl2)
-    if args.pcl2:
+    pcl_mode = (args.pcl or bool(args.pcl_dir) or bool(args.pcl2)
+                or args.hmcl or bool(args.hmcl_dir))
+    if args.hmcl_dir:
+        root = Path(args.hmcl_dir)
+        if not root.is_dir():
+            print("--hmcl-dir 不是一个目录:", root)
+            return 2
+        print("HMCL 游戏目录（显式）:", root)
+    elif args.hmcl:
+        resolved = hmcl_game_dir()
+        if resolved is None:
+            print("没有找到 HMCL 游戏目录；请用 --hmcl-dir 指定（那个 .minecraft）")
+            return 2
+        root = resolved
+        print("HMCL 游戏目录:", root)
+    elif args.pcl2:
         resolved = pcl2_game_dir(args.pcl2)
         if resolved is None:
             print("无法从 PCL2 配置定位游戏目录，请改用 --pcl-dir 直接指定")
@@ -485,7 +585,11 @@ def main() -> int:
             return 2
         root = detected
         print("PCL 游戏目录:", root)
-    rc = install(args.version, root, args.workers)
+    try:
+        rc = install(args.version, root, args.workers)
+    except Exception as exc:  # noqa: BLE001 - surface a readable error, not a traceback
+        print("安装失败:", type(exc).__name__, str(exc)[:200])
+        return 1
     if rc == 0 and pcl_mode:
         path = write_launcher_profiles(root, args.version)
         print("已写 launcher_profiles.json:", path)
