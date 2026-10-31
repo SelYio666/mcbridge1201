@@ -53,3 +53,18 @@
 ## 影响
 
 非阻塞：加入成功、世界可进、玩法正常；不应为了消掉一行日志去动核心逻辑。
+
+## JFR 复现尝试（2026-10-31）
+
+做法：把 1.20.4 装进 `work/launcher-e2e`，复制 p213 那个“新的世界”，用 PCL 同款离线 UUID
+（`00000000-0000-3006-998f-555b73d6dcef`）、`--quickPlaySingleplayer` 首次进入，并加
+`-XX:StartFlightRecording=filename=...,settings=profile,dumponexit=true`；进服后用
+`jcmd <pid> JFR.stop filename=...` 收尾。
+
+- **JFR 方法本身可用**：录制文件生成成功，`jfr print --events jdk.JavaExceptionThrow` 可用；
+- **这条日志没复现**：第一次（保留玩家数据）与第二次（清空 `advancements`/`stats`/`playerdata`）
+  都正常 `logged in` / `joined the game`，日志里没有 `Not a string`；
+- 因此它**不随世界/玩家数据稳定出现**，更可能依赖 PCL 自己的启动上下文（它安装的版本目录、选项、
+  时序）或当次偶发；下一步是在 PCL 里带同样的 JVM 参数启动后抓 JFR。
+
+可复用脚本：`jfr_repro.py`（参数：`--root --version --world --jfr`）。

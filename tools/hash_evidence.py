@@ -1242,6 +1242,7 @@ FILES = [
     "docs/support-matrix.md",
     "docs/remaining-work.md",
     "runs/p219-not-a-string/README.md",
+    "runs/p219-not-a-string/jfr_repro.py",
     "docs/guide.md",
     "docs/download-sources.md",
     "tools/build_portable.py",
