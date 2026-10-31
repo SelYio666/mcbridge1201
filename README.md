@@ -4,19 +4,33 @@
 
 > 新手先读：**[使用说明与教程](docs/guide.md)**（启动器 10 分钟上手、PCL 共用、模组迁移教程、FAQ）。
 
-> 最新发布：**[v0.5.6](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.6)**（一键安装到 PCL：图形面板/全版本选择；主工具 v0.5.4）。
+> 最新发布：**[v0.5.8](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.8)**（PCL 安装器：修复“配置目录不存在仍被使用”；图形面板/全版本选择沿用 v0.5.5–v0.5.6）。
 
 Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来源固定为 **1.20.1**，首个精确目标是 **Fabric 1.21.1**，同时抽样分析 Forge 1.20.1。
 
 本仓库当前交付 P0 的事实与证据，以及 P1 的第一段运行时结果：环境锁定、上游引擎锁定、10 份真实样本、**自研静态损伤分析器**、**body-preserving 重映射器**、CenturyBridge 真实转换产物，和进世界/功能级证据。**只对 `runs/` 里有日志与截图支撑的模组声称通过**（如 EntityCulling、ImmediatelyFast 的移植），其余不宣称兼容。
 
-## 当前状态（2026-10-23）
+## 当前状态（2026-10-31）
 
-- **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康缓存 + GUI 源检查；内嵌 Python 的便携包（v0.5.2）。
-- **已验证进世界**：Fabric 1.21.1（全量安装 + EntityCulling 真生效）；ImmediatelyFast 1.21.1 batching 移植（HUD/物品/overlay 计数、Iris 1.8.1/1.8.14 + shader pack、专用服务器多人加入；`runs/p134`-`p150`）；**ImmediatelyFast 地图 atlas 恢复：p175 单人真实手持 filled_map 渲染；p177 两张地图分别落到 atlas tile 0/1 并与物品展示框地图同屏渲染；p181 动态更新（第二次上传）+ 正常退出清理，并修复退出时向已释放 NativeImage 写入的崩溃；p178 在 80 盔甲架压力下启用 VertexBuffer 动态上传 fast path（on 侧最高 76k 次 glBufferSubData，off/on 截图差 0.0087%，低于 off/off 对照，无 GL/mixin 错误）**（`runs/p175-map-atlas/`、`runs/p177-map-atlas-edge/`、`runs/p181-map-atlas-lifecycle/`、`runs/p178-vertex-upload/`）；NeoForge 21.1.264（AppleSkin / Farmer's Delight / Jade + **专用服务器客户端加入**，`runs/p161-neoforge-server/`；**带 Farmer's Delight 的服务端/客户端同模组加入**，`runs/p163-neoforge-fd-server/`）；Forge 1.20.1-47.4.28（AppleSkin / Farmer's Delight + **专用服务器客户端加入**，`runs/p159-forge-server/`；**带 Farmer's Delight 的同模组加入**，`runs/p164-forge-fd-server/`）；mrpack 真实 files 导入通过（`runs/p160-mrpack/`）。
-- **未通过 / 未验证**：Sodium 1.20.1 转换探针为 `blocked_static`（missingClass=13、missingMember=15、descMismatch=16，`runs/p158-sodium-probe/`），需移植其渲染内核，本轮不做（p199 逐条定性 44 条：6 条为内嵌 Fabric API、7 条纯 id、7 条签名有明确写法、24 条卡在被换掉的即时模式顶点管线，见 [docs/sodium-plan.md](docs/sodium-plan.md)）；Iris 只验证了 ImmediatelyFast 的兼容分支（没有转换 Iris 本身）；ImmediatelyFast 端口 jar 仍有 **2 个 inert**，但它们是官方 1.21.1 已删除的 1.20.4 遗留类（BufferBuilder/FontManager；ChatHud/MinecraftClient/BufferRenderer 已在 p166–p168 重登记，两个 map mixin 在 p175 恢复，VertexBuffer 在 p178 启用；对照见 `runs/p180-inert-closure/`）；地图 atlas 已验证单人手持 + 两张地图（tile 0/1）+ 物品展示框 + p181 动态更新+正常退出清理；atlas 满 1024 张未测；性能**不宣称收益**——HUD 场景差异在噪声内（`runs/p148-bench/`），80 盔甲架实体压力交错两轮慢约 13%（`runs/p157-stress-interleaved/`）。
-- **门禁**：Java 25/25、`test_review_fixes` 共 227 项（本次 **227/227**）、`check_hashes` **1338/1338**、`verify_evidence` passed（含 `text_encoding` 直接项）；CI push 触发已验证（最近 `build` success，见 Actions）。
-- 详情：[总验收快照](runs/p125-final-acceptance/README.md)、[FINAL-STATUS](docs/FINAL-STATUS.md)、[使用说明](docs/guide.md)。
+- **发布**：v0.5.8（PCL 安装器缺失目录修复，`runs/p220`）；v0.5.7 启动器 UI 打磨；v0.5.6 另含
+  `mcbridge-companion-shulkerpreview` / `trashcreativefix` 两个 companion jar。
+- **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康
+  缓存；内嵌 Python 便携包；**图形 PCL 面板**（正式版/快照/远古下拉、搜索、进度、自动检测 PCL2）。
+- **PCL 真机闭环**：PCL2 **2.99.0.0** 上面板真点“安装” → 版本列表出现新版本（`runs/p212`）；
+  从 PCL2 **离线启动** 1.20.4（`runs/p213`）与 **1.21.1**（`runs/p214`）→ 标题界面 → 点进世界。
+- **模组侧**：ImmediatelyFast 1.21.1 移植验证（HUD/物品/地图 atlas/VertexBuffer、Iris、专用服务器、
+  95s soak）；Shulker 网格与服务端物品恢复；TrashSlot UI 全链路（Delete / Shift+Delete / 右键取回 /
+  多客户端隔离 / 同 tick 并发）；Cloth Config 配置界面可开、点开关值真的翻转（`runs/p210`）；
+  Forge/NeoForge 专用服务器 + 客户端加入；mrpack 真实 files。
+- **未通过 / 未验证**：Sodium 渲染内核评估为不可行（`blocked_static`，未写规则）；多客户端/跨机器延迟；
+  PCL 创建世界页底部按钮对合成点击无响应（`runs/p215`，键盘 Enter 可用）；1.20.4 的
+  `Not a string` 两次 JFR 复现均为负结果（`runs/p219`，方法与脚本保留）；ImmediatelyFast 端口仍有
+  2 个 inert（官方 1.21.1 已删除的 1.20.4 遗留类）。
+- **门禁（2026-10-31 实跑）**：`test_review_fixes` **467/467**；`check_hashes` **1573 ok / 0
+  mismatch / 0 missing**；Java 单测 **32/32**；`verify_evidence` passed（含 `text_encoding`，
+  248 个 Markdown 干净）；CI push 触发可用。
+- 详情：[FINAL-STATUS](docs/FINAL-STATUS.md)、[报告 p210–p214](docs/report-2026-10-30.md)、
+  [剩余工作](docs/remaining-work.md)、[使用说明](docs/guide.md)。
 
 ## 现状（2026-10-18）
 
@@ -52,7 +66,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 第三样本 trashslot | 原生 Balm 21 + 初始化/网络载荷桥 + 4 个 NBT 桥，**专用服务端 BOOTED**（`Done (4.655s)`）；三个包 codec（含 5 钻石）往返通过；clientbound receiver 后续已在客户端执行（p29/p64） | `runs/p15-trashslot/`、`runs/p16-balm/`、`runs/p17-balm-net/`、`runs/p29-client-receiver/`、`runs/p32-trashslot-codec/`、`runs/p33-all-packets/`、`rules/fabric-1.21.1/trashslot.json` |
 | 客户端首次运行（PCL） | 1.21.1 Fabric 客户端已装，五模组加载；RL 网络/Balm 客户端初始化/ironchests 模型桥后**到达主菜单**；Balm writer + lithium `VarInt` 桥后**进入单人世界并渲染**；背包 + TrashSlot 按钮已渲染、5 钻石可进背包；trash **移入/取回/clientbound/empty 均通过**（`p63`/`p64`/`p65`）；IronChests **模型 + 同步 NBT + 箱子 GUI（真实九宫格背景）+ 取放交互 + 关箱持久化/S2C** 均通过（`p66`–`p72`），修复流水线已入仓（`p71`）；lithium 玩法冒烟通过（`p73`，非完整评估）；双客户端 **服务端→客户端内容同步 + 访客取走→主机可见的往返均通过**（`p75`/`p76`；LAN 尝试的认证墙见 `p74`）；**双端关屏通过**（`p77`；`Screen.close()`，服务端菜单回落到 46 格）；**同箱双客户端操作总数守恒、无复制**（`p78`）；**同 tick 并发点击服务端只给一人、不复制**（`p79`/`p80`，干净重跑确认输家被纠正）；物理 ESC **通过**（`p83`；传送+新方块后按 ESC，双端回落 46 格；早前失败见 `p81`/`p82`）；lithium TPS 采样 20.03（`p84`，289 区块/60 秒）；empty-trash 真实 Delete 键已通过（`p183`；`p85`/`p86` 的按键失败根因是注入漏 `KEYEVENTF_EXTENDEDKEY`，provider 级见 `p65`）；Shift+Delete 跨槽删除（两叠 5+3）通过（`p184`）；空 cursor 右键取 1 留 4 通过（`p185`）；扩模 6 个样本：5 阻断 / 1 仅启动（`p88`，见 [mod-expansion](docs/mod-expansion.md)） | `runs/p50-client/`、`runs/p51-client-bridge/`、`runs/p52-client-balm/`、`runs/p53-client-world/`、`runs/p54-client-lithium/`、`runs/p55-client-gui/`、`runs/p56-client-item/`、`runs/p57-trash-persist/`、`runs/p58-trash-click/`、`runs/p59-trash-send/`、`runs/p60-trash-return/`、`runs/p61-trash-clean-return/`、`runs/p63-trash-debug/`、`runs/p64-trash-s2c/`、`runs/p65-trash-empty/`、`runs/p66-ironchests-gui/`、`runs/p67-ironchests-gui-nbt/`、`runs/p68-ironchests-gui/`、`runs/p69-ironchests-interaction/`、`runs/p70-ironchests-persist/`、`runs/p71-rebuild-pipeline/`、`runs/p72-ironchests-nine-slice/`、`runs/p73-lithium-play/`、`runs/p74-two-client/`、`runs/p75-two-client-server/`、`runs/p76-two-client-move/`、`runs/p77-two-client-close/`、`runs/p78-two-client-race/`、`runs/p79-two-client-simultaneous/`、`runs/p80-two-client-clean/`、`runs/p81-esc-key/`、`runs/p82-esc-onuse/`、`runs/p83-esc-teleport/`、`runs/p84-lithium-tps/`、`runs/p85-empty-key/`、`runs/p86-empty-hover/`、`runs/p87-independent-test/`、`runs/p88-mod-expansion/`、`runs/p183-trash-key/`、`runs/p184-trash-delete-all/`、`runs/p185-trash-undelete-right/`、[docs/mod-expansion](docs/mod-expansion.md)、[remaining-work](docs/remaining-work.md) |
 | **ShulkerBoxTooltip 网格预览（部分）** | p186：client-side `ContainerComponent` + `ComponentPreviewProvider` + grid renderer 的 t2/t4 桥，tooltip 出现预览框与 `Diamond ×5`；网格 item icon 仍缺、真实 server item 仍空 | `runs/p186-shulker-grid-client-item/` |
-| **一键安装到 PCL（v0.5.5）** | 图形面板 `mcbridge-pcl-panel.zip` + 免 Python `mcbridge-pcl-setup.zip`；版本下拉/搜索/进度/PCL2 自动检测；`from_source_install` 支持 release/snapshot/old_* / all / latest-snapshot；**p212：面板真点一次安装 → PCL2 2.99.0.0 的「版本选择」里出现 1.20.4**（快捷方式已重建、检测不再是 `%APPDATA%` 兜底） | `share/pcl-onclick/`、`runs/p137-pcl2-onclick/`、`runs/p212-pcl2-e2e/` |
+| **一键安装到 PCL（v0.5.8）** | 图形面板 `mcbridge-pcl-panel.zip` + 免 Python `mcbridge-pcl-setup.zip`；版本下拉/搜索/进度/PCL2 自动检测；`from_source_install` 支持 release/snapshot/old_* / all / latest-snapshot；**p212：面板真点一次安装 → PCL2 2.99.0.0 的「版本选择」里出现 1.20.4**（快捷方式已重建、检测不再是 `%APPDATA%` 兜底） | `share/pcl-onclick/`、`runs/p137-pcl2-onclick/`、`runs/p212-pcl2-e2e/` |
 | **Cloth Config 配置界面（p210）** | AppleSkin 的 1.20.1 JiJ `cloth-config-fabric-11.1.136` 在 1.21.1 上**能开、能画 13 行、点得动**：`rows=13 kinds={BooleanToggleBuilder$1=9, …}`、`client_errors=[]`，真实点击把第一条开关由 ON 翻成 OFF；6 处装饰降级为 no-op，`GlobalizedClothConfigScreen` 未覆盖 | `runs/p210-cloth-config/`、`rules/fabric-1.21.1/cloth-config.json`、`rules/fabric-1.21.1/cloth-config-render.json` |
 
 ## 交接
