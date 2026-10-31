@@ -6,7 +6,7 @@
 
 > 本次更新教程：**[v0.5.8 → v0.5.9 图文 + 视频](share/update-v059/README.md)**（HMCL 支持 / 下载更稳 / 目录修复）。
 
-> 最新发布：**[v0.5.9](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.9)**（一键安装支持 **HMCL** + urllib3 传输重试；PCL 目录修复见 v0.5.8）。
+> 最新发布：**[v0.5.10](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.10)**（网页启动器「安装到 PCL2」+ 打包版修复；安装器 v0.5.9 支持 HMCL）。
 
 Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来源固定为 **1.20.1**，首个精确目标是 **Fabric 1.21.1**，同时抽样分析 Forge 1.20.1。
 
@@ -14,7 +14,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 
 ## 当前状态（2026-10-31）
 
-- **发布**：v0.5.9（HMCL 对接 + 连接池/重试，`runs/p222`）；v0.5.8（PCL 缺失目录修复，`runs/p220`）；
+- **发布**：v0.5.10（网页启动器「安装到 PCL2」，`runs/p223`）；v0.5.9（HMCL 对接 + 连接池/重试，`runs/p222`）；
+  v0.5.8（PCL 缺失目录修复，`runs/p220`）；
   v0.5.7 启动器 UI 打磨；v0.5.6 另含
   `mcbridge-companion-shulkerpreview` / `trashcreativefix` 两个 companion jar。
 - **启动器**：离线安装/启动原版 + Fabric/Forge/NeoForge；下载源可选（自动/仅官方/镜像优先）+ 源健康

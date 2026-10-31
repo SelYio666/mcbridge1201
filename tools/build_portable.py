@@ -227,6 +227,9 @@ def build(args) -> Path:
     # launcher sources (no config.json / __pycache__)
     shutil.copytree(ROOT / "launcher", stage / "launcher",
                     ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "config.json"))
+    # the web launcher's /api/pcl reuses the PCL2 detection from this tool
+    (stage / "tools").mkdir()
+    shutil.copy2(ROOT / "tools" / "from_source_install.py", stage / "tools" / "from_source_install.py")
     (stage / "docs").mkdir()
     for name in ("guide.md", "launcher.md"):
         shutil.copy2(ROOT / "docs" / name, stage / "docs" / name)
