@@ -1600,6 +1600,9 @@ FILES = [
     "runs/p216-ui-polish/fixed-list-count.png",
     "runs/p217-release-v0.5.7/README.md",
     "runs/p217-release-v0.5.7/release-notes.md",
+    "runs/p218-pcl-import-video/README.md",
+    "runs/p218-pcl-import-video/make_video_simple.py",
+    "runs/p218-pcl-import-video/p218-pcl-launch-simple.mp4",
 ]
 
 

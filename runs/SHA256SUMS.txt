@@ -1564,3 +1564,6 @@ d0ca212fdf469d7ff08464b3ff6f57961d727173b1778d71cd596346a96a6fba  runs/p216-ui-p
 c36323ed706e3ee74511934aae3e79d9f5b13d6b108142fe2ab0fdafb76ed34c  runs/p216-ui-polish/fixed-list-count.png
 d9706da201b25e27a9aef60003151466c8ed6b560b05e6cee9534ccf596befc5  runs/p217-release-v0.5.7/README.md
 657156b1a7eefa0d6adbb97286c769ac91490f2371b9098edd841fb897bcbd59  runs/p217-release-v0.5.7/release-notes.md
+5f130d0bf26d4bcf00c5893e3c0a367e86ad983772c2a7b96cb207ecca769b93  runs/p218-pcl-import-video/README.md
+c52f1977a74a92e65ab05535558a9b2ebf5e5db06e4bf99c12c903f792612f32  runs/p218-pcl-import-video/make_video_simple.py
+b557b1b977ca4df70db8e27634064c0cb37139bff73cfbfc85d5276d92a076e8  runs/p218-pcl-import-video/p218-pcl-launch-simple.mp4
