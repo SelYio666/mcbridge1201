@@ -1,0 +1,16 @@
+{
+  "package": "mcbridge-launcher-0.5.10.zip",
+  "api_status_root": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+  "api_pcl": {
+    "dir": "C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "notes": []
+  },
+  "ui": {
+    "mc": "1.20.6",
+    "loader": "vanilla",
+    "target": "pcl",
+    "hint": "将装进 PCL2：C:\\Users\\27682\\AppData\\Roaming\\.minecraft",
+    "msg": "已装进 PCL2：C:\\Users\\27682\\AppData\\Roaming\\.minecraft —— 打开 PCL 的版本列表即可看到",
+    "button": "安装到 PCL"
+  }
+}
