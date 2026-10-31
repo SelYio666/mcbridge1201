@@ -1,0 +1,1 @@
+﻿6a3f953 docs: refresh README status to v0.5.8 / 2026-10-31
