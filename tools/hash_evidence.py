@@ -1597,6 +1597,9 @@ FILES = [
     "runs/p216-ui-polish/redo-launcher-after.png",
     "runs/p216-ui-polish/redo-panel-after.png",
     "runs/p216-ui-polish/redo-download-dark.png",
+    "runs/p216-ui-polish/fixed-list-count.png",
+    "runs/p217-release-v0.5.7/README.md",
+    "runs/p217-release-v0.5.7/release-notes.md",
 ]
 
 

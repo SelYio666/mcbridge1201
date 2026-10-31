@@ -2950,6 +2950,16 @@ def test_pcl2_1211() -> None:
           "def activate(" in driver and "wait-title" in driver, "")
 
 
+def test_ui_list_rendering() -> None:
+    """p216 follow-up: the version list must not silently cap below the advertised count."""
+    app = (ROOT / "launcher" / "web" / "app.js").read_text(encoding="utf-8")
+    check("UI: the version list has no hard 400-row cap", "slice(0, 400)" not in app, "")
+    check("UI: the list cap is explicit and large enough for the manifest",
+          "MAX_RENDERED" in app and "items.slice(0, MAX_RENDERED)" in app, "")
+    check("UI: the count label is derived from the rendered list",
+          "当前列出 ${shown.length} 个" in app and "sel.options.length" not in app, "")
+
+
 def main() -> int:
     test_issue03()
     test_issue02()
@@ -2971,6 +2981,7 @@ def main() -> int:
     test_pcl2_e2e()
     test_pcl2_launch()
     test_pcl2_1211()
+    test_ui_list_rendering()
     test_text_encoding_guard()
     test_eol_determinism()
     test_download_policy()

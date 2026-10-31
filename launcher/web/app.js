@@ -49,7 +49,18 @@ function renderVersions() {
   if ($("cntInstall")) $("cntInstall").textContent = `(${(state.manifest || []).length})`;
   if ($("cntInstalled")) $("cntInstalled").textContent = `(${(state.versions || []).length})`;
 
-  for (const v of items.slice(0, 400)) {
+  const MAX_RENDERED = 2000;
+  const shown = items.slice(0, MAX_RENDERED);
+  if ($("vercount")) {
+    const total = state.mode === "installed" ? (state.versions || []).length
+      : (state.manifest || []).length;
+    const more = items.length > MAX_RENDERED ? "，其余请用搜索或下拉选择" : "";
+    $("vercount").textContent = state.mode === "installed"
+      ? `已安装 ${total} 个（当前列出 ${shown.length} 个${more}）`
+      : `共 ${total} 个版本可选（当前列出 ${shown.length} 个${more}）`;
+  }
+
+  for (const v of shown) {
     const el = document.createElement("div");
     el.className = "ver" + (state.selected === v.id ? " sel" : "");
     el.setAttribute("role", "option");
@@ -175,7 +186,8 @@ function renderManifest(initial) {
   const fallback = latest.release || (releaseList[0] && releaseList[0].id) || "";
   sel.value = initial || !prev ? fallback : prev;
   if (!sel.value) sel.value = fallback;
-  if ($("vercount")) $("vercount").textContent = `共 ${state.manifest.length} 个版本可选（当前列出 ${sel.options.length} 个）`;
+  // The count label is owned by renderVersions(): the select's option count includes
+  // versions the list intentionally filters out (snapshots/old), so it was misleading.
 }
 
 async function deleteVersion(id) {
