@@ -257,8 +257,14 @@ def pcl2_game_dir(target: str | Path) -> Path | None:
                 val = line.split(":", 1)[1].strip()
                 if val.startswith("$"):
                     rel = val[1:].strip("\\/")
-                    return exe_dir / rel if rel else exe_dir
-                return Path(val)
+                    cand = exe_dir / rel if rel else exe_dir
+                else:
+                    cand = Path(val)
+                # a configured folder that does not exist yet must not be returned as if it were
+                # installable: PCL would create it, but we would silently write outside the instance
+                if cand.is_dir():
+                    return cand
+                break
     portable = exe_dir / ".minecraft"
     return portable if portable.is_dir() else None
 

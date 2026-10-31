@@ -2679,8 +2679,13 @@ def test_pcl2_detect() -> None:
     rel = base / "relative"
     (rel / "PCL").mkdir(parents=True, exist_ok=True)
     (rel / "PCL" / "Setup.ini").write_text("LaunchFolderSelect:$minecraft\n", encoding="utf-8")
+    (rel / "minecraft").mkdir()  # p220: a configured folder must exist to be returned
     check("p211: a $-relative LaunchFolderSelect resolves inside the launcher folder",
           fs.pcl2_game_dir(rel) == rel / "minecraft", str(fs.pcl2_game_dir(rel)))
+
+    (rel / "PCL" / "Setup.ini").write_text("LaunchFolderSelect:$missing\n", encoding="utf-8")
+    check("p220: a configured-but-missing folder is not returned",
+          fs.pcl2_game_dir(rel) is None, str(fs.pcl2_game_dir(rel)))
 
     portable = base / "portable"
     (portable / ".minecraft").mkdir(parents=True, exist_ok=True)

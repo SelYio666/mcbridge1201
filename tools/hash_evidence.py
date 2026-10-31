@@ -1243,6 +1243,8 @@ FILES = [
     "docs/remaining-work.md",
     "runs/p219-not-a-string/README.md",
     "runs/p219-not-a-string/jfr_repro.py",
+    "runs/p220-pcl2-dir-check/README.md",
+    "runs/p220-pcl2-dir-check/verify.py",
     "docs/guide.md",
     "docs/download-sources.md",
     "tools/build_portable.py",
