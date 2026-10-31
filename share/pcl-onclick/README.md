@@ -13,7 +13,7 @@
 
 ## 方式 A：免 Python（推荐）
 
-1. 打开 <https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.5> 下载
+1. 打开 <https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.8> 下载
    `mcbridge-pcl-setup.zip`（约 9 MB）；
 2. 解压到任意目录（不要只把 exe 拖出来，`_internal` 文件夹要跟着）；
 3. 双击 `mcbridge-pcl-setup.exe`；

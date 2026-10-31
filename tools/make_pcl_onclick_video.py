@@ -180,7 +180,7 @@ def scene_result(d, t):
 def scene_end(d, t):
     a = fade(t, 48.4)
     d.text((72, 230), "一键安装到 PCL", font=font(FONT_CN_B, 48), fill=mix(FG, a))
-    d.text((74, 304), "Release v0.5.5", font=font(FONT_CODE, 20), fill=mix(ACCENT, a))
+    d.text((74, 304), "Release v0.5.8", font=font(FONT_CODE, 20), fill=mix(ACCENT, a))
     d.text((74, 344), "mcbridge-pcl-panel.zip  ·  mcbridge-pcl-setup.zip", font=font(FONT_CODE, 16),
            fill=mix(DIM, a))
     d.text((74, 392), "公开下载源 · 不托管、不分发游戏文件", font=font(FONT_CN, 17), fill=mix(DIM, a))

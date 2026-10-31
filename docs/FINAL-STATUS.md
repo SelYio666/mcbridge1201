@@ -1,12 +1,13 @@
 # mcbridge1201 最终状态（更新至 2026-10-31）
 
 > 定位：**Minecraft 版本迁移与运行辅助工具箱**。迁移与验证归本工具，日常启动交给 PCL。
-> 最新发布：[v0.5.7](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.7)（启动器 UI 打磨 + 版本列表计数修复；PCL 面板/全版本选择沿用 v0.5.5-v0.5.6）。
+> 最新发布：[v0.5.8](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.8)（PCL 安装器：修复“配置目录不存在仍被使用”）。
 > 下文第六节之后是按轮次追加的历史更新；**最新结论以下面这一节和 [report-2026-10-30.md](report-2026-10-30.md) 为准**。
 
 ## 最新状态（2026-10-31）
 
-- **发布**：v0.5.7（`mcbridge-launcher-0.5.7.zip`）；v0.5.6 另含两个 companion jar
+- **发布**：v0.5.8（`mcbridge-pcl-setup.zip` / `mcbridge-pcl-panel.zip`，含 p220 目录修复）；
+  v0.5.7 为启动器 UI 打磨；v0.5.6 另含两个 companion jar
   （`shulkerpreview 1.1.0`、`trashcreativefix 1.0.0`）。
 - **CI**：最近 5 次 push 触发全部 `success`。
 - **本机门禁（10-31 实测）**：`verify_evidence` passed；`test_review_fixes` **466/466**；
@@ -75,7 +76,7 @@
 | TrashSlot creative 删除键 | ✅ | p189：**真缺陷修复**——1.21.1 creative 界面（class_481）hoveredSlot 恒 null 且 SlotWrapper 已删除，1.20.x 的 creative 分支永不可达（DEBUG_HOVERED hovered=null 实证）；companion `trashcreativefix` 重写分支（hotbar menu 45..53 → 服务端 InventoryMenu 36..44，`callIsHovering` 定位，无画布时直接发 MessageDeleteFromSlot）。实测 Shift+Delete 连锁删 hotbar 0+1（SERVER_DELETE slot=36 all=true，menu=class_1723 menuSize=46）、普通 Delete、删除后 trash 清空（slot=-1）；未测：creative inventory tab 27 格、右键 undelete | `runs/p189-trash-creative/`（`after-delete-all.png`、`result.json`、`java/src/trashcreative/`） |
 | TrashSlot 多客户端独立 trash | ✅ | p190：双客户端（GridUser/TrashB，online-mode=false dedicated）+ 服务端 probe 分别 seed 5/3 钻；A 右键取 1（服务端 5→4）+ Delete 清空（→empty），B 的服务端 trash 全程 diamondx3、B 的客户端 UI 全程不变（reply 语义只回发送者）；未测：B 主动操作、三客户端、重进保持 | `runs/p190-trash-multi/`（`result.json`、`client-a/b.log`、`after.png`） |
 | TrashSlot creative inventory tab + 三客户端残余 | ✅ | p191/p192：inventory tab 的 36 格走 class_484 wrapper（field_7874 恒 0，列表位置=服务端 InventoryMenu 逐槽一致），companion 泛化 identity 映射——实测主背包格 Delete（SERVER_DELETE slot=18、inv18=empty）+ creative 列表格不可删（上游语义，无 SERVER_DELETE）+ 右键 undelete 不适用（creative 屏无 trash 画布，上游 undeleteLast 空实现）；三客户端 B 主动 4→3（右键取 1）→empty（Delete）只影响 B，C 服务端/客户端全程不变，A 重进后 trash 变 empty（上游 PlayerLoginEvent 重置，非 bug） | `runs/p191-trash-residual/`、`runs/p192-trash-multi-active/`（result.json、截图、双端日志） |
-| 一键安装到 PCL 图形面板/版本选择 | ✅ v0.5.5：`mcbridge-pcl-panel.zip` + `mcbridge-pcl-setup.zip`；版本下拉/搜索/进度/PCL2 自动检测；`from_source_install` 支持 release/snapshot/old_* / all / latest-snapshot；PCL2 2.13.1.1 实测 | `share/pcl-onclick/`、`runs/p137-pcl2-onclick/` |
+| 一键安装到 PCL 图形面板/版本选择 | ✅ v0.5.8：`mcbridge-pcl-panel.zip` + `mcbridge-pcl-setup.zip`；版本下拉/搜索/进度/PCL2 自动检测；`from_source_install` 支持 release/snapshot/old_* / all / latest-snapshot；PCL2 2.13.1.1 实测 | `share/pcl-onclick/`、`runs/p137-pcl2-onclick/` |
 | Forge 1.20.1-47.4.28 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p159-forge-server/` |
 | mrpack 含真实 files（HTTP 下载 + SHA-1 校验 + overrides） | `runs/p160-mrpack/` |
 | NeoForge 21.1.264 专用服务器 + 客户端 quickPlayMultiplayer 加入 | `runs/p161-neoforge-server/` |
@@ -173,7 +174,7 @@ gh api --method POST repos/SelYio666/mcbridge1201/actions/workflows/ci.yml/dispa
 ## 五、发布
 
 - 仓库：https://github.com/SelYio666/mcbridge1201
-- 最新发布：**v0.5.7**（启动器 UI 打磨 + 版本列表计数修复）；PCL 面板/全版本选择见 v0.5.5–v0.5.6
+- 最新发布：**v0.5.8**（PCL 安装器缺失目录修复）；PCL 面板/全版本选择继续适用
 - 证据索引：`runs/SHA256SUMS.txt`、`docs/STATUS.md`、`docs/review-fixes-2026-10-21.md`
 
 
