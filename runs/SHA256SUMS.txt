@@ -1557,3 +1557,7 @@ d7592022937bfbe44da74ef58d8ce7b9ea38b6d4acb5c0dfc48e2e87190864f2  runs/p216-ui-p
 12426643ec84f0a1f79b893645ca7694f4ab091283262b9be851a3e5ca68d4ee  runs/p216-ui-polish/panel-after.png
 eb5cae6319a61297d4f090352800815fc49c6810ad1afc5f798a360db2fc1b19  runs/p216-ui-polish/download-sources-before.png
 ffe3879d8902db2db8eae745c41cf932ba6cacaa98a1c1f9c0d064174716fa0a  runs/p216-ui-polish/download-sources-after.png
+4433202668812302ae04816f92bb8f0cd02789f3408fc1bc748743c5e86c0e15  runs/p216-ui-polish/acceptance-2026-10-31.md
+bb37d4d03b786ecd884168bdcf85cc1114847365db9fade271e0f5af032df36c  runs/p216-ui-polish/redo-launcher-after.png
+d47190dc6584f7541a57b8a7b9d30460cd6466ad2080499b3739f1c96f7cb429  runs/p216-ui-polish/redo-panel-after.png
+d0ca212fdf469d7ff08464b3ff6f57961d727173b1778d71cd596346a96a6fba  runs/p216-ui-polish/redo-download-dark.png

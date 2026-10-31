@@ -1593,6 +1593,10 @@ FILES = [
     "runs/p216-ui-polish/panel-after.png",
     "runs/p216-ui-polish/download-sources-before.png",
     "runs/p216-ui-polish/download-sources-after.png",
+    "runs/p216-ui-polish/acceptance-2026-10-31.md",
+    "runs/p216-ui-polish/redo-launcher-after.png",
+    "runs/p216-ui-polish/redo-panel-after.png",
+    "runs/p216-ui-polish/redo-download-dark.png",
 ]
 
 
