@@ -1,0 +1,18 @@
+P231_PROXY listening=127.0.0.1:23110 delayMs=50
+P231_PROXY conn=1 open t=1793507447722 delayMs=50 target=127.0.0.1:25566
+P231_PROXY conn=1 traffic dir=down bytes=207900
+P231_PROXY conn=1 traffic dir=down bytes=433044
+P231_PROXY conn=2 open t=1793507465317 delayMs=50 target=127.0.0.1:25566
+P231_PROXY conn=1 traffic dir=down bytes=633504
+P231_PROXY conn=2 traffic dir=down bytes=203729
+P231_PROXY conn=2 traffic dir=down bytes=431518
+P231_PROXY conn=3 open t=1793507483431 delayMs=50 target=127.0.0.1:25566
+P231_PROXY conn=3 traffic dir=down bytes=217174
+P231_PROXY conn=3 traffic dir=down bytes=441701
+P231_PROXY conn=4 open t=1793507500401 delayMs=50 target=127.0.0.1:25566
+P231_PROXY conn=4 traffic dir=down bytes=229978
+P231_PROXY conn=4 traffic dir=down bytes=441141
+P231_PROXY conn=3 traffic dir=down bytes=641705
+P231_PROXY conn=1 close upBytes=2900 downBytes=808276 durMs=83578
+P231_PROXY conn=2 close upBytes=2401 downBytes=617874 durMs=65984
+P231_PROXY conn=4 close upBytes=1350 downBytes=575360 durMs=30890

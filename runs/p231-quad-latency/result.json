@@ -1,0 +1,231 @@
+{
+  "injected_delay_ms_per_direction": 50,
+  "loopback_baseline_note": "p203 loopback fire->write was 4 ms (runs/p203)",
+  "fire_instant_ms": 1793507514744,
+  "window_ms": [
+    1793507514244,
+    1793507519744
+  ],
+  "game_dirs": {
+    "A": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p231-gamedir-a",
+    "B": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p231-gamedir-b",
+    "C": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p231-gamedir-c",
+    "D": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p231-gamedir-d"
+  },
+  "junctions": [
+    ".fabric",
+    "assets",
+    "libraries",
+    "versions"
+  ],
+  "proxy_connections": [],
+  "players": {
+    "A": {
+      "user": "GridUser",
+      "seed": 5,
+      "action": "delete",
+      "expected_stack": "empty",
+      "fire_lines": [
+        "[12:31:54] [Render thread/INFO]: [STDOUT]: P231_FIRE role=A action=delete epochMs=1793507514744 driftMs=0 tick=1290"
+      ],
+      "fire_epoch_ms": 1793507514744,
+      "mutation": {
+        "side": "SERVER",
+        "thread": "Server thread",
+        "tick": 1715,
+        "wall": 1793507514814,
+        "seeding": "false",
+        "user": "GridUser",
+        "stack": "empty"
+      },
+      "one_way_ms": 70,
+      "client_final_line": "[12:32:01] [Render thread/INFO]: [STDOUT]: P231_TRASH role=A tick=1420 trash=empty carried=empty"
+    },
+    "B": {
+      "user": "TrashB",
+      "seed": 4,
+      "action": "take",
+      "expected_stack": "minecraft:diamondx3",
+      "fire_lines": [
+        "[12:31:54] [Render thread/INFO]: [STDOUT]: P231_FIRE role=B action=take epochMs=1793507514744 driftMs=0 tick=937"
+      ],
+      "fire_epoch_ms": 1793507514744,
+      "mutation": {
+        "side": "SERVER",
+        "thread": "Server thread",
+        "tick": 1715,
+        "wall": 1793507514815,
+        "seeding": "false",
+        "user": "TrashB",
+        "stack": "minecraft:diamondx3"
+      },
+      "one_way_ms": 71,
+      "client_final_line": "[12:32:00] [Render thread/INFO]: [STDOUT]: P231_TRASH role=B tick=1060 trash=minecraft:diamondx3 carried=minecraft:diamondx1"
+    },
+    "C": {
+      "user": "TrashC",
+      "seed": 3,
+      "action": "take",
+      "expected_stack": "minecraft:diamondx2",
+      "fire_lines": [
+        "[12:31:54] [Render thread/INFO]: [STDOUT]: P231_FIRE role=C action=take epochMs=1793507514744 driftMs=0 tick=565"
+      ],
+      "fire_epoch_ms": 1793507514744,
+      "mutation": {
+        "side": "SERVER",
+        "thread": "Server thread",
+        "tick": 1715,
+        "wall": 1793507514814,
+        "seeding": "false",
+        "user": "TrashC",
+        "stack": "minecraft:diamondx2"
+      },
+      "one_way_ms": 70,
+      "client_final_line": "[12:32:00] [Render thread/INFO]: [STDOUT]: P231_TRASH role=C tick=680 trash=minecraft:diamondx2 carried=minecraft:diamondx1"
+    },
+    "D": {
+      "user": "TrashD",
+      "seed": 2,
+      "action": "take",
+      "expected_stack": "minecraft:diamondx1",
+      "fire_lines": [
+        "[12:31:54] [Render thread/INFO]: [STDOUT]: P231_FIRE role=D action=take epochMs=1793507514744 driftMs=0 tick=202"
+      ],
+      "fire_epoch_ms": 1793507514744,
+      "mutation": {
+        "side": "SERVER",
+        "thread": "Server thread",
+        "tick": 1715,
+        "wall": 1793507514815,
+        "seeding": "false",
+        "user": "TrashD",
+        "stack": "minecraft:diamondx1"
+      },
+      "one_way_ms": 71,
+      "client_final_line": "[12:32:00] [Render thread/INFO]: [STDOUT]: P231_TRASH role=D tick=320 trash=minecraft:diamondx1 carried=minecraft:diamondx1"
+    }
+  },
+  "server_write_ticks": [
+    1715
+  ],
+  "write_wall_spread_ms": 1,
+  "one_way_ms_all": [
+    70,
+    71,
+    70,
+    71
+  ],
+  "one_way_ms_min": 70,
+  "one_way_ms_median": 71,
+  "seeded_states_visible": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "D": true
+  },
+  "server_final_states": {
+    "A": "trash=empty",
+    "B": "trash=minecraft:diamondx3",
+    "C": "trash=minecraft:diamondx2",
+    "D": "trash=minecraft:diamondx1"
+  },
+  "mutations_before_fire": [
+    {
+      "side": "SERVER",
+      "thread": "Server thread",
+      "tick": 417,
+      "wall": 1793507450212,
+      "seeding": "false",
+      "user": "GridUser",
+      "stack": "empty"
+    },
+    {
+      "side": "SERVER",
+      "thread": "Server thread",
+      "tick": 772,
+      "wall": 1793507467653,
+      "seeding": "false",
+      "user": "TrashB",
+      "stack": "empty"
+    },
+    {
+      "side": "SERVER",
+      "thread": "Server thread",
+      "tick": 1139,
+      "wall": 1793507486010,
+      "seeding": "false",
+      "user": "TrashC",
+      "stack": "empty"
+    },
+    {
+      "side": "SERVER",
+      "thread": "Server thread",
+      "tick": 1495,
+      "wall": 1793507503810,
+      "seeding": "false",
+      "user": "TrashD",
+      "stack": "empty"
+    }
+  ],
+  "serverbound_stamps": [
+    {
+      "thread": "Server thread",
+      "tick": 1715,
+      "wall": 1793507514804,
+      "message": "net.blay09.mods.trashslot.network.MessageTrashSlotClick"
+    },
+    {
+      "thread": "Server thread",
+      "tick": 1715,
+      "wall": 1793507514814,
+      "message": "net.blay09.mods.trashslot.network.MessageDeleteFromSlot"
+    },
+    {
+      "thread": "Server thread",
+      "tick": 1715,
+      "wall": 1793507514814,
+      "message": "net.blay09.mods.trashslot.network.MessageTrashSlotClick"
+    },
+    {
+      "thread": "Server thread",
+      "tick": 1715,
+      "wall": 1793507514815,
+      "message": "net.blay09.mods.trashslot.network.MessageTrashSlotClick"
+    }
+  ],
+  "checks": {
+    "four_ready": true,
+    "four_fired": true,
+    "server_saw_four_writes": true,
+    "writes_match_expectations": true,
+    "writes_on_server_thread": true,
+    "writes_clustered_in_time": true,
+    "four_distinct_game_dirs": true,
+    "client_logs_written_in_game_dirs": true,
+    "seeded_states_visible": true,
+    "client_finals_match": true,
+    "balm_messages_in_window": true,
+    "proxy_connections_at_least_four": true,
+    "proxy_carried_game_traffic": true,
+    "latency_at_least_injected": true,
+    "latency_bounded": true
+  },
+  "server_tail": [
+    "[12:32:08] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=1980 user=GridUser trash=empty",
+    "[12:32:08] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=1980 user=TrashB trash=minecraft:diamondx3",
+    "[12:32:08] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=1980 user=TrashC trash=minecraft:diamondx2",
+    "[12:32:08] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=1980 user=TrashD trash=minecraft:diamondx1",
+    "[12:32:09] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2000 user=GridUser trash=empty",
+    "[12:32:09] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2000 user=TrashB trash=minecraft:diamondx3",
+    "[12:32:09] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2000 user=TrashC trash=minecraft:diamondx2",
+    "[12:32:09] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2000 user=TrashD trash=minecraft:diamondx1",
+    "[12:32:10] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2020 user=GridUser trash=empty",
+    "[12:32:10] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2020 user=TrashB trash=minecraft:diamondx3",
+    "[12:32:10] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2020 user=TrashC trash=minecraft:diamondx2",
+    "[12:32:10] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2020 user=TrashD trash=minecraft:diamondx1",
+    "[12:32:11] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2040 user=GridUser trash=empty",
+    "[12:32:11] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2040 user=TrashB trash=minecraft:diamondx3",
+    "[12:32:11] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2040 user=TrashC trash=minecraft:diamondx2",
+    "[12:32:11] [Server thread/INFO]: [STDOUT]: P231_SERVER tick=2040 user=TrashD trash=minecraft:diamondx1"
+  ]
+}

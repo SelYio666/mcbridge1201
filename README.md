@@ -12,7 +12,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 
 本仓库当前交付 P0 的事实与证据，以及 P1 的第一段运行时结果：环境锁定、上游引擎锁定、10 份真实样本、**自研静态损伤分析器**、**body-preserving 重映射器**、CenturyBridge 真实转换产物，和进世界/功能级证据。**只对 `runs/` 里有日志与截图支撑的模组声称通过**（如 EntityCulling、ImmediatelyFast 的移植），其余不宣称兼容。
 
-## 当前状态（2026-10-31）
+## 当前状态（2026-11-01）
 
 - **发布**：v0.5.10（网页启动器「安装到 PCL2」，`runs/p223`）；v0.5.9（HMCL 对接 + 连接池/重试，`runs/p222`）；
   v0.5.8（PCL 缺失目录修复，`runs/p220`）；
@@ -26,13 +26,17 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
   95s soak）；Shulker 网格与服务端物品恢复；TrashSlot UI 全链路（Delete / Shift+Delete / 右键取回 /
   多客户端隔离 / 同 tick 并发）；Cloth Config 配置界面可开、点开关值真的翻转（`runs/p210`）；
   Forge/NeoForge 专用服务器 + 客户端加入；mrpack 真实 files。
-- **未通过 / 未验证**：Sodium 渲染内核评估为不可行（`blocked_static`，未写规则）；多客户端/跨机器延迟；
-  PCL 创建世界页底部按钮对合成点击无响应（`runs/p215`，键盘 Enter 可用）；1.20.4 的
-  `Not a string` 已结案：原版 1.20.4 单人加入时 level.dat 空 `Player` 模板导致的无害日志（`runs/p230`）；ImmediatelyFast 端口仍有
-  2 个 inert（官方 1.21.1 已删除的 1.20.4 遗留类）。
-- **门禁（2026-10-31 实跑）**：`test_review_fixes` **467/467**；`check_hashes` **1573 ok / 0
-  mismatch / 0 missing**；Java 单测 **32/32**；`verify_evidence` passed（含 `text_encoding`，
-  248 个 Markdown 干净）；CI push 触发可用。
+- **未通过 / 未验证**：Sodium 渲染内核评估为不可行（`blocked_static`，未写规则）；
+  **真跨机延迟（需要第二台机器）**与"同一玩家同 tick 两次操作"（`runs/p231` 边界）；
+  1.20.4 的 `Not a string` 已结案：原版 1.20.4 单人加入时 level.dat 空 `Player`
+  模板导致的无害日志（`runs/p230`）；p215 的"创建世界按钮"已结案：坐标偏 20px（`runs/p226`）；
+  ImmediatelyFast 端口仍有 2 个 inert（官方 1.21.1 已删除的 1.20.4 遗留类）。
+- **多客户端 / 延迟（p231，2026-11-01）**：**四客户端 × 四个独立 gameDir × 50 ms 单向延迟代理**
+  同 tick 四方垃圾桶操作：四条写入全落 tick 1715、互不串台，开火→服务端写点实测 70–71 ms
+  （回环基线 p203 为 4 ms）；判据 15/15。延迟是本机用户态代理注入的**合成延迟，不是第二台机器**。
+- **门禁（2026-11-01 实跑）**：`test_review_fixes` **501/501**（新增 p231 组 34 条）；
+  `check_hashes` **1632 ok / 0 mismatch / 0 missing**；Java 单测 **32/32**；`verify_evidence`
+  passed（含 `text_encoding`）；CI push 触发可用。
 - 详情：[FINAL-STATUS](docs/FINAL-STATUS.md)、[报告 p210–p214](docs/report-2026-10-30.md)、
   [剩余工作](docs/remaining-work.md)、[使用说明](docs/guide.md)。
 
@@ -456,3 +460,25 @@ p213 证明的是 1.20.4。1.21.1 是本仓库所有模组转换的目标版本�
 - **建世界仍是 Enter**：按钮不吃合成点击，与 p213 一致；本轮断言的是**点击进入**这条已复现的路径；
 - **判据**：`runs/p214-pcl2-1211/verify_1211.py` 19/19；回归 `test_pcl2_1211()` 8 条；
 - 边界：没做游戏内玩法/多人/模组加载（该实例里没有转换件）；结束后进程都已关闭。
+
+## p231 四客户端 × 独立 gameDir × 延迟代理 增量（2026-11-01，正常 UTF-8）
+
+- **关掉"多客户端/延迟"里本机可关的部分**：p190/p192/p203 的多客户端共用同一个 gameDir 且只在
+  回环跑过。本轮：**4 个客户端、4 个独立 gameDir**（junction 共享只读的 assets/libraries/versions/
+  .fabric，mods/saves/logs/options.txt 各自独立），每个客户端经 `latency_proxy.py`
+  （双向各延 50 ms、FIFO 保序）连专用服务器，四方在同一 epoch 自旋开火，动作互为指纹
+  （A 删空 5 → empty；B/C/D 各取 1 → x3/x2/x1）。
+- **结果 15/15**：四条服务端写入全落 **tick 1715**、`Server thread`，互不串台；
+  开火→写点实测 **70–71 ms**（注入 50 ms 单向 + tick 对齐；p203 回环基线 4 ms）；
+  代理 4 条连接各有 ≥200 KB 真实游戏流量；客户端最终 UI 各自正确。`result.json`、
+  `server.log`、`client-{a..d}.log`、`proxy.log`、`after-quad.png` 在 `runs/p231-quad-latency/`。
+- **"同 tick"口径**：注入延迟下到达 tick 是抖动（第 4 次实测跨 2 tick、第 7 次全同 tick），
+  判据取"写点 wall 聚集 ≤250 ms"并记录精确 tick，不把好运写成保证；回环同 tick 已由 p203 证明。
+- **踩坑**（7 次运行全记录）：① 4×2G 堆在 15.3G 机器上换页卡死；② **全新 gameDir 首启弹无障碍
+  引导屏，quickPlay 不会连服**——修复是复制 `onboardAccessibility:false` 的 options.txt；
+  ③ verdict 两处笔误（集合长度、连接计数）与 close 行依赖；④ 第 6 次机器空闲内存 0.8G 时
+  client-b 冻死超时。最终形态：`-Xmx768M + SerialGC + C1-only` 客户端、512M 服务端。
+- **边界**：延迟是本机用户态代理注入的**合成延迟，不是第二台机器**；真跨机、"同一玩家同 tick
+  两次操作"、OS 级键鼠输入仍未测。探针源码 `probes/p231-quad-latency/`（4 用户服务端 seed/打点）。
+- 门禁：`test_review_fixes` **501/501**（新增 p231 组 34 条）、`check_hashes` 见提交说明、
+  `verify_evidence` passed；无新 release。

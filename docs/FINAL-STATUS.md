@@ -4,7 +4,7 @@
 > 最新发布：[v0.5.10](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.10)（网页启动器安装到 PCL2）+ v0.5.9（安装器 HMCL 支持）。
 > 下文第六节之后是按轮次追加的历史更新；**最新结论以下面这一节和 [report-2026-10-30.md](report-2026-10-30.md) 为准**。
 
-## 最新状态（2026-10-31）
+## 最新状态（2026-11-01）
 
 - **发布**：v0.5.10（网页启动器「安装到 PCL2」，`runs/p223`；`mcbridge-launcher-0.5.10.zip`）；
   v0.5.9（支持 HMCL，`runs/p222`；`mcbridge-pcl-setup.zip` / `mcbridge-pcl-panel.zip`）；
@@ -12,9 +12,9 @@
   v0.5.7 为启动器 UI 打磨；v0.5.6 另含两个 companion jar
   （`shulkerpreview 1.1.0`、`trashcreativefix 1.0.0`）。
 - **CI**：最近 5 次 push 触发全部 `success`。
-- **本机门禁（10-31 实测）**：`verify_evidence` passed；`test_review_fixes` **466/466**；
-  `check_hashes` **1569 ok / 0 mismatch / 0 missing**；单测 **32 / 0 failures**；
-  `check_text_encoding` 248 个 Markdown 全干净。
+- **本机门禁（11-01 实测）**：`verify_evidence` passed；`test_review_fixes` **501/501**；
+  `check_hashes` **1632 ok / 0 mismatch / 0 missing**；单测 **32 / 0 failures**；
+  `check_text_encoding` 全部 Markdown 干净。
 - **真机闭环**：
   - PCL2 **2.99.0.0** 上面板真的点“安装”：10.3 s，版本列表出现新版本（p212）；
   - 从 PCL2 **离线启动** 1.20.4（p213）与 **1.21.1**（p214）→ 标题界面 → 点进世界；
@@ -22,9 +22,13 @@
 - **引擎侧**：ImmediatelyFast 1.21.1 移植验证（HUD/物品/地图 atlas/VertexBuffer）、
   Shulker 网格与服务端物品恢复、TrashSlot UI 全链路（Delete/Shift+Delete/右键取回/多客户端隔离）、
   Forge/NeoForge 专用服务器与客户端加入、mrpack 真实 files。
-- **仍未完成**：多客户端/跨机器延迟；创建世界页底部按钮对合成点击无响应（p215 未形成结论）；
-  1.20.4 进世界瞬间的 `Not a string` 未溯源；进世界后的玩法/多人/“带转换模组进世界”未验；
-  Sodium 渲染内核评估为不可行；文本编码事故的写入者未定位。
+- **仍未完成**：**真跨机延迟（需要第二台机器）**与"同一玩家同 tick 两次操作"（p231 边界）；
+  进世界后的玩法/多人/"带转换模组进世界"未验；Sodium 渲染内核评估为不可行；
+  文本编码事故的写入者未定位。
+- **多客户端 / 延迟（p231，2026-11-01）**：四客户端 × 四独立 gameDir × 50 ms 单向延迟代理，
+  同 tick 四方垃圾桶操作（tick 1715，写点 spread 1 ms，开火→写点 70–71 ms vs 回环 4 ms），
+  判据 15/15；延迟是本机用户态代理注入的合成延迟，**不是第二台机器**（`runs/p231-quad-latency/`）。
+  p215/p230 的两个旧未解均已结案（p226 坐标偏 20 px；p230 原版空 Player 模板）。
 - **细节**：[report-2026-10-30.md](report-2026-10-30.md)、[remaining-work.md](remaining-work.md)；
   p218 的 22 秒通俗视频在 `runs/p218-pcl-import-video/`。
 

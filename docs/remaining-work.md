@@ -402,3 +402,21 @@ Therefore:
   overlaid into the 0.5.6 package instead.
 
 - p230 (2026-11-01): the `Not a string` line is **explained and closed** - it is vanilla 1.20.4 singleplayer behaviour, not conversion/launcher/mod code. A fresh world's `level.dat` carries an empty `Player` template; on join, `PlayerList.placeNewPlayer` -> `loadPlayerData` -> `new Dynamic(NbtOps, tag.get("Dimension"))` -> `DimensionType.CODEC` -> `DataResult.resultOrPartial(LOGGER::error)` logs the NbtOps message and falls back to the overworld. Confirmed with an ASM agent (stack in runs/p230-not-a-string-agent/stack.txt), official 1.20.4 mappings (aqv=PlayerList, dmq=DimensionType, tb=NbtOps), and NBT probes: the fresh 1.20.4 world has `Player {}` with no Dimension, an already-saved 1.20.4 world has a string Dimension, and 1.21.1 worlds have no Player tag at all (which is why p214 never saw it). Re-entering a world whose template is still empty logs it again, so it is not a one-off. Harmless: join succeeds, dimension falls back to overworld; no save-editing fix was applied.
+
+- p231 (2026-11-01): the local half of the multi-client / latency gap is closed. p190/p192/p203
+  ran two-three clients out of ONE shared game directory on loopback; p231 runs **four clients,
+  each in its own game directory** (junctions to the shared read-only assets/libraries/versions/.fabric,
+  own mods/saves/logs/options.txt), every client through a userspace TCP proxy that delays each
+  direction by 50 ms, all four firing at one shared epoch with four distinct trash operations
+  (delete 5->empty, take 4->3, take 3->2, take 2->1). All four server writes landed on one tick
+  (1715, 1 ms wall spread), each stack matched its own player only, and the measured fire->write
+  delay was 70-71 ms - the injected latency is visible against the p203 loopback baseline of 4 ms
+  (runs/p231-quad-latency/, 15/15 checks). Two reusable findings: a fresh gameDir shows the
+  accessibility-onboarding screen and quickplay will not connect behind it (copy an options.txt
+  with onboardAccessibility:false), and four 2G-heap clients page-stall a 15.3 GB machine that has
+  little free memory - the run shape that survives is 768M clients with SerialGC and C1-only JIT
+  plus a 512M server. Under the injected latency the arrival tick is jitter, not logic (run 4
+  spread over two ticks, run 7 landed on one), so the check asserts the writes cluster in wall
+  time and records the exact ticks instead of re-claiming same-tick as a guarantee. Still open:
+  **real cross-machine latency (needs a second machine - the proxy is synthetic, not a second
+  machine)**, and two operations by the SAME player in one server tick.

@@ -2955,6 +2955,152 @@ def test_pcl2_1211() -> None:
           "def activate(" in driver and "wait-title" in driver, "")
 
 
+def test_p231_quad_latency() -> None:
+    """p231: four clients in four game dirs behind a delaying proxy, one shared instant.
+
+    Everything is recomputed from the committed logs: the server write stamps (P231_SET at
+    TrashHelper.setTrashItem), the client fire instants (P231_FIRE epochMs), and the proxy's own
+    connection log. The latency claim is deliberately modest - the injected 50 ms per direction
+    must show up as a measured fire->write delay far above the p203 loopback baseline (4 ms) - and
+    the README says the proxy is synthetic latency on one machine, not a second machine.
+    """
+    run = ROOT / "runs" / "p231-quad-latency"
+    server_path = run / "server.log"
+    proxy_path = run / "proxy.log"
+    artifacts = [server_path, proxy_path, run / "result.json", run / "README.md",
+                 run / "run.py", run / "latency_proxy.py"]
+    artifacts += [run / f"client-{r.lower()}.log" for r in ("A", "B", "C", "D")]
+    missing = [str(p.relative_to(ROOT)) for p in artifacts if not p.exists()]
+    check("p231: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    result = json.loads((run / "result.json").read_text(encoding="utf-8"))
+    failed = [name for name, ok in result["checks"].items() if not ok]
+    check("p231: the committed result passed every one of its checks",
+          not failed and len(result["checks"]) >= 14,
+          f"{len(result['checks'])} checks, failed: {failed}")
+    injected = result.get("injected_delay_ms_per_direction")
+    check("p231: the run states its injected delay", injected == 50, str(injected))
+
+    fire = result.get("fire_instant_ms")
+    check("p231: result.json carries the shared fire instant", isinstance(fire, int), str(fire))
+    if not isinstance(fire, int):
+        return
+
+    server = server_path.read_text(encoding="utf-8", errors="replace")
+    joins = re.findall(r"P231_JOIN name=(\S+) total=(\d+)", server)
+    check("p231: four players joined the dedicated server",
+          sorted(name for name, _ in joins)
+          == ["GridUser", "TrashB", "TrashC", "TrashD"], str(joins))
+    check("p231: the server probe is present",
+          "P231_SERVER_PROBE ready" in server, "")
+    seed_line = next((ln for ln in server.splitlines() if "P231_SEED" in ln), "")
+    check("p231: the probe seeded 5/4/3/2 once all four were in",
+          "GridUser=5" in seed_line and "TrashB=4" in seed_line
+          and "TrashC=3" in seed_line and "TrashD=2" in seed_line, seed_line)
+
+    writes = []
+    for line in server.splitlines():
+        m = re.search(r"P231_SET side=(\S+) thread=(.+?) tick=(-?\d+) wall=(\d+) "
+                      r"seeding=(\w+) user=(\S+) stack=(\S+)", line)
+        if m and m.group(1) == "SERVER" and m.group(5) == "false":
+            writes.append({"tick": int(m.group(3)), "wall": int(m.group(4)),
+                           "user": m.group(6), "stack": m.group(7)})
+    window = [w for w in writes if fire - 500 <= w["wall"] <= fire + 5000]
+    expected = {"GridUser": "empty", "TrashB": "minecraft:diamondx3",
+                "TrashC": "minecraft:diamondx2", "TrashD": "minecraft:diamondx1"}
+    per_user = {w["user"]: w for w in window}
+    check("p231: exactly one server write per player inside the fire window",
+          sorted(per_user) == sorted(expected), str(sorted(per_user)))
+    check("p231: the four writes match the four distinct expectations",
+          all(per_user.get(u, {}).get("stack") == s for u, s in expected.items()),
+          str({u: per_user.get(u, {}).get("stack") for u in expected}))
+    ticks = sorted({w["tick"] for w in window})
+    walls = [w["wall"] for w in window]
+    # Same-tick concurrency for trash writes was already proven at loopback by p203 (tick 819,
+    # 4 ms apart). Under an injected 50 ms per direction on a loaded single machine the arrival
+    # tick is jitter, not logic - run 3 landed on one tick, run 4 spread over two - so p231
+    # asserts the honest thing: the writes cluster in wall time, and the exact ticks are recorded.
+    check("p231: the four writes cluster in wall time under the injected latency",
+          len(walls) == 4 and max(walls) - min(walls) <= 250,
+          f"ticks={ticks} spread={max(walls) - min(walls) if len(walls) == 4 else None} ms")
+    check("p231: result.json records the same spread it measured in the logs",
+          result.get("write_wall_spread_ms") == (max(walls) - min(walls) if len(walls) == 4
+                                                 else None)
+          and result.get("server_write_ticks") == ticks,
+          f"result={result.get('write_wall_spread_ms')}/{result.get('server_write_ticks')}")
+    window_lines = [ln for ln in server.splitlines()
+                    if "P231_SET side=SERVER" in ln and "seeding=false" in ln
+                    and fire - 500 <= int(re.search(r"wall=(\d+)", ln).group(1)) <= fire + 5000]
+    check("p231: the writes were applied on the server thread",
+          bool(window_lines) and all("Server thread" in ln for ln in window_lines),
+          str(window_lines))
+
+    client_texts = {r: (run / f"client-{r.lower()}.log").read_text(
+        encoding="utf-8", errors="replace") for r in ("A", "B", "C", "D")}
+    users = {"A": "GridUser", "B": "TrashB", "C": "TrashC", "D": "TrashD"}
+    deltas = {}
+    for role, user in users.items():
+        fire_lines = [ln for ln in client_texts[role].splitlines() if "P231_FIRE" in ln]
+        check(f"p231: client {role} fired", len(fire_lines) == 1,
+              str(fire_lines[:1]))
+        m = re.search(r"epochMs=(\d+)", fire_lines[-1]) if fire_lines else None
+        if not m or user not in per_user:
+            continue
+        deltas[role] = per_user[user]["wall"] - int(m.group(1))
+    check("p231: all four deltas were measured", len(deltas) == 4, str(deltas))
+    check("p231: every measured fire-to-write delay shows the injected latency",
+          bool(deltas) and min(deltas.values()) >= 40, str(sorted(deltas.values())))
+    check("p231: the measured delay stays bounded (no stalled client)",
+          bool(deltas) and max(deltas.values()) <= 400, str(sorted(deltas.values())))
+    check("p231: the loopback baseline is beaten by an order of magnitude",
+          bool(deltas) and min(deltas.values()) > 5 * 4,
+          "p203 loopback was 4 ms; p231 min is "
+          f"{min(deltas.values()) if deltas else None} ms")
+
+    finals = {"A": ("trash=empty", None), "B": ("trash=minecraft:diamondx3",
+                                                "carried=minecraft:diamondx1"),
+              "C": ("trash=minecraft:diamondx2", "carried=minecraft:diamondx1"),
+              "D": ("trash=minecraft:diamondx1", "carried=minecraft:diamondx1")}
+    for role, (trash, carried) in finals.items():
+        lines = [ln for ln in client_texts[role].splitlines() if "P231_TRASH role=" in ln]
+        check(f"p231: client {role} ends showing its own trash state",
+              bool(lines) and trash in lines[-1]
+              and (carried is None or carried in lines[-1]), lines[-1] if lines else "")
+        gamedir = client_texts[role].splitlines()[0]
+        check(f"p231: client {role} ran in its own game directory",
+              f"p231-gamedir-{role.lower()}" in gamedir
+              and "--gameDir" in gamedir, gamedir[:120])
+
+    proxy = proxy_path.read_text(encoding="utf-8", errors="replace")
+    check("p231: the proxy ran with the stated delay",
+          f"P231_PROXY listening=127.0.0.1:23110 delayMs={injected}" in proxy, "")
+    traffic: dict[int, int] = {}
+    for m in re.finditer(r"P231_PROXY conn=(\d+) traffic dir=down bytes=(\d+)", proxy):
+        traffic[int(m.group(1))] = max(traffic.get(int(m.group(1)), 0), int(m.group(2)))
+    closes = re.findall(r"P231_PROXY conn=(\d+) close upBytes=(\d+) downBytes=(\d+)", proxy)
+    for conn_id, _, down in closes:
+        traffic[int(conn_id)] = max(traffic.get(int(conn_id), 0), int(down))
+    check("p231: the proxy carried at least four connections",
+          len(traffic) >= 4, str(sorted(traffic)))
+    heavy = [c for c, b in traffic.items() if b > 50000]
+    check("p231: at least four connections carried real game traffic (chunk data)",
+          len(heavy) >= 4,
+          f"traffic lines + closes: {len(closes)} closes, heavy={len(heavy)}")
+    check("p231: the README states the latency is synthetic, not a second machine",
+          "not a second machine" in (run / "README.md").read_text(encoding="utf-8"), "")
+
+    probe = (ROOT / "probes" / "p231-quad-latency" / "src" / "p231" / "QuadProbe.java"
+             ).read_text(encoding="utf-8")
+    check("p231: the server probe seeds four users, not two",
+          all(f'"{u}"' in probe for u in users.values())
+          and probe.count("SEEDS.put(") == 4, "")
+    proxy_src = (run / "latency_proxy.py").read_text(encoding="utf-8")
+    check("p231: the proxy delays through a FIFO queue (TCP order preserved)",
+          "queue.put_nowait" in proxy_src and "await asyncio.sleep(remain)" in proxy_src, "")
+
+
 def test_ui_list_rendering() -> None:
     """p216 follow-up: the version list must not silently cap below the advertised count."""
     app = (ROOT / "launcher" / "web" / "app.js").read_text(encoding="utf-8")
@@ -2986,6 +3132,7 @@ def main() -> int:
     test_pcl2_e2e()
     test_pcl2_launch()
     test_pcl2_1211()
+    test_p231_quad_latency()
     test_ui_list_rendering()
     test_text_encoding_guard()
     test_eol_determinism()
