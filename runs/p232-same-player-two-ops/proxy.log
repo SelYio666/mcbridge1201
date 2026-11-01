@@ -1,0 +1,16 @@
+P232_PROXY listening=127.0.0.1:23110 delayMs=50
+P232_PROXY conn=1 open t=1793524130589 delayMs=50 target=127.0.0.1:25566
+P232_PROXY conn=1 traffic dir=down bytes=205473
+P232_PROXY conn=1 traffic dir=down bytes=420653
+P232_PROXY conn=2 open t=1793524144841 delayMs=50 target=127.0.0.1:25566
+P232_PROXY conn=2 traffic dir=down bytes=208195
+P232_PROXY conn=2 traffic dir=down bytes=444560
+P232_PROXY conn=1 traffic dir=down bytes=620876
+P232_PROXY conn=3 open t=1793524163208 delayMs=50 target=127.0.0.1:25566
+P232_PROXY conn=3 traffic dir=down bytes=220798
+P232_PROXY conn=3 traffic dir=down bytes=498062
+P232_PROXY conn=4 open t=1793524181402 delayMs=50 target=127.0.0.1:25566
+P232_PROXY conn=4 traffic dir=down bytes=226974
+P232_PROXY conn=4 traffic dir=down bytes=454492
+P232_PROXY conn=4 close upBytes=1303 downBytes=577057 durMs=30172
+P232_PROXY conn=2 close upBytes=2361 downBytes=622516 durMs=66750

@@ -3101,6 +3101,145 @@ def test_p231_quad_latency() -> None:
           "queue.put_nowait" in proxy_src and "await asyncio.sleep(remain)" in proxy_src, "")
 
 
+def test_p232_same_player_two_ops() -> None:
+    """p232: one player fires take-then-delete inside one client tick; three witnesses watch.
+
+    Closes the p203 boundary "two operations by the SAME player in one server tick". Everything
+    is recomputed from the committed logs: the two P232_SET stamps for GridUser (take 5 -> x4,
+    then delete -> empty) must land in the injected order on one server tick, the three standby
+    witnesses (P232_STANDBY, action=none) must have zero writes in the window and unchanged final
+    state, and the 50 ms proxy must still be visible in the measured fire->write delay.
+    """
+    run = ROOT / "runs" / "p232-same-player-two-ops"
+    server_path = run / "server.log"
+    proxy_path = run / "proxy.log"
+    artifacts = [server_path, proxy_path, run / "result.json", run / "README.md",
+                 run / "run.py", run / "latency_proxy.py"]
+    artifacts += [run / f"client-{r.lower()}.log" for r in ("A", "B", "C", "D")]
+    missing = [str(p.relative_to(ROOT)) for p in artifacts if not p.exists()]
+    check("p232: every input of this check is committed", not missing, ", ".join(missing))
+    if missing:
+        return
+
+    result = json.loads((run / "result.json").read_text(encoding="utf-8"))
+    failed = [name for name, ok in result["checks"].items() if not ok]
+    check("p232: the committed result passed every one of its checks",
+          not failed and len(result["checks"]) >= 19,
+          f"{len(result['checks'])} checks, failed: {failed}")
+    injected = result.get("injected_delay_ms_per_direction")
+    check("p232: the run states its injected delay", injected == 50, str(injected))
+
+    fire = result.get("fire_instant_ms")
+    check("p232: result.json carries the shared fire instant", isinstance(fire, int), str(fire))
+    if not isinstance(fire, int):
+        return
+
+    server = server_path.read_text(encoding="utf-8", errors="replace")
+    joins = re.findall(r"P232_JOIN name=(\S+) total=(\d+)", server)
+    check("p232: four players joined the dedicated server",
+          sorted(name for name, _ in joins)
+          == ["GridUser", "TrashB", "TrashC", "TrashD"], str(joins))
+    seed_line = next((ln for ln in server.splitlines() if "P232_SEED" in ln), "")
+    check("p232: the probe seeded 5/4/3/2 once all four were in",
+          "GridUser=5" in seed_line and "TrashB=4" in seed_line
+          and "TrashC=3" in seed_line and "TrashD=2" in seed_line, seed_line)
+
+    writes = []
+    for line in server.splitlines():
+        m = re.search(r"P232_SET side=(\S+) thread=(.+?) tick=(-?\d+) wall=(\d+) "
+                      r"seeding=(\w+) user=(\S+) stack=(\S+)", line)
+        if m and m.group(1) == "SERVER" and m.group(5) == "false":
+            writes.append({"tick": int(m.group(3)), "wall": int(m.group(4)),
+                           "thread": m.group(2), "user": m.group(6), "stack": m.group(7)})
+    window = [w for w in writes if fire - 500 <= w["wall"] <= fire + 5000]
+    actor = sorted([w for w in window if w["user"] == "GridUser"], key=lambda w: w["wall"])
+    witnesses = [w for w in window if w["user"] != "GridUser"]
+    check("p232: the actor produced exactly two writes inside the window",
+          len(actor) == 2, str([(w["user"], w["stack"], w["tick"]) for w in actor]))
+    check("p232: the first write is the take (5 -> x4)",
+          len(actor) >= 1 and actor[0]["stack"] == "minecraft:diamondx4",
+          actor[0]["stack"] if actor else "none")
+    check("p232: the second write is the delete (-> empty)",
+          len(actor) >= 2 and actor[1]["stack"] == "empty",
+          actor[1]["stack"] if len(actor) >= 2 else "none")
+    check("p232: the two writes landed in the injected order",
+          len(actor) == 2 and actor[0]["wall"] <= actor[1]["wall"],
+          str([w["wall"] for w in actor]))
+    check("p232: both writes landed on the same server tick",
+          len(actor) == 2 and actor[0]["tick"] == actor[1]["tick"],
+          str(sorted({w["tick"] for w in actor})))
+    check("p232: both writes were applied on the server thread",
+          len(actor) == 2 and all("Server thread" in w["thread"] for w in actor),
+          str([w["thread"] for w in actor]))
+    check("p232: the witnesses produced zero writes inside the window",
+          len(witnesses) == 0, str([(w["user"], w["stack"]) for w in witnesses]))
+
+    client_texts = {r: (run / f"client-{r.lower()}.log").read_text(
+        encoding="utf-8", errors="replace") for r in ("A", "B", "C", "D")}
+    a_fire = [ln for ln in client_texts["A"].splitlines() if "P232_FIRE" in ln]
+    check("p232: client A fired exactly once with the double action",
+          len(a_fire) == 1 and "action=double" in a_fire[0], str(a_fire[:1]))
+    for role in ("B", "C", "D"):
+        check(f"p232: witness {role} stood by and never fired",
+              "P232_STANDBY" in client_texts[role] and "P232_FIRE" not in client_texts[role], "")
+
+    a_epoch = None
+    if a_fire:
+        m = re.search(r"epochMs=(\d+)", a_fire[-1])
+        if m:
+            a_epoch = int(m.group(1))
+    deltas = [(w["wall"] - a_epoch) if a_epoch is not None else None for w in actor]
+    check("p232: both write delays were measured against the actor's fire instant",
+          len(deltas) == 2 and all(d is not None for d in deltas), str(deltas))
+    check("p232: both measured delays show the injected latency",
+          bool(deltas) and all(d is not None and d >= 40 for d in deltas), str(deltas))
+    check("p232: both measured delays stay bounded",
+          bool(deltas) and all(d is not None and d <= 400 for d in deltas), str(deltas))
+
+    finals = {"B": "minecraft:diamondx4", "C": "minecraft:diamondx3",
+              "D": "minecraft:diamondx2"}
+    for role, expected in finals.items():
+        user = {"B": "TrashB", "C": "TrashC", "D": "TrashD"}[role]
+        st = [line.split(f"user={user} ", 1)[1].strip() for line in server.splitlines()
+              if "P232_SERVER " in line and f"user={user} " in line]
+        check(f"p232: witness {role}'s server trash ends unchanged at {expected}",
+              bool(st) and st[-1].endswith(f"trash={expected}"), st[-1] if st else "")
+        lines = [ln for ln in client_texts[role].splitlines() if "P232_TRASH role=" in ln]
+        check(f"p232: witness {role}'s client UI ends unchanged with an empty cursor",
+              bool(lines) and f"trash={expected}" in lines[-1]
+              and "carried=empty" in lines[-1], lines[-1] if lines else "")
+    a_lines = [ln for ln in client_texts["A"].splitlines() if "P232_TRASH role=" in ln]
+    check("p232: the actor's client ends with an empty trash and one diamond on the cursor",
+          bool(a_lines) and "trash=empty" in a_lines[-1]
+          and "carried=minecraft:diamondx1" in a_lines[-1], a_lines[-1] if a_lines else "")
+
+    for role in ("A", "B", "C", "D"):
+        gamedir = client_texts[role].splitlines()[0]
+        check(f"p232: client {role} ran in its own game directory",
+              f"p232-gamedir-{role.lower()}" in gamedir and "--gameDir" in gamedir,
+              gamedir[:120])
+
+    proxy = proxy_path.read_text(encoding="utf-8", errors="replace")
+    check("p232: the proxy ran with the stated delay",
+          f"P232_PROXY listening=127.0.0.1:23110 delayMs={injected}" in proxy, "")
+    traffic: dict[int, int] = {}
+    for m in re.finditer(r"P232_PROXY conn=(\d+) traffic dir=down bytes=(\d+)", proxy):
+        traffic[int(m.group(1))] = max(traffic.get(int(m.group(1)), 0), int(m.group(2)))
+    for m in re.finditer(r"P232_PROXY conn=(\d+) close upBytes=(\d+) downBytes=(\d+)", proxy):
+        traffic[int(m.group(1))] = max(traffic.get(int(m.group(1)), 0), int(m.group(3)))
+    heavy = [c for c, b in traffic.items() if b > 50000]
+    check("p232: at least four connections carried real game traffic (chunk data)",
+          len(heavy) >= 4, str(sorted(traffic)))
+    check("p232: the README records the cross-machine part as blocked, not faked",
+          "blocked" in (run / "README.md").read_text(encoding="utf-8"), "")
+
+    probe_src = (ROOT / "probes" / "p232-same-player-two-ops" / "src" / "p232"
+                 / "ClientProbe.java").read_text(encoding="utf-8")
+    check("p232: the client probe has the double action and the standby path",
+          '"double".equals(ACTION)' in probe_src and '"none".equals(ACTION)' in probe_src
+          and "P232_STANDBY" in probe_src, "")
+
+
 def test_ui_list_rendering() -> None:
     """p216 follow-up: the version list must not silently cap below the advertised count."""
     app = (ROOT / "launcher" / "web" / "app.js").read_text(encoding="utf-8")
@@ -3133,6 +3272,7 @@ def main() -> int:
     test_pcl2_launch()
     test_pcl2_1211()
     test_p231_quad_latency()
+    test_p232_same_player_two_ops()
     test_ui_list_rendering()
     test_text_encoding_guard()
     test_eol_determinism()

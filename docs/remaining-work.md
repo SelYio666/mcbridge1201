@@ -420,3 +420,17 @@ Therefore:
   time and records the exact ticks instead of re-claiming same-tick as a guarantee. Still open:
   **real cross-machine latency (needs a second machine - the proxy is synthetic, not a second
   machine)**, and two operations by the SAME player in one server tick.
+
+- p232 (2026-11-01): the last p203 boundary is closed - **two operations by the SAME player in
+  one server tick**. Reusing the p231 rig unchanged (four clients, four game dirs, 50 ms per
+  direction proxy), only the probe action changed: A fires "double" (right-click take, then
+  Delete, injected back to back inside one client tick) while B/C/D join with action "none" and
+  stand by as isolation witnesses (P232_STANDBY, never fire). Result 21/21: BOTH writes landed,
+  in the injected order (take 5->x4 then delete ->empty), on the SAME server tick (1755, walls
+  1 ms apart, one_way 76/77 ms), no coalescing, no drop, no tick split; the witnesses produced
+  zero writes in the window and their server trash (x4/x3/x2) plus client UI stayed untouched
+  (runs/p232-same-player-two-ops/). Still open: **real cross-machine latency is blocked on a
+  second machine** - the 50 ms is a synthetic userspace proxy, not a second machine, and the
+  p232 README records the ready-made plan (remote client -> local dedicated server, same probe
+  and verdict, real RTT reported with the connection type). OS-level SendInput remains undone on
+  purpose while the user is at the machine; per-client independent assets/resourcepacks untested.

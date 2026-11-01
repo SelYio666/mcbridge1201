@@ -31,11 +31,14 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
   1.20.4 的 `Not a string` 已结案：原版 1.20.4 单人加入时 level.dat 空 `Player`
   模板导致的无害日志（`runs/p230`）；p215 的"创建世界按钮"已结案：坐标偏 20px（`runs/p226`）；
   ImmediatelyFast 端口仍有 2 个 inert（官方 1.21.1 已删除的 1.20.4 遗留类）。
-- **多客户端 / 延迟（p231，2026-11-01）**：**四客户端 × 四个独立 gameDir × 50 ms 单向延迟代理**
+- **多客户端 / 延迟（p231 + p232，2026-11-01）**：**四客户端 × 四个独立 gameDir × 50 ms 单向延迟代理**
   同 tick 四方垃圾桶操作：四条写入全落 tick 1715、互不串台，开火→服务端写点实测 70–71 ms
-  （回环基线 p203 为 4 ms）；判据 15/15。延迟是本机用户态代理注入的**合成延迟，不是第二台机器**。
-- **门禁（2026-11-01 实跑）**：`test_review_fixes` **501/501**（新增 p231 组 34 条）；
-  `check_hashes` **1632 ok / 0 mismatch / 0 missing**；Java 单测 **32/32**；`verify_evidence`
+  （回环基线 p203 为 4 ms）；判据 15/15。**p232 关掉 p203 遗留的"同一玩家同 tick 两次操作"**：
+  take→delete 背靠背两条写入都落、按注入顺序、同在 tick 1755（wall 相差 1 ms），
+  三个旁观客户端零影响；判据 21/21。延迟是本机用户态代理注入的**合成延迟，不是第二台机器**，
+  真跨机因无第二台机器记为 blocked（`runs/p232-same-player-two-ops/` 有就绪方案）。
+- **门禁（2026-11-01 实跑）**：`test_review_fixes` **536/536**（p231 组 34 条 + p232 组 35 条）；
+  `check_hashes` **1655 ok / 0 mismatch / 0 missing**；Java 单测 **32/32**；`verify_evidence`
   passed（含 `text_encoding`）；CI push 触发可用。
 - 详情：[FINAL-STATUS](docs/FINAL-STATUS.md)、[报告 p210–p214](docs/report-2026-10-30.md)、
   [报告：接手核验 + p231](docs/report-2026-11-01.md)、
@@ -482,4 +485,20 @@ p213 证明的是 1.20.4。1.21.1 是本仓库所有模组转换的目标版本�
 - **边界**：延迟是本机用户态代理注入的**合成延迟，不是第二台机器**；真跨机、"同一玩家同 tick
   两次操作"、OS 级键鼠输入仍未测。探针源码 `probes/p231-quad-latency/`（4 用户服务端 seed/打点）。
 - 门禁：`test_review_fixes` **501/501**（新增 p231 组 34 条）、`check_hashes` 见提交说明、
+  `verify_evidence` passed；无新 release。
+
+## p232 同一玩家同 tick 两次操作 增量（2026-11-01，正常 UTF-8）
+
+- **关掉 p203 的遗留边界**（"two operations by the SAME player in one server tick"）：
+  完全复用 p231 的四客户端 × 独立 gameDir × 50 ms 代理设施，只改探针动作——
+  **A（GridUser）`action=double`**：同一 client tick 内右键取 1（trash 5→4，光标拿 1）后
+  紧跟 Delete（trash 4→empty，光标保持 1），两条 serverbound 消息同一毫秒发出；
+  **B/C/D `action=none`**：打一行 `P232_STANDBY` 后永不开火，做隔离见证。
+- **结果 21/21**：两条写入都落，**按注入顺序、同在 tick 1755**（wall 相差 1 ms），
+  one_way 76/77 ms；见证人窗口内零写入、服务端与客户端状态全程不变（x4/x3/x2）；
+  A 客户端最终 `trash=empty carried=diamondx1`。第二个操作没有被合并、没有被丢弃、
+  也没有落到下一个 tick。`runs/p232-same-player-two-ops/`（探针 `probes/p232-same-player-two-ops/`）。
+- **真跨机如实记 blocked**：没有第二台机器，本轮不做、不冒充；README 里写了就绪方案
+  （远程机客户端直连本机服务端，沿用 p232 探针与判据测真实 RTT）。
+- 门禁：`test_review_fixes` **536/536**（p232 组 35 条）、`check_hashes` 见提交说明、
   `verify_evidence` passed；无新 release。

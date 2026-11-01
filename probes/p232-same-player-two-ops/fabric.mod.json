@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "p232twoops",
+  "version": "1.0.0",
+  "name": "p232 same-player two-ops trash probe",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["p232.QuadProbe"],
+    "client": ["p232.ClientProbe"]
+  },
+  "mixins": ["p232.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "trashslot": "*"
+  }
+}

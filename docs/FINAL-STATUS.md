@@ -12,8 +12,8 @@
   v0.5.7 为启动器 UI 打磨；v0.5.6 另含两个 companion jar
   （`shulkerpreview 1.1.0`、`trashcreativefix 1.0.0`）。
 - **CI**：最近 5 次 push 触发全部 `success`。
-- **本机门禁（11-01 实测）**：`verify_evidence` passed；`test_review_fixes` **501/501**；
-  `check_hashes` **1632 ok / 0 mismatch / 0 missing**；单测 **32 / 0 failures**；
+- **本机门禁（11-01 实测）**：`verify_evidence` passed；`test_review_fixes` **536/536**；
+  `check_hashes` **1655 ok / 0 mismatch / 0 missing**；单测 **32 / 0 failures**；
   `check_text_encoding` 全部 Markdown 干净。
 - **真机闭环**：
   - PCL2 **2.99.0.0** 上面板真的点“安装”：10.3 s，版本列表出现新版本（p212）；
@@ -22,12 +22,14 @@
 - **引擎侧**：ImmediatelyFast 1.21.1 移植验证（HUD/物品/地图 atlas/VertexBuffer）、
   Shulker 网格与服务端物品恢复、TrashSlot UI 全链路（Delete/Shift+Delete/右键取回/多客户端隔离）、
   Forge/NeoForge 专用服务器与客户端加入、mrpack 真实 files。
-- **仍未完成**：**真跨机延迟（需要第二台机器）**与"同一玩家同 tick 两次操作"（p231 边界）；
-  进世界后的玩法/多人/"带转换模组进世界"未验；Sodium 渲染内核评估为不可行；
-  文本编码事故的写入者未定位。
-- **多客户端 / 延迟（p231，2026-11-01）**：四客户端 × 四独立 gameDir × 50 ms 单向延迟代理，
+- **仍未完成**：**真跨机延迟（需要第二台机器）**；进世界后的玩法/多人/"带转换模组进世界"
+  未验；Sodium 渲染内核评估为不可行；文本编码事故的写入者未定位。
+- **多客户端 / 延迟（p231 + p232，2026-11-01）**：四客户端 × 四独立 gameDir × 50 ms 单向延迟代理，
   同 tick 四方垃圾桶操作（tick 1715，写点 spread 1 ms，开火→写点 70–71 ms vs 回环 4 ms），
-  判据 15/15；延迟是本机用户态代理注入的合成延迟，**不是第二台机器**（`runs/p231-quad-latency/`）。
+  判据 15/15（`runs/p231-quad-latency/`）；**p232 关掉 p203 遗留的"同一玩家同 tick 两次操作"**：
+  take→delete 背靠背都落、按注入顺序、同 tick（1755），三个旁观客户端零影响，判据 21/21
+  （`runs/p232-same-player-two-ops/`）。延迟是本机用户态代理注入的合成延迟，**不是第二台机器**；
+  真跨机因无第二台机器记为 blocked（p232 README 有就绪方案）。
   p215/p230 的两个旧未解均已结案（p226 坐标偏 20 px；p230 原版空 Player 模板）。
 - **细节**：[report-2026-11-01.md](report-2026-11-01.md)（接手核验 + p231）、
   [report-2026-10-30.md](report-2026-10-30.md)、[remaining-work.md](remaining-work.md)；
