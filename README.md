@@ -38,6 +38,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
   `check_hashes` **1632 ok / 0 mismatch / 0 missing**；Java 单测 **32/32**；`verify_evidence`
   passed（含 `text_encoding`）；CI push 触发可用。
 - 详情：[FINAL-STATUS](docs/FINAL-STATUS.md)、[报告 p210–p214](docs/report-2026-10-30.md)、
+  [报告：接手核验 + p231](docs/report-2026-11-01.md)、
   [剩余工作](docs/remaining-work.md)、[使用说明](docs/guide.md)。
 
 ## 现状（2026-10-18）

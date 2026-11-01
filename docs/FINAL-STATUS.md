@@ -29,7 +29,8 @@
   同 tick 四方垃圾桶操作（tick 1715，写点 spread 1 ms，开火→写点 70–71 ms vs 回环 4 ms），
   判据 15/15；延迟是本机用户态代理注入的合成延迟，**不是第二台机器**（`runs/p231-quad-latency/`）。
   p215/p230 的两个旧未解均已结案（p226 坐标偏 20 px；p230 原版空 Player 模板）。
-- **细节**：[report-2026-10-30.md](report-2026-10-30.md)、[remaining-work.md](remaining-work.md)；
+- **细节**：[report-2026-11-01.md](report-2026-11-01.md)（接手核验 + p231）、
+  [report-2026-10-30.md](report-2026-10-30.md)、[remaining-work.md](remaining-work.md)；
   p218 的 22 秒通俗视频在 `runs/p218-pcl-import-video/`。
 
 ## 一、已验证（有日志/截图/哈希）

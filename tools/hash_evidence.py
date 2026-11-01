@@ -1666,6 +1666,7 @@ FILES = [
     "runs/p231-quad-latency/result.json",
     "runs/p231-quad-latency/after-quad.png",
     "runs/p231-quad-latency/server.properties.before",
+    "docs/report-2026-11-01.md",
 ]
 
 
