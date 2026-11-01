@@ -28,7 +28,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
   Forge/NeoForge 专用服务器 + 客户端加入；mrpack 真实 files。
 - **未通过 / 未验证**：Sodium 渲染内核评估为不可行（`blocked_static`，未写规则）；多客户端/跨机器延迟；
   PCL 创建世界页底部按钮对合成点击无响应（`runs/p215`，键盘 Enter 可用）；1.20.4 的
-  `Not a string` 两次 JFR 复现均为负结果（`runs/p219`，方法与脚本保留）；ImmediatelyFast 端口仍有
+  `Not a string` 已结案：原版 1.20.4 单人加入时 level.dat 空 `Player` 模板导致的无害日志（`runs/p230`）；ImmediatelyFast 端口仍有
   2 个 inert（官方 1.21.1 已删除的 1.20.4 遗留类）。
 - **门禁（2026-10-31 实跑）**：`test_review_fixes` **467/467**；`check_hashes` **1573 ok / 0
   mismatch / 0 missing**；Java 单测 **32/32**；`verify_evidence` passed（含 `text_encoding`，
