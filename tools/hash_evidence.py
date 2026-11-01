@@ -1281,6 +1281,7 @@ FILES = [
     "runs/p230-not-a-string-agent/rejoin.py",
     "runs/p230-not-a-string-agent/stack.txt",
     "runs/p230-not-a-string-agent/nbt_probe.py",
+    "docs/handover-zcode.md",
     "docs/guide.md",
     "docs/download-sources.md",
     "tools/build_portable.py",
