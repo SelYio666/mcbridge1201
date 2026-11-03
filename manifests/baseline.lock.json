@@ -1,23 +1,14 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T22:53:50+08:00",
+  "generatedAt": "2026-11-03T22:57:59+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "e56b0470ad23cbe64e9d23d5416795869b51301a",
+    "commit": "092a45ec51177214cdc5504512e127324fcaa547",
     "branch": "zcode",
-    "dirty": true,
-    "modifiedFiles": [
-      "ava/src/main/java/top/mcbridge1201/Main.java",
-      "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
-      "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
-      "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
-      "runs/SHA256SUMS.txt",
-      "runs/p259-insert-before-call/README.md",
-      "runs/p259-insert-before-call/result.json",
-      "tools/hash_evidence.py"
-    ],
+    "dirty": false,
+    "modifiedFiles": [],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
   },
