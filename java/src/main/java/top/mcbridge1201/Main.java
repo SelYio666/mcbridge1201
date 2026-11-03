@@ -317,6 +317,7 @@ public final class Main {
             rules.mixinConfigAdditions.addAll(part.mixinConfigAdditions);
             rules.mixinStrips.addAll(part.mixinStrips);
             rules.registrationKeys.addAll(part.registrationKeys);
+            rules.insertBeforeCalls.addAll(part.insertBeforeCalls);
         }
         TargetIndex idx = null;
         String clientJar = one(f, "client-jar", null);

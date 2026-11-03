@@ -602,6 +602,10 @@ public final class JarPatcher {
             changed = true;
             framesAffected = true;
         }
+        if (applyInsertBeforeCalls(cn, rules, st)) {
+            changed = true;
+            framesAffected = true;
+        }
         for (MethodNode mn : cn.methods) {
             InsnList insns = mn.instructions;
             for (AbstractInsnNode insn = insns.getFirst(); insn != null; ) {
@@ -934,6 +938,75 @@ public final class JarPatcher {
             }
         }
         return false;
+    }
+
+    /**
+     * Inserts a bridge call immediately before each matched call.
+     *
+     * <p>Uses a two-pass form: matches are collected first, then inserted. Inserting while walking
+     * would feed the freshly inserted INVOKESTATIC back into the same walk, and a rule whose match
+     * entries overlap (the same owner appearing twice) would then fire twice on one site.
+     *
+     * <p>The injected sequence must be stack-neutral: the matched call's arguments are already
+     * pushed, so the bridge consumes exactly the local that was loaded for it.
+     */
+    private static boolean applyInsertBeforeCalls(ClassNode cn, RuleSet rules, Stats st) {
+        if (rules.insertBeforeCalls.isEmpty()) {
+            return false;
+        }
+        boolean any = false;
+        for (MethodNode mn : cn.methods) {
+            List<MethodInsnNode> hits = new ArrayList<>();
+            for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null;
+                    insn = insn.getNext()) {
+                if (!(insn instanceof MethodInsnNode m)) {
+                    continue;
+                }
+                for (RuleSet.InsertBeforeCall r : rules.insertBeforeCalls) {
+                    if (r.loadLocal < 0) {
+                        continue;
+                    }
+                    if (!r.matchOwner.equals(m.owner) || !r.matchName.equals(m.name)
+                            || !r.matchDesc.equals(m.desc)) {
+                        continue;
+                    }
+                    if (r.matchOpcode != 0 && r.matchOpcode != m.getOpcode()) {
+                        continue;
+                    }
+                    hits.add(m);
+                    st.applied.merge(r.id, 1, Integer::sum);
+                    any = true;
+                    break;
+                }
+            }
+            for (MethodInsnNode hit : hits) {
+                RuleSet.InsertBeforeCall r = matchInsertRule(rules, hit);
+                if (r == null) {
+                    continue;
+                }
+                InsnList inject = new InsnList();
+                int loadOpcode = "iload".equals(r.loadKind) ? Opcodes.ILOAD : Opcodes.ALOAD;
+                inject.add(new VarInsnNode(loadOpcode, r.loadLocal));
+                inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
+                        r.bridgeMethod, r.bridgeDesc, false));
+                mn.instructions.insertBefore(hit, inject);
+            }
+        }
+        return any;
+    }
+
+    private static RuleSet.InsertBeforeCall matchInsertRule(RuleSet rules, MethodInsnNode m) {
+        for (RuleSet.InsertBeforeCall r : rules.insertBeforeCalls) {
+            if (r.loadLocal < 0) {
+                continue;
+            }
+            if (r.matchOwner.equals(m.owner) && r.matchName.equals(m.name)
+                    && r.matchDesc.equals(m.desc)
+                    && (r.matchOpcode == 0 || r.matchOpcode == m.getOpcode())) {
+                return r;
+            }
+        }
+        return null;
     }
 
     private static void shiftLocals(MethodNode mn, int fromSlot, int delta) {

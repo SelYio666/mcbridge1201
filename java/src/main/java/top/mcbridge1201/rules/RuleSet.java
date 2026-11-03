@@ -305,6 +305,39 @@ public final class RuleSet {
         public String evidence;
     }
 
+    /**
+     * Inserts one bridge call immediately before a matched call.
+     *
+     * <p>This exists because some fixes are "tell the bridge something before the callee runs",
+     * not "replace the callee". The concrete case: ResourcefulLib evaluates a mod's
+     * {@code Supplier} inside {@code FabricRegistryEntry.of}, and the registry id is sitting in a
+     * local variable at that moment - a bridge can cache it in a context so the lambda that builds
+     * {@code Item.Settings} can key it (runs/p258).
+     *
+     * <p>Stack discipline: the matched call's arguments are already on the stack when the insertion
+     * happens, so the injected sequence must be net-zero. {@code ALOAD slot} pushes the argument and
+     * the bridge call consumes exactly it.
+     */
+    public static final class InsertBeforeCall {
+        public String id;
+        /** The call this inserts before; matched exactly (owner + name + descriptor + opcode). */
+        public String matchOwner;
+        public String matchName;
+        public String matchDesc;
+        public int matchOpcode;
+        /** Local variable slot to push as the single bridge argument. */
+        public int loadLocal = -1;
+        /** How to push it: "aload" (reference) or "iload" (int). */
+        public String loadKind = "aload";
+        public String bridgeClass;
+        public String bridgeMethod;
+        public String bridgeDesc;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
+
+    public final List<InsertBeforeCall> insertBeforeCalls = new ArrayList<>();
     public final List<RegistrationKey> registrationKeys = new ArrayList<>();
     public String version;
     public String target;
@@ -385,6 +418,11 @@ public final class RuleSet {
         if (o.has("mixinStrips")) {
             for (var el : o.getAsJsonArray("mixinStrips")) {
                 rs.mixinStrips.add(new Gson().fromJson(el, MixinStrip.class));
+            }
+        }
+        if (o.has("insertBeforeCalls")) {
+            for (var el : o.getAsJsonArray("insertBeforeCalls")) {
+                rs.insertBeforeCalls.add(new Gson().fromJson(el, InsertBeforeCall.class));
             }
         }
         if (o.has("registrationKeys")) {
