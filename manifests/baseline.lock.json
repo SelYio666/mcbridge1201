@@ -1,0 +1,853 @@
+{
+  "schemaVersion": "baseline-lock-1",
+  "generatedAt": "2026-11-03T19:45:54+08:00",
+  "tool": "tools/freeze_baseline.py",
+  "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
+  "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
+  "git": {
+    "commit": "36a960317d948f6f0a8871ab4a073db5de9fb7dd",
+    "branch": "master",
+    "dirty": true,
+    "modifiedFiles": [
+      "ONTEXT.md",
+      "README.md",
+      "docs/multi-target-baseline.md",
+      "java/src/main/java/top/mcbridge1201/Main.java",
+      "java/src/main/java/top/mcbridge1201/profile/TargetProfile.java",
+      "java/src/test/java/top/mcbridge1201/TargetProfileValidationTest.java",
+      "manifests/baseline.lock.json",
+      "runs/SHA256SUMS.txt",
+      "runs/p243-target-profile-gate/README.md",
+      "runs/p243-target-profile-gate/profile-check-bridge-class-version.json",
+      "runs/p243-target-profile-gate/profile-check-index-hash.json",
+      "runs/p243-target-profile-gate/profile-check-index-missing.json",
+      "runs/p243-target-profile-gate/profile-check-positive.json",
+      "runs/p243-target-profile-gate/profile-check-rule-order.json",
+      "runs/p243-target-profile-gate/profile-check-wrong-namespace.json",
+      "runs/p243-target-profile-gate/profile-check-wrong-target.json",
+      "runs/p243-target-profile-gate/result.json",
+      "targets/fabric-1.21.1.json",
+      "tools/freeze_baseline.py",
+      "tools/hash_evidence.py",
+      "tools/run_target_gate.py"
+    ],
+    "untrackedFiles": [
+      "runs/p208-cross-platform/release-accept.json"
+    ],
+    "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
+  },
+  "environment": {
+    "path": "manifests/environment.lock.json",
+    "sha256": "a2ad5d50329297405b17c5e546508361ca2aa475891bca25dca8198c0df3dbeb",
+    "generatedAt": "2026-10-18T18:02:15+08:00",
+    "targets": [
+      {
+        "minecraft": "1.21.1",
+        "javaMajor": 21,
+        "clientJarSha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+        "mappingsSha256": "140c47931cccc8fc9e4c22d7603e2d714d1a953a146f51ea7397d95c955536ec"
+      },
+      {
+        "minecraft": "1.20.1",
+        "javaMajor": 17,
+        "clientJarSha256": "56b71336d2b4fdffd197f56595b0da93e32a946f78f382a299b8f4b92758bb0f",
+        "mappingsSha256": "67bfc33ef0c7103f002d6ac134f8eddd3d67e2ce45d266e83816d1a2e2c9b01d"
+      }
+    ],
+    "fabric": {
+      "intermediary-1.20.1": {
+        "version": null,
+        "sha256": "26b60a7dac40e19609cdf095f7124a79ea426d8a84344bc8883c7210f0294799"
+      },
+      "intermediary-1.21.1": {
+        "version": null,
+        "sha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6"
+      },
+      "loader": {
+        "version": "0.19.5",
+        "sha256": "93044e4dd46de5d8136701292f05e868da096d2c9fddb4793e4fdbcc63efc695"
+      },
+      "api": {
+        "version": "0.102.0+1.21.1",
+        "sha256": "fd021e3ea8d043805207f39d43ac4b358629b30f0d9280ffc5a886a433291bd1"
+      },
+      "api-1.20.1": {
+        "version": "0.92.12+1.20.1",
+        "sha256": "4197ff4fbdac13cffccd267c1bc59e9fbabb2b5683a9d5f8023f4b5ea16a1c1e"
+      }
+    }
+  },
+  "inputs": {
+    "rules": {
+      "root": "rules/fabric-1.21.1",
+      "count": 29,
+      "packageSha256": "e9ce1b1933e62988f560c0a5c0380250192628abe394d068bd635411b635d1dc",
+      "files": [
+        {
+          "path": "rules/fabric-1.21.1/appleskin-food.json",
+          "sha256": "4328d3e696eb9a76b902277dea4a6d94595bceca8049213766a866dcc6fd5789",
+          "size": 4301
+        },
+        {
+          "path": "rules/fabric-1.21.1/appleskin-tooltip.json",
+          "sha256": "2f3c1602bcedb40c0ec2266e5705520e33e61a74a1208e3f0adcab0301f9def7",
+          "size": 994
+        },
+        {
+          "path": "rules/fabric-1.21.1/cloth-config-render.json",
+          "sha256": "733bd94c3631f6e87b8982e191a3b2d626db7b9322b2d9d701b53f95f0b5f1c8",
+          "size": 13062
+        },
+        {
+          "path": "rules/fabric-1.21.1/cloth-config.json",
+          "sha256": "3ceb405b6b4ba16a6667a88caed9a624178011ded72edde6fa059d96654e210e",
+          "size": 5364
+        },
+        {
+          "path": "rules/fabric-1.21.1/container.json",
+          "sha256": "5ec89cec31da14ed35fb6bae4446ac063636684ddea25ab3465a64f590e5d168",
+          "size": 5682
+        },
+        {
+          "path": "rules/fabric-1.21.1/dyecolor-components.json",
+          "sha256": "d05f05cfff5fd7f899a985a047b5b84e68dda9ed2188c84cfe3eeb30bbd23a2c",
+          "size": 1036
+        },
+        {
+          "path": "rules/fabric-1.21.1/entityculling-mixin-port.json",
+          "sha256": "a457860ae233067723a85828160480293b9ca7f78c33a757beae3063a874dad5",
+          "size": 2473
+        },
+        {
+          "path": "rules/fabric-1.21.1/entrylist-constructor.json",
+          "sha256": "85b07b73247b686d0a6bcab7312f4bcc525b7f7550864442a0ce058234d3f8f6",
+          "size": 1524
+        },
+        {
+          "path": "rules/fabric-1.21.1/fabric-legacy-networking.json",
+          "sha256": "758089110e998572ea002f7bfd737fa781352865b6caa21125bbcf0b88159638",
+          "size": 8636
+        },
+        {
+          "path": "rules/fabric-1.21.1/fallingtree-tombstones.json",
+          "sha256": "68450cf17f3e9a00d94ddec9dccc411c1a94ad804742b883079a1a265ecf7c6c",
+          "size": 2528
+        },
+        {
+          "path": "rules/fabric-1.21.1/identifier-single-arg.json",
+          "sha256": "9083efd03c143c8cfffa1d31dba20846cb96f5d5bace34f0109ccab2821e533e",
+          "size": 1753
+        },
+        {
+          "path": "rules/fabric-1.21.1/immediatelyfast-batching-port.json",
+          "sha256": "483fa436e0d02c8859e7654d67cda7df7fda3a2e9ac8ba4a95222121c9b9327e",
+          "size": 11759
+        },
+        {
+          "path": "rules/fabric-1.21.1/ironchests-draw.json",
+          "sha256": "b2b4c5db71ea8656a73549350ee8242eb637bc297ddf7b0674c63837a7d6f755",
+          "size": 1266
+        },
+        {
+          "path": "rules/fabric-1.21.1/ironchests-nbt.json",
+          "sha256": "e73b86004dcd12f8d42ebab1ff267032c81c952125bb19b9586f9723784fd385",
+          "size": 2400
+        },
+        {
+          "path": "rules/fabric-1.21.1/ironchests-screen.json",
+          "sha256": "93f4a0ab98dc05cc3b64cd2ac4d85a8abaa481c587900302d758c2130a2bc5b7",
+          "size": 1123
+        },
+        {
+          "path": "rules/fabric-1.21.1/lithium-degraded.json",
+          "sha256": "26fd8e4fc494830191f76bf3542cb8c87fbf94fc860204788530aba14c70af33",
+          "size": 702
+        },
+        {
+          "path": "rules/fabric-1.21.1/lithium-varint.json",
+          "sha256": "702ab95bb3fea1b84f04142a137b284e51cdf65989656d8f8593a81185f00762",
+          "size": 971
+        },
+        {
+          "path": "rules/fabric-1.21.1/lithium.json",
+          "sha256": "a3bd4dfb842f6867605cb2ad3b6ac0a65f9608e7ccb12fd9d1dcd9371b55d6d1",
+          "size": 9417
+        },
+        {
+          "path": "rules/fabric-1.21.1/modmenu-list-render.json",
+          "sha256": "bed6d52b6fa2222098e84172e2b20ad712acc295523f18f6d3e4bfefa2167a1f",
+          "size": 3745
+        },
+        {
+          "path": "rules/fabric-1.21.1/modmenu-options.json",
+          "sha256": "1616da2e3aa7354c0c632b51bebc55db4e498d6463cb23d4e1b68149d6a95edc",
+          "size": 1819
+        },
+        {
+          "path": "rules/fabric-1.21.1/modmenu-textfield.json",
+          "sha256": "f81b6b9cb8ca587d1460817188bd042a8446b30501ab9428b395f8c5f221ac37",
+          "size": 1133
+        },
+        {
+          "path": "rules/fabric-1.21.1/modmenu-title-screen.json",
+          "sha256": "6d4f8808d1dd06fb34eaf5f8c75d63240415047134d28967db9ae970c5670773",
+          "size": 1854
+        },
+        {
+          "path": "rules/fabric-1.21.1/nbt-packet.json",
+          "sha256": "ca7aaeb2172d533bfed5cce20570f98404b27d0a9907225c0f99014d98f1d8e9",
+          "size": 1193
+        },
+        {
+          "path": "rules/fabric-1.21.1/render-widget-override.json",
+          "sha256": "06bf5a4d415fa7783e064042006656867f2a512e1654ba7b6fdcfbb308ed088a",
+          "size": 2750
+        },
+        {
+          "path": "rules/fabric-1.21.1/shulker-nbt.json",
+          "sha256": "bbde5b97f55535720ffe60ad249decc3d8ef1a18b8cc666ef5cfeef9c18aae9a",
+          "size": 6662
+        },
+        {
+          "path": "rules/fabric-1.21.1/status-effect-instance.json",
+          "sha256": "fba00a19f56f887427b3341d324468051ce3f353cb9168339eaf73ca5e794796",
+          "size": 3612
+        },
+        {
+          "path": "rules/fabric-1.21.1/textured-button.json",
+          "sha256": "f5258c8d13d9968f1083562b1ab929077b5e64dc7d73da6fed4a11bb9b6441e1",
+          "size": 1771
+        },
+        {
+          "path": "rules/fabric-1.21.1/trashslot-sendtoserver.json",
+          "sha256": "305176d854a2203c038cb20b70f975af807b8640c390e471beb946b6d9ab7cbe",
+          "size": 2043
+        },
+        {
+          "path": "rules/fabric-1.21.1/trashslot.json",
+          "sha256": "4428d035de3af501349290608d8ee58172dfb9956ebec69162c733444aae9c2c",
+          "size": 11204
+        }
+      ]
+    },
+    "sources": {
+      "java/src/main": {
+        "root": "java/src/main",
+        "count": 17,
+        "packageSha256": "2da19bf5ddc61a42373d8146267cdc857d6eef7127c7f01ae7f4d05a6b2a8fe5",
+        "files": [
+          {
+            "path": "java/src/main/java/top/mcbridge1201/Main.java",
+            "sha256": "1d098f8c77c131e671fdb8a712f0c406ce0785866900858b9593d8c4c1fc1eae",
+            "size": 32349
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/analyze/Analyzer.java",
+            "sha256": "bd28f7f05de5303b4f5843078f806433037e3ac2d4fb3ce244cbc13e5a9b7027",
+            "size": 16252
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/index/ClassInfo.java",
+            "sha256": "248a71e1ecb9a0badc7003fec3151f7ab413d003d9d8bfe1ee0ed3e871588de8",
+            "size": 970
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/index/IndexBuilder.java",
+            "sha256": "515833ca131e66c19039f3788857bdd7d4134aefdbdb92900b3acf15cebd4352",
+            "size": 5446
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/index/TargetIndex.java",
+            "sha256": "0b23708413b90304ce3cefe823f6802a29fd3334189de7e43efab1fb10e1757b",
+            "size": 5802
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/index/TinyMappings.java",
+            "sha256": "2078b6e7b81765e8c6fabe23712c9f2269d2bda4897d4d548d01bd205e959162",
+            "size": 4257
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/profile/TargetProfile.java",
+            "sha256": "6db580d57e137b24c022c0e2d57be0b4481a461388bdaa75d02b5a374de48bc0",
+            "size": 34946
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/remap/Hierarchy.java",
+            "sha256": "79f3b39085826089304b51e55710d73a65338b905690eb76242491bc7202deb9",
+            "size": 3279
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/remap/JarRemapper.java",
+            "sha256": "735e1d09ca2cbe1d52098fee2b36c6db2f14ab20ef9d3c0254aa99005748c80a",
+            "size": 12329
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/remap/ReadOnlyGuardPatcher.java",
+            "sha256": "5d64738a927b45151a606faf4a3885686da584e3fe58f0aaa2d3cfd10cf24a1c",
+            "size": 3373
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/rules/BridgeGenerator.java",
+            "sha256": "3dd3443c9f6f0bdc7ee273f59866a6144fca41128a200630c9b4adf669cc0b34",
+            "size": 18462
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
+            "sha256": "f0fc3893c72e709ea670e0ee56d4b8f67b593d380f5896d3c0b400a18a625a25",
+            "size": 55208
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
+            "sha256": "fd459b209cfad04fa171bbf6fdb9146349b5a210781925c60b348d151bb740a5",
+            "size": 18555
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/scan/ArtifactScanner.java",
+            "sha256": "b9730757f42bc644816d2687060a55df79fc8979245bd2e840df63e68b485660",
+            "size": 28403
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/scan/Ref.java",
+            "sha256": "17ee21a1fffe8eb4da60723d0c5faaf69d82f64082962c301ac7fb0e40fc95e2",
+            "size": 318
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/scan/RefCollector.java",
+            "sha256": "e7789d64b83a87f18ec0bbf98fce6a4b3daf5a3d7a6c742d26c53a696b0d0f93",
+            "size": 8916
+          },
+          {
+            "path": "java/src/main/java/top/mcbridge1201/scan/RefKind.java",
+            "sha256": "047da786507416b26cb7fbeb94115c8953ea7a175a197133fcf2da3fe848e65c",
+            "size": 89
+          }
+        ]
+      },
+      "java/src/bridge": {
+        "root": "java/src/bridge",
+        "count": 34,
+        "packageSha256": "5637f5e21779d891b3f38918142a6fa0205b04ce1dc666efdca85f2c96c877f3",
+        "files": [
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/AppleSkinFoodBridge.java",
+            "sha256": "afbb99a2e99c6a65f45bcb3d9a28f9517974db2fa9a328cef0285440ba3652af",
+            "size": 1790
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/AppleSkinTooltipBridge.java",
+            "sha256": "b93cb672206e9299dc611a84b4a97d1e7d88b5a05ec761a8c33ea5db8c9a7a0b",
+            "size": 2094
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/BalmClientInitializeBridge.java",
+            "sha256": "5cd1eaa96b66222595e5f2562a31ca125d8b29db346f1c973ac934789a9ff5c7",
+            "size": 727
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/BalmInitializeBridge.java",
+            "sha256": "108eabae973e331fd17ef3c5c9893923ac2360045b3ce1058cdf0a2c971a7cda",
+            "size": 705
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/BalmNetworkingBridge.java",
+            "sha256": "0ab7b7243dd704ee657b6c0d5912270008647915370b5cd3f4301ac79465c30c",
+            "size": 7991
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ChunkAccessPump.java",
+            "sha256": "8ea45d9efc606571de705f4cee24e510bb402bb5c8244528e20cb0ca13bd29e7",
+            "size": 2005
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ClothConfigBridge.java",
+            "sha256": "29f57152fbdce0d8aa22ff7966431baf434c7645e8a9634eeb8448609f0da1ab",
+            "size": 1511
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ClothConfigScreenBridge.java",
+            "sha256": "06070e753b2fa2dc81e52e4e4fd2ceffb0fb24d2c8c67b18a0681def0b5810b6",
+            "size": 1170
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ClothRenderBridge.java",
+            "sha256": "1c4ec8e21597204121ffb630fab08a7beb8f504ea912df5d1918ac1fffc85717",
+            "size": 8040
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ClothTextFieldBridge.java",
+            "sha256": "97e86daff97243bf9d14ed5ccccb1dfa9851ec55471bf1994a08c6473bc782f2",
+            "size": 1004
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/CodecDispatch.java",
+            "sha256": "9370b5a8a658b5aaec91117a25b0c064500965e0f7c3de2235e3b93efc62bba4",
+            "size": 3358
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/DrawContextTextureBridge.java",
+            "sha256": "9c15b012853891e6f2f36daac52d9dd0676bdcd096aadf814f6d2349d2fd0413",
+            "size": 3835
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/DyeColorBridge.java",
+            "sha256": "85e410799e8db3c77a8c75eb2aa195d3dd634a0e4380bccf79c3e16dc65d690f",
+            "size": 615
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/FabricLegacyNetworking.java",
+            "sha256": "439039bd5cfaf2c7a51e0c0aaa6ff8554fbd203be7ea3968579df171c17c9b89",
+            "size": 8030
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/FallingTreeBridge.java",
+            "sha256": "65a3a2d2e6902640f62ffe9201fa0305077e8a8b5300d8f0251941f651a6bd12",
+            "size": 1560
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/IdentifierBridge.java",
+            "sha256": "6b9ef7c0079e5794c6eb50d77e3cd82fee7d1a7246e27a8b395fb95bf37b2bc7",
+            "size": 725
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/IronChestsNbtBridge.java",
+            "sha256": "35b6a2d26c5ba71a1f5fa28dd4c078556f7d3164ef54e70a9421b13c5395cec3",
+            "size": 2824
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ItemPredicateAny.java",
+            "sha256": "eb4caea3aa1b5aa13b1ff70e157a51c36217fc91ef3494dd3d55d9e6338492d8",
+            "size": 584
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ItemPredicateFromJson.java",
+            "sha256": "386cf440ca0aeddcfa366ad7867c6e55574a181dec87417ed280f787df6be988",
+            "size": 1486
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/LegacyEntryListWidget.java",
+            "sha256": "0625d427e003b7711b03017e7851abce98245f7ddeb70cd28d73db1c4f8777a3",
+            "size": 2074
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/LegacyParentWidget.java",
+            "sha256": "0013de608fb1cfc0db1dab0ce5e579cf28bbe6c8a8d68a1ac59a4894cb8fc079",
+            "size": 2013
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/LegacyTexturedButton.java",
+            "sha256": "9ff78994a6039c55e2c12996c10c26174478b8a43d71db0658ea8f7818e5e05f",
+            "size": 3967
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/LithiumVarIntBridge.java",
+            "sha256": "0e07d1c8e66b1844732e4321990c68697876b7cf7179fd18cccd6b4db24b8fd0",
+            "size": 516
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ModMenuListRenderBridge.java",
+            "sha256": "0188288f679b2ef8dd992729ea0c69adf0749edff799e750bb7731193e31351f",
+            "size": 19712
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ModMenuOptionsListBridge.java",
+            "sha256": "17e0e085e2cfce74cfa679339c482bc7295d8f4f7f8b04e44a851c91130ceec6",
+            "size": 1171
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ModMenuTitleScreenBridge.java",
+            "sha256": "9107bf3068f6ba8791ef3b93629cd68c9209bde46d227825a1845f8ffcd6d7b9",
+            "size": 1166
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/NbtListCompatBridge.java",
+            "sha256": "725beae7db6a76309157af0e061f043cd24572dab7be81cec28bb8bdacc70c91",
+            "size": 957
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/NbtPacketBridge.java",
+            "sha256": "70059c54e43d512c48144c54670399bf8ed0d00d644a91191aebf07a34a52c3b",
+            "size": 808
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ScreenRenderBridge.java",
+            "sha256": "35434afad4493d097fda5191321653df10b7bbb5600015d2d3cd6a06dea0a3e4",
+            "size": 671
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ShulkerBoxNbtBridge.java",
+            "sha256": "e0a1fd21b1eee70c001c208737f13c63dedb823fe2fc48154c5d3261ab9b4a04",
+            "size": 4628
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/StatusEffectInstanceBridge.java",
+            "sha256": "4184c3c337d32ee7c0bb887813325141e37d749f2915685be4efdcfd4ca40804",
+            "size": 1440
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/TextFieldTickBridge.java",
+            "sha256": "2045949a30b2f01626ba93a4ff9709ecf8a084dd879353cda3d6e68ef647a316",
+            "size": 716
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/TrashSlotNbtBridge.java",
+            "sha256": "26d5ca2e7543c7ed00950b1d8310a1176ee776dcc3a69bb892a16809f1a2a153",
+            "size": 4903
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/WalkNodeEvaluatorCheckNeighbourBlocks.java",
+            "sha256": "5344368a460f380493236d96ee8d2c02966b42f05fd6afabc4f9858722ec1c0b",
+            "size": 3459
+          }
+        ]
+      },
+      "java/src/bridge-shim": {
+        "root": "java/src/bridge-shim",
+        "count": 2,
+        "packageSha256": "2db7b6b9afe05869174510df94c9952418dc1ec3ee77dfeff5b7b84601cecaa8",
+        "files": [
+          {
+            "path": "java/src/bridge-shim/java/net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking.java",
+            "sha256": "5c0ca5159cd910159bd3e45c4d7865765b229a44dd5daacff544955d570449a5",
+            "size": 720
+          },
+          {
+            "path": "java/src/bridge-shim/java/net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking.java",
+            "sha256": "5ff5a4030aae0a40cef26ede46dd92377b3bde493d4757be325c8dbde35f04ed",
+            "size": 741
+          }
+        ]
+      },
+      "java/src/mixin": {
+        "root": "java/src/mixin",
+        "count": 1,
+        "packageSha256": "1d58ef398fda90309dc38a51c2828b834ca86b3471005cae048c0adcb7354d54",
+        "files": [
+          {
+            "path": "java/src/mixin/java/me/jellysquid/mods/lithium/mixin/world/chunk_access/ServerChunkManagerMixin.java",
+            "sha256": "18acdf5de52aae90e3e7737a2968206e6e754eadd3cda4d36aade5c0cd7e5da6",
+            "size": 2031
+          }
+        ]
+      },
+      "java/src/test": {
+        "root": "java/src/test",
+        "count": 11,
+        "packageSha256": "c2a119d6563be7849807075b4b49b1f179819cb6691d8dc7d34075f297758432",
+        "files": [
+          {
+            "path": "java/src/test/java/top/mcbridge1201/AnalyzerCoreTest.java",
+            "sha256": "5f4ae0b2f1bc3135474adba9dbd75ce78a210e67ba0acfcc2d28f8c008eb9a18",
+            "size": 7130
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/CallSiteAdaptationTest.java",
+            "sha256": "8c6ade47f7b46df8b93d1aab831b2f6ba41725a05bc4d9e33ea7b0f8b5849612",
+            "size": 2639
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/JarPatcherCallSiteTest.java",
+            "sha256": "5ed34c4353d0f446bdcdc2b44c7aa557d65ffb867be81e9e98bea48740ea269d",
+            "size": 9011
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/JarPatcherCodecDispatchTest.java",
+            "sha256": "6c4b080a2e8e2336f79c0e871a6880f790448942d2fd7f74c1e09707b9f7eb14",
+            "size": 4559
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/JarPatcherKeepPrefixTest.java",
+            "sha256": "bd2b93919e814b58c1760e716a27c7f3a3033f753bf3d10f973d03d6f8f79b03",
+            "size": 9749
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/JarPatcherMethodRenameTest.java",
+            "sha256": "d52b23c9dc980218ae5968c24da00b780f028fd44535e8f04f603f7562a51a72",
+            "size": 8254
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/MixinCallbackAdaptationTest.java",
+            "sha256": "8b4d514d959cbe149515decaa2e171ca555c8a84880b5a4cddd24a071e8a407f",
+            "size": 9732
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/MixinClassReplacementTest.java",
+            "sha256": "4f04bee64680b1f4f03e93948387a11e50d77e3904394f9c1f2e75c2c7b84086",
+            "size": 3354
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/MixinConfigAdditionTest.java",
+            "sha256": "4989a94f513436821807687ff62cfb412f9dae2aeeab54954dad392cc5d25294",
+            "size": 3742
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/MixinInjectionScanTest.java",
+            "sha256": "8b15b31780ef0a9eecc1708701a225927273f58276e824792cddbeff07f983e5",
+            "size": 10629
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/TargetProfileValidationTest.java",
+            "sha256": "76879c41b3752c8ea14f62e245c3605858445af047e89b53b4751039f2a1a851",
+            "size": 16125
+          }
+        ]
+      }
+    },
+    "tools": {
+      "count": 11,
+      "present": 11,
+      "packageSha256": "cc643036feafe3230842a2092f0b50383b474e0c5fae4a8a5884c0014c357730",
+      "files": [
+        {
+          "path": "tools/check_hashes.py",
+          "sha256": "2c13a8ce76079732cacc71533ae77324c82466a23261b699f4876e32b7d452f5",
+          "size": 1914
+        },
+        {
+          "path": "tools/check_manifest_coverage.py",
+          "sha256": "3bb56ef3a65e1d1e8c0df1eea5b3c3acc4db99d5046c4d93779d4148342830da",
+          "size": 2215
+        },
+        {
+          "path": "tools/check_text_encoding.py",
+          "sha256": "81c04e1db466b23a089e57371d2508d5a6b0c865be13610dac6ba5d0f22c2a4c",
+          "size": 8149
+        },
+        {
+          "path": "tools/verify_evidence.py",
+          "sha256": "68a52fe48bc5ba3ea972d89d66f2b14dfecf5be8b33154831f6b5aa1a830f673",
+          "size": 6951
+        },
+        {
+          "path": "tools/hash_evidence.py",
+          "sha256": "04e6652a9345be5362102c96a9079bab9980ac9471f7cd1f9393feba30acec6d",
+          "size": 86159
+        },
+        {
+          "path": "tools/release_check.py",
+          "sha256": "030fe6d1a95ed6e5837eaa3e6198649bc91a8cbfd2a3099546d0dc6fc3f88b32",
+          "size": 4853
+        },
+        {
+          "path": "tools/build_bridges.py",
+          "sha256": "256b0ae8153558b7e3ee8fc5d26e7e9c563773893ed5e5cd198a9214eb97ee2e",
+          "size": 3191
+        },
+        {
+          "path": "tools/run_contract.py",
+          "sha256": "0d4f8a97984141f1191c8b61a2c153197e924d516b2f0953c6dbc70e1ce546c9",
+          "size": 3404
+        },
+        {
+          "path": "tools/run_server.py",
+          "sha256": "1fbf5cff372589ee75b79d45fbbc6610ebf1a90afc6a43cea03e133bb7c1594d",
+          "size": 4893
+        },
+        {
+          "path": "tools/build_reports.py",
+          "sha256": "6060309303e8c73340c033687d1a9492d759e9e3a626c1d3819e76c37b472d6e",
+          "size": 8605
+        },
+        {
+          "path": "tools/freeze_baseline.py",
+          "sha256": "214f94c9e70ab8b04a71f77b09275ae7f2fe32e27f8859c75f988c937ea8b64b",
+          "size": 17731
+        }
+      ]
+    },
+    "manifests": {
+      "count": 3,
+      "present": 3,
+      "packageSha256": "f0c3527d3885dd8b80b3eac061dd85c2d54e2075df9df4444a0ea415ea632b60",
+      "files": [
+        {
+          "path": "manifests/environment.lock.json",
+          "sha256": "a2ad5d50329297405b17c5e546508361ca2aa475891bca25dca8198c0df3dbeb",
+          "size": 4784
+        },
+        {
+          "path": "manifests/upstream.lock.json",
+          "sha256": "6017ee9d46ba4b74315a2e47829214b69a3f7c37030a7699a4a4b04593ffebda",
+          "size": 7824
+        },
+        {
+          "path": "manifests/corpus.json",
+          "sha256": "2a71b760796737c06fb815494ea5ac84b0963c1362eb10f940aae55a2f606a05",
+          "size": 12294
+        }
+      ]
+    }
+  },
+  "targetProfiles": {
+    "count": 1,
+    "profiles": [
+      {
+        "path": "targets/fabric-1.21.1.json",
+        "sha256": "55efc7655f199da56452581d17b425e966320362b0e8b20f51ea408814b50890",
+        "profileId": "fabric-1.21.1",
+        "targetId": "fabric-1.21.1",
+        "minecraft": "1.21.1",
+        "loader": "fabric",
+        "javaMajor": 21,
+        "namespace": "intermediary",
+        "bridgeAbi": "mcbridge-bridge-1",
+        "ruleOrderEntries": 29
+      }
+    ]
+  },
+  "evidence": {
+    "profiles": [
+      {
+        "path": "profiles/bundle-all-three__fabric-1.21.1.json",
+        "sha256": "958b9c0ec9bcae6297719661f54bae4cee41fe7d3f95d54d3dbc74d6409559c6",
+        "profileId": "bundle.all-three.fabric-1.21.1",
+        "status": "passed_within_scope",
+        "contractsPassed": 4,
+        "contractsPending": 2,
+        "contractsOther": 0,
+        "knownLimitations": 0
+      },
+      {
+        "path": "profiles/ironchests-5.0.2-fabric__fabric-1.21.1.json",
+        "sha256": "131435aa82f3b1c2744e2c932da7e656072e495bd08d1b86867383506cf9a411",
+        "profileId": "ironchests.5.0.2.fabric-1.20.1__fabric-1.21.1",
+        "status": "passed_within_scope",
+        "contractsPassed": 5,
+        "contractsPending": 3,
+        "contractsOther": 0,
+        "knownLimitations": 2
+      },
+      {
+        "path": "profiles/lithium-0.11.4-fabric__fabric-1.21.1.json",
+        "sha256": "512d8ee81eafd4852f9cc58171e9ff6a113eb36152a058162f7af55bb2312f8c",
+        "profileId": "lithium.0.11.4.fabric-1.20.1__fabric-1.21.1",
+        "status": "booted_within_scope",
+        "contractsPassed": 4,
+        "contractsPending": 3,
+        "contractsOther": 0,
+        "knownLimitations": 0
+      },
+      {
+        "path": "profiles/trashslot-15.1.5-fabric__fabric-1.21.1.json",
+        "sha256": "38f889442047498c8b627a3de92e2f9293d8ecbe1559e3dee435ca42b12b66d2",
+        "profileId": "trashslot.15.1.5.fabric-1.20.1__fabric-1.21.1",
+        "status": "booted_within_scope",
+        "contractsPassed": 4,
+        "contractsPending": 3,
+        "contractsOther": 1,
+        "knownLimitations": 0
+      }
+    ],
+    "profilesByStatus": {
+      "booted_within_scope": 2,
+      "passed_within_scope": 2
+    },
+    "note": "Status vocabulary is passed_within_scope / booted_within_scope / pending. It is narrower than 'compatible' and states scope, not breadth."
+  },
+  "degradations": {
+    "mixinStrips": [
+      {
+        "path": "rules/fabric-1.21.1/lithium-degraded.json",
+        "id": "lithium.strip.entity.collisions.movement",
+        "config": "lithium.mixins.json",
+        "classes": [
+          "entity.collisions.movement.EntityMixin",
+          "block.flatten_states.FluidStateMixin"
+        ],
+        "reason": "Redirector adjustMovementForCollisionsGetEntitiesLater scanned 0 targets in 1.21.1 (Entity movement code changed). Runtime: InjectionError at 1.21.1 server boot."
+      }
+    ],
+    "note": "Removing a mixin is a recorded degradation, never silent success. These are the only ones declared in the frozen rule package."
+  },
+  "historical": {
+    "documents": [
+      {
+        "path": "docs/progress.md",
+        "sha256": "d336ff33dc00a5d57a765b3d2e4c96647121fcfbb80899d09a9cc5e6f60a0cdb",
+        "missing": false
+      },
+      {
+        "path": "docs/baseline.md",
+        "sha256": "f3b4c6558758aedbcbcdb8ddf79b3a546f8cf2f4bc282049a577b53d2f6076d1",
+        "missing": false
+      },
+      {
+        "path": "docs/handoff.md",
+        "sha256": "b861dcf4b0fb837651c5471a248f3ea081792cb59c7d4afbf85c7f242a8cccb6",
+        "missing": false
+      },
+      {
+        "path": "docs/handover-zcode.md",
+        "sha256": "47de03e3bbc95a21177a5a409eb1f22d5639f56bebb34052aa54b730a15dc4d1",
+        "missing": false
+      }
+    ],
+    "policy": "These files are append-only history. Their older conclusions are NOT re-adjudicated by this baseline: a claim from an earlier round stays a claim from that round. Current contract = CURRENT_DOCS + profiles/ + this lock.",
+    "currentDocs": [
+      {
+        "path": "docs/FINAL-STATUS.md",
+        "sha256": "bfca7c28eb20fad3dbe64728c39890eda38ef9ad0bd87fa07a5fd72627287e54"
+      },
+      {
+        "path": "docs/remaining-work.md",
+        "sha256": "0864138d9a772441b4da3c8d1c8d186c9378343fd6da4528971ef4d4a8e9f610"
+      },
+      {
+        "path": "docs/STATUS.md",
+        "sha256": "d0d9d73c6261e93c1e7af3ebf66ddda43ae129fe42a1f55c1b934ddd39ffc735"
+      },
+      {
+        "path": "docs/support-matrix.md",
+        "sha256": "ab23bf626f10facc1cba10e8f3ad9410e3da4a6e471a42bedd42c28dd193be29"
+      },
+      {
+        "path": "docs/limitations.md",
+        "sha256": "e850cac0e54afafa53473dd928a89cf2523905c946592cc85822d1151d888e31"
+      },
+      {
+        "path": "docs/multi-target-baseline.md",
+        "sha256": "10a73e47e5c6d680431ad7f4d6d6f199141316c82bd0a8f17b0a622415814180"
+      }
+    ]
+  },
+  "gates": {
+    "ran": true,
+    "passed": true,
+    "steps": [
+      {
+        "name": "hash manifest matches the tree",
+        "rc": 0,
+        "tail": [
+          "ok=1721 mismatch=0 missing=0"
+        ]
+      },
+      {
+        "name": "every run README/result is hashed",
+        "rc": 0,
+        "tail": [
+          "required evidence files: 331",
+          "hashed evidence files: 331",
+          "coverage OK"
+        ]
+      },
+      {
+        "name": "markdown encoding is clean",
+        "rc": 0,
+        "tail": [
+          "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
+          "exempt files: 1, suppressed content findings: 3",
+          "checked 275 markdown file(s): 275 clean, 0 finding(s)"
+        ]
+      },
+      {
+        "name": "evidence gate (contracts + unit tests + encoding)",
+        "rc": 0,
+        "tail": [
+          "  },",
+          "  \"root\": \"C:\\\\Users\\\\27682\\\\Documents\\\\\\u65b0\\u5efa\\u6587\\u4ef6\\u5939\\\\mcbridge1201\"",
+          "}"
+        ]
+      }
+    ],
+    "note": "Gates run by this script are read-only checks over the tree; the game-side contracts they summarize were not re-executed here."
+  }
+}

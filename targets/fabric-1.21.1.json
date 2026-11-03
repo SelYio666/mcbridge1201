@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "target-profile-1",
+  "profileId": "fabric-1.21.1",
+  "status": "frozen",
+  "note": "Frozen identity of the one conversion target this repository has actually exercised. Every hash here was read from manifests/environment.lock.json and re-hashed on this machine on 2026-11-03; no index was re-downloaded. This file is a configuration identity, NOT a support claim: what converts correctly is listed in profiles/ per artifact.",
+  "refusesTargets": [
+    "fabric-1.21.4",
+    "fabric-1.21.8",
+    "fabric-1.21.11",
+    "fabric-26.1.2",
+    "fabric-26.3",
+    "neoforge-1.21.1"
+  ],
+  "source": {
+    "minecraft": "1.20.1",
+    "loader": "fabric",
+    "namespace": "intermediary",
+    "javaMajor": 17,
+    "classMajorMax": 61,
+    "originalJarSha256": null,
+    "note": "The source is always an immutable original 1.20.1 jar; a jar already converted for 1.21.1 must never be fed back as source. Per-artifact source hashes live in profiles/, because they differ per mod."
+  },
+  "target": {
+    "id": "fabric-1.21.1",
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "loaderVersion": "0.19.5",
+    "fabricApi": "0.102.0+1.21.1",
+    "javaMajor": 21,
+    "classMajorMax": 65,
+    "namespace": "intermediary",
+    "namespaceStrategy": "version_specific_mapping_and_index"
+  },
+  "indices": {
+    "clientJar": {
+      "role": "target client",
+      "path": "work/target/client-1.21.1.jar",
+      "sha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+      "size": 26836906
+    },
+    "mappings": {
+      "role": "intermediary mappings (mappings/mappings.tiny inside the jar)",
+      "path": "work/target/intermediary-1.21.1-v2.jar",
+      "sha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+      "size": 582921
+    },
+    "loader": {
+      "role": "fabric loader",
+      "path": "work/target/fabric-loader-0.19.5.jar",
+      "sha256": "93044e4dd46de5d8136701292f05e868da096d2c9fddb4793e4fdbcc63efc695",
+      "size": 1984980
+    },
+    "api": [
+      {
+        "role": "fabric api",
+        "path": "work/target/fabric-api-0.102.0+1.21.1.jar",
+        "sha256": "fd021e3ea8d043805207f39d43ac4b358629b30f0d9280ffc5a886a433291bd1",
+        "size": 2286038
+      }
+    ],
+    "libs": [
+      {
+        "role": "bridge compile classpath (javac)",
+        "path": "work/lib/gson-2.11.0.jar",
+        "sha256": "57928d6e5a6edeb2abd3770a8f95ba44dce45f3b23b7a9dc2b309c581552a78b",
+        "size": null
+      }
+    ]
+  },
+  "pipeline": {
+    "engine": {
+      "name": "CenturyBridge",
+      "commit": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
+      "artifactSha256": null,
+      "license": "MIT",
+      "note": "Commit and license hash come from manifests/upstream.lock.json. The engine artifact itself is not tracked in this repository, so no artifact hash is claimed here; profiles/*.json record the per-run values, and some of them predate this freeze."
+    },
+    "bridgeAbi": "mcbridge-bridge-1",
+    "ruleOrder": [
+      "rules/fabric-1.21.1/appleskin-food.json",
+      "rules/fabric-1.21.1/appleskin-tooltip.json",
+      "rules/fabric-1.21.1/cloth-config-render.json",
+      "rules/fabric-1.21.1/cloth-config.json",
+      "rules/fabric-1.21.1/container.json",
+      "rules/fabric-1.21.1/dyecolor-components.json",
+      "rules/fabric-1.21.1/entityculling-mixin-port.json",
+      "rules/fabric-1.21.1/entrylist-constructor.json",
+      "rules/fabric-1.21.1/fabric-legacy-networking.json",
+      "rules/fabric-1.21.1/fallingtree-tombstones.json",
+      "rules/fabric-1.21.1/identifier-single-arg.json",
+      "rules/fabric-1.21.1/immediatelyfast-batching-port.json",
+      "rules/fabric-1.21.1/ironchests-draw.json",
+      "rules/fabric-1.21.1/ironchests-nbt.json",
+      "rules/fabric-1.21.1/ironchests-screen.json",
+      "rules/fabric-1.21.1/lithium.json",
+      "rules/fabric-1.21.1/lithium-varint.json",
+      "rules/fabric-1.21.1/lithium-degraded.json",
+      "rules/fabric-1.21.1/modmenu-list-render.json",
+      "rules/fabric-1.21.1/modmenu-options.json",
+      "rules/fabric-1.21.1/modmenu-textfield.json",
+      "rules/fabric-1.21.1/modmenu-title-screen.json",
+      "rules/fabric-1.21.1/nbt-packet.json",
+      "rules/fabric-1.21.1/render-widget-override.json",
+      "rules/fabric-1.21.1/shulker-nbt.json",
+      "rules/fabric-1.21.1/status-effect-instance.json",
+      "rules/fabric-1.21.1/textured-button.json",
+      "rules/fabric-1.21.1/trashslot.json",
+      "rules/fabric-1.21.1/trashslot-sendtoserver.json"
+    ],
+    "capabilities": [
+      "item.predicate.any",
+      "item.predicate.json",
+      "codec.dispatch.mapcodec",
+      "identifier.construct",
+      "blockentity.nbt.registries",
+      "dfu.interfaceization",
+      "container.contract",
+      "mixin.inject.target_descriptor",
+      "mixin.class.replacement",
+      "network.legacy.channel",
+      "gui.draw.extracted",
+      "render.list.legacy"
+    ],
+    "output": {
+      "bridgeClasses": "work/targets/fabric-1.21.1/bridges",
+      "cache": "work/targets/fabric-1.21.1/cache",
+      "convertedJars": "work/targets/fabric-1.21.1/out",
+      "reports": "runs/target-fabric-1.21.1"
+    }
+  },
+  "resources": {
+    "dataVersion": 3953,
+    "resourcePackFormat": 34,
+    "converters": [
+      "recipes",
+      "loot",
+      "tags"
+    ],
+    "note": "dataVersion 3953 / pack format 34 are the 1.21.1 values. The repository converts recipes, loot and tags today; models and blockstates are converted per artifact and are not part of this declared capability list."
+  },
+  "verification": {
+    "fixtureVersion": "manifests/environment.lock.json@2026-10-18T18:02:15+08:00",
+    "testedScopes": [
+      "dedicated server boot",
+      "container place/insert/NBT/restart (dedicated server)",
+      "synthetic codec dispatch probe",
+      "225-chunk stress",
+      "client boot and title screen (PCL2-launched, 1.20.4/1.21.1)",
+      "Cloth Config screen open and toggle (AppleSkin)"
+    ],
+    "knownGaps": [
+      "Real two-machine multiplayer is blocked (needs a second host); four-client same-host latency runs exist instead.",
+      "In-world gameplay, world rendering and multiplayer after entering a world with converted mods are unverified.",
+      "Sodium render core was assessed as infeasible and is out of scope.",
+      "Real OS mouse/keyboard into a converted mod GUI is only partially covered; synthetic input is not the same evidence."
+    ],
+    "evidence": "Records collected before this freeze; this run did not re-execute them. See docs/FINAL-STATUS.md for the current section and runs/ for the artifacts."
+  }
+}

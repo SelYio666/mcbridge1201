@@ -1327,6 +1327,11 @@ FILES = [
     "runs/p242-release-ui-accept/result.json",
     "runs/p242-release-ui-accept/packaged-result.json",
     "runs/p242-release-ui-accept/packaged-after-import.png",
+    "runs/p243-grab-1211/README.md",
+    "runs/p243-grab-1211/probe.py",
+    "runs/p243-grab-1211/result.json",
+    "runs/p243-grab-1211/view-before-1211.png",
+    "runs/p243-grab-1211/view-after-move-1211.png",
     "runs/p144-immediatelyfast-shader/result.json",
     "runs/p152-stress-off/result.json",
     "runs/p152-stress-on/result.json",
@@ -1740,7 +1745,27 @@ FILES = [
     "runs/p232-same-player-two-ops/result.json",
     "runs/p232-same-player-two-ops/after-twoops.png",
     "runs/p232-same-player-two-ops/server.properties.before",
+    "targets/fabric-1.21.1.json",
+    "java/src/main/java/top/mcbridge1201/profile/TargetProfile.java",
+    "java/src/test/java/top/mcbridge1201/TargetProfileValidationTest.java",
+    "tools/freeze_baseline.py",
+    "tools/run_target_gate.py",
+    "docs/multi-target-baseline.md",
+    "runs/p243-target-profile-gate/README.md",
+    "runs/p243-target-profile-gate/result.json",
+    "runs/p243-target-profile-gate/profile-check-positive.json",
+    "runs/p243-target-profile-gate/profile-check-wrong-target.json",
+    "runs/p243-target-profile-gate/profile-check-wrong-namespace.json",
+    "runs/p243-target-profile-gate/profile-check-index-hash.json",
+    "runs/p243-target-profile-gate/profile-check-index-missing.json",
+    "runs/p243-target-profile-gate/profile-check-bridge-class-version.json",
+    "runs/p243-target-profile-gate/profile-check-rule-order.json",
 ]
+
+# manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the
+# gates that themselves run check_hashes.py, so listing it would make the manifest and the lock
+# mutually stale after every gate run. It is verified instead by `freeze_baseline.py --check`,
+# which recomputes every input hash and reports drift leaf by leaf.
 
 
 def sha256(path):

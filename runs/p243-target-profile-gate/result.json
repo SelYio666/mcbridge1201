@@ -1,0 +1,147 @@
+{
+  "gate": "target-profile",
+  "profile": "targets/fabric-1.21.1.json",
+  "cli": "java/build/install/mcbridge1201/bin/mcbridge1201.bat",
+  "javaHome": "C:\\Users\\27682\\Documents\\新建文件夹\\.toolchain\\jdk",
+  "cases": [
+    {
+      "id": "positive-frozen-profile",
+      "goal": "the frozen profile accepts its own rule package",
+      "expect": {
+        "rc": 0,
+        "codes_absent": [
+          "rules.target-mismatch",
+          "rules.namespace-mismatch",
+          "indices.hash-mismatch",
+          "rules.order-mismatch"
+        ]
+      },
+      "rc": 0,
+      "output": [
+        "checked 29 rule file(s), 0 bridge dir(s); errors=0 warnings=4 -> PASS",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p243-target-profile-gate\\profile-check-positive.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "wrong-target",
+      "goal": "a rule package built for another target is refused",
+      "expect": {
+        "rc": 3,
+        "code": "rules.target-mismatch"
+      },
+      "rc": 3,
+      "errorCodes": [
+        "rules.target-mismatch"
+      ],
+      "output": [
+        "checked 1 rule file(s), 0 bridge dir(s); errors=1 warnings=1 -> FAIL",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p243-target-profile-gate\\profile-check-wrong-target.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "wrong-namespace",
+      "goal": "rules written in another namespace are refused",
+      "expect": {
+        "rc": 3,
+        "code": "rules.namespace-mismatch"
+      },
+      "rc": 3,
+      "errorCodes": [
+        "rules.namespace-mismatch"
+      ],
+      "output": [
+        "checked 1 rule file(s), 0 bridge dir(s); errors=1 warnings=1 -> FAIL",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p243-target-profile-gate\\profile-check-wrong-namespace.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "index-hash",
+      "goal": "an index whose bytes differ from the frozen hash is refused",
+      "expect": {
+        "rc": 3,
+        "code": "indices.hash-mismatch"
+      },
+      "rc": 3,
+      "errorCodes": [
+        "indices.hash-mismatch"
+      ],
+      "output": [
+        "checked 29 rule file(s), 0 bridge dir(s); errors=1 warnings=4 -> FAIL",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p243-target-profile-gate\\profile-check-index-hash.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "index-missing",
+      "goal": "a missing target index is refused",
+      "expect": {
+        "rc": 3,
+        "code": "indices.missing"
+      },
+      "rc": 3,
+      "errorCodes": [
+        "indices.missing"
+      ],
+      "output": [
+        "checked 29 rule file(s), 0 bridge dir(s); errors=1 warnings=4 -> FAIL",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p243-target-profile-gate\\profile-check-index-missing.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "bridge-class-version",
+      "goal": "a bridge compiled above the target Java level is refused",
+      "expect": {
+        "rc": 3,
+        "code": "bridge.class-version"
+      },
+      "rc": 3,
+      "errorCodes": [
+        "bridge.class-version"
+      ],
+      "output": [
+        "checked 29 rule file(s), 1 bridge dir(s); errors=1 warnings=4 -> FAIL",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p243-target-profile-gate\\profile-check-bridge-class-version.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "rule-order",
+      "goal": "a rule package passed in another order than the profile's is refused",
+      "expect": {
+        "rc": 3,
+        "code": "rules.order-mismatch"
+      },
+      "rc": 3,
+      "errorCodes": [
+        "rules.order-mismatch"
+      ],
+      "output": [
+        "checked 2 rule file(s), 0 bridge dir(s); errors=1 warnings=0 -> FAIL",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p243-target-profile-gate\\profile-check-rule-order.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "patch-refuses-before-writing",
+      "goal": "patch --profile stops before writing a jar",
+      "expect": {
+        "rc": 2,
+        "output_exists": false
+      },
+      "rc": 2,
+      "outputExists": false,
+      "output": [
+        "  profile warning [rules.duplicate-id] trashslot-sendtoserver.json: rule id 'trashslot.balm.send-to-server' is also used by another rule file; the per-id hit counts reported by patch will be merged",
+        "  profile error [indices.hash-mismatch] index 'target client' at client-1.21.1.jar has sha256 499f6897d183 but the profile froze 000000000000; a different jar/mapping set silently changes every member lookup",
+        "profile fabric-1.21.1 rejected: 1 error(s); no jar was written"
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "dry runs only: no jar was converted and no game was launched"
+}

@@ -7,6 +7,7 @@ import top.mcbridge1201.analyze.Analyzer;
 import top.mcbridge1201.index.IndexBuilder;
 import top.mcbridge1201.index.TargetIndex;
 import top.mcbridge1201.index.TinyMappings;
+import top.mcbridge1201.profile.TargetProfile;
 import top.mcbridge1201.scan.ArtifactScanner;
 
 import java.io.IOException;
@@ -36,6 +37,7 @@ public final class Main {
             case "analyze" -> analyze(args);
             case "index-info" -> indexInfo(args);
             case "remap-jar" -> remapJar(args);
+            case "profile-check" -> profileCheck(args);
             case "patch" -> patchJar(args);
             case "patch-readonly" -> patchReadOnly(args);
             case "refs" -> dumpRefs(args);
@@ -55,7 +57,13 @@ public final class Main {
                            --out <plan.json> [--markdown <file>]
                   index-info --client-jar <jar> --mappings <tiny> --api <jar> [...]
                   remap-jar --in <obf.jar> --out <intermediary.jar> --mappings <tiny|mappings.jar>
+                  profile-check --profile <targets/fabric-1.21.1.json>
+                           [--rules <json> ... | --rules-from-profile] [--bridge-dir <dir> ...]
+                           [--root <repo root>] [--client-jar <jar>] [--mappings <tiny>]
+                           [--api <jar> ...] [--lib <jar> ...] [--allow-missing-indices] [--no-hash]
+                           [--strict] [--json <file>]
                   patch    --in <jar> --out <jar> --rules <json> [--rules <json> ...]
+                           [--profile <targets/fabric-1.21.1.json> [--rules-from-profile] [--root <dir>]]
                            [--client-jar <1.21.1 client.jar> --mappings <intermediary tiny>]
                            [--bridge-dir <javac output dir> ...]
                 """);
@@ -157,12 +165,122 @@ public final class Main {
         }
     }
 
+    /** Map the CLI flags onto the profile validator's input. */
+    private static TargetProfile.Input targetInput(Map<String, List<String>> f, TargetProfile profile) {
+        TargetProfile.Input in = new TargetProfile.Input();
+        String root = one(f, "root", null);
+        in.root = root != null ? Path.of(root).toAbsolutePath() : Path.of("").toAbsolutePath();
+        for (String r : f.getOrDefault("rules", List.of())) in.ruleFiles.add(Path.of(r));
+        if (profile != null && f.containsKey("rules-from-profile")) {
+            for (String rel : profile.pipeline.ruleOrder) {
+                Path rp = Path.of(rel);
+                in.ruleFiles.add(rp.isAbsolute() ? rp : in.root.resolve(rp));
+            }
+        }
+        for (String b : f.getOrDefault("bridge-dir", List.of())) in.bridgeDirs.add(Path.of(b));
+        String cj = one(f, "client-jar", null);
+        if (cj != null) in.clientJar = Path.of(cj);
+        String mp = one(f, "mappings", null);
+        if (mp != null) in.mappings = Path.of(mp);
+        for (String a : f.getOrDefault("api", List.of())) in.apiJars.add(Path.of(a));
+        for (String l : f.getOrDefault("lib", List.of())) in.libs.add(Path.of(l));
+        in.allowMissingIndices = f.containsKey("allow-missing-indices");
+        in.verifyIndexHashes = !f.containsKey("no-hash");
+        return in;
+    }
+
+    /**
+     * Dry-run target gate: load one profile, validate it against the rule package, index files and
+     * bridge classes on disk, and write a machine-readable verdict. This never touches a jar, so it
+     * is the cheap way to prove "a wrong target/namespace/dependency stops before conversion".
+     */
+    private static void profileCheck(String[] args) throws IOException {
+        Map<String, List<String>> f = flags(args, 1);
+        Path profilePath = Path.of(require(f, "profile"));
+        TargetProfile profile;
+        try {
+            profile = TargetProfile.load(profilePath);
+        } catch (IOException e) {
+            System.err.println("invalid profile " + profilePath + ": " + e.getMessage());
+            System.exit(2);
+            return;
+        }
+        TargetProfile.Input in = targetInput(f, profile);
+        List<TargetProfile.Problem> problems = profile.validate(in);
+        int errors = 0;
+        int warnings = 0;
+        for (TargetProfile.Problem p : problems) {
+            System.out.println("  " + p);
+            if (p.isError()) {
+                errors++;
+            } else {
+                warnings++;
+            }
+        }
+        boolean strict = f.containsKey("strict");
+        boolean passed = errors == 0 && (!strict || warnings == 0);
+        System.out.printf("profile %s -> target %s (%s %s, java %d, class major %d, ns %s, abi %s)%n",
+                profile.profileId, profile.target.id, profile.target.loader, profile.target.minecraft,
+                profile.target.javaMajor, profile.target.classMajorMax, profile.target.namespace,
+                profile.pipeline.bridgeAbi);
+        System.out.printf("checked %d rule file(s), %d bridge dir(s); errors=%d warnings=%d -> %s%n",
+                in.ruleFiles.size(), in.bridgeDirs.size(), errors, warnings,
+                passed ? "PASS" : "FAIL");
+        String out = one(f, "json", null);
+        if (out != null) {
+            JsonObject o = new JsonObject();
+            o.add("profile", profile.toJson());
+            o.addProperty("ruleFiles", in.ruleFiles.size());
+            o.addProperty("bridgeDirs", in.bridgeDirs.size());
+            o.addProperty("errors", errors);
+            o.addProperty("warnings", warnings);
+            o.addProperty("strict", strict);
+            o.addProperty("passed", passed);
+            JsonArray arr = new JsonArray();
+            for (TargetProfile.Problem p : problems) {
+                JsonObject po = new JsonObject();
+                po.addProperty("severity", p.severity);
+                po.addProperty("code", p.code);
+                po.addProperty("message", p.message);
+                arr.add(po);
+            }
+            o.add("problems", arr);
+            Files.writeString(Path.of(out), new GsonBuilder().setPrettyPrinting().create().toJson(o) + "\n",
+                    StandardCharsets.UTF_8);
+            System.out.println("wrote " + out);
+        }
+        if (!passed) {
+            System.exit(3);
+        }
+    }
+
     /** Apply versioned transform rules (field redirects) and embed the bridge classes. */
     private static void patchJar(String[] args) throws IOException {
         Map<String, List<String>> f = flags(args, 1);
         Path in = Path.of(require(f, "in"));
         Path out = Path.of(require(f, "out"));
-        List<String> rulePaths = f.getOrDefault("rules", List.of());
+        String rootArg = one(f, "root", null);
+        Path root = rootArg != null ? Path.of(rootArg).toAbsolutePath() : Path.of("").toAbsolutePath();
+        String profileArg = one(f, "profile", null);
+        TargetProfile profile = null;
+        if (profileArg != null) {
+            try {
+                profile = TargetProfile.load(Path.of(profileArg));
+            } catch (IOException e) {
+                System.err.println("invalid profile " + profileArg + ": " + e.getMessage());
+                System.exit(2);
+                return;
+            }
+        }
+        List<String> rulePaths = new ArrayList<>(f.getOrDefault("rules", List.of()));
+        if (profile != null && f.containsKey("rules-from-profile")) {
+            // The profile's ruleOrder is the authoritative sequence; taking it from there is the
+            // only way two callers cannot end up applying the same package in a different order.
+            for (String rel : profile.pipeline.ruleOrder) {
+                Path rp = Path.of(rel);
+                rulePaths.add((rp.isAbsolute() ? rp : root.resolve(rp)).toString());
+            }
+        }
         if (rulePaths.isEmpty()) {
             System.err.println("missing --rules");
             System.exit(2);
@@ -212,6 +330,30 @@ public final class Main {
         if (requestedTarget != null && !requestedTarget.equals(target)) {
             System.err.println("requested --target " + requestedTarget + " but rules target " + target);
             System.exit(2);
+        }
+        if (profile != null) {
+            if (!profile.target.id.equals(target)) {
+                System.err.println("rules target " + target + " != profile target " + profile.target.id
+                        + "; refusing to convert this jar against another target's rule package");
+                System.exit(2);
+                return;
+            }
+            List<TargetProfile.Problem> errors = new ArrayList<>();
+            for (TargetProfile.Problem p : profile.validate(targetInput(f, profile))) {
+                System.out.println("  profile " + p);
+                if (p.isError()) {
+                    errors.add(p);
+                }
+            }
+            if (!errors.isEmpty()) {
+                System.err.println("profile " + profile.profileId + " rejected: " + errors.size()
+                        + " error(s); no jar was written");
+                System.exit(2);
+                return;
+            }
+            System.out.printf("profile %s accepted (java %d, class major %d, abi %s)%n",
+                    profile.profileId, profile.target.javaMajor, profile.target.classMajorMax,
+                    profile.pipeline.bridgeAbi);
         }
         System.out.printf("validated %d rule file(s): schema=%s target=%s%n",
                 rulePaths.size(), rules.version, target);

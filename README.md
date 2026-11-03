@@ -44,7 +44,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
   `dist/mcbridge-launcher-<版本>.zip`（`runs/p240-release-check/`）。
 - 详情：[FINAL-STATUS](docs/FINAL-STATUS.md)、[报告 p210–p214](docs/report-2026-10-30.md)、
   [报告：接手核验 + p231](docs/report-2026-11-01.md)、
-  [剩余工作](docs/remaining-work.md)、[使用说明](docs/guide.md)。
+  [剩余工作](docs/remaining-work.md)、[使用说明](docs/guide.md)、
+  [多目标基线与目标身份](docs/multi-target-baseline.md)。
 
 ## 现状（2026-10-18）
 
@@ -64,6 +65,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | 规则数 | `container.json` 7 条 + `lithium.json` 调用点/2 条 Mixin 目标/1 条实现类替换 + `trashslot.json` 4 条 NBT/3 条 Balm 调用点 | `rules/fabric-1.21.1/` |
 | 容器契约（服务端命令） | **通过**：放置 → 插入 5 钻石 → NBT `Items` → 重启读回 5 | `runs/p5-contract-*/` |
 | 兼容档案 | ironchests `passed_within_scope`；lithium / trashslot `booted_within_scope`；all-three bundle `passed_within_scope` | [profiles/README.md](profiles/README.md)、`profiles/bundle-all-three__fabric-1.21.1.json` |
+| **目标身份（A02）** | `targets/fabric-1.21.1.json`：来源/目标命名空间与 Java、索引 SHA-256、引擎提交、权威规则顺序、桥 ABI；`profile-check` 拒绝错目标、错命名空间、索引缺失或被替换、桥 class 版本过高、规则乱序，`patch --profile` 拒绝时不写 jar | [docs/multi-target-baseline.md](docs/multi-target-baseline.md)、`runs/p243-target-profile-gate/` |
+| **基线冻结（A01）** | `manifests/baseline.lock.json`：29 个规则文件、65 个源码、目标索引、逐制品证据状态与显式降级按 SHA-256 固定；`--check` 逐叶子复算漂移 | `tools/freeze_baseline.py`、[docs/multi-target-baseline.md](docs/multi-target-baseline.md) |
 | 支持矩阵 | 10 份样本的静态结果 + 运行时阶段（未运行 ≠ 通过） | [docs/support-matrix.md](docs/support-matrix.md) |
 | 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
 | **调用点签名适配** | `callSiteAdaptations` + javac 桥；lithium `class_14.method_59` 命中 2 处，`NoSuchMethodError` 消失 | [docs/baseline.md](docs/baseline.md) §7.17、`runs/p10-lithium-signature/` |

@@ -1,0 +1,78 @@
+{
+  "profile": {
+    "schemaVersion": "target-profile-1",
+    "profileId": "fabric-1.21.1",
+    "status": "frozen",
+    "target": {
+      "id": "fabric-1.21.1",
+      "minecraft": "1.21.1",
+      "loader": "fabric",
+      "loaderVersion": "0.19.5",
+      "fabricApi": "0.102.0+1.21.1",
+      "javaMajor": 21,
+      "classMajorMax": 65,
+      "namespace": "intermediary",
+      "namespaceStrategy": "version_specific_mapping_and_index"
+    },
+    "source": {
+      "minecraft": "1.20.1",
+      "loader": "fabric",
+      "namespace": "intermediary",
+      "javaMajor": 17,
+      "classMajorMax": 61
+    },
+    "bridgeAbi": "mcbridge-bridge-1",
+    "ruleOrderEntries": 29,
+    "engine": {
+      "name": "CenturyBridge",
+      "commit": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec"
+    },
+    "resources": {
+      "dataVersion": 3953,
+      "resourcePackFormat": 34
+    },
+    "verification": {
+      "fixtureVersion": "manifests/environment.lock.json@2026-10-18T18:02:15+08:00",
+      "testedScopes": [
+        "dedicated server boot",
+        "container place/insert/NBT/restart (dedicated server)",
+        "synthetic codec dispatch probe",
+        "225-chunk stress",
+        "client boot and title screen (PCL2-launched, 1.20.4/1.21.1)",
+        "Cloth Config screen open and toggle (AppleSkin)"
+      ],
+      "knownGaps": [
+        "Real two-machine multiplayer is blocked (needs a second host); four-client same-host latency runs exist instead.",
+        "In-world gameplay, world rendering and multiplayer after entering a world with converted mods are unverified.",
+        "Sodium render core was assessed as infeasible and is out of scope.",
+        "Real OS mouse/keyboard into a converted mod GUI is only partially covered; synthetic input is not the same evidence."
+      ]
+    },
+    "refusesTargets": [
+      "fabric-1.21.4",
+      "fabric-1.21.8",
+      "fabric-1.21.11",
+      "fabric-26.1.2",
+      "fabric-26.3",
+      "neoforge-1.21.1"
+    ]
+  },
+  "ruleFiles": 1,
+  "bridgeDirs": 0,
+  "errors": 1,
+  "warnings": 1,
+  "strict": false,
+  "passed": false,
+  "problems": [
+    {
+      "severity": "error",
+      "code": "rules.namespace-mismatch",
+      "message": "profile namespace is \u0027intermediary\u0027 but 1 rule reference(s) are written in another namespace: rule-official-ns.json fieldRedirects.sourceOwner \u003d net/minecraft/world/entity/Entity is official"
+    },
+    {
+      "severity": "warning",
+      "code": "rules.not-in-profile",
+      "message": "rule-official-ns.json is not listed in pipeline.ruleOrder; the profile does not record where it applies, so this run cannot be reproduced from it"
+    }
+  ]
+}
