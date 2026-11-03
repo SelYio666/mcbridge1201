@@ -1,0 +1,278 @@
+{
+  "workstream": "B03: separate real descriptor breakage from subtype false alarms",
+  "source": "runs/p250-1214-break-classification/result.json",
+  "counts": {
+    "descriptorChangedTotal": 9,
+    "broken": 5,
+    "methodChanged": 4,
+    "compatible": 0,
+    "same": 0,
+    "unknown": 0
+  },
+  "verdicts": {
+    "broken": 5,
+    "method-changed": 4
+  },
+  "entries": [
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_1269",
+      "field": "field_21466",
+      "mojangOwner": "net.minecraft.world.InteractionResult",
+      "oldDescriptor": "Lnet/minecraft/class_1269;",
+      "oldType": "net/minecraft/class_1269",
+      "newType": "net/minecraft/class_1269$class_9860",
+      "newSignatures": [],
+      "newTypeIsSubtype": true,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_1269$class_9860 is a subtype of net/minecraft/class_1269; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_1269",
+      "field": "field_5811",
+      "mojangOwner": "net.minecraft.world.InteractionResult",
+      "oldDescriptor": "Lnet/minecraft/class_1269;",
+      "oldType": "net/minecraft/class_1269",
+      "newType": "net/minecraft/class_1269$class_9859",
+      "newSignatures": [],
+      "newTypeIsSubtype": true,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_1269$class_9859 is a subtype of net/minecraft/class_1269; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_1269",
+      "field": "field_5812",
+      "mojangOwner": "net.minecraft.world.InteractionResult",
+      "oldDescriptor": "Lnet/minecraft/class_1269;",
+      "oldType": "net/minecraft/class_1269",
+      "newType": "net/minecraft/class_1269$class_9860",
+      "newSignatures": [],
+      "newTypeIsSubtype": true,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_1269$class_9860 is a subtype of net/minecraft/class_1269; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_2741",
+      "field": "field_12481",
+      "mojangOwner": "net.minecraft.world.level.block.state.properties.BlockStateProperties",
+      "oldDescriptor": "Lnet/minecraft/class_2753;",
+      "oldType": "net/minecraft/class_2753",
+      "newType": "net/minecraft/class_2754<net/minecraft/class_2350>",
+      "newSignatures": [],
+      "newTypeIsSubtype": false,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_2754<net/minecraft/class_2350> is not a subtype of net/minecraft/class_2753; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_2741",
+      "field": "field_12525",
+      "mojangOwner": "net.minecraft.world.level.block.state.properties.BlockStateProperties",
+      "oldDescriptor": "Lnet/minecraft/class_2753;",
+      "oldType": "net/minecraft/class_2753",
+      "newType": "net/minecraft/class_2754<net/minecraft/class_2350>",
+      "newSignatures": [],
+      "newTypeIsSubtype": false,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_2754<net/minecraft/class_2350> is not a subtype of net/minecraft/class_2753; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_2769",
+      "field": "method_11898",
+      "mojangOwner": "net.minecraft.world.level.block.state.properties.Property",
+      "oldDescriptor": "()Ljava/util/Collection;",
+      "oldType": null,
+      "newType": null,
+      "newSignatures": [
+        "public abstract java.util.List<T> method_11898();"
+      ],
+      "newTypeIsSubtype": false,
+      "verdict": "method-changed",
+      "detail": "signature moved; adapt at the call site (or via a bridge)"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_332",
+      "field": "method_25290",
+      "mojangOwner": "net.minecraft.client.gui.GuiGraphics",
+      "oldDescriptor": "(Lnet/minecraft/class_2960;IIFFIIII)V",
+      "oldType": null,
+      "newType": null,
+      "newSignatures": [
+        "public void method_25290(java.util.function.Function<net.minecraft.class_2960, net.minecraft.class_1921>, net.minecraft.class_2960, int, int, float, float, int, int, int, int);"
+      ],
+      "newTypeIsSubtype": false,
+      "verdict": "method-changed",
+      "detail": "signature moved; adapt at the call site (or via a bridge)"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_332",
+      "field": "method_25302",
+      "mojangOwner": "net.minecraft.client.gui.GuiGraphics",
+      "oldDescriptor": "(Lnet/minecraft/class_2960;IIIIII)V",
+      "oldType": null,
+      "newType": null,
+      "newSignatures": [
+        "public void method_25302(java.util.function.Function<net.minecraft.class_2960, net.minecraft.class_1921>, net.minecraft.class_2960, int, int, float, float, int, int, int, int, int, int);"
+      ],
+      "newTypeIsSubtype": false,
+      "verdict": "method-changed",
+      "detail": "signature moved; adapt at the call site (or via a bridge)"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_4309",
+      "field": "<init>",
+      "mojangOwner": "net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener",
+      "oldDescriptor": "(Lcom/google/gson/Gson;Ljava/lang/String;)V",
+      "oldType": null,
+      "newType": null,
+      "newSignatures": [
+        "protected net.minecraft.class_4309(net.minecraft.class_7225$class_7874, com.mojang.serialization.Codec<T>, net.minecraft.class_5321<? extends net.minecraft.class_2378<T>>);",
+        "protected net.minecraft.class_4309(com.mojang.serialization.Codec<T>, net.minecraft.class_7654);"
+      ],
+      "newTypeIsSubtype": false,
+      "verdict": "method-changed",
+      "detail": "signature moved; adapt at the call site (or via a bridge)"
+    }
+  ],
+  "needsConversion": [
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_1269",
+      "field": "field_21466",
+      "mojangOwner": "net.minecraft.world.InteractionResult",
+      "oldDescriptor": "Lnet/minecraft/class_1269;",
+      "oldType": "net/minecraft/class_1269",
+      "newType": "net/minecraft/class_1269$class_9860",
+      "newSignatures": [],
+      "newTypeIsSubtype": true,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_1269$class_9860 is a subtype of net/minecraft/class_1269; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_1269",
+      "field": "field_5811",
+      "mojangOwner": "net.minecraft.world.InteractionResult",
+      "oldDescriptor": "Lnet/minecraft/class_1269;",
+      "oldType": "net/minecraft/class_1269",
+      "newType": "net/minecraft/class_1269$class_9859",
+      "newSignatures": [],
+      "newTypeIsSubtype": true,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_1269$class_9859 is a subtype of net/minecraft/class_1269; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_1269",
+      "field": "field_5812",
+      "mojangOwner": "net.minecraft.world.InteractionResult",
+      "oldDescriptor": "Lnet/minecraft/class_1269;",
+      "oldType": "net/minecraft/class_1269",
+      "newType": "net/minecraft/class_1269$class_9860",
+      "newSignatures": [],
+      "newTypeIsSubtype": true,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_1269$class_9860 is a subtype of net/minecraft/class_1269; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_2741",
+      "field": "field_12481",
+      "mojangOwner": "net.minecraft.world.level.block.state.properties.BlockStateProperties",
+      "oldDescriptor": "Lnet/minecraft/class_2753;",
+      "oldType": "net/minecraft/class_2753",
+      "newType": "net/minecraft/class_2754<net/minecraft/class_2350>",
+      "newSignatures": [],
+      "newTypeIsSubtype": false,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_2754<net/minecraft/class_2350> is not a subtype of net/minecraft/class_2753; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_2741",
+      "field": "field_12525",
+      "mojangOwner": "net.minecraft.world.level.block.state.properties.BlockStateProperties",
+      "oldDescriptor": "Lnet/minecraft/class_2753;",
+      "oldType": "net/minecraft/class_2753",
+      "newType": "net/minecraft/class_2754<net/minecraft/class_2350>",
+      "newSignatures": [],
+      "newTypeIsSubtype": false,
+      "verdict": "broken",
+      "detail": "net/minecraft/class_2754<net/minecraft/class_2350> is not a subtype of net/minecraft/class_2753; either way the descriptor differs, so resolution fails"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_2769",
+      "field": "method_11898",
+      "mojangOwner": "net.minecraft.world.level.block.state.properties.Property",
+      "oldDescriptor": "()Ljava/util/Collection;",
+      "oldType": null,
+      "newType": null,
+      "newSignatures": [
+        "public abstract java.util.List<T> method_11898();"
+      ],
+      "newTypeIsSubtype": false,
+      "verdict": "method-changed",
+      "detail": "signature moved; adapt at the call site (or via a bridge)"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_332",
+      "field": "method_25290",
+      "mojangOwner": "net.minecraft.client.gui.GuiGraphics",
+      "oldDescriptor": "(Lnet/minecraft/class_2960;IIFFIIII)V",
+      "oldType": null,
+      "newType": null,
+      "newSignatures": [
+        "public void method_25290(java.util.function.Function<net.minecraft.class_2960, net.minecraft.class_1921>, net.minecraft.class_2960, int, int, float, float, int, int, int, int);"
+      ],
+      "newTypeIsSubtype": false,
+      "verdict": "method-changed",
+      "detail": "signature moved; adapt at the call site (or via a bridge)"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_332",
+      "field": "method_25302",
+      "mojangOwner": "net.minecraft.client.gui.GuiGraphics",
+      "oldDescriptor": "(Lnet/minecraft/class_2960;IIIIII)V",
+      "oldType": null,
+      "newType": null,
+      "newSignatures": [
+        "public void method_25302(java.util.function.Function<net.minecraft.class_2960, net.minecraft.class_1921>, net.minecraft.class_2960, int, int, float, float, int, int, int, int, int, int);"
+      ],
+      "newTypeIsSubtype": false,
+      "verdict": "method-changed",
+      "detail": "signature moved; adapt at the call site (or via a bridge)"
+    },
+    {
+      "input": "ironchests-5.0.2",
+      "owner": "net/minecraft/class_4309",
+      "field": "<init>",
+      "mojangOwner": "net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener",
+      "oldDescriptor": "(Lcom/google/gson/Gson;Ljava/lang/String;)V",
+      "oldType": null,
+      "newType": null,
+      "newSignatures": [
+        "protected net.minecraft.class_4309(net.minecraft.class_7225$class_7874, com.mojang.serialization.Codec<T>, net.minecraft.class_5321<? extends net.minecraft.class_2378<T>>);",
+        "protected net.minecraft.class_4309(com.mojang.serialization.Codec<T>, net.minecraft.class_7654);"
+      ],
+      "newTypeIsSubtype": false,
+      "verdict": "method-changed",
+      "detail": "signature moved; adapt at the call site (or via a bridge)"
+    }
+  ],
+  "caveats": [
+    "A changed descriptor is broken even when the new type is a subtype: JVMS 5.4.3.2/5.4.3.3 resolve a field or method by name AND descriptor. newTypeIsSubtype is recorded for information only. Measured with JvmResolutionTest (runs/p255).",
+    "Even a resolving member can behave differently; this check only judges linkage.",
+    "This only looks at the descriptor. A member that disappeared entirely is a different category ('member-removed') and is not re-examined here."
+  ],
+  "scope": "static only: no conversion, no game launch"
+}

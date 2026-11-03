@@ -1836,6 +1836,10 @@ FILES = [
     "runs/p254-1214-draw-rules/disassembly-TexturedScreenRenderer-after.txt",
     "runs/p254-1214-draw-rules/disassembly-GeneratedScreenRenderer-before.txt",
     "runs/p254-1214-draw-rules/disassembly-GeneratedScreenRenderer-after.txt",
+    "java/src/test/java/top/mcbridge1201/JvmResolutionTest.java",
+    "runs/p255-desc-rejudged/README.md",
+    "runs/p255-desc-rejudged/result.json",
+    "runs/p253-desc-compat/README.md",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

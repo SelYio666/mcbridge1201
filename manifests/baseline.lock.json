@@ -1,35 +1,21 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T22:14:49+08:00",
+  "generatedAt": "2026-11-03T22:21:01+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "1c573bb547afab8c36485a54985b6e177db245a2",
+    "commit": "813678b52b89c3aa3e3521bc9af51f185a1b8529",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "java/src/bridge-1214/java/top/mcbridge1201/bridge/DrawContextBlitBridge1214.java",
-      "rules/fabric-1.21.4/ironchests-blit.json",
+      "java/src/test/java/top/mcbridge1201/JvmResolutionTest.java",
       "runs/SHA256SUMS.txt",
-      "runs/p254-1214-draw-rules/README.md",
-      "runs/p254-1214-draw-rules/bridges-shim/net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler.class",
-      "runs/p254-1214-draw-rules/bridges-shim/net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking.class",
-      "runs/p254-1214-draw-rules/bridges-shim/net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler.class",
-      "runs/p254-1214-draw-rules/bridges-shim/net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking.class",
-      "runs/p254-1214-draw-rules/bridges/net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler.class",
-      "runs/p254-1214-draw-rules/bridges/net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler.class",
-      "runs/p254-1214-draw-rules/bridges/top/mcbridge1201/bridge/DrawContextBlitBridge1214.class",
-      "runs/p254-1214-draw-rules/bridges/top/mcbridge1201/bridge/DrawContextTextureBridge1214.class",
-      "runs/p254-1214-draw-rules/disassembly-GeneratedScreenRenderer-after.txt",
-      "runs/p254-1214-draw-rules/disassembly-GeneratedScreenRenderer-before.txt",
-      "runs/p254-1214-draw-rules/disassembly-TexturedScreenRenderer-after.txt",
-      "runs/p254-1214-draw-rules/disassembly-TexturedScreenRenderer-before.txt",
-      "runs/p254-1214-draw-rules/result.json",
-      "targets/fabric-1.21.4.json",
-      "tools/freeze_baseline.py",
-      "tools/hash_evidence.py",
-      "tools/run_1214_draw_rules.py"
+      "runs/p253-desc-compat/README.md",
+      "runs/p255-desc-rejudged/README.md",
+      "runs/p255-desc-rejudged/result.json",
+      "tools/check_desc_compat.py",
+      "tools/hash_evidence.py"
     ],
     "untrackedFiles": [
       "WORKSPACE.md"
@@ -555,8 +541,8 @@
       },
       "java/src/test": {
         "root": "java/src/test",
-        "count": 12,
-        "packageSha256": "c0348965ef261a2aa32e2d60092038800bad69d6dd346e65112f14316a40d672",
+        "count": 13,
+        "packageSha256": "fcd0e90b76ea5cc87a29d7c740e0eb6575f2101ab18785baee0f2f2d4b55a147",
         "files": [
           {
             "path": "java/src/test/java/top/mcbridge1201/AnalyzerCoreTest.java",
@@ -594,6 +580,11 @@
             "size": 9222
           },
           {
+            "path": "java/src/test/java/top/mcbridge1201/JvmResolutionTest.java",
+            "sha256": "90209d2af4185401d29b7ffdee25a46e848e5b3b5b959def265667b8bd0fbcfb",
+            "size": 6900
+          },
+          {
             "path": "java/src/test/java/top/mcbridge1201/MixinCallbackAdaptationTest.java",
             "sha256": "8b4d514d959cbe149515decaa2e171ca555c8a84880b5a4cddd24a071e8a407f",
             "size": 9732
@@ -624,7 +615,7 @@
     "tools": {
       "count": 27,
       "present": 27,
-      "packageSha256": "ee6e32da7d266b1b17e81b537f3bb32311fe22ed64dff368458ff8dc4b3c9855",
+      "packageSha256": "9bd0d6a7db29b0d15d3fb65243144229d2b239c13d8a5961998fa58c3ad7fac8",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -648,8 +639,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "ff3c6626adf3edac3f692f9dac1cc597f821acd3b470df12e4216d1872f8c803",
-          "size": 91066
+          "sha256": "ab631e71fc5372d8ed05c483f7bcc13564307625fc4d3722e9d7f4a547cdfd6a",
+          "size": 91255
         },
         {
           "path": "tools/release_check.py",
@@ -718,8 +709,8 @@
         },
         {
           "path": "tools/check_desc_compat.py",
-          "sha256": "743a766d0849b4cb761f465606c0b2bc1d437cd06f0fff0ecacb9f48931dce03",
-          "size": 9263
+          "sha256": "d72c8157fb9a7d34cb4337b8e69c8ce6a1b9e64508f9e88739cd20a1c4d8a5cc",
+          "size": 9638
         },
         {
           "path": "tools/run_1214_draw_rules.py",
@@ -950,15 +941,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1802 mismatch=0 missing=0"
+          "ok=1806 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 353",
-          "hashed evidence files: 353",
+          "required evidence files: 355",
+          "hashed evidence files: 355",
           "coverage OK"
         ]
       },
@@ -968,7 +959,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 286 markdown file(s): 286 clean, 0 finding(s)"
+          "checked 287 markdown file(s): 287 clean, 0 finding(s)"
         ]
       },
       {

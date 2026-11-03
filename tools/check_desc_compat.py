@@ -169,21 +169,25 @@ def main() -> int:
             if new_signatures:
                 verdict = "method-changed"
                 detail = "signature moved; adapt at the call site (or via a bridge)"
+        subtype = False
         if old_type and new_type:
             if new_type == old_type:
                 verdict, detail = "same", "descriptor already matches"
-            elif is_subtype(javap_exe, new_type, old_type, cache):
-                verdict = "compatible"
-                detail = f"{new_type} is a subtype of {old_type}; a JVM accepts it where the old type was expected"
             else:
+                # A subtype is NOT good enough: JVMS 5.4.3.2/5.4.3.3 resolve a field or method by
+                # name AND descriptor, so a stale descriptor fails with NoSuchFieldError /
+                # NoSuchMethodError before the verifier ever looks at assignability.
+                # Measured with JvmResolutionTest against the 1.21.4 stub (runs/p255).
+                subtype = is_subtype(javap_exe, new_type, old_type, cache)
                 verdict = "broken"
-                detail = f"{new_type} is not a subtype of {old_type}"
+                detail = (f"{new_type} {'is a subtype of' if subtype else 'is not a subtype of'}"
+                          f" {old_type}; either way the descriptor differs, so resolution fails")
         results.append({
             "input": r["input"], "owner": owner, "field": field,
             "mojangOwner": r.get("mojangOwner1211") or r.get("mojangOwner1214"),
             "oldDescriptor": old_desc, "oldType": old_type,
             "newType": new_type, "newSignatures": new_signatures,
-            "verdict": verdict, "detail": detail,
+            "newTypeIsSubtype": subtype, "verdict": verdict, "detail": detail,
         })
         print(f"{verdict:11} {owner}.{field}  {old_type} -> {new_type}")
 
@@ -206,11 +210,10 @@ def main() -> int:
         "entries": results,
         "needsConversion": real,
         "caveats": [
-            "The subtype check walks the target stub's own class headers; JDK types are not"
-            " resolved, which does not affect these game types.",
-            "Compatible means 'a JVM accepts the value where the old type was expected'. It does"
-            " not mean the surrounding logic is correct - a field that changed meaning would still"
-            " be a behaviour bug.",
+            "A changed descriptor is broken even when the new type is a subtype: JVMS 5.4.3.2/5.4.3.3"
+            " resolve a field or method by name AND descriptor. newTypeIsSubtype is recorded for"
+            " information only. Measured with JvmResolutionTest (runs/p255).",
+            "Even a resolving member can behave differently; this check only judges linkage.",
             "This only looks at the descriptor. A member that disappeared entirely is a different"
             " category ('member-removed') and is not re-examined here.",
         ],
