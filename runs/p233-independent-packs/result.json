@@ -1,0 +1,24 @@
+{
+  "means": {
+    "red": [
+      135,
+      75,
+      75
+    ],
+    "green": [
+      72,
+      138,
+      72
+    ]
+  },
+  "checks": {
+    "red_is_red": true,
+    "green_is_green": true,
+    "clients_differ": true,
+    "distinct_game_dirs": true,
+    "packs_on_disk": true
+  },
+  "passed": true,
+  "total": 5,
+  "note": "assets/libraries shared by junction; only resourcepacks + options are per-client"
+}
