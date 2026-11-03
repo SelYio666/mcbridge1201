@@ -1,0 +1,42 @@
+{
+  "workstream": "ThreadLocal lifetime tests for RegistryKeyContext",
+  "why": "a leaked pending id makes the NEXT registration use the previous mod's id - data corruption, not a cosmetic bug",
+  "cases": [
+    {
+      "name": "contextIsVisibleDuringTheSupplierAndClearedAfter",
+      "passed": true,
+      "asserts": "visible inside the supplier, null afterwards"
+    },
+    {
+      "name": "contextIsClearedWhenTheSupplierThrows",
+      "passed": true,
+      "asserts": "the finally block runs when the supplier throws"
+    },
+    {
+      "name": "nestedRegistrationRestoresTheOuterContext",
+      "passed": true,
+      "asserts": "inner sees inner, then the outer id is restored - not cleared"
+    },
+    {
+      "name": "anotherThreadDoesNotSeeTheContext",
+      "passed": true,
+      "asserts": "a second thread sees null while the first has a context"
+    }
+  ],
+  "pitfallsRecorded": [
+    "lambda cannot throw checked exceptions; the reflective call needs an unchecked wrapper",
+    "BuiltInRegistries cannot be initialised without a game - the test passes a null registry, because only settings() reads it and that is not what this test covers",
+    "1.21.4 made the Identifier constructor private (use method_60655) and restricts the path to [a-z0-9/._-]"
+  ],
+  "howItRuns": "URLClassLoader over the compiled bridge + the 1.21.4 stub + the dependency jars; reflective calls; skips via assumeTrue when work/ is absent",
+  "unitTests": {
+    "total": 65,
+    "failed": 0
+  },
+  "notCovered": [
+    "the key injection itself: no assertion that Settings carries the right RegistryKey (needs a constructible Registry, unavailable offline)",
+    "concurrency stress: only the isolation assertion above",
+    "behaviour in a real 1.21.4 instance"
+  ],
+  "scope": "lifecycle of the context only; no game launch"
+}

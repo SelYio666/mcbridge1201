@@ -1875,6 +1875,9 @@ FILES = [
     "rules/fabric-1.21.4/registry-key-context.json",
     "runs/p263-registration-skill-split/README.md",
     "runs/p263-registration-skill-split/result.json",
+    "java/src/test/java/top/mcbridge1201/RegistryKeyContextTest.java",
+    "runs/p264-registry-context-lifetime/README.md",
+    "runs/p264-registry-context-lifetime/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

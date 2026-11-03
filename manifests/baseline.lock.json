@@ -1,27 +1,19 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T23:38:54+08:00",
+  "generatedAt": "2026-11-03T23:47:00+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "0cd606ba931bc8ab3c290a43920815073e19ce7c",
+    "commit": "cb52f1daedf4944b016f53dfb3ddb34223d32169",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
-      "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
-      "manifests/baseline.lock.json",
-      "rules/fabric-1.21.4/registry-key-context.json",
+      "java/logs/latest.log",
+      "java/src/test/java/top/mcbridge1201/RegistryKeyContextTest.java",
       "runs/SHA256SUMS.txt",
-      "runs/p249-registration-key-rule/result.json",
-      "runs/p252-1214-first-bridge/result.json",
-      "runs/p254-1214-draw-rules/result.json",
-      "runs/p256-1214-interaction-result/result.json",
-      "runs/p257-1214-field-rules/result.json",
-      "runs/p263-registration-skill-split/README.md",
-      "runs/p263-registration-skill-split/result.json",
-      "targets/fabric-1.21.4.json",
+      "runs/p264-registry-context-lifetime/README.md",
+      "runs/p264-registry-context-lifetime/result.json",
       "tools/hash_evidence.py"
     ],
     "untrackedFiles": [],
@@ -561,8 +553,8 @@
       },
       "java/src/test": {
         "root": "java/src/test",
-        "count": 15,
-        "packageSha256": "756702366f87ab6259ee08a05632855ff46aecc7dc6502df308532ce3a16d91b",
+        "count": 16,
+        "packageSha256": "07b0cccfe6ee1a474e41d5c536cbbffe362a80f6d20b942a45520e17af3c7c5f",
         "files": [
           {
             "path": "java/src/test/java/top/mcbridge1201/AnalyzerCoreTest.java",
@@ -630,6 +622,11 @@
             "size": 10629
           },
           {
+            "path": "java/src/test/java/top/mcbridge1201/RegistryKeyContextTest.java",
+            "sha256": "565737366ef30efbf272e93c34da0fc4eed1f23b6d8ef3e21335faf23be0aaa8",
+            "size": 9601
+          },
+          {
             "path": "java/src/test/java/top/mcbridge1201/RuleSetLoadTest.java",
             "sha256": "4544c9adbfbf01b1b36470858339798e4e34d06a19799e1e3746a94904823266",
             "size": 1199
@@ -645,7 +642,7 @@
     "tools": {
       "count": 31,
       "present": 31,
-      "packageSha256": "2452096fd9c9010afa6873a530de7abef9b3af3686bd2875e9b129651509b484",
+      "packageSha256": "5c27953ebf146a7b1b1744394003869f574c7551a40940c7afb6e0abb93a1bd5",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -669,8 +666,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "6144bb0461ebb5dd6dff2f45653f4361c4bb25087d97797287feec51419a2823",
-          "size": 93144
+          "sha256": "a03308892fa761f3d1844e0fbf851b495b3d3c1f1ebc1d936e6f96225b65efe7",
+          "size": 93323
         },
         {
           "path": "tools/release_check.py",
@@ -991,15 +988,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1841 mismatch=0 missing=0"
+          "ok=1844 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 371",
-          "hashed evidence files: 371",
+          "required evidence files: 373",
+          "hashed evidence files: 373",
           "coverage OK"
         ]
       },
@@ -1009,7 +1006,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 296 markdown file(s): 296 clean, 0 finding(s)"
+          "checked 297 markdown file(s): 297 clean, 0 finding(s)"
         ]
       },
       {
