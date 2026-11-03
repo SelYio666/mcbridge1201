@@ -1811,6 +1811,12 @@ FILES = [
     "tools/classify_1214_breaks.py",
     "runs/p250-1214-break-classification/README.md",
     "runs/p250-1214-break-classification/result.json",
+    "manifests/target-fabric-1.21.4-libs.lock.json",
+    "tools/fetch_target_libs.py",
+    "tools/expand_bundle_libs.py",
+    "tools/probe_target_bridges.py",
+    "runs/p251-1214-compile-closure/README.md",
+    "runs/p251-1214-compile-closure/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

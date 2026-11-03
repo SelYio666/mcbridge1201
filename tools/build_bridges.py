@@ -161,6 +161,21 @@ def from_profile(profile_path):
         if not path:
             continue
         libs.append(path if os.path.isabs(path) else os.path.join(ROOT, path))
+    closure = indices.get("libClosure")
+    if closure and closure.get("path"):
+        closure_path = closure["path"] if os.path.isabs(closure["path"]) else os.path.join(ROOT, closure["path"])
+        if not os.path.isfile(closure_path):
+            die(f"library closure missing: {closure_path}")
+        actual = sha256(closure_path)
+        if closure.get("sha256") and actual != closure["sha256"]:
+            die(f"library closure {os.path.basename(closure_path)} has sha256 {actual[:12]} but the"
+                f" profile froze {closure['sha256'][:12]}")
+        with open(closure_path, encoding="utf-8") as f:
+            lock = json.load(f)
+        for rel in lock.get("classpath") or []:
+            libs.append(rel if os.path.isabs(rel) else os.path.join(ROOT, rel))
+        print(f"classpath closure: {len(lock.get('classpath') or [])} jar(s) from"
+              f" {os.path.basename(closure_path)}")
 
     return {
         "profile_path": profile_path,

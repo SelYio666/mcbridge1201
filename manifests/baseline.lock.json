@@ -1,20 +1,27 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T21:32:56+08:00",
+  "generatedAt": "2026-11-03T21:49:03+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "c8d5dcb978a746c6bbd799685075632920f9608a",
+    "commit": "c8d1d5c95004afb5cef94bc175427dd56144f790",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
+      "java/src/main/java/top/mcbridge1201/profile/TargetProfile.java",
+      "manifests/target-fabric-1.21.4-libs.lock.json",
       "runs/SHA256SUMS.txt",
-      "runs/p250-1214-break-classification/README.md",
-      "runs/p250-1214-break-classification/result.json",
-      "tools/classify_1214_breaks.py",
+      "runs/p251-1214-compile-closure/README.md",
+      "runs/p251-1214-compile-closure/build-bridges.log",
+      "runs/p251-1214-compile-closure/result.json",
+      "targets/fabric-1.21.4.json",
+      "tools/build_bridges.py",
+      "tools/expand_bundle_libs.py",
+      "tools/fetch_target_libs.py",
       "tools/freeze_baseline.py",
-      "tools/hash_evidence.py"
+      "tools/hash_evidence.py",
+      "tools/probe_target_bridges.py"
     ],
     "untrackedFiles": [
       "WORKSPACE.md"
@@ -233,7 +240,7 @@
       "java/src/main": {
         "root": "java/src/main",
         "count": 17,
-        "packageSha256": "95583e3d5be58d487f7cd5a5ff2f14c694c11cebc1f4516451a695094d68173e",
+        "packageSha256": "986695d2a924f701c2ab61b09f9a85fb08dd785882a632e543f58f38050f754c",
         "files": [
           {
             "path": "java/src/main/java/top/mcbridge1201/Main.java",
@@ -267,8 +274,8 @@
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/profile/TargetProfile.java",
-            "sha256": "4e531e6d7ee74b0d1f7bd851ef4b35c7ca7119717894d32a3b7d43f70a01bff4",
-            "size": 35375
+            "sha256": "fcd681f7ef63e4c26d81d95e5e06bb261b430e722af79f098a0544c94549ce22",
+            "size": 35786
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/remap/Hierarchy.java",
@@ -597,9 +604,9 @@
       }
     },
     "tools": {
-      "count": 21,
-      "present": 21,
-      "packageSha256": "1f657e96ae13cea08ad5c87ef5855b83ddff2dce26443d84170903bd30428a14",
+      "count": 24,
+      "present": 24,
+      "packageSha256": "a77fe3cb4419267ddd450bbdd995d9522e93a4f733986041581c269e3884cd5c",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -623,8 +630,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "bb16a8d3e7eeb16f73b50fe410b6ddaf40a3596049dca0e1e5b4e82e0f01df9e",
-          "size": 89735
+          "sha256": "b9ad18164362a3d17b3ef2961a8535c273da22f5cfd12f2fd6791e5ce62af46b",
+          "size": 89992
         },
         {
           "path": "tools/release_check.py",
@@ -633,8 +640,8 @@
         },
         {
           "path": "tools/build_bridges.py",
-          "sha256": "68dab9c462f0416f25d5501338cfe7f00ab38e3c281f05267cb72145bf19f69e",
-          "size": 13686
+          "sha256": "7d46ef3549f74c4275df81b1c2d2338ce3b6a75e76f2a03981a4071dc4c89c97",
+          "size": 14601
         },
         {
           "path": "tools/conversion_cache.py",
@@ -672,6 +679,21 @@
           "size": 8444
         },
         {
+          "path": "tools/fetch_target_libs.py",
+          "sha256": "d0ee54bb367aa64c635ea27b1cd3ee4a71fa8a8117ea9533ab4d90e4decec9c9",
+          "size": 5545
+        },
+        {
+          "path": "tools/expand_bundle_libs.py",
+          "sha256": "6eaaeef4b5b85e90f72f1e5bea66fa8707be8281b4dffb67b9539b571bb0651c",
+          "size": 3687
+        },
+        {
+          "path": "tools/probe_target_bridges.py",
+          "sha256": "01878c27ba7e8a94b0a55922cdb2fe1bb038847e862becb29b04168ce0e4d5a6",
+          "size": 6288
+        },
+        {
           "path": "tools/run_target_gate.py",
           "sha256": "04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6",
           "size": 10540
@@ -703,8 +725,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "3597460767a71de8be99919bfd87ce70c4d0c94b948085460a4b5c8ecc802ba6",
-          "size": 18262
+          "sha256": "0b4c20bc5f049bb3160674b75c6b1d18d98a0a0c73ef30d0523f75c57ffcfde0",
+          "size": 18368
         }
       ]
     },
@@ -760,7 +782,7 @@
       },
       {
         "path": "targets/fabric-1.21.4.json",
-        "sha256": "7556e97373d433118e05997cef10465b3b0e76fcffec56ceb57962dec015c985",
+        "sha256": "da07f5460c1457cf7cc62e411e0bb5b13edb242128ac3521ea503198b4d289ea",
         "profileId": "fabric-1.21.4",
         "targetId": "fabric-1.21.4",
         "minecraft": "1.21.4",
@@ -895,15 +917,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1777 mismatch=0 missing=0"
+          "ok=1783 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 345",
-          "hashed evidence files: 345",
+          "required evidence files: 347",
+          "hashed evidence files: 347",
           "coverage OK"
         ]
       },
@@ -913,7 +935,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 282 markdown file(s): 282 clean, 0 finding(s)"
+          "checked 283 markdown file(s): 283 clean, 0 finding(s)"
         ]
       },
       {

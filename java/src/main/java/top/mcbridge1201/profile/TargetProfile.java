@@ -89,6 +89,12 @@ public final class TargetProfile {
         public Artifact loader;
         public List<Artifact> api = new ArrayList<>();
         public List<Artifact> libs = new ArrayList<>();
+        /**
+         * A pinned closure file (JSON with a {@code classpath} array). Used when a target's compile
+         * classpath is the whole library set rather than a handful of jars: listing 59 paths in the
+         * profile would bury the identity fields, so the closure is one artifact with one hash.
+         */
+        public Artifact libClosure;
     }
 
     /** The locked upstream engine (CenturyBridge and friends) this pipeline segments with. */
@@ -574,6 +580,7 @@ public final class TargetProfile {
         if (indices.libs != null) {
             indices.libs.forEach(a -> addIfPresent(declared, a));
         }
+        addIfPresent(declared, indices.libClosure);
         for (Artifact a : declared) {
             Path p = resolve(in.root, a.path);
             if (!Files.isRegularFile(p)) {

@@ -1,0 +1,1132 @@
+{
+  "schemaVersion": "target-libs-lock-1",
+  "minecraft": "1.21.4",
+  "source": "piston-meta version json 'libraries' (windows, classpath jars only)",
+  "count": 106,
+  "totalBytes": 67223291,
+  "classpath": [
+    "work/target/libs-1214/com/fasterxml/jackson/core/jackson-annotations/2.13.4/jackson-annotations-2.13.4.jar",
+    "work/target/libs-1214/com/fasterxml/jackson/core/jackson-core/2.13.4/jackson-core-2.13.4.jar",
+    "work/target/libs-1214/com/fasterxml/jackson/core/jackson-databind/2.13.4.2/jackson-databind-2.13.4.2.jar",
+    "work/target/libs-1214/com/github/oshi/oshi-core/6.6.5/oshi-core-6.6.5.jar",
+    "work/target/libs-1214/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar",
+    "work/target/libs-1214/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar",
+    "work/target/libs-1214/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar",
+    "work/target/libs-1214/com/google/guava/guava/33.3.1-jre/guava-33.3.1-jre.jar",
+    "work/target/libs-1214/com/ibm/icu/icu4j/76.1/icu4j-76.1.jar",
+    "work/target/libs-1214/com/microsoft/azure/msal4j/1.17.2/msal4j-1.17.2.jar",
+    "work/target/libs-1214/com/mojang/authlib/6.0.57/authlib-6.0.57.jar",
+    "work/target/libs-1214/com/mojang/blocklist/1.0.10/blocklist-1.0.10.jar",
+    "work/target/libs-1214/com/mojang/brigadier/1.3.10/brigadier-1.3.10.jar",
+    "work/target/libs-1214/com/mojang/datafixerupper/8.0.16/datafixerupper-8.0.16.jar",
+    "work/target/libs-1214/com/mojang/jtracy/1.0.29/jtracy-1.0.29.jar",
+    "work/target/libs-1214/com/mojang/logging/1.5.10/logging-1.5.10.jar",
+    "work/target/libs-1214/com/mojang/patchy/2.2.10/patchy-2.2.10.jar",
+    "work/target/libs-1214/com/mojang/text2speech/1.17.9/text2speech-1.17.9.jar",
+    "work/target/libs-1214/com/nimbusds/content-type/2.3/content-type-2.3.jar",
+    "work/target/libs-1214/com/nimbusds/lang-tag/1.7/lang-tag-1.7.jar",
+    "work/target/libs-1214/com/nimbusds/nimbus-jose-jwt/9.40/nimbus-jose-jwt-9.40.jar",
+    "work/target/libs-1214/com/nimbusds/oauth2-oidc-sdk/11.18/oauth2-oidc-sdk-11.18.jar",
+    "work/target/libs-1214/commons-codec/commons-codec/1.17.1/commons-codec-1.17.1.jar",
+    "work/target/libs-1214/commons-io/commons-io/2.17.0/commons-io-2.17.0.jar",
+    "work/target/libs-1214/commons-logging/commons-logging/1.3.4/commons-logging-1.3.4.jar",
+    "work/target/libs-1214/io/netty/netty-buffer/4.1.115.Final/netty-buffer-4.1.115.Final.jar",
+    "work/target/libs-1214/io/netty/netty-codec/4.1.115.Final/netty-codec-4.1.115.Final.jar",
+    "work/target/libs-1214/io/netty/netty-common/4.1.115.Final/netty-common-4.1.115.Final.jar",
+    "work/target/libs-1214/io/netty/netty-handler/4.1.115.Final/netty-handler-4.1.115.Final.jar",
+    "work/target/libs-1214/io/netty/netty-resolver/4.1.115.Final/netty-resolver-4.1.115.Final.jar",
+    "work/target/libs-1214/io/netty/netty-transport-classes-epoll/4.1.115.Final/netty-transport-classes-epoll-4.1.115.Final.jar",
+    "work/target/libs-1214/io/netty/netty-transport-native-unix-common/4.1.115.Final/netty-transport-native-unix-common-4.1.115.Final.jar",
+    "work/target/libs-1214/io/netty/netty-transport/4.1.115.Final/netty-transport-4.1.115.Final.jar",
+    "work/target/libs-1214/it/unimi/dsi/fastutil/8.5.15/fastutil-8.5.15.jar",
+    "work/target/libs-1214/net/java/dev/jna/jna-platform/5.15.0/jna-platform-5.15.0.jar",
+    "work/target/libs-1214/net/java/dev/jna/jna/5.15.0/jna-5.15.0.jar",
+    "work/target/libs-1214/net/minidev/accessors-smart/2.5.1/accessors-smart-2.5.1.jar",
+    "work/target/libs-1214/net/minidev/json-smart/2.5.1/json-smart-2.5.1.jar",
+    "work/target/libs-1214/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar",
+    "work/target/libs-1214/org/apache/commons/commons-compress/1.27.1/commons-compress-1.27.1.jar",
+    "work/target/libs-1214/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar",
+    "work/target/libs-1214/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar",
+    "work/target/libs-1214/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar",
+    "work/target/libs-1214/org/apache/logging/log4j/log4j-api/2.24.1/log4j-api-2.24.1.jar",
+    "work/target/libs-1214/org/apache/logging/log4j/log4j-core/2.24.1/log4j-core-2.24.1.jar",
+    "work/target/libs-1214/org/apache/logging/log4j/log4j-slf4j2-impl/2.24.1/log4j-slf4j2-impl-2.24.1.jar",
+    "work/target/libs-1214/org/jcraft/jorbis/0.0.17/jorbis-0.0.17.jar",
+    "work/target/libs-1214/org/joml/joml/1.10.8/joml-1.10.8.jar",
+    "work/target/libs-1214/org/lwjgl/lwjgl-freetype/3.3.3/lwjgl-freetype-3.3.3.jar",
+    "work/target/libs-1214/org/lwjgl/lwjgl-glfw/3.3.3/lwjgl-glfw-3.3.3.jar",
+    "work/target/libs-1214/org/lwjgl/lwjgl-jemalloc/3.3.3/lwjgl-jemalloc-3.3.3.jar",
+    "work/target/libs-1214/org/lwjgl/lwjgl-openal/3.3.3/lwjgl-openal-3.3.3.jar",
+    "work/target/libs-1214/org/lwjgl/lwjgl-opengl/3.3.3/lwjgl-opengl-3.3.3.jar",
+    "work/target/libs-1214/org/lwjgl/lwjgl-stb/3.3.3/lwjgl-stb-3.3.3.jar",
+    "work/target/libs-1214/org/lwjgl/lwjgl-tinyfd/3.3.3/lwjgl-tinyfd-3.3.3.jar",
+    "work/target/libs-1214/org/lwjgl/lwjgl/3.3.3/lwjgl-3.3.3.jar",
+    "work/target/libs-1214/org/lz4/lz4-java/1.8.0/lz4-java-1.8.0.jar",
+    "work/target/libs-1214/org/ow2/asm/asm/9.6/asm-9.6.jar",
+    "work/target/libs-1214/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar",
+    "work/target/api-modules-1214/fabric-api-base-0.4.54+b47eab6b04.jar",
+    "work/target/api-modules-1214/fabric-api-lookup-api-v1-1.6.86+b1caf1e904.jar",
+    "work/target/api-modules-1214/fabric-biome-api-v1-15.0.6+b1c29d8e04.jar",
+    "work/target/api-modules-1214/fabric-block-api-v1-1.0.31+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-block-view-api-v2-1.0.20+9c49cc8c04.jar",
+    "work/target/api-modules-1214/fabric-blockrenderlayer-v1-2.0.8+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-client-tags-api-v1-1.1.29+20ea1e2304.jar",
+    "work/target/api-modules-1214/fabric-command-api-v1-1.2.62+f71b366f04.jar",
+    "work/target/api-modules-1214/fabric-command-api-v2-2.2.41+e496eb1504.jar",
+    "work/target/api-modules-1214/fabric-commands-v0-0.2.79+df3654b304.jar",
+    "work/target/api-modules-1214/fabric-content-registries-v0-9.1.19+25d1a67604.jar",
+    "work/target/api-modules-1214/fabric-convention-tags-v1-2.1.20+7f945d5b04.jar",
+    "work/target/api-modules-1214/fabric-convention-tags-v2-2.14.1+aebda09404.jar",
+    "work/target/api-modules-1214/fabric-crash-report-info-v1-0.3.6+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-data-attachment-api-v1-1.6.2+e99da0f704.jar",
+    "work/target/api-modules-1214/fabric-data-generation-api-v1-22.3.1+0f4e5f5504.jar",
+    "work/target/api-modules-1214/fabric-dimensions-v1-4.0.10+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-entity-events-v1-2.0.15+62245bef04.jar",
+    "work/target/api-modules-1214/fabric-events-interaction-v0-4.0.4+a4eebcf004.jar",
+    "work/target/api-modules-1214/fabric-game-rule-api-v1-1.0.63+7d48d43904.jar",
+    "work/target/api-modules-1214/fabric-item-api-v1-11.4.0+189dd6fe04.jar",
+    "work/target/api-modules-1214/fabric-item-group-api-v1-4.2.2+fcb9601404.jar",
+    "work/target/api-modules-1214/fabric-key-binding-api-v1-1.0.57+7d48d43904.jar",
+    "work/target/api-modules-1214/fabric-keybindings-v0-0.2.55+df3654b304.jar",
+    "work/target/api-modules-1214/fabric-lifecycle-events-v1-2.5.4+bf2a60eb04.jar",
+    "work/target/api-modules-1214/fabric-loot-api-v2-3.0.38+3f89f5a504.jar",
+    "work/target/api-modules-1214/fabric-loot-api-v3-1.0.26+203e6b2304.jar",
+    "work/target/api-modules-1214/fabric-message-api-v1-6.0.26+238a33c004.jar",
+    "work/target/api-modules-1214/fabric-model-loading-api-v1-4.3.0+ae23723504.jar",
+    "work/target/api-modules-1214/fabric-networking-api-v1-4.4.0+db5e668204.jar",
+    "work/target/api-modules-1214/fabric-object-builder-api-v1-18.0.14+38b0d59804.jar",
+    "work/target/api-modules-1214/fabric-particles-v1-4.0.14+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-recipe-api-v1-8.1.1+640e77ae04.jar",
+    "work/target/api-modules-1214/fabric-registry-sync-v0-6.1.11+4a9c1ece04.jar",
+    "work/target/api-modules-1214/fabric-renderer-api-v1-5.0.3+50f0feb204.jar",
+    "work/target/api-modules-1214/fabric-renderer-indigo-2.0.3+50f0feb204.jar",
+    "work/target/api-modules-1214/fabric-rendering-data-attachment-v1-0.3.58+73761d2e04.jar",
+    "work/target/api-modules-1214/fabric-rendering-fluids-v1-3.1.19+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-rendering-v1-10.2.1+0d31b09f04.jar",
+    "work/target/api-modules-1214/fabric-resource-conditions-api-v1-5.0.13+203e6b2304.jar",
+    "work/target/api-modules-1214/fabric-resource-loader-v0-3.1.1+360374ac04.jar",
+    "work/target/api-modules-1214/fabric-screen-api-v1-2.0.38+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-screen-handler-api-v1-1.3.118+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-sound-api-v1-1.0.32+7feeb73304.jar",
+    "work/target/api-modules-1214/fabric-tag-api-v1-1.0.7+7d48d43904.jar",
+    "work/target/api-modules-1214/fabric-transfer-api-v1-5.4.9+efa825c904.jar",
+    "work/target/api-modules-1214/fabric-transitive-access-wideners-v1-6.3.2+56e78b9b04.jar"
+  ],
+  "libraries": [
+    {
+      "name": "com.fasterxml.jackson.core:jackson-annotations:2.13.4",
+      "path": "work/target/libs-1214/com/fasterxml/jackson/core/jackson-annotations/2.13.4/jackson-annotations-2.13.4.jar",
+      "size": 75717,
+      "sha256": "ac5b27a634942391ca113850ee7db01df1499a240174021263501c05fc653b44",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.fasterxml.jackson.core:jackson-core:2.13.4",
+      "path": "work/target/libs-1214/com/fasterxml/jackson/core/jackson-core/2.13.4/jackson-core-2.13.4.jar",
+      "size": 374895,
+      "sha256": "4c2e043200edd9ee7ba6fc378bd5c17784a5bf2388e152d208068b51fd0839cf",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.fasterxml.jackson.core:jackson-databind:2.13.4.2",
+      "path": "work/target/libs-1214/com/fasterxml/jackson/core/jackson-databind/2.13.4.2/jackson-databind-2.13.4.2.jar",
+      "size": 1531681,
+      "sha256": "ba1a368137f9b92f48dd07f299ff7a782a69487b853ef5578215426fcde8f08b",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.github.oshi:oshi-core:6.6.5",
+      "path": "work/target/libs-1214/com/github/oshi/oshi-core/6.6.5/oshi-core-6.6.5.jar",
+      "size": 991378,
+      "sha256": "ec2afad57aca1d362c3b313c258aa9f66b517a28c60162a70d5fab3ae1659288",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.github.stephenc.jcip:jcip-annotations:1.0-1",
+      "path": "work/target/libs-1214/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar",
+      "size": 4722,
+      "sha256": "4fccff8382aafc589962c4edb262f6aa595e34f1e11e61057d1c6a96e8fc7323",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.google.code.gson:gson:2.11.0",
+      "path": "work/target/libs-1214/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar",
+      "size": 298435,
+      "sha256": "57928d6e5a6edeb2abd3770a8f95ba44dce45f3b23b7a9dc2b309c581552a78b",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.google.guava:failureaccess:1.0.2",
+      "path": "work/target/libs-1214/com/google/guava/failureaccess/1.0.2/failureaccess-1.0.2.jar",
+      "size": 4740,
+      "sha256": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.google.guava:guava:33.3.1-jre",
+      "path": "work/target/libs-1214/com/google/guava/guava/33.3.1-jre/guava-33.3.1-jre.jar",
+      "size": 3079289,
+      "sha256": "4bf0e2c5af8e4525c96e8fde17a4f7307f97f8478f11c4c8e35a0e3298ae4e90",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.ibm.icu:icu4j:76.1",
+      "path": "work/target/libs-1214/com/ibm/icu/icu4j/76.1/icu4j-76.1.jar",
+      "size": 14621879,
+      "sha256": "732cdf18121b1642899da1f5e37e52cc7f48e3ec07fa737105d4603976781b33",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.microsoft.azure:msal4j:1.17.2",
+      "path": "work/target/libs-1214/com/microsoft/azure/msal4j/1.17.2/msal4j-1.17.2.jar",
+      "size": 366717,
+      "sha256": "797530d79d750700da2ecb70a27718d747e59c44ed3829a6d18f06c915721e1b",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.mojang:authlib:6.0.57",
+      "path": "work/target/libs-1214/com/mojang/authlib/6.0.57/authlib-6.0.57.jar",
+      "size": 115435,
+      "sha256": "e40ec0926a408aa05faf902f05dcde7e5f6255f6eeeb17f1e7ffb68b369d809a",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.mojang:blocklist:1.0.10",
+      "path": "work/target/libs-1214/com/mojang/blocklist/1.0.10/blocklist-1.0.10.jar",
+      "size": 964,
+      "sha256": "830bfd639c8db49236bbd8e45d3a2b8c96c56ff654a10118654958a6235d4c44",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.mojang:brigadier:1.3.10",
+      "path": "work/target/libs-1214/com/mojang/brigadier/1.3.10/brigadier-1.3.10.jar",
+      "size": 80082,
+      "sha256": "c8ee4136e474ac7723ca2b432ec8d1a2bc88ef7d1ec57c314ba9e33cdc83dd75",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.mojang:datafixerupper:8.0.16",
+      "path": "work/target/libs-1214/com/mojang/datafixerupper/8.0.16/datafixerupper-8.0.16.jar",
+      "size": 724313,
+      "sha256": "ffc138bc2596c291781b0d5e211ccac51f0f2345f27fc2742f335cedf7e2870d",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.mojang:jtracy:1.0.29",
+      "path": "work/target/libs-1214/com/mojang/jtracy/1.0.29/jtracy-1.0.29.jar",
+      "size": 10382,
+      "sha256": "017dfd1aa6f536cfcb8f643830f6f9f17028e8277417a4741a92c46e47424dda",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.mojang:logging:1.5.10",
+      "path": "work/target/libs-1214/com/mojang/logging/1.5.10/logging-1.5.10.jar",
+      "size": 19800,
+      "sha256": "de3031f2420d649b9a4152e4e160d50b87ce6e7b4d68163caf2b5ebbaf391f7e",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.mojang:patchy:2.2.10",
+      "path": "work/target/libs-1214/com/mojang/patchy/2.2.10/patchy-2.2.10.jar",
+      "size": 4439,
+      "sha256": "16d70e7968b45caffc81576268eb000f473fb60bf257182d3447dea8ec919d5a",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.mojang:text2speech:1.17.9",
+      "path": "work/target/libs-1214/com/mojang/text2speech/1.17.9/text2speech-1.17.9.jar",
+      "size": 12243,
+      "sha256": "c2a95b499e76fada7dd63e9b0ec797b678d411c2b0ee6f37f4dc674662bfb0af",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.nimbusds:content-type:2.3",
+      "path": "work/target/libs-1214/com/nimbusds/content-type/2.3/content-type-2.3.jar",
+      "size": 8877,
+      "sha256": "60349793e006fba96b532cb0c21e10e969fe0db8d87f91c3b9eaf82ba2998895",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.nimbusds:lang-tag:1.7",
+      "path": "work/target/libs-1214/com/nimbusds/lang-tag/1.7/lang-tag-1.7.jar",
+      "size": 11170,
+      "sha256": "e8c1c594e2425bdbea2d860de55c69b69fc5d59454452449a0f0913c2a5b8a31",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.nimbusds:nimbus-jose-jwt:9.40",
+      "path": "work/target/libs-1214/com/nimbusds/nimbus-jose-jwt/9.40/nimbus-jose-jwt-9.40.jar",
+      "size": 810931,
+      "sha256": "77128ed53756421bf59d2fc7f31554da29ea81cad8a5345977275adb7c5254c8",
+      "sha1Ok": true
+    },
+    {
+      "name": "com.nimbusds:oauth2-oidc-sdk:11.18",
+      "path": "work/target/libs-1214/com/nimbusds/oauth2-oidc-sdk/11.18/oauth2-oidc-sdk-11.18.jar",
+      "size": 896918,
+      "sha256": "e510e8c61c603584b7a541988bb7b2e3321c2d392e4943f5e77e396d994182bc",
+      "sha1Ok": true
+    },
+    {
+      "name": "commons-codec:commons-codec:1.17.1",
+      "path": "work/target/libs-1214/commons-codec/commons-codec/1.17.1/commons-codec-1.17.1.jar",
+      "size": 372687,
+      "sha256": "f9f6cb103f2ddc3c99a9d80ada2ae7bf0685111fd6bffccb72033d1da4e6ff23",
+      "sha1Ok": true
+    },
+    {
+      "name": "commons-io:commons-io:2.17.0",
+      "path": "work/target/libs-1214/commons-io/commons-io/2.17.0/commons-io-2.17.0.jar",
+      "size": 515978,
+      "sha256": "4aa4ca48f3dfd30b78220b7881d8cb93eac4093ec94361b6befa9487998a550b",
+      "sha1Ok": true
+    },
+    {
+      "name": "commons-logging:commons-logging:1.3.4",
+      "path": "work/target/libs-1214/commons-logging/commons-logging/1.3.4/commons-logging-1.3.4.jar",
+      "size": 73721,
+      "sha256": "bc2dfe32f1ef06509e6a065144c1adf7b420eabf11a87f30bd127f8faa332016",
+      "sha1Ok": true
+    },
+    {
+      "name": "io.netty:netty-buffer:4.1.115.Final",
+      "path": "work/target/libs-1214/io/netty/netty-buffer/4.1.115.Final/netty-buffer-4.1.115.Final.jar",
+      "size": 337801,
+      "sha256": "4a7b331d3770c566ab70eb02a0d1feed63b95cf6e4d68c8fe778c4c9de2d116d",
+      "sha1Ok": true
+    },
+    {
+      "name": "io.netty:netty-codec:4.1.115.Final",
+      "path": "work/target/libs-1214/io/netty/netty-codec/4.1.115.Final/netty-codec-4.1.115.Final.jar",
+      "size": 352900,
+      "sha256": "cd189afb70ec6eacfcdfdd3a5f472b4e705a5c91d5bd3ef0386421f2ae15ec77",
+      "sha1Ok": true
+    },
+    {
+      "name": "io.netty:netty-common:4.1.115.Final",
+      "path": "work/target/libs-1214/io/netty/netty-common/4.1.115.Final/netty-common-4.1.115.Final.jar",
+      "size": 718162,
+      "sha256": "39f1b5a2aaa4eab5d036dfd0486e35a4276df412e092d36b2d88b494705a134d",
+      "sha1Ok": true
+    },
+    {
+      "name": "io.netty:netty-handler:4.1.115.Final",
+      "path": "work/target/libs-1214/io/netty/netty-handler/4.1.115.Final/netty-handler-4.1.115.Final.jar",
+      "size": 578357,
+      "sha256": "5972028cc863b74927ce0d11fb8d58f65da2560bef5602fe8ce8903bd306ca07",
+      "sha1Ok": true
+    },
+    {
+      "name": "io.netty:netty-resolver:4.1.115.Final",
+      "path": "work/target/libs-1214/io/netty/netty-resolver/4.1.115.Final/netty-resolver-4.1.115.Final.jar",
+      "size": 37841,
+      "sha256": "7b3455d14f59828765a00573bc3967dc59379e874bd62a67eb1926d6512109d1",
+      "sha1Ok": true
+    },
+    {
+      "name": "io.netty:netty-transport-classes-epoll:4.1.115.Final",
+      "path": "work/target/libs-1214/io/netty/netty-transport-classes-epoll/4.1.115.Final/netty-transport-classes-epoll-4.1.115.Final.jar",
+      "size": 147620,
+      "sha256": "40aa67b4463cca0ab346e393c87f6c37e8954d18ec8b78567d95b55aa1f2b3aa",
+      "sha1Ok": true
+    },
+    {
+      "name": "io.netty:netty-transport-native-unix-common:4.1.115.Final",
+      "path": "work/target/libs-1214/io/netty/netty-transport-native-unix-common/4.1.115.Final/netty-transport-native-unix-common-4.1.115.Final.jar",
+      "size": 44158,
+      "sha256": "4b03e716272657c296b0204b57c140b2b2ca96b1a746c92da41f595892ec6d88",
+      "sha1Ok": true
+    },
+    {
+      "name": "io.netty:netty-transport:4.1.115.Final",
+      "path": "work/target/libs-1214/io/netty/netty-transport/4.1.115.Final/netty-transport-4.1.115.Final.jar",
+      "size": 521369,
+      "sha256": "c3d71faaa736ffd2c9260ab0b498024b814c39c7d764bea8113fa98de6e2bdd2",
+      "sha1Ok": true
+    },
+    {
+      "name": "it.unimi.dsi:fastutil:8.5.15",
+      "path": "work/target/libs-1214/it/unimi/dsi/fastutil/8.5.15/fastutil-8.5.15.jar",
+      "size": 23730770,
+      "sha256": "cffeb6673bdf1e6e4377d684df2f55ac359cf5cf6df613e05e62deeea500936a",
+      "sha1Ok": true
+    },
+    {
+      "name": "net.java.dev.jna:jna-platform:5.15.0",
+      "path": "work/target/libs-1214/net/java/dev/jna/jna-platform/5.15.0/jna-platform-5.15.0.jar",
+      "size": 1376668,
+      "sha256": "18b7f6e7d34ce89309a6d9052ae1a987e8e64057e2f683e01e50f2f2b59cd153",
+      "sha1Ok": true
+    },
+    {
+      "name": "net.java.dev.jna:jna:5.15.0",
+      "path": "work/target/libs-1214/net/java/dev/jna/jna/5.15.0/jna-5.15.0.jar",
+      "size": 2001532,
+      "sha256": "a564158d28ab5127fc6a958028ed54279fe0999662c46425b6a3b09a2a52094d",
+      "sha1Ok": true
+    },
+    {
+      "name": "net.minidev:accessors-smart:2.5.1",
+      "path": "work/target/libs-1214/net/minidev/accessors-smart/2.5.1/accessors-smart-2.5.1.jar",
+      "size": 30305,
+      "sha256": "2796ae857d0c7be4bc3580daa4d3828d555212355f4c83d38dd0af0742b3c812",
+      "sha1Ok": true
+    },
+    {
+      "name": "net.minidev:json-smart:2.5.1",
+      "path": "work/target/libs-1214/net/minidev/json-smart/2.5.1/json-smart-2.5.1.jar",
+      "size": 122291,
+      "sha256": "86c0c189581b79b57b0719f443a724e9f628ffbb9eef645cf79194f5973a1001",
+      "sha1Ok": true
+    },
+    {
+      "name": "net.sf.jopt-simple:jopt-simple:5.0.4",
+      "path": "work/target/libs-1214/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar",
+      "size": 78146,
+      "sha256": "df26cc58f235f477db07f753ba5a3ab243ebe5789d9f89ecf68dd62ea9a66c28",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.apache.commons:commons-compress:1.27.1",
+      "path": "work/target/libs-1214/org/apache/commons/commons-compress/1.27.1/commons-compress-1.27.1.jar",
+      "size": 1087319,
+      "sha256": "293d80f54b536b74095dcd7ea3cf0a29bbfc3402519281332495f4420d370d16",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.apache.commons:commons-lang3:3.17.0",
+      "path": "work/target/libs-1214/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar",
+      "size": 673587,
+      "sha256": "6ee731df5c8e5a2976a1ca023b6bb320ea8d3539fbe64c8a1d5cb765127c33b4",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.apache.httpcomponents:httpclient:4.5.14",
+      "path": "work/target/libs-1214/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar",
+      "size": 785639,
+      "sha256": "c8bc7e1c51a6d4ce72f40d2ebbabf1c4b68bfe76e732104b04381b493478e9d6",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.apache.httpcomponents:httpcore:4.4.16",
+      "path": "work/target/libs-1214/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar",
+      "size": 327891,
+      "sha256": "6c9b3dd142a09dc468e23ad39aad6f75a0f2b85125104469f026e52a474e464f",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.apache.logging.log4j:log4j-api:2.24.1",
+      "path": "work/target/libs-1214/org/apache/logging/log4j/log4j-api/2.24.1/log4j-api-2.24.1.jar",
+      "size": 348428,
+      "sha256": "6e77bb229fc8dcaf09038beeb5e9030b22e9e01b51b458b0183ce669ebcc92ef",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.apache.logging.log4j:log4j-core:2.24.1",
+      "path": "work/target/libs-1214/org/apache/logging/log4j/log4j-core/2.24.1/log4j-core-2.24.1.jar",
+      "size": 1910958,
+      "sha256": "00bcf388472ca80a687014181763b66d777177f22cbbf179fd60e1b1ac9bc9b0",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.apache.logging.log4j:log4j-slf4j2-impl:2.24.1",
+      "path": "work/target/libs-1214/org/apache/logging/log4j/log4j-slf4j2-impl/2.24.1/log4j-slf4j2-impl-2.24.1.jar",
+      "size": 30133,
+      "sha256": "644b6e3f0c40e5699ea0ca013844b138af440561d27226672e80b7aa1fdfc156",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.jcraft:jorbis:0.0.17",
+      "path": "work/target/libs-1214/org/jcraft/jorbis/0.0.17/jorbis-0.0.17.jar",
+      "size": 99701,
+      "sha256": "e067f29a3701426b67ed973036949c6e58ca5bb53eef7240b2e71e286d252a9e",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.joml:joml:1.10.8",
+      "path": "work/target/libs-1214/org/joml/joml/1.10.8/joml-1.10.8.jar",
+      "size": 778846,
+      "sha256": "bf19510145178df82cd3bd37edd514c13f411531ec5545299fd3abcbc98fe7c2",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lwjgl:lwjgl-freetype:3.3.3",
+      "path": "work/target/libs-1214/org/lwjgl/lwjgl-freetype/3.3.3/lwjgl-freetype-3.3.3.jar",
+      "size": 450896,
+      "sha256": "e1a7ab07106349d9a8a68f6860b7b73b353c502b81e662aca77f931c6fdd3de8",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lwjgl:lwjgl-glfw:3.3.3",
+      "path": "work/target/libs-1214/org/lwjgl/lwjgl-glfw/3.3.3/lwjgl-glfw-3.3.3.jar",
+      "size": 135546,
+      "sha256": "bedc757fd2b1b255146db26b74b9cbd1fcf5644b89b47b104fa721c741604259",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lwjgl:lwjgl-jemalloc:3.3.3",
+      "path": "work/target/libs-1214/org/lwjgl/lwjgl-jemalloc/3.3.3/lwjgl-jemalloc-3.3.3.jar",
+      "size": 43896,
+      "sha256": "e99e31269e6678a4bfc62ef24c50a481c01cbdd004861ece9a59ba12768c6516",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lwjgl:lwjgl-openal:3.3.3",
+      "path": "work/target/libs-1214/org/lwjgl/lwjgl-openal/3.3.3/lwjgl-openal-3.3.3.jar",
+      "size": 110586,
+      "sha256": "ae0e82767cacf08921f578fba9d84753ddeb00ceada0510a2b4a882be28fbf95",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lwjgl:lwjgl-opengl:3.3.3",
+      "path": "work/target/libs-1214/org/lwjgl/lwjgl-opengl/3.3.3/lwjgl-opengl-3.3.3.jar",
+      "size": 929192,
+      "sha256": "5062da750e5f7ec89e27e8b67b7d40fa8c4b16890159e35f828116ce6c8eca1e",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lwjgl:lwjgl-stb:3.3.3",
+      "path": "work/target/libs-1214/org/lwjgl/lwjgl-stb/3.3.3/lwjgl-stb-3.3.3.jar",
+      "size": 120283,
+      "sha256": "0cff7aa46ea9d70fcc20857015293ea80fbf21adcac34600c84da9b81a44ca93",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lwjgl:lwjgl-tinyfd:3.3.3",
+      "path": "work/target/libs-1214/org/lwjgl/lwjgl-tinyfd/3.3.3/lwjgl-tinyfd-3.3.3.jar",
+      "size": 13400,
+      "sha256": "ee0515054ee19a3f4088426fee9d879eb2ee657b07e5064e4e2c851f6adcf14b",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lwjgl:lwjgl:3.3.3",
+      "path": "work/target/libs-1214/org/lwjgl/lwjgl/3.3.3/lwjgl-3.3.3.jar",
+      "size": 785029,
+      "sha256": "dc9c7b2d48e8396d68895f8902ffa01e46253de44dfe927533ff09457ebfeec4",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.lz4:lz4-java:1.8.0",
+      "path": "work/target/libs-1214/org/lz4/lz4-java/1.8.0/lz4-java-1.8.0.jar",
+      "size": 682804,
+      "sha256": "d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.ow2.asm:asm:9.6",
+      "path": "work/target/libs-1214/org/ow2/asm/asm/9.6/asm-9.6.jar",
+      "size": 123598,
+      "sha256": "3c6fac2424db3d4a853b669f4e3d1d9c3c552235e19a319673f887083c2303a1",
+      "sha1Ok": true
+    },
+    {
+      "name": "org.slf4j:slf4j-api:2.0.16",
+      "path": "work/target/libs-1214/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar",
+      "size": 69435,
+      "sha256": "a12578dde1ba00bd9b816d388a0b879928d00bab3c83c240f7013bf4196c579a",
+      "sha1Ok": true
+    },
+    {
+      "name": "fabric-api module fabric-api-base-0.4.54+b47eab6b04",
+      "path": "work/target/api-modules-1214/fabric-api-base-0.4.54+b47eab6b04.jar",
+      "size": 26588,
+      "sha256": "4aa1b7f194a09e3e5441a7a68cd1202312ef69bfff7cb7fa87fb3acd229cacb2",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-api-lookup-api-v1-1.6.86+b1caf1e904",
+      "path": "work/target/api-modules-1214/fabric-api-lookup-api-v1-1.6.86+b1caf1e904.jar",
+      "size": 46755,
+      "sha256": "d11f884696668c399640a99fb5130103ea597ba0faed69f8deabc10ab9eda3e9",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-biome-api-v1-15.0.6+b1c29d8e04",
+      "path": "work/target/api-modules-1214/fabric-biome-api-v1-15.0.6+b1c29d8e04.jar",
+      "size": 74600,
+      "sha256": "b904e8404a86417e37f209954b448ff5e01df8e3cb6aae5b4676f439afdc2319",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-block-api-v1-1.0.31+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-block-api-v1-1.0.31+7feeb73304.jar",
+      "size": 13062,
+      "sha256": "183d50e63759f8f521c6c0415f09b17edf6827a60ed69bef35758fc55bac0cce",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-block-view-api-v2-1.0.20+9c49cc8c04",
+      "path": "work/target/api-modules-1214/fabric-block-view-api-v2-1.0.20+9c49cc8c04.jar",
+      "size": 19448,
+      "sha256": "646ef8054fba6697cf10fce24cddbebbf77f4eee231cf5b0acdb31e7657a2f3a",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-blockrenderlayer-v1-2.0.8+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-blockrenderlayer-v1-2.0.8+7feeb73304.jar",
+      "size": 13729,
+      "sha256": "65792484c3bf57ab5f8bb4b071c22a99d3e86ca9f6ca01d4a0073a1f5ce942d4",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-client-tags-api-v1-1.1.29+20ea1e2304",
+      "path": "work/target/api-modules-1214/fabric-client-tags-api-v1-1.1.29+20ea1e2304.jar",
+      "size": 18903,
+      "sha256": "a5fdbf5722cabe6d26b916065bb952ee1814fb17e1904c8ba63e794d245afb3f",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-command-api-v1-1.2.62+f71b366f04",
+      "path": "work/target/api-modules-1214/fabric-command-api-v1-1.2.62+f71b366f04.jar",
+      "size": 10511,
+      "sha256": "4c7fbd6fdb4936e8f8737617f1d0fb2766b476d6e1841dff9d96eaff97579c35",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-command-api-v2-2.2.41+e496eb1504",
+      "path": "work/target/api-modules-1214/fabric-command-api-v2-2.2.41+e496eb1504.jar",
+      "size": 32248,
+      "sha256": "3d2c8341cd0930846194251551aea505c8390b3aa5129c7e40f0e64d09cbb34c",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-commands-v0-0.2.79+df3654b304",
+      "path": "work/target/api-modules-1214/fabric-commands-v0-0.2.79+df3654b304.jar",
+      "size": 8371,
+      "sha256": "cd20d1f4b495567f72061fe5e336370ae28f122ae8953fa811ad190660760d12",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-content-registries-v0-9.1.19+25d1a67604",
+      "path": "work/target/api-modules-1214/fabric-content-registries-v0-9.1.19+25d1a67604.jar",
+      "size": 59859,
+      "sha256": "ebeddfbf7a617b9ee6db8d5013f87c99c612797ef3fbc38cbd302db74ed3a658",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-convention-tags-v1-2.1.20+7f945d5b04",
+      "path": "work/target/api-modules-1214/fabric-convention-tags-v1-2.1.20+7f945d5b04.jar",
+      "size": 29752,
+      "sha256": "3a4b734fd5afb0d2bf49d6fbdf71556ff477985e1c2d9ad87d5f716eac12384b",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-convention-tags-v2-2.14.1+aebda09404",
+      "path": "work/target/api-modules-1214/fabric-convention-tags-v2-2.14.1+aebda09404.jar",
+      "size": 252555,
+      "sha256": "49f7989a8d6cdf5ca106b54793a2f7ffd91d3f7986a2ccd440ef62cc6d43076f",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-crash-report-info-v1-0.3.6+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-crash-report-info-v1-0.3.6+7feeb73304.jar",
+      "size": 15842,
+      "sha256": "17f65e2018e8e208fa93eec387de971cb1078975047cb978ba0388ba341fbb2a",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-data-attachment-api-v1-1.6.2+e99da0f704",
+      "path": "work/target/api-modules-1214/fabric-data-attachment-api-v1-1.6.2+e99da0f704.jar",
+      "size": 83402,
+      "sha256": "3a44765df57fc82ca00614cd63a8d800a9dab3d613477a37415b318914fafbe3",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-data-generation-api-v1-22.3.1+0f4e5f5504",
+      "path": "work/target/api-modules-1214/fabric-data-generation-api-v1-22.3.1+0f4e5f5504.jar",
+      "size": 113555,
+      "sha256": "fb6542ba1006a81a46a7e8900719c88baf46a585e9e258c926aa3f5e3580a8ac",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-dimensions-v1-4.0.10+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-dimensions-v1-4.0.10+7feeb73304.jar",
+      "size": 18296,
+      "sha256": "28636c51b42afe13202dd478e46eb247c1539f56de948ebe0a00f56aa788cb7d",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-entity-events-v1-2.0.15+62245bef04",
+      "path": "work/target/api-modules-1214/fabric-entity-events-v1-2.0.15+62245bef04.jar",
+      "size": 52455,
+      "sha256": "2bd6acc30eee28b9e94e188ef489d59713929631216e329f8aac6ff9c68f1a72",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-events-interaction-v0-4.0.4+a4eebcf004",
+      "path": "work/target/api-modules-1214/fabric-events-interaction-v0-4.0.4+a4eebcf004.jar",
+      "size": 53146,
+      "sha256": "f1ccb8e65063ee8408fdd73baa9c237a41c55bad8bdb9e3d6d405f3f88878c98",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-game-rule-api-v1-1.0.63+7d48d43904",
+      "path": "work/target/api-modules-1214/fabric-game-rule-api-v1-1.0.63+7d48d43904.jar",
+      "size": 48525,
+      "sha256": "a8a37a3ad38203aa6812237b7139c3d2fd7d33194e35bc87d3a70ecec286e2ad",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-item-api-v1-11.4.0+189dd6fe04",
+      "path": "work/target/api-modules-1214/fabric-item-api-v1-11.4.0+189dd6fe04.jar",
+      "size": 56760,
+      "sha256": "3fe7f8a9accc771ddbd91c5b1fcee1acb44adcda4eac2034684301b831fc7df4",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-item-group-api-v1-4.2.2+fcb9601404",
+      "path": "work/target/api-modules-1214/fabric-item-group-api-v1-4.2.2+fcb9601404.jar",
+      "size": 52071,
+      "sha256": "f3eaded2b849715e7e4f493ed6cfcee4eb3f18c2f222deb609fb1b4de1f89d58",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-key-binding-api-v1-1.0.57+7d48d43904",
+      "path": "work/target/api-modules-1214/fabric-key-binding-api-v1-1.0.57+7d48d43904.jar",
+      "size": 15411,
+      "sha256": "03a53262510899dd1762e03da00100ae01d4eb37d3a91a4d760aebb1e9fe6920",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-keybindings-v0-0.2.55+df3654b304",
+      "path": "work/target/api-modules-1214/fabric-keybindings-v0-0.2.55+df3654b304.jar",
+      "size": 10877,
+      "sha256": "c21b0450439a1305cbcf7d44719f89a256f1e9f19a0e8ae86eeec78edb5ccb4b",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-lifecycle-events-v1-2.5.4+bf2a60eb04",
+      "path": "work/target/api-modules-1214/fabric-lifecycle-events-v1-2.5.4+bf2a60eb04.jar",
+      "size": 88464,
+      "sha256": "006c1a3fef3c65484a46771940db0af54e1ea8f412a52dc502870c4f21fae5b4",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-loot-api-v2-3.0.38+3f89f5a504",
+      "path": "work/target/api-modules-1214/fabric-loot-api-v2-3.0.38+3f89f5a504.jar",
+      "size": 20094,
+      "sha256": "471ec4e95f0b53797a1aaeae0ae59480e41c6060a9a6a17126bfdb45969e2df6",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-loot-api-v3-1.0.26+203e6b2304",
+      "path": "work/target/api-modules-1214/fabric-loot-api-v3-1.0.26+203e6b2304.jar",
+      "size": 28512,
+      "sha256": "63546f7abe82bcfad2ee2fea5863d829d6667d30268651202e07d8b7f98710c0",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-message-api-v1-6.0.26+238a33c004",
+      "path": "work/target/api-modules-1214/fabric-message-api-v1-6.0.26+238a33c004.jar",
+      "size": 41111,
+      "sha256": "4c3500588ac4ed27225bb40bef05cd5ac5e9a1b357e9d3b1a10ac5e4eb48398a",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-model-loading-api-v1-4.3.0+ae23723504",
+      "path": "work/target/api-modules-1214/fabric-model-loading-api-v1-4.3.0+ae23723504.jar",
+      "size": 70613,
+      "sha256": "b611b9af432331a660f4df3ff6117b57febcf828e0e93be463ce05f8c02c86f9",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-networking-api-v1-4.4.0+db5e668204",
+      "path": "work/target/api-modules-1214/fabric-networking-api-v1-4.4.0+db5e668204.jar",
+      "size": 185507,
+      "sha256": "a8ccdf9bbcf20dd25429d021bf9072ce1ce36168ba4acf7c0a24f8b02e8f895d",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-object-builder-api-v1-18.0.14+38b0d59804",
+      "path": "work/target/api-modules-1214/fabric-object-builder-api-v1-18.0.14+38b0d59804.jar",
+      "size": 75369,
+      "sha256": "ab05c5b48a3bd3fa1abb02547576bb6277b4277f0d9f9ad5c25b8c3b8731a561",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-particles-v1-4.0.14+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-particles-v1-4.0.14+7feeb73304.jar",
+      "size": 27715,
+      "sha256": "a1a4a3560aecb81222e0fb790dd2e2d12ccb9a6b59e6df7c40f6ee9ed81d8f6c",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-recipe-api-v1-8.1.1+640e77ae04",
+      "path": "work/target/api-modules-1214/fabric-recipe-api-v1-8.1.1+640e77ae04.jar",
+      "size": 63782,
+      "sha256": "dc88f5366ba3a6a61518532dacaa80346e461bcb16f41251a63fa904dc5926d7",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-registry-sync-v0-6.1.11+4a9c1ece04",
+      "path": "work/target/api-modules-1214/fabric-registry-sync-v0-6.1.11+4a9c1ece04.jar",
+      "size": 127380,
+      "sha256": "db5b525de431a10d0b1d4b9a007b4d321d92e38cc0881ac1e6acb5679f2c4f39",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-renderer-api-v1-5.0.3+50f0feb204",
+      "path": "work/target/api-modules-1214/fabric-renderer-api-v1-5.0.3+50f0feb204.jar",
+      "size": 47787,
+      "sha256": "0bf88cc89e96a6c41dcbd3c42ca87eeed66dccac5069cc1e7ff50c9b83fe63db",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-renderer-indigo-2.0.3+50f0feb204",
+      "path": "work/target/api-modules-1214/fabric-renderer-indigo-2.0.3+50f0feb204.jar",
+      "size": 104482,
+      "sha256": "fb0fd7895edab2436a9179728b7b8f32bd40f2e643d5c5cf639ec9f65f7f969b",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-rendering-data-attachment-v1-0.3.58+73761d2e04",
+      "path": "work/target/api-modules-1214/fabric-rendering-data-attachment-v1-0.3.58+73761d2e04.jar",
+      "size": 13628,
+      "sha256": "49fb79f4a1fea4cb22c1a5f131de60f5970d215b0bec17827263eb01f1c0523b",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-rendering-fluids-v1-3.1.19+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-rendering-fluids-v1-3.1.19+7feeb73304.jar",
+      "size": 27085,
+      "sha256": "57dfbf5a2b3f38235379a2101a964f9b736858d99cad10ba06e3cb421e456afb",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-rendering-v1-10.2.1+0d31b09f04",
+      "path": "work/target/api-modules-1214/fabric-rendering-v1-10.2.1+0d31b09f04.jar",
+      "size": 96685,
+      "sha256": "0015c167bf2205d5982f9f6db0c393196bf5e1892fbcdf3f31e80b71db7762f5",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-resource-conditions-api-v1-5.0.13+203e6b2304",
+      "path": "work/target/api-modules-1214/fabric-resource-conditions-api-v1-5.0.13+203e6b2304.jar",
+      "size": 57839,
+      "sha256": "a72f07da7e6657ff023ad8c68c1df564a98aa02eaafc1ed1d3f79a8c2281dc79",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-resource-loader-v0-3.1.1+360374ac04",
+      "path": "work/target/api-modules-1214/fabric-resource-loader-v0-3.1.1+360374ac04.jar",
+      "size": 117919,
+      "sha256": "449fb5f520461f0b1961c14ecb0dfd4c92d6a30fa1a5ed7ea0a74cde21abf10f",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-screen-api-v1-2.0.38+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-screen-api-v1-2.0.38+7feeb73304.jar",
+      "size": 50287,
+      "sha256": "372b209526ae12e61510ffb7146bc78844efabcdf8e2d3a5aa95e01c1b343fa1",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-screen-handler-api-v1-1.3.118+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-screen-handler-api-v1-1.3.118+7feeb73304.jar",
+      "size": 24482,
+      "sha256": "3bab3d12e224967962ad8adad98c8fde7cdb07af74b5224c169f085092fdd413",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-sound-api-v1-1.0.32+7feeb73304",
+      "path": "work/target/api-modules-1214/fabric-sound-api-v1-1.0.32+7feeb73304.jar",
+      "size": 14853,
+      "sha256": "ecf9ae7b9edae70c7109c17461d7eb6622420cb159446f8a077972ce3d846720",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-tag-api-v1-1.0.7+7d48d43904",
+      "path": "work/target/api-modules-1214/fabric-tag-api-v1-1.0.7+7d48d43904.jar",
+      "size": 25281,
+      "sha256": "7f687b5db6b8ceaedbbc0209c5233321341588a8175bea026067f52d8dff98f9",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-transfer-api-v1-5.4.9+efa825c904",
+      "path": "work/target/api-modules-1214/fabric-transfer-api-v1-5.4.9+efa825c904.jar",
+      "size": 185958,
+      "sha256": "8a7699ff3cf1afdfb4985c9e302bc724e7768dc04b98cb2e8940e8fdc8d84cb9",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    },
+    {
+      "name": "fabric-api module fabric-transitive-access-wideners-v1-6.3.2+56e78b9b04",
+      "path": "work/target/api-modules-1214/fabric-transitive-access-wideners-v1-6.3.2+56e78b9b04.jar",
+      "size": 9257,
+      "sha256": "23139793127acc1904195aa995710f3ec3d950d71fc135ae74bb2635603fc5cb",
+      "sha1Ok": null,
+      "role": "fabric api module (expanded from the bundle)"
+    }
+  ],
+  "skipped": [
+    {
+      "name": "ca.weblite:java-objc-bridge:1.1",
+      "why": "rules exclude windows"
+    },
+    {
+      "name": "com.mojang:jtracy:1.0.29:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "com.mojang:jtracy:1.0.29:natives-macos",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "com.mojang:jtracy:1.0.29:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "io.netty:netty-transport-native-epoll:4.1.115.Final:linux-aarch_64",
+      "why": "rules exclude windows"
+    },
+    {
+      "name": "io.netty:netty-transport-native-epoll:4.1.115.Final:linux-x86_64",
+      "why": "rules exclude windows"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-freetype:3.3.3:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-freetype:3.3.3:natives-macos-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-freetype:3.3.3:natives-macos-patch",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-freetype:3.3.3:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-freetype:3.3.3:natives-windows-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-freetype:3.3.3:natives-windows-x86",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-glfw:3.3.3:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-glfw:3.3.3:natives-macos",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-glfw:3.3.3:natives-macos-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-glfw:3.3.3:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-glfw:3.3.3:natives-windows-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-glfw:3.3.3:natives-windows-x86",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-jemalloc:3.3.3:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-jemalloc:3.3.3:natives-macos",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-jemalloc:3.3.3:natives-macos-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-jemalloc:3.3.3:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-jemalloc:3.3.3:natives-windows-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-jemalloc:3.3.3:natives-windows-x86",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-openal:3.3.3:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-openal:3.3.3:natives-macos",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-openal:3.3.3:natives-macos-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-openal:3.3.3:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-openal:3.3.3:natives-windows-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-openal:3.3.3:natives-windows-x86",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-opengl:3.3.3:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-opengl:3.3.3:natives-macos",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-opengl:3.3.3:natives-macos-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-opengl:3.3.3:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-opengl:3.3.3:natives-windows-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-opengl:3.3.3:natives-windows-x86",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-stb:3.3.3:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-stb:3.3.3:natives-macos",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-stb:3.3.3:natives-macos-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-stb:3.3.3:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-stb:3.3.3:natives-windows-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-stb:3.3.3:natives-windows-x86",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-tinyfd:3.3.3:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-tinyfd:3.3.3:natives-macos",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-tinyfd:3.3.3:natives-macos-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-tinyfd:3.3.3:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-tinyfd:3.3.3:natives-windows-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl-tinyfd:3.3.3:natives-windows-x86",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl:3.3.3:natives-linux",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl:3.3.3:natives-macos",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl:3.3.3:natives-macos-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl:3.3.3:natives-windows",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl:3.3.3:natives-windows-arm64",
+      "why": "native jar, not a classpath entry"
+    },
+    {
+      "name": "org.lwjgl:lwjgl:3.3.3:natives-windows-x86",
+      "why": "native jar, not a classpath entry"
+    }
+  ],
+  "note": "Compile/runtime classpath for the target. Natives are excluded: they are for launching the game, not for javac. Every entry carries sha256; piston's sha1 was verified at download time.",
+  "expansions": [
+    {
+      "bundle": "work/target/fabric-api-0.119.4+1.21.4.jar",
+      "modules": 47,
+      "note": "The bundle keeps modules under META-INF/jars/; they are expanded here so javac and any later run see the same jars."
+    }
+  ]
+}

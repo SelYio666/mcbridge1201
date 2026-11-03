@@ -66,7 +66,14 @@
         "size": 2149128
       }
     ],
-    "libs": []
+    "libs": [],
+    "libClosure": {
+      "role": "1.21.4 compile/runtime library closure (106 jars, incl. fabric api modules)",
+      "path": "manifests/target-fabric-1.21.4-libs.lock.json",
+      "sha256": "c5641867f556bbc4aaf24c0bf8680ea013dc5a065a42b2fc00879027cb301bdf",
+      "size": 50796,
+      "note": "Fetched by tools/fetch_target_libs.py from the version json; natives excluded. build_bridges expands its classpath."
+    }
   },
   "pipeline": {
     "engine": {
