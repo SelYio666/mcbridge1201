@@ -1864,6 +1864,10 @@ FILES = [
     "rules/fabric-1.21.4/registration-key.json",
     "runs/p260-registry-context-attempt/README.md",
     "runs/p260-registry-context-attempt/result.json",
+    "tools/check_rule_targets.py",
+    "tools/classpool.py",
+    "runs/p261-rule-target-check/README.md",
+    "runs/p261-rule-target-check/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

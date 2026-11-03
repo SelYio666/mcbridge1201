@@ -1,25 +1,21 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T23:07:38+08:00",
+  "generatedAt": "2026-11-03T23:17:41+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "15d2697a3db6592e5d0c80c80b30b42bd85742e0",
+    "commit": "f1cb3e460ba95732600ab2ff5a54cd3d01e1f831",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "java/src/bridge-1214/java/top/mcbridge1201/bridge/RegistryKeyContext.java",
-      "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
-      "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
-      "rules/fabric-1.21.4/registration-key.json",
       "runs/SHA256SUMS.txt",
-      "runs/p249-registration-key-rule/disassembly-after.txt",
-      "runs/p249-registration-key-rule/result.json",
-      "runs/p260-registry-context-attempt/README.md",
-      "runs/p260-registry-context-attempt/result.json",
-      "tools/hash_evidence.py",
-      "tools/run_registration_rule.py"
+      "runs/p261-rule-target-check/README.md",
+      "runs/p261-rule-target-check/result.json",
+      "tools/check_rule_targets.py",
+      "tools/classpool.py",
+      "tools/freeze_baseline.py",
+      "tools/hash_evidence.py"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -630,9 +626,9 @@
       }
     },
     "tools": {
-      "count": 30,
-      "present": 30,
-      "packageSha256": "53e0b3c22c635966a32b3f6fc9785a257b43be6ef23dc0ec7f9e824f866e2bea",
+      "count": 31,
+      "present": 31,
+      "packageSha256": "6b123d6a5a117ae1290ffae190e6bd4e212362e37262b54d615af3401c6da46d",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -656,8 +652,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "5fea7dfdeaadb04bcd1052173936aafe32107b3d6138a166b174e208e5adb282",
-          "size": 92618
+          "sha256": "9a26b2a371009164311779f97f6a73772e6472056a3d794facf31a06ce1c4006",
+          "size": 92771
         },
         {
           "path": "tools/release_check.py",
@@ -750,6 +746,11 @@
           "size": 8583
         },
         {
+          "path": "tools/check_rule_targets.py",
+          "sha256": "3318723ea50d070d961f986c43aad5737da610e05c260333d3ecdb3d48a36b33",
+          "size": 6058
+        },
+        {
           "path": "tools/run_target_gate.py",
           "sha256": "04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6",
           "size": 10540
@@ -781,8 +782,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "9371cc2ae1537ab8bafed48e61b9d77e3dd7af9b27bb87662693dee03dcc3da4",
-          "size": 18604
+          "sha256": "134e37100da803082efb6d3dcf2a5facf51d7f1e0db24ea95fdd37af6c882c70",
+          "size": 18639
         }
       ]
     },
@@ -973,15 +974,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1830 mismatch=0 missing=0"
+          "ok=1834 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 365",
-          "hashed evidence files: 365",
+          "required evidence files: 367",
+          "hashed evidence files: 367",
           "coverage OK"
         ]
       },
@@ -991,7 +992,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 293 markdown file(s): 293 clean, 0 finding(s)"
+          "checked 294 markdown file(s): 294 clean, 0 finding(s)"
         ]
       },
       {

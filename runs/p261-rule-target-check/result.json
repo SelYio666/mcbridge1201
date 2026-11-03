@@ -1,0 +1,41 @@
+{
+  "workstream": "a gate for the mistake p260 found: rules naming target members that do not exist",
+  "why": "1.21.4 renamed Registry#registryKey from method_30517 to method_46765; the 1.21.4 rule still said method_30517 and every bytecode assertion passed, because patch emits calls without checking the callee exists",
+  "checks": {
+    "positive": {
+      "rulesDir": "rules/fabric-1.21.4",
+      "ruleFiles": 5,
+      "targetReferenceGroups": 3,
+      "missing": 0,
+      "rc": 0
+    },
+    "negative": {
+      "rulesDir": "work/tmp/old-rule (registryKeyName restored to method_30517)",
+      "ruleFiles": 1,
+      "missing": 1,
+      "rc": 1,
+      "reported": "net/minecraft/class_2378.method_30517()Lnet/minecraft/class_5321;"
+    }
+  },
+  "whatIsInspected": {
+    "registrationKeys": [
+      "setterOwner/Name/Desc",
+      "keyFactoryOwner/Name/Desc",
+      "registryKeyOwner/Name/Desc"
+    ],
+    "callSiteAdaptations": [
+      "targetOwner/targetName/targetDesc"
+    ],
+    "signatureAdaptations": [
+      "targetClass/methodName/newDesc"
+    ],
+    "notInspected": [
+      "sourceOwner/sourceName (the 1.20.1 shape)",
+      "bridgeClass/bridgeMethod (our own compiled classes)"
+    ],
+    "precision": "reads the target class's declaration tables, so (name, descriptor) must match exactly; a same-named overload does not count as present"
+  },
+  "notInDefaultGates": "it needs work/target/client-1.21.4-intermediary.jar, which is not committed; wiring it into release_check would fail on a clean checkout",
+  "passed": true,
+  "scope": "tool + evidence only, no conversion; the negative case is a synthetic copy of the rule with the old name"
+}
