@@ -1,19 +1,21 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T20:53:05+08:00",
+  "generatedAt": "2026-11-03T21:04:45+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "f7854c98e6582c738d5bb8d66e43ee14ecdc1ff0",
+    "commit": "cad6e42446ab437f48924deb0c8dfe77c1da0a3e",
     "branch": "master",
     "dirty": true,
     "modifiedFiles": [
-      "anifests/baseline.lock.json",
+      "EADME.md",
       "runs/SHA256SUMS.txt",
-      "runs/p247-baseline-audit/README.md",
-      "runs/p247-baseline-audit/check-after.json",
-      "tools/hash_evidence.py"
+      "share/code-walkthrough/README.md",
+      "share/code-walkthrough/code-walkthrough.mp4",
+      "share/code-walkthrough/cover.png",
+      "tools/hash_evidence.py",
+      "tools/make_code_video.py"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -577,7 +579,7 @@
     "tools": {
       "count": 16,
       "present": 16,
-      "packageSha256": "f74f97541eecca31b7119d1910c7ffa40de0d37867c0e59b54fffc9a80040a43",
+      "packageSha256": "f8e0fb1d7371ad8e607b0b3a4b1ef55d3f14f9094247f8212df83f5139cac950",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -601,8 +603,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "77ddf7b6b99a5c89ec95ad7aea8fcb7ba2b0505a7b3c42e54ebb109735e8d19b",
-          "size": 88318
+          "sha256": "2b05b3b7f70043ec3baa03ee985bd4d346fb2467829c63cb63b6895f0e4ea821",
+          "size": 88481
         },
         {
           "path": "tools/release_check.py",

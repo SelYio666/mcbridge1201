@@ -45,7 +45,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 - 详情：[FINAL-STATUS](docs/FINAL-STATUS.md)、[报告 p210–p214](docs/report-2026-10-30.md)、
   [报告：接手核验 + p231](docs/report-2026-11-01.md)、
   [剩余工作](docs/remaining-work.md)、[使用说明](docs/guide.md)、
-  [多目标基线与目标身份](docs/multi-target-baseline.md)。
+  [多目标基线与目标身份](docs/multi-target-baseline.md)、
+  [代码走读视频（5 分钟）](share/code-walkthrough/README.md)。
 
 ## 现状（2026-10-18）
 
