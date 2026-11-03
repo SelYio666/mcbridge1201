@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "0.1-draft",
+  "generatedAt": "2026-11-03T20:46:53.2615276+08:00",
+  "tool": "mcbridge1201 0.1.0",
+  "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "clientJar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-zcode\\work\\target\\client-1.21.1.jar",
+    "clientJarSha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+    "mappings": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-zcode\\work\\target\\intermediary-1.21.1-v2.jar",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "indexClasses": 9542,
+    "indexMembers": 81383,
+    "indexBuildMs": 599,
+    "apiJars": [
+      {
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-zcode\\work\\target\\fabric-loader-0.19.5.jar",
+        "sha256": "93044e4dd46de5d8136701292f05e868da096d2c9fddb4793e4fdbcc63efc695"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "file": "mcbfixture-1.0.0.jar",
+      "sha256": "1f210e26c471a2611db8e13b5bd77f590c2b4f3d53aef6a5e96c5607a636e18b",
+      "size": 4514,
+      "loader": "fabric",
+      "metadataFiles": [
+        "fabric.mod.json"
+      ],
+      "modId": "mcbfixture",
+      "version": "1.0.0",
+      "displayName": "MCBridge source fixture",
+      "environment": "*",
+      "depends": {
+        "fabricloader": "\u003e\u003d0.14.0",
+        "minecraft": "1.20.1",
+        "java": "\u003e\u003d17"
+      },
+      "classes": 6,
+      "classFileMajorMax": 61,
+      "nestedJars": 0,
+      "signed": false,
+      "accessWideners": 0,
+      "verdict": "blocked_static",
+      "stage": "ANALYZED",
+      "counts": {
+        "missingClass": 0,
+        "missingMember": 1,
+        "descMismatch": 0,
+        "missingApiClass": 0,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 0,
+        "mixins": 1,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 1,
+        "mixinAtTargets": 0,
+        "mixinAtOrdinals": 0,
+        "mixinInjectionsUnresolved": 0,
+        "missingConfirmedInSource": 0,
+        "externalPackages": 1
+      },
+      "missingClass": [],
+      "missingMember": [
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7969",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "mcbfixture/FixtureData"
+          ]
+        }
+      ],
+      "descMismatch": [],
+      "missingApiClass": [],
+      "missingApiMember": [],
+      "wrongLoaderNamespace": [],
+      "unmappedNamespace": [],
+      "externalPackages": [
+        {
+          "owner": "org",
+          "kind": "package",
+          "refs": 4
+        }
+      ],
+      "mixins": {
+        "configs": 1,
+        "classes": 1,
+        "injections": 1,
+        "atTargets": 0,
+        "atOrdinals": 0,
+        "unresolvedTargets": [],
+        "unresolvedInjections": []
+      },
+      "notes": [
+        "static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)"
+      ]
+    }
+  ],
+  "summary": {
+    "artifacts": 1,
+    "blockedStatic": 1,
+    "needsDependency": 0,
+    "cleanStatic": 0
+  }
+}

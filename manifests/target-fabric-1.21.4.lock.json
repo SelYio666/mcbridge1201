@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "target-env-lock-1",
+  "minecraft": "1.21.4",
+  "type": "release",
+  "releaseTime": "2024-12-03T10:12:57+00:00",
+  "javaVersion": {
+    "component": "java-runtime-delta",
+    "majorVersion": 21
+  },
+  "classMajorMax": 65,
+  "namespace": "intermediary",
+  "artifacts": {
+    "clientJar": {
+      "role": "target client jar",
+      "version": null,
+      "url": "https://piston-data.mojang.com/v1/objects/a7e5a6024bfd3cd614625aa05629adf760020304/client.jar",
+      "path": "work/target/client-1.21.4.jar",
+      "size": 28335587,
+      "sha256": "c17c450c6e72cc51297daa57ce38f800aa01cf022b743daa21a0512d326d894e",
+      "sha1": "a7e5a6024bfd3cd614625aa05629adf760020304",
+      "sha1Ok": true
+    },
+    "clientMappings": {
+      "role": "official (Mojang) client mappings",
+      "version": null,
+      "url": "https://piston-data.mojang.com/v1/objects/0cf2a0b7f056da1a5a5dd99fc6dc752f33987150/client.txt",
+      "path": "work/target/client-1.21.4-mappings.txt",
+      "size": 10323161,
+      "sha256": "48b502ccc5e855b49da8aa9c0c0d7c565bec54c9f5da3a3664528aff7b9fdf23",
+      "sha1": "0cf2a0b7f056da1a5a5dd99fc6dc752f33987150",
+      "sha1Ok": true
+    },
+    "intermediary": {
+      "role": "fabric intermediary",
+      "version": "1.21.4",
+      "url": "https://maven.fabricmc.net/net/fabricmc/intermediary/1.21.4/intermediary-1.21.4-v2.jar",
+      "path": "work/target/intermediary-1.21.4-v2.jar",
+      "size": 622486,
+      "sha256": "2ca8d753e5338f78a44379567b391978ec694c08f681880f81ce76999da8ef51",
+      "sha1": null,
+      "sha1Ok": null
+    },
+    "loader": {
+      "role": "fabric loader",
+      "version": "0.16.14",
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-loader/0.16.14/fabric-loader-0.16.14.jar",
+      "path": "work/target/fabric-loader-0.16.14.jar",
+      "size": 1416842,
+      "sha256": "9ed7b7f4197153ad97d71b4b9cd9148989e8f0c600934b035ce45f3ef003efc0",
+      "sha1": null,
+      "sha1Ok": null
+    },
+    "api": {
+      "role": "fabric api",
+      "version": "0.119.4+1.21.4",
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.119.4+1.21.4/fabric-api-0.119.4+1.21.4.jar",
+      "path": "work/target/fabric-api-0.119.4+1.21.4.jar",
+      "size": 2149128,
+      "sha256": "d183bacb845167f09264c2f90322b7ecffe8826debda6f60e597889264bef4af",
+      "sha1": null,
+      "sha1Ok": null
+    }
+  },
+  "notIncluded": [
+    "The bridge compile stub: it is derived locally from clientJar + intermediary by `mcbridge1201 remap-jar` and recorded by hash in targets/fabric-1.21.4.json.",
+    "Server jar, assets and libraries: not needed for the static delta stage."
+  ],
+  "note": "Pinned by URL and hash. Game jars live under work/ (gitignored); the client jar is Mojang's and the EULA applies."
+}

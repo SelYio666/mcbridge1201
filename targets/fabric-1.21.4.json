@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "target-profile-1",
+  "profileId": "fabric-1.21.4",
+  "status": "planned",
+  "note": "B01 froze this target only. The environment is exact and readable at Java 21, but no rule package exists for 1.21.4 yet, so pipeline.ruleOrder is empty and the gate refuses to convert anything with this profile. The delta classification lives in runs/p247-fabric-1.21.4-delta/.",
+  "refusesTargets": [
+    "fabric-1.21.1",
+    "fabric-1.20.4",
+    "fabric-1.21.8",
+    "fabric-1.21.11",
+    "fabric-26.1.2",
+    "fabric-26.3",
+    "neoforge-1.21.1"
+  ],
+  "source": {
+    "minecraft": "1.20.1",
+    "loader": "fabric",
+    "namespace": "intermediary",
+    "javaMajor": 17,
+    "classMajorMax": 61,
+    "originalJarSha256": null,
+    "note": "Same immutable 1.20.1 sources as the other routes, including fixtures/source-fabric-1.20.1."
+  },
+  "target": {
+    "id": "fabric-1.21.4",
+    "minecraft": "1.21.4",
+    "loader": "fabric",
+    "loaderVersion": "0.16.14",
+    "fabricApi": "0.119.4+1.21.4",
+    "javaMajor": 21,
+    "classMajorMax": 65,
+    "namespace": "intermediary",
+    "namespaceStrategy": "version_specific_mapping_and_index"
+  },
+  "indices": {
+    "bridgeStub": {
+      "role": "bridge compile stub (1.21.4 client remapped to intermediary)",
+      "path": "work/target/client-1.21.4-intermediary.jar",
+      "sha256": "6c421c2c3583b41497d0c179e1789d2e50cf85fa8114bf2372d2a6de5bb690e9",
+      "size": 29230991,
+      "note": "Derived locally by `mcbridge1201 remap-jar`; pinned here because it is not a downloadable artifact."
+    },
+    "clientJar": {
+      "role": "target client",
+      "path": "work/target/client-1.21.4.jar",
+      "sha256": "c17c450c6e72cc51297daa57ce38f800aa01cf022b743daa21a0512d326d894e",
+      "size": 28335587
+    },
+    "mappings": {
+      "role": "intermediary mappings (mappings/mappings.tiny inside)",
+      "path": "work/target/intermediary-1.21.4-v2.jar",
+      "sha256": "2ca8d753e5338f78a44379567b391978ec694c08f681880f81ce76999da8ef51",
+      "size": 622486
+    },
+    "loader": {
+      "role": "fabric loader",
+      "path": "work/target/fabric-loader-0.16.14.jar",
+      "sha256": "9ed7b7f4197153ad97d71b4b9cd9148989e8f0c600934b035ce45f3ef003efc0",
+      "size": 1416842
+    },
+    "api": [
+      {
+        "role": "fabric api",
+        "path": "work/target/fabric-api-0.119.4+1.21.4.jar",
+        "sha256": "d183bacb845167f09264c2f90322b7ecffe8826debda6f60e597889264bef4af",
+        "size": 2149128
+      }
+    ],
+    "libs": []
+  },
+  "pipeline": {
+    "engine": {
+      "name": "CenturyBridge",
+      "commit": "cf4ebeba2eaaa49d3746162cc2c10b670d681aec",
+      "artifactSha256": null,
+      "license": "MIT",
+      "note": "Not exercised for 1.21.4 yet: no segmented conversion was run for this target."
+    },
+    "bridgeAbi": "mcbridge-bridge-1",
+    "ruleOrder": [],
+    "capabilities": [],
+    "output": {
+      "bridgeClasses": "work/targets/fabric-1.21.4/bridges",
+      "cache": "work/targets/fabric-1.21.4/cache",
+      "convertedJars": "work/targets/fabric-1.21.4/out",
+      "reports": "runs/p247-fabric-1.21.4-delta"
+    }
+  },
+  "resources": {
+    "dataVersion": null,
+    "resourcePackFormat": null,
+    "converters": [],
+    "note": "dataVersion and pack format were NOT verified in this stage; they stay null rather than guessed. The 1.21.4 resource changes (items/ model definitions, equipment path, removed tags) are listed in the delta report, not converted."
+  },
+  "verification": {
+    "fixtureVersion": "source-fabric-1.20.1",
+    "testedScopes": [
+      "static index + delta classification only"
+    ],
+    "knownGaps": [
+      "No rule package: nothing can be converted for this target yet.",
+      "No 1.21.4 game was launched.",
+      "The bridge compile closure (indices.libs) is not prepared; B02/B03 need it before any bridge can be compiled for this target."
+    ],
+    "evidence": "runs/p247-fabric-1.21.4-delta"
+  }
+}

@@ -1783,6 +1783,19 @@ FILES = [
     "runs/p246-source-fixture-1204/static-1.20.4.json",
     "runs/p246-source-fixture-1204/profile-check-1.20.4.json",
     "runs/p246-source-fixture-1204/profile-check-1.20.4-with-1211-rules.json",
+    "manifests/target-fabric-1.21.4.lock.json",
+    "targets/fabric-1.21.4.json",
+    "tools/fetch_target_1214.py",
+    "tools/run_1214_delta.py",
+    "runs/p247-fabric-1.21.4-delta/README.md",
+    "runs/p247-fabric-1.21.4-delta/result.json",
+    "runs/p247-fabric-1.21.4-delta/official-changes.json",
+    "runs/p247-fabric-1.21.4-delta/profile-check-1.21.4.json",
+    "runs/p247-fabric-1.21.4-delta/profile-check-1.21.4-with-1211-rules.json",
+    "runs/p247-fabric-1.21.4-delta/static-fixture-1.21.1.json",
+    "runs/p247-fabric-1.21.4-delta/static-fixture-1.21.4.json",
+    "runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.1.json",
+    "runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.4.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

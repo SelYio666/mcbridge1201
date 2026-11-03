@@ -1,41 +1,34 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T20:15:51+08:00",
+  "generatedAt": "2026-11-03T20:47:33+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "de36c5a6f7ee93c70869c8ba51bf29359f267454",
-    "branch": "master",
+    "commit": "51cea8d12adca178af822e1e2f411a52d3d86862",
+    "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      ".gitignore",
-      "README.md",
-      "docs/multi-target-baseline.md",
-      "fixtures/source-fabric-1.20.1/manifest.json",
-      "fixtures/source-fabric-1.20.1/resources/fabric.mod.json",
-      "fixtures/source-fabric-1.20.1/resources/mcbfixture.mixins.json",
-      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureData.java",
-      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureIndy.java",
-      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureMod.java",
-      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureRegistry.java",
-      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureScreen.java",
-      "fixtures/source-fabric-1.20.1/src/mcbfixture/mixin/FixtureMixin.java",
-      "manifests/baseline.lock.json",
+      "manifests/target-fabric-1.21.4.lock.json",
       "runs/SHA256SUMS.txt",
-      "runs/p246-source-fixture-1204/README.md",
-      "runs/p246-source-fixture-1204/profile-check-1.20.4-with-1211-rules.json",
-      "runs/p246-source-fixture-1204/profile-check-1.20.4.json",
-      "runs/p246-source-fixture-1204/result.json",
-      "runs/p246-source-fixture-1204/static-1.20.1.json",
-      "runs/p246-source-fixture-1204/static-1.20.4.json",
-      "targets/fabric-1.20.4.json",
-      "tools/build_source_fixture.py",
+      "runs/p247-fabric-1.21.4-delta/README.md",
+      "runs/p247-fabric-1.21.4-delta/official-changes.json",
+      "runs/p247-fabric-1.21.4-delta/profile-check-1.21.4-with-1211-rules.json",
+      "runs/p247-fabric-1.21.4-delta/profile-check-1.21.4.json",
+      "runs/p247-fabric-1.21.4-delta/result.json",
+      "runs/p247-fabric-1.21.4-delta/static-fixture-1.21.1.json",
+      "runs/p247-fabric-1.21.4-delta/static-fixture-1.21.4.json",
+      "runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.1.json",
+      "runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.4.json",
+      "targets/fabric-1.21.4.json",
+      "tools/fetch_target_1214.py",
       "tools/freeze_baseline.py",
       "tools/hash_evidence.py",
-      "tools/run_source_fixture_probe.py"
+      "tools/run_1214_delta.py"
     ],
-    "untrackedFiles": [],
+    "untrackedFiles": [
+      "WORKSPACE.md"
+    ],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
   },
   "environment": {
@@ -595,9 +588,9 @@
       }
     },
     "tools": {
-      "count": 16,
-      "present": 16,
-      "packageSha256": "0b7102e268b8ee0291abd872d3a24209367106d2eca2b7ef06ca957576f00f34",
+      "count": 18,
+      "present": 18,
+      "packageSha256": "9e87cee875e2e4dc719f7ea780cb6c8d2eed443ed9623ecb5b0daec479f6dbb1",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -621,8 +614,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "95cecb1952473821e5c01b6e34476895dbb3653cf4cb10dc9971688b97679227",
-          "size": 88227
+          "sha256": "398a975c1f4c001bae0eb02cb440fd680aaf783cc231a99337d6a0cc3ba8e4bd",
+          "size": 88945
         },
         {
           "path": "tools/release_check.py",
@@ -643,6 +636,16 @@
           "path": "tools/build_source_fixture.py",
           "sha256": "783ac33fbdfbd0f9539ed53deb566c0ff4393d9d9a64d2b414ce286b5556338a",
           "size": 10112
+        },
+        {
+          "path": "tools/fetch_target_1214.py",
+          "sha256": "733587afdf4037f68154dc196cebaad6778592dd8d85f82398c1c0bfd2b8fec0",
+          "size": 6794
+        },
+        {
+          "path": "tools/run_1214_delta.py",
+          "sha256": "d7b26402b43f1d8b1ddb172ac4b824db3818b317718f9fa38b5b838b3a69ec58",
+          "size": 19267
         },
         {
           "path": "tools/run_target_gate.py",
@@ -676,8 +679,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "fb91d38d20cad7f2340f07f012b39a171cb9aedc5db3258436d6ea16d39452fb",
-          "size": 17910
+          "sha256": "6a6d40096edb2690a986164e74037f970c4107ceb8b927ebe892ce92ade7e840",
+          "size": 17975
         }
       ]
     },
@@ -705,7 +708,7 @@
     }
   },
   "targetProfiles": {
-    "count": 2,
+    "count": 3,
     "profiles": [
       {
         "path": "targets/fabric-1.20.4.json",
@@ -730,6 +733,18 @@
         "namespace": "intermediary",
         "bridgeAbi": "mcbridge-bridge-1",
         "ruleOrderEntries": 29
+      },
+      {
+        "path": "targets/fabric-1.21.4.json",
+        "sha256": "e794c90c0c5d7c527639bdeaf4286ff30e1dbd107df27ebbb8d199c8e7a542ac",
+        "profileId": "fabric-1.21.4",
+        "targetId": "fabric-1.21.4",
+        "minecraft": "1.21.4",
+        "loader": "fabric",
+        "javaMajor": 21,
+        "namespace": "intermediary",
+        "bridgeAbi": "mcbridge-bridge-1",
+        "ruleOrderEntries": 0
       }
     ]
   },
@@ -856,15 +871,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1749 mismatch=0 missing=0"
+          "ok=1762 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 337",
-          "hashed evidence files: 337",
+          "required evidence files: 339",
+          "hashed evidence files: 339",
           "coverage OK"
         ]
       },
@@ -874,7 +889,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 278 markdown file(s): 278 clean, 0 finding(s)"
+          "checked 279 markdown file(s): 279 clean, 0 finding(s)"
         ]
       },
       {
@@ -882,7 +897,7 @@
         "rc": 0,
         "tail": [
           "  },",
-          "  \"root\": \"C:\\\\Users\\\\27682\\\\Documents\\\\\\u65b0\\u5efa\\u6587\\u4ef6\\u5939\\\\mcbridge1201\"",
+          "  \"root\": \"C:\\\\Users\\\\27682\\\\Documents\\\\\\u65b0\\u5efa\\u6587\\u4ef6\\u5939\\\\mcbridge1201-zcode\"",
           "}"
         ]
       }

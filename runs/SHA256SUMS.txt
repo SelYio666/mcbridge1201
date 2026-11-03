@@ -1707,7 +1707,7 @@ bd0474f5434b2425b328a0b7a792bd58c4d878a460fa882e716b1bb4e9fe7641  runs/p232-same
 8c9ab369fe0a2f32b6941eadedd91b33a8de7fdecb7f347da6c69eaba9d4b3f1  targets/fabric-1.21.1.json
 0b2f26febf63ba44b6966d491b8bd149e1c6eeebd9fca60c78c28e9b5724b7c7  java/src/main/java/top/mcbridge1201/profile/TargetProfile.java
 76879c41b3752c8ea14f62e245c3605858445af047e89b53b4751039f2a1a851  java/src/test/java/top/mcbridge1201/TargetProfileValidationTest.java
-fb91d38d20cad7f2340f07f012b39a171cb9aedc5db3258436d6ea16d39452fb  tools/freeze_baseline.py
+6a6d40096edb2690a986164e74037f970c4107ceb8b927ebe892ce92ade7e840  tools/freeze_baseline.py
 04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6  tools/run_target_gate.py
 37615e2e30afe1b2c21a280ab79dd62028d3ecdc15d8fd9094bde3cb68874197  docs/multi-target-baseline.md
 f704e1b4682d7c9029462329c71976c8c0ffda4e3105b2cf80458fa22e419880  runs/p243-target-profile-gate/README.md
@@ -1747,3 +1747,16 @@ dd0d5fb7a1873989945bfd211f89e9733b59799b7bc4b757405399843555b3b8  runs/p246-sour
 4f36b91fe20f65f3fe4ee6307283f00f38910d9da80139e21333855792b6033d  runs/p246-source-fixture-1204/static-1.20.4.json
 c7e7847bbe42a0dde1eff85a439732059e08f83bd5f8fc73199ed2167541ebc8  runs/p246-source-fixture-1204/profile-check-1.20.4.json
 eeafc9e62f1336bd09bab6cb21424678fe4e4b3b9ebc6159ab274ee5865a9874  runs/p246-source-fixture-1204/profile-check-1.20.4-with-1211-rules.json
+ededa34394d524646b406dbdb3760482382894b0fbf2aac5c856c9af35d6b83c  manifests/target-fabric-1.21.4.lock.json
+e794c90c0c5d7c527639bdeaf4286ff30e1dbd107df27ebbb8d199c8e7a542ac  targets/fabric-1.21.4.json
+733587afdf4037f68154dc196cebaad6778592dd8d85f82398c1c0bfd2b8fec0  tools/fetch_target_1214.py
+d7b26402b43f1d8b1ddb172ac4b824db3818b317718f9fa38b5b838b3a69ec58  tools/run_1214_delta.py
+a9bd5c440ad51a5d4b8852e9f6181d5dea1b0893f862f540ac9ab4bd0789cf3a  runs/p247-fabric-1.21.4-delta/README.md
+63b52fba55843b504382f2eb0113d6fdd0f947b2648b4e2e2d86cf2a9aec38b0  runs/p247-fabric-1.21.4-delta/result.json
+bf8af59bc35b3906c1c92601f2c9d64f1419a7adb8333a849384131afe9b5fab  runs/p247-fabric-1.21.4-delta/official-changes.json
+32f8579153ee5ea23be692c6a040d7aedaab0ca029b42330b184b60badc2ac98  runs/p247-fabric-1.21.4-delta/profile-check-1.21.4.json
+8d7fb8d09d3c41a8073462c73c8d70ff9716299349f630197d4d4713d1b66913  runs/p247-fabric-1.21.4-delta/profile-check-1.21.4-with-1211-rules.json
+9e9bc449b4f182c0c9d35543a3e961e58e6f8764409f4149f8352f12e0b317cd  runs/p247-fabric-1.21.4-delta/static-fixture-1.21.1.json
+89ebf2b8d926c1f3733b0014df5d9c704563c9b78462762fb9a2ae3fb2a3322c  runs/p247-fabric-1.21.4-delta/static-fixture-1.21.4.json
+3bcff408e08bc17a4c90ff9eb3d1e9d37794539e551f24e27241c31875e73684  runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.1.json
+c5294478da900de3170ed861592e6a83b3b183337f708c1932e4a94e4f2e1f2a  runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.4.json

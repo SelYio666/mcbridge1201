@@ -1,0 +1,176 @@
+{
+  "source": [
+    "https://fabricmc.net/2024/10/14/1212.html",
+    "https://fabricmc.net/2024/12/02/1214.html"
+  ],
+  "items": [
+    {
+      "id": "1212.registry-key-settings",
+      "version": "1.21.2",
+      "area": "registration",
+      "summary": "Block/Item settings must carry a RegistryKey; missing it fails with 'NullPointerException: Item id not set' at registry time.",
+      "staticDetectable": "partial",
+      "why": "The call to Settings#registryKey is a member reference and is visible, but its absence is a call that was never emitted: nothing in the bytecode says it is required."
+    },
+    {
+      "id": "1212.serverworld-params",
+      "version": "1.21.2",
+      "area": "api-shape",
+      "summary": "Server-only methods now take ServerWorld explicitly; callers must pass it instead of casting.",
+      "staticDetectable": "yes",
+      "why": "The descriptor of the called method changes, so an exact-match site either misses or needs a call-site adaptation."
+    },
+    {
+      "id": "1212.action-result-merge",
+      "version": "1.21.2",
+      "area": "api-shape",
+      "summary": "ActionResult / ItemActionResult / TypedActionResult merged into ActionResult.",
+      "staticDetectable": "yes",
+      "why": "Return types and static factory owners change: member lookups fail or need bridges."
+    },
+    {
+      "id": "1212.entity-render-state",
+      "version": "1.21.2",
+      "area": "rendering",
+      "summary": "EntityRenderer gains a render-state type parameter; createRenderState / updateRenderState split rendering data from the entity instance.",
+      "staticDetectable": "yes",
+      "why": "The renderer's method set and descriptors change. Whether the ported renderer still looks right is NOT visible here."
+    },
+    {
+      "id": "1212.registry-rename",
+      "version": "1.21.2",
+      "area": "api-shape",
+      "summary": "Registry implements RegistryEntryLookup: getEntry->getOptional, entryOf->getOrThrow, getOrThrow->getValueOrThrow, and siblings.",
+      "staticDetectable": "yes",
+      "why": "Method names change; exact-match lookups miss."
+    },
+    {
+      "id": "1212.recipes-rework",
+      "version": "1.21.2",
+      "area": "data",
+      "summary": "Recipes keyed by RegistryKey; Recipe/ID server-side only; clients get RecipeDisplayEntry with NetworkRecipeId.",
+      "staticDetectable": "partial",
+      "why": "Method signatures move, but the client/server split is a protocol change: a signature that still resolves can still be wrong at runtime."
+    },
+    {
+      "id": "1212.ingredient-list",
+      "version": "1.21.2",
+      "area": "data",
+      "summary": "Ingredient is internally a list of items, not item stacks.",
+      "staticDetectable": "partial",
+      "why": "Type stays Ingredient, so only calls that read stacks reveal it."
+    },
+    {
+      "id": "1212.profiler",
+      "version": "1.21.2",
+      "area": "api-shape",
+      "summary": "Shared profiler is accessed through Profilers#get instead of world.getProfiler().",
+      "staticDetectable": "yes",
+      "why": "Call owner/descriptor change."
+    },
+    {
+      "id": "1212.attribute-prefix",
+      "version": "1.21.2",
+      "area": "api-shape",
+      "summary": "EntityAttributes constants drop the GENERIC prefix and their identifiers change.",
+      "staticDetectable": "yes",
+      "why": "Static field names change; references miss."
+    },
+    {
+      "id": "1212.loot-tables-empty",
+      "version": "1.21.2",
+      "area": "data",
+      "summary": "LootTables#EMPTY removed; absence is Optional now.",
+      "staticDetectable": "yes",
+      "why": "Field reference disappears."
+    },
+    {
+      "id": "1212.fuel-event",
+      "version": "1.21.2",
+      "area": "registration",
+      "summary": "Furnace fuels register through FuelRegistryEvents.BUILD with a context. FuelRegistry.INSTANCE.add is gone.",
+      "staticDetectable": "yes",
+      "why": "Owner/API type change."
+    },
+    {
+      "id": "1212.entity-type-key",
+      "version": "1.21.2",
+      "area": "registration",
+      "summary": "EntityType.Builder#build now requires a RegistryKey; the no-arg build injected by FabricEntityTypeBuilder was removed.",
+      "staticDetectable": "yes",
+      "why": "Descriptor change on build()."
+    },
+    {
+      "id": "1212.spawn-reason",
+      "version": "1.21.2",
+      "area": "api-shape",
+      "summary": "Creating an entity requires a SpawnReason.",
+      "staticDetectable": "yes",
+      "why": "Descriptor change on create()."
+    },
+    {
+      "id": "1212.datagen-recipe-generator",
+      "version": "1.21.2",
+      "area": "datagen",
+      "summary": "Recipe providers override getRecipeGenerator instead of generate.",
+      "staticDetectable": "yes",
+      "why": "Override signature changes; the override silently stops being called if it is not migrated."
+    },
+    {
+      "id": "1214.item-model-definitions",
+      "version": "1.21.4",
+      "area": "resources",
+      "summary": "Items use assets/<ns>/items/*.json model definitions; ItemColors and related tinting APIs were removed.",
+      "staticDetectable": "partial",
+      "why": "Removed Java APIs are visible; a missing JSON asset is only visible to a resource scan, and a model that loads but looks wrong is not visible to either."
+    },
+    {
+      "id": "1214.block-model-render-type",
+      "version": "1.21.4",
+      "area": "rendering",
+      "summary": "BlockEntity#getRenderType is gone: every block entity renders its block model.",
+      "staticDetectable": "yes",
+      "why": "The override target disappears from the target index."
+    },
+    {
+      "id": "1214.model-loading-split",
+      "version": "1.21.4",
+      "area": "rendering",
+      "summary": "Model Loading API split into static vs block models; BeforeBake/AfterBake removed; GroupableModel no longer extends UnbakedModel.",
+      "staticDetectable": "yes",
+      "why": "Types and callback interfaces change."
+    },
+    {
+      "id": "1214.pick-block-server-side",
+      "version": "1.21.4",
+      "area": "network",
+      "summary": "Pick Block moved from client to logical server; client callbacks replaced by PlayerPickItemEvents.",
+      "staticDetectable": "partial",
+      "why": "The client callback API is visible when it is removed; whether a mod's pick logic is now on the right side is a runtime question."
+    },
+    {
+      "id": "1214.custom-ingredient-stream",
+      "version": "1.21.4",
+      "area": "api-shape",
+      "summary": "CustomIngredient#getMatchingStacks returns a stream, not a list.",
+      "staticDetectable": "yes",
+      "why": "Return type change on an override."
+    },
+    {
+      "id": "1214.equipment-path",
+      "version": "1.21.4",
+      "area": "resources",
+      "summary": "Equipment assets moved from models/equipment to assets/<ns>/equipment; several tags removed; slot outline textures moved.",
+      "staticDetectable": "no",
+      "why": "Pure asset layout: no bytecode reference points at a resource path that can be checked without a resource scan and a visual comparison."
+    },
+    {
+      "id": "1214.rendering-v0-removed",
+      "version": "1.21.4",
+      "area": "api-shape",
+      "summary": "fabric-rendering-v0 and FabricModelPredicateProviderRegistry removed; BuiltinItemRenderer replaced by SpecialModelTypes.ID_MAPPER access widener.",
+      "staticDetectable": "yes",
+      "why": "Removed API classes are visible in the API index."
+    }
+  ]
+}

@@ -1,0 +1,681 @@
+{
+  "workstream": "B01 freeze the 1.21.4 environment and classify the delta",
+  "environment": {
+    "lock": "manifests/target-fabric-1.21.4.lock.json",
+    "profile": "targets/fabric-1.21.4.json",
+    "stub": "work/target/client-1.21.4-intermediary.jar",
+    "javaMajor": 21,
+    "classMajorMax": 65
+  },
+  "baseline": {
+    "env": "1.21.1",
+    "indexes": [
+      "work/target/client-1.21.1.jar",
+      "work/target/intermediary-1.21.1-v2.jar",
+      "work/target/fabric-loader-0.19.5.jar"
+    ]
+  },
+  "delta": {
+    "fixture": {
+      "counts": {
+        "1.21.1": 1,
+        "1.21.4": 1,
+        "newIn1214": 0,
+        "resolvedIn1214": 0,
+        "inBoth": 1
+      },
+      "newIn1214": [],
+      "resolvedIn1214": [],
+      "inBoth": [
+        {
+          "field": "missingMember",
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7969",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method"
+        }
+      ],
+      "analyzeRc": {
+        "1.21.1": 0,
+        "1.21.4": 0
+      }
+    },
+    "ironchests-5.0.2": {
+      "counts": {
+        "1.21.1": 76,
+        "1.21.4": 97,
+        "newIn1214": 21,
+        "resolvedIn1214": 0,
+        "inBoth": 76
+      },
+      "newIn1214": [
+        {
+          "field": "missingClass",
+          "owner": "net/minecraft/class_2753",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingClass",
+          "owner": "net/minecraft/class_3270",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingClass",
+          "owner": "net/minecraft/class_6395",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_1269",
+          "name": "field_21466",
+          "desc": "Lnet/minecraft/class_1269;",
+          "kind": "field"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_1269",
+          "name": "field_5811",
+          "desc": "Lnet/minecraft/class_1269;",
+          "kind": "field"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_1269",
+          "name": "field_5812",
+          "desc": "Lnet/minecraft/class_1269;",
+          "kind": "field"
+        },
+        {
+          "field": "missingMember",
+          "owner": "net/minecraft/class_2464",
+          "name": "field_11456",
+          "desc": "Lnet/minecraft/class_2464;",
+          "kind": "field"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_2741",
+          "name": "field_12481",
+          "desc": "Lnet/minecraft/class_2753;",
+          "kind": "field"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_2741",
+          "name": "field_12525",
+          "desc": "Lnet/minecraft/class_2753;",
+          "kind": "field"
+        },
+        {
+          "field": "missingMember",
+          "owner": "net/minecraft/class_1269",
+          "name": "method_29236",
+          "desc": "(Z)Lnet/minecraft/class_1269;",
+          "kind": "method"
+        },
+        {
+          "field": "missingMember",
+          "owner": "net/minecraft/class_1936",
+          "name": "method_39281",
+          "desc": "(Lnet/minecraft/class_2338;Lnet/minecraft/class_3611;I)V",
+          "kind": "method"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_2237",
+          "name": "method_9559",
+          "desc": "(Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;",
+          "kind": "method"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_2680",
+          "name": "method_26226",
+          "desc": "(Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;",
+          "kind": "method"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_2769",
+          "name": "method_11898",
+          "desc": "()Ljava/util/Collection;",
+          "kind": "method"
+        },
+        {
+          "field": "missingClass",
+          "owner": "net/minecraft/class_3270",
+          "name": "method_14420",
+          "desc": "()Ljava/lang/String;",
+          "kind": "method"
+        },
+        {
+          "field": "missingClass",
+          "owner": "net/minecraft/class_3270",
+          "name": "method_14421",
+          "desc": "(Lcom/google/gson/JsonObject;)Ljava/lang/Object;",
+          "kind": "method"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_332",
+          "name": "method_25290",
+          "desc": "(Lnet/minecraft/class_2960;IIFFIIII)V",
+          "kind": "method"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_332",
+          "name": "method_25302",
+          "desc": "(Lnet/minecraft/class_2960;IIIIII)V",
+          "kind": "method"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_4309",
+          "name": "<init>",
+          "desc": "(Lcom/google/gson/Gson;Ljava/lang/String;)V",
+          "kind": "method"
+        },
+        {
+          "field": "missingMember",
+          "owner": "net/minecraft/class_4722",
+          "name": "method_24076",
+          "desc": "()Lnet/minecraft/class_1921;",
+          "kind": "method"
+        },
+        {
+          "field": "missingClass",
+          "owner": "net/minecraft/class_5272",
+          "name": "method_27879",
+          "desc": "(Lnet/minecraft/class_1792;Lnet/minecraft/class_2960;Lnet/minecraft/class_6395;)V",
+          "kind": "method"
+        }
+      ],
+      "resolvedIn1214": [],
+      "inBoth": [
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/client/model/ExtraModelProvider",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/event/Event",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/FabricItemGroupEntries",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/itemgroup/v1/ItemGroupEvents$ModifyEntries",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/networking/v1/PacketSender",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder$Factory",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/object/builder/v1/block/entity/FabricBlockEntityTypeBuilder",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/recipe/v1/ingredient/CustomIngredientSerializer",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/recipe/v1/ingredient/CustomIngredient",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/resource/IdentifiableResourceReloadListener",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerFactory",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType$ExtendedFactory",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingClass",
+          "owner": "net/minecraft/class_2444",
+          "name": null,
+          "desc": null,
+          "kind": "class"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap",
+          "name": "INSTANCE",
+          "desc": "Lnet/fabricmc/fabric/api/blockrenderlayer/v1/BlockRenderLayerMap;",
+          "kind": "field"
+        },
+        {
+          "field": "missingApiClass",
+          "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+          "name": "INSTANCE",
+          "desc": "Lnet/fabricmc/fabric/api/client/model/ModelLoadingRegistry;",
+          "kind": "field"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_1294",
+          "name": "field_5901",
+          "desc": "Lnet/minecraft/class_1291;",
+          "kind": "field"
+        },
+        {
+          "field": "descMismatch",
+          "owner": "net/minecraft/class_1294",
+          "name": "field_5909",
+          "desc": "Lnet/minecraft/class_1291;",
+          "kind": "field"
+        },
+        {
+          "field": "missingMember",
+          "owner": "net/minecraft/class_2040",
+          "name": "field_9581",
+          "desc": "Lnet/minecraft/class_2040;",
+          "kind": "field"
+        },
+        {
+          "field": "missingMember",
+          "owner": "net/minecraft/class_2048",
+          "name": "field_9599",
+          "desc": "Lnet/minecraft/class_2048;",
+          "kind": "field"
+        }
+      ],
+      "analyzeRc": {
+        "1.21.1": 0,
+        "1.21.4": 0
+      }
+    }
+  },
+  "officialChanges": {
+    "source": [
+      "https://fabricmc.net/2024/10/14/1212.html",
+      "https://fabricmc.net/2024/12/02/1214.html"
+    ],
+    "count": 21,
+    "byArea": {
+      "registration": [
+        "1212.registry-key-settings",
+        "1212.fuel-event",
+        "1212.entity-type-key"
+      ],
+      "api-shape": [
+        "1212.serverworld-params",
+        "1212.action-result-merge",
+        "1212.registry-rename",
+        "1212.profiler",
+        "1212.attribute-prefix",
+        "1212.spawn-reason",
+        "1214.custom-ingredient-stream",
+        "1214.rendering-v0-removed"
+      ],
+      "rendering": [
+        "1212.entity-render-state",
+        "1214.block-model-render-type",
+        "1214.model-loading-split"
+      ],
+      "data": [
+        "1212.recipes-rework",
+        "1212.ingredient-list",
+        "1212.loot-tables-empty"
+      ],
+      "datagen": [
+        "1212.datagen-recipe-generator"
+      ],
+      "resources": [
+        "1214.item-model-definitions",
+        "1214.equipment-path"
+      ],
+      "network": [
+        "1214.pick-block-server-side"
+      ]
+    },
+    "staticDetectable": {
+      "yes": 15,
+      "partial": 5,
+      "no": 1
+    },
+    "items": [
+      {
+        "id": "1212.registry-key-settings",
+        "version": "1.21.2",
+        "area": "registration",
+        "summary": "Block/Item settings must carry a RegistryKey; missing it fails with 'NullPointerException: Item id not set' at registry time.",
+        "staticDetectable": "partial",
+        "why": "The call to Settings#registryKey is a member reference and is visible, but its absence is a call that was never emitted: nothing in the bytecode says it is required."
+      },
+      {
+        "id": "1212.serverworld-params",
+        "version": "1.21.2",
+        "area": "api-shape",
+        "summary": "Server-only methods now take ServerWorld explicitly; callers must pass it instead of casting.",
+        "staticDetectable": "yes",
+        "why": "The descriptor of the called method changes, so an exact-match site either misses or needs a call-site adaptation."
+      },
+      {
+        "id": "1212.action-result-merge",
+        "version": "1.21.2",
+        "area": "api-shape",
+        "summary": "ActionResult / ItemActionResult / TypedActionResult merged into ActionResult.",
+        "staticDetectable": "yes",
+        "why": "Return types and static factory owners change: member lookups fail or need bridges."
+      },
+      {
+        "id": "1212.entity-render-state",
+        "version": "1.21.2",
+        "area": "rendering",
+        "summary": "EntityRenderer gains a render-state type parameter; createRenderState / updateRenderState split rendering data from the entity instance.",
+        "staticDetectable": "yes",
+        "why": "The renderer's method set and descriptors change. Whether the ported renderer still looks right is NOT visible here."
+      },
+      {
+        "id": "1212.registry-rename",
+        "version": "1.21.2",
+        "area": "api-shape",
+        "summary": "Registry implements RegistryEntryLookup: getEntry->getOptional, entryOf->getOrThrow, getOrThrow->getValueOrThrow, and siblings.",
+        "staticDetectable": "yes",
+        "why": "Method names change; exact-match lookups miss."
+      },
+      {
+        "id": "1212.recipes-rework",
+        "version": "1.21.2",
+        "area": "data",
+        "summary": "Recipes keyed by RegistryKey; Recipe/ID server-side only; clients get RecipeDisplayEntry with NetworkRecipeId.",
+        "staticDetectable": "partial",
+        "why": "Method signatures move, but the client/server split is a protocol change: a signature that still resolves can still be wrong at runtime."
+      },
+      {
+        "id": "1212.ingredient-list",
+        "version": "1.21.2",
+        "area": "data",
+        "summary": "Ingredient is internally a list of items, not item stacks.",
+        "staticDetectable": "partial",
+        "why": "Type stays Ingredient, so only calls that read stacks reveal it."
+      },
+      {
+        "id": "1212.profiler",
+        "version": "1.21.2",
+        "area": "api-shape",
+        "summary": "Shared profiler is accessed through Profilers#get instead of world.getProfiler().",
+        "staticDetectable": "yes",
+        "why": "Call owner/descriptor change."
+      },
+      {
+        "id": "1212.attribute-prefix",
+        "version": "1.21.2",
+        "area": "api-shape",
+        "summary": "EntityAttributes constants drop the GENERIC prefix and their identifiers change.",
+        "staticDetectable": "yes",
+        "why": "Static field names change; references miss."
+      },
+      {
+        "id": "1212.loot-tables-empty",
+        "version": "1.21.2",
+        "area": "data",
+        "summary": "LootTables#EMPTY removed; absence is Optional now.",
+        "staticDetectable": "yes",
+        "why": "Field reference disappears."
+      },
+      {
+        "id": "1212.fuel-event",
+        "version": "1.21.2",
+        "area": "registration",
+        "summary": "Furnace fuels register through FuelRegistryEvents.BUILD with a context. FuelRegistry.INSTANCE.add is gone.",
+        "staticDetectable": "yes",
+        "why": "Owner/API type change."
+      },
+      {
+        "id": "1212.entity-type-key",
+        "version": "1.21.2",
+        "area": "registration",
+        "summary": "EntityType.Builder#build now requires a RegistryKey; the no-arg build injected by FabricEntityTypeBuilder was removed.",
+        "staticDetectable": "yes",
+        "why": "Descriptor change on build()."
+      },
+      {
+        "id": "1212.spawn-reason",
+        "version": "1.21.2",
+        "area": "api-shape",
+        "summary": "Creating an entity requires a SpawnReason.",
+        "staticDetectable": "yes",
+        "why": "Descriptor change on create()."
+      },
+      {
+        "id": "1212.datagen-recipe-generator",
+        "version": "1.21.2",
+        "area": "datagen",
+        "summary": "Recipe providers override getRecipeGenerator instead of generate.",
+        "staticDetectable": "yes",
+        "why": "Override signature changes; the override silently stops being called if it is not migrated."
+      },
+      {
+        "id": "1214.item-model-definitions",
+        "version": "1.21.4",
+        "area": "resources",
+        "summary": "Items use assets/<ns>/items/*.json model definitions; ItemColors and related tinting APIs were removed.",
+        "staticDetectable": "partial",
+        "why": "Removed Java APIs are visible; a missing JSON asset is only visible to a resource scan, and a model that loads but looks wrong is not visible to either."
+      },
+      {
+        "id": "1214.block-model-render-type",
+        "version": "1.21.4",
+        "area": "rendering",
+        "summary": "BlockEntity#getRenderType is gone: every block entity renders its block model.",
+        "staticDetectable": "yes",
+        "why": "The override target disappears from the target index."
+      },
+      {
+        "id": "1214.model-loading-split",
+        "version": "1.21.4",
+        "area": "rendering",
+        "summary": "Model Loading API split into static vs block models; BeforeBake/AfterBake removed; GroupableModel no longer extends UnbakedModel.",
+        "staticDetectable": "yes",
+        "why": "Types and callback interfaces change."
+      },
+      {
+        "id": "1214.pick-block-server-side",
+        "version": "1.21.4",
+        "area": "network",
+        "summary": "Pick Block moved from client to logical server; client callbacks replaced by PlayerPickItemEvents.",
+        "staticDetectable": "partial",
+        "why": "The client callback API is visible when it is removed; whether a mod's pick logic is now on the right side is a runtime question."
+      },
+      {
+        "id": "1214.custom-ingredient-stream",
+        "version": "1.21.4",
+        "area": "api-shape",
+        "summary": "CustomIngredient#getMatchingStacks returns a stream, not a list.",
+        "staticDetectable": "yes",
+        "why": "Return type change on an override."
+      },
+      {
+        "id": "1214.equipment-path",
+        "version": "1.21.4",
+        "area": "resources",
+        "summary": "Equipment assets moved from models/equipment to assets/<ns>/equipment; several tags removed; slot outline textures moved.",
+        "staticDetectable": "no",
+        "why": "Pure asset layout: no bytecode reference points at a resource path that can be checked without a resource scan and a visual comparison."
+      },
+      {
+        "id": "1214.rendering-v0-removed",
+        "version": "1.21.4",
+        "area": "api-shape",
+        "summary": "fabric-rendering-v0 and FabricModelPredicateProviderRegistry removed; BuiltinItemRenderer replaced by SpecialModelTypes.ID_MAPPER access widener.",
+        "staticDetectable": "yes",
+        "why": "Removed API classes are visible in the API index."
+      }
+    ],
+    "caveat": "staticDetectable is this run's judgement about what a bytecode/member diff can see. The counts in `delta` are the measurement; the flags are not."
+  },
+  "cases": [
+    {
+      "id": "b01.1214-stub-java21",
+      "goal": "the 1.21.4 compile stub is readable at the target Java level",
+      "expect": {
+        "onlyMajor": 65
+      },
+      "got": {
+        "majors": {
+          "65": 8857
+        },
+        "classes": 8857
+      },
+      "passed": true
+    },
+    {
+      "id": "b01.1214-no-rules-refused",
+      "goal": "the 1.21.4 profile refuses to convert without a rule package",
+      "expect": {
+        "rc": 3,
+        "code": "pipeline.rule-order-empty"
+      },
+      "got": {
+        "rc": 3,
+        "errorCodes": [
+          "pipeline.rule-order-empty"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "b01.1214-reuses-no-1211-rules",
+      "goal": "the 1.21.1 rule package cannot be aimed at 1.21.4",
+      "expect": {
+        "rc": 3,
+        "code": "rules.target-mismatch"
+      },
+      "got": {
+        "rc": 3,
+        "errorCodes": [
+          "pipeline.rule-order-empty",
+          "rules.target-mismatch"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "b01.measured-delta",
+      "goal": "the same 1.20.1 input is diffed against both target indexes",
+      "expect": {
+        "inputsAnalysed": 2
+      },
+      "got": {
+        "inputsAnalysed": 2,
+        "deltas": {
+          "fixture": {
+            "1.21.1": 1,
+            "1.21.4": 1,
+            "newIn1214": 0,
+            "resolvedIn1214": 0,
+            "inBoth": 1
+          },
+          "ironchests-5.0.2": {
+            "1.21.1": 76,
+            "1.21.4": 97,
+            "newIn1214": 21,
+            "resolvedIn1214": 0,
+            "inBoth": 76
+          }
+        }
+      },
+      "passed": true
+    }
+  ],
+  "scope": "static only: two indexes were built and diffed, no jar was converted and no game was launched. No 1.21.4 rule package exists.",
+  "passed": true,
+  "failed": []
+}
