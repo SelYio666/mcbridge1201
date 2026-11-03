@@ -1868,6 +1868,10 @@ FILES = [
     "tools/classpool.py",
     "runs/p261-rule-target-check/README.md",
     "runs/p261-rule-target-check/result.json",
+    "java/src/test/java/top/mcbridge1201/RuleSetLoadTest.java",
+    "runs/p262-stale-cli-root-cause/README.md",
+    "runs/p262-stale-cli-root-cause/result.json",
+    "runs/p260-registry-context-attempt/README.md",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

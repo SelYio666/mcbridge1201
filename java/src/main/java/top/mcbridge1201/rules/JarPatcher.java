@@ -602,7 +602,7 @@ public final class JarPatcher {
             changed = true;
             framesAffected = true;
         }
-        if (applyInsertBeforeCalls(cn, rules, st)) {
+        if (applyInsertBeforeCalls(cn, rules, st, used)) {
             changed = true;
             framesAffected = true;
         }
@@ -950,7 +950,8 @@ public final class JarPatcher {
      * <p>The injected sequence must be stack-neutral: the matched call's arguments are already
      * pushed, so the bridge consumes exactly the local that was loaded for it.
      */
-    private static boolean applyInsertBeforeCalls(ClassNode cn, RuleSet rules, Stats st) {
+    private static boolean applyInsertBeforeCalls(ClassNode cn, RuleSet rules, Stats st,
+                                                 Set<String> used) {
         if (rules.insertBeforeCalls.isEmpty()) {
             return false;
         }
@@ -997,11 +998,15 @@ public final class JarPatcher {
                     mn.instructions.insertBefore(hit, inject);
                     mn.instructions.set(hit, new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
                             r.replaceMethod, r.replaceDesc, false));
+                    // Register the bridge, or it is used but never embedded and the patched jar
+                    // fails with NoClassDefFoundError at the first call.
+                    recordBridge(st, used, r.bridgeClass);
                     continue;
                 }
                 inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
                         r.bridgeMethod, r.bridgeDesc, false));
                 mn.instructions.insertBefore(hit, inject);
+                recordBridge(st, used, r.bridgeClass);
             }
         }
         return any;

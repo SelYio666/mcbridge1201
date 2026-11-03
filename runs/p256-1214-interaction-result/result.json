@@ -8,12 +8,14 @@
   "build": {
     "rc": 0,
     "majors": {
-      "65": 5
+      "65": 8
     }
   },
   "patch": {
     "rc": 0,
     "applied": {
+      "1214.blockstate-properties.field-12481": 3,
+      "1214.blockstate-properties.field-12525": 4,
       "1214.interaction-result.field-21466": 2,
       "1214.interaction-result.field-5811": 20,
       "1214.interaction-result.field-5812": 7,
@@ -26,9 +28,9 @@
       "  rule ironchests.blit-region-1214 applied 2 time(s)",
       "  rule ironchests.blit-simple-1214 applied 3 time(s)",
       "  rule ironchests.draw-nine-sliced-1214 applied 1 time(s)",
-      "  bridges embedded: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
-      "  javac bridges: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
-      "  sha256 61a0382a2a44bc7b456a9f987d36495372bf25ab3c161422e4db1e608caca652"
+      "  bridges embedded: [top/mcbridge1201/bridge/BlockStatePropertiesBridge1214, top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  javac bridges: [top/mcbridge1201/bridge/BlockStatePropertiesBridge1214, top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  sha256 6d4f817820db0037fb48a2a675813d83fa1c0ec64cf7eb02e2a33d0682e478ad"
     ]
   },
   "constantPool": {

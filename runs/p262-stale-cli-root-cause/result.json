@@ -1,0 +1,50 @@
+{
+  "workstream": "root cause of p260: the patch CLI was a stale build, not a broken rule",
+  "rootCause": {
+    "what": "patch loads the engine from java/build/install/.../lib/*.jar; after adding insertBeforeCalls in p259 only `gradle test` was run, which uses build/classes",
+    "symptom": "the rule parsed fine, applied 0 times, and no bytecode changed - which p260 wrongly attributed to the matching logic and the nested-jar path",
+    "proof": {
+      "singleClassJarWithOldCli": "classes changed=0",
+      "sameJarAfterInstallDist": "rule applied 1 time(s)"
+    }
+  },
+  "realBugsFixed": [
+    {
+      "id": "bridge-not-registered",
+      "detail": "applyInsertBeforeCalls rewrote the bytecode without recordBridge, so the patched jar called a bridge it did not contain (NoClassDefFoundError)",
+      "fix": "recordBridge in both branches (plain insert and call replacement)"
+    },
+    {
+      "id": "used-not-passed",
+      "detail": "the pass had no Set<String> used parameter, so registering the bridge did not compile",
+      "fix": "pass it through from patchClass"
+    }
+  ],
+  "regression": {
+    "unitTests": {
+      "total": 61,
+      "failed": 0,
+      "new": "RuleSetLoadTest - loads a rule file from disk and asserts every insertBeforeCalls field parses"
+    },
+    "evidence": {
+      "p249": "PASS",
+      "p252": "PASS",
+      "p254": "PASS",
+      "p256": "PASS",
+      "p257": "PASS"
+    },
+    "restored": [
+      "runs/p243-target-profile-gate",
+      "runs/p245-target-isolation-cache",
+      "runs/p246-source-fixture-1204"
+    ],
+    "whyRestored": "those need work/ resources this workspace lacks; re-running them wrote FAIL, which is environment absence rather than regression"
+  },
+  "lesson": "after changing the engine, run installDist before any evidence script: gradle test and the CLI are two different artifacts, and 'tests green, CLI unchanged' is harder to notice than a red test",
+  "p260Revisit": {
+    "supplierRuleNeverMatched": "FALSIFIED - the rule works",
+    "conflictWithRegistrationKeys": "STILL TRUE - constructorRedirect rewrites every settings construction, leaving registrationKeys without a target",
+    "action": "the rule stays out of the profile until the conflict is resolved"
+  },
+  "scope": "engine fixes + regression only; the end-to-end wrapper path is still unverified and no 1.21.4 runtime was started"
+}

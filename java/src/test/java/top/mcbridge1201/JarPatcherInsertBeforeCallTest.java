@@ -86,6 +86,21 @@ class JarPatcherInsertBeforeCallTest {
 
     private ClassNode lastPatched;
 
+    /** A minimal stand-in for our bridge; patch refuses to leave a dangling call to a missing class. */
+    private static byte[] bridgeClass() {
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC | Opcodes.ACC_FINAL, CTX, null,
+                "java/lang/Object", null);
+        MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "set",
+                "(Ljava/lang/String;)V", null, null);
+        mv.visitCode();
+        mv.visitInsn(Opcodes.RETURN);
+        mv.visitMaxs(0, 0);
+        mv.visitEnd();
+        cw.visitEnd();
+        return cw.toByteArray();
+    }
+
     private Map<String, Integer> patch(byte[] cls, int loadLocal) throws Exception {
         Path in = tmp.resolve("in.jar");
         Path out = tmp.resolve("out.jar");
@@ -94,7 +109,9 @@ class JarPatcherInsertBeforeCallTest {
             zos.write(cls);
             zos.closeEntry();
         }
-        JarPatcher.Result res = JarPatcher.patch(in, out, ruleSet(loadLocal));
+        java.util.Map<String, byte[]> bridges = new java.util.HashMap<>();
+        bridges.put(CTX, bridgeClass());
+        JarPatcher.Result res = JarPatcher.patch(in, out, ruleSet(loadLocal), null, bridges);
         try (ZipFile zf = new ZipFile(out.toFile())) {
             byte[] patched = zf.getInputStream(zf.getEntry("test/Entry.class")).readAllBytes();
             ClassNode cn = new ClassNode();
