@@ -1,0 +1,17 @@
+{
+  "lock": "manifests/baseline.lock.json",
+  "drift": false,
+  "changes": [],
+  "comparedFields": [
+    "degradations",
+    "environment",
+    "evidence",
+    "historical",
+    "inputs",
+    "targetProfiles"
+  ],
+  "gate": {
+    "ran": false,
+    "note": "Pass --run-gates to execute them."
+  }
+}

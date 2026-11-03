@@ -1760,6 +1760,8 @@ FILES = [
     "runs/p244-grab-1211/result.json",
     "runs/p244-grab-1211/view-before-1211.png",
     "runs/p244-grab-1211/view-after-move-1211.png",
+    "runs/p247-baseline-audit/README.md",
+    "runs/p247-baseline-audit/check-after.json",
     "tools/build_bridges.py",
     "tools/conversion_cache.py",
     "tools/run_isolation_cache.py",
