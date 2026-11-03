@@ -1824,6 +1824,9 @@ FILES = [
     "runs/p252-1214-first-bridge/result.json",
     "runs/p252-1214-first-bridge/disassembly-before.txt",
     "runs/p252-1214-first-bridge/disassembly-after.txt",
+    "tools/check_desc_compat.py",
+    "runs/p253-desc-compat/README.md",
+    "runs/p253-desc-compat/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the
