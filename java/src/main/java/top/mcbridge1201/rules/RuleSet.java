@@ -263,6 +263,49 @@ public final class RuleSet {
         public String risk;
         public String evidence;
     }
+
+    /**
+     * Injects a registry key into a settings object that was built without one.
+     *
+     * <p>1.21.2 made block/item settings carry their registry key before registration; a 1.20.1
+     * source never calls the setter, so this is an <em>absent call</em>, not a wrong reference.
+     * None of the other rule types can express it: there is no call site to rewrite, the key is
+     * not a constructor argument, and replacing the body would drop the surrounding logic.
+     *
+     * <p>The rewrite is deliberately narrow. It fires only when, in the same method, an instance
+     * of {@code settingsClass} is constructed, the two loads pushed most recently before it are
+     * replayable (a registry and an id), and a register call follows within {@code maxDistance}
+     * instructions. Anything else is left untouched rather than guessed at.
+     */
+    public static final class RegistrationKey {
+        public String id;
+        /** The register call that proves this is a registration site and not any settings use. */
+        public String registerOwner;
+        public String registerName;
+        /** Settings class, e.g. {@code net/minecraft/class_1792$class_1793}. */
+        public String settingsClass;
+        /** Settings constructor descriptor, e.g. {@code ()V}. */
+        public String settingsCtorDesc;
+        /** The setter to inject, e.g. {@code method_63686} on the settings class. */
+        public String setterOwner;
+        public String setterName;
+        public String setterDesc;
+        /** {@code RegistryKey.of} on the ResourceKey class. */
+        public String keyFactoryOwner;
+        public String keyFactoryName;
+        public String keyFactoryDesc;
+        /** {@code Registry#registryKey()} — the ResourceKey of the registry instance. */
+        public String registryKeyOwner;
+        public String registryKeyName;
+        public String registryKeyDesc;
+        /** How far ahead to look for the register call; defaults to 40 instructions. */
+        public int maxDistance;
+        public String capability;
+        public String risk;
+        public String evidence;
+    }
+
+    public final List<RegistrationKey> registrationKeys = new ArrayList<>();
     public String version;
     public String target;
 
@@ -342,6 +385,11 @@ public final class RuleSet {
         if (o.has("mixinStrips")) {
             for (var el : o.getAsJsonArray("mixinStrips")) {
                 rs.mixinStrips.add(new Gson().fromJson(el, MixinStrip.class));
+            }
+        }
+        if (o.has("registrationKeys")) {
+            for (var el : o.getAsJsonArray("registrationKeys")) {
+                rs.registrationKeys.add(new Gson().fromJson(el, RegistrationKey.class));
             }
         }
         return rs;

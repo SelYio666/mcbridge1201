@@ -1,0 +1,97 @@
+{
+  "workstream": "B03 first slice: registry-key injection",
+  "target": {
+    "profile": "targets/fabric-1.21.4.json",
+    "rule": "rules/fabric-1.21.4/registration-key.json"
+  },
+  "input": {
+    "jar": "fixtures/source-fabric-1.20.1/out/mcbfixture-1.0.0.jar",
+    "sha256": "1f210e26c471a2611db8e13b5bd77f590c2b4f3d53aef6a5e96c5607a636e18b"
+  },
+  "output": {
+    "jar": "runs/p249-registration-key-rule/fixture-1.21.4.jar",
+    "sha256": "7977fc0e77556d530aa8d24eeb9199881d7c23773dfab3245bbff3b23fce82b0"
+  },
+  "patch": {
+    "rc": 0,
+    "applied": {
+      "id": "1214.item-settings.registry-key",
+      "count": 1
+    },
+    "classesChanged": 1,
+    "log": [
+      "validated 1 rule file(s): schema=0.1-draft target=fabric-1.21.4",
+      "patched mcbfixture-1.0.0.jar -> fixture-1.21.4.jar (classes changed=1)",
+      "  rule 1214.item-settings.registry-key applied 1 time(s)",
+      "  bridges embedded: []",
+      "  javac bridges: []",
+      "  sha256 7977fc0e77556d530aa8d24eeb9199881d7c23773dfab3245bbff3b23fce82b0"
+    ]
+  },
+  "bytecode": {
+    "before": {
+      "setter": -1,
+      "keyFactory": -1,
+      "registryKey": -1
+    },
+    "after": {
+      "setter": 30,
+      "keyFactory": 27,
+      "registryKey": 21
+    },
+    "itemCtorOffset": 34
+  },
+  "checks": [
+    {
+      "id": "rule-fired",
+      "expect": 1,
+      "got": 1,
+      "why": "the fixture's registration site must be recognised",
+      "passed": true
+    },
+    {
+      "id": "one-class-changed",
+      "expect": 1,
+      "got": 1,
+      "why": "only the registration class should change",
+      "passed": true
+    },
+    {
+      "id": "source-has-no-setter",
+      "expect": -1,
+      "got": -1,
+      "why": "a 1.20.1 source never calls the key setter",
+      "passed": true
+    },
+    {
+      "id": "patched-calls-setter",
+      "expect": ">=0",
+      "got": 30,
+      "why": "the conversion has to add the call",
+      "passed": true
+    },
+    {
+      "id": "key-built-before-setter",
+      "expect": true,
+      "got": true,
+      "why": "the key must exist before it is applied",
+      "passed": true
+    },
+    {
+      "id": "registry-key-read-before-factory",
+      "expect": true,
+      "got": true,
+      "why": "the resource key comes from the registry instance",
+      "passed": true
+    },
+    {
+      "id": "setter-before-item-constructor",
+      "expect": true,
+      "got": true,
+      "why": "the settings must be keyed before the item consumes them",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "bytecode verification only. No 1.21.4 runtime was started, so 'Item id not set' is not proven gone; and one rule is not a conversion."
+}

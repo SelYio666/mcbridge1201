@@ -9,11 +9,13 @@ import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.ParameterNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -596,6 +598,10 @@ public final class JarPatcher {
             changed = true;
             framesAffected = true;
         }
+        if (applyRegistrationKeys(cn, rules, st)) {
+            changed = true;
+            framesAffected = true;
+        }
         for (MethodNode mn : cn.methods) {
             InsnList insns = mn.instructions;
             for (AbstractInsnNode insn = insns.getFirst(); insn != null; ) {
@@ -810,6 +816,119 @@ public final class JarPatcher {
             }
         }
         return any;
+    }
+
+    /**
+     * Injects a registry key into a settings object built without one (1.21.2+ requirement).
+     *
+     * <p>This is the one rule type that adds a call instead of rewriting one: 1.20.1 code never
+     * asked its settings for a registry key, so there is nothing to retarget. The pass is narrow
+     * on purpose - it needs, inside one instruction window, a replayable registry load, a
+     * replayable id load, the settings constructor and a following register call. An absent call
+     * cannot be repaired by guessing where it belonged, so anything outside that shape is left
+     * untouched and simply stays broken (which is visible as a missing rule hit).
+     *
+     * <p>Stack effect of the injected block, starting from {@code [.., settings]}:
+     * {@code DUP, <registry>, INVOKEVIRTUAL registryKey(), <id>, INVOKESTATIC of, INVOKEVIRTUAL
+     * setter, POP} leaves {@code [.., keyedSettings]} - the original settings instance is dropped
+     * and the setter's return value takes its place.
+     */
+    private static boolean applyRegistrationKeys(ClassNode cn, RuleSet rules, Stats st) {
+        if (rules.registrationKeys.isEmpty()) {
+            return false;
+        }
+        boolean any = false;
+        for (MethodNode mn : cn.methods) {
+            InsnList insns = mn.instructions;
+            for (AbstractInsnNode insn = insns.getFirst(); insn != null; insn = insn.getNext()) {
+                if (!(insn instanceof MethodInsnNode m) || m.getOpcode() != Opcodes.INVOKESPECIAL
+                        || !"<init>".equals(m.name)) {
+                    continue;
+                }
+                for (RuleSet.RegistrationKey r : rules.registrationKeys) {
+                    if (!r.settingsClass.equals(m.owner) || !r.settingsCtorDesc.equals(m.desc)) {
+                        continue;
+                    }
+                    AbstractInsnNode idLoad = replayableLoadBefore(insn, 1);
+                    // The registry load is the next replayable load *before the id*, so it is the
+                    // first one when counting back from the id load itself.
+                    AbstractInsnNode regLoad = idLoad == null ? null : replayableLoadBefore(idLoad, 1);
+                    if (regLoad == null || idLoad == null) {
+                        continue;
+                    }
+                    int window = r.maxDistance > 0 ? r.maxDistance : 40;
+                    if (!registerCallFollows(insn, r, window)) {
+                        continue;
+                    }
+                    InsnList inject = new InsnList();
+                    inject.add(new InsnNode(Opcodes.DUP));
+                    inject.add(cloneLoad(regLoad));
+                    inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, r.registryKeyOwner,
+                            r.registryKeyName, r.registryKeyDesc, false));
+                    inject.add(cloneLoad(idLoad));
+                    inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, r.keyFactoryOwner,
+                            r.keyFactoryName, r.keyFactoryDesc, false));
+                    inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, r.setterOwner,
+                            r.setterName, r.setterDesc, false));
+                    inject.add(new InsnNode(Opcodes.POP));
+                    insns.insert(insn, inject);
+                    st.applied.merge(r.id, 1, Integer::sum);
+                    any = true;
+                    break;
+                }
+            }
+        }
+        return any;
+    }
+
+    /**
+     * Walks backwards from {@code from} and returns the {@code nth} replayable load, skipping the
+     * {@code NEW}/{@code DUP} pair that belongs to the constructor being inspected. Only loads that
+     * can be repeated without side effects count: a getstatic, a getfield or an aload.
+     */
+    private static AbstractInsnNode replayableLoadBefore(AbstractInsnNode from, int nth) {
+        int seen = 0;
+        for (AbstractInsnNode cur = from.getPrevious(); cur != null; cur = cur.getPrevious()) {
+            int op = cur.getOpcode();
+            if (op == Opcodes.NEW || op == Opcodes.DUP || op == Opcodes.DUP_X1
+                    || op == Opcodes.DUP_X2 || op == Opcodes.SWAP) {
+                continue;
+            }
+            boolean load = (cur instanceof FieldInsnNode f && f.getOpcode() == Opcodes.GETSTATIC)
+                    || (cur instanceof FieldInsnNode f2 && f2.getOpcode() == Opcodes.GETFIELD)
+                    || (cur instanceof VarInsnNode v && v.getOpcode() == Opcodes.ALOAD);
+            if (!load) {
+                continue;
+            }
+            if (++seen == nth) {
+                return cur;
+            }
+        }
+        return null;
+    }
+
+    private static AbstractInsnNode cloneLoad(AbstractInsnNode load) {
+        if (load instanceof FieldInsnNode f) {
+            return new FieldInsnNode(f.getOpcode(), f.owner, f.name, f.desc);
+        }
+        VarInsnNode v = (VarInsnNode) load;
+        return new VarInsnNode(v.getOpcode(), v.var);
+    }
+
+    private static boolean registerCallFollows(AbstractInsnNode from, RuleSet.RegistrationKey r,
+                                               int window) {
+        int seen = 0;
+        for (AbstractInsnNode cur = from.getNext(); cur != null && seen < window;
+                cur = cur.getNext(), seen++) {
+            if (cur instanceof MethodInsnNode m && m.getOpcode() == Opcodes.INVOKESTATIC
+                    && r.registerOwner.equals(m.owner) && r.registerName.equals(m.name)) {
+                return true;
+            }
+            if (cur instanceof LabelNode) {
+                return false; // a branch target means the window is no longer one straight block
+            }
+        }
+        return false;
     }
 
     private static void shiftLocals(MethodNode mn, int fromSlot, int delta) {

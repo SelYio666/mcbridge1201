@@ -1,0 +1,44 @@
+Compiled from "FixtureRegistry.java"
+public final class mcbfixture.FixtureRegistry {
+  public static final net.minecraft.class_2960 PROBE_ID;
+
+  public static net.minecraft.class_1792 PROBE_ITEM;
+
+  private mcbfixture.FixtureRegistry();
+    Code:
+       0: aload_0
+       1: invokespecial #18                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  public static void bootstrap();
+    Code:
+       0: getstatic     #25                 // Field net/minecraft/class_7923.field_41178:Lnet/minecraft/class_7922;
+       3: getstatic     #27                 // Field PROBE_ID:Lnet/minecraft/class_2960;
+       6: new           #9                  // class net/minecraft/class_1792
+       9: dup
+      10: new           #7                  // class net/minecraft/class_1792$class_1793
+      13: dup
+      14: invokespecial #28                 // Method net/minecraft/class_1792$class_1793."<init>":()V
+      17: dup
+      18: getstatic     #25                 // Field net/minecraft/class_7923.field_41178:Lnet/minecraft/class_7922;
+      21: invokevirtual #34                 // Method net/minecraft/class_2378.method_30517:()Lnet/minecraft/class_5321;
+      24: getstatic     #27                 // Field PROBE_ID:Lnet/minecraft/class_2960;
+      27: invokestatic  #40                 // Method net/minecraft/class_5321.method_29179:(Lnet/minecraft/class_5321;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
+      30: invokevirtual #44                 // Method net/minecraft/class_1792$class_1793.method_63686:(Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793;
+      33: pop
+      34: invokespecial #47                 // Method net/minecraft/class_1792."<init>":(Lnet/minecraft/class_1792$class_1793;)V
+      37: invokestatic  #51                 // InterfaceMethod net/minecraft/class_2378.method_10230:(Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;Ljava/lang/Object;)Ljava/lang/Object;
+      40: checkcast     #9                  // class net/minecraft/class_1792
+      43: putstatic     #53                 // Field PROBE_ITEM:Lnet/minecraft/class_1792;
+      46: return
+
+  static {};
+    Code:
+       0: new           #56                 // class net/minecraft/class_2960
+       3: dup
+       4: ldc           #58                 // String mcbfixture
+       6: ldc           #60                 // String probe_item
+       8: invokespecial #63                 // Method net/minecraft/class_2960."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+      11: putstatic     #27                 // Field PROBE_ID:Lnet/minecraft/class_2960;
+      14: return
+}

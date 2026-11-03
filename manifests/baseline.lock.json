@@ -1,20 +1,30 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T21:01:22+08:00",
+  "generatedAt": "2026-11-03T21:22:01+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "a33bcd8c6ca2e65e0051ebe6e9f5b7271bebe74c",
+    "commit": "59cf25c77dd8a09ba694a899abf8f2e709e62d75",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
+      "java/src/main/java/top/mcbridge1201/Main.java",
+      "java/src/main/java/top/mcbridge1201/profile/TargetProfile.java",
+      "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
+      "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
+      "java/src/test/java/top/mcbridge1201/JarPatcherRegistrationKeyTest.java",
+      "manifests/baseline.lock.json",
+      "rules/fabric-1.21.4/registration-key.json",
       "runs/SHA256SUMS.txt",
-      "runs/p248-registry-key-gap/README.md",
-      "runs/p248-registry-key-gap/result.json",
+      "runs/p249-registration-key-rule/README.md",
+      "runs/p249-registration-key-rule/disassembly-after.txt",
+      "runs/p249-registration-key-rule/disassembly-before.txt",
+      "runs/p249-registration-key-rule/result.json",
+      "targets/fabric-1.21.4.json",
       "tools/freeze_baseline.py",
       "tools/hash_evidence.py",
-      "tools/scan_registration_sites.py"
+      "tools/run_registration_rule.py"
     ],
     "untrackedFiles": [
       "WORKSPACE.md"
@@ -64,167 +74,181 @@
   },
   "inputs": {
     "rules": {
-      "root": "rules/fabric-1.21.1",
-      "count": 29,
-      "packageSha256": "e9ce1b1933e62988f560c0a5c0380250192628abe394d068bd635411b635d1dc",
-      "files": [
-        {
-          "path": "rules/fabric-1.21.1/appleskin-food.json",
-          "sha256": "4328d3e696eb9a76b902277dea4a6d94595bceca8049213766a866dcc6fd5789",
-          "size": 4301
-        },
-        {
-          "path": "rules/fabric-1.21.1/appleskin-tooltip.json",
-          "sha256": "2f3c1602bcedb40c0ec2266e5705520e33e61a74a1208e3f0adcab0301f9def7",
-          "size": 994
-        },
-        {
-          "path": "rules/fabric-1.21.1/cloth-config-render.json",
-          "sha256": "733bd94c3631f6e87b8982e191a3b2d626db7b9322b2d9d701b53f95f0b5f1c8",
-          "size": 13062
-        },
-        {
-          "path": "rules/fabric-1.21.1/cloth-config.json",
-          "sha256": "3ceb405b6b4ba16a6667a88caed9a624178011ded72edde6fa059d96654e210e",
-          "size": 5364
-        },
-        {
-          "path": "rules/fabric-1.21.1/container.json",
-          "sha256": "5ec89cec31da14ed35fb6bae4446ac063636684ddea25ab3465a64f590e5d168",
-          "size": 5682
-        },
-        {
-          "path": "rules/fabric-1.21.1/dyecolor-components.json",
-          "sha256": "d05f05cfff5fd7f899a985a047b5b84e68dda9ed2188c84cfe3eeb30bbd23a2c",
-          "size": 1036
-        },
-        {
-          "path": "rules/fabric-1.21.1/entityculling-mixin-port.json",
-          "sha256": "a457860ae233067723a85828160480293b9ca7f78c33a757beae3063a874dad5",
-          "size": 2473
-        },
-        {
-          "path": "rules/fabric-1.21.1/entrylist-constructor.json",
-          "sha256": "85b07b73247b686d0a6bcab7312f4bcc525b7f7550864442a0ce058234d3f8f6",
-          "size": 1524
-        },
-        {
-          "path": "rules/fabric-1.21.1/fabric-legacy-networking.json",
-          "sha256": "758089110e998572ea002f7bfd737fa781352865b6caa21125bbcf0b88159638",
-          "size": 8636
-        },
-        {
-          "path": "rules/fabric-1.21.1/fallingtree-tombstones.json",
-          "sha256": "68450cf17f3e9a00d94ddec9dccc411c1a94ad804742b883079a1a265ecf7c6c",
-          "size": 2528
-        },
-        {
-          "path": "rules/fabric-1.21.1/identifier-single-arg.json",
-          "sha256": "9083efd03c143c8cfffa1d31dba20846cb96f5d5bace34f0109ccab2821e533e",
-          "size": 1753
-        },
-        {
-          "path": "rules/fabric-1.21.1/immediatelyfast-batching-port.json",
-          "sha256": "483fa436e0d02c8859e7654d67cda7df7fda3a2e9ac8ba4a95222121c9b9327e",
-          "size": 11759
-        },
-        {
-          "path": "rules/fabric-1.21.1/ironchests-draw.json",
-          "sha256": "b2b4c5db71ea8656a73549350ee8242eb637bc297ddf7b0674c63837a7d6f755",
-          "size": 1266
-        },
-        {
-          "path": "rules/fabric-1.21.1/ironchests-nbt.json",
-          "sha256": "e73b86004dcd12f8d42ebab1ff267032c81c952125bb19b9586f9723784fd385",
-          "size": 2400
-        },
-        {
-          "path": "rules/fabric-1.21.1/ironchests-screen.json",
-          "sha256": "93f4a0ab98dc05cc3b64cd2ac4d85a8abaa481c587900302d758c2130a2bc5b7",
-          "size": 1123
-        },
-        {
-          "path": "rules/fabric-1.21.1/lithium-degraded.json",
-          "sha256": "26fd8e4fc494830191f76bf3542cb8c87fbf94fc860204788530aba14c70af33",
-          "size": 702
-        },
-        {
-          "path": "rules/fabric-1.21.1/lithium-varint.json",
-          "sha256": "702ab95bb3fea1b84f04142a137b284e51cdf65989656d8f8593a81185f00762",
-          "size": 971
-        },
-        {
-          "path": "rules/fabric-1.21.1/lithium.json",
-          "sha256": "a3bd4dfb842f6867605cb2ad3b6ac0a65f9608e7ccb12fd9d1dcd9371b55d6d1",
-          "size": 9417
-        },
-        {
-          "path": "rules/fabric-1.21.1/modmenu-list-render.json",
-          "sha256": "bed6d52b6fa2222098e84172e2b20ad712acc295523f18f6d3e4bfefa2167a1f",
-          "size": 3745
-        },
-        {
-          "path": "rules/fabric-1.21.1/modmenu-options.json",
-          "sha256": "1616da2e3aa7354c0c632b51bebc55db4e498d6463cb23d4e1b68149d6a95edc",
-          "size": 1819
-        },
-        {
-          "path": "rules/fabric-1.21.1/modmenu-textfield.json",
-          "sha256": "f81b6b9cb8ca587d1460817188bd042a8446b30501ab9428b395f8c5f221ac37",
-          "size": 1133
-        },
-        {
-          "path": "rules/fabric-1.21.1/modmenu-title-screen.json",
-          "sha256": "6d4f8808d1dd06fb34eaf5f8c75d63240415047134d28967db9ae970c5670773",
-          "size": 1854
-        },
-        {
-          "path": "rules/fabric-1.21.1/nbt-packet.json",
-          "sha256": "ca7aaeb2172d533bfed5cce20570f98404b27d0a9907225c0f99014d98f1d8e9",
-          "size": 1193
-        },
-        {
-          "path": "rules/fabric-1.21.1/render-widget-override.json",
-          "sha256": "06bf5a4d415fa7783e064042006656867f2a512e1654ba7b6fdcfbb308ed088a",
-          "size": 2750
-        },
-        {
-          "path": "rules/fabric-1.21.1/shulker-nbt.json",
-          "sha256": "bbde5b97f55535720ffe60ad249decc3d8ef1a18b8cc666ef5cfeef9c18aae9a",
-          "size": 6662
-        },
-        {
-          "path": "rules/fabric-1.21.1/status-effect-instance.json",
-          "sha256": "fba00a19f56f887427b3341d324468051ce3f353cb9168339eaf73ca5e794796",
-          "size": 3612
-        },
-        {
-          "path": "rules/fabric-1.21.1/textured-button.json",
-          "sha256": "f5258c8d13d9968f1083562b1ab929077b5e64dc7d73da6fed4a11bb9b6441e1",
-          "size": 1771
-        },
-        {
-          "path": "rules/fabric-1.21.1/trashslot-sendtoserver.json",
-          "sha256": "305176d854a2203c038cb20b70f975af807b8640c390e471beb946b6d9ab7cbe",
-          "size": 2043
-        },
-        {
-          "path": "rules/fabric-1.21.1/trashslot.json",
-          "sha256": "4428d035de3af501349290608d8ee58172dfb9956ebec69162c733444aae9c2c",
-          "size": 11204
-        }
-      ]
+      "rules/fabric-1.21.1": {
+        "root": "rules/fabric-1.21.1",
+        "count": 29,
+        "packageSha256": "e9ce1b1933e62988f560c0a5c0380250192628abe394d068bd635411b635d1dc",
+        "files": [
+          {
+            "path": "rules/fabric-1.21.1/appleskin-food.json",
+            "sha256": "4328d3e696eb9a76b902277dea4a6d94595bceca8049213766a866dcc6fd5789",
+            "size": 4301
+          },
+          {
+            "path": "rules/fabric-1.21.1/appleskin-tooltip.json",
+            "sha256": "2f3c1602bcedb40c0ec2266e5705520e33e61a74a1208e3f0adcab0301f9def7",
+            "size": 994
+          },
+          {
+            "path": "rules/fabric-1.21.1/cloth-config-render.json",
+            "sha256": "733bd94c3631f6e87b8982e191a3b2d626db7b9322b2d9d701b53f95f0b5f1c8",
+            "size": 13062
+          },
+          {
+            "path": "rules/fabric-1.21.1/cloth-config.json",
+            "sha256": "3ceb405b6b4ba16a6667a88caed9a624178011ded72edde6fa059d96654e210e",
+            "size": 5364
+          },
+          {
+            "path": "rules/fabric-1.21.1/container.json",
+            "sha256": "5ec89cec31da14ed35fb6bae4446ac063636684ddea25ab3465a64f590e5d168",
+            "size": 5682
+          },
+          {
+            "path": "rules/fabric-1.21.1/dyecolor-components.json",
+            "sha256": "d05f05cfff5fd7f899a985a047b5b84e68dda9ed2188c84cfe3eeb30bbd23a2c",
+            "size": 1036
+          },
+          {
+            "path": "rules/fabric-1.21.1/entityculling-mixin-port.json",
+            "sha256": "a457860ae233067723a85828160480293b9ca7f78c33a757beae3063a874dad5",
+            "size": 2473
+          },
+          {
+            "path": "rules/fabric-1.21.1/entrylist-constructor.json",
+            "sha256": "85b07b73247b686d0a6bcab7312f4bcc525b7f7550864442a0ce058234d3f8f6",
+            "size": 1524
+          },
+          {
+            "path": "rules/fabric-1.21.1/fabric-legacy-networking.json",
+            "sha256": "758089110e998572ea002f7bfd737fa781352865b6caa21125bbcf0b88159638",
+            "size": 8636
+          },
+          {
+            "path": "rules/fabric-1.21.1/fallingtree-tombstones.json",
+            "sha256": "68450cf17f3e9a00d94ddec9dccc411c1a94ad804742b883079a1a265ecf7c6c",
+            "size": 2528
+          },
+          {
+            "path": "rules/fabric-1.21.1/identifier-single-arg.json",
+            "sha256": "9083efd03c143c8cfffa1d31dba20846cb96f5d5bace34f0109ccab2821e533e",
+            "size": 1753
+          },
+          {
+            "path": "rules/fabric-1.21.1/immediatelyfast-batching-port.json",
+            "sha256": "483fa436e0d02c8859e7654d67cda7df7fda3a2e9ac8ba4a95222121c9b9327e",
+            "size": 11759
+          },
+          {
+            "path": "rules/fabric-1.21.1/ironchests-draw.json",
+            "sha256": "b2b4c5db71ea8656a73549350ee8242eb637bc297ddf7b0674c63837a7d6f755",
+            "size": 1266
+          },
+          {
+            "path": "rules/fabric-1.21.1/ironchests-nbt.json",
+            "sha256": "e73b86004dcd12f8d42ebab1ff267032c81c952125bb19b9586f9723784fd385",
+            "size": 2400
+          },
+          {
+            "path": "rules/fabric-1.21.1/ironchests-screen.json",
+            "sha256": "93f4a0ab98dc05cc3b64cd2ac4d85a8abaa481c587900302d758c2130a2bc5b7",
+            "size": 1123
+          },
+          {
+            "path": "rules/fabric-1.21.1/lithium-degraded.json",
+            "sha256": "26fd8e4fc494830191f76bf3542cb8c87fbf94fc860204788530aba14c70af33",
+            "size": 702
+          },
+          {
+            "path": "rules/fabric-1.21.1/lithium-varint.json",
+            "sha256": "702ab95bb3fea1b84f04142a137b284e51cdf65989656d8f8593a81185f00762",
+            "size": 971
+          },
+          {
+            "path": "rules/fabric-1.21.1/lithium.json",
+            "sha256": "a3bd4dfb842f6867605cb2ad3b6ac0a65f9608e7ccb12fd9d1dcd9371b55d6d1",
+            "size": 9417
+          },
+          {
+            "path": "rules/fabric-1.21.1/modmenu-list-render.json",
+            "sha256": "bed6d52b6fa2222098e84172e2b20ad712acc295523f18f6d3e4bfefa2167a1f",
+            "size": 3745
+          },
+          {
+            "path": "rules/fabric-1.21.1/modmenu-options.json",
+            "sha256": "1616da2e3aa7354c0c632b51bebc55db4e498d6463cb23d4e1b68149d6a95edc",
+            "size": 1819
+          },
+          {
+            "path": "rules/fabric-1.21.1/modmenu-textfield.json",
+            "sha256": "f81b6b9cb8ca587d1460817188bd042a8446b30501ab9428b395f8c5f221ac37",
+            "size": 1133
+          },
+          {
+            "path": "rules/fabric-1.21.1/modmenu-title-screen.json",
+            "sha256": "6d4f8808d1dd06fb34eaf5f8c75d63240415047134d28967db9ae970c5670773",
+            "size": 1854
+          },
+          {
+            "path": "rules/fabric-1.21.1/nbt-packet.json",
+            "sha256": "ca7aaeb2172d533bfed5cce20570f98404b27d0a9907225c0f99014d98f1d8e9",
+            "size": 1193
+          },
+          {
+            "path": "rules/fabric-1.21.1/render-widget-override.json",
+            "sha256": "06bf5a4d415fa7783e064042006656867f2a512e1654ba7b6fdcfbb308ed088a",
+            "size": 2750
+          },
+          {
+            "path": "rules/fabric-1.21.1/shulker-nbt.json",
+            "sha256": "bbde5b97f55535720ffe60ad249decc3d8ef1a18b8cc666ef5cfeef9c18aae9a",
+            "size": 6662
+          },
+          {
+            "path": "rules/fabric-1.21.1/status-effect-instance.json",
+            "sha256": "fba00a19f56f887427b3341d324468051ce3f353cb9168339eaf73ca5e794796",
+            "size": 3612
+          },
+          {
+            "path": "rules/fabric-1.21.1/textured-button.json",
+            "sha256": "f5258c8d13d9968f1083562b1ab929077b5e64dc7d73da6fed4a11bb9b6441e1",
+            "size": 1771
+          },
+          {
+            "path": "rules/fabric-1.21.1/trashslot-sendtoserver.json",
+            "sha256": "305176d854a2203c038cb20b70f975af807b8640c390e471beb946b6d9ab7cbe",
+            "size": 2043
+          },
+          {
+            "path": "rules/fabric-1.21.1/trashslot.json",
+            "sha256": "4428d035de3af501349290608d8ee58172dfb9956ebec69162c733444aae9c2c",
+            "size": 11204
+          }
+        ]
+      },
+      "rules/fabric-1.21.4": {
+        "root": "rules/fabric-1.21.4",
+        "count": 1,
+        "packageSha256": "1f67ea2232a3ad6a6894e3006e771b1e9b0374467f1d5404a3cdfff05be1c8b4",
+        "files": [
+          {
+            "path": "rules/fabric-1.21.4/registration-key.json",
+            "sha256": "81de54afd548786b77ca33904b654922c13c3a304237261f52f5918e089acc46",
+            "size": 1807
+          }
+        ]
+      }
     },
     "sources": {
       "java/src/main": {
         "root": "java/src/main",
         "count": 17,
-        "packageSha256": "acdafff73f4d36b8accb25c6d52b7b1b42bef9a2be0c7b1b19d88685004efecb",
+        "packageSha256": "95583e3d5be58d487f7cd5a5ff2f14c694c11cebc1f4516451a695094d68173e",
         "files": [
           {
             "path": "java/src/main/java/top/mcbridge1201/Main.java",
-            "sha256": "1d098f8c77c131e671fdb8a712f0c406ce0785866900858b9593d8c4c1fc1eae",
-            "size": 32349
+            "sha256": "9722d3c46f3f13f57b77bc33c5a287e6da01d409b792e44e920923ba4e816c93",
+            "size": 32415
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/analyze/Analyzer.java",
@@ -253,8 +277,8 @@
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/profile/TargetProfile.java",
-            "sha256": "0b2f26febf63ba44b6966d491b8bd149e1c6eeebd9fca60c78c28e9b5724b7c7",
-            "size": 35134
+            "sha256": "4e531e6d7ee74b0d1f7bd851ef4b35c7ca7119717894d32a3b7d43f70a01bff4",
+            "size": 35375
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/remap/Hierarchy.java",
@@ -278,13 +302,13 @@
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
-            "sha256": "f0fc3893c72e709ea670e0ee56d4b8f67b593d380f5896d3c0b400a18a625a25",
-            "size": 55208
+            "sha256": "f0219843da680009c25252687be23f7078085d5d6c7a0db78ad3d511943a831e",
+            "size": 61159
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
-            "sha256": "fd459b209cfad04fa171bbf6fdb9146349b5a210781925c60b348d151bb740a5",
-            "size": 18555
+            "sha256": "ef56298dca680919d94299a9f6869a667c2077bea53a008b9b09c6dbbb7c36c2",
+            "size": 20986
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/scan/ArtifactScanner.java",
@@ -516,8 +540,8 @@
       },
       "java/src/test": {
         "root": "java/src/test",
-        "count": 11,
-        "packageSha256": "c2a119d6563be7849807075b4b49b1f179819cb6691d8dc7d34075f297758432",
+        "count": 12,
+        "packageSha256": "c0348965ef261a2aa32e2d60092038800bad69d6dd346e65112f14316a40d672",
         "files": [
           {
             "path": "java/src/test/java/top/mcbridge1201/AnalyzerCoreTest.java",
@@ -550,6 +574,11 @@
             "size": 8254
           },
           {
+            "path": "java/src/test/java/top/mcbridge1201/JarPatcherRegistrationKeyTest.java",
+            "sha256": "be74a14bacd1c650e6c3b83f263459871d6f35743b5a1cd8fa34ffee2d0485bf",
+            "size": 9222
+          },
+          {
             "path": "java/src/test/java/top/mcbridge1201/MixinCallbackAdaptationTest.java",
             "sha256": "8b4d514d959cbe149515decaa2e171ca555c8a84880b5a4cddd24a071e8a407f",
             "size": 9732
@@ -578,9 +607,9 @@
       }
     },
     "tools": {
-      "count": 19,
-      "present": 19,
-      "packageSha256": "71f3d0510b24d164eb4881fec6caf61467e9b40ec1999c5b6b8773144091ecbc",
+      "count": 20,
+      "present": 20,
+      "packageSha256": "6b342323a97cf1f9251687c176433b8a6fb1cf1f786b2a508b66dac4bcf992e9",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -604,8 +633,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "361756025384fbc40f965e6d76e9d3600de36d128cd6159c3e37d5c2c5f0983c",
-          "size": 89075
+          "sha256": "a3d99ac1de2a70420c9f74667b610f439afc1b4f16c1b90acef2ae41590866ed",
+          "size": 89590
         },
         {
           "path": "tools/release_check.py",
@@ -643,6 +672,11 @@
           "size": 13981
         },
         {
+          "path": "tools/run_registration_rule.py",
+          "sha256": "bfb0b3be802e1cd2ae0b65c50624feaa2f8b41cc80d5ed9369cc317e0b3e356b",
+          "size": 7718
+        },
+        {
           "path": "tools/run_target_gate.py",
           "sha256": "04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6",
           "size": 10540
@@ -674,8 +708,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "c7c9f6c373e8dbce217c7b49473222567a5eeb86c5d8991d87111c3344b82675",
-          "size": 18015
+          "sha256": "b3d2c6421d779cfbc022a5d2cb4b20a349528d4943f7b89977c8f6b864f65c88",
+          "size": 18225
         }
       ]
     },
@@ -731,7 +765,7 @@
       },
       {
         "path": "targets/fabric-1.21.4.json",
-        "sha256": "e794c90c0c5d7c527639bdeaf4286ff30e1dbd107df27ebbb8d199c8e7a542ac",
+        "sha256": "7556e97373d433118e05997cef10465b3b0e76fcffec56ceb57962dec015c985",
         "profileId": "fabric-1.21.4",
         "targetId": "fabric-1.21.4",
         "minecraft": "1.21.4",
@@ -739,7 +773,7 @@
         "javaMajor": 21,
         "namespace": "intermediary",
         "bridgeAbi": "mcbridge-bridge-1",
-        "ruleOrderEntries": 0
+        "ruleOrderEntries": 1
       }
     ]
   },
@@ -866,15 +900,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1765 mismatch=0 missing=0"
+          "ok=1774 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 341",
-          "hashed evidence files: 341",
+          "required evidence files: 343",
+          "hashed evidence files: 343",
           "coverage OK"
         ]
       },
@@ -884,7 +918,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 280 markdown file(s): 280 clean, 0 finding(s)"
+          "checked 281 markdown file(s): 281 clean, 0 finding(s)"
         ]
       },
       {

@@ -1799,6 +1799,15 @@ FILES = [
     "tools/scan_registration_sites.py",
     "runs/p248-registry-key-gap/README.md",
     "runs/p248-registry-key-gap/result.json",
+    "rules/fabric-1.21.4/registration-key.json",
+    "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
+    "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
+    "java/src/test/java/top/mcbridge1201/JarPatcherRegistrationKeyTest.java",
+    "tools/run_registration_rule.py",
+    "runs/p249-registration-key-rule/README.md",
+    "runs/p249-registration-key-rule/result.json",
+    "runs/p249-registration-key-rule/disassembly-before.txt",
+    "runs/p249-registration-key-rule/disassembly-after.txt",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

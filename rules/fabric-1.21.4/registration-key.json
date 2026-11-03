@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.4",
+  "note": "1.21.2 made block/item settings carry their registry key before registration. A 1.20.1 source never calls the setter, so the conversion has to ADD a call. This is the only rule type in the engine that inserts instructions, and it only fires on a shape it can prove: replayable registry and id loads, the settings constructor, and a register call in the same straight-line block.",
+  "registrationKeys": [
+    {
+      "id": "1214.item-settings.registry-key",
+      "registerOwner": "net/minecraft/class_2378",
+      "registerName": "method_10230",
+      "settingsClass": "net/minecraft/class_1792$class_1793",
+      "settingsCtorDesc": "()V",
+      "setterOwner": "net/minecraft/class_1792$class_1793",
+      "setterName": "method_63686",
+      "setterDesc": "(Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793;",
+      "keyFactoryOwner": "net/minecraft/class_5321",
+      "keyFactoryName": "method_29179",
+      "keyFactoryDesc": "(Lnet/minecraft/class_5321;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;",
+      "registryKeyOwner": "net/minecraft/class_2378",
+      "registryKeyName": "method_30517",
+      "registryKeyDesc": "()Lnet/minecraft/class_5321;",
+      "maxDistance": 40,
+      "capability": "registration.registry_key",
+      "risk": "medium",
+      "evidence": "1.21.4 target: class_1792$class_1793.method_63686 takes (Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793; and class_5321.method_29179 is RegistryKey.of(ResourceKey, Identifier); class_2378.method_30517 returns the registry's own ResourceKey. 1.20.1 source never calls any key setter (0 classes in the fixture and in ironchests), so this is an absent-call conversion, measured in runs/p248-registry-key-gap."
+    }
+  ]
+}

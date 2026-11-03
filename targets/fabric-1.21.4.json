@@ -1,8 +1,8 @@
 {
   "schemaVersion": "target-profile-1",
   "profileId": "fabric-1.21.4",
-  "status": "planned",
-  "note": "B01 froze this target only. The environment is exact and readable at Java 21, but no rule package exists for 1.21.4 yet, so pipeline.ruleOrder is empty and the gate refuses to convert anything with this profile. The delta classification lives in runs/p247-fabric-1.21.4-delta/.",
+  "status": "rule_package_started",
+  "note": "B03 has begun: the 1.21.4 profile now owns exactly one rule, the registry-key injection measured in runs/p248-registry-key-gap. It is still not a support claim - one rule cannot convert a mod, no game has been launched, and every other delta from runs/p247-fabric-1.21.4-delta is still unconverted.",
   "refusesTargets": [
     "fabric-1.21.1",
     "fabric-1.20.4",
@@ -77,8 +77,12 @@
       "note": "Not exercised for 1.21.4 yet: no segmented conversion was run for this target."
     },
     "bridgeAbi": "mcbridge-bridge-1",
-    "ruleOrder": [],
-    "capabilities": [],
+    "ruleOrder": [
+      "rules/fabric-1.21.4/registration-key.json"
+    ],
+    "capabilities": [
+      "registration.registry_key"
+    ],
     "output": {
       "bridgeClasses": "work/targets/fabric-1.21.4/bridges",
       "cache": "work/targets/fabric-1.21.4/cache",
@@ -95,12 +99,13 @@
   "verification": {
     "fixtureVersion": "source-fabric-1.20.1",
     "testedScopes": [
-      "static index + delta classification only"
+      "static index + delta classification",
+      "registry-key injection on fixtures/source-fabric-1.20.1 (bytecode verification only)"
     ],
     "knownGaps": [
-      "No rule package: nothing can be converted for this target yet.",
-      "No 1.21.4 game was launched.",
-      "The bridge compile closure (indices.libs) is not prepared; B02/B03 need it before any bridge can be compiled for this target."
+      "One rule only. The 21 new breakages from the 1.21.4 delta are untouched.",
+      "No 1.21.4 game was launched: 'Item id not set' is not proven gone.",
+      "Only the inline inline-settings shape is handled; settings built in a helper or held in a field are left alone on purpose."
     ],
     "evidence": "runs/p247-fabric-1.21.4-delta"
   }

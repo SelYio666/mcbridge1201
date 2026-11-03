@@ -372,6 +372,10 @@ public final class TargetProfile {
             {"mixinClassReplacements", "targetClass"},
             {"mixinClassReplacements", "replacementClass"},
             {"mixinConfigAdditions", "mixinClass"},
+            {"registrationKeys", "settingsClass"},
+            {"registrationKeys", "setterOwner"},
+            {"registrationKeys", "registryKeyOwner"},
+            {"registrationKeys", "keyFactoryOwner"},
     };
 
     private void checkNamespaces(List<Problem> out, Map<String, JsonObject> rules) {
@@ -467,6 +471,7 @@ public final class TargetProfile {
             {"mixinCallbackAdaptations"},
             {"mixinClassReplacements"},
             {"mixinConfigAdditions"},
+            {"registrationKeys"},
     };
 
     /**
