@@ -18,6 +18,11 @@ jobs:
       - name: Hash manifest matches the checkout
         run: python tools/check_hashes.py
 
+      # check_hashes only verifies what the manifest lists; a new run directory whose
+      # README/result.json never got added would pass silently. This catches that.
+      - name: Every run README/result is hashed
+        run: python tools/check_manifest_coverage.py
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
