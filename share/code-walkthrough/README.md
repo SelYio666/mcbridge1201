@@ -1,29 +1,34 @@
-# mcbridge1201 代码走读视频
+# mcbridge1201 讲解视频（大白话版）
 
-- 视频：[code-walkthrough.mp4](code-walkthrough.mp4)（**5 分 00 秒**，1280×720，30 fps，2.1 MB）
+- 视频：[code-walkthrough.mp4](code-walkthrough.mp4)（**3 分 52 秒**，1280×720，30 fps，1.4 MB）
 - 封面：[cover.png](cover.png)
 - 生成脚本：[tools/make_code_video.py](../../tools/make_code_video.py)
-  —— 全部画面由 Pillow 画出、ffmpeg 只负责编码，不依赖录屏或外部素材。
 
-## 内容（10 段）
+上一版是“代码走读”，信息密度太高、不好懂。这一版按“讲给人听”重做：
 
-| # | 主题 | 讲什么 |
+- **每屏最多 4–5 行**，字号 23–30 px，不做逐行代码朗读；
+- 只保留**一个 3 行的配置片段**当例子，其余用比喻和流程讲；
+- 节奏放慢（12 字/秒左右）。
+
+## 内容（9 段）
+
+| # | 主题 | 一句话 |
 |---|---|---|
-| 01 | 代码地图 | 92 个 Java 源文件（12,070 行）、29 份规则（1,712 行）、56 个 Python 工具（14,243 行）、226 份 evidence README |
-| 02 | 转换管线 | manifest → version.json → client.jar → 库/资源 → 目标索引 → 扫描 → 分析 → 重映射 → 规则修补 → BytecodeVerify |
-| 03 | 规则长什么样 | `rules/fabric-1.21.1/container.json` 里一条 `fieldRedirect` 的完整字段 |
-| 04 | 桥生成 | `BridgeGenerator` 用 ASM 写字节码，构建期不依赖游戏 classpath |
-| 05 | 重映射 | `JarRemapper` 的 identical-id 重映射：只换名字/描述符，保留方法体 |
-| 06 | 本地启动器 | `launcher/server.py` 的 `/api/install`：目标 local / PCL2 |
-| 07 | 一键安装器 | `tools/from_source_install.py`：stdlib、逐项 sha1、断点续传、BMCLAPI 回退 |
-| 08 | 证据体系 | `check_hashes` / `check_manifest_coverage` / `verify_evidence` + 两道 CI 检查 |
-| 09 | 发布 | `release_check.py --build <版本> --accept --ui-accept` 的 7 个步骤 |
+| 00 | 标题 | 把 1.20.1 的模组搬到 1.21.1 继续用 |
+| 01 | 为什么需要它 | 模组像插件，游戏升级后零件改名/挪位，旧模组直接崩 |
+| 02 | 它只做三件事 | 读（找引用）→ 翻（改名/补桥）→ 验（真启动一次） |
+| 03 | “翻译”长什么样 | 一张规则表：旧零件 → 新零件（简化片段） |
+| 04 | 新版删掉的用“桥”补 | 工具自己生成小段代码，不依赖游戏本体 |
+| 05 | 做到什么程度 | 10 个真实模组做过完整转换与运行验证；修不了会明说 |
+| 06 | 配套的两个工具 | 网页启动器 + 一键装进 PCL/HMCL |
+| 07 | 为什么可以信 | 仓库 0 个 jar；每个结论都有日志/截图/哈希，CI 会拦 |
+| 08 | 结尾 | 仓库地址 |
 
-## 边界（如实）
+## 边界
 
-- 这是**走读**，不是逐行朗读全部代码：片段是从仓库里截取并适度缩短的，模块名、函数名、命令都真实存在；
-- 不包含另一个 agent 正在做的“其他版本适配（TargetProfile/baseline 之外的新目标）”内容；
-- 统计数字取自当前仓库快照（`git ls-files` 计数），会随开发变化。
+- 统计数字取自当前仓库快照，会随开发变化；
+- 不涉及另一个 agent 正在做的“其他版本适配”内容；
+- 只讲主干（转换/启动器/安装/证据），不逐文件讲全部代码。
 
 ## 重新生成
 
@@ -31,4 +36,4 @@
 python tools/make_code_video.py
 ```
 
-改 `SCENES` 里的文案/片段即可；中英混排靠 `draw_code_line` 按字符切字体（中文雅黑、英文 Consolas）。
+改 `SCENES` 里的文案即可；`kind` 支持 `title` / `plain` / `code` 三种版式。

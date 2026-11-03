@@ -1,20 +1,17 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T21:04:45+08:00",
+  "generatedAt": "2026-11-03T21:14:01+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "cad6e42446ab437f48924deb0c8dfe77c1da0a3e",
+    "commit": "532247f63577df67abdfc872b702c34764296e3b",
     "branch": "master",
     "dirty": true,
     "modifiedFiles": [
-      "EADME.md",
-      "runs/SHA256SUMS.txt",
-      "share/code-walkthrough/README.md",
+      "hare/code-walkthrough/README.md",
       "share/code-walkthrough/code-walkthrough.mp4",
       "share/code-walkthrough/cover.png",
-      "tools/hash_evidence.py",
       "tools/make_code_video.py"
     ],
     "untrackedFiles": [],
