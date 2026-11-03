@@ -1,7 +1,8 @@
 # 多目标基线与目标身份（阶段 A）
 
 本文件记录路线计划 `MCBridge-多版本兼容规划-2026-11-03` 里 **阶段 A** 的落地结果：
-A01（冻结 1.21.1 基线）与 A02（`TargetProfile` 与计划身份）。
+A01（冻结 1.21.1 基线）、A02（`TargetProfile` 与计划身份）、A03（按目标隔离桥构建）、
+A04（转换缓存键与陈旧桥防护）。
 
 范围声明：本阶段**没有**新增任何 Minecraft 目标版本，**没有**重新运行游戏侧契约，
 **没有**修改 1.21.1 的转换行为。新增的是「把现有 1.21.1 路线固定成可核对的身份」和
@@ -119,17 +120,66 @@ $env:JAVA_HOME = "<jdk21>"
 & <gradle> -p java --offline test --tests "top.mcbridge1201.TargetProfileValidationTest"
 ```
 
-## 3. 本阶段没有做的事
+## 3. A03：按目标隔离的桥构建
 
-- 没有新增目标：`targets/` 只有 `fabric-1.21.1.json`；`refusesTargets` 明确列出未接入的目标，
-  1.20.4 探针属于 A06，本轮未做。
-- 没有按目标隔离构建输出与缓存（A03）与缓存键失效（A04）。`pipeline.output` 只是记录了
-  拟用的目录，`patch` 尚不强制写入那里——不要把它当作已经隔离。
-- 没有重建桥的编译矩阵（Java 17/21/25 三档）：`build_bridges.py` 仍使用调用方 JDK，
-  只新增了「目标侧 class major 检查」这一道防线。
+`tools/build_bridges.py` 增加 `--profile` 目标模式；旧的 `--stub/--lib/--out` 入口保留且行为不变。
+
+```powershell
+python tools\build_bridges.py --profile targets\fabric-1.21.1.json
+```
+
+目标模式下 stub、`--release`、classpath 与输出目录全部来自 profile：
+
+| 来自 profile | 字段 |
+|---|---|
+| 编译用的 stub | `indices.bridgeStub`（intermediary 化的客户端 jar，带 SHA-256） |
+| classpath | `indices.libs`（12 项：gson、datafixerupper、netty×3、fastutil、brigadier、loader、fabric 三个模块、Balm） |
+| `javac --release` | `target.javaMajor` |
+| 输出目录 | `pipeline.output.bridgeClasses` → `work/targets/fabric-1.21.1/bridges` |
+
+编译前后的拒绝条件（全部实测 rc 2）：目标 Java 高于本地 javac、stub 缺失或哈希不符、
+stub 的 class major 高于目标、profile 的桥 ABI 与本构建不同、`classMajorMax` 与 `javaMajor`
+不一致、产物 class major 与目标不符。正例：34 个桥源 → 41 个 class，全部 major 65。
+
+**输出隔离的含义**：不同目标不会共用 `work/bridges`。但 `indices.libs` 指向本机
+`work/instances/…/libraries` 下的服务端库，是**被 pin 的本地闭包**而非可下载工件；
+干净机器必须准备同版本库，否则 `profile-check` 会报 `indices.missing`。
+
+## 4. A04：转换缓存键与陈旧桥防护
+
+`tools/conversion_cache.py` 把"这次转换的输入"命名成一个键，并在未命中时说出**是哪个输入变了**：
+
+```powershell
+python tools\conversion_cache.py key    --profile targets\fabric-1.21.1.json --source <原始jar> \
+    --bridge-dir work\targets\fabric-1.21.1\bridges --rules-from-profile
+python tools\conversion_cache.py store  ... --artifact <转换产物>
+python tools\conversion_cache.py lookup ...
+```
+
+| 键组件 | 防的是什么 |
+|---|---|
+| `bridgeAbi` | 规则包面向旧桥 ABI 时仍命中旧缓存 |
+| `profile`（路径+哈希+目标身份） | 换目标却复用另一目标的产物 |
+| `pipeline.engine.commit` | 上游引擎换了分段语义 |
+| `source.sha256` | 同名的不同构建被当成同一来源 |
+| `indices.*`（stub/client/mappings/loader/api/libs） | 换索引或换 mapping |
+| `rules`（按 `ruleOrder` 顺序） | 换规则或换顺序 |
+| `bridges.*`（每个 class 的哈希） | **陈旧桥**：桥重编了但产物还是旧的 |
+| `config` | 调用方追加的 patch 选项 |
+
+`lookup` 命中 rc 0；未命中 rc 1，并与"同一源 jar 的最近一次记录"逐组件比对，输出
+`bridges.sha256: f1778096… -> 407e87e6…` 这类原因。**`patch` 尚未读写缓存**——本轮交付的是
+键与记录的契约，接进 `patch` 是后续工作，不宣称"转换已带缓存"。
+
+## 5. 本阶段没有做的事
+
+- 没有新增目标：`targets/` 只有 `fabric-1.21.1.json`；1.20.4 探针（A06）未做。
+- 没有跑 Java 17/25 的真实桥编译：`--release` 与 class major 校验已就位，但 17 档被"stub 版本更高"
+  挡住、25 档被"javac 版本不足"挡住——那是两条**拒绝路径**，不是支持。
+- 没有把缓存接进 `patch`（见 §4）。
 - 没有重新执行任何游戏侧契约；`profiles/` 里的状态来自冻结之前的轮次。
 
-## 4. 现状与缺口
+## 6. 现状与缺口
 
 `manifests/baseline.lock.json` 生成时的状态以文件内 `git` 与 `evidence` 两节为准。
 已知未完成项（需要第二台机器或真实客户端）与之前轮次一致，见

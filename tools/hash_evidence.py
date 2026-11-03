@@ -1760,6 +1760,11 @@ FILES = [
     "runs/p244-grab-1211/result.json",
     "runs/p244-grab-1211/view-before-1211.png",
     "runs/p244-grab-1211/view-after-move-1211.png",
+    "tools/build_bridges.py",
+    "tools/conversion_cache.py",
+    "tools/run_isolation_cache.py",
+    "runs/p245-target-isolation-cache/README.md",
+    "runs/p245-target-isolation-cache/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the
@@ -1777,6 +1782,10 @@ def sha256(path):
 
 
 def main():
+    # --skip-missing exists for one situation: generating the manifest from a *clean* checkout of
+    # a commit while the list already names artifacts from work that is not committed yet (two
+    # sessions editing the same tree). The default still fails, so a genuinely lost file is loud.
+    skip_missing = "--skip-missing" in sys.argv[1:]
     lines = []
     missing = []
     for rel in FILES:
@@ -1786,7 +1795,12 @@ def main():
             continue
         lines.append(f"{sha256(p)}  {rel}")
     if missing:
-        raise SystemExit("manifest lists missing files:\n  " + "\n  ".join(missing))
+        if not skip_missing:
+            raise SystemExit("manifest lists missing files:\n  " + "\n  ".join(missing))
+        print(f"warning: {len(missing)} listed file(s) are absent from this tree and were skipped:",
+              file=sys.stderr)
+        for rel in missing:
+            print(f"  {rel}", file=sys.stderr)
     tracked = _tracked_paths()
     if tracked is not None:
         untracked = [rel for rel in FILES if rel not in tracked]

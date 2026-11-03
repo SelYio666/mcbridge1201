@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Exercise the target gate: one accepted run and the negatives that must be refused.
 
 This is the executable form of A02's release criterion ("错目标、错 namespace、缺依赖负例失败").

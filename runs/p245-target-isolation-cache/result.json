@@ -1,0 +1,197 @@
+{
+  "workstreams": [
+    "A03 target-isolated bridge build",
+    "A04 cache key and stale-bridge guard"
+  ],
+  "profile": "targets/fabric-1.21.1.json",
+  "targetOutput": "work/targets/fabric-1.21.1/bridges",
+  "javaHome": "C:\\Users\\27682\\Documents\\新建文件夹\\.toolchain\\jdk",
+  "cases": [
+    {
+      "id": "a03-target-build",
+      "goal": "profile mode compiles bridges into the target's own directory",
+      "expect": {
+        "rc": 0,
+        "onlyMajor": 65,
+        "dir": "work/targets/fabric-1.21.1/bridges"
+      },
+      "rc": 0,
+      "majors": {
+        "65": 41
+      },
+      "outDir": "work/targets/fabric-1.21.1/bridges",
+      "classes": 41,
+      "tail": [
+        "注: 某些输入文件使用了未经检查或不安全的操作。",
+        "注: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a03-legacy-entry",
+      "goal": "the old --stub/--lib/--out invocation still works",
+      "expect": {
+        "rc": 0
+      },
+      "rc": 0,
+      "tail": [
+        "注: 某些输入文件使用了未经检查或不安全的操作。",
+        "注: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a03-output-isolated",
+      "goal": "the target output dir differs from the legacy default work/bridges",
+      "expect": {
+        "different": true
+      },
+      "rc": 0,
+      "targetOut": "work/targets/fabric-1.21.1/bridges",
+      "legacyOut": "work/bridges",
+      "different": true,
+      "passed": true
+    },
+    {
+      "id": "a03-java-unreachable",
+      "goal": "a target above the local javac is refused, not approximated",
+      "expect": {
+        "rc": 2,
+        "contains": "needs Java 25"
+      },
+      "rc": 2,
+      "tail": [
+        "target fabric-1.21.1 needs Java 25 but javac is 21: this target is not reachable from this toolchain (a JDK upgrade is the fix, not a flag)"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a03-stub-unpinned",
+      "goal": "a stub whose bytes differ from the frozen hash is refused",
+      "expect": {
+        "rc": 2,
+        "contains": "profile froze"
+      },
+      "rc": 2,
+      "tail": [
+        "bridge stub client-1.21.1-intermediary.jar has sha256 2cbf8e4a2132 but the profile froze 000000000000; rebuild or update the profile, do not compile bridges against an unpinned stub"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a03-stub-newer-than-target",
+      "goal": "a stub newer than the target Java level is refused",
+      "expect": {
+        "rc": 2,
+        "contains": "above the target"
+      },
+      "rc": 2,
+      "tail": [
+        "bridge stub carries class major 65, above the target's 61: `javac --release 17` refuses to read a newer classpath class, so remap the stub for this target first"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a03-bridge-abi",
+      "goal": "a profile for another bridge ABI is refused",
+      "expect": {
+        "rc": 2,
+        "contains": "bridge ABI"
+      },
+      "rc": 2,
+      "tail": [
+        "profile C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\work\\tmp\\p245\\profile-abi.json: bridge ABI 'mcbridge-bridge-0' but this build embeds 'mcbridge-bridge-1'; the bridge sources must be re-validated against the new ABI"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a04-key-stable",
+      "goal": "the same inputs give the same key",
+      "expect": {
+        "rc": 0,
+        "same": true
+      },
+      "rc": 0,
+      "key": "1c21a387349aa28a55ae01f078588fdd0120bf9aae0fb38146653bb85bef9950",
+      "key2": "1c21a387349aa28a55ae01f078588fdd0120bf9aae0fb38146653bb85bef9950",
+      "same": true,
+      "passed": true
+    },
+    {
+      "id": "a04-store-then-hit",
+      "goal": "a stored conversion is found again by its key",
+      "expect": {
+        "rc": 0
+      },
+      "rc": 0,
+      "storeRc": 0,
+      "hit": true,
+      "tail": [
+        "HIT 1c21a387349aa28a55ae01f078588fdd0120bf9aae0fb38146653bb85bef9950"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a04-target-changed",
+      "goal": "another target does not hit the old cache entry",
+      "expect": {
+        "rc": 1
+      },
+      "rc": 1,
+      "hit": false,
+      "reasons": [
+        "profile.minecraft: 1.21.1 -> 1.21.4",
+        "profile.path: targets/fabric-1.21. -> work/tmp/p245/profil",
+        "profile.sha256: 8c9ab369fe0a2f32b694 -> f33e41589d10b7dc179d",
+        "profile.targetId: fabric-1.21.1 -> fabric-1.21.4"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a04-bridge-changed",
+      "goal": "a rebuilt bridge class invalidates the cache and says so",
+      "expect": {
+        "rc": 1,
+        "reasonPrefix": "bridges"
+      },
+      "rc": 1,
+      "hit": false,
+      "reasons": [
+        "bridges.sha256: f1778096b1ab8d382aad -> 407e87e65f9b309c2966"
+      ],
+      "sawBridgeReason": true,
+      "passed": true
+    },
+    {
+      "id": "a04-rules-changed",
+      "goal": "a different rule package gives a different key",
+      "expect": {
+        "rc": 0,
+        "differentFromBase": true
+      },
+      "rc": 0,
+      "key": "929993c90733b90c334e9595bd40b3f421a946c399da9d97c6a9c0380a44149f",
+      "differentFromBase": true,
+      "passed": true
+    },
+    {
+      "id": "a04-bridge-conflict",
+      "goal": "a jar embedding a different bridge byte image is reported",
+      "expect": {
+        "rc": 1,
+        "contains": "MISMATCH"
+      },
+      "rc": 1,
+      "class": "top/mcbridge1201/bridge/AppleSkinFoodBridge.class",
+      "tail": [
+        "MISMATCH top/mcbridge1201/bridge/AppleSkinFoodBridge.class",
+        "  stale-bridge.jar: f79bca2d7ffa64b9 != 4eb53fd18524bb5f",
+        "checked 1 jar(s); problems = 1"
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "failed": [],
+  "scope": "build and cache contract only: no jar was converted and no game was launched"
+}

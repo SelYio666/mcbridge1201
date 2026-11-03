@@ -82,6 +82,8 @@ public final class TargetProfile {
 
     /** Indexes the conversion reads. Role names are fixed so a profile cannot point at the wrong file. */
     public static final class Indices {
+        /** Client jar remapped to the target namespace: the javac classpath for bridge sources. */
+        public Artifact bridgeStub;
         public Artifact clientJar;
         public Artifact mappings;
         public Artifact loader;
@@ -557,6 +559,7 @@ public final class TargetProfile {
 
     private void checkIndices(List<Problem> out, Input in) throws IOException {
         List<Artifact> declared = new ArrayList<>();
+        addIfPresent(declared, indices.bridgeStub);
         addIfPresent(declared, indices.clientJar);
         addIfPresent(declared, indices.mappings);
         addIfPresent(declared, indices.loader);
