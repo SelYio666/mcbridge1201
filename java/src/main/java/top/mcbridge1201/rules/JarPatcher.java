@@ -608,11 +608,18 @@ public final class JarPatcher {
         }
         for (MethodNode mn : cn.methods) {
             InsnList insns = mn.instructions;
+            boolean registersHere = callsAny(insns, rules.constructorRegistrationOwner(),
+                    rules.constructorRegistrationName());
             for (AbstractInsnNode insn = insns.getFirst(); insn != null; ) {
                 AbstractInsnNode next = insn.getNext();
                 if (insn instanceof MethodInsnNode m && m.getOpcode() == Opcodes.INVOKESPECIAL
                         && "<init>".equals(m.name)) {
                     RuleSet.ConstructorRedirect r = rules.matchConstructor(m.owner, m.desc);
+                    if (r != null && registersHere && r.skipWhenCallsOwner != null) {
+                        // `registrationKeys` owns methods that register: it can see the id, this
+                        // redirect cannot. Declining here is the skill split, not an accident.
+                        r = null;
+                    }
                     if (r != null && rewriteConstructor(insns, m, r)) {
                         st.applied.merge(r.id, 1, Integer::sum);
                         recordBridge(st, used, r.bridgeClass);
@@ -940,15 +947,31 @@ public final class JarPatcher {
         return false;
     }
 
+    /** True when this method contains a call to the given owner/name (any invoke kind). */
+    private static boolean callsAny(InsnList insns, String owner, String name) {
+        if (owner == null || name == null) {
+            return false;
+        }
+        for (AbstractInsnNode insn = insns.getFirst(); insn != null; insn = insn.getNext()) {
+            if (insn instanceof MethodInsnNode m && owner.equals(m.owner) && name.equals(m.name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
-     * Inserts a bridge call immediately before each matched call.
+     * Inserts a bridge call immediately before (or instead of) each matched call.
      *
-     * <p>Uses a two-pass form: matches are collected first, then inserted. Inserting while walking
-     * would feed the freshly inserted INVOKESTATIC back into the same walk, and a rule whose match
-     * entries overlap (the same owner appearing twice) would then fire twice on one site.
+     * <p>Two-pass: matches are collected, then applied. Inserting while walking would feed the
+     * freshly inserted INVOKESTATIC back into the same traversal, and a method with two matching
+     * sites would produce four insertions.
      *
-     * <p>The injected sequence must be stack-neutral: the matched call's arguments are already
-     * pushed, so the bridge consumes exactly the local that was loaded for it.
+     * <p>A rule may be scoped to one class/method. That is not a nicety: the bridge arguments come
+     * from local slots, and the same callee in another class has different locals. Measured on
+     * ironchests, an unscoped `Supplier.get` rule fired 32 times while exactly one of those sites
+     * actually had (Registry, Identifier) in locals 0 and 1 (runs/p263) - the other 31 would have
+     * produced calls that fail verification.
      */
     private static boolean applyInsertBeforeCalls(ClassNode cn, RuleSet rules, Stats st,
                                                  Set<String> used) {
@@ -957,14 +980,14 @@ public final class JarPatcher {
         }
         boolean any = false;
         for (MethodNode mn : cn.methods) {
-            List<MethodInsnNode> hits = new ArrayList<>();
+            List<Object[]> hits = new ArrayList<>();
             for (AbstractInsnNode insn = mn.instructions.getFirst(); insn != null;
                     insn = insn.getNext()) {
                 if (!(insn instanceof MethodInsnNode m)) {
                     continue;
                 }
                 for (RuleSet.InsertBeforeCall r : rules.insertBeforeCalls) {
-                    if (r.loadLocal < 0) {
+                    if (r.loadLocal < 0 || !ruleAppliesTo(r, cn, mn)) {
                         continue;
                     }
                     if (!r.matchOwner.equals(m.owner) || !r.matchName.equals(m.name)
@@ -974,56 +997,48 @@ public final class JarPatcher {
                     if (r.matchOpcode != 0 && r.matchOpcode != m.getOpcode()) {
                         continue;
                     }
-                    hits.add(m);
+                    hits.add(new Object[]{m, r});
                     st.applied.merge(r.id, 1, Integer::sum);
                     any = true;
                     break;
                 }
             }
-            for (MethodInsnNode hit : hits) {
-                RuleSet.InsertBeforeCall r = matchInsertRule(rules, hit);
-                if (r == null) {
-                    continue;
-                }
+            for (Object[] hit : hits) {
+                MethodInsnNode m = (MethodInsnNode) hit[0];
+                RuleSet.InsertBeforeCall r = (RuleSet.InsertBeforeCall) hit[1];
+                boolean replaces = r.replaceMethod != null && !r.replaceMethod.isBlank();
                 int loadOpcode = "iload".equals(r.loadKind) ? Opcodes.ILOAD : Opcodes.ALOAD;
                 InsnList inject = new InsnList();
                 inject.add(new VarInsnNode(loadOpcode, r.loadLocal));
                 for (int extra : r.loadLocals) {
                     inject.add(new VarInsnNode(loadOpcode, extra));
                 }
-                if (r.replaceMethod != null && !r.replaceMethod.isBlank()) {
-                    // Insert the context arguments first, then swap the callee itself. Doing it the
-                    // other way round (remove-then-insert) loses the anchor node: after remove(hit)
-                    // the node is detached and insertBefore(hit, ...) throws.
-                    mn.instructions.insertBefore(hit, inject);
-                    mn.instructions.set(hit, new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
-                            r.replaceMethod, r.replaceDesc, false));
-                    // Register the bridge, or it is used but never embedded and the patched jar
-                    // fails with NoClassDefFoundError at the first call.
-                    recordBridge(st, used, r.bridgeClass);
-                    continue;
+                if (replaces) {
+                    // Arguments first, then swap the callee. The reverse order detaches the anchor
+                    // node and insertBefore(hit, ...) throws.
+                    mn.instructions.insertBefore(m, inject);
+                    mn.instructions.set(m, new MethodInsnNode(Opcodes.INVOKESTATIC,
+                            r.bridgeClass, r.replaceMethod, r.replaceDesc, false));
+                } else {
+                    inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
+                            r.bridgeMethod, r.bridgeDesc, false));
+                    mn.instructions.insertBefore(m, inject);
                 }
-                inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
-                        r.bridgeMethod, r.bridgeDesc, false));
-                mn.instructions.insertBefore(hit, inject);
+                // Without this the jar calls a bridge it does not contain.
                 recordBridge(st, used, r.bridgeClass);
             }
         }
         return any;
     }
 
-    private static RuleSet.InsertBeforeCall matchInsertRule(RuleSet rules, MethodInsnNode m) {
-        for (RuleSet.InsertBeforeCall r : rules.insertBeforeCalls) {
-            if (r.loadLocal < 0) {
-                continue;
-            }
-            if (r.matchOwner.equals(m.owner) && r.matchName.equals(m.name)
-                    && r.matchDesc.equals(m.desc)
-                    && (r.matchOpcode == 0 || r.matchOpcode == m.getOpcode())) {
-                return r;
-            }
+    /** Scoped rules only apply to their declared class/method; unscoped rules apply everywhere. */
+    private static boolean ruleAppliesTo(RuleSet.InsertBeforeCall r, ClassNode cn, MethodNode mn) {
+        if (r.onlyInClass == null || r.onlyInClass.isBlank()) {
+            return true;
         }
-        return null;
+        return r.onlyInClass.equals(cn.name)
+                && (r.onlyInMethodName == null || r.onlyInMethodName.equals(mn.name))
+                && (r.onlyInMethodDesc == null || r.onlyInMethodDesc.equals(mn.desc));
     }
 
     private static void shiftLocals(MethodNode mn, int fromSlot, int delta) {

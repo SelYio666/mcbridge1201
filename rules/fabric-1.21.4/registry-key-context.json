@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.4",
+  "note": "Registration context across the supplier boundary, now with a skill split. ResourcefulLib's FabricRegistryEntry.of evaluates a mod's Supplier and only then registers, so the id exists on the factory's stack but not inside the lambda that builds Item.Settings (runs/p258). Two rules bridge that gap: replace the supplier call with one that carries registry+id, and route settings construction through a factory that reads the active context. The settings redirect DECLINES any method that calls Registry.register, because registrationKeys owns those - it can see the id, this rule cannot (runs/p260, runs/p263).",
+  "insertBeforeCalls": [
+    {
+      "id": "resourcefullib.supplier.get-with-registry-context",
+      "matchOwner": "java/util/function/Supplier",
+      "matchName": "get",
+      "matchDesc": "()Ljava/lang/Object;",
+      "matchOpcode": 185,
+      "loadLocal": 0,
+      "loadKind": "aload",
+      "loadLocals": [
+        1
+      ],
+      "bridgeClass": "top/mcbridge1201/bridge/RegistryKeyContext",
+      "bridgeMethod": "getWithKey",
+      "bridgeDesc": "(Ljava/util/function/Supplier;Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;)Ljava/lang/Object;",
+      "replaceMethod": "getWithKey",
+      "replaceDesc": "(Ljava/util/function/Supplier;Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;)Ljava/lang/Object;",
+      "capability": "registration.context.supplier",
+      "risk": "high",
+      "evidence": "runs/p258: in FabricRegistryEntry.of, aload_1 (the Identifier) is at offset 4/6 and Supplier.get at 8, with the registry in local 0. The replacement pushes registry then id, so the new descriptor consumes supplier+registry+id in that order. The bridge restores the previous context in a finally block, so a patched class cannot set it and forget to clear it.",
+      "onlyInClass": "com/teamresourceful/resourcefullib/common/registry/fabric/FabricRegistryEntry",
+      "onlyInMethodName": "of",
+      "onlyInMethodDesc": "(Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;Ljava/util/function/Supplier;)Lcom/teamresourceful/resourcefullib/common/registry/fabric/FabricRegistryEntry;"
+    }
+  ],
+  "constructorRedirects": [
+    {
+      "id": "1214.item-settings.registry-context",
+      "owner": "net/minecraft/class_1792$class_1793",
+      "desc": "()V",
+      "skipWhenCallsOwner": "net/minecraft/class_2378",
+      "skipWhenCallsName": "method_10230",
+      "bridgeClass": "top/mcbridge1201/bridge/RegistryKeyContext",
+      "bridgeMethod": "settings",
+      "bridgeDesc": "()Lnet/minecraft/class_1792$class_1793;",
+      "capability": "registration.context.settings",
+      "risk": "medium",
+      "evidence": "The factory returns a keyed Settings when a context is active and a plain one otherwise. Declines methods that call Registry.register: there registrationKeys injects the key itself (it has the id in scope), and replacing the constructor first would strip that rule of its target - the conflict measured in runs/p260 and split in runs/p263."
+    }
+  ]
+}

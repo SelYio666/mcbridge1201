@@ -1,25 +1,27 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T23:24:57+08:00",
+  "generatedAt": "2026-11-03T23:38:54+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "001840f20077971b7680309537e1c43d0a1c4c22",
+    "commit": "0cd606ba931bc8ab3c290a43920815073e19ce7c",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
       "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
-      "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
-      "java/src/test/java/top/mcbridge1201/RuleSetLoadTest.java",
+      "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
+      "manifests/baseline.lock.json",
+      "rules/fabric-1.21.4/registry-key-context.json",
       "runs/SHA256SUMS.txt",
+      "runs/p249-registration-key-rule/result.json",
       "runs/p252-1214-first-bridge/result.json",
       "runs/p254-1214-draw-rules/result.json",
       "runs/p256-1214-interaction-result/result.json",
       "runs/p257-1214-field-rules/result.json",
-      "runs/p260-registry-context-attempt/README.md",
-      "runs/p262-stale-cli-root-cause/README.md",
-      "runs/p262-stale-cli-root-cause/result.json",
+      "runs/p263-registration-skill-split/README.md",
+      "runs/p263-registration-skill-split/result.json",
+      "targets/fabric-1.21.4.json",
       "tools/hash_evidence.py"
     ],
     "untrackedFiles": [],
@@ -222,8 +224,8 @@
       },
       "rules/fabric-1.21.4": {
         "root": "rules/fabric-1.21.4",
-        "count": 5,
-        "packageSha256": "72a0b3c61aa748301cc0c5d34e799edddbf7a0b326a1f0ff014687731dcb54d0",
+        "count": 6,
+        "packageSha256": "e467869d932a63a582caf8437e517916251f4f4d1ff5babfeab0c4fd4ec9705a",
         "files": [
           {
             "path": "rules/fabric-1.21.4/blockstate-properties.json",
@@ -249,6 +251,11 @@
             "path": "rules/fabric-1.21.4/registration-key.json",
             "sha256": "d0143fc920e9605ef129b9da19f032d0cb30b2cd0623a0191e610c33e40d76ae",
             "size": 2081
+          },
+          {
+            "path": "rules/fabric-1.21.4/registry-key-context.json",
+            "sha256": "bd842677581e9abb92eddd63011df9ffe235782e8327a5857c4bad3670fdb7c3",
+            "size": 3073
           }
         ]
       }
@@ -257,7 +264,7 @@
       "java/src/main": {
         "root": "java/src/main",
         "count": 17,
-        "packageSha256": "af78894ab97660c63d77fbda39bcd6bf18211e2ea831ce86a198ce183f04bbf5",
+        "packageSha256": "c862c77015fab7bfd65f911ee26737390510f5c9ceea051fc925ef0e03130611",
         "files": [
           {
             "path": "java/src/main/java/top/mcbridge1201/Main.java",
@@ -316,13 +323,13 @@
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
-            "sha256": "0139ad367bf89449fea990b9bc5fd434d5bcd78970c7c310c066cbc0dec94d35",
-            "size": 65859
+            "sha256": "3fbbe76383937e9fd7c21ff9e9056f4800c3ce5796cc4fbc9e4577054bf74e7f",
+            "size": 66894
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
-            "sha256": "09b2ddb5996727679c2032e584373be2ac1f728df5c1c4d8c95f05da88136baf",
-            "size": 23531
+            "sha256": "5c9f0485583e67c1f52b3efde71fbd6c8c31f12f6ccd18f9b04767efcadb0a18",
+            "size": 25489
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/scan/ArtifactScanner.java",
@@ -638,7 +645,7 @@
     "tools": {
       "count": 31,
       "present": 31,
-      "packageSha256": "7c0324e8800bff67c0dd25ce2a9445a6225f8c4855fc03e8a6ba7b334b306e89",
+      "packageSha256": "2452096fd9c9010afa6873a530de7abef9b3af3686bd2875e9b129651509b484",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -662,8 +669,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "5d580f7ac2ac451a869a630a9d33f0cc7c6826c9ccaff9faf81feff0aab587e7",
-          "size": 92985
+          "sha256": "6144bb0461ebb5dd6dff2f45653f4361c4bb25087d97797287feec51419a2823",
+          "size": 93144
         },
         {
           "path": "tools/release_check.py",
@@ -849,7 +856,7 @@
       },
       {
         "path": "targets/fabric-1.21.4.json",
-        "sha256": "644ed8932e1e559587a95d79d5c3ff6289532de802d37ed8afefda78ba3b8776",
+        "sha256": "655c94bb1cb08797c329d6055f6e254173f97613922be9823715aba1af5caf67",
         "profileId": "fabric-1.21.4",
         "targetId": "fabric-1.21.4",
         "minecraft": "1.21.4",
@@ -857,7 +864,7 @@
         "javaMajor": 21,
         "namespace": "intermediary",
         "bridgeAbi": "mcbridge-bridge-1",
-        "ruleOrderEntries": 5
+        "ruleOrderEntries": 6
       }
     ]
   },
@@ -984,15 +991,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1838 mismatch=0 missing=0"
+          "ok=1841 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 369",
-          "hashed evidence files: 369",
+          "required evidence files: 371",
+          "hashed evidence files: 371",
           "coverage OK"
         ]
       },
@@ -1002,7 +1009,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 295 markdown file(s): 295 clean, 0 finding(s)"
+          "checked 296 markdown file(s): 296 clean, 0 finding(s)"
         ]
       },
       {

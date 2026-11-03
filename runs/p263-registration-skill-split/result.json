@@ -1,0 +1,53 @@
+{
+  "workstream": "split the two registration-key rules so they stop competing",
+  "split": {
+    "registrationKeys": "settings built in the same method as Registry.register (it can see the id)",
+    "registry-key-context": "settings built inside a lambda, where the id lives on the wrapper's stack (ResourcefulLib path)",
+    "mechanism": {
+      "constructorRedirects.skipWhenCallsOwner/Name": "the context rule declines any method that calls Registry.register",
+      "insertBeforeCalls.onlyInClass/onlyInMethodName/onlyInMethodDesc": "the supplier rule is scoped to FabricRegistryEntry.of"
+    }
+  },
+  "measurements": {
+    "unscopedSupplierRule": {
+      "ironchestsFirings": 32,
+      "sitesWithMatchingLocals": 1,
+      "consequence": "the other 31 would emit getWithKey(Supplier, class_2378, class_2960) while locals 0/1 hold other types - verification failure"
+    },
+    "afterScoping": {
+      "fixture": {
+        "supplierRule": 0,
+        "contextRule": 0,
+        "registrationKeys": 1,
+        "classesChanged": 1
+      },
+      "ironchests": {
+        "supplierRule": 1,
+        "contextRule": 8,
+        "registrationKeys": 0,
+        "classesChanged": 10
+      }
+    }
+  },
+  "lesson": "an insert rule must be scoped: its arguments come from local slots, and the same callee elsewhere has a different layout. 32 firings looked like good coverage and was 31 latent verification failures.",
+  "regression": {
+    "unitTests": 61,
+    "evidence": {
+      "p249": "PASS",
+      "p252": "PASS",
+      "p254": "PASS",
+      "p256": "PASS",
+      "p257": "PASS"
+    },
+    "ruleTargetCheck": {
+      "files": 6,
+      "missing": 0
+    }
+  },
+  "notYet": [
+    "end-to-end on a 1.21.4 instance",
+    "ThreadLocal lifetime tests for RegistryKeyContext",
+    "the scope descriptor is copied from javap; a ResourcefulLib update would make the rule fire 0 times (silent no-op, not a wrong edit)"
+  ],
+  "scope": "static/bytecode only: no game launch"
+}

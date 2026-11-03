@@ -185,6 +185,18 @@ public final class RuleSet {
      * Needed when a constructor became private (e.g. {@code new Identifier(ns, path)} in 1.21.1).
      */
     public static final class ConstructorRedirect {
+        /**
+         * Skip this redirect inside any method that calls the given member.
+         *
+         * <p>Two rules can want the same constructor: `registrationKeys` injects a key right after
+         * `new Settings()` when the register call is in the same method, and the context rule
+         * replaces the constructor outright for settings built inside a lambda (where the id is not
+         * in scope). Without a skill split they fight over the same site and the first one wins.
+         * This field is how the context rule stays out of the way: it declines any method that has
+         * a registration call, because that is `registrationKeys`' territory.
+         */
+        public String skipWhenCallsOwner;
+        public String skipWhenCallsName;
         public String id;
         public String owner;
         public String desc;
@@ -345,9 +357,38 @@ public final class RuleSet {
          */
         public String replaceMethod;
         public String replaceDesc;
+        /**
+         * Optional scope. Without it an insert rule matches the callee everywhere, which is wrong
+         * when the bridge arguments come from local slots: the same callee in another class has
+         * different locals, and the emitted call would fail verification. Measured on ironchests,
+         * an unscoped Supplier.get rule fired 32 times while exactly one site had
+         * (Registry, Identifier) in locals 0 and 1 (runs/p263).
+         */
+        public String onlyInClass;
+        public String onlyInMethodName;
+        public String onlyInMethodDesc;
         public String capability;
         public String risk;
         public String evidence;
+    }
+
+    /** Owner/name that marks a method as a registration site, used by the constructor split. */
+    public String constructorRegistrationOwner() {
+        for (ConstructorRedirect r : constructorRedirects) {
+            if (r.skipWhenCallsOwner != null) {
+                return r.skipWhenCallsOwner;
+            }
+        }
+        return null;
+    }
+
+    public String constructorRegistrationName() {
+        for (ConstructorRedirect r : constructorRedirects) {
+            if (r.skipWhenCallsName != null) {
+                return r.skipWhenCallsName;
+            }
+        }
+        return null;
     }
 
     public final List<InsertBeforeCall> insertBeforeCalls = new ArrayList<>();

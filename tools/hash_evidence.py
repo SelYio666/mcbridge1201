@@ -1872,6 +1872,9 @@ FILES = [
     "runs/p262-stale-cli-root-cause/README.md",
     "runs/p262-stale-cli-root-cause/result.json",
     "runs/p260-registry-context-attempt/README.md",
+    "rules/fabric-1.21.4/registry-key-context.json",
+    "runs/p263-registration-skill-split/README.md",
+    "runs/p263-registration-skill-split/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the
