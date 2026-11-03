@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.4",
+  "note": "The two plain-texture blits ironchests calls. Both are matched on the ORIGINAL 1.20.1 jar. 1.21.4 adds a Function<Identifier, RenderType> first parameter to class_332's blits and makes the full overload carry explicit region/texture sizes, so each old call gets a bridge that supplies the resolver and the missing sizes.",
+  "methodRedirects": [
+    {
+      "id": "ironchests.blit-region-1214",
+      "sourceOwner": "net/minecraft/class_332",
+      "sourceName": "method_25290",
+      "sourceDesc": "(Lnet/minecraft/class_2960;IIFFIIII)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/DrawContextBlitBridge1214",
+      "bridgeMethod": "blit",
+      "bridgeDesc": "(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIFFIIII)V",
+      "capability": "screen.draw.blit.region",
+      "risk": "medium",
+      "evidence": "1.20.1 call: TexturedScreenRenderer calls class_332.method_25290(Lclass_2960;IIFFIIII)V (measured with `mcbridge1201 refs`). 1.21.4 has method_25290(Function,Identifier,int,int,float,float,int,int,int,int) - same parameter order after the resolver, measured with javap. The bridge adds RenderType.guiTextured via class_1921.method_62277 and forwards."
+    },
+    {
+      "id": "ironchests.blit-simple-1214",
+      "sourceOwner": "net/minecraft/class_332",
+      "sourceName": "method_25302",
+      "sourceDesc": "(Lnet/minecraft/class_2960;IIIIII)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/DrawContextBlitBridge1214",
+      "bridgeMethod": "blitSimple",
+      "bridgeDesc": "(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIII)V",
+      "capability": "screen.draw.blit.atlas",
+      "risk": "medium",
+      "evidence": "1.20.1 call: GeneratedScreenRenderer calls class_332.method_25302(Lclass_2960;IIIIII)V three times (measured with `mcbridge1201 refs`). 1.21.4's method_25302 takes twelve parameters (Function,Identifier,x,y,u,v,width,height,regionW,regionH,textureW,textureH). 1.20.1's seven-argument form forwards with region = destination size and texture = 256x256; the bridge reproduces exactly that, so the geometry matches the old convenience overload. This 256 assumption is the one piece of the bridge that is a convention rather than a measurement - flagged in runs/p254."
+    }
+  ]
+}

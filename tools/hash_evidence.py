@@ -1827,6 +1827,15 @@ FILES = [
     "tools/check_desc_compat.py",
     "runs/p253-desc-compat/README.md",
     "runs/p253-desc-compat/result.json",
+    "rules/fabric-1.21.4/ironchests-blit.json",
+    "java/src/bridge-1214/java/top/mcbridge1201/bridge/DrawContextBlitBridge1214.java",
+    "tools/run_1214_draw_rules.py",
+    "runs/p254-1214-draw-rules/README.md",
+    "runs/p254-1214-draw-rules/result.json",
+    "runs/p254-1214-draw-rules/disassembly-TexturedScreenRenderer-before.txt",
+    "runs/p254-1214-draw-rules/disassembly-TexturedScreenRenderer-after.txt",
+    "runs/p254-1214-draw-rules/disassembly-GeneratedScreenRenderer-before.txt",
+    "runs/p254-1214-draw-rules/disassembly-GeneratedScreenRenderer-after.txt",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

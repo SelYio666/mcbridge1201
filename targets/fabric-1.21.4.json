@@ -86,11 +86,14 @@
     "bridgeAbi": "mcbridge-bridge-1",
     "ruleOrder": [
       "rules/fabric-1.21.4/registration-key.json",
-      "rules/fabric-1.21.4/ironchests-draw.json"
+      "rules/fabric-1.21.4/ironchests-draw.json",
+      "rules/fabric-1.21.4/ironchests-blit.json"
     ],
     "capabilities": [
       "registration.registry_key",
-      "screen.draw.nine-sliced"
+      "screen.draw.nine-sliced",
+      "screen.draw.blit.region",
+      "screen.draw.blit.atlas"
     ],
     "output": {
       "bridgeClasses": "work/targets/fabric-1.21.4/bridges",

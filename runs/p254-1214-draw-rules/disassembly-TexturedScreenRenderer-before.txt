@@ -1,0 +1,131 @@
+Compiled from "TexturedScreenRenderer.java"
+public final class tech.thatgravyboat.ironchests.client.ui.TexturedScreenRenderer extends java.lang.Record implements tech.thatgravyboat.ironchests.client.ui.ScreenRenderer {
+  private final net.minecraft.class_2960 texture;
+
+  private final tech.thatgravyboat.ironchests.api.chesttype.ChestType type;
+
+  public tech.thatgravyboat.ironchests.client.ui.TexturedScreenRenderer(tech.thatgravyboat.ironchests.api.chesttype.ChestType);
+    Code:
+       0: aload_0
+       1: new           #20                 // class net/minecraft/class_2960
+       4: dup
+       5: ldc           #22                 // String ironchests
+       7: aload_1
+       8: invokevirtual #27                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.texture:()Ljava/lang/String;
+      11: invokedynamic #39,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+      16: invokespecial #42                 // Method net/minecraft/class_2960."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+      19: aload_1
+      20: invokespecial #45                 // Method "<init>":(Lnet/minecraft/class_2960;Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;)V
+      23: return
+
+  public tech.thatgravyboat.ironchests.client.ui.TexturedScreenRenderer(net.minecraft.class_2960, tech.thatgravyboat.ironchests.api.chesttype.ChestType);
+    Code:
+       0: aload_0
+       1: invokespecial #50                 // Method java/lang/Record."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #52                 // Field texture:Lnet/minecraft/class_2960;
+       9: aload_0
+      10: aload_2
+      11: putfield      #54                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      14: return
+
+  public void render(net.minecraft.class_332, int, int);
+    Code:
+       0: iload_2
+       1: aload_0
+       2: getfield      #54                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+       5: invokevirtual #63                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.width:()I
+       8: isub
+       9: iconst_2
+      10: idiv
+      11: istore        4
+      13: iload_3
+      14: aload_0
+      15: getfield      #54                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      18: invokevirtual #66                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.height:()I
+      21: isub
+      22: iconst_2
+      23: idiv
+      24: istore        5
+      26: ldc2_w        #67                 // double 256.0d
+      29: aload_0
+      30: getfield      #54                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      33: invokevirtual #63                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.width:()I
+      36: i2f
+      37: ldc           #69                 // float 256.0f
+      39: fdiv
+      40: f2d
+      41: invokestatic  #75                 // Method java/lang/Math.ceil:(D)D
+      44: ldc2_w        #67                 // double 256.0d
+      47: dmul
+      48: invokestatic  #79                 // Method java/lang/Math.max:(DD)D
+      51: d2i
+      52: istore        6
+      54: ldc2_w        #67                 // double 256.0d
+      57: aload_0
+      58: getfield      #54                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      61: invokevirtual #66                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.height:()I
+      64: i2f
+      65: ldc           #69                 // float 256.0f
+      67: fdiv
+      68: f2d
+      69: invokestatic  #75                 // Method java/lang/Math.ceil:(D)D
+      72: ldc2_w        #67                 // double 256.0d
+      75: dmul
+      76: invokestatic  #79                 // Method java/lang/Math.max:(DD)D
+      79: d2i
+      80: istore        7
+      82: iload         6
+      84: iload         7
+      86: invokestatic  #82                 // Method java/lang/Math.max:(II)I
+      89: istore        8
+      91: aload_1
+      92: aload_0
+      93: getfield      #52                 // Field texture:Lnet/minecraft/class_2960;
+      96: iload         4
+      98: iload         5
+     100: fconst_0
+     101: fconst_0
+     102: aload_0
+     103: getfield      #54                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+     106: invokevirtual #63                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.width:()I
+     109: aload_0
+     110: getfield      #54                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+     113: invokevirtual #66                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.height:()I
+     116: iload         8
+     118: iload         8
+     120: invokevirtual #88                 // Method net/minecraft/class_332.method_25290:(Lnet/minecraft/class_2960;IIFFIIII)V
+     123: return
+
+  public final java.lang.String toString();
+    Code:
+       0: aload_0
+       1: invokedynamic #108,  0            // InvokeDynamic #1:toString:(Ltech/thatgravyboat/ironchests/client/ui/TexturedScreenRenderer;)Ljava/lang/String;
+       6: areturn
+
+  public final int hashCode();
+    Code:
+       0: aload_0
+       1: invokedynamic #112,  0            // InvokeDynamic #1:hashCode:(Ltech/thatgravyboat/ironchests/client/ui/TexturedScreenRenderer;)I
+       6: ireturn
+
+  public final boolean equals(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokedynamic #118,  0            // InvokeDynamic #1:equals:(Ltech/thatgravyboat/ironchests/client/ui/TexturedScreenRenderer;Ljava/lang/Object;)Z
+       7: ireturn
+
+  public net.minecraft.class_2960 texture();
+    Code:
+       0: aload_0
+       1: getfield      #52                 // Field texture:Lnet/minecraft/class_2960;
+       4: areturn
+
+  public tech.thatgravyboat.ironchests.api.chesttype.ChestType type();
+    Code:
+       0: aload_0
+       1: getfield      #54                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+       4: areturn
+}

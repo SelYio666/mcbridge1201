@@ -1,0 +1,151 @@
+{
+  "workstream": "B03 third slice: both plain blits plus the nine-slice, on the original jar",
+  "target": "targets/fabric-1.21.4.json",
+  "rules": {
+    "ironchests.draw-nine-sliced-1214": {
+      "old": "method_48587",
+      "bridge": "DrawContextTextureBridge1214"
+    },
+    "ironchests.blit-region-1214": {
+      "old": "method_25290",
+      "bridge": "DrawContextBlitBridge1214"
+    },
+    "ironchests.blit-simple-1214": {
+      "old": "method_25302",
+      "bridge": "DrawContextBlitBridge1214"
+    }
+  },
+  "input": "work/corpus/ironchests/ironchests-5.0.2-fabric.jar",
+  "output": "runs/p254-1214-draw-rules/ironchests-5.0.2-1214-draw.jar",
+  "build": {
+    "rc": 0,
+    "majors": {
+      "65": 4
+    }
+  },
+  "patch": {
+    "rc": 0,
+    "applied": {
+      "ironchests.blit-region-1214": 2,
+      "ironchests.blit-simple-1214": 3,
+      "ironchests.draw-nine-sliced-1214": 1
+    },
+    "classesChanged": 3,
+    "bridgeClasses": [
+      "top/mcbridge1201/bridge/DrawContextBlitBridge1214.class",
+      "top/mcbridge1201/bridge/DrawContextTextureBridge1214.class"
+    ],
+    "logTail": [
+      "  rule ironchests.blit-region-1214 applied 2 time(s)",
+      "  rule ironchests.blit-simple-1214 applied 3 time(s)",
+      "  rule ironchests.draw-nine-sliced-1214 applied 1 time(s)",
+      "  bridges embedded: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214]",
+      "  javac bridges: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214]",
+      "  sha256 cb4d4a2f6470713bedd0d7a3377d7eddba724fdf126d8a71a7e04d38dfd6242a"
+    ]
+  },
+  "bytecode": {
+    "TexturedScreenRenderer": {
+      "oldCallsBefore": {
+        "method_25290": 1
+      },
+      "oldCallsAfter": {},
+      "bridgeCallsAfter": {
+        "DrawContextBlitBridge1214": 1
+      }
+    },
+    "GeneratedScreenRenderer": {
+      "oldCallsBefore": {
+        "method_48587": 1,
+        "method_25302": 3
+      },
+      "oldCallsAfter": {},
+      "bridgeCallsAfter": {
+        "DrawContextTextureBridge1214": 1,
+        "DrawContextBlitBridge1214": 3
+      }
+    }
+  },
+  "nestedJars": {
+    "oldCallsAfter": 0,
+    "bridgePresent": 1,
+    "entries": [
+      {
+        "jar": "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar",
+        "oldCalls": 0,
+        "bridgeRefs": 1
+      }
+    ]
+  },
+  "callSiteBookkeeping": {
+    "appliedTotal": 6,
+    "outerVisible": 5,
+    "nestedVisible": 1
+  },
+  "checks": [
+    {
+      "id": "bridges-compile-at-65",
+      "expect": [
+        65
+      ],
+      "got": [
+        65
+      ],
+      "why": "both target bridges must be loadable by 1.21.4",
+      "passed": true
+    },
+    {
+      "id": "all-three-rules-fired",
+      "expect": {
+        "ironchests.draw-nine-sliced-1214": 1,
+        "ironchests.blit-region-1214": 2,
+        "ironchests.blit-simple-1214": 3
+      },
+      "got": {
+        "ironchests.blit-region-1214": 2,
+        "ironchests.blit-simple-1214": 3,
+        "ironchests.draw-nine-sliced-1214": 1
+      },
+      "why": "nine-slice 1, region blit 2, simple blit 3 - the call sites measured with refs",
+      "passed": true
+    },
+    {
+      "id": "three-classes-changed",
+      "expect": 3,
+      "got": 3,
+      "why": "only the two renderers should move",
+      "passed": true
+    },
+    {
+      "id": "both-bridges-embedded",
+      "expect": 2,
+      "got": 2,
+      "why": "the patched jar carries every class it now calls",
+      "passed": true
+    },
+    {
+      "id": "no-old-call-left",
+      "expect": 0,
+      "got": 0,
+      "why": "a leftover draw call would be a NoSuchMethodError at runtime",
+      "passed": true
+    },
+    {
+      "id": "outer-classes-rewritten",
+      "expect": 5,
+      "got": 5,
+      "why": "the two outer renderers hold 5 of the 6 rewritten call sites",
+      "passed": true
+    },
+    {
+      "id": "nested-jar-rewritten",
+      "expect": true,
+      "got": true,
+      "why": "the six-times-applied rule count includes one call inside ResourcefulLib; the patched nested jar must reference the bridge and no longer the old member",
+      "passed": true
+    }
+  ],
+  "openAssumption": "blitSimple reproduces 1.20.1's 7-argument overload with region = the destination size and texture = 256x256. That is the vanilla forwarding convention, not a measurement; a texture atlas larger than 256 would sample the wrong texels, and only a game run can falsify it.",
+  "passed": true,
+  "scope": "bytecode only: no 1.21.4 runtime was started, so rendering correctness is unverified."
+}

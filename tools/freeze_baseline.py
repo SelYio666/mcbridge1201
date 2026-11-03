@@ -62,6 +62,7 @@ TOOL_FILES = [
     "tools/probe_target_bridges.py",
     "tools/run_1214_first_bridge.py",
     "tools/check_desc_compat.py",
+    "tools/run_1214_draw_rules.py",
     "tools/run_target_gate.py",
     "tools/run_isolation_cache.py",
     "tools/run_source_fixture_probe.py",
