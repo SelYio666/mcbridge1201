@@ -85,16 +85,23 @@ def main() -> int:
     ap.add_argument("--overlay-launcher", action="store_true",
                     help="replace the package's launcher/*.py with the current worktree")
     ap.add_argument("--out", default="clean-host.json")
+    ap.add_argument("--zip", default=None, help="explicit package (default: newest by version)")
     args = ap.parse_args()
 
-    packages = list((ROOT / "dist").glob("mcbridge-launcher-*.zip"))
-    if not packages:
-        print("SKIP: no dist/mcbridge-launcher-*.zip")
-        return 2
-    # natural version order: "0.5.10" must beat "0.5.7" (plain string sort puts it first)
-    import re as _re
-    packages.sort(key=lambda p: [int(x) for x in _re.findall(r"\d+", p.stem)])
-    package = packages[-1]
+    if args.zip:
+        package = Path(args.zip).resolve()
+        if not package.is_file():
+            print("SKIP: --zip does not exist:", package)
+            return 2
+    else:
+        packages = list((ROOT / "dist").glob("mcbridge-launcher-*.zip"))
+        if not packages:
+            print("SKIP: no dist/mcbridge-launcher-*.zip")
+            return 2
+        # natural version order: "0.5.10" must beat "0.5.7" (plain string sort puts it first)
+        import re as _re
+        packages.sort(key=lambda p: [int(x) for x in _re.findall(r"\d+", p.stem)])
+        package = packages[-1]
 
     if WORK.exists():
         shutil.rmtree(WORK)

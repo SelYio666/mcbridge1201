@@ -40,6 +40,8 @@ def main() -> int:
     ap.add_argument("--build", metavar="LABEL", default=None,
                     help="also build dist/mcbridge-launcher-<LABEL>.zip")
     ap.add_argument("--json", default=None)
+    ap.add_argument("--accept", action="store_true",
+                    help="after --build, run the clean-host acceptance on that zip (p208)")
     args = ap.parse_args()
 
     env_note = []
@@ -59,9 +61,15 @@ def main() -> int:
         ("every run README/result is hashed", [PY, "tools/check_manifest_coverage.py"]),
         ("evidence gate (suite + unit tests + encoding)", [PY, "tools/verify_evidence.py"]),
     ]
+    zip_path = None
     if args.build:
         steps.append((f"portable build {args.build}",
                       [PY, "tools/build_portable.py", "--label", args.build]))
+        zip_path = ROOT / "dist" / f"mcbridge-launcher-{args.build}.zip"
+        if args.accept:
+            steps.append((f"clean-host acceptance {zip_path.name}",
+                          [PY, "runs/p208-cross-platform/run_clean_host.py",
+                           "--zip", str(zip_path), "--out", "release-accept.json"]))
 
     results = []
     ok = True
@@ -74,9 +82,7 @@ def main() -> int:
             ok = False
             break
 
-    zip_path = None
     if args.build and ok:
-        zip_path = ROOT / "dist" / f"mcbridge-launcher-{args.build}.zip"
         if zip_path.is_file():
             print(f"   zip {zip_path.name} {zip_path.stat().st_size} bytes")
         else:

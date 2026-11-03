@@ -1321,6 +1321,8 @@ FILES = [
     "tools/release_check.py",
     "runs/p240-release-check/README.md",
     "runs/p240-release-check/result.json",
+    "runs/p241-release-accept/README.md",
+    "runs/p241-release-accept/result.json",
     "runs/p144-immediatelyfast-shader/result.json",
     "runs/p152-stress-off/result.json",
     "runs/p152-stress-on/result.json",
