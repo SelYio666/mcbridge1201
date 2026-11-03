@@ -37,9 +37,11 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
   take→delete 背靠背两条写入都落、按注入顺序、同在 tick 1755（wall 相差 1 ms），
   三个旁观客户端零影响；判据 21/21。延迟是本机用户态代理注入的**合成延迟，不是第二台机器**，
   真跨机因无第二台机器记为 blocked（`runs/p232-same-player-two-ops/` 有就绪方案）。
-- **门禁（2026-11-01 实跑）**：`test_review_fixes` **536/536**（p231 组 34 条 + p232 组 35 条）；
-  `check_hashes` **1655 ok / 0 mismatch / 0 missing**；Java 单测 **32/32**；`verify_evidence`
-  passed（含 `text_encoding`）；CI push 触发可用。
+- **门禁（2026-11-03 实跑）**：`test_review_fixes` **536/536**（p231 组 34 条 + p232 组 35 条）；
+  `check_hashes` **1700 ok / 0 mismatch / 0 missing**；`check_manifest_coverage` **323/323**；
+  Java 单测 **32/32**；`verify_evidence` passed（含 `text_encoding`）；CI push 触发可用。
+- **发版**：`python tools/release_check.py --build <版本>` 一条命令跑完门禁并打
+  `dist/mcbridge-launcher-<版本>.zip`（`runs/p240-release-check/`）。
 - 详情：[FINAL-STATUS](docs/FINAL-STATUS.md)、[报告 p210–p214](docs/report-2026-10-30.md)、
   [报告：接手核验 + p231](docs/report-2026-11-01.md)、
   [剩余工作](docs/remaining-work.md)、[使用说明](docs/guide.md)。

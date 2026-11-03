@@ -1,20 +1,23 @@
-# mcbridge1201 最终状态（更新至 2026-10-31）
+# mcbridge1201 最终状态（更新至 2026-11-03）
 
 > 定位：**Minecraft 版本迁移与运行辅助工具箱**。迁移与验证归本工具，日常启动交给 PCL。
 > 最新发布：[v0.5.10](https://github.com/SelYio666/mcbridge1201/releases/tag/v0.5.10)（网页启动器安装到 PCL2）+ v0.5.9（安装器 HMCL 支持）。
-> 下文第六节之后是按轮次追加的历史更新；**最新结论以下面这一节和 [report-2026-10-30.md](report-2026-10-30.md) 为准**。
+> 下文第六节之后是按轮次追加的历史更新；**最新结论以下面这一节和 [remaining-work.md](remaining-work.md) 为准**。
 
-## 最新状态（2026-11-01）
+## 最新状态（2026-11-03）
 
 - **发布**：v0.5.10（网页启动器「安装到 PCL2」，`runs/p223`；`mcbridge-launcher-0.5.10.zip`）；
   v0.5.9（支持 HMCL，`runs/p222`；`mcbridge-pcl-setup.zip` / `mcbridge-pcl-panel.zip`）；
   v0.5.8（p220 目录修复）；
   v0.5.7 为启动器 UI 打磨；v0.5.6 另含两个 companion jar
   （`shulkerpreview 1.1.0`、`trashcreativefix 1.0.0`）。
-- **CI**：最近 5 次 push 触发全部 `success`。
-- **本机门禁（11-01 实测）**：`verify_evidence` passed；`test_review_fixes` **536/536**；
-  `check_hashes` **1655 ok / 0 mismatch / 0 missing**；单测 **32 / 0 failures**；
-  `check_text_encoding` 全部 Markdown 干净。
+- **CI**：最近 5 次 push 触发全部 `success`；CI 已加“清单必须匹配检出 + 证据覆盖率”两道检查
+  （`runs/p236` 做过负向验证）。
+- **本机门禁（11-03 实测）**：`verify_evidence` passed；`test_review_fixes` **536/536**；
+  `check_hashes` **1700 ok / 0 mismatch / 0 missing**；`check_manifest_coverage` **323/323**；
+  单测 **32 / 0 failures**；`check_text_encoding` 全部 Markdown 干净。
+- **发版**：`python tools/release_check.py --build <版本>` 一条命令跑完上述门禁并打
+  `dist/mcbridge-launcher-<版本>.zip`（`runs/p240-release-check/`）。
 - **真机闭环**：
   - PCL2 **2.99.0.0** 上面板真的点“安装”：10.3 s，版本列表出现新版本（p212）；
   - 从 PCL2 **离线启动** 1.20.4（p213）与 **1.21.1**（p214）→ 标题界面 → 点进世界；
