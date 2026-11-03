@@ -171,15 +171,58 @@ python tools\conversion_cache.py lookup ...
 `bridges.sha256: f1778096… -> 407e87e6…` 这类原因。**`patch` 尚未读写缓存**——本轮交付的是
 键与记录的契约，接进 `patch` 是后续工作，不宣称"转换已带缓存"。
 
-## 5. 本阶段没有做的事
+## 5. A05：来源端固定 fixture
 
-- 没有新增目标：`targets/` 只有 `fabric-1.21.1.json`；1.20.4 探针（A06）未做。
-- 没有跑 Java 17/25 的真实桥编译：`--release` 与 class major 校验已就位，但 17 档被"stub 版本更高"
-  挡住、25 档被"javac 版本不足"挡住——那是两条**拒绝路径**，不是支持。
+真实样本都是别人的制品，改转换器时无法确定输入形态。`fixtures/source-fabric-1.20.1/` 是自建的
+1.20.1 Fabric 源，**编译一次、按 hash 固定**，每个目标转换同一份字节：
+
+```powershell
+python tools\build_source_fixture.py
+```
+
+| 覆盖 | 载体 |
+|---|---|
+| 注册 + `new Identifier(ns,path)` 构造器 | `FixtureRegistry` |
+| ItemStack NBT 读取（1.20.5 的 `WrapperLookup` 断裂点） | `FixtureData` |
+| Screen 渲染钩子（1.21.6 的提取/绘制拆分） | `FixtureScreen` |
+| `@Inject` 到真实 intermediary 成员的四参回调 | `mixin/FixtureMixin` |
+| lambda／方法引用／字符串拼接／stream（indy） | `FixtureIndy` |
+
+产物 6 个 class 全部 major 61，jar 由 `fixtures/source-fabric-1.20.1/manifest.json` 按 SHA-256 定位，
+`.gitignore` 只让源码与 manifest 入库。对 1.20.1 自身索引静态自检 `missingClass=0 /
+missingMember=0 / descMismatch=0`。
+
+**运行基线 pending**：本机没有 1.20.1 Fabric 实例，"来源原生环境通过"这条没有做。
+
+## 6. A06：1.20.4 架构探针
+
+`targets/fabric-1.20.4.json`（`status: probe_only`）把 1.20.4 环境 pin 下来：client jar、
+intermediary、由本项目 `remap-jar` 生成的 stub（7787 class，全部 major 61）、loader 0.15.11、
+fabric api 0.97.3。它**故意没有规则包**，所以门禁拒绝用它转换任何东西。
+
+三条实测结论：
+
+1. **目标切换有防线**：`profile-check` 报 `pipeline.rule-order-empty`；把 1.21.1 规则指过去再叠加
+   `rules.target-mismatch`。不是靠别名蒙混。
+2. **静态断裂为 0，但不等于能跑**：fixture 对 1.20.4 索引 `missingClass=0 / missingMember=0 /
+   descMismatch=0`——intermediary 名在这段区间对 fixture 覆盖的 API 稳定。1.20.4 的真实风险是
+   1.20.2 引入的 configuration 网络阶段、注册时机与渲染管线，**字节码引用层面看不出来**。
+   因此本轮只记录"静态无断裂"。
+3. **桥是目标资产**：`build_bridges.py --profile targets/fabric-1.20.4.json` 产出 103 个编译错误、
+   0 个 class。1.21.1 的桥源码不能复用给 1.20.4，每个目标需要自己的桥。
+
+**未验证**：没有启动 1.20.4 客户端/服务端，构造器/注册/容器/收发包/GUI 五项只做到静态定位。
+
+## 7. 本阶段没有做的事
+
+- 没有把任何目标标记为"已支持"：`targets/` 里 1.20.4 只有 `probe_only`，且没有规则包。
+- 没有跑 Java 25 的真实桥编译：`--release` 与 class major 校验已就位，但 25 档被
+  "javac 版本不足"挡住——那是**拒绝路径**，不是支持。
 - 没有把缓存接进 `patch`（见 §4）。
 - 没有重新执行任何游戏侧契约；`profiles/` 里的状态来自冻结之前的轮次。
+- 没有 1.20.1 / 1.20.4 的运行时基线，也没有 configuration 阶段的任何验证。
 
-## 6. 现状与缺口
+## 8. 现状与缺口
 
 `manifests/baseline.lock.json` 生成时的状态以文件内 `git` 与 `evidence` 两节为准。
 已知未完成项（需要第二台机器或真实客户端）与之前轮次一致，见

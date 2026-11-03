@@ -29,3 +29,6 @@ runs/p210-cloth-config/attempt1-field-only/
 
 # 本地 Gradle/JDK 缓存（不是交付物）
 .toolchain/
+
+# fixture build output: pinned by hash in fixtures/*/manifest.json, never committed
+fixtures/**/out/

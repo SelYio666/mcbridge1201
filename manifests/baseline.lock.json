@@ -1,28 +1,39 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T20:01:17+08:00",
+  "generatedAt": "2026-11-03T20:15:51+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "d71a900c1040c6bdd5657ed9d5e76e55bc387b05",
+    "commit": "de36c5a6f7ee93c70869c8ba51bf29359f267454",
     "branch": "master",
     "dirty": true,
     "modifiedFiles": [
+      ".gitignore",
       "README.md",
       "docs/multi-target-baseline.md",
-      "java/src/main/java/top/mcbridge1201/profile/TargetProfile.java",
+      "fixtures/source-fabric-1.20.1/manifest.json",
+      "fixtures/source-fabric-1.20.1/resources/fabric.mod.json",
+      "fixtures/source-fabric-1.20.1/resources/mcbfixture.mixins.json",
+      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureData.java",
+      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureIndy.java",
+      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureMod.java",
+      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureRegistry.java",
+      "fixtures/source-fabric-1.20.1/src/mcbfixture/FixtureScreen.java",
+      "fixtures/source-fabric-1.20.1/src/mcbfixture/mixin/FixtureMixin.java",
       "manifests/baseline.lock.json",
       "runs/SHA256SUMS.txt",
-      "runs/p243-target-profile-gate/README.md",
-      "runs/p245-target-isolation-cache/README.md",
-      "runs/p245-target-isolation-cache/result.json",
-      "targets/fabric-1.21.1.json",
-      "tools/build_bridges.py",
-      "tools/conversion_cache.py",
+      "runs/p246-source-fixture-1204/README.md",
+      "runs/p246-source-fixture-1204/profile-check-1.20.4-with-1211-rules.json",
+      "runs/p246-source-fixture-1204/profile-check-1.20.4.json",
+      "runs/p246-source-fixture-1204/result.json",
+      "runs/p246-source-fixture-1204/static-1.20.1.json",
+      "runs/p246-source-fixture-1204/static-1.20.4.json",
+      "targets/fabric-1.20.4.json",
+      "tools/build_source_fixture.py",
+      "tools/freeze_baseline.py",
       "tools/hash_evidence.py",
-      "tools/run_isolation_cache.py",
-      "tools/run_target_gate.py"
+      "tools/run_source_fixture_probe.py"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -584,9 +595,9 @@
       }
     },
     "tools": {
-      "count": 11,
-      "present": 11,
-      "packageSha256": "c44758aa1ed7537a661d8c9d0b0c72a30f663b37e14973466876d82153b00b7b",
+      "count": 16,
+      "present": 16,
+      "packageSha256": "0b7102e268b8ee0291abd872d3a24209367106d2eca2b7ef06ca957576f00f34",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -610,8 +621,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "86423871578e22baea86bc2026b76f8dd09a6b0c21f73ce1c472296185a8524f",
-          "size": 87155
+          "sha256": "95cecb1952473821e5c01b6e34476895dbb3653cf4cb10dc9971688b97679227",
+          "size": 88227
         },
         {
           "path": "tools/release_check.py",
@@ -622,6 +633,31 @@
           "path": "tools/build_bridges.py",
           "sha256": "68dab9c462f0416f25d5501338cfe7f00ab38e3c281f05267cb72145bf19f69e",
           "size": 13686
+        },
+        {
+          "path": "tools/conversion_cache.py",
+          "sha256": "57759caf2c26a8f5699feb64a279c84720a968470bf9db833fc567223a361ca7",
+          "size": 11446
+        },
+        {
+          "path": "tools/build_source_fixture.py",
+          "sha256": "783ac33fbdfbd0f9539ed53deb566c0ff4393d9d9a64d2b414ce286b5556338a",
+          "size": 10112
+        },
+        {
+          "path": "tools/run_target_gate.py",
+          "sha256": "04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6",
+          "size": 10540
+        },
+        {
+          "path": "tools/run_isolation_cache.py",
+          "sha256": "c2f54b621e4ad9293cb1896bea2ea06026db4790cc98e9a838691db433f0fa80",
+          "size": 12753
+        },
+        {
+          "path": "tools/run_source_fixture_probe.py",
+          "sha256": "078e132ffac04413d98729d3257996363c94cca4f0670c0f445de7c9c662d736",
+          "size": 13635
         },
         {
           "path": "tools/run_contract.py",
@@ -640,8 +676,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "214f94c9e70ab8b04a71f77b09275ae7f2fe32e27f8859c75f988c937ea8b64b",
-          "size": 17731
+          "sha256": "fb91d38d20cad7f2340f07f012b39a171cb9aedc5db3258436d6ea16d39452fb",
+          "size": 17910
         }
       ]
     },
@@ -669,8 +705,20 @@
     }
   },
   "targetProfiles": {
-    "count": 1,
+    "count": 2,
     "profiles": [
+      {
+        "path": "targets/fabric-1.20.4.json",
+        "sha256": "9cf5405303c38acef4f50ea6756fbec83bf892f4c95b7635b5b331151f9ec0ca",
+        "profileId": "fabric-1.20.4",
+        "targetId": "fabric-1.20.4",
+        "minecraft": "1.20.4",
+        "loader": "fabric",
+        "javaMajor": 17,
+        "namespace": "intermediary",
+        "bridgeAbi": "mcbridge-bridge-1",
+        "ruleOrderEntries": 0
+      },
       {
         "path": "targets/fabric-1.21.1.json",
         "sha256": "8c9ab369fe0a2f32b6941eadedd91b33a8de7fdecb7f347da6c69eaba9d4b3f1",
@@ -796,7 +844,7 @@
       },
       {
         "path": "docs/multi-target-baseline.md",
-        "sha256": "348bbcabff05250d3b18e222e43307eaeb19a6bcbe6051be5a3492bd4574c626"
+        "sha256": "37615e2e30afe1b2c21a280ab79dd62028d3ecdc15d8fd9094bde3cb68874197"
       }
     ]
   },
@@ -808,15 +856,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1731 mismatch=0 missing=0"
+          "ok=1749 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 335",
-          "hashed evidence files: 335",
+          "required evidence files: 337",
+          "hashed evidence files: 337",
           "coverage OK"
         ]
       },
@@ -826,7 +874,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 277 markdown file(s): 277 clean, 0 finding(s)"
+          "checked 278 markdown file(s): 278 clean, 0 finding(s)"
         ]
       },
       {

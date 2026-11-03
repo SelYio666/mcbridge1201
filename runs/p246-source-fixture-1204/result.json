@@ -1,0 +1,204 @@
+{
+  "workstreams": [
+    "A05 source-side fixture",
+    "A06 1.20.4 architecture probe"
+  ],
+  "fixture": "fixtures/source-fabric-1.20.1",
+  "profile1204": "targets/fabric-1.20.4.json",
+  "javaHome": "C:\\Users\\27682\\Documents\\新建文件夹\\.toolchain\\jdk",
+  "cases": [
+    {
+      "id": "a05-fixture-pinned",
+      "goal": "the fixture jar exists and matches the hash recorded in its manifest",
+      "expect": {
+        "ok": true
+      },
+      "rc": 0,
+      "jar": "fixtures/source-fabric-1.20.1/out/mcbfixture-1.0.0.jar",
+      "sha256": "1f210e26c471a2611db8e13b5bd77f590c2b4f3d53aef6a5e96c5607a636e18b",
+      "manifestSha256": "1f210e26c471a2611db8e13b5bd77f590c2b4f3d53aef6a5e96c5607a636e18b",
+      "size": 4514,
+      "majors": {
+        "61": 6
+      },
+      "ok": true,
+      "passed": true
+    },
+    {
+      "id": "a05-shapes-present",
+      "goal": "each claimed bytecode shape is present in the fixture's constant pools",
+      "expect": {
+        "allPresent": true
+      },
+      "rc": 0,
+      "shapes": {
+        "registration": {
+          "class": "mcbfixture/FixtureRegistry.class",
+          "missing": []
+        },
+        "constructor": {
+          "class": "mcbfixture/FixtureRegistry.class",
+          "missing": []
+        },
+        "item-nbt": {
+          "class": "mcbfixture/FixtureData.class",
+          "missing": []
+        },
+        "gui-render-hook": {
+          "class": "mcbfixture/FixtureScreen.class",
+          "missing": []
+        },
+        "mixin-inject": {
+          "class": "mcbfixture/mixin/FixtureMixin.class",
+          "missing": []
+        },
+        "indy": {
+          "class": "mcbfixture/FixtureIndy.class",
+          "missing": []
+        }
+      },
+      "allPresent": true,
+      "passed": true
+    },
+    {
+      "id": "a05-static-clean-on-source",
+      "goal": "the fixture has no static damage against its own 1.20.1 target",
+      "expect": {
+        "rc": 0,
+        "missingClass": 0,
+        "missingMember": 0
+      },
+      "rc": 0,
+      "counts": {
+        "missingClass": 0,
+        "missingMember": 0,
+        "descMismatch": 0,
+        "missingApiClass": 0,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 0,
+        "mixins": 1,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 1,
+        "mixinAtTargets": 0,
+        "mixinAtOrdinals": 0,
+        "mixinInjectionsUnresolved": 0,
+        "missingConfirmedInSource": 0,
+        "externalPackages": 1
+      },
+      "missingClass": 0,
+      "missingMember": 0,
+      "tail": [
+        "mcbfixture-1.0.0.jar                       needs_dependency missingClass=0    missingMember=0    mismatch=0   apiMissing=0   external=1  ",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p246-source-fixture-1204\\static-1.20.1.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a06-stub-is-java17",
+      "goal": "the 1.20.4 compile stub carries Java 17 class files (major 61)",
+      "expect": {
+        "rc": 0,
+        "onlyMajor": 61
+      },
+      "rc": 0,
+      "stub": "work/target/client-1.20.4-intermediary.jar",
+      "majors": {
+        "61": 7787
+      },
+      "classes": 7787,
+      "passed": true
+    },
+    {
+      "id": "a06-no-rule-package-refused",
+      "goal": "a target with no rule package is refused instead of silently converting nothing",
+      "expect": {
+        "rc": 3,
+        "code": "pipeline.rule-order-empty"
+      },
+      "rc": 3,
+      "errorCodes": [
+        "pipeline.rule-order-empty"
+      ],
+      "tail": [
+        "checked 0 rule file(s), 0 bridge dir(s); errors=1 warnings=0 -> FAIL",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p246-source-fixture-1204\\profile-check-1.20.4.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a06-wrong-target-rules-refused",
+      "goal": "a 1.21.1 rule package cannot be aimed at the 1.20.4 profile",
+      "expect": {
+        "rc": 3,
+        "code": "rules.target-mismatch"
+      },
+      "rc": 3,
+      "errorCodes": [
+        "pipeline.rule-order-empty",
+        "rules.target-mismatch"
+      ],
+      "tail": [
+        "checked 1 rule file(s), 0 bridge dir(s); errors=2 warnings=0 -> FAIL",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p246-source-fixture-1204\\profile-check-1.20.4-with-1211-rules.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a06-break-map",
+      "goal": "the 1.20.1 fixture is statically diffed against the 1.20.4 index and the breakage is listed",
+      "expect": {
+        "rc": 0
+      },
+      "rc": 0,
+      "counts": {
+        "missingClass": 0,
+        "missingMember": 0,
+        "descMismatch": 0,
+        "missingApiClass": 0,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 0,
+        "mixins": 1,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 1,
+        "mixinAtTargets": 0,
+        "mixinAtOrdinals": 0,
+        "mixinInjectionsUnresolved": 0,
+        "missingConfirmedInSource": 0,
+        "externalPackages": 1
+      },
+      "missing": {
+        "missingClass": [],
+        "missingMember": [],
+        "descMismatch": [],
+        "missingApiClass": []
+      },
+      "tail": [
+        "mcbfixture-1.0.0.jar                       needs_dependency missingClass=0    missingMember=0    mismatch=0   apiMissing=0   external=1  ",
+        "wrote C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p246-source-fixture-1204\\static-1.20.4.json"
+      ],
+      "passed": true
+    },
+    {
+      "id": "a06-bridges-are-target-specific",
+      "goal": "the 1.21.1 bridge sources do not compile for 1.20.4 (they are a target asset, not a generic one)",
+      "expect": {
+        "rc_nonzero": true
+      },
+      "rc": 1,
+      "compileErrorsSeen": 103,
+      "tail": [
+        "注: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。",
+        "注: 某些消息已经过简化; 请使用 -Xdiags:verbose 重新编译以获得完整输出",
+        "100 个错误",
+        "仅显示前 100 个错误（共 184 个）；若要查看更多错误，请使用 -Xmaxerrs"
+      ],
+      "bridgesProduced": 0,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "failed": [],
+  "scope": "static/build only. No game was launched: the fixture's source-side runtime baseline is pending, not passed, and no 1.20.4 runtime probe was executed."
+}

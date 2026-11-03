@@ -69,6 +69,8 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
 | **基线冻结（A01）** | `manifests/baseline.lock.json`：29 个规则文件、65 个源码、目标索引、逐制品证据状态与显式降级按 SHA-256 固定；`--check` 逐叶子复算漂移 | `tools/freeze_baseline.py`、[docs/multi-target-baseline.md](docs/multi-target-baseline.md) |
 | **按目标隔离的桥构建（A03）** | `build_bridges.py --profile`：stub / `--release` / 12 项 classpath / 输出目录来自目标身份；目标 Java 不可达、stub 哈希不符、stub 版本高于目标、桥 ABI 不符、产物 class major 不符都拒绝；旧 `--stub/--lib/--out` 入口不变（41 个 class 全 major 65） | `runs/p245-target-isolation-cache/` |
 | **缓存键与陈旧桥防护（A04）** | `conversion_cache.py key/store/lookup`：键覆盖 ABI、目标身份、源 jar、索引、规则顺序、桥字节、引擎提交与配置；未命中时逐组件说明原因；同名不同字节的桥由 `check_bridge_consistency.py` 判为冲突（`patch` 尚未读写缓存） | `runs/p245-target-isolation-cache/` |
+| **来源端固定 fixture（A05）** | `fixtures/source-fabric-1.20.1/`：注册/构造器/NBT/GUI 钩子/Mixin 注入/indy 六类形态，编译一次 6 个 class 全 major 61，jar 按 SHA-256 定位，`.gitignore` 只让源码与 manifest 入库；对 1.20.1 自身索引静态 0 损伤（运行基线 pending） | `runs/p246-source-fixture-1204/` |
+| **1.20.4 架构探针（A06）** | `targets/fabric-1.20.4.json`（`probe_only`）pin 住 1.20.4 环境与 7787 class 的 Java 17 stub；无规则包被 `pipeline.rule-order-empty` 拒绝、错规则被 `rules.target-mismatch` 拒绝；fixture 对 1.20.4 静态断裂为 0（**不等于能跑**）；1.21.1 桥源码对 1.20.4 编译出 103 错误 | `runs/p246-source-fixture-1204/` |
 | 支持矩阵 | 10 份样本的静态结果 + 运行时阶段（未运行 ≠ 通过） | [docs/support-matrix.md](docs/support-matrix.md) |
 | 签名适配规则 | BlockEntity NBT 1 参 → 2 参（带 WrapperLookup），持久化恢复 | `rules/fabric-1.21.1/container.json` §signatureAdaptations |
 | **调用点签名适配** | `callSiteAdaptations` + javac 桥；lithium `class_14.method_59` 命中 2 处，`NoSuchMethodError` 消失 | [docs/baseline.md](docs/baseline.md) §7.17、`runs/p10-lithium-signature/` |
