@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "joined": true,
+    "foreground": true,
+    "mouse_grabbed": false,
+    "chat_opens": true,
+    "chat_closes": true
+  },
+  "passed": true,
+  "required": [
+    "joined",
+    "foreground",
+    "chat_opens",
+    "chat_closes"
+  ],
+  "diffs": {
+    "chat_bottom": 10.41,
+    "closed_bottom": 1.46
+  },
+  "note": "mouse_grabbed is expected to stay false: synthetic clicks do not engage the GLFW cursor grab here, so inventory/pause keys (handled in handleKeybinds under the grabbed state) are out of scope."
+}
