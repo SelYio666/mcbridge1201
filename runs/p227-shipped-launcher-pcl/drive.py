@@ -19,9 +19,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 RUN = Path(__file__).resolve().parent
-DIST = ROOT / "dist" / "mcbridge-launcher-0.5.10.zip"
-PKG = ROOT / "work" / "tmp" / "p227-pkg"
-PORT = 8772
+DIST = Path(os.environ.get("P227_ZIP", str(ROOT / "dist" / "mcbridge-launcher-0.5.10.zip")))
+PKG = Path(os.environ.get("P227_PKG", str(ROOT / "work" / "tmp" / "p227-pkg")))
+PORT = int(os.environ.get("P227_PORT", "8772"))
+OUT = Path(os.environ.get("P227_OUT", str(ROOT / "runs" / "p227-shipped-launcher-pcl")))
 EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 if not EDGE.exists():
     EDGE = Path(r"C:\Program Files\Microsoft\Edge\Application\msedge.exe")
@@ -168,10 +169,10 @@ def main() -> int:
         shot = ws.call("Page.captureScreenshot", {"format": "png"})
         data = shot.get("result", {}).get("data")
         if data:
-            (RUN / "packaged-after-import.png").write_bytes(base64.b64decode(data))
+            (OUT / "packaged-after-import.png").write_bytes(base64.b64decode(data))
         out = {"package": DIST.name, "api_status_root": status and status.get("root"),
                "api_pcl": pcl, "ui": val}
-        (RUN / "packaged-result.json").write_text(json.dumps(out, ensure_ascii=False, indent=2),
+        (OUT / "packaged-result.json").write_text(json.dumps(out, ensure_ascii=False, indent=2),
                                                  encoding="utf-8")
         ok = ("已装进 PCL2" in str(val.get("msg", ""))
               and bool(pcl.get("dir")))

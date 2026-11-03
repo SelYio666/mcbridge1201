@@ -23,10 +23,13 @@ ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
 
 
-def run(name: str, args: list[str], timeout: int = 1800) -> dict:
+def run(name: str, args: list[str], timeout: int = 1800, env: dict | None = None) -> dict:
     start = time.time()
+    full_env = dict(os.environ)
+    if env:
+        full_env.update(env)
     proc = subprocess.run(args, cwd=str(ROOT), capture_output=True, text=True,
-                          encoding="utf-8", errors="replace", timeout=timeout)
+                          encoding="utf-8", errors="replace", timeout=timeout, env=full_env)
     tail = [line for line in (proc.stdout or "").splitlines() if line.strip()][-3:]
     return {"name": name, "args": args, "rc": proc.returncode,
             "tail": tail, "seconds": round(time.time() - start, 1)}
@@ -42,6 +45,8 @@ def main() -> int:
     ap.add_argument("--json", default=None)
     ap.add_argument("--accept", action="store_true",
                     help="after --build, run the clean-host acceptance on that zip (p208)")
+    ap.add_argument("--ui-accept", action="store_true",
+                    help="after --build, also drive the packaged web UI (p227)")
     args = ap.parse_args()
 
     env_note = []
@@ -71,11 +76,23 @@ def main() -> int:
                           [PY, "runs/p208-cross-platform/run_clean_host.py",
                            "--zip", str(zip_path), "--out", "release-accept.json"]))
 
+    step_env: dict = {}
+    if args.build and args.ui_accept:
+        ui_out = ROOT / "work" / "tmp" / f"release-ui-{args.build}"
+        step_env["ui"] = {"P227_ZIP": str(zip_path), "P227_OUT": str(ui_out),
+                          "P227_PORT": "8773"}
+        steps.append((f"packaged UI acceptance {zip_path.name}",
+                      [PY, "runs/p227-shipped-launcher-pcl/drive.py"]))
+
     results = []
     ok = True
     for name, cmd in steps:
         print(f"== {name}", flush=True)
-        r = run(name, cmd)
+        env = None
+        if name.startswith("packaged UI acceptance"):
+            ui_out.mkdir(parents=True, exist_ok=True)
+            env = step_env["ui"]
+        r = run(name, cmd, env=env)
         results.append(r)
         print("   rc", r["rc"], "|", " / ".join(r["tail"])[:200], flush=True)
         if r["rc"] != 0:
