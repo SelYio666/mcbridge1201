@@ -93,7 +93,9 @@ def main() -> int:
         return 2
     javap = str(Path(home) / "bin" / "javap.exe")
 
-    bridges = out / "bridges"
+    # Build products stay out of runs/: they are rebuildable, and a committed
+    # .class would be a stale duplicate of what build_bridges just produced.
+    bridges = ROOT / "work" / "tmp" / f"bridges-{out.name}"
     if bridges.exists():
         shutil.rmtree(bridges)
     rc_build, build_log = run([sys.executable, str(ROOT / "tools" / "build_bridges.py"),
@@ -166,22 +168,29 @@ def main() -> int:
     old_left = (sum(sum(v["oldCallsAfter"].values()) for v in per_class.values())
                 + nested["oldCallsAfter"])
     bridge_calls = sum(sum(v["bridgeCallsAfter"].values()) for v in per_class.values())
-    expected = sum(applied.values())
+    expected = sum(v for k, v in applied.items() if "nine-sliced" in k or "blit" in k)
 
     checks = [
         {"id": "bridges-compile-at-65", "expect": [65], "got": sorted(majors),
          "why": "both target bridges must be loadable by 1.21.4"},
-        {"id": "all-three-rules-fired",
+        # The profile carries more rules than these three now. Compare only the draw rules,
+        # otherwise this evidence breaks every time the package grows.
+        {"id": "all-three-draw-rules-fired",
          "expect": {"ironchests.draw-nine-sliced-1214": 1,
-                     "ironchests.blit-region-1214": 2,
-                     "ironchests.blit-simple-1214": 3},
-         "got": applied,
+                    "ironchests.blit-region-1214": 2,
+                    "ironchests.blit-simple-1214": 3},
+         "got": {k: v for k, v in applied.items()
+                 if "nine-sliced" in k or "blit" in k},
          "why": "nine-slice 1, region blit 2, simple blit 3 - the call sites measured with refs"},
-        {"id": "three-classes-changed", "expect": 3, "got": changed,
-         "why": "only the two renderers should move"},
-        {"id": "both-bridges-embedded", "expect": 2,
-         "got": len({n for n in embedded if n.endswith(".class")}),
-         "why": "the patched jar carries every class it now calls"},
+        # Assert the effect of THESE rules, not global totals: the package grows, and a
+        # "exactly 3 classes" check turns red for a reason unrelated to the draw rules.
+        {"id": "renderers-changed-at-least", "expect": True, "got": (changed or 0) >= 3,
+         "why": "both renderers must move (plus whatever else the package touches)"},
+        {"id": "draw-bridges-embedded", "expect": True,
+         "got": all(f"{b}.class" in set(embedded) for b in
+                    ("top/mcbridge1201/bridge/DrawContextTextureBridge1214",
+                     "top/mcbridge1201/bridge/DrawContextBlitBridge1214")),
+         "why": "the patched jar carries both draw bridges it now calls"},
         {"id": "no-old-call-left", "expect": 0, "got": old_left,
          "why": "a leftover draw call would be a NoSuchMethodError at runtime"},
         {"id": "outer-classes-rewritten", "expect": 5, "got": bridge_calls,

@@ -206,7 +206,9 @@ def main() -> int:
         print("need a JDK and the built CLI", file=sys.stderr)
         return 2
 
-    bridges = out / "bridges"
+    # Build products stay out of runs/: they are rebuildable, and a committed
+    # .class would be a stale duplicate of what build_bridges just produced.
+    bridges = ROOT / "work" / "tmp" / f"bridges-{out.name}"
     if bridges.exists():
         shutil.rmtree(bridges)
     rc_build, _ = run([sys.executable, str(ROOT / "tools" / "build_bridges.py"),

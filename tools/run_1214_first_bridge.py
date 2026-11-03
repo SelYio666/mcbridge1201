@@ -88,7 +88,9 @@ def main() -> int:
     javap = Path(home) / "bin" / "javap.exe"
 
     # 1) compile the target-specific bridge
-    bridges = out / "bridges"
+    # Build products stay out of runs/: they are rebuildable, and a committed
+    # .class would be a stale duplicate of what build_bridges just produced.
+    bridges = ROOT / "work" / "tmp" / f"bridges-{out.name}"
     if bridges.exists():
         shutil.rmtree(bridges)
     rc_build, build_log = run([sys.executable, str(ROOT / "tools" / "build_bridges.py"),

@@ -8,12 +8,12 @@
   "build": {
     "rc": 0,
     "majors": {
-      "65": 3
+      "65": 5
     },
     "logTail": [
-      "embedded legacy shim -> C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-zcode\\runs\\p252-1214-first-bridge\\bridges\\net\\fabricmc\\fabric\\api\\networking\\v1\\ServerPlayNetworking$PlayChannelHandler.class",
-      "bridge class major: 3 class(es) at major 65",
-      "target output: runs\\p252-1214-first-bridge\\bridges (profile fabric-1.21.4)"
+      "embedded legacy shim -> C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-zcode\\work\\tmp\\bridges-p252-1214-first-bridge\\net\\fabricmc\\fabric\\api\\networking\\v1\\ServerPlayNetworking$PlayChannelHandler.class",
+      "bridge class major: 5 class(es) at major 65",
+      "target output: work\\tmp\\bridges-p252-1214-first-bridge (profile fabric-1.21.4)"
     ]
   },
   "patch": {
@@ -24,11 +24,11 @@
     },
     "bridgeEmbedded": true,
     "logTail": [
-      "patched ironchests-5.0.2-fabric.jar -> ironchests-5.0.2-1214.jar (classes changed=1)",
+      "  rule ironchests.blit-simple-1214 applied 3 time(s)",
       "  rule ironchests.draw-nine-sliced-1214 applied 1 time(s)",
-      "  bridges embedded: [top/mcbridge1201/bridge/DrawContextTextureBridge1214]",
-      "  javac bridges: [top/mcbridge1201/bridge/DrawContextTextureBridge1214]",
-      "  sha256 6179d0dd32988ecd2b20baaaf98a7079d539a089d802d5c4143f3c1ff7b99792"
+      "  bridges embedded: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  javac bridges: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  sha256 61a0382a2a44bc7b456a9f987d36495372bf25ab3c161422e4db1e608caca652"
     ]
   },
   "callsite": {

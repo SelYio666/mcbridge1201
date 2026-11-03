@@ -32,3 +32,6 @@ runs/p210-cloth-config/attempt1-field-only/
 
 # fixture build output: pinned by hash in fixtures/*/manifest.json, never committed
 fixtures/**/out/
+
+# compiled bridge output produced while collecting evidence (rebuildable)
+runs/**/*.class

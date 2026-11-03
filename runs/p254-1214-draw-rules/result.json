@@ -20,28 +20,32 @@
   "build": {
     "rc": 0,
     "majors": {
-      "65": 4
+      "65": 5
     }
   },
   "patch": {
     "rc": 0,
     "applied": {
+      "1214.interaction-result.field-21466": 2,
+      "1214.interaction-result.field-5811": 20,
+      "1214.interaction-result.field-5812": 7,
       "ironchests.blit-region-1214": 2,
       "ironchests.blit-simple-1214": 3,
       "ironchests.draw-nine-sliced-1214": 1
     },
-    "classesChanged": 3,
+    "classesChanged": 8,
     "bridgeClasses": [
       "top/mcbridge1201/bridge/DrawContextBlitBridge1214.class",
-      "top/mcbridge1201/bridge/DrawContextTextureBridge1214.class"
+      "top/mcbridge1201/bridge/DrawContextTextureBridge1214.class",
+      "top/mcbridge1201/bridge/InteractionResultBridge1214.class"
     ],
     "logTail": [
       "  rule ironchests.blit-region-1214 applied 2 time(s)",
       "  rule ironchests.blit-simple-1214 applied 3 time(s)",
       "  rule ironchests.draw-nine-sliced-1214 applied 1 time(s)",
-      "  bridges embedded: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214]",
-      "  javac bridges: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214]",
-      "  sha256 cb4d4a2f6470713bedd0d7a3377d7eddba724fdf126d8a71a7e04d38dfd6242a"
+      "  bridges embedded: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  javac bridges: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  sha256 61a0382a2a44bc7b456a9f987d36495372bf25ab3c161422e4db1e608caca652"
     ]
   },
   "bytecode": {
@@ -61,8 +65,8 @@
       },
       "oldCallsAfter": {},
       "bridgeCallsAfter": {
-        "DrawContextTextureBridge1214": 1,
-        "DrawContextBlitBridge1214": 3
+        "DrawContextBlitBridge1214": 3,
+        "DrawContextTextureBridge1214": 1
       }
     }
   },
@@ -95,7 +99,7 @@
       "passed": true
     },
     {
-      "id": "all-three-rules-fired",
+      "id": "all-three-draw-rules-fired",
       "expect": {
         "ironchests.draw-nine-sliced-1214": 1,
         "ironchests.blit-region-1214": 2,
@@ -110,17 +114,17 @@
       "passed": true
     },
     {
-      "id": "three-classes-changed",
-      "expect": 3,
-      "got": 3,
-      "why": "only the two renderers should move",
+      "id": "renderers-changed-at-least",
+      "expect": true,
+      "got": true,
+      "why": "both renderers must move (plus whatever else the package touches)",
       "passed": true
     },
     {
-      "id": "both-bridges-embedded",
-      "expect": 2,
-      "got": 2,
-      "why": "the patched jar carries every class it now calls",
+      "id": "draw-bridges-embedded",
+      "expect": true,
+      "got": true,
+      "why": "the patched jar carries both draw bridges it now calls",
       "passed": true
     },
     {

@@ -90,7 +90,7 @@ public final class tech.thatgravyboat.ironchests.client.ui.GeneratedScreenRender
      131: iconst_0
      132: bipush        18
      134: bipush        18
-     136: invokevirtual #65                 // Method net/minecraft/class_332.method_25302:(Lnet/minecraft/class_2960;IIIIII)V
+     136: invokestatic  #65                 // Method top/mcbridge1201/bridge/DrawContextBlitBridge1214.blitSimple:(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIII)V
      139: iinc          7, 1
      142: goto          87
      145: iinc          6, 1
@@ -139,7 +139,7 @@ public final class tech.thatgravyboat.ironchests.client.ui.GeneratedScreenRender
      221: iconst_0
      222: bipush        18
      224: bipush        18
-     226: invokevirtual #65                 // Method net/minecraft/class_332.method_25302:(Lnet/minecraft/class_2960;IIIIII)V
+     226: invokestatic  #65                 // Method top/mcbridge1201/bridge/DrawContextBlitBridge1214.blitSimple:(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIII)V
      229: iinc          8, 1
      232: goto          179
      235: iinc          7, 1
@@ -169,7 +169,7 @@ public final class tech.thatgravyboat.ironchests.client.ui.GeneratedScreenRender
      281: iconst_0
      282: bipush        18
      284: bipush        18
-     286: invokevirtual #65                 // Method net/minecraft/class_332.method_25302:(Lnet/minecraft/class_2960;IIIIII)V
+     286: invokestatic  #65                 // Method top/mcbridge1201/bridge/DrawContextBlitBridge1214.blitSimple:(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIII)V
      289: iinc          7, 1
      292: goto          244
      295: return
