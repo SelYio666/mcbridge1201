@@ -38,7 +38,7 @@ Minecraft Java 1.20.1 模组跨版本兼容平台的第一阶段工作区。来�
   三个旁观客户端零影响；判据 21/21。延迟是本机用户态代理注入的**合成延迟，不是第二台机器**，
   真跨机因无第二台机器记为 blocked（`runs/p232-same-player-two-ops/` 有就绪方案）。
 - **门禁（2026-11-03 实跑）**：`test_review_fixes` **536/536**（p231 组 34 条 + p232 组 35 条）；
-  `check_hashes` **1700 ok / 0 mismatch / 0 missing**；`check_manifest_coverage` **323/323**；
+  `check_hashes` **1749 ok / 0 mismatch / 0 missing**；`check_manifest_coverage` **337/337**；
   Java 单测 **32/32**；`verify_evidence` passed（含 `text_encoding`）；CI push 触发可用。
 - **发版**：`python tools/release_check.py --build <版本>` 一条命令跑完门禁并打
   `dist/mcbridge-launcher-<版本>.zip`（`runs/p240-release-check/`）。

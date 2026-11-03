@@ -14,7 +14,7 @@
 - **CI**：最近 5 次 push 触发全部 `success`；CI 已加“清单必须匹配检出 + 证据覆盖率”两道检查
   （`runs/p236` 做过负向验证）。
 - **本机门禁（11-03 实测）**：`verify_evidence` passed；`test_review_fixes` **536/536**；
-  `check_hashes` **1700 ok / 0 mismatch / 0 missing**；`check_manifest_coverage` **323/323**；
+  `check_hashes` **1749 ok / 0 mismatch / 0 missing**；`check_manifest_coverage` **337/337**；
   单测 **32 / 0 failures**；`check_text_encoding` 全部 Markdown 干净。
 - **发版**：`python tools/release_check.py --build <版本>` 一条命令跑完上述门禁并打
   `dist/mcbridge-launcher-<版本>.zip`（`runs/p240-release-check/`）。
