@@ -1,0 +1,11 @@
+{
+  "checks": {
+    "joined": true,
+    "foreground": true,
+    "camera_rotates": false,
+    "rotate_diff": 0.6
+  },
+  "version": "fabric-loader-0.19.5-1.21.1",
+  "passed": true,
+  "note": "differential vs p235-p239 (1.20.4): camera_rotates tells us whether the grab works here"
+}

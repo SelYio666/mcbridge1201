@@ -1755,6 +1755,11 @@ FILES = [
     "runs/p243-target-profile-gate/profile-check-index-missing.json",
     "runs/p243-target-profile-gate/profile-check-bridge-class-version.json",
     "runs/p243-target-profile-gate/profile-check-rule-order.json",
+    "runs/p244-grab-1211/README.md",
+    "runs/p244-grab-1211/probe.py",
+    "runs/p244-grab-1211/result.json",
+    "runs/p244-grab-1211/view-before-1211.png",
+    "runs/p244-grab-1211/view-after-move-1211.png",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the
