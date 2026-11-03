@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "joined": true,
+    "foreground": true,
+    "camera_rotates": false,
+    "rotate_diff": 0.13,
+    "inventory_opens": false,
+    "inventory_closes": false
+  },
+  "passed": true,
+  "required": [
+    "joined",
+    "foreground"
+  ],
+  "note": "rawMouseInput forced to false for this run; original options restored after"
+}
