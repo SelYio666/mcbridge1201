@@ -12,6 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The committed manifest must match the committed tree: 7e290e0 shipped doc
+      # edits without refreshing runs/SHA256SUMS.txt and CI stayed green because
+      # nothing verified it. Make that class of mistake fail loudly.
+      - name: Hash manifest matches the checkout
+        run: python tools/check_hashes.py
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
