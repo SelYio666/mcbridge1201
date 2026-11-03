@@ -1,0 +1,106 @@
+{
+  "workstream": "B03 fourth slice: InteractionResult constants via accessors",
+  "target": "targets/fabric-1.21.4.json",
+  "rule": "rules/fabric-1.21.4/interaction-result.json",
+  "bridge": "java/src/bridge-1214/java/top/mcbridge1201/bridge/InteractionResultBridge1214.java",
+  "input": "work/corpus/ironchests/ironchests-5.0.2-fabric.jar",
+  "output": "runs/p256-1214-interaction-result/ironchests-5.0.2-1214-ir.jar",
+  "build": {
+    "rc": 0,
+    "majors": {
+      "65": 5
+    }
+  },
+  "patch": {
+    "rc": 0,
+    "applied": {
+      "1214.interaction-result.field-21466": 2,
+      "1214.interaction-result.field-5811": 20,
+      "1214.interaction-result.field-5812": 7,
+      "ironchests.blit-region-1214": 2,
+      "ironchests.blit-simple-1214": 3,
+      "ironchests.draw-nine-sliced-1214": 1
+    },
+    "classesChanged": 8,
+    "logTail": [
+      "  rule ironchests.blit-region-1214 applied 2 time(s)",
+      "  rule ironchests.blit-simple-1214 applied 3 time(s)",
+      "  rule ironchests.draw-nine-sliced-1214 applied 1 time(s)",
+      "  bridges embedded: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  javac bridges: [top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  sha256 61a0382a2a44bc7b456a9f987d36495372bf25ab3c161422e4db1e608caca652"
+    ]
+  },
+  "constantPool": {
+    "before": {
+      "staleFieldRefs": 11,
+      "bridgeRefs": 0,
+      "classesWithStaleRefs": [
+        "tech/thatgravyboat/ironchests/common/items/DollyItem.class",
+        "tech/thatgravyboat/ironchests/common/items/LockItem.class",
+        "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlock.class",
+        "tech/thatgravyboat/ironchests/common/items/KeyItem.class",
+        "tech/thatgravyboat/ironchests/common/items/UpgradeItem.class"
+      ],
+      "nested": {
+        "stale": 0,
+        "bridged": 0,
+        "entries": []
+      }
+    },
+    "after": {
+      "staleFieldRefs": 0,
+      "bridgeRefs": 11,
+      "classesWithStaleRefs": [],
+      "nested": {
+        "stale": 0,
+        "bridged": 0,
+        "entries": []
+      }
+    }
+  },
+  "checks": [
+    {
+      "id": "bridge-compiles-at-65",
+      "expect": [
+        65
+      ],
+      "got": [
+        65
+      ],
+      "passed": true
+    },
+    {
+      "id": "source-has-stale-field-refs",
+      "expect": true,
+      "got": true,
+      "passed": true
+    },
+    {
+      "id": "all-three-fields-redirected",
+      "expect": true,
+      "got": true,
+      "passed": true
+    },
+    {
+      "id": "no-stale-field-ref-left",
+      "expect": 0,
+      "got": 0,
+      "passed": true
+    },
+    {
+      "id": "bridge-refs-present",
+      "expect": true,
+      "got": true,
+      "passed": true
+    }
+  ],
+  "method": "constant-pool Fieldref/Methodref parsing, not substring matching: the bridge and string tables both contain the member names",
+  "poolDeduplication": {
+    "ruleHits": 29,
+    "bridgeMethodrefEntries": 11,
+    "why": "the constant pool holds one entry per distinct name+descriptor, so 29 call sites appear as 11 Methodref entries across 8 classes"
+  },
+  "passed": true,
+  "scope": "linkage only: no 1.21.4 runtime, so behaviour is unverified. Whether each constant still MEANS what 1.20.1 meant is not checked."
+}

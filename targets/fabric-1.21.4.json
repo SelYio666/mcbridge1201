@@ -87,13 +87,15 @@
     "ruleOrder": [
       "rules/fabric-1.21.4/registration-key.json",
       "rules/fabric-1.21.4/ironchests-draw.json",
-      "rules/fabric-1.21.4/ironchests-blit.json"
+      "rules/fabric-1.21.4/ironchests-blit.json",
+      "rules/fabric-1.21.4/interaction-result.json"
     ],
     "capabilities": [
+      "interaction.result.constant",
       "registration.registry_key",
-      "screen.draw.nine-sliced",
+      "screen.draw.blit.atlas",
       "screen.draw.blit.region",
-      "screen.draw.blit.atlas"
+      "screen.draw.nine-sliced"
     ],
     "output": {
       "bridgeClasses": "work/targets/fabric-1.21.4/bridges",

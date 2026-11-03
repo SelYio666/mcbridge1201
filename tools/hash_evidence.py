@@ -1840,6 +1840,11 @@ FILES = [
     "runs/p255-desc-rejudged/README.md",
     "runs/p255-desc-rejudged/result.json",
     "runs/p253-desc-compat/README.md",
+    "rules/fabric-1.21.4/interaction-result.json",
+    "java/src/bridge-1214/java/top/mcbridge1201/bridge/InteractionResultBridge1214.java",
+    "tools/run_1214_interaction_bridge.py",
+    "runs/p256-1214-interaction-result/README.md",
+    "runs/p256-1214-interaction-result/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

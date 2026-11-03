@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.4",
+  "note": "InteractionResult's constant fields changed descriptor in 1.21.4: they are still class_1269 constants from the source's point of view, but the target declares them as record subtypes. JVMS 5.4.3.2 resolves a field by name AND descriptor, so the old GETSTATIC fails with NoSuchFieldError even though the value would be assignable (measured in JvmResolutionTest, runs/p255). Each rule redirects one field read to an accessor that re-widens the target field to class_1269.",
+  "fieldRedirects": [
+    {
+      "id": "1214.interaction-result.field-5811",
+      "sourceOwner": "net/minecraft/class_1269",
+      "sourceName": "field_5811",
+      "sourceDesc": "Lnet/minecraft/class_1269;",
+      "bridgeClass": "top/mcbridge1201/bridge/InteractionResultBridge1214",
+      "bridgeMethod": "field5811",
+      "bridgeDesc": "()Lnet/minecraft/class_1269;",
+      "capability": "interaction.result.constant",
+      "risk": "low",
+      "evidence": "1.20.1: class_1269.field_5811 is declared as class_1269. 1.21.4: same name, declared as class_1269$class_9859 (a record implementing class_1269). javap on both stubs; the linkage failure and the fix direction were measured, not inferred."
+    },
+    {
+      "id": "1214.interaction-result.field-5812",
+      "sourceOwner": "net/minecraft/class_1269",
+      "sourceName": "field_5812",
+      "sourceDesc": "Lnet/minecraft/class_1269;",
+      "bridgeClass": "top/mcbridge1201/bridge/InteractionResultBridge1214",
+      "bridgeMethod": "field5812",
+      "bridgeDesc": "()Lnet/minecraft/class_1269;",
+      "capability": "interaction.result.constant",
+      "risk": "low",
+      "evidence": "Same shape as field_5811: 1.21.4 declares it as class_1269$class_9860."
+    },
+    {
+      "id": "1214.interaction-result.field-21466",
+      "sourceOwner": "net/minecraft/class_1269",
+      "sourceName": "field_21466",
+      "sourceDesc": "Lnet/minecraft/class_1269;",
+      "bridgeClass": "top/mcbridge1201/bridge/InteractionResultBridge1214",
+      "bridgeMethod": "field21466",
+      "bridgeDesc": "()Lnet/minecraft/class_1269;",
+      "capability": "interaction.result.constant",
+      "risk": "low",
+      "evidence": "Same shape as field_5811: 1.21.4 declares it as class_1269$class_9860. The constants' individual meanings (SUCCESS/CONSUME/PASS/FAIL) were NOT re-verified for 1.21.4, which is why the accessors are named after the intermediary fields."
+    }
+  ]
+}

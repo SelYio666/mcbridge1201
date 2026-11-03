@@ -1,21 +1,33 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T22:21:01+08:00",
+  "generatedAt": "2026-11-03T22:30:21+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "813678b52b89c3aa3e3521bc9af51f185a1b8529",
+    "commit": "791c3732b036b89275dda761b7e8143e440d350a",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "java/src/test/java/top/mcbridge1201/JvmResolutionTest.java",
+      "java/src/bridge-1214/java/top/mcbridge1201/bridge/InteractionResultBridge1214.java",
+      "manifests/baseline.lock.json",
+      "rules/fabric-1.21.4/interaction-result.json",
       "runs/SHA256SUMS.txt",
-      "runs/p253-desc-compat/README.md",
-      "runs/p255-desc-rejudged/README.md",
-      "runs/p255-desc-rejudged/result.json",
-      "tools/check_desc_compat.py",
-      "tools/hash_evidence.py"
+      "runs/p256-1214-interaction-result/README.md",
+      "runs/p256-1214-interaction-result/bridges-shim/net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler.class",
+      "runs/p256-1214-interaction-result/bridges-shim/net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking.class",
+      "runs/p256-1214-interaction-result/bridges-shim/net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler.class",
+      "runs/p256-1214-interaction-result/bridges-shim/net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking.class",
+      "runs/p256-1214-interaction-result/bridges/net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler.class",
+      "runs/p256-1214-interaction-result/bridges/net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler.class",
+      "runs/p256-1214-interaction-result/bridges/top/mcbridge1201/bridge/DrawContextBlitBridge1214.class",
+      "runs/p256-1214-interaction-result/bridges/top/mcbridge1201/bridge/DrawContextTextureBridge1214.class",
+      "runs/p256-1214-interaction-result/bridges/top/mcbridge1201/bridge/InteractionResultBridge1214.class",
+      "runs/p256-1214-interaction-result/result.json",
+      "targets/fabric-1.21.4.json",
+      "tools/freeze_baseline.py",
+      "tools/hash_evidence.py",
+      "tools/run_1214_interaction_bridge.py"
     ],
     "untrackedFiles": [
       "WORKSPACE.md"
@@ -219,9 +231,14 @@
       },
       "rules/fabric-1.21.4": {
         "root": "rules/fabric-1.21.4",
-        "count": 3,
-        "packageSha256": "9f96d7f67e5cbbba5a520e97ded391c83053d3522ed9047d8ec1173193d80277",
+        "count": 4,
+        "packageSha256": "d3e838e036a987c69afab5335fed564fe8862dfc3f3e3722626405ed3c1b4f32",
         "files": [
+          {
+            "path": "rules/fabric-1.21.4/interaction-result.json",
+            "sha256": "f18a041568b7be42be362b45e9fb1889af8d5846ed60ba30f3b8ae0d379190be",
+            "size": 2473
+          },
           {
             "path": "rules/fabric-1.21.4/ironchests-blit.json",
             "sha256": "86022a0a29247a017cabce0dddd9361b50e1512de40a5d0462ea8b2857e89447",
@@ -613,9 +630,9 @@
       }
     },
     "tools": {
-      "count": 27,
-      "present": 27,
-      "packageSha256": "9bd0d6a7db29b0d15d3fb65243144229d2b239c13d8a5961998fa58c3ad7fac8",
+      "count": 28,
+      "present": 28,
+      "packageSha256": "3cc03be50b27815cc71505d6ee720625f402904fecd9c061047b63eddf7e866e",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -639,8 +656,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "ab631e71fc5372d8ed05c483f7bcc13564307625fc4d3722e9d7f4a547cdfd6a",
-          "size": 91255
+          "sha256": "80d728e72f6553550c1d758db73ebbe8b001c935b5089a8fe7c4ff1e06149e3a",
+          "size": 91544
         },
         {
           "path": "tools/release_check.py",
@@ -718,6 +735,11 @@
           "size": 11154
         },
         {
+          "path": "tools/run_1214_interaction_bridge.py",
+          "sha256": "a0b077487dd52ead4ea23790e950bd8534e3a794a130cafc5ee6178d460642a2",
+          "size": 12129
+        },
+        {
           "path": "tools/run_target_gate.py",
           "sha256": "04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6",
           "size": 10540
@@ -749,8 +771,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "7fecdefb764ad849e7aa75971e0667360571d563fa32e6d190a6f8e6514e5ad8",
-          "size": 18476
+          "sha256": "7d2c479111df1c6a47c4060c9daff93344328ca7ba341d3e8f21a45607f7493c",
+          "size": 18520
         }
       ]
     },
@@ -806,7 +828,7 @@
       },
       {
         "path": "targets/fabric-1.21.4.json",
-        "sha256": "ce55e63ba0418c9f2d4f5d44f8349fb1f0048e713918ab9779d7df9fdbc8ad47",
+        "sha256": "349e48e2e47f0e46b666347d9615b2c58753311f0e76fae62235d12d7e9ebdbd",
         "profileId": "fabric-1.21.4",
         "targetId": "fabric-1.21.4",
         "minecraft": "1.21.4",
@@ -814,7 +836,7 @@
         "javaMajor": 21,
         "namespace": "intermediary",
         "bridgeAbi": "mcbridge-bridge-1",
-        "ruleOrderEntries": 3
+        "ruleOrderEntries": 4
       }
     ]
   },
@@ -941,15 +963,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1806 mismatch=0 missing=0"
+          "ok=1811 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 355",
-          "hashed evidence files: 355",
+          "required evidence files: 357",
+          "hashed evidence files: 357",
           "coverage OK"
         ]
       },
@@ -959,7 +981,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 287 markdown file(s): 287 clean, 0 finding(s)"
+          "checked 288 markdown file(s): 288 clean, 0 finding(s)"
         ]
       },
       {
