@@ -434,3 +434,5 @@ Therefore:
   p232 README records the ready-made plan (remote client -> local dedicated server, same probe
   and verdict, real RTT reported with the connection type). OS-level SendInput remains undone on
   purpose while the user is at the machine; per-client independent assets/resourcepacks untested.
+
+- p234 (2026-11-03): OS-level mouse/keyboard is now exercised at the **menu level**: real `mouse_event` hover on Singleplayer brightens the button (mean 119.8 -> 125.2), a real click changes the screen, a real `keybd_event` Esc returns to the title, and every input is gated on `GetForegroundWindow() == game window` (aborts instead of clicking if not). Boundary: menus only; in-game actions still use the GLFW-callback synthetic input from p191/p192; one client, 1.21.1 Fabric, one monitor; no world data written. See runs/p234-os-input/.

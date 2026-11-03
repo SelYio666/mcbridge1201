@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "foreground": true,
+    "hover_brightens": true,
+    "click_changes_screen": true,
+    "esc_returns": true
+  },
+  "passed": true,
+  "total": 4,
+  "hover_values": [
+    119.8,
+    125.2
+  ]
+}
