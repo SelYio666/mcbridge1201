@@ -1,0 +1,73 @@
+{
+  "workstream": "B03 probe: can the ResourcefulLib registration path carry a registry key?",
+  "sample": "work/corpus/ironchests/ironchests-5.0.2-fabric.jar",
+  "facts": {
+    "wrapperRegisterOnlyCollects": true,
+    "wrapperInitIsEmpty": true,
+    "factoryEvaluatesSupplierBeforeRegistering": true,
+    "factoryTakesTheIdAsLocal1": true,
+    "factorySignature": "net.minecraft.class_2378<T>, net.minecraft.class_2960, java.util.function.Supplier<I>"
+  },
+  "instructionOrder": [
+    [
+      "aload_1(id)",
+      4
+    ],
+    [
+      "aload_1(id)",
+      6
+    ],
+    [
+      "supplier.get",
+      8
+    ],
+    [
+      "method_10230",
+      13
+    ]
+  ],
+  "checks": [
+    {
+      "id": "register-does-not-register",
+      "expect": true,
+      "got": true,
+      "why": "the wrapper's register() only collects entries; the key cannot be injected there",
+      "passed": true
+    },
+    {
+      "id": "init-does-nothing",
+      "expect": true,
+      "got": true,
+      "why": "init() is empty, so registration is not deferred to init",
+      "passed": true
+    },
+    {
+      "id": "factory-evaluates-then-registers",
+      "expect": true,
+      "got": true,
+      "why": "FabricRegistryEntry.of is the only place that both calls the supplier and registers",
+      "passed": true
+    },
+    {
+      "id": "id-available-before-supplier",
+      "expect": true,
+      "got": true,
+      "why": "the id must be readable (local 1) before Supplier.get(), or no context can be set",
+      "passed": true
+    }
+  ],
+  "injectionPoint": {
+    "method": "com.teamresourceful.resourcefullib.common.registry.fabric.FabricRegistryEntry.of",
+    "before": "invokeinterface java/util/function/Supplier.get",
+    "whatToInsert": "aload_1 (the Identifier local) + a bridge call that stores it as the pending registry id in a ThreadLocal",
+    "whyItWorks": "the supplier is evaluated inside this method, so a lambda that builds Item.Settings runs with the pending id set"
+  },
+  "whatIsStillMissing": [
+    "a rule type that inserts a call before a matched call (the existing registrationKeys rule only fires when a register call is in the SAME method as the settings ctor)",
+    "a bridge that exposes the pending id and a settings factory",
+    "a second rule to redirect the mod's `new Item.Settings()` inside the lambda",
+    "ThreadLocal lifetime handling: nested registrations or an exception would leak the id"
+  ],
+  "passed": true,
+  "scope": "probe only: nothing was patched. This answers 'is there an injection point', not 'does the conversion work'."
+}

@@ -1,0 +1,43 @@
+Compiled from "FabricRegistryEntry.java"
+public class com.teamresourceful.resourcefullib.common.registry.fabric.FabricRegistryEntry<T> implements com.teamresourceful.resourcefullib.common.registry.RegistryEntry<T> {
+  private final net.minecraft.class_2960 id;
+
+  private final T value;
+
+  private com.teamresourceful.resourcefullib.common.registry.fabric.FabricRegistryEntry(net.minecraft.class_2960, T);
+    Code:
+       0: aload_0
+       1: invokespecial #19                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #21                 // Field id:Lnet/minecraft/class_2960;
+       9: aload_0
+      10: aload_2
+      11: putfield      #23                 // Field value:Ljava/lang/Object;
+      14: return
+
+  public static <T, I extends T> com.teamresourceful.resourcefullib.common.registry.fabric.FabricRegistryEntry<I> of(net.minecraft.class_2378<T>, net.minecraft.class_2960, java.util.function.Supplier<I>);
+    Code:
+       0: new           #2                  // class com/teamresourceful/resourcefullib/common/registry/fabric/FabricRegistryEntry
+       3: dup
+       4: aload_1
+       5: aload_0
+       6: aload_1
+       7: aload_2
+       8: invokeinterface #37,  1           // InterfaceMethod java/util/function/Supplier.get:()Ljava/lang/Object;
+      13: invokestatic  #43                 // InterfaceMethod net/minecraft/class_2378.method_10230:(Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;Ljava/lang/Object;)Ljava/lang/Object;
+      16: invokespecial #45                 // Method "<init>":(Lnet/minecraft/class_2960;Ljava/lang/Object;)V
+      19: areturn
+
+  public T get();
+    Code:
+       0: aload_0
+       1: getfield      #23                 // Field value:Ljava/lang/Object;
+       4: areturn
+
+  public net.minecraft.class_2960 getId();
+    Code:
+       0: aload_0
+       1: getfield      #21                 // Field id:Lnet/minecraft/class_2960;
+       4: areturn
+}

@@ -1851,6 +1851,11 @@ FILES = [
     "java/src/bridge-1214/java/top/mcbridge1201/bridge/BlockStatePropertiesBridge1214.java",
     "runs/p257-1214-field-rules/README.md",
     "runs/p257-1214-field-rules/result.json",
+    "tools/probe_resourceful_registration.py",
+    "runs/p258-resourceful-registration-probe/README.md",
+    "runs/p258-resourceful-registration-probe/result.json",
+    "runs/p258-resourceful-registration-probe/javap-FabricRegistryEntry.txt",
+    "runs/p258-resourceful-registration-probe/javap-FabricResourcefulRegistry.txt",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the
