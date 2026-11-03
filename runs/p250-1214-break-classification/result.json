@@ -1,0 +1,268 @@
+{
+  "workstream": "B03: classify the 1.21.4 breakages into rule candidates",
+  "source": {
+    "delta": "runs/p247-fabric-1.21.4-delta/result.json",
+    "stubs": [
+      "work/target/client-1.21.1-intermediary.jar",
+      "work/target/client-1.21.4-intermediary.jar"
+    ]
+  },
+  "counts": {
+    "newBreaks": 21,
+    "withMojangName": 21,
+    "byCategory": {
+      "class-removed": 6,
+      "descriptor-changed": 9,
+      "member-removed": 6
+    },
+    "byProposedRule": {
+      "needs a hand-written bridge or a degradation: a rule cannot invent a class": 6,
+      "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)": 9,
+      "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement": 6
+    }
+  },
+  "entries": {
+    "fixture": [],
+    "ironchests-5.0.2": [
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_2753",
+        "name": null,
+        "desc": null,
+        "mojangOwner1211": "net.minecraft.world.level.block.state.properties.DirectionProperty",
+        "mojangOwner1214": null,
+        "category": "class-removed",
+        "note": "the owning class is gone from the 1.21.4 index",
+        "proposedRuleType": "needs a hand-written bridge or a degradation: a rule cannot invent a class"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_3270",
+        "name": null,
+        "desc": null,
+        "mojangOwner1211": "net.minecraft.server.packs.metadata.MetadataSectionSerializer",
+        "mojangOwner1214": null,
+        "category": "class-removed",
+        "note": "the owning class is gone from the 1.21.4 index",
+        "proposedRuleType": "needs a hand-written bridge or a degradation: a rule cannot invent a class"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_6395",
+        "name": null,
+        "desc": null,
+        "mojangOwner1211": "net.minecraft.client.renderer.item.ClampedItemPropertyFunction",
+        "mojangOwner1214": null,
+        "category": "class-removed",
+        "note": "the owning class is gone from the 1.21.4 index",
+        "proposedRuleType": "needs a hand-written bridge or a degradation: a rule cannot invent a class"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_1269",
+        "name": "field_21466",
+        "desc": "Lnet/minecraft/class_1269;",
+        "mojangOwner1211": "net.minecraft.world.InteractionResult",
+        "mojangOwner1214": "net.minecraft.world.InteractionResult",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_1269",
+        "name": "field_5811",
+        "desc": "Lnet/minecraft/class_1269;",
+        "mojangOwner1211": "net.minecraft.world.InteractionResult",
+        "mojangOwner1214": "net.minecraft.world.InteractionResult",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_1269",
+        "name": "field_5812",
+        "desc": "Lnet/minecraft/class_1269;",
+        "mojangOwner1211": "net.minecraft.world.InteractionResult",
+        "mojangOwner1214": "net.minecraft.world.InteractionResult",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_2464",
+        "name": "field_11456",
+        "desc": "Lnet/minecraft/class_2464;",
+        "mojangOwner1211": "net.minecraft.world.level.block.RenderShape",
+        "mojangOwner1214": "net.minecraft.world.level.block.RenderShape",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_2741",
+        "name": "field_12481",
+        "desc": "Lnet/minecraft/class_2753;",
+        "mojangOwner1211": "net.minecraft.world.level.block.state.properties.BlockStateProperties",
+        "mojangOwner1214": "net.minecraft.world.level.block.state.properties.BlockStateProperties",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_2741",
+        "name": "field_12525",
+        "desc": "Lnet/minecraft/class_2753;",
+        "mojangOwner1211": "net.minecraft.world.level.block.state.properties.BlockStateProperties",
+        "mojangOwner1214": "net.minecraft.world.level.block.state.properties.BlockStateProperties",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_1269",
+        "name": "method_29236",
+        "desc": "(Z)Lnet/minecraft/class_1269;",
+        "mojangOwner1211": "net.minecraft.world.InteractionResult",
+        "mojangOwner1214": "net.minecraft.world.InteractionResult",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_1936",
+        "name": "method_39281",
+        "desc": "(Lnet/minecraft/class_2338;Lnet/minecraft/class_3611;I)V",
+        "mojangOwner1211": "net.minecraft.world.level.LevelAccessor",
+        "mojangOwner1214": "net.minecraft.world.level.LevelAccessor",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_2237",
+        "name": "method_9559",
+        "desc": "(Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;",
+        "mojangOwner1211": "net.minecraft.world.level.block.BaseEntityBlock",
+        "mojangOwner1214": "net.minecraft.world.level.block.BaseEntityBlock",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "alsoAbsentOn1211": true,
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_2680",
+        "name": "method_26226",
+        "desc": "(Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;",
+        "mojangOwner1211": "net.minecraft.world.level.block.state.BlockState",
+        "mojangOwner1214": "net.minecraft.world.level.block.state.BlockState",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "alsoAbsentOn1211": true,
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_2769",
+        "name": "method_11898",
+        "desc": "()Ljava/util/Collection;",
+        "mojangOwner1211": "net.minecraft.world.level.block.state.properties.Property",
+        "mojangOwner1214": "net.minecraft.world.level.block.state.properties.Property",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_3270",
+        "name": "method_14420",
+        "desc": "()Ljava/lang/String;",
+        "mojangOwner1211": "net.minecraft.server.packs.metadata.MetadataSectionSerializer",
+        "mojangOwner1214": null,
+        "category": "class-removed",
+        "note": "the owning class is gone from the 1.21.4 index",
+        "proposedRuleType": "needs a hand-written bridge or a degradation: a rule cannot invent a class"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_3270",
+        "name": "method_14421",
+        "desc": "(Lcom/google/gson/JsonObject;)Ljava/lang/Object;",
+        "mojangOwner1211": "net.minecraft.server.packs.metadata.MetadataSectionSerializer",
+        "mojangOwner1214": null,
+        "category": "class-removed",
+        "note": "the owning class is gone from the 1.21.4 index",
+        "proposedRuleType": "needs a hand-written bridge or a degradation: a rule cannot invent a class"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_332",
+        "name": "method_25290",
+        "desc": "(Lnet/minecraft/class_2960;IIFFIIII)V",
+        "mojangOwner1211": "net.minecraft.client.gui.GuiGraphics",
+        "mojangOwner1214": "net.minecraft.client.gui.GuiGraphics",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_332",
+        "name": "method_25302",
+        "desc": "(Lnet/minecraft/class_2960;IIIIII)V",
+        "mojangOwner1211": "net.minecraft.client.gui.GuiGraphics",
+        "mojangOwner1214": "net.minecraft.client.gui.GuiGraphics",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_4309",
+        "name": "<init>",
+        "desc": "(Lcom/google/gson/Gson;Ljava/lang/String;)V",
+        "mojangOwner1211": "net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener",
+        "mojangOwner1214": "net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener",
+        "category": "descriptor-changed",
+        "note": "the member name exists; the descriptor is what moved",
+        "proposedRuleType": "callSiteAdaptations (callee gained/lost parameters) or signatureAdaptations (override)"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_4722",
+        "name": "method_24076",
+        "desc": "()Lnet/minecraft/class_1921;",
+        "mojangOwner1211": "net.minecraft.client.renderer.Sheets",
+        "mojangOwner1214": "net.minecraft.client.renderer.Sheets",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      {
+        "kind": "new",
+        "owner": "net/minecraft/class_5272",
+        "name": "method_27879",
+        "desc": "(Lnet/minecraft/class_1792;Lnet/minecraft/class_2960;Lnet/minecraft/class_6395;)V",
+        "mojangOwner1211": "net.minecraft.client.renderer.item.ItemProperties",
+        "mojangOwner1214": null,
+        "category": "class-removed",
+        "note": "the owning class is gone from the 1.21.4 index",
+        "proposedRuleType": "needs a hand-written bridge or a degradation: a rule cannot invent a class"
+      }
+    ]
+  },
+  "caveats": [
+    "Category detection is constant-pool based: 'member present' means the name appears in the class, not that a call with this descriptor resolves.",
+    "A proposed rule type is a suggestion for the next work item, not an existing capability.",
+    "Only the breaks measured in the delta are classified; nothing here was converted."
+  ],
+  "scope": "classification only: no jar converted, no rule written, no game launched."
+}

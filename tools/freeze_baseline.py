@@ -56,6 +56,7 @@ TOOL_FILES = [
     "tools/run_1214_delta.py",
     "tools/scan_registration_sites.py",
     "tools/run_registration_rule.py",
+    "tools/classify_1214_breaks.py",
     "tools/run_target_gate.py",
     "tools/run_isolation_cache.py",
     "tools/run_source_fixture_probe.py",

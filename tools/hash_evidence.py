@@ -1808,6 +1808,9 @@ FILES = [
     "runs/p249-registration-key-rule/result.json",
     "runs/p249-registration-key-rule/disassembly-before.txt",
     "runs/p249-registration-key-rule/disassembly-after.txt",
+    "tools/classify_1214_breaks.py",
+    "runs/p250-1214-break-classification/README.md",
+    "runs/p250-1214-break-classification/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the
