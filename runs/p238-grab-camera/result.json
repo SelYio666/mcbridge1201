@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "joined": true,
+    "foreground": true,
+    "camera_rotates": false,
+    "rotate_diff": 1.68,
+    "inventory_opens": false,
+    "inventory_closes": false
+  },
+  "passed": true,
+  "required": [
+    "joined",
+    "foreground"
+  ],
+  "note": "camera_rotates is the grab oracle; inventory_* only mean something when it is true."
+}
