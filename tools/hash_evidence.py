@@ -1859,6 +1859,11 @@ FILES = [
     "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
     "runs/p259-insert-before-call/README.md",
     "runs/p259-insert-before-call/result.json",
+    "java/src/bridge-1214/java/top/mcbridge1201/bridge/RegistryKeyContext.java",
+    "tools/run_registration_rule.py",
+    "rules/fabric-1.21.4/registration-key.json",
+    "runs/p260-registry-context-attempt/README.md",
+    "runs/p260-registry-context-attempt/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

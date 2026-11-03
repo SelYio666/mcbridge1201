@@ -984,9 +984,21 @@ public final class JarPatcher {
                 if (r == null) {
                     continue;
                 }
-                InsnList inject = new InsnList();
                 int loadOpcode = "iload".equals(r.loadKind) ? Opcodes.ILOAD : Opcodes.ALOAD;
+                InsnList inject = new InsnList();
                 inject.add(new VarInsnNode(loadOpcode, r.loadLocal));
+                for (int extra : r.loadLocals) {
+                    inject.add(new VarInsnNode(loadOpcode, extra));
+                }
+                if (r.replaceMethod != null && !r.replaceMethod.isBlank()) {
+                    // Insert the context arguments first, then swap the callee itself. Doing it the
+                    // other way round (remove-then-insert) loses the anchor node: after remove(hit)
+                    // the node is detached and insertBefore(hit, ...) throws.
+                    mn.instructions.insertBefore(hit, inject);
+                    mn.instructions.set(hit, new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
+                            r.replaceMethod, r.replaceDesc, false));
+                    continue;
+                }
                 inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, r.bridgeClass,
                         r.bridgeMethod, r.bridgeDesc, false));
                 mn.instructions.insertBefore(hit, inject);

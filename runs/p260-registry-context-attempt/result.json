@@ -1,0 +1,30 @@
+{
+  "workstream": "attempt to connect the ResourcefulLib registration path; withdrawn",
+  "realFix": {
+    "what": "Registry#registryKey is method_30517 in 1.20.1 but method_46765 in 1.21.4",
+    "whereItWasWrong": "rules/fabric-1.21.4/registration-key.json, RegistryKeyContext.java, and the p249 checker constant",
+    "whyItWasInvisible": "patch emits calls without checking that the target member exists, so every bytecode assertion passed while the artifact would have thrown NoSuchMethodError",
+    "verified": "p249 rerun: the emitted call is class_2378.method_46765, five checks pass"
+  },
+  "blockers": [
+    {
+      "id": "rule-conflict",
+      "detail": "registry-key-context (constructorRedirect, unconditional) and registrationKeys (insert after the settings ctor) both fire on the same site in the fixture"
+    },
+    {
+      "id": "supplier-rule-never-matched",
+      "detail": "insertBeforeCalls did not rewrite Supplier.get inside the nested FabricRegistryEntry.of: getWithKey is absent from the patched entry class",
+      "status": "undiagnosed"
+    }
+  ],
+  "withdrawn": {
+    "ruleFile": "rules/fabric-1.21.4/registry-key-context.json",
+    "profileRuleOrder": 5,
+    "keptButUnreferenced": [
+      "java/src/bridge-1214/java/top/mcbridge1201/bridge/RegistryKeyContext.java"
+    ],
+    "why": "a rule that claims a capability it does not deliver makes the next support matrix lie"
+  },
+  "nextStep": "a checker that verifies every target-side member named by a rule actually exists in the target index before patching - the method_30517/method_46765 mistake is exactly what it would catch",
+  "scope": "one correction verified, one capability withdrawn. Nothing here is a support claim."
+}

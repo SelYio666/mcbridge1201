@@ -332,6 +332,19 @@ public final class RuleSet {
         public String bridgeClass;
         public String bridgeMethod;
         public String bridgeDesc;
+        /**
+         * Extra locals to push, in order, after {@code loadLocal}. Used when the bridge needs more
+         * context than one value (e.g. the registry and the id, so it can derive the key itself).
+         */
+        public List<Integer> loadLocals = new ArrayList<>();
+        /**
+         * When set, the matched call is REPLACED by this bridge instead of merely being preceded by
+         * one. The pushed locals become additional trailing arguments, which is how a callee that
+         * needs context gets it without the caller knowing: `supplier.get()` is not changeable, but
+         * `getWithKey(supplier, registry, id)` is.
+         */
+        public String replaceMethod;
+        public String replaceDesc;
         public String capability;
         public String risk;
         public String evidence;

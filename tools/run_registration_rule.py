@@ -29,7 +29,7 @@ TARGET_CLASS = "mcbfixture/FixtureRegistry.class"
 
 SETTER = "method_63686"
 KEY_FACTORY = "method_29179"
-REGISTRY_KEY = "method_30517"
+REGISTRY_KEY = "method_46765"
 ITEM_CTOR_OWNER = "net/minecraft/class_1792"
 
 

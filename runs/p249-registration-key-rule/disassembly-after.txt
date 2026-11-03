@@ -21,7 +21,7 @@ public final class mcbfixture.FixtureRegistry {
       14: invokespecial #28                 // Method net/minecraft/class_1792$class_1793."<init>":()V
       17: dup
       18: getstatic     #25                 // Field net/minecraft/class_7923.field_41178:Lnet/minecraft/class_7922;
-      21: invokevirtual #34                 // Method net/minecraft/class_2378.method_30517:()Lnet/minecraft/class_5321;
+      21: invokevirtual #34                 // Method net/minecraft/class_2378.method_46765:()Lnet/minecraft/class_5321;
       24: getstatic     #27                 // Field PROBE_ID:Lnet/minecraft/class_2960;
       27: invokestatic  #40                 // Method net/minecraft/class_5321.method_29179:(Lnet/minecraft/class_5321;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
       30: invokevirtual #44                 // Method net/minecraft/class_1792$class_1793.method_63686:(Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793;

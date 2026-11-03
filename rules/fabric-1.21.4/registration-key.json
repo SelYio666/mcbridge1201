@@ -16,12 +16,12 @@
       "keyFactoryName": "method_29179",
       "keyFactoryDesc": "(Lnet/minecraft/class_5321;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;",
       "registryKeyOwner": "net/minecraft/class_2378",
-      "registryKeyName": "method_30517",
+      "registryKeyName": "method_46765",
       "registryKeyDesc": "()Lnet/minecraft/class_5321;",
       "maxDistance": 40,
       "capability": "registration.registry_key",
       "risk": "medium",
-      "evidence": "1.21.4 target: class_1792$class_1793.method_63686 takes (Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793; and class_5321.method_29179 is RegistryKey.of(ResourceKey, Identifier); class_2378.method_30517 returns the registry's own ResourceKey. 1.20.1 source never calls any key setter (0 classes in the fixture and in ironchests), so this is an absent-call conversion, measured in runs/p248-registry-key-gap."
+      "evidence": "1.21.4 target: class_1792$class_1793.method_63686 takes (Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793; and class_5321.method_29179 is RegistryKey.of(ResourceKey, Identifier); class_2378.method_30517 returns the registry's own ResourceKey. 1.20.1 source never calls any key setter (0 classes in the fixture and in ironchests), so this is an absent-call conversion, measured in runs/p248-registry-key-gap. CORRECTED 2026-11-03: this originally said method_30517, which is the 1.20.1 name; 1.21.4 renames Registry#registryKey to method_46765 (javap both). The patch emits whatever the rule says without checking the target, so the old name would have produced a NoSuchMethodError."
     }
   ]
 }

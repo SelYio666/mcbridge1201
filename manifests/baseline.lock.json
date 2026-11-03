@@ -1,14 +1,26 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T22:57:59+08:00",
+  "generatedAt": "2026-11-03T23:07:38+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "092a45ec51177214cdc5504512e127324fcaa547",
+    "commit": "15d2697a3db6592e5d0c80c80b30b42bd85742e0",
     "branch": "zcode",
-    "dirty": false,
-    "modifiedFiles": [],
+    "dirty": true,
+    "modifiedFiles": [
+      "java/src/bridge-1214/java/top/mcbridge1201/bridge/RegistryKeyContext.java",
+      "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
+      "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
+      "rules/fabric-1.21.4/registration-key.json",
+      "runs/SHA256SUMS.txt",
+      "runs/p249-registration-key-rule/disassembly-after.txt",
+      "runs/p249-registration-key-rule/result.json",
+      "runs/p260-registry-context-attempt/README.md",
+      "runs/p260-registry-context-attempt/result.json",
+      "tools/hash_evidence.py",
+      "tools/run_registration_rule.py"
+    ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
   },
@@ -210,7 +222,7 @@
       "rules/fabric-1.21.4": {
         "root": "rules/fabric-1.21.4",
         "count": 5,
-        "packageSha256": "91ebb77b37d0fea9aeec59c55160bd3725be211a699e8d08d2de2842c312091e",
+        "packageSha256": "72a0b3c61aa748301cc0c5d34e799edddbf7a0b326a1f0ff014687731dcb54d0",
         "files": [
           {
             "path": "rules/fabric-1.21.4/blockstate-properties.json",
@@ -234,8 +246,8 @@
           },
           {
             "path": "rules/fabric-1.21.4/registration-key.json",
-            "sha256": "81de54afd548786b77ca33904b654922c13c3a304237261f52f5918e089acc46",
-            "size": 1807
+            "sha256": "d0143fc920e9605ef129b9da19f032d0cb30b2cd0623a0191e610c33e40d76ae",
+            "size": 2081
           }
         ]
       }
@@ -244,7 +256,7 @@
       "java/src/main": {
         "root": "java/src/main",
         "count": 17,
-        "packageSha256": "885609f7f4f0d054cda19fd41ebeffde3159760996f680f1a81a992a202d7234",
+        "packageSha256": "4d0d655684a85c7d4c2718daf72b00af89f9970f073300a7e18712da82375241",
         "files": [
           {
             "path": "java/src/main/java/top/mcbridge1201/Main.java",
@@ -303,13 +315,13 @@
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
-            "sha256": "32a911f2f38a3fd4ca421414347edae78c3309db9015588df571192c973c9d40",
-            "size": 64727
+            "sha256": "3077186c235c2e4c05d6a3abc949ecb106853d6b615bda3882a9a1f19b6191b1",
+            "size": 65501
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
-            "sha256": "564b4e7abce07e3ef6cf5d34ac05a2ae449cfde424c95a3ad6ba338477320e48",
-            "size": 22798
+            "sha256": "09b2ddb5996727679c2032e584373be2ac1f728df5c1c4d8c95f05da88136baf",
+            "size": 23531
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/scan/ArtifactScanner.java",
@@ -620,7 +632,7 @@
     "tools": {
       "count": 30,
       "present": 30,
-      "packageSha256": "b4db969c60fb0919598ba21b3c17460595e98cc48fe19606f1467b3ade8f017d",
+      "packageSha256": "53e0b3c22c635966a32b3f6fc9785a257b43be6ef23dc0ec7f9e824f866e2bea",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -644,8 +656,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "8659dd2fca5a4e6614691ae74cee9dc38c1516ddee27cc7f3b05c4dc33f9d65e",
-          "size": 92344
+          "sha256": "5fea7dfdeaadb04bcd1052173936aafe32107b3d6138a166b174e208e5adb282",
+          "size": 92618
         },
         {
           "path": "tools/release_check.py",
@@ -684,7 +696,7 @@
         },
         {
           "path": "tools/run_registration_rule.py",
-          "sha256": "bfb0b3be802e1cd2ae0b65c50624feaa2f8b41cc80d5ed9369cc317e0b3e356b",
+          "sha256": "5818d12fd07794b0eb0dca25161bdf54a012bb8902aa8762036d9b9e170e425c",
           "size": 7718
         },
         {
@@ -961,15 +973,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1825 mismatch=0 missing=0"
+          "ok=1830 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 363",
-          "hashed evidence files: 363",
+          "required evidence files: 365",
+          "hashed evidence files: 365",
           "coverage OK"
         ]
       },
@@ -979,7 +991,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 292 markdown file(s): 292 clean, 0 finding(s)"
+          "checked 293 markdown file(s): 293 clean, 0 finding(s)"
         ]
       },
       {
