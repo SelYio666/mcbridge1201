@@ -1,0 +1,25 @@
+{
+  "stale_manifest": {
+    "check_hashes_rc": 1,
+    "check_hashes_tail": [
+      "ok=1678 mismatch=1 missing=0"
+    ],
+    "coverage_rc": 0,
+    "coverage_tail": [
+      "coverage OK"
+    ]
+  },
+  "after_refresh": {
+    "check_hashes_rc": 0,
+    "check_hashes_tail": [
+      "ok=1679 mismatch=0 missing=0"
+    ]
+  },
+  "checks": {
+    "stale_detected": true,
+    "coverage_unaffected": true,
+    "refresh_fixes_it": true
+  },
+  "passed": true,
+  "total": 3
+}
