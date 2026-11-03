@@ -1,0 +1,40 @@
+{
+  "workstream": "B03 infrastructure: insert-before-call rule type",
+  "engine": {
+    "ruleType": "insertBeforeCalls",
+    "fields": [
+      "matchOwner",
+      "matchName",
+      "matchDesc",
+      "matchOpcode",
+      "loadLocal",
+      "loadKind",
+      "bridgeClass",
+      "bridgeMethod",
+      "bridgeDesc"
+    ],
+    "emits": "ALOAD <loadLocal> ; INVOKESTATIC <bridge>",
+    "insertedBefore": "the matched call",
+    "stackEffect": "net zero: the argument pushed is the one the bridge consumes"
+  },
+  "tests": {
+    "suite": "top.mcbridge1201.JarPatcherInsertBeforeCallTest",
+    "cases": 4,
+    "failed": 0,
+    "names": [
+      "insertsBeforeTheMatchedCall",
+      "pushesTheDeclaredLocalBeforeTheBridge",
+      "twoMatchesGetTwoInsertions",
+      "aRuleWithoutALocalSlotIsSkipped"
+    ],
+    "fullSuite": 60
+  },
+  "unlocked": "the first half of the ResourcefulLib path: store the registry id before the supplier is evaluated (runs/p258)",
+  "notYet": [
+    "no rule in the package uses this type yet (rules/fabric-1.21.4 still has 5 files)",
+    "the context bridge (ThreadLocal + settings factory) does not exist",
+    "the lambda-side settings redirect does not exist",
+    "ironchests' registration path is still unconverted"
+  ],
+  "scope": "engine capability + unit tests only: nothing was run against a real mod"
+}

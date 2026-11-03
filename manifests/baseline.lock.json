@@ -1,22 +1,22 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T22:48:39+08:00",
+  "generatedAt": "2026-11-03T22:53:50+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "b37d26e3cc53732203583c4520c4f3ce4eb6d45c",
+    "commit": "e56b0470ad23cbe64e9d23d5416795869b51301a",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
+      "ava/src/main/java/top/mcbridge1201/Main.java",
+      "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
+      "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
+      "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
       "runs/SHA256SUMS.txt",
-      "runs/p258-resourceful-registration-probe/README.md",
-      "runs/p258-resourceful-registration-probe/javap-FabricRegistryEntry.txt",
-      "runs/p258-resourceful-registration-probe/javap-FabricResourcefulRegistry.txt",
-      "runs/p258-resourceful-registration-probe/result.json",
-      "tools/freeze_baseline.py",
-      "tools/hash_evidence.py",
-      "tools/probe_resourceful_registration.py"
+      "runs/p259-insert-before-call/README.md",
+      "runs/p259-insert-before-call/result.json",
+      "tools/hash_evidence.py"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -253,12 +253,12 @@
       "java/src/main": {
         "root": "java/src/main",
         "count": 17,
-        "packageSha256": "a7cc0a3757d088500d45e5f4ca58c4a5666e9dc53ed7a07b90b08eda1d405e7b",
+        "packageSha256": "885609f7f4f0d054cda19fd41ebeffde3159760996f680f1a81a992a202d7234",
         "files": [
           {
             "path": "java/src/main/java/top/mcbridge1201/Main.java",
-            "sha256": "9722d3c46f3f13f57b77bc33c5a287e6da01d409b792e44e920923ba4e816c93",
-            "size": 32415
+            "sha256": "90a1a494c0c8badb0576306fa19a598e868f0864674b0d67ecd3d8adbd3bbcda",
+            "size": 32483
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/analyze/Analyzer.java",
@@ -312,13 +312,13 @@
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/rules/JarPatcher.java",
-            "sha256": "7783025e46094dc56363c67463dc567d38213c176f2093931237000b42b91d82",
-            "size": 61602
+            "sha256": "32a911f2f38a3fd4ca421414347edae78c3309db9015588df571192c973c9d40",
+            "size": 64727
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/rules/RuleSet.java",
-            "sha256": "ef56298dca680919d94299a9f6869a667c2077bea53a008b9b09c6dbbb7c36c2",
-            "size": 20986
+            "sha256": "564b4e7abce07e3ef6cf5d34ac05a2ae449cfde424c95a3ad6ba338477320e48",
+            "size": 22798
           },
           {
             "path": "java/src/main/java/top/mcbridge1201/scan/ArtifactScanner.java",
@@ -550,8 +550,8 @@
       },
       "java/src/test": {
         "root": "java/src/test",
-        "count": 13,
-        "packageSha256": "fcd0e90b76ea5cc87a29d7c740e0eb6575f2101ab18785baee0f2f2d4b55a147",
+        "count": 14,
+        "packageSha256": "c501bdd2b89cdaa845e7ef058bba48fed9f2da0afeb81f2f46dfcf3576f75a2c",
         "files": [
           {
             "path": "java/src/test/java/top/mcbridge1201/AnalyzerCoreTest.java",
@@ -572,6 +572,11 @@
             "path": "java/src/test/java/top/mcbridge1201/JarPatcherCodecDispatchTest.java",
             "sha256": "6c4b080a2e8e2336f79c0e871a6880f790448942d2fd7f74c1e09707b9f7eb14",
             "size": 4559
+          },
+          {
+            "path": "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
+            "sha256": "aadb3284fbe4501903d062afc1a2c5b44c3621e20d186c8cc0ef57c52c4d6dd4",
+            "size": 6817
           },
           {
             "path": "java/src/test/java/top/mcbridge1201/JarPatcherKeepPrefixTest.java",
@@ -624,7 +629,7 @@
     "tools": {
       "count": 30,
       "present": 30,
-      "packageSha256": "15a76bd05d961edb7347aa3010955ff27ab8a0541504caabe23aa2a5f3f50124",
+      "packageSha256": "b4db969c60fb0919598ba21b3c17460595e98cc48fe19606f1467b3ade8f017d",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -648,8 +653,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "14e9ab9660a6497de11a86e0d835fc84c578021b77d4b1906f48b3f81b9b202b",
-          "size": 92171
+          "sha256": "8659dd2fca5a4e6614691ae74cee9dc38c1516ddee27cc7f3b05c4dc33f9d65e",
+          "size": 92344
         },
         {
           "path": "tools/release_check.py",
@@ -965,15 +970,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1822 mismatch=0 missing=0"
+          "ok=1825 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 361",
-          "hashed evidence files: 361",
+          "required evidence files: 363",
+          "hashed evidence files: 363",
           "coverage OK"
         ]
       },
@@ -983,7 +988,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 291 markdown file(s): 291 clean, 0 finding(s)"
+          "checked 292 markdown file(s): 292 clean, 0 finding(s)"
         ]
       },
       {

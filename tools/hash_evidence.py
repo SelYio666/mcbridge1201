@@ -1856,6 +1856,9 @@ FILES = [
     "runs/p258-resourceful-registration-probe/result.json",
     "runs/p258-resourceful-registration-probe/javap-FabricRegistryEntry.txt",
     "runs/p258-resourceful-registration-probe/javap-FabricResourcefulRegistry.txt",
+    "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
+    "runs/p259-insert-before-call/README.md",
+    "runs/p259-insert-before-call/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the
