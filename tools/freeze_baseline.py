@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parent.parent
 LOCK = ROOT / "manifests" / "baseline.lock.json"
 SCHEMA = "baseline-lock-1"
 
-RULES_DIR = "rules/fabric-1.21.1"
+RULE_DIRS = ["rules/fabric-1.21.1", "rules/fabric-1.21.4"]
 SOURCE_TREES = [
     "java/src/main",
     "java/src/bridge",
@@ -244,8 +244,10 @@ def evidence_state() -> dict:
 def degradations() -> dict:
     """Explicit losses. A strip is legal only if it says what it removes and why."""
     strips = []
-    base = ROOT / RULES_DIR
-    for p in sorted(base.glob("*.json"), key=lambda x: x.name):
+    files = []
+    for d in RULE_DIRS:
+        files.extend(sorted((ROOT / d).glob("*.json"), key=lambda x: x.name))
+    for p in files:
         try:
             data = json.loads(p.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
@@ -311,7 +313,7 @@ def run_gates(verbose: bool = False) -> dict:
 
 
 def build(run_gate_flag: bool) -> dict:
-    rules = hash_group(RULES_DIR, (".json",))
+    rules = {d: hash_group(d, (".json",)) for d in RULE_DIRS}
     sources = {tree: hash_group(tree, (".java",)) for tree in SOURCE_TREES}
     lock = {
         "schemaVersion": SCHEMA,
@@ -428,7 +430,8 @@ def main() -> int:
     src_count = sum(g["count"] for g in lock["inputs"]["sources"].values())
     print(f"wrote {rel(LOCK)}")
     print(f"  commit {lock['git']['commit']} dirty={lock['git']['dirty']}")
-    print(f"  rules {rules['count']} files, package {rules['packageSha256'][:16]}")
+    print(f"  rules {sum(g['count'] for g in rules.values())} files across {len(rules)} package(s):"
+          + "".join(f" {d}={g['count']}" for d, g in rules.items()))
     print(f"  sources {src_count} .java files across {len(lock['inputs']['sources'])} trees")
     print(f"  target profiles {lock['targetProfiles']['count']}, evidence profiles {len(lock['evidence']['profiles'])}")
     print(f"  degradations {len(lock['degradations']['mixinStrips'])} declared mixin strip(s)")
