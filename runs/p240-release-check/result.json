@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "env": [
+    "JAVA_HOME=C:\\Users\\27682\\Documents\\新建文件夹\\.toolchain\\jdk",
+    "GRADLE_USER_HOME=C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\.toolchain\\gradle-home"
+  ],
+  "steps": [
+    {
+      "name": "hash manifest matches the tree",
+      "args": [
+        "C:\\Users\\27682\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "tools/check_hashes.py"
+      ],
+      "rc": 0,
+      "tail": [
+        "ok=1697 mismatch=0 missing=0"
+      ],
+      "seconds": 0.9
+    },
+    {
+      "name": "every run README/result is hashed",
+      "args": [
+        "C:\\Users\\27682\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "tools/check_manifest_coverage.py"
+      ],
+      "rc": 0,
+      "tail": [
+        "required evidence files: 323",
+        "hashed evidence files: 323",
+        "coverage OK"
+      ],
+      "seconds": 0.1
+    },
+    {
+      "name": "evidence gate (suite + unit tests + encoding)",
+      "args": [
+        "C:\\Users\\27682\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "tools/verify_evidence.py"
+      ],
+      "rc": 0,
+      "tail": [
+        "  },",
+        "  \"root\": \"C:\\\\Users\\\\27682\\\\Documents\\\\\\u65b0\\u5efa\\u6587\\u4ef6\\u5939\\\\mcbridge1201\"",
+        "}"
+      ],
+      "seconds": 146.0
+    },
+    {
+      "name": "portable build test-0.5.10",
+      "args": [
+        "C:\\Users\\27682\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "tools/build_portable.py",
+        "--label",
+        "test-0.5.10"
+      ],
+      "rc": 0,
+      "tail": [
+        "vendored dependencies: 7",
+        "package: C:\\Users\\27682\\Documents\\�½��ļ���\\mcbridge1201\\dist\\mcbridge-launcher-test-0.5.10.zip 11976724 bytes",
+        "done"
+      ],
+      "seconds": 3.1
+    }
+  ],
+  "zip": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\dist\\mcbridge-launcher-test-0.5.10.zip",
+  "zip_bytes": 11976724
+}
