@@ -1,0 +1,167 @@
+{
+  "workstream": "B03 pre-work: measure the 1.21.4 registration-key gap",
+  "target": {
+    "profile": "targets/fabric-1.21.4.json",
+    "stub": "work/target/client-1.21.4-intermediary.jar",
+    "api": {
+      "present": true,
+      "class": "net/minecraft/class_1792$class_1793.class",
+      "hasRegistryKeySetter": true,
+      "setterName": "method_63686",
+      "setterDescriptor": "(Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793;",
+      "descriptorVisibleInConstantPool": true
+    }
+  },
+  "inputs": [
+    {
+      "jar": "fixtures/source-fabric-1.20.1/out/mcbfixture-1.0.0.jar",
+      "sha256": "1f210e26c471a2611db8e13b5bd77f590c2b4f3d53aef6a5e96c5607a636e18b",
+      "classes": 6,
+      "callsRegister": 1,
+      "usesRegistryWrapper": 0,
+      "buildsItemSettings": 1,
+      "touchesRegistriesItem": 1,
+      "buildsBlockSettings": 0,
+      "buildsEntityType": 0,
+      "alreadyCallsTargetSetter": 0,
+      "gapClasses": [
+        "mcbfixture/FixtureRegistry.class"
+      ],
+      "nestedJars": []
+    },
+    {
+      "jar": "work/corpus/ironchests/ironchests-5.0.2-fabric.jar",
+      "sha256": "6a07065a3a68280e26a0fc8a3fc0d8dde10b0999432492ef6726cd583be96de6",
+      "classes": 206,
+      "callsRegister": 2,
+      "usesRegistryWrapper": 15,
+      "buildsItemSettings": 6,
+      "touchesRegistriesItem": 4,
+      "buildsBlockSettings": 0,
+      "buildsEntityType": 0,
+      "alreadyCallsTargetSetter": 0,
+      "gapClasses": [
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/ItemRegistry.class"
+      ],
+      "nestedJars": [
+        {
+          "entry": "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar",
+          "sha256": "bc9903d37c91cfac726f9f0d67544c64e086500fcb4fd8400c6a1bf75d4d6d89",
+          "directRegister": 2,
+          "registryWrapper": 5,
+          "itemSettings": 0,
+          "blockSettings": 0,
+          "entityType": 0,
+          "registriesItem": 3,
+          "alreadySetter": 0,
+          "classes": 140,
+          "directRegisterClasses": [
+            "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/registry/fabric/FabricRegistryEntry.class",
+            "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/item/tabs/fabric/ResourcefulCreativeTabImpl.class"
+          ],
+          "itemSettingsClasses": []
+        }
+      ]
+    }
+  ],
+  "gapDetail": {
+    "fixtures/source-fabric-1.20.1/out/mcbfixture-1.0.0.jar": {
+      "directRegister": [
+        "mcbfixture/FixtureRegistry.class"
+      ],
+      "registryWrapper": [],
+      "itemSettings": [
+        "mcbfixture/FixtureRegistry.class"
+      ],
+      "blockSettings": [],
+      "entityType": [],
+      "overlap": [
+        "mcbfixture/FixtureRegistry.class"
+      ]
+    },
+    "work/corpus/ironchests/ironchests-5.0.2-fabric.jar": {
+      "directRegister": [
+        "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/registry/fabric/FabricRegistryEntry.class",
+        "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/item/tabs/fabric/ResourcefulCreativeTabImpl.class"
+      ],
+      "registryWrapper": [
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/BlockRegistry$BlockEntityFactory.class",
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/BlockRegistry.class",
+        "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlock.class",
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/ItemRegistry.class",
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/fabric/MenuRegistryImpl.class",
+        "tech/thatgravyboat/ironchests/client/IronChestsClient.class",
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/fabric/BlockRegistryImpl.class",
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/MenuRegistry$MenuFactory.class",
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/MenuRegistry.class",
+        "tech/thatgravyboat/ironchests/api/chesttype/ChestUpgradeType.class",
+        "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/registry/ResourcefulRegistries.class",
+        "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/item/tabs/ResourcefulCreativeTab.class",
+        "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/registry/fabric/ResourcefulRegistriesImpl.class",
+        "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/item/tabs/fabric/ResourcefulCreativeTabImpl.class",
+        "META-INF/jars/resourcefullib-fabric-1.20-2.0.6.jar!/com/teamresourceful/resourcefullib/common/registry/ItemLikeResourcefulRegistry.class"
+      ],
+      "itemSettings": [
+        "tech/thatgravyboat/ironchests/common/items/DollyItem.class",
+        "tech/thatgravyboat/ironchests/common/items/LockItem.class",
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/ItemRegistry.class",
+        "tech/thatgravyboat/ironchests/common/items/KeyItem.class",
+        "tech/thatgravyboat/ironchests/common/items/KeyRingItem.class",
+        "tech/thatgravyboat/ironchests/common/items/UpgradeItem.class"
+      ],
+      "blockSettings": [],
+      "entityType": [],
+      "overlap": [
+        "tech/thatgravyboat/ironchests/common/registry/minecraft/ItemRegistry.class"
+      ]
+    }
+  },
+  "checks": [
+    {
+      "id": "target-has-registry-key-setter",
+      "expect": true,
+      "got": true,
+      "why": "the setter the converter would inject must exist in the target"
+    },
+    {
+      "id": "target-setter-takes-registry-key",
+      "expect": true,
+      "got": true,
+      "why": "the descriptor must be the RegistryKey overload, not an unrelated method"
+    },
+    {
+      "id": "source-never-calls-it",
+      "expect": 0,
+      "got": 0,
+      "why": "a 1.20.1 source calling a 1.21.4-only setter would mean the sample is not 1.20.1"
+    },
+    {
+      "id": "gap-exists-in-at-least-one-input",
+      "expect": ">=1",
+      "got": 2,
+      "why": "if no class both registers and builds settings, the fixture does not exercise it"
+    }
+  ],
+  "ruleDraft": {
+    "status": "draft_only_not_implemented",
+    "why_not_a_callSiteAdaptation": "There is no wrong call to rewrite: 1.20.1 code never calls a registry-key setter, so a call-site rule has nothing to match. The key has to be injected between 'new Settings()' and 'new Item(settings)', using an id that is usually a separate static field read at the register call.",
+    "why_not_a_constructorRedirect": "constructorRedirects replace one constructor call with a factory that receives the same arguments. The registry key is not among those arguments; it has to be recovered from the registry id passed to a later call in the same method.",
+    "proposed_shape": {
+      "kind": "registrationSiteRewrite",
+      "match": {
+        "registerCall": "class_2378.method_10230(registry, id, value)",
+        "valueConstruction": "value is a fresh instance whose constructor took a Settings built in the same method"
+      },
+      "rewrite": "emit bridge call RegistrationKeyBridge.register(registry, id, supplier) where the supplier builds the value with settings.method_63686(RegistryKey.of(RegistryKeys.ITEM, id))",
+      "requires": [
+        "a bridge that accepts a factory instead of an instance",
+        "identity of the registry (item/block/entity) to pick RegistryKeys.*",
+        "a decision for values that are not constructed inline (field holders)"
+      ],
+      "prerequisite": "A bytecode data-flow pass that ties the register call to the construction it registers; the current rule engine matches single call sites."
+    },
+    "verification_plan": "Patch the fixture, then assert: the patched class calls method_63686 before class_1792.<init>; a 1.21.4 boot does not raise 'Item id not set'. Only the first half is possible without a game instance."
+  },
+  "passed": true,
+  "scope": "measurement only. Nothing was converted, no rule was written, no game was launched: this locates the shape of the gap, it does not close it."
+}

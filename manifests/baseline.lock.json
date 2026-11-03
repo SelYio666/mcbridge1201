@@ -1,30 +1,20 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-03T20:47:33+08:00",
+  "generatedAt": "2026-11-03T21:01:22+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "51cea8d12adca178af822e1e2f411a52d3d86862",
+    "commit": "a33bcd8c6ca2e65e0051ebe6e9f5b7271bebe74c",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "manifests/target-fabric-1.21.4.lock.json",
       "runs/SHA256SUMS.txt",
-      "runs/p247-fabric-1.21.4-delta/README.md",
-      "runs/p247-fabric-1.21.4-delta/official-changes.json",
-      "runs/p247-fabric-1.21.4-delta/profile-check-1.21.4-with-1211-rules.json",
-      "runs/p247-fabric-1.21.4-delta/profile-check-1.21.4.json",
-      "runs/p247-fabric-1.21.4-delta/result.json",
-      "runs/p247-fabric-1.21.4-delta/static-fixture-1.21.1.json",
-      "runs/p247-fabric-1.21.4-delta/static-fixture-1.21.4.json",
-      "runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.1.json",
-      "runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.4.json",
-      "targets/fabric-1.21.4.json",
-      "tools/fetch_target_1214.py",
+      "runs/p248-registry-key-gap/README.md",
+      "runs/p248-registry-key-gap/result.json",
       "tools/freeze_baseline.py",
       "tools/hash_evidence.py",
-      "tools/run_1214_delta.py"
+      "tools/scan_registration_sites.py"
     ],
     "untrackedFiles": [
       "WORKSPACE.md"
@@ -588,9 +578,9 @@
       }
     },
     "tools": {
-      "count": 18,
-      "present": 18,
-      "packageSha256": "9e87cee875e2e4dc719f7ea780cb6c8d2eed443ed9623ecb5b0daec479f6dbb1",
+      "count": 19,
+      "present": 19,
+      "packageSha256": "71f3d0510b24d164eb4881fec6caf61467e9b40ec1999c5b6b8773144091ecbc",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -614,8 +604,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "398a975c1f4c001bae0eb02cb440fd680aaf783cc231a99337d6a0cc3ba8e4bd",
-          "size": 88945
+          "sha256": "361756025384fbc40f965e6d76e9d3600de36d128cd6159c3e37d5c2c5f0983c",
+          "size": 89075
         },
         {
           "path": "tools/release_check.py",
@@ -646,6 +636,11 @@
           "path": "tools/run_1214_delta.py",
           "sha256": "d7b26402b43f1d8b1ddb172ac4b824db3818b317718f9fa38b5b838b3a69ec58",
           "size": 19267
+        },
+        {
+          "path": "tools/scan_registration_sites.py",
+          "sha256": "e430f2b8a9f3b3f9a9a255a46b53bbfb6deada6972794f74824b332321ef3cea",
+          "size": 13981
         },
         {
           "path": "tools/run_target_gate.py",
@@ -679,8 +674,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "6a6d40096edb2690a986164e74037f970c4107ceb8b927ebe892ce92ade7e840",
-          "size": 17975
+          "sha256": "c7c9f6c373e8dbce217c7b49473222567a5eeb86c5d8991d87111c3344b82675",
+          "size": 18015
         }
       ]
     },
@@ -871,15 +866,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1762 mismatch=0 missing=0"
+          "ok=1765 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 339",
-          "hashed evidence files: 339",
+          "required evidence files: 341",
+          "hashed evidence files: 341",
           "coverage OK"
         ]
       },
@@ -889,7 +884,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 279 markdown file(s): 279 clean, 0 finding(s)"
+          "checked 280 markdown file(s): 280 clean, 0 finding(s)"
         ]
       },
       {

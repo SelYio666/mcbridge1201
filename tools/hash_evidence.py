@@ -1796,6 +1796,9 @@ FILES = [
     "runs/p247-fabric-1.21.4-delta/static-fixture-1.21.4.json",
     "runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.1.json",
     "runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.4.json",
+    "tools/scan_registration_sites.py",
+    "runs/p248-registry-key-gap/README.md",
+    "runs/p248-registry-key-gap/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

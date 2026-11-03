@@ -1707,7 +1707,7 @@ bd0474f5434b2425b328a0b7a792bd58c4d878a460fa882e716b1bb4e9fe7641  runs/p232-same
 8c9ab369fe0a2f32b6941eadedd91b33a8de7fdecb7f347da6c69eaba9d4b3f1  targets/fabric-1.21.1.json
 0b2f26febf63ba44b6966d491b8bd149e1c6eeebd9fca60c78c28e9b5724b7c7  java/src/main/java/top/mcbridge1201/profile/TargetProfile.java
 76879c41b3752c8ea14f62e245c3605858445af047e89b53b4751039f2a1a851  java/src/test/java/top/mcbridge1201/TargetProfileValidationTest.java
-6a6d40096edb2690a986164e74037f970c4107ceb8b927ebe892ce92ade7e840  tools/freeze_baseline.py
+c7c9f6c373e8dbce217c7b49473222567a5eeb86c5d8991d87111c3344b82675  tools/freeze_baseline.py
 04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6  tools/run_target_gate.py
 37615e2e30afe1b2c21a280ab79dd62028d3ecdc15d8fd9094bde3cb68874197  docs/multi-target-baseline.md
 f704e1b4682d7c9029462329c71976c8c0ffda4e3105b2cf80458fa22e419880  runs/p243-target-profile-gate/README.md
@@ -1760,3 +1760,6 @@ bf8af59bc35b3906c1c92601f2c9d64f1419a7adb8333a849384131afe9b5fab  runs/p247-fabr
 89ebf2b8d926c1f3733b0014df5d9c704563c9b78462762fb9a2ae3fb2a3322c  runs/p247-fabric-1.21.4-delta/static-fixture-1.21.4.json
 3bcff408e08bc17a4c90ff9eb3d1e9d37794539e551f24e27241c31875e73684  runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.1.json
 c5294478da900de3170ed861592e6a83b3b183337f708c1932e4a94e4f2e1f2a  runs/p247-fabric-1.21.4-delta/static-ironchests-5.0.2-1.21.4.json
+e430f2b8a9f3b3f9a9a255a46b53bbfb6deada6972794f74824b332321ef3cea  tools/scan_registration_sites.py
+9bc97bfbe9756409a2f9c0e6004bc31de23855f179543e0079c39908977581d4  runs/p248-registry-key-gap/README.md
+55bd5712ab3e63631f62aef39b055fb47823d70eb8f65c79056671a490414db2  runs/p248-registry-key-gap/result.json
