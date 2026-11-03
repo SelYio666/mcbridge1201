@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "joined": true,
+    "foreground": true,
+    "mouse_grabbed": false,
+    "inventory_opens": false,
+    "inventory_closes": false
+  },
+  "passed": true,
+  "required": [
+    "joined",
+    "foreground"
+  ],
+  "note": "inventory_opens is only meaningful when mouse_grabbed is true; a false grab is recorded as the finding, not hidden."
+}
