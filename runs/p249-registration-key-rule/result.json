@@ -20,7 +20,7 @@
     },
     "classesChanged": 1,
     "log": [
-      "validated 5 rule file(s): schema=0.1-draft target=fabric-1.21.4",
+      "validated 6 rule file(s): schema=0.1-draft target=fabric-1.21.4",
       "patched mcbfixture-1.0.0.jar -> fixture-1.21.4.jar (classes changed=1)",
       "  rule 1214.item-settings.registry-key applied 1 time(s)",
       "  bridges embedded: []",

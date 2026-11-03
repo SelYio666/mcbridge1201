@@ -31,24 +31,28 @@
       "1214.interaction-result.field-21466": 2,
       "1214.interaction-result.field-5811": 20,
       "1214.interaction-result.field-5812": 7,
+      "1214.item-settings.registry-context": 8,
       "ironchests.blit-region-1214": 2,
       "ironchests.blit-simple-1214": 3,
-      "ironchests.draw-nine-sliced-1214": 1
+      "ironchests.draw-nine-sliced-1214": 1,
+      "resourcefullib.supplier.get-with-registry-context": 1
     },
-    "classesChanged": 8,
+    "classesChanged": 10,
     "bridgeClasses": [
       "top/mcbridge1201/bridge/BlockStatePropertiesBridge1214.class",
       "top/mcbridge1201/bridge/DrawContextBlitBridge1214.class",
       "top/mcbridge1201/bridge/DrawContextTextureBridge1214.class",
-      "top/mcbridge1201/bridge/InteractionResultBridge1214.class"
+      "top/mcbridge1201/bridge/InteractionResultBridge1214.class",
+      "top/mcbridge1201/bridge/RegistryKeyContext$Pending.class",
+      "top/mcbridge1201/bridge/RegistryKeyContext.class"
     ],
     "logTail": [
-      "  rule ironchests.blit-region-1214 applied 2 time(s)",
       "  rule ironchests.blit-simple-1214 applied 3 time(s)",
       "  rule ironchests.draw-nine-sliced-1214 applied 1 time(s)",
-      "  bridges embedded: [top/mcbridge1201/bridge/BlockStatePropertiesBridge1214, top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
-      "  javac bridges: [top/mcbridge1201/bridge/BlockStatePropertiesBridge1214, top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
-      "  sha256 6d4f817820db0037fb48a2a675813d83fa1c0ec64cf7eb02e2a33d0682e478ad"
+      "  rule resourcefullib.supplier.get-with-registry-context applied 1 time(s)",
+      "  bridges embedded: [top/mcbridge1201/bridge/BlockStatePropertiesBridge1214, top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214, top/mcbridge1201/bridge/RegistryKeyContext]",
+      "  javac bridges: [top/mcbridge1201/bridge/BlockStatePropertiesBridge1214, top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214, top/mcbridge1201/bridge/RegistryKeyContext]",
+      "  sha256 08e839c9fdcb1518c8e7112ae9fd4b12fdb1b171736639afdb18df2af61810f2"
     ]
   },
   "bytecode": {
@@ -68,8 +72,8 @@
       },
       "oldCallsAfter": {},
       "bridgeCallsAfter": {
-        "DrawContextBlitBridge1214": 3,
-        "DrawContextTextureBridge1214": 1
+        "DrawContextTextureBridge1214": 1,
+        "DrawContextBlitBridge1214": 3
       }
     }
   },
