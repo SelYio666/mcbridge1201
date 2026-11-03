@@ -1817,6 +1817,13 @@ FILES = [
     "tools/probe_target_bridges.py",
     "runs/p251-1214-compile-closure/README.md",
     "runs/p251-1214-compile-closure/result.json",
+    "rules/fabric-1.21.4/ironchests-draw.json",
+    "java/src/bridge-1214/java/top/mcbridge1201/bridge/DrawContextTextureBridge1214.java",
+    "tools/run_1214_first_bridge.py",
+    "runs/p252-1214-first-bridge/README.md",
+    "runs/p252-1214-first-bridge/result.json",
+    "runs/p252-1214-first-bridge/disassembly-before.txt",
+    "runs/p252-1214-first-bridge/disassembly-after.txt",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

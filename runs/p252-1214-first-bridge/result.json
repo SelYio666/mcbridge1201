@@ -1,0 +1,89 @@
+{
+  "workstream": "B03 second slice: first descriptor-changed rule on a real jar",
+  "target": "targets/fabric-1.21.4.json",
+  "rule": "rules/fabric-1.21.4/ironchests-draw.json",
+  "bridge": "java/src/bridge-1214/java/top/mcbridge1201/bridge/DrawContextTextureBridge1214.java",
+  "input": "work/corpus/ironchests/ironchests-5.0.2-fabric.jar",
+  "output": "runs/p252-1214-first-bridge/ironchests-5.0.2-1214.jar",
+  "build": {
+    "rc": 0,
+    "majors": {
+      "65": 3
+    },
+    "logTail": [
+      "embedded legacy shim -> C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-zcode\\runs\\p252-1214-first-bridge\\bridges\\net\\fabricmc\\fabric\\api\\networking\\v1\\ServerPlayNetworking$PlayChannelHandler.class",
+      "bridge class major: 3 class(es) at major 65",
+      "target output: runs\\p252-1214-first-bridge\\bridges (profile fabric-1.21.4)"
+    ]
+  },
+  "patch": {
+    "rc": 0,
+    "applied": {
+      "id": "ironchests.draw-nine-sliced-1214",
+      "count": 1
+    },
+    "bridgeEmbedded": true,
+    "logTail": [
+      "patched ironchests-5.0.2-fabric.jar -> ironchests-5.0.2-1214.jar (classes changed=1)",
+      "  rule ironchests.draw-nine-sliced-1214 applied 1 time(s)",
+      "  bridges embedded: [top/mcbridge1201/bridge/DrawContextTextureBridge1214]",
+      "  javac bridges: [top/mcbridge1201/bridge/DrawContextTextureBridge1214]",
+      "  sha256 6179d0dd32988ecd2b20baaaf98a7079d539a089d802d5c4143f3c1ff7b99792"
+    ]
+  },
+  "callsite": {
+    "before": "60: invokevirtual #48                 // Method net/minecraft/class_332.method_48587:(Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
+    "after": "60: invokestatic  #48                 // Method top/mcbridge1201/bridge/DrawContextTextureBridge1214.drawNineSliced:(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
+    "oldCallRemains": false
+  },
+  "checks": [
+    {
+      "id": "bridge-compiles-at-target-major",
+      "expect": [
+        65
+      ],
+      "got": [
+        65
+      ],
+      "why": "the target bridge must be loadable by the 1.21.4 runtime",
+      "passed": true
+    },
+    {
+      "id": "rule-fired-on-original-jar",
+      "expect": 1,
+      "got": 1,
+      "why": "the rule matches the raw 1.20.1 call, not a CenturyBridge tombstone",
+      "passed": true
+    },
+    {
+      "id": "bridge-embedded",
+      "expect": true,
+      "got": true,
+      "why": "the patched jar has to carry the class it now calls",
+      "passed": true
+    },
+    {
+      "id": "source-calls-method_48587",
+      "expect": true,
+      "got": true,
+      "why": "the 1.20.1 shape this rule exists for",
+      "passed": true
+    },
+    {
+      "id": "patched-calls-bridge",
+      "expect": true,
+      "got": true,
+      "why": "the rewrite has to land on the bridge",
+      "passed": true
+    },
+    {
+      "id": "old-call-is-gone",
+      "expect": true,
+      "got": true,
+      "why": "a leftover call would fail at runtime with NoSuchMethodError",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "bytecode only. The bridge compiles and the call is redirected; whether the nine patches render correctly on 1.21.4 needs the game and was not tested."
+}

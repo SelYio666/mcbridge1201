@@ -177,7 +177,9 @@ def from_profile(profile_path):
         print(f"classpath closure: {len(lock.get('classpath') or [])} jar(s) from"
               f" {os.path.basename(closure_path)}")
 
+    sources = pipeline.get("bridgeSources") or []
     return {
+        "bridge_sources": sources,
         "profile_path": profile_path,
         "profile_id": p.get("profileId"),
         "target_id": target.get("id"),
@@ -280,11 +282,17 @@ def main():
             print(f"stub missing: {cfg['stub']}", file=sys.stderr)
             return 2
 
-    src_root = os.path.join(ROOT, "java", "src", "bridge", "java")
-    sources = java_sources(src_root)
+    src_roots = [os.path.join(ROOT, rel) for rel in (cfg.get("bridge_sources") or [])]
+    if not src_roots:
+        src_roots = [os.path.join(ROOT, "java", "src", "bridge", "java")]
+    sources = []
+    for root in src_roots:
+        sources.extend(java_sources(root))
     if not sources:
-        print("no bridge sources under", src_root, file=sys.stderr)
+        print("no bridge sources under", ", ".join(src_roots), file=sys.stderr)
         return 2
+    print("bridge sources:", ", ".join(os.path.relpath(r, ROOT) for r in src_roots),
+          "->", len(sources), "file(s)")
     os.makedirs(cfg["out"], exist_ok=True)
     cp = os.pathsep.join([os.path.abspath(cfg["stub"])] + [os.path.abspath(x) for x in cfg["libs"]])
     common = ["-nowarn", "-proc:none", "-encoding", "UTF-8"]

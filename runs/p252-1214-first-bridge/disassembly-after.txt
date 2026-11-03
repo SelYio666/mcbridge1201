@@ -1,0 +1,217 @@
+Compiled from "GeneratedScreenRenderer.java"
+public final class tech.thatgravyboat.ironchests.client.ui.GeneratedScreenRenderer extends java.lang.Record implements tech.thatgravyboat.ironchests.client.ui.ScreenRenderer {
+  private final tech.thatgravyboat.ironchests.api.chesttype.ChestType type;
+
+  private static final net.minecraft.class_2960 BACKGROUND;
+
+  private static final net.minecraft.class_2960 SLOT;
+
+  public tech.thatgravyboat.ironchests.client.ui.GeneratedScreenRenderer(tech.thatgravyboat.ironchests.api.chesttype.ChestType);
+    Code:
+       0: aload_0
+       1: invokespecial #22                 // Method java/lang/Record."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+       9: return
+
+  public void render(net.minecraft.class_332, int, int);
+    Code:
+       0: iload_2
+       1: aload_0
+       2: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+       5: invokevirtual #37                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.width:()I
+       8: isub
+       9: iconst_2
+      10: idiv
+      11: istore        4
+      13: iload_3
+      14: aload_0
+      15: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      18: invokevirtual #40                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.height:()I
+      21: isub
+      22: iconst_2
+      23: idiv
+      24: istore        5
+      26: aload_1
+      27: getstatic     #42                 // Field BACKGROUND:Lnet/minecraft/class_2960;
+      30: iload         4
+      32: iload         5
+      34: aload_0
+      35: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      38: invokevirtual #37                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.width:()I
+      41: aload_0
+      42: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      45: invokevirtual #40                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.height:()I
+      48: iconst_4
+      49: iconst_4
+      50: iconst_4
+      51: iconst_4
+      52: sipush        256
+      55: sipush        256
+      58: iconst_0
+      59: iconst_0
+      60: invokestatic  #48                 // Method top/mcbridge1201/bridge/DrawContextTextureBridge1214.drawNineSliced:(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIIIIIIIII)V
+      63: iinc          4, -1
+      66: iinc          5, -1
+      69: iconst_0
+      70: istore        6
+      72: iload         6
+      74: aload_0
+      75: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      78: invokevirtual #51                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.rows:()I
+      81: if_icmpge     151
+      84: iconst_0
+      85: istore        7
+      87: iload         7
+      89: aload_0
+      90: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+      93: invokevirtual #54                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.length:()I
+      96: if_icmpge     145
+      99: aload_1
+     100: getstatic     #56                 // Field SLOT:Lnet/minecraft/class_2960;
+     103: iload         4
+     105: aload_0
+     106: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+     109: invokevirtual #59                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.menuOffset:()I
+     112: iadd
+     113: iload         7
+     115: bipush        18
+     117: imul
+     118: iadd
+     119: iload         5
+     121: bipush        18
+     123: iadd
+     124: iload         6
+     126: bipush        18
+     128: imul
+     129: iadd
+     130: iconst_0
+     131: iconst_0
+     132: bipush        18
+     134: bipush        18
+     136: invokevirtual #65                 // Method net/minecraft/class_332.method_25302:(Lnet/minecraft/class_2960;IIIIII)V
+     139: iinc          7, 1
+     142: goto          87
+     145: iinc          6, 1
+     148: goto          72
+     151: iconst_1
+     152: aload_0
+     153: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+     156: invokevirtual #51                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.rows:()I
+     159: iconst_4
+     160: isub
+     161: bipush        18
+     163: imul
+     164: iadd
+     165: istore        6
+     167: iconst_0
+     168: istore        7
+     170: iload         7
+     172: iconst_3
+     173: if_icmpge     241
+     176: iconst_0
+     177: istore        8
+     179: iload         8
+     181: bipush        9
+     183: if_icmpge     235
+     186: aload_1
+     187: getstatic     #56                 // Field SLOT:Lnet/minecraft/class_2960;
+     190: iload         4
+     192: aload_0
+     193: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+     196: invokevirtual #68                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.inventoryOffset:()I
+     199: iadd
+     200: iload         8
+     202: bipush        18
+     204: imul
+     205: iadd
+     206: iload         5
+     208: bipush        103
+     210: iadd
+     211: iload         7
+     213: bipush        18
+     215: imul
+     216: iadd
+     217: iload         6
+     219: iadd
+     220: iconst_0
+     221: iconst_0
+     222: bipush        18
+     224: bipush        18
+     226: invokevirtual #65                 // Method net/minecraft/class_332.method_25302:(Lnet/minecraft/class_2960;IIIIII)V
+     229: iinc          8, 1
+     232: goto          179
+     235: iinc          7, 1
+     238: goto          170
+     241: iconst_0
+     242: istore        7
+     244: iload         7
+     246: bipush        9
+     248: if_icmpge     295
+     251: aload_1
+     252: getstatic     #56                 // Field SLOT:Lnet/minecraft/class_2960;
+     255: iload         4
+     257: aload_0
+     258: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+     261: invokevirtual #68                 // Method tech/thatgravyboat/ironchests/api/chesttype/ChestType.inventoryOffset:()I
+     264: iadd
+     265: iload         7
+     267: bipush        18
+     269: imul
+     270: iadd
+     271: iload         5
+     273: sipush        161
+     276: iadd
+     277: iload         6
+     279: iadd
+     280: iconst_0
+     281: iconst_0
+     282: bipush        18
+     284: bipush        18
+     286: invokevirtual #65                 // Method net/minecraft/class_332.method_25302:(Lnet/minecraft/class_2960;IIIIII)V
+     289: iinc          7, 1
+     292: goto          244
+     295: return
+
+  public final java.lang.String toString();
+    Code:
+       0: aload_0
+       1: invokedynamic #89,  0             // InvokeDynamic #0:toString:(Ltech/thatgravyboat/ironchests/client/ui/GeneratedScreenRenderer;)Ljava/lang/String;
+       6: areturn
+
+  public final int hashCode();
+    Code:
+       0: aload_0
+       1: invokedynamic #93,  0             // InvokeDynamic #0:hashCode:(Ltech/thatgravyboat/ironchests/client/ui/GeneratedScreenRenderer;)I
+       6: ireturn
+
+  public final boolean equals(java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokedynamic #99,  0             // InvokeDynamic #0:equals:(Ltech/thatgravyboat/ironchests/client/ui/GeneratedScreenRenderer;Ljava/lang/Object;)Z
+       7: ireturn
+
+  public tech.thatgravyboat.ironchests.api.chesttype.ChestType type();
+    Code:
+       0: aload_0
+       1: getfield      #24                 // Field type:Ltech/thatgravyboat/ironchests/api/chesttype/ChestType;
+       4: areturn
+
+  static {};
+    Code:
+       0: new           #104                // class net/minecraft/class_2960
+       3: dup
+       4: ldc           #106                // String ironchests
+       6: ldc           #108                // String textures/gui/base.png
+       8: invokespecial #111                // Method net/minecraft/class_2960."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+      11: putstatic     #42                 // Field BACKGROUND:Lnet/minecraft/class_2960;
+      14: new           #104                // class net/minecraft/class_2960
+      17: dup
+      18: ldc           #106                // String ironchests
+      20: ldc           #113                // String textures/gui/slot.png
+      22: invokespecial #111                // Method net/minecraft/class_2960."<init>":(Ljava/lang/String;Ljava/lang/String;)V
+      25: putstatic     #56                 // Field SLOT:Lnet/minecraft/class_2960;
+      28: return
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.4",
+  "note": "IronChests' 1.20.1 drawNineSlicedTexture(class_2960 + 12 ints) call, matched on the ORIGINAL jar rather than on a CenturyBridge tombstone. The 1.21.1 route matched the tombstone stub because that route goes through the engine; this route patches the raw call directly, which the rule engine supports and which removes a dependency on the engine for a caller that already has the original jar.",
+  "methodRedirects": [
+    {
+      "id": "ironchests.draw-nine-sliced-1214",
+      "sourceOwner": "net/minecraft/class_332",
+      "sourceName": "method_48587",
+      "sourceDesc": "(Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
+      "sourceOpcode": 182,
+      "bridgeClass": "top/mcbridge1201/bridge/DrawContextTextureBridge1214",
+      "bridgeMethod": "drawNineSliced",
+      "bridgeDesc": "(Lnet/minecraft/class_332;Lnet/minecraft/class_2960;IIIIIIIIIIII)V",
+      "capability": "screen.draw.nine-sliced",
+      "risk": "medium",
+      "evidence": "1.20.1 call: GeneratedScreenRenderer.client/ui calls class_332.method_48587(Lnet/minecraft/class_2960;IIIIIIIIIIII)V (measured with `mcbridge1201 refs`). 1.21.4 does not have method_48587; its blit is class_332.method_25293(Function,Identifier,int,int,float,float,int,int,int,int,int,int,int) - measured with javap. The bridge rebuilds the nine patches against that signature, using class_1921.method_62277 = RenderType.guiTextured(Identifier) as the resolver. The rewrite turns the invokevirtual into an invokestatic whose first parameter is the DrawContext receiver, so the stack shape is preserved."
+    }
+  ]
+}
