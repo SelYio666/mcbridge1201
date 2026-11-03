@@ -1845,6 +1845,12 @@ FILES = [
     "tools/run_1214_interaction_bridge.py",
     "runs/p256-1214-interaction-result/README.md",
     "runs/p256-1214-interaction-result/result.json",
+    "tools/classpool.py",
+    "tools/run_1214_field_rules.py",
+    "rules/fabric-1.21.4/blockstate-properties.json",
+    "java/src/bridge-1214/java/top/mcbridge1201/bridge/BlockStatePropertiesBridge1214.java",
+    "runs/p257-1214-field-rules/README.md",
+    "runs/p257-1214-field-rules/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

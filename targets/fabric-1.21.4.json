@@ -88,9 +88,11 @@
       "rules/fabric-1.21.4/registration-key.json",
       "rules/fabric-1.21.4/ironchests-draw.json",
       "rules/fabric-1.21.4/ironchests-blit.json",
-      "rules/fabric-1.21.4/interaction-result.json"
+      "rules/fabric-1.21.4/interaction-result.json",
+      "rules/fabric-1.21.4/blockstate-properties.json"
     ],
     "capabilities": [
+      "blockstate.property.direction",
       "interaction.result.constant",
       "registration.registry_key",
       "screen.draw.blit.atlas",

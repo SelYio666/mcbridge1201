@@ -1,0 +1,186 @@
+{
+  "workstream": "B03 fifth slice: all field rules, including a deleted-type replacement",
+  "target": "targets/fabric-1.21.4.json",
+  "rules": [
+    "rules/fabric-1.21.4/interaction-result.json",
+    "rules/fabric-1.21.4/blockstate-properties.json"
+  ],
+  "input": "work/corpus/ironchests/ironchests-5.0.2-fabric.jar",
+  "output": "runs/p257-1214-field-rules/ironchests-5.0.2-1214-fields.jar",
+  "build": {
+    "rc": 0,
+    "majors": {
+      "65": 6
+    }
+  },
+  "patch": {
+    "rc": 0,
+    "applied": {
+      "1214.blockstate-properties.field-12481": 3,
+      "1214.blockstate-properties.field-12525": 4,
+      "1214.interaction-result.field-21466": 2,
+      "1214.interaction-result.field-5811": 20,
+      "1214.interaction-result.field-5812": 7,
+      "ironchests.blit-region-1214": 2,
+      "ironchests.blit-simple-1214": 3,
+      "ironchests.draw-nine-sliced-1214": 1
+    },
+    "logTail": [
+      "  rule ironchests.blit-region-1214 applied 2 time(s)",
+      "  rule ironchests.blit-simple-1214 applied 3 time(s)",
+      "  rule ironchests.draw-nine-sliced-1214 applied 1 time(s)",
+      "  bridges embedded: [top/mcbridge1201/bridge/BlockStatePropertiesBridge1214, top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  javac bridges: [top/mcbridge1201/bridge/BlockStatePropertiesBridge1214, top/mcbridge1201/bridge/DrawContextBlitBridge1214, top/mcbridge1201/bridge/DrawContextTextureBridge1214, top/mcbridge1201/bridge/InteractionResultBridge1214]",
+      "  sha256 6d4f817820db0037fb48a2a675813d83fa1c0ec64cf7eb02e2a33d0682e478ad"
+    ]
+  },
+  "constantPool": {
+    "before": {
+      "staleFields": 15,
+      "staleTypes": 1,
+      "bridgeRefs": 0,
+      "entries": [
+        {
+          "class": "tech/thatgravyboat/ironchests/common/items/DollyItem.class",
+          "staleFields": 4,
+          "staleTypes": 0,
+          "bridgeRefs": 0
+        },
+        {
+          "class": "tech/thatgravyboat/ironchests/common/items/LockItem.class",
+          "staleFields": 2,
+          "staleTypes": 0,
+          "bridgeRefs": 0
+        },
+        {
+          "class": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlock.class",
+          "staleFields": 4,
+          "staleTypes": 1,
+          "bridgeRefs": 0
+        },
+        {
+          "class": "tech/thatgravyboat/ironchests/common/items/KeyItem.class",
+          "staleFields": 2,
+          "staleTypes": 0,
+          "bridgeRefs": 0
+        },
+        {
+          "class": "tech/thatgravyboat/ironchests/common/items/UpgradeItem.class",
+          "staleFields": 3,
+          "staleTypes": 0,
+          "bridgeRefs": 0
+        }
+      ]
+    },
+    "after": {
+      "staleFields": 0,
+      "staleTypes": 0,
+      "bridgeRefs": 15,
+      "entries": [
+        {
+          "class": "tech/thatgravyboat/ironchests/common/items/DollyItem.class",
+          "staleFields": 0,
+          "staleTypes": 0,
+          "bridgeRefs": 4
+        },
+        {
+          "class": "tech/thatgravyboat/ironchests/common/items/LockItem.class",
+          "staleFields": 0,
+          "staleTypes": 0,
+          "bridgeRefs": 2
+        },
+        {
+          "class": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlock.class",
+          "staleFields": 0,
+          "staleTypes": 0,
+          "bridgeRefs": 4
+        },
+        {
+          "class": "tech/thatgravyboat/ironchests/common/items/KeyItem.class",
+          "staleFields": 0,
+          "staleTypes": 0,
+          "bridgeRefs": 2
+        },
+        {
+          "class": "tech/thatgravyboat/ironchests/common/items/UpgradeItem.class",
+          "staleFields": 0,
+          "staleTypes": 0,
+          "bridgeRefs": 3
+        }
+      ]
+    }
+  },
+  "groups": {
+    "interaction-result": {
+      "hits": 29,
+      "ruleHits": {
+        "1214.interaction-result.field-21466": 2,
+        "1214.interaction-result.field-5811": 20,
+        "1214.interaction-result.field-5812": 7
+      },
+      "staleFieldsAfter": 0
+    },
+    "blockstate-properties": {
+      "hits": 7,
+      "ruleHits": {
+        "1214.blockstate-properties.field-12481": 3,
+        "1214.blockstate-properties.field-12525": 4
+      },
+      "staleFieldsAfter": 0
+    }
+  },
+  "checks": [
+    {
+      "id": "bridges-compile-at-65",
+      "expect": [
+        65
+      ],
+      "got": [
+        65
+      ],
+      "passed": true
+    },
+    {
+      "id": "source-had-stale-field-refs",
+      "expect": true,
+      "got": true,
+      "passed": true
+    },
+    {
+      "id": "source-had-deleted-type",
+      "expect": true,
+      "got": true,
+      "passed": true
+    },
+    {
+      "id": "all-field-rules-fired",
+      "expect": true,
+      "got": true,
+      "passed": true
+    },
+    {
+      "id": "no-stale-field-ref-left",
+      "expect": 0,
+      "got": 0,
+      "passed": true
+    },
+    {
+      "id": "no-deleted-type-left-anywhere",
+      "expect": 0,
+      "got": 0,
+      "passed": true
+    },
+    {
+      "id": "bridge-refs-present",
+      "expect": true,
+      "got": true,
+      "passed": true
+    }
+  ],
+  "deletedTypeMethod": {
+    "problem": "class_2753 no longer exists in 1.21.4, so a bridge cannot declare a return type for it",
+    "approach": "return the common supertype class_2769 and let COMPUTE_FRAMES rebuild every frame, then assert that no CONSTANT_Class entry still names the deleted type - instructions alone would not catch a stale frame"
+  },
+  "passed": true,
+  "scope": "linkage only: no 1.21.4 runtime, so behaviour is unverified"
+}

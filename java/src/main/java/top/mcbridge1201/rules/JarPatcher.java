@@ -624,6 +624,11 @@ public final class JarPatcher {
                         st.applied.merge(r.id, 1, Integer::sum);
                         recordBridge(st, used, r.bridgeClass);
                         changed = true;
+                        // A field redirect can change the TYPE on the stack (a bridge may return a
+                        // supertype - see blockstate-properties, where the old type is deleted).
+                        // Leaving the old StackMapTable in place keeps the deleted type named in a
+                        // frame, which fails verification even though every instruction is fine.
+                        framesAffected = true;
                     }
                 } else if (insn instanceof MethodInsnNode m0) {
                     if (System.getenv("MCB_DEBUG_RULES") != null

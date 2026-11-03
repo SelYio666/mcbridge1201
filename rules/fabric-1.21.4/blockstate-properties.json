@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.4",
+  "note": "BlockStateProperties' direction fields lost their type in 1.21.4: class_2753 (DirectionProperty) is deleted and the fields are declared as class_2754 (EnumProperty<Direction>). A field redirect cannot declare a return type that no longer exists, so the bridge returns the common supertype class_2769 (Property). Sound here because every read in the sample is consumed as a Property (BlockState#has and Property#equals, both still present in 1.21.4) - verified by scanning every class_2753 reference before patching, and by frame recomputation afterwards.",
+  "fieldRedirects": [
+    {
+      "id": "1214.blockstate-properties.field-12481",
+      "sourceOwner": "net/minecraft/class_2741",
+      "sourceName": "field_12481",
+      "sourceDesc": "Lnet/minecraft/class_2753;",
+      "bridgeClass": "top/mcbridge1201/bridge/BlockStatePropertiesBridge1214",
+      "bridgeMethod": "field12481",
+      "bridgeDesc": "()Lnet/minecraft/class_2769;",
+      "capability": "blockstate.property.direction",
+      "risk": "medium",
+      "evidence": "1.20.1: class_2741.field_12481 : Lclass_2753; 1.21.4: same name, Lclass_2754; and class_2753 is absent from the target stub (javap both). Consumers in the sample: BlockState#method_28498(class_2769) and Property#equals - both take/return the supertype, so widening is safe. The one other class_2753 constant is a frame reference, which COMPUTE_FRAMES rebuilds."
+    },
+    {
+      "id": "1214.blockstate-properties.field-12525",
+      "sourceOwner": "net/minecraft/class_2741",
+      "sourceName": "field_12525",
+      "sourceDesc": "Lnet/minecraft/class_2753;",
+      "bridgeClass": "top/mcbridge1201/bridge/BlockStatePropertiesBridge1214",
+      "bridgeMethod": "field12525",
+      "bridgeDesc": "()Lnet/minecraft/class_2769;",
+      "capability": "blockstate.property.direction",
+      "risk": "medium",
+      "evidence": "Same shape as field_12481 (class_2754 in 1.21.4), same supertype-only consumption."
+    }
+  ]
+}
