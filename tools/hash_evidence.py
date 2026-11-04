@@ -1885,6 +1885,10 @@ FILES = [
     "tools/compare_rule_packages.py",
     "runs/p266-rule-package-reuse/README.md",
     "runs/p266-rule-package-reuse/result.json",
+    "tools/resolve_removed_members.py",
+    "runs/p267-removed-members-reclassified/README.md",
+    "runs/p267-removed-members-reclassified/result.json",
+    "runs/p250-1214-break-classification/README.md",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

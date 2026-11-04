@@ -1,0 +1,167 @@
+{
+  "workstream": "re-decide p250's member-removed entries against both mapping sets",
+  "source": "runs/p250-1214-break-classification/result.json",
+  "counts": {
+    "removed": 4,
+    "descriptor-changed": 2
+  },
+  "entries": [
+    {
+      "p250": {
+        "kind": "new",
+        "owner": "net/minecraft/class_2464",
+        "name": "field_11456",
+        "desc": "Lnet/minecraft/class_2464;",
+        "mojangOwner1211": "net.minecraft.world.level.block.RenderShape",
+        "mojangOwner1214": "net.minecraft.world.level.block.RenderShape",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      "name": "field_11456",
+      "callSiteOwner": "net/minecraft/class_2464",
+      "declaringOwner": "net/minecraft/class_2464",
+      "declaringOwnerOfficial": "dmf",
+      "officialName": "b",
+      "oldDesc": "Ldmf;",
+      "declaredIn1214": [],
+      "outcome": "removed",
+      "why": "not declared on the declaring owner in 1.21.4"
+    },
+    {
+      "p250": {
+        "kind": "new",
+        "owner": "net/minecraft/class_1269",
+        "name": "method_29236",
+        "desc": "(Z)Lnet/minecraft/class_1269;",
+        "mojangOwner1211": "net.minecraft.world.InteractionResult",
+        "mojangOwner1214": "net.minecraft.world.InteractionResult",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      "name": "method_29236",
+      "callSiteOwner": "net/minecraft/class_1269",
+      "declaringOwner": "net/minecraft/class_1269",
+      "declaringOwnerOfficial": "bqr",
+      "officialName": "a",
+      "oldDesc": "(Z)Lbqr;",
+      "declaredIn1214": [],
+      "outcome": "removed",
+      "why": "not declared on the declaring owner in 1.21.4"
+    },
+    {
+      "p250": {
+        "kind": "new",
+        "owner": "net/minecraft/class_1936",
+        "name": "method_39281",
+        "desc": "(Lnet/minecraft/class_2338;Lnet/minecraft/class_3611;I)V",
+        "mojangOwner1211": "net.minecraft.world.level.LevelAccessor",
+        "mojangOwner1214": "net.minecraft.world.level.LevelAccessor",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      "name": "method_39281",
+      "callSiteOwner": "net/minecraft/class_1936",
+      "declaringOwner": "net/minecraft/class_1936",
+      "declaringOwnerOfficial": "dcx",
+      "officialName": "a",
+      "oldDesc": "(Ljd;Lepd;I)V",
+      "declaredIn1214": [],
+      "outcome": "removed",
+      "why": "not declared on the declaring owner in 1.21.4"
+    },
+    {
+      "p250": {
+        "kind": "new",
+        "owner": "net/minecraft/class_2237",
+        "name": "method_9559",
+        "desc": "(Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;",
+        "mojangOwner1211": "net.minecraft.world.level.block.BaseEntityBlock",
+        "mojangOwner1214": "net.minecraft.world.level.block.BaseEntityBlock",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "alsoAbsentOn1211": true,
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      "name": "method_9559",
+      "callSiteOwner": "net/minecraft/class_2237",
+      "declaringOwner": "net/minecraft/class_4970",
+      "declaringOwnerOfficial": "dtb",
+      "officialName": "a",
+      "oldDesc": "(Ldtc;Lji;Ldtc;Ldcx;Ljd;Ljd;)Ldtc;",
+      "declaredIn1214": [
+        "(Lnet/minecraft/class_2680;Lnet/minecraft/class_4538;Lnet/minecraft/class_10225;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_5819;)Lnet/minecraft/class_2680;"
+      ],
+      "outcome": "descriptor-changed",
+      "why": "same name, different descriptor - a callSite/signature adaptation, not a removal"
+    },
+    {
+      "p250": {
+        "kind": "new",
+        "owner": "net/minecraft/class_2680",
+        "name": "method_26226",
+        "desc": "(Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;",
+        "mojangOwner1211": "net.minecraft.world.level.block.state.BlockState",
+        "mojangOwner1214": "net.minecraft.world.level.block.state.BlockState",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "alsoAbsentOn1211": true,
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      "name": "method_26226",
+      "callSiteOwner": "net/minecraft/class_2680",
+      "declaringOwner": "net/minecraft/class_4970$class_4971",
+      "declaringOwnerOfficial": "dtb$a",
+      "officialName": "n",
+      "oldDesc": "(Ldcc;Ljd;)Lexc;",
+      "declaredIn1214": [
+        "(Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;"
+      ],
+      "outcome": "descriptor-changed",
+      "why": "same name, different descriptor - a callSite/signature adaptation, not a removal"
+    },
+    {
+      "p250": {
+        "kind": "new",
+        "owner": "net/minecraft/class_4722",
+        "name": "method_24076",
+        "desc": "()Lnet/minecraft/class_1921;",
+        "mojangOwner1211": "net.minecraft.client.renderer.Sheets",
+        "mojangOwner1214": "net.minecraft.client.renderer.Sheets",
+        "category": "member-removed",
+        "note": "the class exists but the member name no longer appears in it",
+        "proposedRuleType": "methodRedirects / fieldRedirects to a bridge, or an explicit degradation if there is no replacement"
+      },
+      "name": "method_24076",
+      "callSiteOwner": "net/minecraft/class_4722",
+      "declaringOwner": "net/minecraft/class_4722",
+      "declaringOwnerOfficial": "gfo",
+      "officialName": "k",
+      "oldDesc": "()Lgfh;",
+      "declaredIn1214": [],
+      "outcome": "removed",
+      "why": "not declared on the declaring owner in 1.21.4"
+    }
+  ],
+  "checks": [
+    {
+      "id": "p250-over-counted-removals",
+      "expect": true,
+      "got": true,
+      "why": "at least one entry is not actually removed",
+      "passed": true
+    },
+    {
+      "id": "two-are-descriptor-changes",
+      "expect": 2,
+      "got": 2,
+      "passed": true
+    }
+  ],
+  "rootCause": "p250 recorded the owner seen at the call site (class_2237, class_2680) but looked members up without walking the hierarchy; a member that is merely declared on a superclass or changed shape then reads as 'removed'",
+  "consequence": "the real remaining work is smaller and differently shaped: the descriptor-changed ones can use callSiteAdaptations / signatureAdaptations; only the truly removed ones need a hand-written bridge or an accepted degradation",
+  "passed": true,
+  "scope": "mapping + declaration lookup only; nothing was patched or run"
+}
