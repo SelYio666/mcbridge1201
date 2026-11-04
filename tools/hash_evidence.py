@@ -1882,6 +1882,9 @@ FILES = [
     "runs/p265-key-injection-boundary/README.md",
     "runs/p265-key-injection-boundary/result.json",
     "runs/p265-key-injection-boundary/javap-RegistryKeyContext.txt",
+    "tools/compare_rule_packages.py",
+    "runs/p266-rule-package-reuse/README.md",
+    "runs/p266-rule-package-reuse/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

@@ -1,0 +1,189 @@
+{
+  "workstream": "cross-version rule reuse: what actually has to be redone per target",
+  "matrix": {
+    "fabric-1.21.1": {
+      "1.21.1": {
+        "ruleCount": 119,
+        "missing": 4,
+        "problems": [
+          {
+            "file": "container.json",
+            "id": "blockentity.nbt.write.lookup",
+            "kind": "class",
+            "owner": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity",
+            "name": "method_11007"
+          },
+          {
+            "file": "container.json",
+            "id": "blockentity.nbt.read.lookup",
+            "kind": "class",
+            "owner": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity",
+            "name": "method_11014"
+          },
+          {
+            "file": "trashslot.json",
+            "id": "trashslot.balm.initialize-context",
+            "kind": "class",
+            "owner": "net/blay09/mods/balm/api/Balm",
+            "name": "initialize"
+          },
+          {
+            "file": "trashslot.json",
+            "id": "trashslot.balm.client-initialize-context",
+            "kind": "class",
+            "owner": "net/blay09/mods/balm/api/client/BalmClient",
+            "name": "initialize"
+          }
+        ]
+      },
+      "1.21.4": {
+        "ruleCount": 119,
+        "missing": 4,
+        "problems": [
+          {
+            "file": "container.json",
+            "id": "blockentity.nbt.write.lookup",
+            "kind": "class",
+            "owner": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity",
+            "name": "method_11007"
+          },
+          {
+            "file": "container.json",
+            "id": "blockentity.nbt.read.lookup",
+            "kind": "class",
+            "owner": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity",
+            "name": "method_11014"
+          },
+          {
+            "file": "trashslot.json",
+            "id": "trashslot.balm.initialize-context",
+            "kind": "class",
+            "owner": "net/blay09/mods/balm/api/Balm",
+            "name": "initialize"
+          },
+          {
+            "file": "trashslot.json",
+            "id": "trashslot.balm.client-initialize-context",
+            "kind": "class",
+            "owner": "net/blay09/mods/balm/api/client/BalmClient",
+            "name": "initialize"
+          }
+        ]
+      }
+    },
+    "fabric-1.21.4": {
+      "1.21.1": {
+        "ruleCount": 11,
+        "missing": 2,
+        "problems": [
+          {
+            "file": "registration-key.json",
+            "id": "1214.item-settings.registry-key",
+            "kind": "member",
+            "owner": "net/minecraft/class_1792$class_1793",
+            "name": "method_63686",
+            "desc": "(Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793;"
+          },
+          {
+            "file": "registration-key.json",
+            "id": "1214.item-settings.registry-key",
+            "kind": "member",
+            "owner": "net/minecraft/class_2378",
+            "name": "method_46765",
+            "desc": "()Lnet/minecraft/class_5321;"
+          }
+        ]
+      },
+      "1.21.4": {
+        "ruleCount": 11,
+        "missing": 0,
+        "problems": []
+      }
+    }
+  },
+  "bridgeSplit": {
+    "fabric-1.21.1": {
+      "needsBridge": 91,
+      "bridgeFree": 28,
+      "bridgeFreeKinds": {
+        "signatureAdaptations": 2,
+        "mixinClassReplacements": 11,
+        "mixinConfigAdditions": 10,
+        "mixinStrips": 1,
+        "mixinCallbackAdaptations": 2,
+        "methodRenames": 2
+      },
+      "bridgeFreeRuleIds": [
+        "blockentity.nbt.write.lookup",
+        "blockentity.nbt.read.lookup",
+        "entityculling/entity-renderer-mixin-port",
+        "entityculling/entity-renderer-mixin-config",
+        "immediatelyfast/hud-ingame-config",
+        "immediatelyfast/hud-gamerenderer-config",
+        "immediatelyfast/bench-sampler-config",
+        "immediatelyfast/chat-hud-config",
+        "immediatelyfast/minecraft-client-config",
+        "immediatelyfast/buffer-renderer-config",
+        "immediatelyfast/map-renderer-config",
+        "immediatelyfast/map-texture-config",
+        "immediatelyfast/vertex-buffer-config",
+        "immediatelyfast/batchable-buffer-source",
+        "immediatelyfast/batching-buffers",
+        "immediatelyfast/vertex-consumer-provider-mixin",
+        "immediatelyfast/text-drawer-mixin",
+        "immediatelyfast/draw-context-consumer",
+        "immediatelyfast/hud-batching-buffer-source",
+        "immediatelyfast/map-renderer-mixin",
+        "immediatelyfast/map-texture-mixin",
+        "immediatelyfast/vertex-buffer-mixin",
+        "lithium.strip.entity.collisions.movement",
+        "lithium.explosionmixin.ctor-callback",
+        "lithium.poi.serializing-storage-ctor-callback",
+        "lithium.serverchunkmanager.chunkresult-port",
+        "fabric.legacy.render-widget-override",
+        "fabric.legacy.clickable-text-override"
+      ]
+    },
+    "fabric-1.21.4": {
+      "needsBridge": 10,
+      "bridgeFree": 1,
+      "bridgeFreeKinds": {
+        "registrationKeys": 1
+      },
+      "bridgeFreeRuleIds": [
+        "1214.item-settings.registry-key"
+      ]
+    }
+  },
+  "checks": [
+    {
+      "id": "1.21.1-rules-targets-exist-in-1.21.4",
+      "expect": true,
+      "got": true,
+      "why": "the same misses on its own target and on 1.21.4 means the miss set is mod classes, not version drift",
+      "passed": true
+    },
+    {
+      "id": "1.21.4-rules-are-not-portable-backwards",
+      "expect": true,
+      "got": true,
+      "why": "the 1.21.4 package uses members that only exist in 1.21.4, as expected",
+      "passed": true
+    },
+    {
+      "id": "bridge-free-rules-are-a-minority-in-1.21.1",
+      "expect": true,
+      "got": true,
+      "why": "most 1.21.1 rules call a bridge, so moving target recompiles bridges",
+      "passed": true
+    }
+  ],
+  "conclusion": {
+    "targetStability": "every member named by the 1.21.1 rules also exists in the 1.21.4 stub - the only misses are Balm classes, which live in a mod, not in Minecraft",
+    "realCost": "bridges, not rules: 91 of 119 rules call a bridge, and a bridge is Java source against Minecraft classes, so it must be recompiled per target",
+    "bridgeFree": "28 rules are pure text (renames, mixin config/marker edits) and travel between targets untouched",
+    "caveat": "target existence is not correctness: a rename needed for 1.21.1 may be unnecessary or wrong for 1.21.4"
+  },
+  "passed": true,
+  "scope": "static comparison of rule text against both stubs; nothing was patched or run"
+}

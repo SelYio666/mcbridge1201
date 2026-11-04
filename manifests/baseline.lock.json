@@ -1,20 +1,18 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-04T18:22:11+08:00",
+  "generatedAt": "2026-11-04T18:29:25+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "96329fa404ddd6a71c4a036c06f501937244db6f",
+    "commit": "574686972a26c33a018cd54ba510cb5006f4223a",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "anifests/baseline.lock.json",
       "runs/SHA256SUMS.txt",
-      "runs/p265-key-injection-boundary/README.md",
-      "runs/p265-key-injection-boundary/javap-RegistryKeyContext.txt",
-      "runs/p265-key-injection-boundary/result.json",
-      "tools/check_bridge_structure.py",
+      "runs/p266-rule-package-reuse/README.md",
+      "runs/p266-rule-package-reuse/result.json",
+      "tools/compare_rule_packages.py",
       "tools/freeze_baseline.py",
       "tools/hash_evidence.py"
     ],
@@ -642,9 +640,9 @@
       }
     },
     "tools": {
-      "count": 32,
-      "present": 32,
-      "packageSha256": "704f0a2ce43c374c579e843c25b6f5e8067685103fc204aed9c99eda1c89a005",
+      "count": 33,
+      "present": 33,
+      "packageSha256": "c78a965af7765060a5e2f98de613d2711d2a1b0cf0be92637cce7b1b69b0d6b6",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -668,8 +666,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "73b9a4a9ec51f88253dcee95889d0142d89fe5f89b255b69396f488572e50191",
-          "size": 93533
+          "sha256": "72d3598b149584668e7526446ff694f38e0318796f431947fd2ebb2193a7941e",
+          "size": 93665
         },
         {
           "path": "tools/release_check.py",
@@ -772,6 +770,11 @@
           "size": 6309
         },
         {
+          "path": "tools/compare_rule_packages.py",
+          "sha256": "f231a0199a624b0edc1d5a15c233755381e599e10dfa661c6e91f66f29c893e0",
+          "size": 8555
+        },
+        {
           "path": "tools/run_target_gate.py",
           "sha256": "04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6",
           "size": 10540
@@ -803,8 +806,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "5f5e1697f919a4386ad847c66735fa79c4bf4e933c1e9df04d924881cffacbe5",
-          "size": 18678
+          "sha256": "219fc412b9815c39e4aed5c2f15ea0875a4af41c0724a55f28d1c39771d202ec",
+          "size": 18716
         }
       ]
     },
@@ -995,15 +998,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1848 mismatch=0 missing=0"
+          "ok=1851 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 375",
-          "hashed evidence files: 375",
+          "required evidence files: 377",
+          "hashed evidence files: 377",
           "coverage OK"
         ]
       },
@@ -1013,7 +1016,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 298 markdown file(s): 298 clean, 0 finding(s)"
+          "checked 299 markdown file(s): 299 clean, 0 finding(s)"
         ]
       },
       {
