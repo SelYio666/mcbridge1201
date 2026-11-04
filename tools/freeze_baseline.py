@@ -67,6 +67,7 @@ TOOL_FILES = [
     "tools/run_1214_field_rules.py",
     "tools/probe_resourceful_registration.py",
     "tools/check_rule_targets.py",
+    "tools/check_bridge_structure.py",
     "tools/run_target_gate.py",
     "tools/run_isolation_cache.py",
     "tools/run_source_fixture_probe.py",

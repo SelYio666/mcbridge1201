@@ -1878,6 +1878,10 @@ FILES = [
     "java/src/test/java/top/mcbridge1201/RegistryKeyContextTest.java",
     "runs/p264-registry-context-lifetime/README.md",
     "runs/p264-registry-context-lifetime/result.json",
+    "tools/check_bridge_structure.py",
+    "runs/p265-key-injection-boundary/README.md",
+    "runs/p265-key-injection-boundary/result.json",
+    "runs/p265-key-injection-boundary/javap-RegistryKeyContext.txt",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

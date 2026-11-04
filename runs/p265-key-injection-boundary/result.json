@@ -1,0 +1,59 @@
+{
+  "workstream": "what can and cannot be verified offline about the registry key injection",
+  "boundary": {
+    "attempt": "construct Item.Settings offline and assert field_54117 names the pending id",
+    "blockedBy": "class_1793.<init> -> class_9334.<clinit> (data components) throws ExceptionInInitializerError without a running game",
+    "consequence": "the behaviour 'settings carries the right RegistryKey' needs a 1.21.4 instance; it is NOT claimed as verified"
+  },
+  "structuralChecks": [
+    {
+      "id": "settings-derives-a-key",
+      "expect": true,
+      "got": true,
+      "why": "reads the registry's key and derives a child key from the pending id",
+      "passed": true
+    },
+    {
+      "id": "settings-attaches-it",
+      "expect": true,
+      "got": true,
+      "why": "without this call the key is computed but never stored",
+      "passed": true
+    },
+    {
+      "id": "settings-order",
+      "expect": [
+        "method_46765",
+        "method_29179",
+        "method_63686"
+      ],
+      "got": [
+        "method_46765",
+        "method_29179",
+        "method_63686"
+      ],
+      "passed": true
+    },
+    {
+      "id": "settings-guards-on-a-context",
+      "expect": true,
+      "got": true,
+      "why": "outside a context the factory must return plain settings",
+      "passed": true
+    },
+    {
+      "id": "getwithkey-restores-in-finally",
+      "expect": true,
+      "got": true,
+      "why": "a straight-line restore would leak the id when the supplier throws",
+      "passed": true
+    }
+  ],
+  "settingsCallOrder": [
+    "method_46765",
+    "method_29179",
+    "method_63686"
+  ],
+  "passed": true,
+  "scope": "structure only: proves the bridge performs the right calls in the right order, not that the game accepts the result"
+}
