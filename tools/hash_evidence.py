@@ -1889,6 +1889,9 @@ FILES = [
     "runs/p267-removed-members-reclassified/README.md",
     "runs/p267-removed-members-reclassified/result.json",
     "runs/p250-1214-break-classification/README.md",
+    "runs/p268-signature-not-mechanical/README.md",
+    "runs/p268-signature-not-mechanical/result.json",
+    "runs/p267-removed-members-reclassified/README.md",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

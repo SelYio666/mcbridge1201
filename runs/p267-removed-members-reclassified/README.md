@@ -29,6 +29,13 @@ protected net.minecraft.class_2680 method_9559(8 个参数)     ← 1.21.4 里�
 public net.minecraft.class_243 method_26226(net.minecraft.class_2338)  ← 还在
 ```
 
+## 3b. 更正（2026-11-04，`runs/p268`）
+
+下面说这两条「属于 `callSiteAdaptations` / `signatureAdaptations` 的领域（规则能处理）」——**后半句不成立**。
+`method_9559` 的调用点是「覆写 + `invokespecial` 调父类」，且 1.21.4 的参数是**重排**（`Direction` 从第 2 位移到第 5 位），
+不是追加，规则表达不了；它需要人工移植。`method_26226` 在 ironchests 里没有调用点。
+结论：1.21.4 上**规则能处理的条目已经全部处理完**。
+
 ## 3. 这对剩余工作意味着什么
 
 **形状变了，不只是数量少了**：

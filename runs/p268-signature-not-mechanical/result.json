@@ -1,0 +1,37 @@
+{
+  "workstream": "method_9559 is not a mechanical signature change; it needs a hand port",
+  "callSite": {
+    "class": "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlock",
+    "shape": "overrides the parent method and calls the parent through invokespecial",
+    "instruction": "invokespecial class_2237.method_9559(6 params) at offset 46",
+    "consequenceIn1214": [
+      "the override no longer overrides anything",
+      "the invokespecial resolves to nothing -> NoSuchMethodError"
+    ]
+  },
+  "signatures": {
+    "1.20.1": "(class_2680, class_2350, class_2680, class_1936, class_2338, class_2338)",
+    "1.21.4": "(class_2680, class_4538, class_10225, class_2338, class_2350, class_2338, class_2680, class_5819)",
+    "notAppendOnly": "Direction moves from position 2 to 5, class_1936 disappears, three types are new - a reorder plus a semantic regroup"
+  },
+  "method_26226": {
+    "callSitesInIronchests": 0,
+    "note": "derived by p250 from an index difference, not from real usage"
+  },
+  "correctionOfP267": {
+    "said": "both belong to callSiteAdaptations / signatureAdaptations, rules can do them",
+    "now": "method_9559 needs a hand port; method_26226 has no call sites"
+  },
+  "whyNoRule": "a rule can rename a method or swap a descriptor, but it cannot express 'the second argument now belongs in position five'; that requires knowing what each argument means in 1.21.4",
+  "tempation": "a rule that turns 6 params into 8 would apply, and could even pass bytecode verification on compatible types, while being semantically wrong - only a 1.21.4 run would catch it",
+  "remaining": {
+    "ruleActionable": 0,
+    "handPort": [
+      "method_9559",
+      "4 removed members",
+      "3 removed classes (item-model rework)",
+      "class_4309 Codec constructor"
+    ]
+  },
+  "scope": "static bytecode reading only; nothing implemented, no game run"
+}
