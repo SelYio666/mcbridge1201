@@ -1895,6 +1895,8 @@ FILES = [
     "tools/audit_rule_package.py",
     "runs/p270-rule-package-audit/README.md",
     "runs/p270-rule-package-audit/result.json",
+    "runs/p271-push-blocked-by-remote/README.md",
+    "runs/p271-push-blocked-by-remote/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

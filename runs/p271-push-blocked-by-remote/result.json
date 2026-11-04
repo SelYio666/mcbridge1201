@@ -1,0 +1,53 @@
+{
+  "workstream": "push to origin was rejected by the remote; bundle prepared as delivery",
+  "remote": "https://github.com/SelYio666/mcbridge1201.git",
+  "attempts": [
+    {
+      "n": 1,
+      "remote": "Internal Server Error",
+      "result": "! [remote rejected] zcode -> zcode"
+    },
+    {
+      "n": 2,
+      "remote": "Internal Server Error (different request id)",
+      "result": "! [remote rejected] zcode -> zcode"
+    },
+    {
+      "n": 3,
+      "remote": "fatal error in commit_refs",
+      "result": "! [remote rejected] zcode -> zcode (failure)"
+    }
+  ],
+  "ruledOut": {
+    "size": ".git is 0.3 MB (objects live in the shared store); the full bundle is 67.4 MB, far below the push ceiling",
+    "permissions": "the error is a server-side rejection, not 403/denied",
+    "nonFastForward": "no --force was used, and origin/zcode does not exist at all",
+    "network": "requests reached GitHub and were answered"
+  },
+  "noForcePush": true,
+  "delivery": {
+    "fullBundle": {
+      "path": "work/tmp/zcode-2026-11-04.bundle",
+      "sizeMB": 67.4,
+      "verify": "The bundle records a complete history"
+    },
+    "incrementalBundle": {
+      "path": "work/tmp/zcode-incremental.bundle",
+      "sizeMB": 0.29,
+      "base": "origin/master (51cea8d)",
+      "commits": 31,
+      "note": "the practical artifact: this session's commits are all text"
+    },
+    "commands": [
+      "git bundle verify <file>",
+      "git fetch <file> zcode:zcode"
+    ]
+  },
+  "resumeSteps": [
+    "git fetch origin",
+    "git rebase origin/master on zcode if it moved",
+    "git push origin zcode (no --force)",
+    "re-run the clean-checkout trio afterwards"
+  ],
+  "scope": "ops record: nothing was pushed anywhere; origin/zcode still does not exist"
+}

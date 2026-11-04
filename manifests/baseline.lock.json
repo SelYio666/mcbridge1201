@@ -1,19 +1,17 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-04T19:04:08+08:00",
+  "generatedAt": "2026-11-04T19:18:57+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "065c1ae0cbf212ef7e7ccd1c334304490b8f74f3",
+    "commit": "1a3802013c3a4d2eb21920a3fd88d0dc673ea2ee",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
       "runs/SHA256SUMS.txt",
-      "runs/p270-rule-package-audit/README.md",
-      "runs/p270-rule-package-audit/result.json",
-      "tools/audit_rule_package.py",
-      "tools/freeze_baseline.py",
+      "runs/p271-push-blocked-by-remote/README.md",
+      "runs/p271-push-blocked-by-remote/result.json",
       "tools/hash_evidence.py"
     ],
     "untrackedFiles": [],
@@ -642,7 +640,7 @@
     "tools": {
       "count": 34,
       "present": 34,
-      "packageSha256": "0ffab42224658dc18a40fd8808a9ba0a47dedead6904a741e1bd2ba3b6b97826",
+      "packageSha256": "99a66629a71cd486c19a3fe4a339d4dbf7ab4dc8ce5a773c354040d3b866a395",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -666,8 +664,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "8306d34ceb7638e3f1ec9a08a638ec4921a737ac431e5fef6b0608e2f91f004f",
-          "size": 94163
+          "sha256": "96ff2ce5201dee09437f8c24c4d89208b1354af7aba1ecf9a1bf41a5fd37f1e4",
+          "size": 94265
         },
         {
           "path": "tools/release_check.py",
@@ -1003,15 +1001,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1861 mismatch=0 missing=0"
+          "ok=1863 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 383",
-          "hashed evidence files: 383",
+          "required evidence files: 385",
+          "hashed evidence files: 385",
           "coverage OK"
         ]
       },
@@ -1021,7 +1019,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 302 markdown file(s): 302 clean, 0 finding(s)"
+          "checked 303 markdown file(s): 303 clean, 0 finding(s)"
         ]
       },
       {
