@@ -69,6 +69,7 @@ TOOL_FILES = [
     "tools/check_rule_targets.py",
     "tools/check_bridge_structure.py",
     "tools/compare_rule_packages.py",
+    "tools/audit_rule_package.py",
     "tools/run_target_gate.py",
     "tools/run_isolation_cache.py",
     "tools/run_source_fixture_probe.py",

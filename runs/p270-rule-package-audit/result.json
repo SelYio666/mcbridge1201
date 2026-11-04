@@ -1,0 +1,61 @@
+{
+  "workstream": "audit of the 1.21.1 rule package for history leftovers",
+  "rulesDir": "rules/fabric-1.21.1",
+  "ruleFiles": 29,
+  "ruleCount": 119,
+  "kinds": {
+    "methodRedirects": 54,
+    "bodyRedirects": 10,
+    "fieldRedirects": 7,
+    "callSiteAdaptations": 6,
+    "constructorRedirects": 11,
+    "signatureAdaptations": 2,
+    "mixinClassReplacements": 11,
+    "mixinConfigAdditions": 10,
+    "superclassReplacements": 3,
+    "mixinStrips": 1,
+    "mixinCallbackAdaptations": 2,
+    "methodRenames": 2
+  },
+  "capabilityClusters": {
+    "cloth-config.screen.render-background": 2,
+    "identifier.construct": 5,
+    "blockentity.nbt.registries": 2,
+    "mixin-class-replacement": 9,
+    "mixin-config-readd": 8,
+    "fabric.networking.client.receiver": 2,
+    "fabric.networking.client.packet": 2,
+    "palette.varint.size": 2,
+    "mixin.inject.target_descriptor": 2,
+    "modmenu.description.render": 2,
+    "balm.network.send.serverbound": 2,
+    "balm.network.payload": 2,
+    "itemstack.nbt.components": 2,
+    "itemstack.packet.components": 2
+  },
+  "noJustification": [],
+  "orphans": [],
+  "noId": [],
+  "checks": [
+    {
+      "id": "every-rule-has-an-id",
+      "expect": 0,
+      "got": 0,
+      "passed": true
+    },
+    {
+      "id": "every-rule-has-justification",
+      "expect": 0,
+      "got": 0,
+      "passed": true
+    },
+    {
+      "id": "no-orphan-rules",
+      "expect": 0,
+      "got": 0,
+      "passed": true
+    }
+  ],
+  "note": "an orphan rule is not necessarily wrong: it may have been added ahead of its evidence, or its evidence may cite a mod name instead of the rule id. This report is an inventory, not a delete list.",
+  "scope": "read-only: no rule was changed or removed"
+}

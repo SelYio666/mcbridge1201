@@ -1892,6 +1892,9 @@ FILES = [
     "runs/p268-signature-not-mechanical/README.md",
     "runs/p268-signature-not-mechanical/result.json",
     "runs/p267-removed-members-reclassified/README.md",
+    "tools/audit_rule_package.py",
+    "runs/p270-rule-package-audit/README.md",
+    "runs/p270-rule-package-audit/result.json",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

@@ -1,18 +1,20 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-04T18:59:35+08:00",
+  "generatedAt": "2026-11-04T19:04:08+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "386b810359b1ee35a4b4f82ac41f5e347ebb1cb6",
+    "commit": "065c1ae0cbf212ef7e7ccd1c334304490b8f74f3",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
       "runs/SHA256SUMS.txt",
-      "runs/p259-insert-before-call/README.md",
-      "runs/p259-insert-before-call/result.json"
+      "runs/p270-rule-package-audit/README.md",
+      "runs/p270-rule-package-audit/result.json",
+      "tools/audit_rule_package.py",
+      "tools/freeze_baseline.py",
+      "tools/hash_evidence.py"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -638,9 +640,9 @@
       }
     },
     "tools": {
-      "count": 33,
-      "present": 33,
-      "packageSha256": "625348e1a64c131228b1b6533ee7f51c4b97c3e7c6d152cb6d380758dd270803",
+      "count": 34,
+      "present": 34,
+      "packageSha256": "0ffab42224658dc18a40fd8808a9ba0a47dedead6904a741e1bd2ba3b6b97826",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -664,8 +666,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "38d1b2df9563d06e803228da8722e60cc70180fce8cd6efde752dd3109841b4b",
-          "size": 94034
+          "sha256": "8306d34ceb7638e3f1ec9a08a638ec4921a737ac431e5fef6b0608e2f91f004f",
+          "size": 94163
         },
         {
           "path": "tools/release_check.py",
@@ -773,6 +775,11 @@
           "size": 8555
         },
         {
+          "path": "tools/audit_rule_package.py",
+          "sha256": "c556ffdea7c96e71b83b6b0dcca849bfdafa8c17304e6e3a1062bd0d15642176",
+          "size": 6480
+        },
+        {
           "path": "tools/run_target_gate.py",
           "sha256": "04eb6de59cb7779782217db596815eb372f4dac637c69956501dfceb55a8ffa6",
           "size": 10540
@@ -804,8 +811,8 @@
         },
         {
           "path": "tools/freeze_baseline.py",
-          "sha256": "219fc412b9815c39e4aed5c2f15ea0875a4af41c0724a55f28d1c39771d202ec",
-          "size": 18716
+          "sha256": "09b757579b6e6c2b705ead4a3bb03b7f2b1ff4713bf92e2d81cd6f918c1aac28",
+          "size": 18751
         }
       ]
     },
@@ -996,15 +1003,15 @@
         "name": "hash manifest matches the tree",
         "rc": 0,
         "tail": [
-          "ok=1858 mismatch=0 missing=0"
+          "ok=1861 mismatch=0 missing=0"
         ]
       },
       {
         "name": "every run README/result is hashed",
         "rc": 0,
         "tail": [
-          "required evidence files: 381",
-          "hashed evidence files: 381",
+          "required evidence files: 383",
+          "hashed evidence files: 383",
           "coverage OK"
         ]
       },
@@ -1014,7 +1021,7 @@
         "tail": [
           "exempt: runs/p198-text-encoding/README.md �� p198 report quotes the damaged bytes to show what was repaired; 3 content finding(s) suppressed, 0 structural kept",
           "exempt files: 1, suppressed content findings: 3",
-          "checked 301 markdown file(s): 301 clean, 0 finding(s)"
+          "checked 302 markdown file(s): 302 clean, 0 finding(s)"
         ]
       },
       {
