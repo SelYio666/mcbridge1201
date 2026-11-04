@@ -1,20 +1,16 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-04T18:29:25+08:00",
+  "generatedAt": "2026-11-04T18:38:19+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "574686972a26c33a018cd54ba510cb5006f4223a",
+    "commit": "0777584939925196aeb2bd6e67a561197e9d2061",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "runs/SHA256SUMS.txt",
-      "runs/p266-rule-package-reuse/README.md",
-      "runs/p266-rule-package-reuse/result.json",
-      "tools/compare_rule_packages.py",
-      "tools/freeze_baseline.py",
-      "tools/hash_evidence.py"
+      "docs/remaining-work.md",
+      "runs/SHA256SUMS.txt"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -970,7 +966,7 @@
       },
       {
         "path": "docs/remaining-work.md",
-        "sha256": "ec3548445ced86d630d35f09b340b9de7746e98e02d877d3f4e2572918e2427d"
+        "sha256": "b19d3549414c341fc867b8eca87a1bd6f40a3830ee6253df0f2c3105f5820a83"
       },
       {
         "path": "docs/STATUS.md",

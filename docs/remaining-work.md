@@ -3,6 +3,67 @@
 This file records what is intentionally not verified in the current environment. It is not a
 claim that these paths work.
 
+## Update 2026-11-04 (Fabric 1.21.4 target)
+
+Work on a second target, Fabric 1.21.4, is in the workspace branch `zcode` and is **static-only**:
+no 1.21.4 client or dedicated server has ever been launched here. Everything below was measured on
+bytecode and on the target stub; nothing is a claim that a mod runs.
+
+### What exists for 1.21.4
+
+- `targets/fabric-1.21.4.json` — profile with a pinned stub (`6c421c2c…`, 8857 classes, all major
+  65), a 106-jar library closure, and six rule files.
+- Rules: `registration-key`, `ironchests-draw`, `ironchests-blit`, `interaction-result`,
+  `blockstate-properties`, `registry-key-context`.
+- Engine abilities added for this target, each with tests or a checker:
+  - `registrationKeys` (insert a key after `Item.Settings` construction), `insertBeforeCalls`
+    (insert/replace around a call, scoped to one class/method), `constructorRedirects` with a
+    "declines methods that register" split, and a `framesAffected` fix for field redirects that
+    change the stack type.
+  - `tools/check_rule_targets.py` — every target-side member a rule names must exist in the target
+    with the exact descriptor. Written after `Registry#registryKey` (`method_30517` → `method_46765`
+    in 1.21.4) slipped through: patch emits calls without checking they resolve.
+  - `tools/check_bridge_structure.py` — asserts the registry-context bridge performs the right
+    calls in the right order, with a context guard and a finally-based restore.
+  - `tools/compare_rule_packages.py` — cross-version reuse: the 1.21.1 rule targets all still exist
+    in 1.21.4; the migration cost is bridges (91 of 119 rules call one), not rule rewrites.
+
+### Measured on the samples
+
+- ironchests 5.0.2 (Fabric): 21 new breaks against 1.21.4 — 6 class-removed, 9 descriptor-changed,
+  6 member-removed. Of the 9 descriptor changes, 8 now have rules; the ninth
+  (`class_4309.<init>`, `(Gson,String)` → `(Codec,ResourceKey)`) changes the parsing mechanism and
+  needs a hand-written port.
+- The fixture converts and its registration gets the key; ironchests' settings construction goes
+  through the context factory.
+
+### Not verified (needs a 1.21.4 instance)
+
+- Whether the injected registry key is accepted (that `Item.Settings` carries the right
+  `RegistryKey` — constructing `Item.Settings` offline dies in `class_9334.<clinit>`).
+- Whether registration stops throwing in 1.21.4.
+- Anything about rendering: the three draw rules are proven at the bytecode level only.
+- The remaining breaks: 3 removed classes (`ItemProperties`, `ClampedItemPropertyFunction`,
+  `MetadataSectionSerializer` — the 1.21.2 item-model rework, not bridgeable), 6 member-removed
+  items, and the `Codec` constructor above.
+
+### Environment blockers
+
+- No 1.21.4 client or server jar is available here, and `work/` (stubs, bridges, corpora) is not
+  committed, so the 1.21.4 evidence scripts and the two checkers only run on a machine that
+  prepared it. On a clean checkout the ThreadLocal tests skip and the checkers report a missing
+  stub — by design, not as a failure.
+
+### Evidence index
+
+`runs/p243` (profile gate), `p245` (isolation cache), `p246` (fixture), `p247` (delta),
+`p248`/`p258` (registry-key gap and injection point), `p249` (registration rule), `p250` (break
+classification), `p251` (compile closure), `p252`/`p254` (draw bridges and rules), `p253`/`p255`
+(descriptor verdict, corrected by a JVM measurement), `p256` (InteractionResult constants),
+`p257` (deleted-type fields + a frame-recompute bug), `p259` (insert rule), `p260` (withdrawn
+attempt), `p261` (target-member checker), `p262` (stale CLI root cause), `p263` (rule skill split),
+`p264` (ThreadLocal lifetime), `p265` (key-injection boundary), `p266` (cross-version reuse).
+
 ## Update 2026-10-28 (documentation encoding)
 
 - The three documents corrupted during p195 (UTF-8 read as cp936 and re-saved) are readable again:
