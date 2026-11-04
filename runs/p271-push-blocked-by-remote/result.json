@@ -49,5 +49,16 @@
     "git push origin zcode (no --force)",
     "re-run the clean-checkout trio afterwards"
   ],
-  "scope": "ops record: nothing was pushed anywhere; origin/zcode still does not exist"
+  "scope": "ops record: the rejection was real at the time and is kept as such; the later successful push is recorded in outcome",
+  "outcome": {
+    "eventuallyPushed": true,
+    "remoteRef": "refs/heads/zcode",
+    "remoteSha": "b5b7dfc4f4571d78e5641364905bafa53a99d37e",
+    "localShaAtConfirmation": "b5b7dfc4f4571d78e5641364905bafa53a99d37e",
+    "howConfirmed": [
+      "git ls-remote origin refs/heads/zcode",
+      "git fetch origin zcode then git rev-parse origin/zcode"
+    ],
+    "note": "the three rejections were a transient remote fault; the same command succeeded later without any local change, and the bundles were not needed"
+  }
 }

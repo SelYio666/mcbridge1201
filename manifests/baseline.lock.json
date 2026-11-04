@@ -1,20 +1,17 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-04T19:23:43+08:00",
+  "generatedAt": "2026-11-04T19:27:14+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "da55901d03a841a3336ef2e1159837935d7386f4",
+    "commit": "b5b7dfc4f4571d78e5641364905bafa53a99d37e",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "docs/remaining-work.md",
-      "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
       "runs/SHA256SUMS.txt",
-      "runs/p259-insert-before-call/README.md",
-      "runs/p259-insert-before-call/result.json",
-      "runs/p263-registration-skill-split/README.md"
+      "runs/p271-push-blocked-by-remote/README.md",
+      "runs/p271-push-blocked-by-remote/result.json"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
