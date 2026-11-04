@@ -72,7 +72,7 @@ classification), `p251` (compile closure), `p252`/`p254` (draw bridges and rules
 (descriptor verdict, corrected by a JVM measurement), `p256` (InteractionResult constants),
 `p257` (deleted-type fields + a frame-recompute bug), `p259` (insert rule), `p260` (withdrawn
 attempt), `p261` (target-member checker), `p262` (stale CLI root cause), `p263` (rule skill split),
-`p264` (ThreadLocal lifetime), `p265` (key-injection boundary), `p266` (cross-version reuse), `p267` (removed-vs-changed reclassification), `p268` (why the last signature change is not mechanical).
+`p264` (ThreadLocal lifetime), `p265` (key-injection boundary), `p266` (cross-version reuse), `p267` (removed-vs-changed reclassification), `p268` (why the last signature change is not mechanical), `p270` (rule-package audit: no leftovers), `p271` (origin rejected the push; bundles prepared).
 
 ## Update 2026-10-28 (documentation encoding)
 

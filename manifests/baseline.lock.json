@@ -1,18 +1,20 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-04T19:18:57+08:00",
+  "generatedAt": "2026-11-04T19:23:43+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "1a3802013c3a4d2eb21920a3fd88d0dc673ea2ee",
+    "commit": "da55901d03a841a3336ef2e1159837935d7386f4",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
+      "docs/remaining-work.md",
+      "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
       "runs/SHA256SUMS.txt",
-      "runs/p271-push-blocked-by-remote/README.md",
-      "runs/p271-push-blocked-by-remote/result.json",
-      "tools/hash_evidence.py"
+      "runs/p259-insert-before-call/README.md",
+      "runs/p259-insert-before-call/result.json",
+      "runs/p263-registration-skill-split/README.md"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -552,7 +554,7 @@
       "java/src/test": {
         "root": "java/src/test",
         "count": 16,
-        "packageSha256": "8953f76b97c00db2f35bc383be4b2ab797c1ec639fff43ab5c3cb7bc8f3d1950",
+        "packageSha256": "2f8b6d0d9576c1336ac4c83ab0b9c8ccd908325ba0714bd1678b0ea7366488c1",
         "files": [
           {
             "path": "java/src/test/java/top/mcbridge1201/AnalyzerCoreTest.java",
@@ -576,8 +578,8 @@
           },
           {
             "path": "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
-            "sha256": "e992f500dcc4f506b7d5c6387d89eeff7ff92b7c01b2df36bedd0b392f2d8f89",
-            "size": 10263
+            "sha256": "3b0429b74595e7021951b4eb70ffe55584b4fa08d9251cec5f02618e193fb578",
+            "size": 11918
           },
           {
             "path": "java/src/test/java/top/mcbridge1201/JarPatcherKeepPrefixTest.java",
@@ -973,7 +975,7 @@
       },
       {
         "path": "docs/remaining-work.md",
-        "sha256": "4e3976121e39576f82c6a2ae45a13900ac3bbc87a55624cfdcfc96ef8a70d3f2"
+        "sha256": "0ee9d4c4e8713e4df43ed97111941319ca4bfc92a2984b39a8a82d7fff2f4b4b"
       },
       {
         "path": "docs/STATUS.md",

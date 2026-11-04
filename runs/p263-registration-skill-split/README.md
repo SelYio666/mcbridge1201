@@ -44,6 +44,11 @@ fixture 上 `classes changed=1`、只命中 `registration-keys`；ironchests 上
 
 这条和 p261 的"目标成员校验"是同一类思路：**规则越宽，越需要证明它落对了地方**。
 
+## 3b. 作用域现在有单元用例（2026-11-04，`runs/p272`）
+
+`onlyInClass` / `onlyInMethodName` 之前只在真实 jar 上验过（命中 32 → 1）。现在 `JarPatcherInsertBeforeCallTest` 里有三个隔离用例：
+匹配时触发、限定在别的类时不触发、限定在别的方法时不触发。
+
 ## 4. 回归
 
 - 单测 **61/61**

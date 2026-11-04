@@ -71,6 +71,14 @@ class JarPatcherInsertBeforeCallTest {
         return rs;
     }
 
+    private static RuleSet scopedRuleSet(String onlyInClass, String onlyInMethodName) {
+        RuleSet rs = ruleSet(1);
+        RuleSet.InsertBeforeCall r = rs.insertBeforeCalls.get(0);
+        r.onlyInClass = onlyInClass;
+        r.onlyInMethodName = onlyInMethodName;
+        return rs;
+    }
+
     @TempDir
     Path tmp;
 
@@ -226,6 +234,33 @@ class JarPatcherInsertBeforeCallTest {
         assertTrue(before instanceof org.objectweb.asm.tree.VarInsnNode v
                         && v.getOpcode() == Opcodes.ILOAD && v.var == 1,
                 "an int argument must be pushed with ILOAD, not ALOAD: " + before);
+    }
+
+    @Test
+    void aScopedRuleFiresInItsOwnClass() throws Exception {
+        Map<String, Integer> applied = patch(withCalls(1), scopedRuleSet("test/Entry", "of"));
+        assertEquals(1, applied.getOrDefault(RULE, 0),
+                "a matching scope must still fire: " + applied);
+        assertEquals(1, positions(CTX, "set").size());
+    }
+
+    @Test
+    void aScopedRuleIsSilentInAnotherClass() throws Exception {
+        // The failure this guards against was measured on ironchests: an unscoped Supplier.get
+        // rule fired 32 times while exactly one site had the locals the bridge expects. 31 calls
+        // would not have verified. Scope is what keeps it silent elsewhere.
+        Map<String, Integer> applied = patch(withCalls(1), scopedRuleSet("some/OtherClass", null));
+        assertEquals(0, applied.getOrDefault(RULE, 0),
+                "a rule scoped to another class must not fire: " + applied);
+        assertTrue(positions(CTX, "set").isEmpty());
+    }
+
+    @Test
+    void aScopedRuleIsSilentInAnotherMethod() throws Exception {
+        Map<String, Integer> applied = patch(withCalls(1), scopedRuleSet("test/Entry", "anotherMethod"));
+        assertEquals(0, applied.getOrDefault(RULE, 0),
+                "a rule scoped to another method must not fire: " + applied);
+        assertTrue(positions(CTX, "set").isEmpty());
     }
 
     @Test
