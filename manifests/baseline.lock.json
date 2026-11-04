@@ -1,16 +1,18 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-04T18:56:10+08:00",
+  "generatedAt": "2026-11-04T18:59:35+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "f7127862d90b316169e585c9b4b333ef8cb2661a",
+    "commit": "386b810359b1ee35a4b4f82ac41f5e347ebb1cb6",
     "branch": "zcode",
     "dirty": true,
     "modifiedFiles": [
-      "docs/remaining-work.md",
-      "runs/SHA256SUMS.txt"
+      "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
+      "runs/SHA256SUMS.txt",
+      "runs/p259-insert-before-call/README.md",
+      "runs/p259-insert-before-call/result.json"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -550,7 +552,7 @@
       "java/src/test": {
         "root": "java/src/test",
         "count": 16,
-        "packageSha256": "07b0cccfe6ee1a474e41d5c536cbbffe362a80f6d20b942a45520e17af3c7c5f",
+        "packageSha256": "8953f76b97c00db2f35bc383be4b2ab797c1ec639fff43ab5c3cb7bc8f3d1950",
         "files": [
           {
             "path": "java/src/test/java/top/mcbridge1201/AnalyzerCoreTest.java",
@@ -574,8 +576,8 @@
           },
           {
             "path": "java/src/test/java/top/mcbridge1201/JarPatcherInsertBeforeCallTest.java",
-            "sha256": "bc48abe22392a8a09db862f8191d932633abed7e0e507a3900437a836bc36288",
-            "size": 7609
+            "sha256": "e992f500dcc4f506b7d5c6387d89eeff7ff92b7c01b2df36bedd0b392f2d8f89",
+            "size": 10263
           },
           {
             "path": "java/src/test/java/top/mcbridge1201/JarPatcherKeepPrefixTest.java",

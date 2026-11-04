@@ -61,6 +61,16 @@ class JarPatcherInsertBeforeCallTest {
         return rs;
     }
 
+    private static RuleSet intRuleSet() {
+        RuleSet rs = ruleSet(1);
+        RuleSet.InsertBeforeCall r = rs.insertBeforeCalls.get(0);
+        r.id = "synthetic.set-int-context";
+        r.loadKind = "iload";
+        r.bridgeMethod = "setInt";
+        r.bridgeDesc = "(I)V";
+        return rs;
+    }
+
     @TempDir
     Path tmp;
 
@@ -84,6 +94,24 @@ class JarPatcherInsertBeforeCallTest {
         return cw.toByteArray();
     }
 
+    /** {@code static Object of(Supplier s, int code) { s.get(); return null; }} */
+    private static byte[] withIntLocal() {
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        cw.visit(Opcodes.V17, Opcodes.ACC_PUBLIC, "test/EntryInt", null, "java/lang/Object", null);
+        MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "of",
+                "(L" + SUPPLIER + ";I)Ljava/lang/Object;", null, null);
+        mv.visitCode();
+        mv.visitVarInsn(Opcodes.ALOAD, 0);
+        mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, SUPPLIER, "get", "()Ljava/lang/Object;", true);
+        mv.visitInsn(Opcodes.POP);
+        mv.visitInsn(Opcodes.ACONST_NULL);
+        mv.visitInsn(Opcodes.ARETURN);
+        mv.visitMaxs(0, 0);
+        mv.visitEnd();
+        cw.visitEnd();
+        return cw.toByteArray();
+    }
+
     private ClassNode lastPatched;
 
     /** A minimal stand-in for our bridge; patch refuses to leave a dangling call to a missing class. */
@@ -97,11 +125,21 @@ class JarPatcherInsertBeforeCallTest {
         mv.visitInsn(Opcodes.RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
+        MethodVisitor mi = cw.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "setInt",
+                "(I)V", null, null);
+        mi.visitCode();
+        mi.visitInsn(Opcodes.RETURN);
+        mi.visitMaxs(0, 0);
+        mi.visitEnd();
         cw.visitEnd();
         return cw.toByteArray();
     }
 
     private Map<String, Integer> patch(byte[] cls, int loadLocal) throws Exception {
+        return patch(cls, ruleSet(loadLocal));
+    }
+
+    private Map<String, Integer> patch(byte[] cls, RuleSet rs) throws Exception {
         Path in = tmp.resolve("in.jar");
         Path out = tmp.resolve("out.jar");
         try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(in))) {
@@ -111,7 +149,7 @@ class JarPatcherInsertBeforeCallTest {
         }
         java.util.Map<String, byte[]> bridges = new java.util.HashMap<>();
         bridges.put(CTX, bridgeClass());
-        JarPatcher.Result res = JarPatcher.patch(in, out, ruleSet(loadLocal), null, bridges);
+        JarPatcher.Result res = JarPatcher.patch(in, out, rs, null, bridges);
         try (ZipFile zf = new ZipFile(out.toFile())) {
             byte[] patched = zf.getInputStream(zf.getEntry("test/Entry.class")).readAllBytes();
             ClassNode cn = new ClassNode();
@@ -165,6 +203,29 @@ class JarPatcherInsertBeforeCallTest {
         assertEquals(2, applied.getOrDefault(RULE, 0), "both call sites: " + applied);
         assertEquals(2, positions(CTX, "set").size(), "no duplicated insertion");
         assertEquals(2, positions(SUPPLIER, "get").size(), "the matched calls are still there");
+    }
+
+    @Test
+    void pushesAnIntLocalWhenTheRuleSaysIload() throws Exception {
+        Map<String, Integer> applied = patch(withIntLocal(), intRuleSet());
+        assertEquals(1, applied.getOrDefault("synthetic.set-int-context", 0),
+                "the int rule must fire: " + applied);
+        List<AbstractInsnNode> instructions = new ArrayList<>();
+        for (AbstractInsnNode insn : lastPatched.methods.get(0).instructions) {
+            instructions.add(insn);
+        }
+        int bridgeAt = -1;
+        for (int i = 0; i < instructions.size(); i++) {
+            if (instructions.get(i) instanceof MethodInsnNode m
+                    && CTX.equals(m.owner) && "setInt".equals(m.name)) {
+                bridgeAt = i;
+            }
+        }
+        assertTrue(bridgeAt > 0, "the int bridge call must be present");
+        AbstractInsnNode before = instructions.get(bridgeAt - 1);
+        assertTrue(before instanceof org.objectweb.asm.tree.VarInsnNode v
+                        && v.getOpcode() == Opcodes.ILOAD && v.var == 1,
+                "an int argument must be pushed with ILOAD, not ALOAD: " + before);
     }
 
     @Test

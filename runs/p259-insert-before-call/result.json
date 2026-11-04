@@ -19,15 +19,17 @@
   },
   "tests": {
     "suite": "top.mcbridge1201.JarPatcherInsertBeforeCallTest",
-    "cases": 4,
+    "cases": 5,
     "failed": 0,
     "names": [
       "insertsBeforeTheMatchedCall",
       "pushesTheDeclaredLocalBeforeTheBridge",
       "twoMatchesGetTwoInsertions",
-      "aRuleWithoutALocalSlotIsSkipped"
+      "aRuleWithoutALocalSlotIsSkipped",
+      "pushesAnIntLocalWhenTheRuleSaysIload"
     ],
-    "fullSuite": 60
+    "fullSuite": 60,
+    "addedLater": "the iload variant was added in p269"
   },
   "unlocked": "the first half of the ResourcefulLib path: store the registry id before the supplier is evaluated (runs/p258)",
   "notYet": [
