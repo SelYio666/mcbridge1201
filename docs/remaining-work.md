@@ -31,9 +31,16 @@ bytecode and on the target stub; nothing is a claim that a mod runs.
 ### Measured on the samples
 
 - ironchests 5.0.2 (Fabric): 21 new breaks against 1.21.4 — 6 class-removed, 9 descriptor-changed,
-  6 member-removed. Of the 9 descriptor changes, 8 now have rules; the ninth
-  (`class_4309.<init>`, `(Gson,String)` → `(Codec,ResourceKey)`) changes the parsing mechanism and
-  needs a hand-written port.
+  6 member-removed. Two of those counts were later corrected (runs/p267/p268):
+  - 2 of the 6 "member-removed" are still present and only changed shape
+    (`method_9559`, `method_26226`); p250 recorded the call-site owner while both are declared on
+    `class_4970`, so a declaration-only lookup called them gone. 4 are genuinely removed.
+  - `method_9559` is therefore descriptor-changed, but it is NOT rule-actionable: the call site is
+    an override plus an `invokespecial` super call, and 1.21.4 REGROUPS the parameters (`Direction`
+    moves from position 2 to 5) rather than appending. That needs a hand port.
+- **No rule-actionable work remains for 1.21.4.** Of the 9 descriptor changes, 8 have rules; the
+  ninth (`class_4309.<init>`) changes the parsing mechanism. Everything else is hand work or needs
+  a running game.
 - The fixture converts and its registration gets the key; ironchests' settings construction goes
   through the context factory.
 
@@ -43,9 +50,12 @@ bytecode and on the target stub; nothing is a claim that a mod runs.
   `RegistryKey` — constructing `Item.Settings` offline dies in `class_9334.<clinit>`).
 - Whether registration stops throwing in 1.21.4.
 - Anything about rendering: the three draw rules are proven at the bytecode level only.
-- The remaining breaks: 3 removed classes (`ItemProperties`, `ClampedItemPropertyFunction`,
-  `MetadataSectionSerializer` — the 1.21.2 item-model rework, not bridgeable), 6 member-removed
-  items, and the `Codec` constructor above.
+- The remaining breaks, all hand work: 3 removed classes (`ItemProperties`,
+  `ClampedItemPropertyFunction`, `MetadataSectionSerializer` — the 1.21.2 item-model rework, not
+  bridgeable), 4 genuinely removed members (`field_11456`, `method_29236`, `method_39281`,
+  `method_24076`), the `method_9559` regroup above, and the `Codec` constructor. For `field_11456`
+  specifically, 1.21.4 reuses its official name for an unrelated `MapCodec`, so a name-based bridge
+  would emit garbage.
 
 ### Environment blockers
 
@@ -62,7 +72,7 @@ classification), `p251` (compile closure), `p252`/`p254` (draw bridges and rules
 (descriptor verdict, corrected by a JVM measurement), `p256` (InteractionResult constants),
 `p257` (deleted-type fields + a frame-recompute bug), `p259` (insert rule), `p260` (withdrawn
 attempt), `p261` (target-member checker), `p262` (stale CLI root cause), `p263` (rule skill split),
-`p264` (ThreadLocal lifetime), `p265` (key-injection boundary), `p266` (cross-version reuse).
+`p264` (ThreadLocal lifetime), `p265` (key-injection boundary), `p266` (cross-version reuse), `p267` (removed-vs-changed reclassification), `p268` (why the last signature change is not mechanical).
 
 ## Update 2026-10-28 (documentation encoding)
 
