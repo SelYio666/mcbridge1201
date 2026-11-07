@@ -1,0 +1,10 @@
+{
+  "version": "neoforge-21.1.264",
+  "mod_count": 14,
+  "exited": true,
+  "errors": [
+    "Caused by: java.lang.NoClassDefFoundError: net/minecraftforge/fml/loading/ImmediateWindowProvider",
+    "Caused by: java.lang.ClassNotFoundException: net.minecraftforge.fml.loading.ImmediateWindowProvider"
+  ],
+  "loaded": false
+}

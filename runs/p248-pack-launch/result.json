@@ -1,0 +1,20 @@
+{
+  "version": "1.20.1-forge-47.4.28",
+  "world": "缆车末日100天地图",
+  "joined": true,
+  "log_bytes": 2761723,
+  "mod_errors": [
+    "[0711月2026 20:17:14.500] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: modid:drone_body removed now.",
+    "[0711月2026 20:17:14.501] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: modid:drone_item removed now.",
+    "[0711月2026 20:17:14.501] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: exdeorum:barrel_fluid_mixing/stone removed now.",
+    "[0711月2026 20:17:14.502] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: modid:drone_bomb removed now.",
+    "[0711月2026 20:17:14.502] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: grapplemod:baseupgradeitem removed now.",
+    "[0711月2026 20:17:14.503] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: exdeorum:barrel_mixing/soul_soil removed now.",
+    "[0711月2026 20:17:14.506] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: grapplemod:magnethook removed now.",
+    "[0711月2026 20:17:14.509] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: alexsmobs:komodo_spit_to_slime removed now.",
+    "[0711月2026 20:17:14.509] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: tacz:attachments/ammo_mod_he removed now.",
+    "[0711月2026 20:17:14.509] [Server thread/ERROR] [net.minecraft.stats.ServerRecipeBook/]: Tried to load unrecognized recipe: exdeorum:barrel_mixing/end_stone removed now."
+  ],
+  "loaded_line": "[0711月2026 20:17:00.839] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.28, for MC 1.20.1 with MCP 20230612.114412",
+  "screenshot": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201\\runs\\p248-pack-launch\\in-game.png"
+}
