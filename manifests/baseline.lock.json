@@ -1,30 +1,23 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-08T23:25:47+08:00",
+  "generatedAt": "2026-11-09T00:54:54+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "c56d78858d744473c0834dbbb9c865104a4c90cf",
+    "commit": "41d93eec78aeff27e0d64cb52b74d2eb120003de",
     "branch": "compat",
     "dirty": true,
     "modifiedFiles": [
-      "java/src/bridge/java/top/mcbridge1201/bridge/ItemStackHurtAndBreakLegacy.java",
-      "java/src/bridge/java/top/mcbridge1201/bridge/LivingEntityBroadcastBreakEvent.java",
       "manifests/baseline.lock.json",
-      "probes/p255-vein-bridge/src/java/probe/VeinBridgeProbe.java",
-      "probes/p255-vein-bridge/src/resources/fabric.mod.json",
-      "rules/README.md",
-      "rules/fabric-1.21.1/veinminer-damage.json",
       "runs/SHA256SUMS.txt",
-      "runs/p255-vein-bridge/README.md",
-      "runs/p255-vein-bridge/logs/p251-baseline-regression.log",
-      "runs/p255-vein-bridge/logs/probe-pass-run.log",
-      "runs/p255-vein-bridge/logs/veinminer-regression.log",
-      "runs/p255-vein-bridge/result.json",
-      "tools/build_vein_probe.py",
-      "tools/hash_evidence.py",
-      "tools/suggest_rules.py"
+      "runs/p256-veinminer-e2e/README.md",
+      "runs/p256-veinminer-e2e/drive.py",
+      "runs/p256-veinminer-e2e/logs/client.log",
+      "runs/p256-veinminer-e2e/logs/screen-before.png",
+      "runs/p256-veinminer-e2e/logs/server.log",
+      "runs/p256-veinminer-e2e/result.json",
+      "tools/hash_evidence.py"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -613,7 +606,7 @@
     "tools": {
       "count": 16,
       "present": 16,
-      "packageSha256": "ad11d5e96699abaa56f82245d2651edbd8f6a8cfdc205a59808577051dae058c",
+      "packageSha256": "659eb98251f1af7ef2261073812fef8b49cb7056663a2dc20959282694be9d88",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -637,8 +630,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "cf4088925827fcc02fac1c5703c14014120a5f888655328a4619133a8a1593f8",
-          "size": 93072
+          "sha256": "5c9e64e52f6b00d1cd0c88506fed368993abf6fbda631db804654eea47c3c560",
+          "size": 93384
         },
         {
           "path": "tools/release_check.py",
