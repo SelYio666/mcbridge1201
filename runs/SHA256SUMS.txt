@@ -1765,7 +1765,7 @@ dd0d5fb7a1873989945bfd211f89e9733b59799b7bc4b757405399843555b3b8  runs/p246-sour
 c7e7847bbe42a0dde1eff85a439732059e08f83bd5f8fc73199ed2167541ebc8  runs/p246-source-fixture-1204/profile-check-1.20.4.json
 eeafc9e62f1336bd09bab6cb21424678fe4e4b3b9ebc6159ab274ee5865a9874  runs/p246-source-fixture-1204/profile-check-1.20.4-with-1211-rules.json
 38af8214cb0a608ed013613c5c2554e4cf56237bdf167407d6622a8ff3f46e60  tools/suggest_rules.py
-f6752ea2fe5c3854f57d340e21747745538ebf30c88cfa81a9c9cd8dd42917bc  rules/fabric-1.21.1/silk-persistence.json
+932e0c5715887b8dad77881a1fbcd12b9f6df55e7d06d95f81ff6d209c732363  rules/fabric-1.21.1/silk-persistence.json
 0a6edb9f1f3a662f1958080f3258a372ff908b6dca37e4756da7f0610bd6da57  java/src/bridge/java/top/mcbridge1201/bridge/DimensionDataStorageComputeIfAbsent.java
 67d2b8b096434a052ee7f59fec4a1050baa51dca7f454ce9a0b9e504a15b511a  runs/p251-suggest-rules/README.md
 2f982d99128c4986353dc98c37f701682b7b9dc55339624a241942681d660e8e  runs/p251-suggest-rules/result.json
@@ -1787,3 +1787,14 @@ a6f01440ee8a01280414053a29a0d3bbaf7004de7cac50bb29a36d5f3b22379c  runs/p251-sugg
 c5d5b5978895b27ab5e900c7ab4f2b0854b51a7f8b0c3670fe19a86544f0d963  runs/p251-suggest-rules/suggestions/sugg-ironchests/draft-ironchests-5.0.2-fabric.jar.json
 8050e5fcb69d2db7df892408c794ce825228c8c763c80b76a9e785ce18a57544  runs/p251-suggest-rules/suggestions/sugg-lithium/draft-lithium-fabric-mc1.20.1-0.11.4.jar.json
 f9ef5a06f718376a851844b984cc97ba67f6316993569215f4e9fb87a88f7428  runs/p251-suggest-rules/suggestions/sugg-trashslot/draft-trashslot-fabric-1.20.1-15.1.5.jar.json
+a7468ed0fd7b6fb08f0450146d61dbebd35dfea85ab9e1fd552a0aee68278778  tools/suggest_from_crash.py
+b22e767c451997eedb3d2772d1751952b73ada491fa8be7eead81b12dd1bc404  runs/p252-crash-to-rule/README.md
+a4d4062c3172f113b9deb874333221894530df8b2690dabb81c45faf43433665  runs/p252-crash-to-rule/result.json
+204ad036bcdb62c781e732279f92006b500bc8b6c0dac74a140613bebabde536  runs/p252-crash-to-rule/logs/crash-server.log
+95fd72dc465665075fa40588cf4f700e81c454b494951b52e03b8bb88f2794cc  runs/p252-crash-to-rule/logs/entityculling-identifier-crash.txt
+805850fc06fd3f400c0083a541c98e559905d96fe3f831c934af9e3382c46702  runs/p252-crash-to-rule/suggestions/before7-replay-no-silk-rule/crash-suggestions.json
+c892d3e7c7def1e52edf95c4c9556bf4caafd8e371c7a1cd1192bb2ec9588729  runs/p252-crash-to-rule/suggestions/before7-replay-no-silk-rule/crash-suggestions.md
+2df55760080f1ea5c7bba7f7cc6bd56064d40fa2d0cc3dd096cf2e0986160b79  runs/p252-crash-to-rule/suggestions/before7-with-current-rules/crash-suggestions.json
+d758cca2f51e1681aecd520340953dfd60470475392422fd23c75e447437a5d9  runs/p252-crash-to-rule/suggestions/before7-with-current-rules/crash-suggestions.md
+4582a0945640416bdb891857998778b38ed329ef935aace2e985aa50205e1f9e  runs/p252-crash-to-rule/suggestions/entityculling-identifier/crash-suggestions.json
+a822d2ee7d3ec5122ee6dc5501a6d73524a04d41b6e12176177e320ece74a557  runs/p252-crash-to-rule/suggestions/entityculling-identifier/crash-suggestions.md

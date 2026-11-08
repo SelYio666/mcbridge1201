@@ -1,0 +1,13 @@
+{
+  "log": "work\\tmp\\veinminer-before7.log",
+  "logSha256": "204ad036bcdb62c781e732279f92006b500bc8b6c0dac74a140613bebabde536",
+  "findings": [
+    {
+      "evidenceLine": "java.lang.NoSuchMethodError: 'net.minecraft.class_18 net.minecraft.class_26.method_17924(java.util.function.Function, java.util.function.Supplier, java.lang.String)'",
+      "logRef": "veinminer-before7.log:94",
+      "kind": "method",
+      "alreadyCovered": "an existing rule already rewrites this call site"
+    }
+  ],
+  "drafts": []
+}

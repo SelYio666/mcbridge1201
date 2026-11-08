@@ -1824,6 +1824,18 @@ FILES = [
     "runs/p251-suggest-rules/suggestions/sugg-ironchests/draft-ironchests-5.0.2-fabric.jar.json",
     "runs/p251-suggest-rules/suggestions/sugg-lithium/draft-lithium-fabric-mc1.20.1-0.11.4.jar.json",
     "runs/p251-suggest-rules/suggestions/sugg-trashslot/draft-trashslot-fabric-1.20.1-15.1.5.jar.json",
+    # p252: crash -> rule loop (compat direction B)
+    "tools/suggest_from_crash.py",
+    "runs/p252-crash-to-rule/README.md",
+    "runs/p252-crash-to-rule/result.json",
+    "runs/p252-crash-to-rule/logs/crash-server.log",
+    "runs/p252-crash-to-rule/logs/entityculling-identifier-crash.txt",
+    "runs/p252-crash-to-rule/suggestions/before7-replay-no-silk-rule/crash-suggestions.json",
+    "runs/p252-crash-to-rule/suggestions/before7-replay-no-silk-rule/crash-suggestions.md",
+    "runs/p252-crash-to-rule/suggestions/before7-with-current-rules/crash-suggestions.json",
+    "runs/p252-crash-to-rule/suggestions/before7-with-current-rules/crash-suggestions.md",
+    "runs/p252-crash-to-rule/suggestions/entityculling-identifier/crash-suggestions.json",
+    "runs/p252-crash-to-rule/suggestions/entityculling-identifier/crash-suggestions.md",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

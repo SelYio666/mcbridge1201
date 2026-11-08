@@ -1,0 +1,13 @@
+{
+  "log": "runs\\p111-popular-mods\\entityculling-identifier-crash.txt",
+  "logSha256": "95fd72dc465665075fa40588cf4f700e81c454b494951b52e03b8bb88f2794cc",
+  "findings": [
+    {
+      "evidenceLine": "java.lang.NoSuchMethodError: 'void net.minecraft.class_2960.<init>(java.lang.String)'",
+      "logRef": "entityculling-identifier-crash.txt:7",
+      "kind": "constructor",
+      "alreadyCovered": "an existing constructorRedirect matches this exact call"
+    }
+  ],
+  "drafts": []
+}

@@ -1,43 +1,22 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-08T21:17:40+08:00",
+  "generatedAt": "2026-11-08T21:25:47+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "3312b0f38ab4347562ab0c3e717507188ae2e21b",
+    "commit": "fe218aee72ef923f128029ee9a4192206be88de7",
     "branch": "compat",
     "dirty": true,
     "modifiedFiles": [
-      "java/src/bridge/java/top/mcbridge1201/bridge/DimensionDataStorageComputeIfAbsent.java",
-      "manifests/baseline.lock.json",
-      "rules/README.md",
-      "rules/fabric-1.21.1/silk-persistence.json",
       "runs/SHA256SUMS.txt",
-      "runs/p251-suggest-rules/README.md",
-      "runs/p251-suggest-rules/logs/after-boot-commands.log",
-      "runs/p251-suggest-rules/logs/before-crash-worldload.log",
-      "runs/p251-suggest-rules/plan-silk.json",
-      "runs/p251-suggest-rules/result.json",
-      "runs/p251-suggest-rules/suggestions/sugg-ironchests/draft-ironchests-5.0.2-fabric.jar.json",
-      "runs/p251-suggest-rules/suggestions/sugg-ironchests/suggestions.json",
-      "runs/p251-suggest-rules/suggestions/sugg-ironchests/suggestions.md",
-      "runs/p251-suggest-rules/suggestions/sugg-lithium/draft-lithium-fabric-mc1.20.1-0.11.4.jar.json",
-      "runs/p251-suggest-rules/suggestions/sugg-lithium/suggestions.json",
-      "runs/p251-suggest-rules/suggestions/sugg-lithium/suggestions.md",
-      "runs/p251-suggest-rules/suggestions/sugg-silk/draft-silk-1.10.1.jar.json",
-      "runs/p251-suggest-rules/suggestions/sugg-silk/suggestions.json",
-      "runs/p251-suggest-rules/suggestions/sugg-silk/suggestions.md",
-      "runs/p251-suggest-rules/suggestions/sugg-trashslot/draft-trashslot-fabric-1.20.1-15.1.5.jar.json",
-      "runs/p251-suggest-rules/suggestions/sugg-trashslot/suggestions.json",
-      "runs/p251-suggest-rules/suggestions/sugg-trashslot/suggestions.md",
-      "runs/p251-suggest-rules/suggestions/sugg-veinminer/draft-Veinminer-2.0.7.jar.json",
-      "runs/p251-suggest-rules/suggestions/sugg-veinminer/suggestions.json",
-      "runs/p251-suggest-rules/suggestions/sugg-veinminer/suggestions.md",
       "tools/hash_evidence.py",
-      "tools/suggest_rules.py"
+      "ules/fabric-1.21.1/silk-persistence.json"
     ],
-    "untrackedFiles": [],
+    "untrackedFiles": [
+      "runs/p252-crash-to-rule/",
+      "tools/suggest_from_crash.py"
+    ],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
   },
   "environment": {
@@ -85,7 +64,7 @@
     "rules": {
       "root": "rules/fabric-1.21.1",
       "count": 30,
-      "packageSha256": "08c529225ba3cc2c96881b67e63cdacac9e95d0523f3b60b8fc9c271a8e9e885",
+      "packageSha256": "660772ea41fa1db192b6bf0aa019992216da08bfeb84d11c7f58f4db05712e6b",
       "files": [
         {
           "path": "rules/fabric-1.21.1/appleskin-food.json",
@@ -214,8 +193,8 @@
         },
         {
           "path": "rules/fabric-1.21.1/silk-persistence.json",
-          "sha256": "f6752ea2fe5c3854f57d340e21747745538ebf30c88cfa81a9c9cd8dd42917bc",
-          "size": 1361
+          "sha256": "932e0c5715887b8dad77881a1fbcd12b9f6df55e7d06d95f81ff6d209c732363",
+          "size": 1547
         },
         {
           "path": "rules/fabric-1.21.1/status-effect-instance.json",
@@ -609,7 +588,7 @@
     "tools": {
       "count": 16,
       "present": 16,
-      "packageSha256": "ae4456e70c115d4f3c81b8dacd42b1dd4ae708ea5b6453509efcf8e09afdf08d",
+      "packageSha256": "490d59a330e0897423f0e1b8f97799b7136ae1c6ac5fd5280c38cf5ef7949184",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -633,8 +612,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "6c5cca2720f7f498b86dc60a075bb2ec124017fd318d84908b9a7983460f9a12",
-          "size": 90602
+          "sha256": "3d6a2fa56245540b4b1faf1491df5c775949ea6500e6b2a6d3aa31a157a3d7d9",
+          "size": 91447
         },
         {
           "path": "tools/release_check.py",

@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-08",
+  "task": "compat B: crash -> rule loop",
+  "tool": "tools/suggest_from_crash.py",
+  "verdicts": {
+    "entityculling_p111_crash": {
+      "log": "logs/entityculling-identifier-crash.txt",
+      "outcome": "already covered by identifier-single-arg.json constructorRedirect",
+      "output": "suggestions/entityculling-identifier/"
+    },
+    "silk_crash_with_current_rules": {
+      "log": "logs/crash-server.log",
+      "outcome": "already covered by silk-persistence.json (p251)",
+      "output": "suggestions/before7-with-current-rules/"
+    },
+    "silk_crash_replayed_without_rule": {
+      "outcome": "auto-generated draft computeifabsent.callsite (callSiteAdaptation, high)",
+      "output": "suggestions/before7-replay-no-silk-rule/",
+      "same_match_keys_as_shipped_rule": true
+    },
+    "passed": true
+  },
+  "replay_draft_vs_shipped_rule": {
+    "log_sha256": "204ad036bcdb62c781e732279f92006b500bc8b6c0dac74a140613bebabde536",
+    "draft_id": "computeifabsent.callsite",
+    "match": true
+  },
+  "crash_log_sha256": "204ad036bcdb62c781e732279f92006b500bc8b6c0dac74a140613bebabde536",
+  "boundaries": [
+    "only NoSuchMethodError/NoSuchFieldError/NoClassDefFoundError/ClassNotFoundException are parsed; mixin/ClassCast errors need other rule shapes and are out of scope",
+    "field errors without a descriptor in the log text degrade to the name-only path",
+    "ClassNotFoundException on MC classes yields a directional note, not a draft"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "log": "work\\tmp\\veinminer-before7.log",
+  "logSha256": "204ad036bcdb62c781e732279f92006b500bc8b6c0dac74a140613bebabde536",
+  "findings": [
+    {
+      "evidenceLine": "java.lang.NoSuchMethodError: 'net.minecraft.class_18 net.minecraft.class_26.method_17924(java.util.function.Function, java.util.function.Supplier, java.lang.String)'",
+      "logRef": "veinminer-before7.log:94",
+      "kind": "method",
+      "drafts": [
+        {
+          "kind": "callSiteAdaptation",
+          "id": "computeifabsent.callsite",
+          "sourceOwner": "net/minecraft/class_26",
+          "sourceName": "method_17924",
+          "sourceDesc": "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+          "targetOwner": "net/minecraft/class_26",
+          "targetName": "method_17924",
+          "targetDesc": "(Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;",
+          "bridgeClass": "top/mcbridge1201/bridge/ComputeifabsentCallsiteBridge",
+          "bridgeMethod": "adapt",
+          "bridgeDesc": "(Lnet/minecraft/class_26;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+          "capability": "callsite.descriptor.method-17924",
+          "risk": "medium",
+          "note": "bridge receives the old stack shape; target keeps the same intermediary id method_17924 with a changed descriptor. instance call: bridge receives the receiver as first argument",
+          "origin": {
+            "log": "veinminer-before7.log",
+            "logSha256": "204ad036bcdb62c781e732279f92006b500bc8b6c0dac74a140613bebabde536",
+            "evidenceLine": "java.lang.NoSuchMethodError: 'net.minecraft.class_18 net.minecraft.class_26.method_17924(java.util.function.Function, java.util.function.Supplier, java.lang.String)'"
+          },
+          "confidence": "high",
+          "evidence": "crash: java.lang.NoSuchMethodError: 'net.minecraft.class_18 net.minecraft.class_26.method_17924(java.util.function.Function, java.util.function.Supplier, java.lang.String)'; 1.21.1 keeps net/minecraft/class_26.method_17924 with desc (Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;"
+        }
+      ]
+    }
+  ],
+  "drafts": [
+    {
+      "kind": "callSiteAdaptation",
+      "id": "computeifabsent.callsite",
+      "sourceOwner": "net/minecraft/class_26",
+      "sourceName": "method_17924",
+      "sourceDesc": "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "targetOwner": "net/minecraft/class_26",
+      "targetName": "method_17924",
+      "targetDesc": "(Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "bridgeClass": "top/mcbridge1201/bridge/ComputeifabsentCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_26;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "capability": "callsite.descriptor.method-17924",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape; target keeps the same intermediary id method_17924 with a changed descriptor. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "log": "veinminer-before7.log",
+        "logSha256": "204ad036bcdb62c781e732279f92006b500bc8b6c0dac74a140613bebabde536",
+        "evidenceLine": "java.lang.NoSuchMethodError: 'net.minecraft.class_18 net.minecraft.class_26.method_17924(java.util.function.Function, java.util.function.Supplier, java.lang.String)'"
+      },
+      "confidence": "high",
+      "evidence": "crash: java.lang.NoSuchMethodError: 'net.minecraft.class_18 net.minecraft.class_26.method_17924(java.util.function.Function, java.util.function.Supplier, java.lang.String)'; 1.21.1 keeps net/minecraft/class_26.method_17924 with desc (Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;"
+    }
+  ]
+}
