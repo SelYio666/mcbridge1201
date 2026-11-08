@@ -1,0 +1,352 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "callSiteAdaptations": [
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c2499.add.callsite",
+      "sourceOwner": "net/minecraft/class_2499",
+      "sourceName": "add",
+      "sourceDesc": "(Ljava/lang/Object;)Z",
+      "targetOwner": "net/minecraft/class_2483",
+      "targetName": "add",
+      "targetDesc": "(ILjava/lang/Object;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C2499AddCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Ljava/lang/Object;)Z",
+      "capability": "callsite.descriptor.add",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. call shape unknown (stub lookup failed): verify the receiver by hand",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 5,
+        "presentInSource": false,
+        "sources": [
+          "net/silkmc/silk/core/item/ItemBuilderKt [nested]",
+          "net/silkmc/silk/nbt/dsl/NbtListBuilder [nested]",
+          "net/silkmc/silk/nbt/serialization/encoder/NbtListEncoder [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2483",
+        "targetDesc": "(ILjava/lang/Object;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2499.add (Ljava/lang/Object;)Z (refs=5, presentInSource=False); callers: net/silkmc/silk/core/item/ItemBuilderKt [nested]; net/silkmc/silk/nbt/dsl/NbtListBuilder [nested]; net/silkmc/silk/nbt/serialization/encoder/NbtListEncoder [nested]. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "textcomponent.callsite",
+      "sourceOwner": "net/minecraft/class_2178",
+      "sourceName": "method_9281",
+      "sourceDesc": "()Lnet/minecraft/class_2178;",
+      "targetOwner": "net/minecraft/class_2178",
+      "targetName": "method_9281",
+      "targetDesc": "(Lnet/minecraft/class_7157;)Lnet/minecraft/class_2178;",
+      "bridgeClass": "top/mcbridge1201/bridge/TextcomponentCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "()Lnet/minecraft/class_2178;",
+      "capability": "callsite.descriptor.textcomponent",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/commands/CommandBuilder$argument$13 [nested]",
+          "net/silkmc/silk/commands/internal/ArgumentTypeUtils [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2178",
+        "targetDesc": "(Lnet/minecraft/class_7157;)Lnet/minecraft/class_2178;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2178.method_9281 ()Lnet/minecraft/class_2178; (refs=2, presentInSource=True); callers: net/silkmc/silk/commands/CommandBuilder$argument$13 [nested]; net/silkmc/silk/commands/internal/ArgumentTypeUtils [nested]. 1.20.1 net.minecraft.commands.arguments.ComponentArgument.textComponent ()Lnet/minecraft/class_2178; -> 1.21.1 net.minecraft.commands.arguments.ComponentArgument.textComponent (Lnet/minecraft/commands/CommandBuildContext;)Lnet/minecraft/class_2178;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c2757.-init-.callsite",
+      "sourceOwner": "net/minecraft/class_2757",
+      "sourceName": "<init>",
+      "sourceDesc": "(Lnet/minecraft/class_2995$class_2996;Ljava/lang/String;Ljava/lang/String;I)V",
+      "targetOwner": "net/minecraft/class_2757",
+      "targetName": "<init>",
+      "targetDesc": "(Ljava/lang/String;Ljava/lang/String;ILjava/util/Optional;Ljava/util/Optional;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C2757InitCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2757;Lnet/minecraft/class_2995$class_2996;Ljava/lang/String;Ljava/lang/String;I)V",
+      "capability": "callsite.descriptor.init",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/game/sideboard/internal/SideboardScoreboard$Line [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2757",
+        "targetDesc": "(Ljava/lang/String;Ljava/lang/String;ILjava/util/Optional;Ljava/util/Optional;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2757.<init> (Lnet/minecraft/class_2995$class_2996;Ljava/lang/String;Ljava/lang/String;I)V (refs=2, presentInSource=True); callers: net/silkmc/silk/game/sideboard/internal/SideboardScoreboard$Line [nested]. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c2658.-init-.callsite",
+      "sourceOwner": "net/minecraft/class_2658",
+      "sourceName": "<init>",
+      "sourceDesc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+      "targetOwner": "net/minecraft/class_2658",
+      "targetName": "<init>",
+      "targetDesc": "(Lnet/minecraft/class_8710;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C2658InitCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2658;Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+      "capability": "callsite.descriptor.init",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/network/packet/ClientToClientPacketDefinition$onReceiveServer$1 [nested]",
+          "net/silkmc/silk/network/packet/ServerToClientPacketDefinition [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2658",
+        "targetDesc": "(Lnet/minecraft/class_8710;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2658.<init> (Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V (refs=2, presentInSource=True); callers: net/silkmc/silk/network/packet/ClientToClientPacketDefinition$onReceiveServer$1 [nested]; net/silkmc/silk/network/packet/ServerToClientPacketDefinition [nested]. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c2817.-init-.callsite",
+      "sourceOwner": "net/minecraft/class_2817",
+      "sourceName": "<init>",
+      "sourceDesc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+      "targetOwner": "net/minecraft/class_2817",
+      "targetName": "<init>",
+      "targetDesc": "(Lnet/minecraft/class_8710;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C2817InitCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2817;Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+      "capability": "callsite.descriptor.init",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/network/packet/ClientToClientPacketDefinition [nested]",
+          "net/silkmc/silk/network/packet/ClientToServerPacketDefinition [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2817",
+        "targetDesc": "(Lnet/minecraft/class_8710;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2817.<init> (Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V (refs=2, presentInSource=True); callers: net/silkmc/silk/network/packet/ClientToClientPacketDefinition [nested]; net/silkmc/silk/network/packet/ClientToServerPacketDefinition [nested]. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "changedimension.callsite",
+      "sourceOwner": "net/minecraft/class_1297",
+      "sourceName": "method_5731",
+      "sourceDesc": "(Lnet/minecraft/class_3218;)Lnet/minecraft/class_1297;",
+      "targetOwner": "net/minecraft/class_1297",
+      "targetName": "method_5731",
+      "targetDesc": "(Lnet/minecraft/class_5454;)Lnet/minecraft/class_1297;",
+      "bridgeClass": "top/mcbridge1201/bridge/ChangedimensionCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1297;Lnet/minecraft/class_3218;)Lnet/minecraft/class_1297;",
+      "capability": "callsite.descriptor.changedimension",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/core/entity/MovementExtensionsKt [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_1297",
+        "targetDesc": "(Lnet/minecraft/class_5454;)Lnet/minecraft/class_1297;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1297.method_5731 (Lnet/minecraft/class_3218;)Lnet/minecraft/class_1297; (refs=1, presentInSource=True); callers: net/silkmc/silk/core/entity/MovementExtensionsKt [nested]. 1.20.1 net.minecraft.world.entity.Entity.changeDimension (Lnet/minecraft/server/level/ServerLevel;)Lnet/minecraft/class_1297; -> 1.21.1 net.minecraft.world.entity.Entity.changeDimension (Lnet/minecraft/world/level/portal/DimensionTransition;)Lnet/minecraft/class_1297;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "tojson.callsite",
+      "sourceOwner": "net/minecraft/class_2561$class_2562",
+      "sourceName": "method_10867",
+      "sourceDesc": "(Lnet/minecraft/class_2561;)Ljava/lang/String;",
+      "targetOwner": "net/minecraft/class_2561$class_2562",
+      "targetName": "method_10867",
+      "targetDesc": "(Lnet/minecraft/class_2561;Lnet/minecraft/class_7225$class_7874;)Ljava/lang/String;",
+      "bridgeClass": "top/mcbridge1201/bridge/TojsonCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2561;)Ljava/lang/String;",
+      "capability": "callsite.descriptor.tojson",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/core/item/ItemBuilderKt [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2561$class_2562",
+        "targetDesc": "(Lnet/minecraft/class_2561;Lnet/minecraft/class_7225$class_7874;)Ljava/lang/String;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2561$class_2562.method_10867 (Lnet/minecraft/class_2561;)Ljava/lang/String; (refs=1, presentInSource=True); callers: net/silkmc/silk/core/item/ItemBuilderKt [nested]. 1.20.1 net.minecraft.network.chat.Component$Serializer.toJson (Lnet/minecraft/network/chat/Component;)Ljava/lang/String; -> 1.21.1 net.minecraft.network.chat.Component$Serializer.toJson (Lnet/minecraft/network/chat/Component;Lnet/minecraft/core/HolderLookup$Provider;)Ljava/lang/String;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "performcommand.callsite",
+      "sourceOwner": "net/minecraft/class_2170",
+      "sourceName": "method_9249",
+      "sourceDesc": "(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)I",
+      "targetOwner": "net/minecraft/class_2170",
+      "targetName": "method_9249",
+      "targetDesc": "(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/PerformcommandCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2170;Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)I",
+      "capability": "callsite.descriptor.performcommand",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/core/server/ServerExtensionsKt [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2170",
+        "targetDesc": "(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2170.method_9249 (Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)I (refs=1, presentInSource=True); callers: net/silkmc/silk/core/server/ServerExtensionsKt [nested]. 1.20.1 net.minecraft.commands.Commands.performCommand (Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)I -> 1.21.1 net.minecraft.commands.Commands.performCommand (Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c2736.-init-.callsite",
+      "sourceOwner": "net/minecraft/class_2736",
+      "sourceName": "<init>",
+      "sourceDesc": "(ILnet/minecraft/class_266;)V",
+      "targetOwner": "net/minecraft/class_2736",
+      "targetName": "<init>",
+      "targetDesc": "(Lnet/minecraft/class_2540;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C2736InitCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2736;ILnet/minecraft/class_266;)V",
+      "capability": "callsite.descriptor.init",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/game/sideboard/internal/SideboardScoreboard$displayToPlayer$initPacketsDeferred$1 [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2736",
+        "targetDesc": "(Lnet/minecraft/class_2540;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2736.<init> (ILnet/minecraft/class_266;)V (refs=1, presentInSource=True); callers: net/silkmc/silk/game/sideboard/internal/SideboardScoreboard$displayToPlayer$initPacketsDeferred$1 [nested]. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c266.-init-.callsite",
+      "sourceOwner": "net/minecraft/class_266",
+      "sourceName": "<init>",
+      "sourceDesc": "(Lnet/minecraft/class_269;Ljava/lang/String;Lnet/minecraft/class_274;Lnet/minecraft/class_2561;Lnet/minecraft/class_274$class_275;)V",
+      "targetOwner": "net/minecraft/class_266",
+      "targetName": "<init>",
+      "targetDesc": "(Lnet/minecraft/class_269;Ljava/lang/String;Lnet/minecraft/class_274;Lnet/minecraft/class_2561;Lnet/minecraft/class_274$class_275;ZLnet/minecraft/class_9022;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C266InitCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_266;Lnet/minecraft/class_269;Ljava/lang/String;Lnet/minecraft/class_274;Lnet/minecraft/class_2561;Lnet/minecraft/class_274$class_275;)V",
+      "capability": "callsite.descriptor.init",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/game/sideboard/internal/SideboardScoreboard [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_266",
+        "targetDesc": "(Lnet/minecraft/class_269;Ljava/lang/String;Lnet/minecraft/class_274;Lnet/minecraft/class_2561;Lnet/minecraft/class_274$class_275;ZLnet/minecraft/class_9022;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_266.<init> (Lnet/minecraft/class_269;Ljava/lang/String;Lnet/minecraft/class_274;Lnet/minecraft/class_2561;Lnet/minecraft/class_274$class_275;)V (refs=1, presentInSource=True); callers: net/silkmc/silk/game/sideboard/internal/SideboardScoreboard [nested]. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "computeifabsent.callsite",
+      "sourceOwner": "net/minecraft/class_26",
+      "sourceName": "method_17924",
+      "sourceDesc": "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "targetOwner": "net/minecraft/class_26",
+      "targetName": "method_17924",
+      "targetDesc": "(Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "bridgeClass": "top/mcbridge1201/bridge/ComputeifabsentCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_26;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "capability": "callsite.descriptor.computeifabsent",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-silk.json",
+        "planSha256": "5eaa941e27fe2c16736eafed446efcbdc91b35bee787a0fba5d8df6141df3df9",
+        "artifact": "silk-1.10.1.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "net/silkmc/silk/persistence/mixin/world/ServerWorldMixin [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_26",
+        "targetDesc": "(Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_26.method_17924 (Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18; (refs=1, presentInSource=True); callers: net/silkmc/silk/persistence/mixin/world/ServerWorldMixin [nested]. 1.20.1 net.minecraft.world.level.storage.DimensionDataStorage.computeIfAbsent (Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18; -> 1.21.1 net.minecraft.world.level.storage.DimensionDataStorage.computeIfAbsent (Lnet/minecraft/world/level/saveddata/SavedData$Factory;Ljava/lang/String;)Lnet/minecraft/class_18;"
+    }
+  ]
+}

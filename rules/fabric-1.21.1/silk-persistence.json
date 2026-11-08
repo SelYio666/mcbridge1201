@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "callSiteAdaptations": [
+    {
+      "id": "computeifabsent.callsite",
+      "sourceOwner": "net/minecraft/class_26",
+      "sourceName": "method_17924",
+      "sourceDesc": "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "bridgeClass": "top/mcbridge1201/bridge/DimensionDataStorageComputeIfAbsent",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_26;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "capability": "callsite.descriptor.computeifabsent",
+      "risk": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_26.method_17924 (Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18; (refs=1, presentInSource=True); callers: net/silkmc/silk/persistence/mixin/world/ServerWorldMixin [nested]. 1.20.1 net.minecraft.world.level.storage.DimensionDataStorage.computeIfAbsent (Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18; -> 1.21.1 net.minecraft.world.level.storage.DimensionDataStorage.computeIfAbsent (Lnet/minecraft/world/level/saveddata/SavedData$Factory;Ljava/lang/String;)Lnet/minecraft/class_18;"
+    }
+  ]
+}

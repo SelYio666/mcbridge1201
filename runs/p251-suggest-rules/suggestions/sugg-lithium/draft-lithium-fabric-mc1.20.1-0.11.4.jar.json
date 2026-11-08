@@ -1,0 +1,220 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "callSiteAdaptations": [
+    {
+      "kind": "callSiteAdaptation",
+      "id": "getsuckshape.callsite",
+      "sourceOwner": "net/minecraft/class_2615",
+      "sourceName": "method_11262",
+      "sourceDesc": "()Lnet/minecraft/class_265;",
+      "targetOwner": "net/minecraft/class_2615",
+      "targetName": "method_11262",
+      "targetDesc": "()Lnet/minecraft/class_238;",
+      "bridgeClass": "top/mcbridge1201/bridge/GetsuckshapeCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2615;)Lnet/minecraft/class_265;",
+      "capability": "callsite.descriptor.getsuckshape",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "lithium-fabric-mc1.20.1-0.11.4.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "me/jellysquid/mods/lithium/common/hopper/HopperHelper",
+          "me/jellysquid/mods/lithium/mixin/entity/hopper_minecart/HopperBlockEntityMixin"
+        ],
+        "targetOwner": "net/minecraft/class_2615",
+        "targetDesc": "()Lnet/minecraft/class_238;"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2615.method_11262 ()Lnet/minecraft/class_265; (refs=2, presentInSource=True); callers: me/jellysquid/mods/lithium/common/hopper/HopperHelper; me/jellysquid/mods/lithium/mixin/entity/hopper_minecart/HopperBlockEntityMixin. Mojang names differ across the chain: getSuckShape vs getSuckAabb"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c4180.-init-.callsite",
+      "sourceOwner": "net/minecraft/class_4180",
+      "sourceName": "<init>",
+      "sourceDesc": "(Ljava/nio/file/Path;Ljava/util/function/Function;Ljava/util/function/Function;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;ZLnet/minecraft/class_5455;Lnet/minecraft/class_5539;)V",
+      "targetOwner": "net/minecraft/class_4180",
+      "targetName": "<init>",
+      "targetDesc": "(Lnet/minecraft/class_9172;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/class_5455;Lnet/minecraft/class_9820;Lnet/minecraft/class_5539;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C4180InitCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_4180;Ljava/nio/file/Path;Ljava/util/function/Function;Ljava/util/function/Function;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;ZLnet/minecraft/class_5455;Lnet/minecraft/class_5539;)V",
+      "capability": "callsite.descriptor.init",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "lithium-fabric-mc1.20.1-0.11.4.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "me/jellysquid/mods/lithium/mixin/ai/poi/PointOfInterestStorageMixin",
+          "me/jellysquid/mods/lithium/mixin/ai/poi/fast_portals/PointOfInterestStorageMixin"
+        ],
+        "targetOwner": "net/minecraft/class_4180",
+        "targetDesc": "(Lnet/minecraft/class_9172;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/class_5455;Lnet/minecraft/class_9820;Lnet/minecraft/class_5539;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_4180.<init> (Ljava/nio/file/Path;Ljava/util/function/Function;Ljava/util/function/Function;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;ZLnet/minecraft/class_5455;Lnet/minecraft/class_5539;)V (refs=2, presentInSource=True); callers: me/jellysquid/mods/lithium/mixin/ai/poi/PointOfInterestStorageMixin; me/jellysquid/mods/lithium/mixin/ai/poi/fast_portals/PointOfInterestStorageMixin. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "getleaderbannerinstance.callsite",
+      "sourceOwner": "net/minecraft/class_3765",
+      "sourceName": "method_16515",
+      "sourceDesc": "()Lnet/minecraft/class_1799;",
+      "targetOwner": "net/minecraft/class_3765",
+      "targetName": "method_16515",
+      "targetDesc": "(Lnet/minecraft/class_7871;)Lnet/minecraft/class_1799;",
+      "bridgeClass": "top/mcbridge1201/bridge/GetleaderbannerinstanceCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "()Lnet/minecraft/class_1799;",
+      "capability": "callsite.descriptor.getleaderbannerinstance",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "lithium-fabric-mc1.20.1-0.11.4.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "me/jellysquid/mods/lithium/mixin/ai/raid/PickupBannerAsLeaderGoalMixin",
+          "me/jellysquid/mods/lithium/mixin/ai/raid/RaiderEntityMixin"
+        ],
+        "targetOwner": "net/minecraft/class_3765",
+        "targetDesc": "(Lnet/minecraft/class_7871;)Lnet/minecraft/class_1799;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_3765.method_16515 ()Lnet/minecraft/class_1799; (refs=2, presentInSource=True); callers: me/jellysquid/mods/lithium/mixin/ai/raid/PickupBannerAsLeaderGoalMixin; me/jellysquid/mods/lithium/mixin/ai/raid/RaiderEntityMixin. 1.20.1 net.minecraft.world.entity.raid.Raid.getLeaderBannerInstance ()Lnet/minecraft/class_1799; -> 1.21.1 net.minecraft.world.entity.raid.Raid.getLeaderBannerInstance (Lnet/minecraft/core/HolderGetter;)Lnet/minecraft/class_1799;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c2499.add.callsite",
+      "sourceOwner": "net/minecraft/class_2499",
+      "sourceName": "add",
+      "sourceDesc": "(Ljava/lang/Object;)Z",
+      "targetOwner": "net/minecraft/class_2483",
+      "targetName": "add",
+      "targetDesc": "(ILjava/lang/Object;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C2499AddCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Ljava/lang/Object;)Z",
+      "capability": "callsite.descriptor.add",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. call shape unknown (stub lookup failed): verify the receiver by hand",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "lithium-fabric-mc1.20.1-0.11.4.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": false,
+        "sources": [
+          "me/jellysquid/mods/lithium/mixin/world/tick_scheduler/ChunkTickSchedulerMixin"
+        ],
+        "targetOwner": "net/minecraft/class_2483",
+        "targetDesc": "(ILjava/lang/Object;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2499.add (Ljava/lang/Object;)Z (refs=2, presentInSource=False); callers: me/jellysquid/mods/lithium/mixin/world/tick_scheduler/ChunkTickSchedulerMixin. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "suck.callsite",
+      "sourceOwner": "net/minecraft/class_2615",
+      "sourceName": "field_12026",
+      "sourceDesc": "Lnet/minecraft/class_265;",
+      "targetOwner": "net/minecraft/class_2615",
+      "targetName": "field_12026",
+      "targetDesc": "Lnet/minecraft/class_238;",
+      "bridgeClass": "top/mcbridge1201/bridge/SuckCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "Lnet/minecraft/class_265;",
+      "capability": "callsite.descriptor.suck",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. call shape unknown (stub lookup failed): verify the receiver by hand",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "lithium-fabric-mc1.20.1-0.11.4.jar",
+        "kind": "field",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "me/jellysquid/mods/lithium/common/hopper/HopperHelper"
+        ],
+        "targetOwner": "net/minecraft/class_2615",
+        "targetDesc": "Lnet/minecraft/class_238;"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2615.field_12026 Lnet/minecraft/class_265; (refs=1, presentInSource=True); callers: me/jellysquid/mods/lithium/common/hopper/HopperHelper. Mojang names differ across the chain: SUCK vs SUCK_AABB"
+    }
+  ],
+  "fieldRedirects": [
+    {
+      "kind": "fieldRedirect",
+      "id": "width.field",
+      "sourceOwner": "net/minecraft/class_4048",
+      "sourceName": "field_18067",
+      "sourceDesc": "F",
+      "bridgeClass": "top/mcbridge1201/bridge/WidthFieldBridge",
+      "bridgeMethod": "get",
+      "bridgeDesc": "()F",
+      "capability": "field.access.width",
+      "risk": "medium",
+      "note": "field net.minecraft.world.entity.EntityDimensions.width exists in 1.21.1 as comp_2185 but is not resolvable from mod code (private/removed constant) - bridge must supply the value or the semantic equivalent",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "lithium-fabric-mc1.20.1-0.11.4.jar",
+        "kind": "field",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin",
+          "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
+        ]
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: missingMember ref net/minecraft/class_4048.field_18067 F (refs=2, presentInSource=True); callers: me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin; me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin. 1.20.1 net/minecraft/class_4048.field_18067 = net.minecraft.world.entity.EntityDimensions.width; 1.21.1 has comp_2185"
+    },
+    {
+      "kind": "fieldRedirect",
+      "id": "height.field",
+      "sourceOwner": "net/minecraft/class_4048",
+      "sourceName": "field_18068",
+      "sourceDesc": "F",
+      "bridgeClass": "top/mcbridge1201/bridge/HeightFieldBridge",
+      "bridgeMethod": "get",
+      "bridgeDesc": "()F",
+      "capability": "field.access.height",
+      "risk": "medium",
+      "note": "field net.minecraft.world.entity.EntityDimensions.height exists in 1.21.1 as comp_2186 but is not resolvable from mod code (private/removed constant) - bridge must supply the value or the semantic equivalent",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "lithium-fabric-mc1.20.1-0.11.4.jar",
+        "kind": "field",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin",
+          "me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin"
+        ]
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: missingMember ref net/minecraft/class_4048.field_18068 F (refs=2, presentInSource=True); callers: me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/FleeEntityGoalMixin; me/jellysquid/mods/lithium/mixin/ai/nearby_entity_tracking/goals/LookAtEntityGoalMixin. 1.20.1 net/minecraft/class_4048.field_18068 = net.minecraft.world.entity.EntityDimensions.height; 1.21.1 has comp_2186"
+    }
+  ]
+}

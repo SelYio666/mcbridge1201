@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "callSiteAdaptations": [
+    {
+      "kind": "callSiteAdaptation",
+      "id": "textcomponent.callsite",
+      "sourceOwner": "net/minecraft/class_2178",
+      "sourceName": "method_9281",
+      "sourceDesc": "()Lnet/minecraft/class_2178;",
+      "targetOwner": "net/minecraft/class_2178",
+      "targetName": "method_9281",
+      "targetDesc": "(Lnet/minecraft/class_7157;)Lnet/minecraft/class_2178;",
+      "bridgeClass": "top/mcbridge1201/bridge/TextcomponentCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "()Lnet/minecraft/class_2178;",
+      "capability": "callsite.descriptor.textcomponent",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+      "origin": {
+        "plan": "plan-popular.json",
+        "planSha256": "3c7bcd8cfe3c5db041320ff10ba3221926352bbb620479f3f213899f8b1a58b9",
+        "artifact": "Veinminer-2.0.7.jar",
+        "kind": "method",
+        "refs": 4,
+        "presentInSource": true,
+        "sources": [
+          "de/miraculixx/veinminer/command/VeinminerCommand$applySetting$lambda$18$$inlined$argument$1",
+          "de/miraculixx/veinminer/command/VeinminerCommand$applySetting$lambda$18$$inlined$argument$3",
+          "de/miraculixx/veinminer/command/VeinminerCommand$command$lambda$12$lambda$8$lambda$3$$inlined$argument$1"
+        ],
+        "targetOwner": "net/minecraft/class_2178",
+        "targetDesc": "(Lnet/minecraft/class_7157;)Lnet/minecraft/class_2178;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2178.method_9281 ()Lnet/minecraft/class_2178; (refs=4, presentInSource=True); callers: de/miraculixx/veinminer/command/VeinminerCommand$applySetting$lambda$18$$inlined$argument$1; de/miraculixx/veinminer/command/VeinminerCommand$applySetting$lambda$18$$inlined$argument$3; de/miraculixx/veinminer/command/VeinminerCommand$command$lambda$12$lambda$8$lambda$3$$inlined$argument$1. 1.20.1 net.minecraft.commands.arguments.ComponentArgument.textComponent ()Lnet/minecraft/class_2178; -> 1.21.1 net.minecraft.commands.arguments.ComponentArgument.textComponent (Lnet/minecraft/commands/CommandBuildContext;)Lnet/minecraft/class_2178;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "hurtandbreak.callsite",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7956",
+      "sourceDesc": "(ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+      "targetOwner": "net/minecraft/class_1799",
+      "targetName": "method_7956",
+      "targetDesc": "(ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/HurtandbreakCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+      "capability": "callsite.descriptor.hurtandbreak",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-popular.json",
+        "planSha256": "3c7bcd8cfe3c5db041320ff10ba3221926352bbb620479f3f213899f8b1a58b9",
+        "artifact": "Veinminer-2.0.7.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "de/miraculixx/veinminer/Veinminer"
+        ],
+        "targetOwner": "net/minecraft/class_1799",
+        "targetDesc": "(ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1799.method_7956 (ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V (refs=1, presentInSource=True); callers: de/miraculixx/veinminer/Veinminer. 1.20.1 net.minecraft.world.item.ItemStack.hurtAndBreak (ILnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V -> 1.21.1 net.minecraft.world.item.ItemStack.hurtAndBreak (ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "broadcastbreakevent.callsite",
+      "sourceOwner": "net/minecraft/class_1657",
+      "sourceName": "method_20235",
+      "sourceDesc": "(Lnet/minecraft/class_1304;)V",
+      "targetOwner": "net/minecraft/class_1309",
+      "targetName": "method_20235",
+      "targetDesc": "(Lnet/minecraft/class_1792;Lnet/minecraft/class_1304;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/BroadcastbreakeventCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1304;)V",
+      "capability": "callsite.descriptor.broadcastbreakevent",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. call shape unknown (stub lookup failed): verify the receiver by hand",
+      "origin": {
+        "plan": "plan-popular.json",
+        "planSha256": "3c7bcd8cfe3c5db041320ff10ba3221926352bbb620479f3f213899f8b1a58b9",
+        "artifact": "Veinminer-2.0.7.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "de/miraculixx/veinminer/Veinminer"
+        ],
+        "targetOwner": "net/minecraft/class_1309",
+        "targetDesc": "(Lnet/minecraft/class_1792;Lnet/minecraft/class_1304;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1657.method_20235 (Lnet/minecraft/class_1304;)V (refs=1, presentInSource=True); callers: de/miraculixx/veinminer/Veinminer. Mojang names differ across the chain: broadcastBreakEvent vs onEquippedItemBroken"
+    }
+  ]
+}

@@ -1,0 +1,860 @@
+{
+  "plan": "work\\plan-corpus.json",
+  "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+  "sourceVersion": "1.20.1",
+  "targetVersion": "1.21.1",
+  "ruleFilesChecked": [
+    "appleskin-food.json",
+    "appleskin-tooltip.json",
+    "cloth-config-render.json",
+    "cloth-config.json",
+    "container.json",
+    "dyecolor-components.json",
+    "entityculling-mixin-port.json",
+    "entrylist-constructor.json",
+    "fabric-legacy-networking.json",
+    "fallingtree-tombstones.json",
+    "identifier-single-arg.json",
+    "immediatelyfast-batching-port.json",
+    "ironchests-draw.json",
+    "ironchests-nbt.json",
+    "ironchests-screen.json",
+    "lithium-degraded.json",
+    "lithium-varint.json",
+    "lithium.json",
+    "modmenu-list-render.json",
+    "modmenu-options.json",
+    "modmenu-textfield.json",
+    "modmenu-title-screen.json",
+    "nbt-packet.json",
+    "render-widget-override.json",
+    "shulker-nbt.json",
+    "status-effect-instance.json",
+    "textured-button.json",
+    "trashslot-sendtoserver.json",
+    "trashslot.json"
+  ],
+  "drafts": [
+    {
+      "kind": "callSiteAdaptation",
+      "id": "savewithfullmetadata.callsite",
+      "sourceOwner": "net/minecraft/class_2586",
+      "sourceName": "method_38242",
+      "sourceDesc": "()Lnet/minecraft/class_2487;",
+      "targetOwner": "net/minecraft/class_2586",
+      "targetName": "method_38242",
+      "targetDesc": "(Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;",
+      "bridgeClass": "top/mcbridge1201/bridge/SavewithfullmetadataCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2586;)Lnet/minecraft/class_2487;",
+      "capability": "callsite.descriptor.savewithfullmetadata",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/DollyItem",
+          "com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_2586",
+        "targetDesc": "(Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2586.method_38242 ()Lnet/minecraft/class_2487; (refs=2, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/DollyItem; com/teamresourceful/resourcefullib/common/codecs/predicates/RestrictedBlockPredicate [nested]. 1.20.1 net.minecraft.world.level.block.entity.BlockEntity.saveWithFullMetadata ()Lnet/minecraft/class_2487; -> 1.21.1 net.minecraft.world.level.block.entity.BlockEntity.saveWithFullMetadata (Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/class_2487;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "c1293.-init-.callsite",
+      "sourceOwner": "net/minecraft/class_1293",
+      "sourceName": "<init>",
+      "sourceDesc": "(Lnet/minecraft/class_1291;II)V",
+      "targetOwner": "net/minecraft/class_1293",
+      "targetName": "<init>",
+      "targetDesc": "(Lnet/minecraft/class_6880;IIZZZ)V",
+      "bridgeClass": "top/mcbridge1201/bridge/C1293InitCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1293;Lnet/minecraft/class_1291;II)V",
+      "capability": "callsite.descriptor.init",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/DollyItem"
+        ],
+        "targetOwner": "net/minecraft/class_1293",
+        "targetDesc": "(Lnet/minecraft/class_6880;IIZZZ)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1293.<init> (Lnet/minecraft/class_1291;II)V (refs=2, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/DollyItem. identity not fully resolved in mappings; descriptor change is from the analyzer note"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "appendhovertext.callsite",
+      "sourceOwner": "net/minecraft/class_1792",
+      "sourceName": "method_7851",
+      "sourceDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Ljava/util/List;Lnet/minecraft/class_1836;)V",
+      "targetOwner": "net/minecraft/class_1792",
+      "targetName": "method_7851",
+      "targetDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_1792$class_9635;Ljava/util/List;Lnet/minecraft/class_1836;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/AppendhovertextCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1792;Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Ljava/util/List;Lnet/minecraft/class_1836;)V",
+      "capability": "callsite.descriptor.appendhovertext",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/DollyItem",
+          "tech/thatgravyboat/ironchests/common/items/KeyItem"
+        ],
+        "targetOwner": "net/minecraft/class_1792",
+        "targetDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_1792$class_9635;Ljava/util/List;Lnet/minecraft/class_1836;)V"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1792.method_7851 (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Ljava/util/List;Lnet/minecraft/class_1836;)V (refs=2, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/DollyItem; tech/thatgravyboat/ironchests/common/items/KeyItem. 1.20.1 net.minecraft.world.item.Item.appendHoverText (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V -> 1.21.1 net.minecraft.world.item.Item.appendHoverText (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/Item$TooltipContext;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "readblockpos.callsite",
+      "sourceOwner": "net/minecraft/class_2512",
+      "sourceName": "method_10691",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2338;",
+      "targetOwner": "net/minecraft/class_2512",
+      "targetName": "method_10691",
+      "targetDesc": "(Lnet/minecraft/class_2487;Ljava/lang/String;)Ljava/util/Optional;",
+      "bridgeClass": "top/mcbridge1201/bridge/ReadblockposCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2338;",
+      "capability": "callsite.descriptor.readblockpos",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/KeyItem",
+          "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+        ],
+        "targetOwner": "net/minecraft/class_2512",
+        "targetDesc": "(Lnet/minecraft/class_2487;Ljava/lang/String;)Ljava/util/Optional;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2512.method_10691 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2338; (refs=2, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/KeyItem; tech/thatgravyboat/ironchests/common/items/KeyRingItem. 1.20.1 net.minecraft.nbt.NbtUtils.readBlockPos (Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/class_2338; -> 1.21.1 net.minecraft.nbt.NbtUtils.readBlockPos (Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;)Ljava/util/Optional;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "fromjson.callsite",
+      "sourceOwner": "net/minecraft/class_2561$class_2562",
+      "sourceName": "method_10877",
+      "sourceDesc": "(Ljava/lang/String;)Lnet/minecraft/class_5250;",
+      "targetOwner": "net/minecraft/class_2561$class_2562",
+      "targetName": "method_10877",
+      "targetDesc": "(Ljava/lang/String;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_5250;",
+      "bridgeClass": "top/mcbridge1201/bridge/FromjsonCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Ljava/lang/String;)Lnet/minecraft/class_5250;",
+      "capability": "callsite.descriptor.fromjson",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/KeyItem",
+          "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+        ],
+        "targetOwner": "net/minecraft/class_2561$class_2562",
+        "targetDesc": "(Ljava/lang/String;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_5250;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2561$class_2562.method_10877 (Ljava/lang/String;)Lnet/minecraft/class_5250; (refs=2, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/KeyItem; tech/thatgravyboat/ironchests/common/items/KeyRingItem. 1.20.1 net.minecraft.network.chat.Component$Serializer.fromJson (Ljava/lang/String;)Lnet/minecraft/class_5250; -> 1.21.1 net.minecraft.network.chat.Component$Serializer.fromJson (Ljava/lang/String;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/class_5250;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "writeblockpos.callsite",
+      "sourceOwner": "net/minecraft/class_2512",
+      "sourceName": "method_10692",
+      "sourceDesc": "(Lnet/minecraft/class_2338;)Lnet/minecraft/class_2487;",
+      "targetOwner": "net/minecraft/class_2512",
+      "targetName": "method_10692",
+      "targetDesc": "(Lnet/minecraft/class_2338;)Lnet/minecraft/class_2520;",
+      "bridgeClass": "top/mcbridge1201/bridge/WriteblockposCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2338;)Lnet/minecraft/class_2487;",
+      "capability": "callsite.descriptor.writeblockpos",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/UnlockableItem",
+          "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+        ],
+        "targetOwner": "net/minecraft/class_2512",
+        "targetDesc": "(Lnet/minecraft/class_2338;)Lnet/minecraft/class_2520;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2512.method_10692 (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2487; (refs=2, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/UnlockableItem; tech/thatgravyboat/ironchests/common/items/KeyRingItem. 1.20.1 net.minecraft.nbt.NbtUtils.writeBlockPos (Lnet/minecraft/core/BlockPos;)Lnet/minecraft/class_2487; -> 1.21.1 net.minecraft.nbt.NbtUtils.writeBlockPos (Lnet/minecraft/core/BlockPos;)Lnet/minecraft/class_2520;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "tojson.callsite",
+      "sourceOwner": "net/minecraft/class_2561$class_2562",
+      "sourceName": "method_10867",
+      "sourceDesc": "(Lnet/minecraft/class_2561;)Ljava/lang/String;",
+      "targetOwner": "net/minecraft/class_2561$class_2562",
+      "targetName": "method_10867",
+      "targetDesc": "(Lnet/minecraft/class_2561;Lnet/minecraft/class_7225$class_7874;)Ljava/lang/String;",
+      "bridgeClass": "top/mcbridge1201/bridge/TojsonCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2561;)Ljava/lang/String;",
+      "capability": "callsite.descriptor.tojson",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 2,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/UnlockableItem",
+          "tech/thatgravyboat/ironchests/common/items/KeyRingItem"
+        ],
+        "targetOwner": "net/minecraft/class_2561$class_2562",
+        "targetDesc": "(Lnet/minecraft/class_2561;Lnet/minecraft/class_7225$class_7874;)Ljava/lang/String;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2561$class_2562.method_10867 (Lnet/minecraft/class_2561;)Ljava/lang/String; (refs=2, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/UnlockableItem; tech/thatgravyboat/ironchests/common/items/KeyRingItem. 1.20.1 net.minecraft.network.chat.Component$Serializer.toJson (Lnet/minecraft/network/chat/Component;)Ljava/lang/String; -> 1.21.1 net.minecraft.network.chat.Component$Serializer.toJson (Lnet/minecraft/network/chat/Component;Lnet/minecraft/core/HolderLookup$Provider;)Ljava/lang/String;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "hurtandbreak.callsite",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7956",
+      "sourceDesc": "(ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+      "targetOwner": "net/minecraft/class_1799",
+      "targetName": "method_7956",
+      "targetDesc": "(ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/HurtandbreakCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+      "capability": "callsite.descriptor.hurtandbreak",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/DollyItem"
+        ],
+        "targetOwner": "net/minecraft/class_1799",
+        "targetDesc": "(ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1799.method_7956 (ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/DollyItem. 1.20.1 net.minecraft.world.item.ItemStack.hurtAndBreak (ILnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V -> 1.21.1 net.minecraft.world.item.ItemStack.hurtAndBreak (ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "savewithid.callsite",
+      "sourceOwner": "net/minecraft/class_2586",
+      "sourceName": "method_38243",
+      "sourceDesc": "()Lnet/minecraft/class_2487;",
+      "targetOwner": "net/minecraft/class_2586",
+      "targetName": "method_38243",
+      "targetDesc": "(Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;",
+      "bridgeClass": "top/mcbridge1201/bridge/SavewithidCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2586;)Lnet/minecraft/class_2487;",
+      "capability": "callsite.descriptor.savewithid",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/DollyItem"
+        ],
+        "targetOwner": "net/minecraft/class_2586",
+        "targetDesc": "(Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2586.method_38243 ()Lnet/minecraft/class_2487; (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/DollyItem. 1.20.1 net.minecraft.world.level.block.entity.BlockEntity.saveWithId ()Lnet/minecraft/class_2487; -> 1.21.1 net.minecraft.world.level.block.entity.BlockEntity.saveWithId (Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/class_2487;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "load.callsite",
+      "sourceOwner": "net/minecraft/class_2586",
+      "sourceName": "method_11014",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)V",
+      "targetOwner": "net/minecraft/class_2586",
+      "targetName": "method_11014",
+      "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/LoadCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2586;Lnet/minecraft/class_2487;)V",
+      "capability": "callsite.descriptor.load",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/DollyItem"
+        ],
+        "targetOwner": "net/minecraft/class_2586",
+        "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2586.method_11014 (Lnet/minecraft/class_2487;)V (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/DollyItem. Mojang names differ across the chain: load vs loadAdditional"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "movement-slowdown.callsite",
+      "sourceOwner": "net/minecraft/class_1294",
+      "sourceName": "field_5909",
+      "sourceDesc": "Lnet/minecraft/class_1291;",
+      "targetOwner": "net/minecraft/class_1294",
+      "targetName": "field_5909",
+      "targetDesc": "Lnet/minecraft/class_6880;",
+      "bridgeClass": "top/mcbridge1201/bridge/MovementSlowdownCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "Lnet/minecraft/class_1291;",
+      "capability": "callsite.descriptor.movement-slowdown",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. call shape unknown (stub lookup failed): verify the receiver by hand",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "field",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/DollyItem"
+        ],
+        "targetOwner": "net/minecraft/class_1294",
+        "targetDesc": "Lnet/minecraft/class_6880;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1294.field_5909 Lnet/minecraft/class_1291; (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/DollyItem. 1.20.1 net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN Lnet/minecraft/world/effect/MobEffect; -> 1.21.1 net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN Lnet/minecraft/core/Holder;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "dig-slowdown.callsite",
+      "sourceOwner": "net/minecraft/class_1294",
+      "sourceName": "field_5901",
+      "sourceDesc": "Lnet/minecraft/class_1291;",
+      "targetOwner": "net/minecraft/class_1294",
+      "targetName": "field_5901",
+      "targetDesc": "Lnet/minecraft/class_6880;",
+      "bridgeClass": "top/mcbridge1201/bridge/DigSlowdownCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "Lnet/minecraft/class_1291;",
+      "capability": "callsite.descriptor.dig-slowdown",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. call shape unknown (stub lookup failed): verify the receiver by hand",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "field",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/items/DollyItem"
+        ],
+        "targetOwner": "net/minecraft/class_1294",
+        "targetDesc": "Lnet/minecraft/class_6880;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1294.field_5901 Lnet/minecraft/class_1291; (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/items/DollyItem. 1.20.1 net.minecraft.world.effect.MobEffects.DIG_SLOWDOWN Lnet/minecraft/world/effect/MobEffect; -> 1.21.1 net.minecraft.world.effect.MobEffects.DIG_SLOWDOWN Lnet/minecraft/core/Holder;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "writenbt.callsite",
+      "sourceOwner": "net/minecraft/class_2540",
+      "sourceName": "method_10794",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;",
+      "targetOwner": "net/minecraft/class_2540",
+      "targetName": "method_10794",
+      "targetDesc": "(Lnet/minecraft/class_2520;)Lnet/minecraft/class_2540;",
+      "bridgeClass": "top/mcbridge1201/bridge/WritenbtCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_2540;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;",
+      "capability": "callsite.descriptor.writenbt",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "tech/thatgravyboat/ironchests/common/network/SyncMessage$Handler"
+        ],
+        "targetOwner": "net/minecraft/class_2540",
+        "targetDesc": "(Lnet/minecraft/class_2520;)Lnet/minecraft/class_2540;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_2540.method_10794 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540; (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/network/SyncMessage$Handler. 1.20.1 net.minecraft.network.FriendlyByteBuf.writeNbt (Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/class_2540; -> 1.21.1 net.minecraft.network.FriendlyByteBuf.writeNbt (Lnet/minecraft/nbt/Tag;)Lnet/minecraft/class_2540;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "gettooltiplines.callsite",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7950",
+      "sourceDesc": "(Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;",
+      "targetOwner": "net/minecraft/class_1799",
+      "targetName": "method_7950",
+      "targetDesc": "(Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;",
+      "bridgeClass": "top/mcbridge1201/bridge/GettooltiplinesCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;",
+      "capability": "callsite.descriptor.gettooltiplines",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "com/teamresourceful/resourcefullib/client/utils/ScreenUtils [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_1799",
+        "targetDesc": "(Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1799.method_7950 (Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List; (refs=1, presentInSource=True); callers: com/teamresourceful/resourcefullib/client/utils/ScreenUtils [nested]. 1.20.1 net.minecraft.world.item.ItemStack.getTooltipLines (Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List; -> 1.21.1 net.minecraft.world.item.ItemStack.getTooltipLines (Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;"
+    },
+    {
+      "kind": "callSiteAdaptation",
+      "id": "computeifabsent.callsite",
+      "sourceOwner": "net/minecraft/class_26",
+      "sourceName": "method_17924",
+      "sourceDesc": "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "targetOwner": "net/minecraft/class_26",
+      "targetName": "method_17924",
+      "targetDesc": "(Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "bridgeClass": "top/mcbridge1201/bridge/ComputeifabsentCallsiteBridge",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_26;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+      "capability": "callsite.descriptor.computeifabsent",
+      "risk": "medium",
+      "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "com/teamresourceful/resourcefullib/common/utils/SaveHandler [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_26",
+        "targetDesc": "(Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;"
+      },
+      "confidence": "high",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_26.method_17924 (Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18; (refs=1, presentInSource=True); callers: com/teamresourceful/resourcefullib/common/utils/SaveHandler [nested]. 1.20.1 net.minecraft.world.level.storage.DimensionDataStorage.computeIfAbsent (Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18; -> 1.21.1 net.minecraft.world.level.storage.DimensionDataStorage.computeIfAbsent (Lnet/minecraft/world/level/saveddata/SavedData$Factory;Ljava/lang/String;)Lnet/minecraft/class_18;"
+    },
+    {
+      "kind": "methodRedirect",
+      "id": "save.retarget",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7953",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+      "bridgeClass": "top/mcbridge1201/bridge/SaveRetargetBridge",
+      "bridgeMethod": "forward",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+      "capability": "member.renamed.save",
+      "risk": "medium",
+      "note": "net.minecraft.world.item.ItemStack.save is method_57379 (Lkp;Ljava/lang/Object;)Ljava/lang/Object; in 1.21.1; descriptor differs, bridge must convert. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "ironchests-5.0.2-fabric.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "com/teamresourceful/resourcefullib/common/codecs/predicates/NbtPredicate [nested]"
+        ],
+        "targetOwner": "net/minecraft/class_1799",
+        "targetName": "method_57379",
+        "targetDesc": "(Lkp;Ljava/lang/Object;)Ljava/lang/Object;"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: missingMember ref net/minecraft/class_1799.method_7953 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487; (refs=1, presentInSource=True); callers: com/teamresourceful/resourcefullib/common/codecs/predicates/NbtPredicate [nested]. 1.20.1 net/minecraft/class_1799.method_7953 = net.minecraft.world.item.ItemStack.save; 1.21.1 keeps it as method_57379"
+    }
+  ],
+  "droppedConflicts": [
+    {
+      "id": "load.callsite-2",
+      "reason": "an existing rule already covers this exact match key",
+      "draft": {
+        "kind": "callSiteAdaptation",
+        "id": "load.callsite-2",
+        "sourceOwner": "net/minecraft/class_2621",
+        "sourceName": "method_11014",
+        "sourceDesc": "(Lnet/minecraft/class_2487;)V",
+        "targetOwner": "net/minecraft/class_2586",
+        "targetName": "method_11014",
+        "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V",
+        "bridgeClass": "top/mcbridge1201/bridge/LoadCallsiteBridge",
+        "bridgeMethod": "adapt",
+        "bridgeDesc": "(Lnet/minecraft/class_2487;)V",
+        "capability": "callsite.descriptor.load",
+        "risk": "medium",
+        "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. call shape unknown (stub lookup failed): verify the receiver by hand",
+        "origin": {
+          "plan": "plan-corpus.json",
+          "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+          "artifact": "ironchests-5.0.2-fabric.jar",
+          "kind": "method",
+          "refs": 1,
+          "presentInSource": true,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "targetOwner": "net/minecraft/class_2586",
+          "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        "confidence": "medium",
+        "evidence": "analyzer: descMismatch ref net/minecraft/class_2621.method_11014 (Lnet/minecraft/class_2487;)V (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity. Mojang names differ across the chain: load vs loadAdditional"
+      }
+    },
+    {
+      "id": "loadallitems.callsite",
+      "reason": "an existing rule already covers this exact match key",
+      "draft": {
+        "kind": "callSiteAdaptation",
+        "id": "loadallitems.callsite",
+        "sourceOwner": "net/minecraft/class_1262",
+        "sourceName": "method_5429",
+        "sourceDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)V",
+        "targetOwner": "net/minecraft/class_1262",
+        "targetName": "method_5429",
+        "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)V",
+        "bridgeClass": "top/mcbridge1201/bridge/LoadallitemsCallsiteBridge",
+        "bridgeMethod": "adapt",
+        "bridgeDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)V",
+        "capability": "callsite.descriptor.loadallitems",
+        "risk": "medium",
+        "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+        "origin": {
+          "plan": "plan-corpus.json",
+          "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+          "artifact": "ironchests-5.0.2-fabric.jar",
+          "kind": "method",
+          "refs": 1,
+          "presentInSource": true,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "targetOwner": "net/minecraft/class_1262",
+          "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        "confidence": "high",
+        "evidence": "analyzer: descMismatch ref net/minecraft/class_1262.method_5429 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)V (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity. 1.20.1 net.minecraft.world.ContainerHelper.loadAllItems (Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/NonNullList;)V -> 1.21.1 net.minecraft.world.ContainerHelper.loadAllItems (Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/NonNullList;Lnet/minecraft/core/HolderLookup$Provider;)V"
+      }
+    },
+    {
+      "id": "saveadditional.callsite",
+      "reason": "an existing rule already covers this exact match key",
+      "draft": {
+        "kind": "callSiteAdaptation",
+        "id": "saveadditional.callsite",
+        "sourceOwner": "net/minecraft/class_2621",
+        "sourceName": "method_11007",
+        "sourceDesc": "(Lnet/minecraft/class_2487;)V",
+        "targetOwner": "net/minecraft/class_2586",
+        "targetName": "method_11007",
+        "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V",
+        "bridgeClass": "top/mcbridge1201/bridge/SaveadditionalCallsiteBridge",
+        "bridgeMethod": "adapt",
+        "bridgeDesc": "(Lnet/minecraft/class_2487;)V",
+        "capability": "callsite.descriptor.saveadditional",
+        "risk": "medium",
+        "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. call shape unknown (stub lookup failed): verify the receiver by hand",
+        "origin": {
+          "plan": "plan-corpus.json",
+          "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+          "artifact": "ironchests-5.0.2-fabric.jar",
+          "kind": "method",
+          "refs": 1,
+          "presentInSource": true,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "targetOwner": "net/minecraft/class_2586",
+          "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V"
+        },
+        "confidence": "high",
+        "evidence": "analyzer: descMismatch ref net/minecraft/class_2621.method_11007 (Lnet/minecraft/class_2487;)V (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity. 1.20.1 net.minecraft.world.level.block.entity.BlockEntity.saveAdditional (Lnet/minecraft/nbt/CompoundTag;)V -> 1.21.1 net.minecraft.world.level.block.entity.BlockEntity.saveAdditional (Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)V"
+      }
+    },
+    {
+      "id": "saveallitems.callsite",
+      "reason": "an existing rule already covers this exact match key",
+      "draft": {
+        "kind": "callSiteAdaptation",
+        "id": "saveallitems.callsite",
+        "sourceOwner": "net/minecraft/class_1262",
+        "sourceName": "method_5426",
+        "sourceDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)Lnet/minecraft/class_2487;",
+        "targetOwner": "net/minecraft/class_1262",
+        "targetName": "method_5426",
+        "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;",
+        "bridgeClass": "top/mcbridge1201/bridge/SaveallitemsCallsiteBridge",
+        "bridgeMethod": "adapt",
+        "bridgeDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)Lnet/minecraft/class_2487;",
+        "capability": "callsite.descriptor.saveallitems",
+        "risk": "medium",
+        "note": "bridge receives the old stack shape and must implement the 1.21.1 call; confidence covers the identity mapping, not the bridge body. static call: bridge signature equals the old descriptor",
+        "origin": {
+          "plan": "plan-corpus.json",
+          "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+          "artifact": "ironchests-5.0.2-fabric.jar",
+          "kind": "method",
+          "refs": 1,
+          "presentInSource": true,
+          "sources": [
+            "tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity"
+          ],
+          "targetOwner": "net/minecraft/class_1262",
+          "targetDesc": "(Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;"
+        },
+        "confidence": "high",
+        "evidence": "analyzer: descMismatch ref net/minecraft/class_1262.method_5426 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)Lnet/minecraft/class_2487; (refs=1, presentInSource=True); callers: tech/thatgravyboat/ironchests/common/blocks/GenericChestBlockEntity. 1.20.1 net.minecraft.world.ContainerHelper.saveAllItems (Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/NonNullList;)Lnet/minecraft/class_2487; -> 1.21.1 net.minecraft.world.ContainerHelper.saveAllItems (Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/NonNullList;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/class_2487;"
+      }
+    }
+  ],
+  "notes": [
+    {
+      "owner": "net/minecraft/class_1799",
+      "name": "method_7948",
+      "reason": "no getOrCreateTag continuation in 1.21.1 net.minecraft.world.item.ItemStack; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_1799",
+      "name": "method_7969",
+      "reason": "no getTag continuation in 1.21.1 net.minecraft.world.item.ItemStack; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_1799",
+      "name": "method_7985",
+      "reason": "no hasTag continuation in 1.21.1 net.minecraft.world.item.ItemStack; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_2096",
+      "name": "method_9038",
+      "reason": "no getMin continuation in 1.21.1 net.minecraft.advancements.critereon.MinMaxBounds; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_1799",
+      "name": "method_7980",
+      "reason": "no setTag continuation in 1.21.1 net.minecraft.world.item.ItemStack; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_1860",
+      "name": "method_8114",
+      "reason": "no getId continuation in 1.21.1 net.minecraft.world.item.crafting.Recipe; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_4588",
+      "name": "method_23763",
+      "reason": "no normal continuation in 1.21.1 com.mojang.blaze3d.vertex.VertexConsumer; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_4588",
+      "name": "method_1344",
+      "reason": "no endVertex continuation in 1.21.1 com.mojang.blaze3d.vertex.VertexConsumer; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_2090",
+      "name": "field_9685",
+      "reason": "no ANY continuation in 1.21.1 net.minecraft.advancements.critereon.LocationPredicate; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_2096",
+      "name": "method_9042",
+      "reason": "no getMax continuation in 1.21.1 net.minecraft.advancements.critereon.MinMaxBounds; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_7923",
+      "name": "field_41176",
+      "reason": "no ENCHANTMENT continuation in 1.21.1 net.minecraft.core.registries.BuiltInRegistries; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_1657",
+      "name": "method_20236",
+      "reason": "no broadcastBreakEvent continuation in 1.21.1 net.minecraft.world.entity.LivingEntity; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_1799",
+      "name": "method_7938",
+      "reason": "no hasCustomHoverName continuation in 1.21.1 net.minecraft.world.item.ItemStack; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_2073",
+      "name": "field_9640",
+      "reason": "no ANY continuation in 1.21.1 net.minecraft.advancements.critereon.ItemPredicate; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_332",
+      "name": "method_48587",
+      "reason": "no blitNineSliced continuation in 1.21.1 net.minecraft.client.gui.GuiGraphics; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_161$class_162",
+      "name": "method_698",
+      "reason": "no serializeToJson continuation in 1.21.1 net.minecraft.advancements.Advancement$Builder; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_2102",
+      "name": "field_9709",
+      "reason": "no ANY continuation in 1.21.1 net.minecraft.advancements.critereon.MobEffectsPredicate; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_2040",
+      "name": "field_9581",
+      "reason": "no ANY continuation in 1.21.1 net.minecraft.advancements.critereon.EntityFlagsPredicate; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "owner": "net/minecraft/class_2048",
+      "name": "field_9599",
+      "reason": "no ANY continuation in 1.21.1 net.minecraft.advancements.critereon.EntityPredicate; needs a semantic port, not a mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingClass",
+      "owner": "net/minecraft/class_2444",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiClass",
+      "owner": "net/fabricmc/fabric/api/client/model/ExtraModelProvider",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiClass",
+      "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$PlayChannelHandler",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiClass",
+      "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking$PlayChannelHandler",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiClass",
+      "owner": "net/fabricmc/fabric/api/client/model/BakedModelManagerHelper",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiClass",
+      "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiClass",
+      "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiClass",
+      "owner": "net/fabricmc/fabric/api/client/model/ModelLoadingRegistry",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiMember",
+      "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiMember",
+      "owner": "net/fabricmc/fabric/api/networking/v1/ServerPlayNetworking",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiMember",
+      "owner": "net/fabricmc/fabric/api/screenhandler/v1/ExtendedScreenHandlerType",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiMember",
+      "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    },
+    {
+      "artifact": "ironchests-5.0.2-fabric.jar",
+      "kind": "missingApiMember",
+      "owner": "net/fabricmc/fabric/api/client/networking/v1/ClientPlayNetworking",
+      "reason": "class/API-level gap: needs a port or shim decision, no mechanical rule"
+    }
+  ],
+  "findingCoverage": 20,
+  "draftFiles": [
+    "draft-ironchests-5.0.2-fabric.jar.json"
+  ]
+}

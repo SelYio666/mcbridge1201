@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-08",
+  "task": "compat A: damage->rule suggester",
+  "tool": "tools/suggest_rules.py",
+  "verdicts": {
+    "passed_mods_no_conflict": {
+      "ironchests": {
+        "drafts": 16,
+        "dropped_conflicts": 4,
+        "note": "dropped = covered by container.json signatureAdaptations callRewrites"
+      },
+      "trashslot": {
+        "drafts": 1,
+        "dropped_conflicts": 0
+      },
+      "lithium": {
+        "drafts": 7,
+        "dropped_conflicts": 1,
+        "note": "checkneighbourblocks.callsite covered by lithium.json incl opcode-184 overlap"
+      },
+      "passed": true
+    },
+    "failing_sample_fixed": {
+      "sample": "Veinminer 2.0.7 + silk 1.10.1 (correct dependency; p111 had used silk-all 1.10.7 from a newer MC line)",
+      "before": {
+        "log": "logs/before-crash-worldload.log",
+        "error": "NoSuchMethodError net.minecraft.class_26.method_17924(Function,Supplier,String) in silk-persistence ServerWorldMixin during ServerLevel <init>"
+      },
+      "suggestion": {
+        "id": "computeifabsent.callsite",
+        "confidence": "high",
+        "plan": "plan-silk.json"
+      },
+      "fix": {
+        "bridge": "java/src/bridge/java/top/mcbridge1201/bridge/DimensionDataStorageComputeIfAbsent.java",
+        "rule": "rules/fabric-1.21.1/silk-persistence.json",
+        "patch": "applied 1 time(s), bridge embedded into nested silk-persistence jar"
+      },
+      "after": {
+        "log": "logs/after-boot-commands.log",
+        "done": "Done (1.157s)",
+        "commands": {
+          "veinminer": "Veinminer Version: 2.0.7 (fabric) / Game Version: 1.21.1",
+          "veinminer toggle": "Veinminer functions disabled"
+        }
+      },
+      "passed": true
+    }
+  },
+  "chain_sha256": {
+    "silk-source-1.20.1": "348aa6f66135db051ac20753fa792506864346afd1051ffaae5604c290f94338",
+    "silk-converted": "216c293df76ac3ffa45f52fedb816ca6de7f5b4b041e5ecc6ea9f36f95d3da13",
+    "silk-converted-nestedfixed": "b735bb05f4e81e4309e8c55bc042678c0a36e129df2c594ce16321ebdd44ea3b",
+    "silk-patched": "c1ead65489c9b6e009efb880e5818d5a8045a721bcb36ab5beedd7d58e4ed7e0",
+    "veinminer-source": "3c6e7ce375e3fbb5f61bd946444ac8be2418fdc6bcaea5209ff379d3f61612c7",
+    "veinminer-converted": "51ebb3452c21aab2894c3193ccc254de58c8845ba3a4d90e63fb403005f5cecd"
+  },
+  "boundaries": [
+    "vein-mining path (hurtAndBreak / broadcastBreakEvent drafts) not exercised: needs a real client, no client harness this round",
+    "silk still has 7 stripped mixins, 6 L2 methods, 7 tombstones; only server boot + command path is claimed",
+    "suggester does not analyze mod-internal / third-party-library-internal changes (VeinMiner<->silk ctor mismatch was found from the runtime log)"
+  ]
+}

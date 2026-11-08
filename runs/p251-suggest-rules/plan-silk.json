@@ -1,0 +1,446 @@
+{
+  "schemaVersion": "0.1-draft",
+  "generatedAt": "2026-11-08T20:48:30.1976163+08:00",
+  "tool": "mcbridge1201 0.1.0",
+  "note": "Static analysis only. No game was launched; static stage ANALYZED does not imply VERIFIED/BOOTED/CONTRACT_PASSED.",
+  "target": {
+    "minecraft": "1.21.1",
+    "loader": "fabric",
+    "clientJar": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-compat\\work\\target\\client-1.21.1.jar",
+    "clientJarSha256": "499f6897d1837516680f3114072d8106e11c9adcd933fe5cf051b551089b0c99",
+    "mappings": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-compat\\work\\target\\intermediary-1.21.1-v2.jar",
+    "mappingsSha256": "e8bd6a4c39e235ee2dc73063558610775c72a2572fa0c6b32915b149074012a6",
+    "indexClasses": 10919,
+    "indexMembers": 87766,
+    "indexBuildMs": 1033,
+    "apiJars": [
+      {
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-compat\\work\\target\\fabric-api-0.102.0+1.21.1.jar",
+        "sha256": "fd021e3ea8d043805207f39d43ac4b358629b30f0d9280ffc5a886a433291bd1"
+      },
+      {
+        "path": "C:\\Users\\27682\\Documents\\新建文件夹\\mcbridge1201-compat\\work\\target\\fabric-loader-0.19.5.jar",
+        "sha256": "93044e4dd46de5d8136701292f05e868da096d2c9fddb4793e4fdbcc63efc695"
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "file": "silk-1.10.1.jar",
+      "sha256": "348aa6f66135db051ac20753fa792506864346afd1051ffaae5604c290f94338",
+      "size": 903071,
+      "loader": "fabric",
+      "metadataFiles": [
+        "fabric.mod.json"
+      ],
+      "modId": "silk-all",
+      "version": "1.10.1",
+      "displayName": "Silk (All modules)",
+      "depends": {
+        "fabric-api": "*",
+        "fabric-language-kotlin": "\u003e\u003d1.8.0+kotlin.1.7.0",
+        "minecraft": "1.20.x"
+      },
+      "classes": 0,
+      "classFileMajorMax": 0,
+      "nestedJars": 7,
+      "signed": false,
+      "accessWideners": 0,
+      "verdict": "blocked_static",
+      "stage": "ANALYZED",
+      "counts": {
+        "unresolvedDueToHierarchy": 8,
+        "missingClass": 0,
+        "missingMember": 6,
+        "descMismatch": 11,
+        "missingApiClass": 0,
+        "missingApiMember": 0,
+        "wrongLoaderNamespace": 0,
+        "unmappedNamespaceRefs": 94,
+        "mixins": 18,
+        "mixinTargetsUnresolved": 0,
+        "mixinInjections": 21,
+        "mixinAtTargets": 2,
+        "mixinAtOrdinals": 0,
+        "mixinInjectionsUnresolved": 8,
+        "missingConfirmedInSource": 16,
+        "externalPackages": 11
+      },
+      "missingClass": [],
+      "missingMember": [
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7977",
+          "desc": "(Lnet/minecraft/class_2561;)Lnet/minecraft/class_1799;",
+          "kind": "method",
+          "refs": 3,
+          "sources": [
+            "net/silkmc/silk/core/item/ItemBuilderKt [nested]",
+            "net/silkmc/silk/igui/GuiIconKt [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_634",
+          "name": "method_2883",
+          "desc": "(Lnet/minecraft/class_2596;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/silkmc/silk/network/packet/ClientToClientPacketDefinition [nested]",
+            "net/silkmc/silk/network/packet/ClientToServerPacketDefinition [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7911",
+          "desc": "(Ljava/lang/String;)Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/item/ItemBuilderKt [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7948",
+          "desc": "()Lnet/minecraft/class_2487;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/item/ItemBuilderKt [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_269",
+          "name": "method_1192",
+          "desc": "(Ljava/lang/String;)I",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/game/sideboard/internal/SideboardScoreboard [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_1799",
+          "name": "method_7938",
+          "desc": "()Z",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/igui/GuiIconKt [nested]"
+          ],
+          "presentInSource": true
+        }
+      ],
+      "descMismatch": [
+        {
+          "owner": "net/minecraft/class_2499",
+          "name": "add",
+          "desc": "(Ljava/lang/Object;)Z",
+          "kind": "method",
+          "refs": 5,
+          "sources": [
+            "net/silkmc/silk/core/item/ItemBuilderKt [nested]",
+            "net/silkmc/silk/nbt/dsl/NbtListBuilder [nested]",
+            "net/silkmc/silk/nbt/serialization/encoder/NbtListEncoder [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2483 with desc (ILjava/lang/Object;)V",
+          "presentInSource": false
+        },
+        {
+          "owner": "net/minecraft/class_2178",
+          "name": "method_9281",
+          "desc": "()Lnet/minecraft/class_2178;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/silkmc/silk/commands/CommandBuilder$argument$13 [nested]",
+            "net/silkmc/silk/commands/internal/ArgumentTypeUtils [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2178 with desc (Lnet/minecraft/class_7157;)Lnet/minecraft/class_2178;",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2757",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_2995$class_2996;Ljava/lang/String;Ljava/lang/String;I)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/silkmc/silk/game/sideboard/internal/SideboardScoreboard$Line [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2757 with desc (Ljava/lang/String;Ljava/lang/String;ILjava/util/Optional;Ljava/util/Optional;)V",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2658",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/silkmc/silk/network/packet/ClientToClientPacketDefinition$onReceiveServer$1 [nested]",
+            "net/silkmc/silk/network/packet/ServerToClientPacketDefinition [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2658 with desc (Lnet/minecraft/class_8710;)V",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2817",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_2960;Lnet/minecraft/class_2540;)V",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/silkmc/silk/network/packet/ClientToClientPacketDefinition [nested]",
+            "net/silkmc/silk/network/packet/ClientToServerPacketDefinition [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2817 with desc (Lnet/minecraft/class_8710;)V",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_1297",
+          "name": "method_5731",
+          "desc": "(Lnet/minecraft/class_3218;)Lnet/minecraft/class_1297;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/entity/MovementExtensionsKt [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_1297 with desc (Lnet/minecraft/class_5454;)Lnet/minecraft/class_1297;",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2561$class_2562",
+          "name": "method_10867",
+          "desc": "(Lnet/minecraft/class_2561;)Ljava/lang/String;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/item/ItemBuilderKt [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2561$class_2562 with desc (Lnet/minecraft/class_2561;Lnet/minecraft/class_7225$class_7874;)Ljava/lang/String;",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2170",
+          "name": "method_9249",
+          "desc": "(Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)I",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/server/ServerExtensionsKt [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2170 with desc (Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;)V",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_2736",
+          "name": "\u003cinit\u003e",
+          "desc": "(ILnet/minecraft/class_266;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/game/sideboard/internal/SideboardScoreboard$displayToPlayer$initPacketsDeferred$1 [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_2736 with desc (Lnet/minecraft/class_2540;)V",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_266",
+          "name": "\u003cinit\u003e",
+          "desc": "(Lnet/minecraft/class_269;Ljava/lang/String;Lnet/minecraft/class_274;Lnet/minecraft/class_2561;Lnet/minecraft/class_274$class_275;)V",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/game/sideboard/internal/SideboardScoreboard [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_266 with desc (Lnet/minecraft/class_269;Ljava/lang/String;Lnet/minecraft/class_274;Lnet/minecraft/class_2561;Lnet/minecraft/class_274$class_275;ZLnet/minecraft/class_9022;)V",
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/class_26",
+          "name": "method_17924",
+          "desc": "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/lang/String;)Lnet/minecraft/class_18;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/persistence/mixin/world/ServerWorldMixin [nested]"
+          ],
+          "note": "target has same name in net/minecraft/class_26 with desc (Lnet/minecraft/class_18$class_8645;Ljava/lang/String;)Lnet/minecraft/class_18;",
+          "presentInSource": true
+        }
+      ],
+      "missingApiClass": [],
+      "missingApiMember": [],
+      "wrongLoaderNamespace": [],
+      "unmappedNamespace": [
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "kind": "class",
+          "refs": 86,
+          "sources": [
+            "net/silkmc/silk/core/Silk [nested]",
+            "net/silkmc/silk/core/entity/PlayerExtensionsKt [nested]",
+            "net/silkmc/silk/core/event/ServerEvents$ServerEvent [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3734",
+          "desc": "()Lnet/minecraft/class_2170;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/silkmc/silk/core/server/ServerExtensionsKt [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3760",
+          "desc": "()Lnet/minecraft/class_3324;",
+          "kind": "method",
+          "refs": 2,
+          "sources": [
+            "net/silkmc/silk/core/server/ServerExtensionsKt [nested]",
+            "net/silkmc/silk/core/text/TextExtensionsKt [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer;buildServerStatus()Lnet/minecraft/network/protocol/status/ServerStatus",
+          "kind": "class",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/mixin/server/MixinMinecraftServer [nested]"
+          ],
+          "presentInSource": false
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3739",
+          "desc": "()Lnet/minecraft/class_2168;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/server/ServerExtensionsKt [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3831",
+          "desc": "()Ljava/io/File;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/server/ServerExtensionsKt [nested]"
+          ],
+          "presentInSource": true
+        },
+        {
+          "owner": "net/minecraft/server/MinecraftServer",
+          "name": "method_3847",
+          "desc": "(Lnet/minecraft/class_5321;)Lnet/minecraft/class_3218;",
+          "kind": "method",
+          "refs": 1,
+          "sources": [
+            "net/silkmc/silk/core/world/pos/SilkPosition [nested]"
+          ],
+          "presentInSource": true
+        }
+      ],
+      "externalPackages": [
+        {
+          "owner": "[B",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[I",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[J",
+          "kind": "package",
+          "refs": 1
+        },
+        {
+          "owner": "[Ljava",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "[Lnet",
+          "kind": "package",
+          "refs": 6
+        },
+        {
+          "owner": "com",
+          "kind": "package",
+          "refs": 82
+        },
+        {
+          "owner": "io",
+          "kind": "package",
+          "refs": 2
+        },
+        {
+          "owner": "kotlin",
+          "kind": "package",
+          "refs": 173
+        },
+        {
+          "owner": "kotlinx",
+          "kind": "package",
+          "refs": 133
+        },
+        {
+          "owner": "net",
+          "kind": "package",
+          "refs": 4
+        },
+        {
+          "owner": "org",
+          "kind": "package",
+          "refs": 31
+        }
+      ],
+      "mixins": {
+        "configs": 5,
+        "classes": 18,
+        "injections": 21,
+        "atTargets": 2,
+        "atOrdinals": 0,
+        "unresolvedTargets": [],
+        "unresolvedInjections": [
+          "META-INF/jars/silk-core-1.10.1.jar!/silk-core.mixins.json:mixins -\u003e net/minecraft/class_3324.method_14570(Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;)V (Inject)",
+          "META-INF/jars/silk-core-1.10.1.jar!/silk-core.mixins.json:mixins -\u003e @At INVOKE net/minecraft/class_3244.\u003cinit\u003e(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;)V (Inject)",
+          "META-INF/jars/silk-core-1.10.1.jar!/silk-core.mixins.json:mixins -\u003e net/minecraft/class_3324.method_14570(Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;)V (Inject)",
+          "META-INF/jars/silk-core-1.10.1.jar!/silk-core.mixins.json:mixins -\u003e net/minecraft/class_3244.method_10839(Lnet/minecraft/class_2561;)V (Inject)",
+          "META-INF/jars/silk-core-1.10.1.jar!/silk-core.mixins.json:mixins -\u003e net/minecraft/class_3248.method_10839(Lnet/minecraft/class_2561;)V (Inject)",
+          "META-INF/jars/silk-network-1.10.1.jar!/silk-network.mixins.json:mixins -\u003e net/minecraft/class_3244.method_12075(Lnet/minecraft/class_2817;)V (Inject)",
+          "META-INF/jars/silk-network-1.10.1.jar!/silk-network.mixins.json:client -\u003e net/minecraft/class_634.method_11152(Lnet/minecraft/class_2658;)V (Inject)",
+          "META-INF/jars/silk-persistence-1.10.1.jar!/silk-persistence.mixins.json:mixins -\u003e net/minecraft/class_2852.method_12395(Lnet/minecraft/class_3218;Lnet/minecraft/class_4153;Lnet/minecraft/class_1923;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2839; (Inject)"
+        ]
+      },
+      "notes": [
+        "static analysis only: a clean result is not a runtime or gameplay pass (stage ANALYZED)"
+      ]
+    }
+  ],
+  "summary": {
+    "artifacts": 1,
+    "blockedStatic": 1,
+    "needsDependency": 0,
+    "cleanStatic": 0
+  }
+}

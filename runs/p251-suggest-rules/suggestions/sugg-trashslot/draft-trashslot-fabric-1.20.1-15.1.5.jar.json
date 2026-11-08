@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "methodRedirects": [
+    {
+      "kind": "methodRedirect",
+      "id": "save.retarget",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7953",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+      "bridgeClass": "top/mcbridge1201/bridge/SaveRetargetBridge",
+      "bridgeMethod": "forward",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+      "capability": "member.renamed.save",
+      "risk": "medium",
+      "note": "net.minecraft.world.item.ItemStack.save is method_57379 (Lkp;Ljava/lang/Object;)Ljava/lang/Object; in 1.21.1; descriptor differs, bridge must convert. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "trashslot-fabric-1.20.1-15.1.5.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "net/blay09/mods/trashslot/TrashHelper"
+        ],
+        "targetOwner": "net/minecraft/class_1799",
+        "targetName": "method_57379",
+        "targetDesc": "(Lkp;Ljava/lang/Object;)Ljava/lang/Object;"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: missingMember ref net/minecraft/class_1799.method_7953 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487; (refs=1, presentInSource=True); callers: net/blay09/mods/trashslot/TrashHelper. 1.20.1 net/minecraft/class_1799.method_7953 = net.minecraft.world.item.ItemStack.save; 1.21.1 keeps it as method_57379"
+    }
+  ]
+}

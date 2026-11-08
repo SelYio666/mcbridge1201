@@ -1,19 +1,41 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-07T20:37:22+08:00",
+  "generatedAt": "2026-11-08T21:17:40+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "c7aabfbd2834ef72267e606958cec10bcca1ee98",
-    "branch": "master",
+    "commit": "3312b0f38ab4347562ab0c3e717507188ae2e21b",
+    "branch": "compat",
     "dirty": true,
     "modifiedFiles": [
-      "runs/p250-port-report/port-report.json",
-      "runs/p250-port-report/port-report.md",
+      "java/src/bridge/java/top/mcbridge1201/bridge/DimensionDataStorageComputeIfAbsent.java",
+      "manifests/baseline.lock.json",
+      "rules/README.md",
+      "rules/fabric-1.21.1/silk-persistence.json",
+      "runs/SHA256SUMS.txt",
+      "runs/p251-suggest-rules/README.md",
+      "runs/p251-suggest-rules/logs/after-boot-commands.log",
+      "runs/p251-suggest-rules/logs/before-crash-worldload.log",
+      "runs/p251-suggest-rules/plan-silk.json",
+      "runs/p251-suggest-rules/result.json",
+      "runs/p251-suggest-rules/suggestions/sugg-ironchests/draft-ironchests-5.0.2-fabric.jar.json",
+      "runs/p251-suggest-rules/suggestions/sugg-ironchests/suggestions.json",
+      "runs/p251-suggest-rules/suggestions/sugg-ironchests/suggestions.md",
+      "runs/p251-suggest-rules/suggestions/sugg-lithium/draft-lithium-fabric-mc1.20.1-0.11.4.jar.json",
+      "runs/p251-suggest-rules/suggestions/sugg-lithium/suggestions.json",
+      "runs/p251-suggest-rules/suggestions/sugg-lithium/suggestions.md",
+      "runs/p251-suggest-rules/suggestions/sugg-silk/draft-silk-1.10.1.jar.json",
+      "runs/p251-suggest-rules/suggestions/sugg-silk/suggestions.json",
+      "runs/p251-suggest-rules/suggestions/sugg-silk/suggestions.md",
+      "runs/p251-suggest-rules/suggestions/sugg-trashslot/draft-trashslot-fabric-1.20.1-15.1.5.jar.json",
+      "runs/p251-suggest-rules/suggestions/sugg-trashslot/suggestions.json",
+      "runs/p251-suggest-rules/suggestions/sugg-trashslot/suggestions.md",
+      "runs/p251-suggest-rules/suggestions/sugg-veinminer/draft-Veinminer-2.0.7.jar.json",
+      "runs/p251-suggest-rules/suggestions/sugg-veinminer/suggestions.json",
+      "runs/p251-suggest-rules/suggestions/sugg-veinminer/suggestions.md",
       "tools/hash_evidence.py",
-      "tools/port_report.py",
-      "uns/p250-port-report/README.md"
+      "tools/suggest_rules.py"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -62,8 +84,8 @@
   "inputs": {
     "rules": {
       "root": "rules/fabric-1.21.1",
-      "count": 29,
-      "packageSha256": "e9ce1b1933e62988f560c0a5c0380250192628abe394d068bd635411b635d1dc",
+      "count": 30,
+      "packageSha256": "08c529225ba3cc2c96881b67e63cdacac9e95d0523f3b60b8fc9c271a8e9e885",
       "files": [
         {
           "path": "rules/fabric-1.21.1/appleskin-food.json",
@@ -191,6 +213,11 @@
           "size": 6662
         },
         {
+          "path": "rules/fabric-1.21.1/silk-persistence.json",
+          "sha256": "f6752ea2fe5c3854f57d340e21747745538ebf30c88cfa81a9c9cd8dd42917bc",
+          "size": 1361
+        },
+        {
           "path": "rules/fabric-1.21.1/status-effect-instance.json",
           "sha256": "fba00a19f56f887427b3341d324468051ce3f353cb9168339eaf73ca5e794796",
           "size": 3612
@@ -307,8 +334,8 @@
       },
       "java/src/bridge": {
         "root": "java/src/bridge",
-        "count": 34,
-        "packageSha256": "5637f5e21779d891b3f38918142a6fa0205b04ce1dc666efdca85f2c96c877f3",
+        "count": 35,
+        "packageSha256": "d1737246e9426738a27719977697960a5c0a5a622efbc5e270487e3530c29305",
         "files": [
           {
             "path": "java/src/bridge/java/top/mcbridge1201/bridge/AppleSkinFoodBridge.java",
@@ -364,6 +391,11 @@
             "path": "java/src/bridge/java/top/mcbridge1201/bridge/CodecDispatch.java",
             "sha256": "9370b5a8a658b5aaec91117a25b0c064500965e0f7c3de2235e3b93efc62bba4",
             "size": 3358
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/DimensionDataStorageComputeIfAbsent.java",
+            "sha256": "0a6edb9f1f3a662f1958080f3258a372ff908b6dca37e4756da7f0610bd6da57",
+            "size": 2031
           },
           {
             "path": "java/src/bridge/java/top/mcbridge1201/bridge/DrawContextTextureBridge.java",
@@ -577,7 +609,7 @@
     "tools": {
       "count": 16,
       "present": 16,
-      "packageSha256": "212b32c411a834562ec853921e6ea3c953aba4d93aaa3be37b38ae91da510c72",
+      "packageSha256": "ae4456e70c115d4f3c81b8dacd42b1dd4ae708ea5b6453509efcf8e09afdf08d",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -601,8 +633,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "bfe49ecf5abcf199b9aed21fa0f77d0ffd1aae85fac2b6706e035d07199d9029",
-          "size": 88918
+          "sha256": "6c5cca2720f7f498b86dc60a075bb2ec124017fd318d84908b9a7983460f9a12",
+          "size": 90602
         },
         {
           "path": "tools/release_check.py",

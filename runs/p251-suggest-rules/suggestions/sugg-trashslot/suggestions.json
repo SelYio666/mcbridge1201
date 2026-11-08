@@ -1,0 +1,80 @@
+{
+  "plan": "work\\plan-corpus.json",
+  "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+  "sourceVersion": "1.20.1",
+  "targetVersion": "1.21.1",
+  "ruleFilesChecked": [
+    "appleskin-food.json",
+    "appleskin-tooltip.json",
+    "cloth-config-render.json",
+    "cloth-config.json",
+    "container.json",
+    "dyecolor-components.json",
+    "entityculling-mixin-port.json",
+    "entrylist-constructor.json",
+    "fabric-legacy-networking.json",
+    "fallingtree-tombstones.json",
+    "identifier-single-arg.json",
+    "immediatelyfast-batching-port.json",
+    "ironchests-draw.json",
+    "ironchests-nbt.json",
+    "ironchests-screen.json",
+    "lithium-degraded.json",
+    "lithium-varint.json",
+    "lithium.json",
+    "modmenu-list-render.json",
+    "modmenu-options.json",
+    "modmenu-textfield.json",
+    "modmenu-title-screen.json",
+    "nbt-packet.json",
+    "render-widget-override.json",
+    "shulker-nbt.json",
+    "status-effect-instance.json",
+    "textured-button.json",
+    "trashslot-sendtoserver.json",
+    "trashslot.json"
+  ],
+  "drafts": [
+    {
+      "kind": "methodRedirect",
+      "id": "save.retarget",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7953",
+      "sourceDesc": "(Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+      "bridgeClass": "top/mcbridge1201/bridge/SaveRetargetBridge",
+      "bridgeMethod": "forward",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;",
+      "capability": "member.renamed.save",
+      "risk": "medium",
+      "note": "net.minecraft.world.item.ItemStack.save is method_57379 (Lkp;Ljava/lang/Object;)Ljava/lang/Object; in 1.21.1; descriptor differs, bridge must convert. instance call: bridge receives the receiver as first argument",
+      "origin": {
+        "plan": "plan-corpus.json",
+        "planSha256": "946b9827fc11aa65f04dc5b67b772bd62ceed17243dabffb84982d433dcc2b6e",
+        "artifact": "trashslot-fabric-1.20.1-15.1.5.jar",
+        "kind": "method",
+        "refs": 1,
+        "presentInSource": true,
+        "sources": [
+          "net/blay09/mods/trashslot/TrashHelper"
+        ],
+        "targetOwner": "net/minecraft/class_1799",
+        "targetName": "method_57379",
+        "targetDesc": "(Lkp;Ljava/lang/Object;)Ljava/lang/Object;"
+      },
+      "confidence": "medium",
+      "evidence": "analyzer: missingMember ref net/minecraft/class_1799.method_7953 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487; (refs=1, presentInSource=True); callers: net/blay09/mods/trashslot/TrashHelper. 1.20.1 net/minecraft/class_1799.method_7953 = net.minecraft.world.item.ItemStack.save; 1.21.1 keeps it as method_57379"
+    }
+  ],
+  "droppedConflicts": [],
+  "notes": [
+    {
+      "owner": "net/minecraft/class_1799",
+      "name": "method_7915",
+      "reason": "no of continuation in 1.21.1 net.minecraft.world.item.ItemStack; needs a semantic port, not a mechanical rule"
+    }
+  ],
+  "findingCoverage": 1,
+  "draftFiles": [
+    "draft-trashslot-fabric-1.20.1-15.1.5.jar.json"
+  ]
+}
