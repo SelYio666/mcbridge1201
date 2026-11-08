@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "mcbridge-compat-shim",
+  "version": "0.1.0",
+  "name": "mcbridge1201 compat shim",
+  "description": "Runtime shims for symbols removed between Minecraft 1.20.1 and 1.21.1 (start: ItemPredicate.ANY). Rule-free companion to the conversion rules; installed next to converted mods.",
+  "authors": ["mcbridge1201"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {},
+  "mixins": ["mcbridge-compat-shim.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.15.0"
+  }
+}

@@ -1,21 +1,21 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-08T21:25:47+08:00",
+  "generatedAt": "2026-11-08T21:46:35+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "fe218aee72ef923f128029ee9a4192206be88de7",
+    "commit": "a11369ae28ac771a25847e0fb1dbe27339e6b730",
     "branch": "compat",
     "dirty": true,
     "modifiedFiles": [
-      "runs/SHA256SUMS.txt",
       "tools/hash_evidence.py",
-      "ules/fabric-1.21.1/silk-persistence.json"
+      "uns/SHA256SUMS.txt"
     ],
     "untrackedFiles": [
-      "runs/p252-crash-to-rule/",
-      "tools/suggest_from_crash.py"
+      "compat-shim/",
+      "runs/p253-compat-shim/",
+      "tools/build_compat_shim.py"
     ],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
   },
@@ -588,7 +588,7 @@
     "tools": {
       "count": 16,
       "present": 16,
-      "packageSha256": "490d59a330e0897423f0e1b8f97799b7136ae1c6ac5fd5280c38cf5ef7949184",
+      "packageSha256": "5e1f844e10a885f00248add4ef98480b3a0896c4aaef3d7154fecf2cc8f9c982",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -612,8 +612,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "3d6a2fa56245540b4b1faf1491df5c775949ea6500e6b2a6d3aa31a157a3d7d9",
-          "size": 91447
+          "sha256": "90424b3a0aacb2ed8ce394b164ac060ac047f4e942c04b2ba5642971a03005d7",
+          "size": 92048
         },
         {
           "path": "tools/release_check.py",

@@ -1836,6 +1836,17 @@ FILES = [
     "runs/p252-crash-to-rule/suggestions/before7-with-current-rules/crash-suggestions.md",
     "runs/p252-crash-to-rule/suggestions/entityculling-identifier/crash-suggestions.json",
     "runs/p252-crash-to-rule/suggestions/entityculling-identifier/crash-suggestions.md",
+    # p253: compat shim mod (compat direction C)
+    "tools/build_compat_shim.py",
+    "compat-shim/src/java/top/mcbridge1201/shim/mixin/ItemPredicateAnyFieldMixin.java",
+    "compat-shim/src/resources/fabric.mod.json",
+    "compat-shim/src/resources/mcbridge-compat-shim.mixins.json",
+    "runs/p253-compat-shim/README.md",
+    "runs/p253-compat-shim/result.json",
+    "runs/p253-compat-shim/container-noany.json",
+    "runs/p253-compat-shim/logs/control-no-shim-crash.log",
+    "runs/p253-compat-shim/logs/variant-shim-boot.log",
+    "runs/p253-compat-shim/logs/variant-shim-rejected-by-mixin.log",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

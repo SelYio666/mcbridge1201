@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-08",
+  "task": "compat C: compat shim mod (ItemPredicate.ANY)",
+  "deliverables": [
+    "compat-shim/ (source, no jar in repo)",
+    "tools/build_compat_shim.py"
+  ],
+  "shim_mechanism": {
+    "field": "class_2073.field_9640 re-added by mixin as public static, ACC_SYNTHETIC set on the compiled field",
+    "why_synthetic": "Mixin validateField rejects non-private static fields unless private/SYNTHETIC (verified by disassembling sponge-mixin 0.17.4 MixinPreProcessorStandard); field resolution ignores the flag",
+    "initializer": "same shape as the fieldRedirect bridge: new ItemPredicate(Optional.empty(), Ints.ANY, DataComponentPredicate.EMPTY, Map.of()) at <clinit> TAIL"
+  },
+  "ab_test": {
+    "patched_jar": "ironchests 5.0.2 converted, patched with container.json WITHOUT itempredicate.any.static-field (container-noany.json)",
+    "control": {
+      "mods": "fabric-api + ironchests-noany",
+      "result": "crash at entrypoint: NoSuchFieldError class_2073.field_9640 (IronChestsFabric.onInitialize)",
+      "log": "logs/control-no-shim-crash.log"
+    },
+    "variant": {
+      "mods": "control + mcbridge-compat-shim-0.1.0.jar",
+      "result": "Done (4.709s), 0 ERROR lines, give answered, clean stop with saves",
+      "log": "logs/variant-shim-boot.log"
+    },
+    "mixin_rejection_record": "logs/variant-shim-rejected-by-mixin.log (first two shim attempts rejected by Mixin; kept as evidence)",
+    "passed": true
+  },
+  "chain_sha256": {
+    "shim-jar": "af45e1a0153a209b175b2e4be9aa16c650ce5a5ac1f93fbb53c7239c60bd4381",
+    "ironchests-noany-patched": "51e6f13e6c4a2c2395d2e502bf4a36e97aac297719fd96bd360f6fab4e9146c6"
+  },
+  "boundaries": [
+    "verified to dedicated-server Done + world load + clean stop; the ironchests container contract was NOT re-run on the shim path",
+    "only ItemPredicate.ANY is shimmed; SYNTHETIC_FIELDS map + mixin list are the extension points",
+    "when both the rule and the shim exist, the rule wins (call sites rewritten; shim field unread)"
+  ]
+}

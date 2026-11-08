@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "top.mcbridge1201.shim.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "mixins": [
+    "ItemPredicateAnyFieldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
