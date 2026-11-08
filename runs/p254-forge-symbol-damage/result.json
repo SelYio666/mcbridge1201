@@ -1,0 +1,119 @@
+{
+ "date": "2026-11-08",
+ "task": "compat D: Forge 1.20.1 per-symbol damage (analysis only)",
+ "tool": "tools/forge_symbol_damage.py",
+ "mappings_input": {
+  "mcp_config_zip_sha256": "f46d1050d8bed9046886b90a0d2fb80b4c6b5120fc35d32e5d37498dbe0a6d2a",
+  "joined_tsrg": "config/joined.tsrg inside the zip (not committed, stays in work/)"
+ },
+ "verdict": {
+  "mods_analyzed": 12,
+  "missingMember_total": 183,
+  "descMismatch_total": 1441,
+  "missingClass_total": 70,
+  "runtime_claim": "NONE - analysis only, no NeoForge claim"
+ },
+ "per_mod": {
+  "[信雅互联] Connector-1.0.0-beta.48+1.20.1.jar": {
+   "mcRefs": 308,
+   "missingClass": 16,
+   "missingMember": 0,
+   "descMismatch": 0,
+   "forgeApiRefs": 275,
+   "srgUnresolved": 0
+  },
+  "[内存泄漏修复] memoryleakfix-forge-1.17+-1.1.5.jar": {
+   "mcRefs": 2,
+   "missingClass": 0,
+   "missingMember": 0,
+   "descMismatch": 1,
+   "forgeApiRefs": 3,
+   "srgUnresolved": 0
+  },
+  "[意志坚定] ToughAsNails-forge-1.20.1-9.2.0.171.jar": {
+   "mcRefs": 1185,
+   "missingClass": 7,
+   "missingMember": 26,
+   "descMismatch": 188,
+   "forgeApiRefs": 30,
+   "srgUnresolved": 1
+  },
+  "bookwyrms-1.20.1-1.2.0.jar": {
+   "mcRefs": 186,
+   "missingClass": 0,
+   "missingMember": 12,
+   "descMismatch": 61,
+   "forgeApiRefs": 53,
+   "srgUnresolved": 0
+  },
+  "CreativeCore_FORGE_v2.12.37_mc1.20.1.jar": {
+   "mcRefs": 1738,
+   "missingClass": 9,
+   "missingMember": 41,
+   "descMismatch": 264,
+   "forgeApiRefs": 96,
+   "srgUnresolved": 4
+  },
+  "dcrapi-0.1.1.jar": {
+   "mcRefs": 125,
+   "missingClass": 0,
+   "missingMember": 0,
+   "descMismatch": 18,
+   "forgeApiRefs": 41,
+   "srgUnresolved": 0
+  },
+  "ftb-library-forge-2001.2.12.jar": {
+   "mcRefs": 1426,
+   "missingClass": 13,
+   "missingMember": 48,
+   "descMismatch": 245,
+   "forgeApiRefs": 11,
+   "srgUnresolved": 3
+  },
+  "GlitchCore-forge-1.20.1-0.0.1.1.jar": {
+   "mcRefs": 54,
+   "missingClass": 1,
+   "missingMember": 1,
+   "descMismatch": 8,
+   "forgeApiRefs": 77,
+   "srgUnresolved": 0
+  },
+  "pmshaders-1.0.2-1.20.1-forge.jar": {
+   "mcRefs": 24,
+   "missingClass": 0,
+   "missingMember": 0,
+   "descMismatch": 3,
+   "forgeApiRefs": 0,
+   "srgUnresolved": 0
+  },
+  "pmweather-0.16.4-1.20.1-alpha.jar": {
+   "mcRefs": 2703,
+   "missingClass": 11,
+   "missingMember": 27,
+   "descMismatch": 381,
+   "forgeApiRefs": 249,
+   "srgUnresolved": 0
+  },
+  "syals_delight-1.0.0.jar": {
+   "mcRefs": 34,
+   "missingClass": 5,
+   "missingMember": 0,
+   "descMismatch": 6,
+   "forgeApiRefs": 25,
+   "srgUnresolved": 0
+  },
+  "zombiegame-1.20.1-1.2.jar": {
+   "mcRefs": 1110,
+   "missingClass": 8,
+   "missingMember": 28,
+   "descMismatch": 266,
+   "forgeApiRefs": 138,
+   "srgUnresolved": 7
+  }
+ },
+ "cross_check": "ItemStack.getTag/getOrCreateTag/setHoverName appear in the missingMember lists - the same NBT->component removals the Fabric-side analyzer reported for 1.20.1 mods",
+ "boundaries": [
+  "constructors (<init>) and indy/MethodHandle constants are not scanned; Forge API semantic gaps out of scope; 7/1110-level srgUnresolved kept honest"
+ ],
+ "tsrg_zip_sha256": "f46d1050d8bed9046886b90a0d2fb80b4c6b5120fc35d32e5d37498dbe0a6d2a"
+}

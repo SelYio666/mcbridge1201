@@ -1847,6 +1847,12 @@ FILES = [
     "runs/p253-compat-shim/logs/control-no-shim-crash.log",
     "runs/p253-compat-shim/logs/variant-shim-boot.log",
     "runs/p253-compat-shim/logs/variant-shim-rejected-by-mixin.log",
+    # p254: Forge 1.20.1 per-symbol damage (compat direction D)
+    "tools/forge_symbol_damage.py",
+    "runs/p254-forge-symbol-damage/README.md",
+    "runs/p254-forge-symbol-damage/result.json",
+    "runs/p254-forge-symbol-damage/forge-damage.json",
+    "runs/p254-forge-symbol-damage/forge-damage.md",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

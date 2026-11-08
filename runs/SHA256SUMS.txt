@@ -1808,3 +1808,8 @@ ece703eff4948b3d08bab4bd1cf66ba01eaca78e9426ac0955ff5245bd7ed5c7  runs/p253-comp
 0ef9417a24b86e57c7cff10cc618745f57bf9f7402a6593310ca93f192164db2  runs/p253-compat-shim/logs/control-no-shim-crash.log
 97164a8ae42e864ba44bc90c6ec9fef6f47e093eedfdd731f0b4d9c704123531  runs/p253-compat-shim/logs/variant-shim-boot.log
 e8a5d287400f5094185224bd056a9dad8c259b2df34660c36c4c8c31f7a94531  runs/p253-compat-shim/logs/variant-shim-rejected-by-mixin.log
+654d81a8104e92bab65b1fa896455dbe553597434832ab0a86520809c633311c  tools/forge_symbol_damage.py
+42a19a43166495847e221d17003eb3bc58f149473c34bb31c24c824b86f24403  runs/p254-forge-symbol-damage/README.md
+1f0ea0241ee5646db321c6bb0d21b6bd36cbcc5439be505a2eea837f4c2ecf86  runs/p254-forge-symbol-damage/result.json
+90b2c14e8e7c984a417b79183f7f947dc94a7bda97aa72258ed83fa7094f2d53  runs/p254-forge-symbol-damage/forge-damage.json
+388cd5dbf94d666c1af6935b6aa9888540560984361e7eabe27bf0029f316b6d  runs/p254-forge-symbol-damage/forge-damage.md
