@@ -1853,6 +1853,18 @@ FILES = [
     "runs/p254-forge-symbol-damage/result.json",
     "runs/p254-forge-symbol-damage/forge-damage.json",
     "runs/p254-forge-symbol-damage/forge-damage.md",
+    # p255: VeinMiner follow-up bridges + server-side probe (compat A follow-up)
+    "java/src/bridge/java/top/mcbridge1201/bridge/ItemStackHurtAndBreakLegacy.java",
+    "java/src/bridge/java/top/mcbridge1201/bridge/LivingEntityBroadcastBreakEvent.java",
+    "rules/fabric-1.21.1/veinminer-damage.json",
+    "tools/build_vein_probe.py",
+    "probes/p255-vein-bridge/src/java/probe/VeinBridgeProbe.java",
+    "probes/p255-vein-bridge/src/resources/fabric.mod.json",
+    "runs/p255-vein-bridge/README.md",
+    "runs/p255-vein-bridge/result.json",
+    "runs/p255-vein-bridge/logs/probe-pass-run.log",
+    "runs/p255-vein-bridge/logs/veinminer-regression.log",
+    "runs/p255-vein-bridge/logs/p251-baseline-regression.log",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

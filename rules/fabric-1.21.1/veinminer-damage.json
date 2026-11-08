@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "0.1-draft",
+  "target": "fabric-1.21.1",
+  "callSiteAdaptations": [
+    {
+      "id": "hurtandbreak.callsite",
+      "sourceOwner": "net/minecraft/class_1799",
+      "sourceName": "method_7956",
+      "sourceDesc": "(ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+      "targetOwner": "net/minecraft/class_1799",
+      "targetName": "method_7956",
+      "targetDesc": "(ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/ItemStackHurtAndBreakLegacy",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1799;ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V",
+      "capability": "callsite.descriptor.hurtandbreak",
+      "risk": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1799.method_7956 (ILnet/minecraft/class_1309;Ljava/util/function/Consumer;)V (refs=1, presentInSource=True); callers: de/miraculixx/veinminer/Veinminer. 1.20.1 net.minecraft.world.item.ItemStack.hurtAndBreak (ILnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V -> 1.21.1 net.minecraft.world.item.ItemStack.hurtAndBreak (ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V"
+    },
+    {
+      "id": "broadcastbreakevent.callsite",
+      "sourceOwner": "net/minecraft/class_1657",
+      "sourceName": "method_20235",
+      "sourceDesc": "(Lnet/minecraft/class_1304;)V",
+      "targetOwner": "net/minecraft/class_1309",
+      "targetName": "method_20235",
+      "targetDesc": "(Lnet/minecraft/class_1792;Lnet/minecraft/class_1304;)V",
+      "bridgeClass": "top/mcbridge1201/bridge/LivingEntityBroadcastBreakEvent",
+      "bridgeMethod": "adapt",
+      "bridgeDesc": "(Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V",
+      "capability": "callsite.descriptor.broadcastbreakevent",
+      "risk": "medium",
+      "evidence": "analyzer: descMismatch ref net/minecraft/class_1657.method_20235 (Lnet/minecraft/class_1304;)V (refs=1, presentInSource=True); callers: de/miraculixx/veinminer/Veinminer. Mojang names differ across the chain: broadcastBreakEvent vs onEquippedItemBroken"
+    }
+  ]
+}

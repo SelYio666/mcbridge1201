@@ -521,14 +521,27 @@ class Suggester:
         """bridgeDesc for an INVOKESTATIC replacement of this call.
 
         Instance calls keep the receiver on the stack, so the bridge's first parameter is the
-        owner type. Returns (bridgeDesc, note).
+        owner type. Mods reference inherited methods through the receiver type, so when the
+        owner itself does not declare the member, the ACC_STATIC probe runs against the
+        declaring class found by name+descriptor. Returns (bridgeDesc, note).
         """
-        static = is_static_method(self.source_stub, owner, name, desc) if self.source_stub else None
-        if static is False:  # instance call: receiver becomes the bridge's first argument
+        probed = is_static_method(self.source_stub, owner, name, desc) if self.source_stub else None
+        decl_cls = None
+        if probed is None and self.source_stub is not None:
+            for (cls, nm), row in self.src.by_inter.items():
+                if nm == name and self.src._desc_equiv(row[2], desc):
+                    decl_cls = cls
+                    probed = is_static_method(self.source_stub, cls, name, desc)
+                    break
+        if probed is False:  # instance call: receiver becomes the bridge's first argument
             inner = desc[1:desc.index(")")]
             ret = desc[desc.index(")") + 1:]
-            return f"(L{owner};{inner}){ret}", "instance call: bridge receives the receiver as first argument"
-        if static is True:
+            recv = decl_cls or owner
+            note = "instance call: bridge receives the receiver as first argument"
+            if decl_cls and decl_cls != owner:
+                note += f" (declared on {decl_cls}, called through {owner})"
+            return f"(L{recv};{inner}){ret}", note
+        if probed is True:
             return desc, "static call: bridge signature equals the old descriptor"
         return desc, "call shape unknown (stub lookup failed): verify the receiver by hand"
 

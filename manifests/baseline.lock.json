@@ -1,22 +1,23 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-08T21:46:35+08:00",
+  "generatedAt": "2026-11-08T22:06:05+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "a11369ae28ac771a25847e0fb1dbe27339e6b730",
+    "commit": "a7762a73d23f6e6570e627e6c68899e8ea99c553",
     "branch": "compat",
     "dirty": true,
     "modifiedFiles": [
-      "tools/hash_evidence.py",
-      "uns/SHA256SUMS.txt"
+      "runs/SHA256SUMS.txt",
+      "runs/p254-forge-symbol-damage/README.md",
+      "runs/p254-forge-symbol-damage/forge-damage.json",
+      "runs/p254-forge-symbol-damage/forge-damage.md",
+      "runs/p254-forge-symbol-damage/result.json",
+      "tools/forge_symbol_damage.py",
+      "tools/hash_evidence.py"
     ],
-    "untrackedFiles": [
-      "compat-shim/",
-      "runs/p253-compat-shim/",
-      "tools/build_compat_shim.py"
-    ],
+    "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
   },
   "environment": {
@@ -588,7 +589,7 @@
     "tools": {
       "count": 16,
       "present": 16,
-      "packageSha256": "5e1f844e10a885f00248add4ef98480b3a0896c4aaef3d7154fecf2cc8f9c982",
+      "packageSha256": "12840f4936fbf11742789c83e083b24865dc156c34d87e8985e22abfb4d303cd",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -612,8 +613,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "90424b3a0aacb2ed8ce394b164ac060ac047f4e942c04b2ba5642971a03005d7",
-          "size": 92048
+          "sha256": "b57c14e65d44f7c33389f988c8fa5a923ac2e3950532c77a44a2568d09406195",
+          "size": 92352
         },
         {
           "path": "tools/release_check.py",

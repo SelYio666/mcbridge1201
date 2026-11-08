@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "mcbridge-vein-probe",
+  "version": "1.0.0",
+  "name": "mcbridge p255 vein bridge probe",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["probe.VeinBridgeProbe"]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*"
+  }
+}

@@ -1,0 +1,45 @@
+{
+ "date": "2026-11-08",
+ "task": "compat A follow-up: implement the two remaining VeinMiner drafts (hurtAndBreak + broadcastBreakEvent)",
+ "deliverables": [
+  "java/src/bridge/java/top/mcbridge1201/bridge/ItemStackHurtAndBreakLegacy.java",
+  "java/src/bridge/java/top/mcbridge1201/bridge/LivingEntityBroadcastBreakEvent.java",
+  "rules/fabric-1.21.1/veinminer-damage.json",
+  "tools/build_vein_probe.py + probes/p255-vein-bridge/ (runtime probe mod, jar stays in work/)",
+  "tools/suggest_rules.py: declaration-class fallback for ACC_STATIC probing (broadcastBreakEvent is declared on LivingEntity but the mod names Player as owner; the old probe missed it and emitted a receiver-less bridgeDesc)"
+ ],
+ "patch": {
+  "rule_hits": {
+   "hurtandbreak.callsite": 1,
+   "broadcastbreakevent.callsite": 1
+  },
+  "bridges_embedded": [
+   "ItemStackHurtAndBreakLegacy",
+   "LivingEntityBroadcastBreakEvent"
+  ]
+ },
+ "runtime_verification": {
+  "method": "server-side probe mod registers /mcbridge-probe; RCON summons a NoAI zombie holding a diamond_pickaxe in the overworld (forceload add 0 0 first: summons outside loaded chunks are discarded - two earlier runs failed on exactly that); the probe calls both bridges on the live entity and logs assertions",
+  "probe_lines": {
+   "PROBE_HURT": "before=0 after=100 maxDamage=1561 count=1 consumerCalls=0 (1.20.1 semantics: the consumer fires only when the item actually breaks)",
+   "PROBE_BREAK": "countBefore=1 countAfter=0 consumerCalls=1 consumerGotEntity=true (the 1.20.1-shaped consumer receives the LivingEntity, not the 1.21.1 Item)",
+   "PROBE_BROADCAST": "ok (LivingEntity.onEquippedItemBroken called through the bridge)",
+   "PROBE_RESULT": "pass=true"
+  },
+  "log": "logs/probe-pass-run.log",
+  "verdict": "both bridges verified end to end on the null-ServerPlayer path with a real entity"
+ },
+ "regression": {
+  "veinminer_command": "logs/veinminer-regression.log - Veinminer Version 2.0.7 / Game Version 1.21.1 answered with both new rules active (plus p251 silk chain)",
+  "p251_baseline": "logs/p251-baseline-regression.log - the p251 after-run still on record"
+ },
+ "boundaries": [
+  "the ServerPlayer branch of hurtAndBreak (durability sync + ITEM_DURABILITY_CHANGED criteria) is exercised by the 1.21.1 vanilla code but was not observed with a real client player",
+  "actual vein-mining gameplay (client breaking blocks) still unverified - needs a client driver",
+  "probe run required 3 attempts (world not forceloaded: summoned entity discarded; probe assertion bug: expected consumer fire on a non-breaking hurt; probe picked a leftover zombie with an already-broken pickaxe) - all three runs kept in work/tmp, final clean run recorded here"
+ ],
+ "chain_sha256": {
+  "veinminer-patched": "abf0db96e65f8ac9f929222a9a3e95379a98e2b0307c5eeb2fa1716a1423e0de",
+  "vein-probe-jar": "8f6e795cb64249d2d98617390220e83c7ccf8b1425ddf997165f2a0a58ee1400"
+ }
+}

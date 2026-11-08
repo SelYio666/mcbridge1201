@@ -160,6 +160,8 @@ Mixin 回调，而不是删 mixin：
 | `trashslot.{itemstack,packet}.*` + `trashslot.balm.*` | trashslot 的 4 个 ItemStack/NBT tombstone + 旧 Balm 初始化/网络调用 | 1.20.5 组件化；NBT 桥 + `Balm.initialize(String, LoadContext, Runnable)` + `PacketType`/`StreamCodec` 载荷桥 | **已应用；专用服务端 Done（Balm 21）；客户端/网络流量未验证** |
 | `constant-kind-fix(-handle)` | class→interface 的常量池种类 | 1.20.5 的 DFU 接口化 | 已应用 123 + 3 处 |
 | `computeifabsent.callsite`（silk-persistence.json） | `DimensionDataStorage.computeIfAbsent(Function,Supplier,String)` → `(SavedData.Factory,String)`；桥按 silk 官方 1.21 构建同款传 `DataFixTypes.LEVEL` | 1.20.5 起 SavedData 走 Factory 记录；实例调用桥自动补接收者参数 | **已应用 1 处（silk 1.10.1 嵌套 silk-persistence）；VeinMiner+转换后 silk 的服务器从世界加载崩溃 → `Done (1.157s)` + 命令可用（runs/p251）**；规则由 `tools/suggest_rules.py` 建议并人工实现 |
+| `hurtandbreak.callsite`（veinminer-damage.json） | `ItemStack.hurtAndBreak(int,LivingEntity,Consumer)` → `(int,ServerLevel,@Nullable ServerPlayer,Consumer)`；1.20.1 的 Consumer 收实体，桥重绑 `item -> consumer.accept(entity)` | 1.21.1 四参 player 可空（非玩家路径等价）；附魔减伤已并入四参本体 | **已应用 1 处；探针在活体僵尸上验证伤害/破坏/consumer 契约（runs/p255，pass=true）；ServerPlayer 分支与真实挖矿未观测** |
+| `broadcastbreakevent.callsite`（veinminer-damage.json） | `LivingEntity.broadcastBreakEvent(EquipmentSlot)` → `onEquippedItemBroken(Item,EquipmentSlot)`；两者本体相同，Item 参数 1.21.1 未读 | 桥按槽内当前物品填充；声明类回退修正了 bridgeDesc 的接收者形状 | **已应用 1 处；探针验证无异常广播（runs/p255）** |
 
 `signatureAdaptations` 会迁移方法描述符、平移局部变量槽、给指定调用补参数，并用 `COMPUTE_FRAMES` 重算帧；这是“签名变化”类损伤的通用处理形态，而不是单点改名。
 
