@@ -1824,3 +1824,9 @@ fba42dcd776c155382088a9d8ce87a431d4544f9bd986e8159f19eea57fe605e  java/src/bridg
 5d5e87b51c223c2f964e22d45458617a95b5803adbb864d88e779d5ac91c762c  runs/p255-vein-bridge/logs/probe-pass-run.log
 d5e6347bf7997da6fd6e657be2cb73a700f8db03a63931048f74a505ecc303c0  runs/p255-vein-bridge/logs/veinminer-regression.log
 260414560ef634f66dab35e1dab1f9a5865428b3c149ed3c230a239937595fe7  runs/p255-vein-bridge/logs/p251-baseline-regression.log
+58f8eac34141bbcc52478c38eabe9ed86e388b69adf29ff502a9786f00545495  runs/p256-veinminer-e2e/drive.py
+bc913c2661920e7b384ccf29669c83e639a615f8c6d80c7b204f44d85d46ef9d  runs/p256-veinminer-e2e/README.md
+a5a8ee41a2baae3f021e8d1eb1e8dc9cf1216e109819467e64d303bcf8f70721  runs/p256-veinminer-e2e/result.json
+f0bc2bb81748b8cad54ccf13f7cc3d583a05a8a22e55af0b19fd605577e33839  runs/p256-veinminer-e2e/logs/server.log
+3148442cf09d9d87b31fa94c9824a23c1a74960bfb9c49bab0cd23208d633856  runs/p256-veinminer-e2e/logs/client.log
+018dc88361356c0ccb708e1fd27542b0c430695b66783c4c979a4eb143975a21  runs/p256-veinminer-e2e/logs/screen-before.png

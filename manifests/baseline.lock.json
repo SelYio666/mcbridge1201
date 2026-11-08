@@ -1,21 +1,30 @@
 {
   "schemaVersion": "baseline-lock-1",
-  "generatedAt": "2026-11-08T22:06:05+08:00",
+  "generatedAt": "2026-11-08T23:25:47+08:00",
   "tool": "tools/freeze_baseline.py",
   "what": "The 1.20.1 -> Fabric 1.21.1 conversion frozen as a contract: the rule package, the bridge and converter sources, the pinned target indices, the per-artifact evidence statuses and the declared degradations, each by SHA-256.",
   "not": "Not a support claim and not a test run. Nothing here was executed to produce it except the optional --run-gates read-only checks.",
   "git": {
-    "commit": "a7762a73d23f6e6570e627e6c68899e8ea99c553",
+    "commit": "c56d78858d744473c0834dbbb9c865104a4c90cf",
     "branch": "compat",
     "dirty": true,
     "modifiedFiles": [
+      "java/src/bridge/java/top/mcbridge1201/bridge/ItemStackHurtAndBreakLegacy.java",
+      "java/src/bridge/java/top/mcbridge1201/bridge/LivingEntityBroadcastBreakEvent.java",
+      "manifests/baseline.lock.json",
+      "probes/p255-vein-bridge/src/java/probe/VeinBridgeProbe.java",
+      "probes/p255-vein-bridge/src/resources/fabric.mod.json",
+      "rules/README.md",
+      "rules/fabric-1.21.1/veinminer-damage.json",
       "runs/SHA256SUMS.txt",
-      "runs/p254-forge-symbol-damage/README.md",
-      "runs/p254-forge-symbol-damage/forge-damage.json",
-      "runs/p254-forge-symbol-damage/forge-damage.md",
-      "runs/p254-forge-symbol-damage/result.json",
-      "tools/forge_symbol_damage.py",
-      "tools/hash_evidence.py"
+      "runs/p255-vein-bridge/README.md",
+      "runs/p255-vein-bridge/logs/p251-baseline-regression.log",
+      "runs/p255-vein-bridge/logs/probe-pass-run.log",
+      "runs/p255-vein-bridge/logs/veinminer-regression.log",
+      "runs/p255-vein-bridge/result.json",
+      "tools/build_vein_probe.py",
+      "tools/hash_evidence.py",
+      "tools/suggest_rules.py"
     ],
     "untrackedFiles": [],
     "note": "Recorded, not compared by --check: a worktree is expected to be ahead of the commit it was frozen at. Only inputs.* moving means the frozen contract moved."
@@ -64,8 +73,8 @@
   "inputs": {
     "rules": {
       "root": "rules/fabric-1.21.1",
-      "count": 30,
-      "packageSha256": "660772ea41fa1db192b6bf0aa019992216da08bfeb84d11c7f58f4db05712e6b",
+      "count": 31,
+      "packageSha256": "e41060c679ea16c97184e56ea232df928850a8cb18b87ee48be781268c66ca7d",
       "files": [
         {
           "path": "rules/fabric-1.21.1/appleskin-food.json",
@@ -216,6 +225,11 @@
           "path": "rules/fabric-1.21.1/trashslot.json",
           "sha256": "4428d035de3af501349290608d8ee58172dfb9956ebec69162c733444aae9c2c",
           "size": 11204
+        },
+        {
+          "path": "rules/fabric-1.21.1/veinminer-damage.json",
+          "sha256": "6f90644fcd8572214d16c62c3ea348f7d6d436b2482b152c72c779f6ee9ee051",
+          "size": 2233
         }
       ]
     },
@@ -314,8 +328,8 @@
       },
       "java/src/bridge": {
         "root": "java/src/bridge",
-        "count": 35,
-        "packageSha256": "d1737246e9426738a27719977697960a5c0a5a622efbc5e270487e3530c29305",
+        "count": 37,
+        "packageSha256": "3fb4975a8c3f59da10fe406bce042a76ea073ba617852e561b58e6a47511d0f8",
         "files": [
           {
             "path": "java/src/bridge/java/top/mcbridge1201/bridge/AppleSkinFoodBridge.java",
@@ -418,6 +432,11 @@
             "size": 1486
           },
           {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/ItemStackHurtAndBreakLegacy.java",
+            "sha256": "d4c91630d444c65d233a7e0b7893023864bc26bede318716d04085905600415d",
+            "size": 2228
+          },
+          {
             "path": "java/src/bridge/java/top/mcbridge1201/bridge/LegacyEntryListWidget.java",
             "sha256": "0625d427e003b7711b03017e7851abce98245f7ddeb70cd28d73db1c4f8777a3",
             "size": 2074
@@ -436,6 +455,11 @@
             "path": "java/src/bridge/java/top/mcbridge1201/bridge/LithiumVarIntBridge.java",
             "sha256": "0e07d1c8e66b1844732e4321990c68697876b7cf7179fd18cccd6b4db24b8fd0",
             "size": 516
+          },
+          {
+            "path": "java/src/bridge/java/top/mcbridge1201/bridge/LivingEntityBroadcastBreakEvent.java",
+            "sha256": "fba42dcd776c155382088a9d8ce87a431d4544f9bd986e8159f19eea57fe605e",
+            "size": 1383
           },
           {
             "path": "java/src/bridge/java/top/mcbridge1201/bridge/ModMenuListRenderBridge.java",
@@ -589,7 +613,7 @@
     "tools": {
       "count": 16,
       "present": 16,
-      "packageSha256": "12840f4936fbf11742789c83e083b24865dc156c34d87e8985e22abfb4d303cd",
+      "packageSha256": "ad11d5e96699abaa56f82245d2651edbd8f6a8cfdc205a59808577051dae058c",
       "files": [
         {
           "path": "tools/check_hashes.py",
@@ -613,8 +637,8 @@
         },
         {
           "path": "tools/hash_evidence.py",
-          "sha256": "b57c14e65d44f7c33389f988c8fa5a923ac2e3950532c77a44a2568d09406195",
-          "size": 92352
+          "sha256": "cf4088925827fcc02fac1c5703c14014120a5f888655328a4619133a8a1593f8",
+          "size": 93072
         },
         {
           "path": "tools/release_check.py",

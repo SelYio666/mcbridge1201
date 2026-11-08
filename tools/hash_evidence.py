@@ -1865,6 +1865,13 @@ FILES = [
     "runs/p255-vein-bridge/logs/probe-pass-run.log",
     "runs/p255-vein-bridge/logs/veinminer-regression.log",
     "runs/p255-vein-bridge/logs/p251-baseline-regression.log",
+    # p256: real-client vein-mining E2E
+    "runs/p256-veinminer-e2e/drive.py",
+    "runs/p256-veinminer-e2e/README.md",
+    "runs/p256-veinminer-e2e/result.json",
+    "runs/p256-veinminer-e2e/logs/server.log",
+    "runs/p256-veinminer-e2e/logs/client.log",
+    "runs/p256-veinminer-e2e/logs/screen-before.png",
 ]
 
 # manifests/baseline.lock.json is deliberately NOT listed above: it records the results of the

@@ -1,0 +1,41 @@
+{
+ "date": "2026-11-09",
+ "task": "compat A follow-up: end-to-end vein-mining with a REAL client (p255 boundary closed)",
+ "verdict": {
+  "pass": true,
+  "ore_left_of_16": 0,
+  "pickaxe_damage": 16,
+  "server_linkage_errors": 0,
+  "client_linkage_errors": 0,
+  "join": "[00:48:57] [Server thread/INFO]: TestPlayer[/127.0.0.1:51449] logged in with entity id 168 at (9.5, 69.0, 75.5)"
+ },
+ "what_ran": [
+  "real 1.21.1 Fabric client (KnotClient launch over the PCL-installed game/libraries, assets via junction), offline login, --quickPlayMultiplayer onto the dedicated server",
+  "server = converted VeinMiner (p255 patched) + converted silk chain (p251) + fabric-api; fresh playerdata every run",
+  "RCON choreography: 2x2 coal-ore pillar (16) at y120-123 pre-built before join; player tp-ed on top looking straight down; diamond pickaxe via item replace",
+  "input injection: window topmost+foreground (ALT-key foreground-lock bypass), sneak held, LMB held 5 s"
+ ],
+ "verdict_meaning": {
+  "ore_left_of_16=0": "the vein-mine took the entire pillar (default veinBlocks are ORES - coal included; the beforeBlockBreak gate compares Block.getDescriptionId() translation keys)",
+  "pickaxe_damage=16": "durability dropped exactly one per block: 1 via vanilla mineBlock + 15 via VeinMiner damageItem -> ItemStackHurtAndBreakLegacy -> the 1.21.1 four-arg hurtAndBreak with a real ServerPlayer (sync + ITEM_DURABILITY_CHANGED criteria inside)",
+  "linkage_errors=0": "no NoSuchMethodError/NoSuchFieldError on either side"
+ },
+ "boundaries": [
+  "single client, single pillar, one vein shape; multiplayer-with-humans not covered",
+  "VeinMiner config file WRITE is broken in the mod itself (0-byte settings.json/blocks.json recreated on every boot - encodeToString silently fails); the E2E relies on the in-code DEFAULT veinBlocks instead; config-write damage is a separate follow-up",
+  "the ServerPlayer durability sync was observed via the item damage number, not on a second client"
+ ],
+ "failures_on_the_way": [
+  "asm-analysis missing from the Knot classpath (server-instance ow2 jars fixed it)",
+  "relative --gameDir doubled under the cwd (Knot created gameDir/work/e2e/... mods path)",
+  "two drive runs overlapped and the first server held port 25565",
+  "--quickPlayServer is not a 1.21.1 flag (correct: --quickPlayMultiplayer); accessToken \"0\" breaks profile parsing (use the UUID-shaped placeholder)",
+  "playerdata wipe must include .dat_old: the server falls back to it and restored a dead player (Health 0, You Died screen)",
+  "foreground lock rejects SetForegroundWindow sporadically (ALT-key bypass + retries fixed it)",
+  "custom blocks.json with registry ids never matched: the gate uses translation keys; and the DEFAULT vein set is ores, not logs",
+  "log format: \"minecraft:damage\": 16 carries a space after the colon; \"No blocks were filled\" means 0 replaced"
+ ],
+ "chain_sha256": {
+  "veinminer-patched": "abf0db96e65f8ac9f929222a9a3e95379a98e2b0307c5eeb2fa1716a1423e0de"
+ }
+}
